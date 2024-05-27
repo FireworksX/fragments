@@ -1,0 +1,37 @@
+{
+  "name": "@fragments/next",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@fragments/nodes": "*",
+    "@fragments/render-react": "*",
+    "@graph-state/core": "^0.4.0",
+    "@graph-state/plugin-extend": "^0.2.0",
+    "@graph-state/plugin-logger": "^0.2.0",
+    "@graph-state/react": "^0.3.0",
+    "classnames": "^2.5.1",
+    "next": "14.2.3",
+    "react": "^18",
+    "react-dom": "^18",
+    "use-sync-external-store": "^1.2.2"
+  },
+  "devDependencies": {
+    "@svgr/webpack": "^8.1.0",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.3",
+    "eslint-config-prettier": "^7",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-unused-imports": "^2.0.0",
+    "prettier": "^2.5.1",
+    "typescript": "^5"
+  }
+}

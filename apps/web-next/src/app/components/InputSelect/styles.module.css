@@ -1,0 +1,56 @@
+.root {
+    height: 30px;
+    border-radius: var(--radius-second);
+    color: var(--text-color-accent);
+    background: var(--background-secondary);
+    display: flex;
+    align-items: center;
+}
+
+.body {
+    font-size: 12px;
+    flex-grow: 1;
+    font-weight: 500;
+    margin-left: 8px;
+}
+
+.placeholder {
+    color: var(--secondary);
+}
+
+.iconWrapper {
+    margin-left: 5px;
+    width: 22px;
+    min-width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.iconPlaceholder {
+    position: absolute;
+    inset: 0;
+}
+
+.iconTarget {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.iconValue {
+    position: absolute;
+    inset: 0;
+}
+
+.reset {
+    width: 24px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

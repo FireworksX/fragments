@@ -1,0 +1,35 @@
+{
+  "name": "@fragments/fragments-plugin",
+  "private": false,
+  "version": "0.1.0",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "source": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "test": "vitest",
+    "publish": "npm publish",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@adstore/utils": "*",
+    "@graph-state/core": "^0.4.0",
+    "@graph-state/plugin-extend": "^0.3.1",
+    "@graph-state/plugin-logger": "^0.2.0",
+    "tsup": "^7.2.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  }
+}

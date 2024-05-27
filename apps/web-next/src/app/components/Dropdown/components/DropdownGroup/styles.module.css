@@ -1,0 +1,12 @@
+.root {
+    padding: 5px;
+    border-bottom: 1px solid var(--secondary-light);
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    &:empty {
+        display: none;
+    }
+}

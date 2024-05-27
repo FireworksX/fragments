@@ -1,0 +1,24 @@
+.root {
+  position: relative;
+}
+
+.lock {
+  transition: var(--animation-transition-default);
+  color: var(--border);
+  position: absolute;
+  left: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  .active & {
+    color: var(--primary)
+  }
+}
+
+.shackle {
+  transform: translateY(-1px);
+
+.active & {
+  transform: translateY(0px);
+}
+}

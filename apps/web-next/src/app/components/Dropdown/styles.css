@@ -1,0 +1,8 @@
+
+.tippy-arrow {
+    color: var(--background) !important;
+}
+
+.tippy-content {
+    padding: 0 !important;
+}

@@ -1,0 +1,24 @@
+@layer ui {
+    .root {
+        transition: transform var(--animation-transition-default);
+        outline: none;
+        cursor: pointer;
+    }
+
+    .withEffect {
+        &:active {
+            transform: scale(0.93);
+        }
+    }
+
+    .asButton {
+        outline: none;
+        border: none;
+        padding: 0;
+        text-align: left;
+        width: 100%;
+        background: transparent;
+    }
+}
+
+

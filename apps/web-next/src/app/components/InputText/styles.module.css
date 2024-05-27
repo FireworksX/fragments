@@ -1,0 +1,15 @@
+.root {
+    position: relative;
+}
+
+.inner {
+    width: 100%;
+    background: var(--background-secondary);
+    border-radius: var(--radius-second);
+    border: none;
+    outline: none;
+    height: 30px;
+    font-size: 12px;
+    font-weight: 500;
+    padding-left: 7px;
+}

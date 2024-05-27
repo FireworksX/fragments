@@ -1,0 +1,11 @@
+.root {
+    border-radius: var(--radius-second);
+    padding: 0 10px;
+}
+
+.color {
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    box-shadow: var(--shadow-basic);
+}

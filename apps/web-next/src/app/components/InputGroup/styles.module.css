@@ -1,0 +1,25 @@
+.root {
+    display: flex;
+    align-items: center;
+
+    & > *,
+    & > * > input {
+        border-radius: 0;
+
+        &:focus {
+            border: 1px solid var(--primary);
+        }
+    }
+
+    & > *:first-child,
+    & > *:first-child > input {
+        border-top-left-radius: var(--radius-second);
+        border-bottom-left-radius: var(--radius-second);
+    }
+
+    & > *:last-child,
+    & > *:last-child > input {
+        border-top-right-radius: var(--radius-second);
+        border-bottom-right-radius: var(--radius-second);
+    }
+}

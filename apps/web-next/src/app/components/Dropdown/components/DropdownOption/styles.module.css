@@ -1,0 +1,34 @@
+.root {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 5px;
+    padding: 6px 7px 6px 12px;
+    font-size: 12px;
+    min-width: 100px;
+    transition: var(--animation-transition-default);
+    cursor: pointer;
+    color: var(--text-color-accent);
+
+
+    &:hover:not(.disabled) {
+        background: var(--primary-bg);
+    }
+
+    &.disabled {
+        color: var(--secondary);
+        cursor: default;
+
+    }
+}
+
+
+.description {
+    color: var(--secondary);
+
+}
+
+.arrow {
+    color: var(--secondary);
+}

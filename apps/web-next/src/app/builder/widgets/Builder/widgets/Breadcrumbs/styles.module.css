@@ -1,0 +1,28 @@
+.root {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    position: relative;
+    gap: 10px;
+    background: rgba(var(--background-secondary--rgb, .8));
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(5px);
+}
+
+.crumb {
+    width: auto;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 10px;
+    border-radius: var(--radius-second);
+    background: var(--background-secondary);
+    color: var(--text-color-accent);
+    box-shadow: var(--shadow-secondary);
+
+    &.component {
+        background: var(--component-bg);
+        color: var(--component);
+    }
+}

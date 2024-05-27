@@ -1,0 +1,8 @@
+.root {
+  position: relative;
+}
+
+.iconContainer {
+  color: var(--text-color);
+
+}

@@ -1,0 +1,18 @@
+.tabsWrapper {
+    padding: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.tabsSelector {
+    width: 100%;
+
+}
+
+.delimiter {
+    width: calc(100% - 30px);
+    height: 1px;
+    background: var(--border);
+    margin: 0 15px;
+}
+

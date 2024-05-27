@@ -1,0 +1,9 @@
+.root {
+  .ReactCollapse--collapse {
+    transition: height 500ms;
+  }
+
+  .ReactCollapse--content {
+    padding-left: 10px;
+  }
+}

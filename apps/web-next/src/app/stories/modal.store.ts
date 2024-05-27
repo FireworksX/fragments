@@ -1,0 +1,38 @@
+import { createState, GraphState } from '@graph-state/core'
+import { CreateComponentContext } from '@/app/widgets/modals/CreateComponentModal/CreateComponentModal'
+import { CreateCustomBreakpointContext } from '@/app/widgets/modals/CreateCustomBreakpoint/CreateCustomBreakpoint'
+
+export type ModalPanelMap = {
+  createComponent: CreateComponentContext
+  createCustomBreakpoint: CreateCustomBreakpointContext
+  aboutTemplate: unknown
+  createLanding: unknown
+  componentVariables: unknown
+}
+
+export const MODAL_TYPE = 'Modal'
+
+interface ModalStore extends GraphState {
+  open<TName extends keyof ModalPanelMap>(name: TName, context: ModalPanelMap[TName]): void
+  close(): void
+}
+
+export const modalStore = createState({
+  plugins: [
+    graphState => {
+      graphState.open = <TName extends keyof ModalPanelMap>(name: TName, context: ModalPanelMap[TName]) => {
+        graphState.mutate({
+          _type: MODAL_TYPE,
+          _id: name,
+          ...(context ?? {})
+        })
+      }
+
+      graphState.close = () => {
+        graphState.inspectFields(MODAL_TYPE).forEach(link => graphState.invalidate(link))
+      }
+
+      return graphState
+    }
+  ]
+}) as ModalStore
