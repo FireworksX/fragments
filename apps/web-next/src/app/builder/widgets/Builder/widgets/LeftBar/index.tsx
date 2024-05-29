@@ -5,6 +5,7 @@ import TabsSelector from '@/app/components/TabsSelector'
 import { TabsSelectorItem } from '@adstore/web/src/components/TabsSelector/TabsSelector'
 import { useState } from 'react'
 import Assets from '@/app/builder/widgets/Builder/widgets/Assets/Assets'
+import Layers from '@/app/builder/widgets/Builder/widgets/Layers/Layers'
 
 const modes: TabsSelectorItem[] = [
   {
@@ -30,8 +31,8 @@ const LeftBar = () => {
       </div>
 
       <div className={styles.delimiter} />
-
-      <Assets />
+      {mode === 'layers' && <Layers />}
+      {mode === 'assets' && <Assets />}
     </div>
   )
 }

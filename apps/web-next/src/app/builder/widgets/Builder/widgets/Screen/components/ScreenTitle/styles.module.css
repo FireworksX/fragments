@@ -3,7 +3,7 @@
     align-items: center;
     padding: 10px;
     border-radius: var(--radius-second);
-    background-color: rgba(var(--background--rgb, .7));
+    background-color: rgba(var(--background--rgb), .7);
     box-shadow: var(--shadow-basic);
 }
 

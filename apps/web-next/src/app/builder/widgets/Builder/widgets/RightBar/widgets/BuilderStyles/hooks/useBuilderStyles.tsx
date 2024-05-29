@@ -75,7 +75,7 @@ export const useBuilderStyles = () => {
       ...layerInvoker('cornerRadius')
     },
     zIndex: {
-      disabled: zIndexInvoker.value === graphState.empty,
+      disabled: graphState.isEmpty(zIndexInvoker.value),
       ...zIndexInvoker,
       onClick: clickZIndex
     },

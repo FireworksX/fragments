@@ -1,16 +1,15 @@
 import { generateId, Resolver, setKey } from '../helpers'
-import { keyOfEntity } from '@adstore/statex'
 import { CloneProps } from '../types/props'
 import { BaseNode } from '../types'
 
-export const clonePropsResolver: Resolver = (statex, entity): CloneProps => {
-  const key = keyOfEntity(entity)
+export const clonePropsResolver: Resolver = (state, entity): CloneProps => {
+  const key = state.keyOfEntity(entity)
 
   return {
     ...entity,
     overrides: entity?.overrides ?? [],
     clone(overrideNode: BaseNode) {
-      const node = statex.resolve(key)
+      const node = state.resolve(key)
       const nextChildren = (node?.findChildren?.(() => true) ?? []).map(child => child.clone?.() ?? child)
 
       const nextEntity = {
@@ -21,8 +20,8 @@ export const clonePropsResolver: Resolver = (statex, entity): CloneProps => {
         children: nextChildren
       }
 
-      const cloneKey = statex.mutate(nextEntity)
-      statex.mutate(key, {
+      const cloneKey = state.mutate(nextEntity)
+      state.mutate(key, {
         overrides: [setKey(cloneKey)]
       })
 

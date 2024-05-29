@@ -1,4 +1,4 @@
-import { Plugin } from '@graph-state/core'
+import { LinkKey, Plugin } from '@graph-state/core'
 import loggerPlugin from '@graph-state/plugin-logger'
 import extendPlugin from '@graph-state/plugin-extend'
 import { Entity, keyOfEntity, Statex } from '@adstore/statex'
@@ -187,10 +187,12 @@ export const fragmentsPlugin: Plugin = graphState => {
     extendPlugin()(graphState)
   }
 
-  const [rootNode] = graphState.inspectFields(builderNodes.Document)
-  graphState.documentNode = graphState.resolve(rootNode)
-  graphState.empty = empty
+  const [rootLink] = graphState.inspectFields(builderNodes.Document)
+  graphState.root = rootLink
+  // graphState.empty = empty
   graphState.viewport = graphState.keyOfEntity(viewportNode(graphState))
+  graphState.isEmpty = (value: unknown) => typeof value === undefined || value == null
+
   graphState.hasOverride = (entity: Entity, field?: string) => {
     const resolvedEntity = typeof entity === 'string' ? graphState.resolve(entity) : entity
     const resolvedOverride = graphState.resolve(resolvedEntity?.overrideFrom)
@@ -200,24 +202,28 @@ export const fragmentsPlugin: Plugin = graphState => {
 
     return isOverride && resolvedOverride?._type === resolvedEntity?._type
   }
+
   graphState.resetOverride = (entity: Entity, field: string) => {
     graphState.mutate(keyOfEntity(entity), {
       [field]: override
     })
   }
 
-  graphState.resolveValue = (key: EntityKey, field: string) => {
-    const entity = graphState.resolve(key)
+  graphState.resolveValue = (link: LinkKey, field: string) => {
+    if (field == 'visible') {
+      // console.trace(link, field)
+    }
+    const graph = graphState.resolve(link)
 
-    if (entity && field in entity && entity[field] !== undefined) {
-      if (entity[field] !== empty && entity[field] !== override) {
-        return entity[field]
-      } else if (entity.overrideFrom) {
-        return graphState.resolveValue(entity.overrideFrom, field)
-      }
+    if (graph && field in graph && graph[field] !== undefined) {
+      // if (entity[field] !== empty && entity[field] !== override) {
+      return graph[field]
+      // } else if (entity.overrideFrom) {
+      //   return graphState.resolveValue(entity.overrideFrom, field)
+      // }
     }
 
-    return empty
+    return undefined
   }
 
   // graphState.mutate(rootNode, {})

@@ -1,16 +1,15 @@
 import { clonedField, Resolver } from '../helpers'
-import { keyOfEntity } from '@adstore/statex'
 import { Effect } from '@adstore/web/src/types/props'
 import { builderEffectType } from 'src/defenitions'
 
-export const effectsPropsResolver: Resolver = (statex, entity) => {
-  const key = keyOfEntity(entity)
+export const effectsPropsResolver: Resolver = (state, entity) => {
+  const key = state.keyOfEntity(entity)
 
   return {
     ...entity,
-    effects: clonedField(statex, entity, 'effects', []),
+    effects: clonedField(state, entity, 'effects', []),
     setEffect(effect: Effect) {
-      statex.mutate(
+      state.mutate(
         key,
         prev => {
           const effects = [...prev.effects]
@@ -32,7 +31,7 @@ export const effectsPropsResolver: Resolver = (statex, entity) => {
       )
     },
     removeEffect(type: keyof typeof builderEffectType) {
-      statex.mutate(key, prev => ({ effects: prev.effects.filter(e => e.type !== type) }), {
+      state.mutate(key, prev => ({ effects: prev.effects.filter(e => e.type !== type) }), {
         replace: true
       })
     }

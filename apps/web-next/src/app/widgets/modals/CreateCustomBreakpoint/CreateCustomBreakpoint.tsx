@@ -32,7 +32,7 @@ const CreateCustomBreakpoint: FC<CreateCustomBreakpointProps> = ({ className }) 
         description='Add a new custom Breakpoint. If you wish to update it, simply change its width.'
         footer={
           <>
-            <Button mode='secondary' stretched onClick={close}>
+            <Button mode='secondary' stretched onClick={modalStore.close}>
               Cancel
             </Button>
             <Button stretched onClick={() => modal?.onAdd(name, width)}>

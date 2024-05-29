@@ -13,6 +13,7 @@ import InputNumber from '@/app/components/InputNumber/InputNumber'
 import Select from '@/app/components/Select/Select'
 import { builderSizing } from '@fragments/fragments-plugin'
 import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
+import { isValue } from '@adstore/utils'
 
 interface BuilderSizeProps {
   className?: string
@@ -37,7 +38,7 @@ const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
     <Panel className={cn(styles.root, className)} title='Size'>
       {hasSync && (
         <div className={styles.lockerWrapper}>
-          <BuilderSizeLocker isLocked={sync.value !== graphState.empty} onClick={sync.onChange} />
+          <BuilderSizeLocker isLocked={isValue(sync.value)} onClick={sync.onChange} />
         </div>
       )}
 

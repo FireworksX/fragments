@@ -23,7 +23,8 @@ const Canvas: FC<CanvasProps> = ({ className, children }) => {
             height: 0,
             transform: '',
             x: canvas?.x,
-            y: canvas?.y
+            y: canvas?.y,
+            scale: canvas?.scale
           }}
         >
           <div className={styles.viewport} ref={viewportRef}>

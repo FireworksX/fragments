@@ -86,9 +86,10 @@ export const Layer: FC<LayerProps> = ({ layerKey, mode, onClick, ...rest }) => {
     <Tag data-key={layerKey} style={cssRules} onClick={proxyOnClick}>
       {(children || []).map((child) => (
         <Layer
-          key={`${layerKey}_${componentContext.componentKey}`}
+          key={child}
           // componentKey={componentContext.componentKey}
-          layerKey={graphState.keyOfEntity(child)}
+          layerKey={child}
+          onClick={onClick}
         />
       ))}
     </Tag>

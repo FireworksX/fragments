@@ -1,7 +1,7 @@
 import { ScreenNode } from 'src/types/nodes'
 import { builderNodes, builderSizing } from 'src/defenitions'
 import { keyOfEntity, Statex } from '@adstore/statex'
-import { pipeResolvers } from 'src/helpers'
+import { pipeResolvers, ResolverNode } from 'src/helpers'
 import { basePropsResolver } from 'src/propsResolvers/basePropsResolver'
 import { childrenPropsResolver } from 'src/propsResolvers/childrenPropsResolver'
 import { geometryPropsResolver } from 'src/propsResolvers/geometryPropsResolver'
@@ -12,24 +12,24 @@ import { paddingPropsResolver } from 'src/propsResolvers/paddingPropsResolver'
 import { scenePropsResolver } from 'src/propsResolvers/scenePropsResolver'
 import { GraphState } from '@graph-state/core'
 
-export const screenNode = (graphState: GraphState, initialEntity?: ScreenNode): ScreenNode => {
+export const screenNode: ResolverNode = (state, initialEntity?: ScreenNode): ScreenNode => {
   const key = keyOfEntity(initialEntity) ?? ''
 
   const initialNode = {
     ...initialEntity,
     background: [],
     setPrimary: () => {
-      const primaryScreen = graphState
+      const primaryScreen = state
         .inspectFields(builderNodes.Screen)
-        .map(graphState.resolve)
+        .map(state.resolve)
         .find(s => s.isPrimary)
 
-      graphState.mutate(key, {
+      state.mutate(key, {
         isPrimary: true
       })
 
       if (primaryScreen) {
-        graphState.mutate(keyOfEntity(primaryScreen), {
+        state.mutate(keyOfEntity(primaryScreen), {
           isPrimary: false
         })
       }
@@ -45,7 +45,7 @@ export const screenNode = (graphState: GraphState, initialEntity?: ScreenNode): 
     paddingPropsResolver,
     scenePropsResolver,
     clonePropsResolver
-  )(initialNode, graphState)
+  )(initialNode, state)
 
   return {
     ...resolvedNode,

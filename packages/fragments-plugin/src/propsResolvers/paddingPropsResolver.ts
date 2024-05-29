@@ -1,4 +1,4 @@
-import { clonedField, Resolver } from '../helpers'
+import { clonedField, OVERRIDE, Resolver } from '../helpers'
 import { isValue } from '@adstore/utils'
 import { keyOfEntity } from '@adstore/statex'
 import { capitalize } from '@adstore/web/src/utils/helpers'
@@ -6,32 +6,32 @@ import { PaddingProps } from '../types/props'
 
 const isValidValue = (value: any) => typeof value === 'number'
 
-export const paddingPropsResolver: Resolver = (statex, entity): PaddingProps => {
+export const paddingPropsResolver: Resolver = (state, entity): PaddingProps => {
   const key = keyOfEntity(entity)
   const isMixed = [entity.paddingLeft, entity.paddingRight, entity.paddingTop, entity.paddingBottom].some(
-    value => isValue(value) && value !== statex.override && value > 0
+    value => isValue(value) && value !== OVERRIDE && value > 0
   )
 
   return {
     ...entity,
-    padding: clonedField(statex, entity, 'padding', isMixed ? statex.mixed : 0),
-    paddingLeft: clonedField(statex, entity, 'paddingLeft', isMixed ? statex.mixed : 0),
-    paddingRight: clonedField(statex, entity, 'paddingRight', isMixed ? statex.mixed : 0),
-    paddingTop: clonedField(statex, entity, 'paddingTop', isMixed ? statex.mixed : 0),
-    paddingBottom: clonedField(statex, entity, 'paddingBottom', isMixed ? statex.mixed : 0),
+    padding: clonedField(state, entity, 'padding', isMixed ? state.mixed : 0),
+    paddingLeft: clonedField(state, entity, 'paddingLeft', isMixed ? state.mixed : 0),
+    paddingRight: clonedField(state, entity, 'paddingRight', isMixed ? state.mixed : 0),
+    paddingTop: clonedField(state, entity, 'paddingTop', isMixed ? state.mixed : 0),
+    paddingBottom: clonedField(state, entity, 'paddingBottom', isMixed ? state.mixed : 0),
 
     setPadding(...args) {
       const isMixed = args.length > 1
 
       if (isMixed) {
         if (typeof args[0] === 'string' && isValidValue(args[1])) {
-          statex.mutate(key, {
-            padding: statex.mixed,
+          state.mutate(key, {
+            padding: state.mixed,
             [`padding${capitalize(args[0])}`]: isValidValue(args[1]) ? args[1] ?? 0 : 0
           })
         }
       } else {
-        statex.mutate(key, {
+        state.mutate(key, {
           padding: isValidValue(args[0]) ? args[0] ?? 0 : 0
         })
       }

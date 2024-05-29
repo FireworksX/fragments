@@ -15,27 +15,17 @@ import StackPanelCreateColor from '@/app/builder/widgets/Builder/widgets/StackCo
 import StackPanelCssOverride from '@/app/builder/widgets/Builder/widgets/StackCollector/components/StackPanelCssOverride/StackPanelCssOverride'
 import StackPanelCssOverrideList from '@/app/builder/widgets/Builder/widgets/StackCollector/components/StackPanelCssOverrideList/StackPanelCssOverideList'
 import StackLoopEffect from '@/app/builder/widgets/Builder/widgets/StackCollector/components/StackLoopEffect/StackLoopEffect'
-import { createState } from '@graph-state/core'
 import isBrowser from '@/app/utils/isBrowser'
-
-import { Layer } from '@fragments/nodes'
-import { FragmentsRender } from '@fragments/render-react'
-import { fragmentsPlugin } from '@fragments/fragments-plugin'
-import { template } from '@/app/builder/widgets/Builder/template'
 import { BuilderContext, BuilderProvider } from '@/app/builder/widgets/Builder/BuilderContext'
 import Canvas from '@/app/builder/widgets/Builder/widgets/Canvas/Canvas'
 import { animated } from '@react-spring/web'
 import CreateCustomBreakpoint from '@/app/widgets/modals/CreateCustomBreakpoint/CreateCustomBreakpoint'
 import CreateComponentModal from '@/app/widgets/modals/CreateComponentModal/CreateComponentModal'
-import { ModalProvider } from '@/app/builder/widgets/Builder/ModalContext'
-
-const graphState = createState({
-  initialState: template,
-  plugins: [fragmentsPlugin]
-})
+import { builderStore } from '@/app/stories/builder.store'
+import LayerHighlight from '@/app/builder/widgets/Builder/widgets/LayerHighlight/LayerHighlight'
 
 if (isBrowser) {
-  window.graphState = graphState
+  window.builderStore = builderStore
 }
 
 const Builder = () => {
@@ -45,11 +35,10 @@ const Builder = () => {
     <>
       <div className={styles.root}>
         <div className={styles.background}></div>
-        <AsideBar className={styles.left}>
-          <LeftBar />
-        </AsideBar>
+        <AsideBar className={styles.left}>{<LeftBar />}</AsideBar>
         <div className={styles.body}>
           <Canvas>
+            <LayerHighlight />
             <DisplayBreakpoints />
           </Canvas>
 
@@ -97,9 +86,7 @@ const Builder = () => {
 }
 
 export default () => (
-  <ModalProvider>
-    <BuilderProvider graphState={graphState}>
-      <Builder />
-    </BuilderProvider>
-  </ModalProvider>
+  <BuilderProvider graphState={builderStore}>
+    <Builder />
+  </BuilderProvider>
 )

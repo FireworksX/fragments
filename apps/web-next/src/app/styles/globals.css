@@ -19,7 +19,8 @@
     --component-bg: rgb(232, 222, 255);
     --component-disabled: #a4d8fa;
 
-    --secondary: rgb(135, 152, 168);
+    --secondary: #8798A8;
+    --secondary--rgb: 135, 152, 168;
     --secondary-active: #657280;
     --secondary-bg: #F3F5F7;
     --secondary-disabled: #DAE0E4;

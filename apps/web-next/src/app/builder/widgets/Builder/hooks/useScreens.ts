@@ -8,10 +8,8 @@ export const useScreens = () => {
   const screensKeys = useGraphFields(graphState, builderNodes.Screen)
   const screensValues = useGraphStack(graphState, screensKeys)
   const primaryScreen = screensValues.find(breakpoint => breakpoint.isPrimary)
-  console.log(screensValues)
 
   const addScreen = (name: string, width: number) => {
-    console.log(primaryScreen)
     const nextScreenKey = primaryScreen.clone()
 
     graphState.mutate(nextScreenKey, {

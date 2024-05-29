@@ -2,38 +2,34 @@ import { builderConstrain, builderSizing } from 'src/defenitions'
 import { keyOfEntity } from '@adstore/statex'
 import { clonedField, Resolver } from '../helpers'
 
-export const layoutPropsResolver: Resolver = (graphState, entity) => {
+export const layoutPropsResolver: Resolver = (state, entity) => {
   const key = keyOfEntity(entity)
 
   return {
     ...entity,
-    x: clonedField(graphState, entity, 'x', 0),
-    y: clonedField(graphState, entity, 'y', 0),
-    aspectRatio: clonedField(graphState, entity, 'aspectRatio'),
-    zIndex: clonedField(graphState, entity, 'zIndex'),
-    width: clonedField(graphState, entity, 'width', 100),
-    height: clonedField(graphState, entity, 'height', 100),
-    rotation: clonedField(graphState, entity, 'rotation', 0),
-    layoutSizingHorizontal: clonedField(graphState, entity, 'layoutSizingHorizontal', builderSizing.Fixed),
-    layoutSizingVertical: clonedField(graphState, entity, 'layoutSizingVertical', builderSizing.Fixed),
-    constrains: clonedField(graphState, entity, 'constrains', {
+    x: clonedField(state, entity, 'x', 0),
+    y: clonedField(state, entity, 'y', 0),
+    aspectRatio: clonedField(state, entity, 'aspectRatio'),
+    zIndex: clonedField(state, entity, 'zIndex'),
+    width: clonedField(state, entity, 'width', 100),
+    height: clonedField(state, entity, 'height', 100),
+    rotation: clonedField(state, entity, 'rotation', 0),
+    layoutSizingHorizontal: clonedField(state, entity, 'layoutSizingHorizontal', builderSizing.Fixed),
+    layoutSizingVertical: clonedField(state, entity, 'layoutSizingVertical', builderSizing.Fixed),
+    constrains: clonedField(state, entity, 'constrains', {
       vertical: entity?.constrains?.vertical ?? builderConstrain.Center,
       horizontal: entity?.constrains?.horizontal ?? builderConstrain.Center
     }),
 
     syncSize() {
-      graphState.mutate(key, prev => {
-        return {
-          aspectRatio: prev.aspectRatio === graphState.empty ? prev.height / prev.width : graphState.empty
-        }
-      })
+      state.mutate(key, prev => ({ aspectRatio: prev.aspectRatio === null ? prev.height / prev.width : null }))
     },
     setZIndex(value: number) {
       if (typeof value !== 'number') {
         return
       }
 
-      graphState.mutate(key, {
+      state.mutate(key, {
         zIndex: value
       })
     },
@@ -42,17 +38,17 @@ export const layoutPropsResolver: Resolver = (graphState, entity) => {
         return
       }
 
-      const aspectRatio = graphState.resolveValue(key, 'aspectRatio')
-      const height = graphState.resolveValue(key, 'height')
+      const aspectRatio = state.resolveValue(key, 'aspectRatio')
+      const height = state.resolveValue(key, 'height')
 
-      if (aspectRatio === graphState.empty || !aspectRatio) {
-        graphState.mutate(key, {
+      if (aspectRatio === null || !aspectRatio) {
+        state.mutate(key, {
           width: value
         })
       } else {
-        graphState.mutate(key, {
+        state.mutate(key, {
           width: value,
-          height: aspectRatio !== graphState.empty ? +(value * aspectRatio).toFixed(1) : height
+          height: aspectRatio !== null ? +(value * aspectRatio).toFixed(1) : height
         })
       }
     },
@@ -61,17 +57,17 @@ export const layoutPropsResolver: Resolver = (graphState, entity) => {
         return
       }
 
-      const aspectRatio = graphState.resolveValue(key, 'aspectRatio')
-      const width = graphState.resolveValue(key, 'width')
+      const aspectRatio = state.resolveValue(key, 'aspectRatio')
+      const width = state.resolveValue(key, 'width')
 
-      if (aspectRatio === graphState.empty || !aspectRatio) {
-        graphState.mutate(key, {
+      if (aspectRatio === null || !aspectRatio) {
+        state.mutate(key, {
           height: value
         })
       } else {
-        graphState.mutate(key, prev => ({
+        state.mutate(key, prev => ({
           height: value,
-          width: aspectRatio !== graphState.empty ? +(value / prev.aspectRatio).toFixed(2) : width
+          width: aspectRatio !== null ? +(value / prev.aspectRatio).toFixed(2) : width
         }))
       }
     },
@@ -80,7 +76,7 @@ export const layoutPropsResolver: Resolver = (graphState, entity) => {
         return
       }
 
-      graphState.mutate(key, {
+      state.mutate(key, {
         rotation: deg
       })
     },
@@ -89,7 +85,7 @@ export const layoutPropsResolver: Resolver = (graphState, entity) => {
         return
       }
 
-      graphState.mutate(key, {
+      state.mutate(key, {
         x,
         y
       })
@@ -97,12 +93,12 @@ export const layoutPropsResolver: Resolver = (graphState, entity) => {
     setSizeMode(mode: 'horizontal' | 'vertical', value: typeof builderSizing) {
       if (Object.keys(builderSizing).includes(value)) {
         if (mode === 'horizontal') {
-          graphState.mutate(key, {
+          state.mutate(key, {
             layoutSizingHorizontal: value
           })
         }
         if (mode === 'vertical') {
-          graphState.mutate(key, {
+          state.mutate(key, {
             layoutSizingVertical: value
           })
         }
@@ -111,7 +107,7 @@ export const layoutPropsResolver: Resolver = (graphState, entity) => {
     setConstrains(mode: 'horizontal' | 'vertical', value: typeof builderConstrain) {
       if (Object.keys(builderConstrain).includes(value)) {
         if (mode === 'horizontal' || mode === 'vertical') {
-          graphState.mutate(key, prev => ({
+          state.mutate(key, prev => ({
             constrains: {
               ...prev.constrains,
               [mode]: value

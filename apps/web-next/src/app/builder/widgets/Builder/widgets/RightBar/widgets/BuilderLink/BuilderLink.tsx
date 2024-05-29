@@ -21,9 +21,8 @@ interface BuilderLinkProps {
 }
 
 const BuilderLink: FC<BuilderLinkProps> = ({ className }) => {
-  const { graphState } = useContext(BuilderContext)
   const { href, isNewTab, onClick } = useBuilderLink()
-  const isEmpty = href.value === graphState.empty
+  const isEmpty = !href.value
 
   return (
     <Panel

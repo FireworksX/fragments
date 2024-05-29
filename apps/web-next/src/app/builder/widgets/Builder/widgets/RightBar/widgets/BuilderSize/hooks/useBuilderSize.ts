@@ -1,4 +1,3 @@
-// import { builderSizing } from '../../../../../../../data/promos/creators'
 import { useBuilderSelection } from '@/app/builder/widgets/Builder/hooks/useBuilderSelection'
 import { useLayerInvokerNew } from '@/app/builder/widgets/Builder/hooks/useLayerInvokerNew'
 import { builderSizing } from '@fragments/fragments-plugin'
@@ -8,6 +7,7 @@ export const useBuilderSize = () => {
   const layerInvoker = useLayerInvokerNew(selection, ({ node, key, value }) => {
     switch (key) {
       case 'width':
+        console.log(node)
         node.setWidth(+value)
         break
       case 'height':

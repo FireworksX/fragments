@@ -5,7 +5,7 @@ import Modal from '@/app/components/Modal/Modal'
 import Button from '@/app/components/Button'
 import InputText from '@/app/components/InputText/InputText'
 import ModalContainer from '@/app/components/ModalContainer/ModalContainer'
-import { ModalContext } from '@/app/builder/widgets/Builder/ModalContext'
+import { modalStore } from '@/app/stories/modal.store'
 
 interface CreateComponentModalProps {
   className?: string
@@ -18,7 +18,7 @@ export interface CreateComponentContext {
 const NAME = 'createComponent'
 
 const CreateComponentModal: FC<CreateComponentModalProps> = ({ className }) => {
-  const { close, name: modalName, context } = useContext(ModalContext)
+  // const { close, name: modalName, context } = useContext(ModalContext)
   const [name, setName] = useState('')
 
   return (
@@ -28,12 +28,12 @@ const CreateComponentModal: FC<CreateComponentModalProps> = ({ className }) => {
         description='Components can be edited in their own canvas. Double-click on any instance to add visual variants and interactions.'
         footer={
           <>
-            <Button mode='secondary' stretched onClick={close}>
+            <Button mode='secondary' stretched onClick={modalStore.close}>
               Cancel
             </Button>
-            <Button stretched onClick={() => context?.onCreate(name)}>
-              Create
-            </Button>
+            {/*<Button stretched onClick={() => context?.onCreate(name)}>*/}
+            {/*  Create*/}
+            {/*</Button>*/}
           </>
         }
       >

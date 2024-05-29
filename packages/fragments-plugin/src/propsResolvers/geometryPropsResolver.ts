@@ -28,31 +28,31 @@ export const getDefaultBorder = (): Border => ({
   }
 })
 
-export const geometryPropsResolver: Resolver = (statex: Statex, entity) => {
+export const geometryPropsResolver: Resolver = (state, entity) => {
   const key = keyOfEntity(entity)
 
   return {
     ...entity,
-    fills: clonedField(statex, entity, 'fills'),
-    fillType: clonedField(statex, entity, 'fillType'),
-    border: clonedField(statex, entity, 'border'),
+    fills: clonedField(state, entity, 'fills'),
+    fillType: clonedField(state, entity, 'fillType'),
+    border: clonedField(state, entity, 'border'),
     getCurrentFill(): Paint {
-      const fills = statex.resolveValue(key, 'fills')
-      const type = statex.resolveValue(key, 'fillType')
+      const fills = state.resolveValue(key, 'fills')
+      const type = state.resolveValue(key, 'fillType')
 
       return fills?.find?.(f => f.type === type)
     },
     setFillType(type: keyof typeof builderPaintMode) {
-      statex.mutate(key, {
+      state.mutate(key, {
         fillType: type
       })
     },
     setFill(fill: Paint) {
-      statex.mutate(
+      state.mutate(
         key,
         () => {
-          const resolvedValue = statex.resolveValue(key, 'fills')
-          const fills = Array.isArray(resolvedValue) ? [...statex.resolveValue(key, 'fills')] : []
+          const resolvedValue = state.resolveValue(key, 'fills')
+          const fills = Array.isArray(resolvedValue) ? [...state.resolveValue(key, 'fills')] : []
           const prevIndex = fills.findIndex(f => f.type === fill.type)
 
           if (prevIndex !== -1) {
@@ -71,7 +71,7 @@ export const geometryPropsResolver: Resolver = (statex: Statex, entity) => {
       )
     },
     setBorder(border) {
-      statex.mutate(key, {
+      state.mutate(key, {
         border
       })
     }

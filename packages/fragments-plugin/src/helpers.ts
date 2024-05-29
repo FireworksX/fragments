@@ -17,5 +17,7 @@ export const pipeResolvers =
     }, graph)
   }
 
-export const clonedField = (graphState: GraphState, entity: Entity, key: string, fallback?: unknown) =>
-  graphState.hasOverride(entity, key) ? graphState.override : entity[key] ?? fallback ?? graphState.empty
+export const OVERRIDE = 'override'
+
+export const clonedField = (graphState: GraphState, entity: Entity, key: string, fallback?: unknown = null) =>
+  graphState.hasOverride(entity, key) ? OVERRIDE : entity[key] ?? fallback

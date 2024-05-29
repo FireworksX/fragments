@@ -15,6 +15,10 @@ export const template = {
               _id: '45b080252533'
             }
           ]
+        },
+        {
+          _type: 'Frame',
+          _id: '342325463'
         }
       ]
     }

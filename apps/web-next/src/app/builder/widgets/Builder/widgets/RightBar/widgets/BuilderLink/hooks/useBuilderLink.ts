@@ -32,10 +32,10 @@ export const useBuilderLink = () => {
   const newTabInvoker = layerInvoker('hyperlinkNewTab')
 
   const onClickHeader = () => {
-    if (hrefInvoker.value !== graphState.empty) {
+    if (hrefInvoker.value) {
       hrefInvoker.onChange(undefined)
     } else {
-      hrefInvoker.onChange('')
+      hrefInvoker.onChange('/')
     }
   }
 

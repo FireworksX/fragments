@@ -1,6 +1,5 @@
 import { FrameNode } from '../types/nodes'
-import { keyOfEntity, Statex } from '@adstore/statex'
-import { pipeResolvers } from '../helpers'
+import { pipeResolvers, ResolverNode } from '../helpers'
 import { basePropsResolver } from '../propsResolvers/basePropsResolver'
 import { childrenPropsResolver } from '../propsResolvers/childrenPropsResolver'
 import { geometryPropsResolver } from '../propsResolvers/geometryPropsResolver'
@@ -13,9 +12,8 @@ import { cssPropsResolver } from '../propsResolvers/cssPropsResolver'
 import { effectsPropsResolver } from '../propsResolvers/effectsPropsResolver'
 import { cornerPropsResolver } from '../propsResolvers/cornerPropsResolver'
 import { hyperlinkPropsResolver } from '../propsResolvers/hyperlinkPropsResolver'
-import { GraphState } from '@graph-state/core'
 
-export const frameNode = (graphState: GraphState, initialEntity?: FrameNode): FrameNode => {
+export const frameNode: ResolverNode = (state, initialEntity?: FrameNode): FrameNode => {
   return pipeResolvers(
     basePropsResolver,
     childrenPropsResolver,
@@ -29,5 +27,5 @@ export const frameNode = (graphState: GraphState, initialEntity?: FrameNode): Fr
     cornerPropsResolver,
     hyperlinkPropsResolver,
     clonePropsResolver
-  )(initialEntity, graphState)
+  )(initialEntity, state)
 }

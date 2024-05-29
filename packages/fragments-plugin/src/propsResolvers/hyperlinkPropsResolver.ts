@@ -1,20 +1,19 @@
 import { clonedField, Resolver } from '../helpers'
-import { keyOfEntity } from '@adstore/statex'
 
-export const hyperlinkPropsResolver: Resolver = (graphState, entity) => {
-  const key = keyOfEntity(entity)
+export const hyperlinkPropsResolver: Resolver = (state, entity) => {
+  const key = state.keyOfEntity(entity)
 
   return {
     ...entity,
-    hyperlinkHref: clonedField(graphState, entity, 'hyperlinkHref'),
-    hyperlinkNewTab: clonedField(graphState, entity, 'hyperlinkNewTab'),
+    hyperlinkHref: clonedField(state, entity, 'hyperlinkHref'),
+    hyperlinkNewTab: clonedField(state, entity, 'hyperlinkNewTab', true),
     setHyperlinkHref(href: string) {
-      graphState.mutate(key, {
+      state.mutate(key, {
         hyperlinkHref: href
       })
     },
     setHyperlinkNewTab(flag: boolean) {
-      graphState.mutate(key, {
+      state.mutate(key, {
         hyperlinkNewTab: flag
       })
     }

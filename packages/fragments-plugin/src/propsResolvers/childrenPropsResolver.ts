@@ -16,8 +16,8 @@ export const childrenPropsResolver: Resolver = <TChild extends SceneNode = Scene
       const childEntity = typeof child === 'string' ? graphState.resolve(child) : child
 
       return {
-        ...childEntity,
-        parentKey: setKey(key)
+        ...childEntity
+        // parentKey: setKey(key)
       }
     })
 

@@ -17,11 +17,11 @@ const RightBar: FC<RightBarProps> = ({ className }) => (
   <div className={cn(className, styles.root)}>
     <BuilderLink />
     <BuilderPosition />
-    {/*<BuilderSize />*/}
-    {/*<BuilderLayout />*/}
-    {/*<BuilderEffects />*/}
-    {/*<BuilderStyles />*/}
-    {/*<BuilderCssOverride />*/}
+    <BuilderSize />
+    <BuilderLayout />
+    <BuilderEffects />
+    <BuilderStyles />
+    <BuilderCssOverride />
   </div>
 )
 

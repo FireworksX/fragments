@@ -1,6 +1,8 @@
 import { createState, GraphState } from '@graph-state/core'
 import { CreateComponentContext } from '@/app/widgets/modals/CreateComponentModal/CreateComponentModal'
 import { CreateCustomBreakpointContext } from '@/app/widgets/modals/CreateCustomBreakpoint/CreateCustomBreakpoint'
+import loggerPlugin from '@graph-state/plugin-logger'
+import isBrowser from '@/app/utils/isBrowser'
 
 export type ModalPanelMap = {
   createComponent: CreateComponentContext
@@ -19,6 +21,7 @@ interface ModalStore extends GraphState {
 
 export const modalStore = createState({
   plugins: [
+    loggerPlugin({ onlyBrowser: true }),
     graphState => {
       graphState.open = <TName extends keyof ModalPanelMap>(name: TName, context: ModalPanelMap[TName]) => {
         graphState.mutate({
@@ -36,3 +39,9 @@ export const modalStore = createState({
     }
   ]
 }) as ModalStore
+
+if (isBrowser) {
+  window.modalStore = modalStore
+
+  modalStore.subscribe(modalStore, console.log)
+}
