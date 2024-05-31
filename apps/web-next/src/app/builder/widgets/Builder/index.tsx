@@ -1,5 +1,6 @@
 'use client'
 import styles from './styles.module.css'
+import cn from 'classnames'
 import AsideBar from '@/app/builder/widgets/Builder/components/AsideBar'
 import FloatingBar from '@/app/builder/widgets/Builder/widgets/FloatingBar'
 import LeftBar from '@/app/builder/widgets/Builder/widgets/LeftBar'
@@ -23,6 +24,8 @@ import CreateCustomBreakpoint from '@/app/widgets/modals/CreateCustomBreakpoint/
 import CreateComponentModal from '@/app/widgets/modals/CreateComponentModal/CreateComponentModal'
 import { builderStore } from '@/app/stories/builder.store'
 import LayerHighlight from '@/app/builder/widgets/Builder/widgets/LayerHighlight/LayerHighlight'
+import { useGraph } from '@graph-state/react'
+import { popoutsStore } from '@/app/stories/popouts.store'
 
 if (isBrowser) {
   window.builderStore = builderStore
@@ -30,6 +33,7 @@ if (isBrowser) {
 
 const Builder = () => {
   const { canvas } = useContext(BuilderContext)
+  const [currentPopout] = useGraph(popoutsStore, popoutsStore.getCurrent())
 
   return (
     <>
@@ -60,7 +64,11 @@ const Builder = () => {
             }}
           />
 
-          <div className={styles.popout}>
+          <div
+            className={cn(styles.popout, {
+              [styles.left]: currentPopout?.position === 'left'
+            })}
+          >
             <StackCollector>
               <StackPanelBorder name='border' title='Border' />
               <StackPanelFill name='fill' title='Fill' />

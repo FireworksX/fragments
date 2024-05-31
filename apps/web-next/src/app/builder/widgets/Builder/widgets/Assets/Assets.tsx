@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useContext } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import ColorCell from '../../components/ColorCell/ColorCell'
@@ -6,7 +6,6 @@ import { useBuilderAssets } from './hooks/useBuilderAssets'
 import Touchable from '@/app/components/Touchable'
 import Button from '@/app/components/Button'
 import Cell from '@/app/builder/widgets/Builder/components/Cell/Cell'
-import Icon from '@adstore/web/src/components/Icon/Icon'
 import Panel from '@/app/builder/widgets/Builder/components/Panel/Panel'
 import Collapse from '@/app/components/Collapse/Collapse'
 import Dropdown from '@/app/components/Dropdown/Dropdown'
@@ -14,15 +13,16 @@ import DropdownGroup from '@/app/components/Dropdown/components/DropdownGroup/Dr
 import DropdownOption from '@/app/components/Dropdown/components/DropdownOption/DropdownOption'
 import CssCell from '@/app/builder/widgets/Builder/components/CssCell/CssCell'
 import PanelHeadAside from '@/app/builder/widgets/Builder/components/PanelHeadAside/PanelHeadAside'
+import Plus from '@/app/svg/plus.svg'
+import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
+import ComponentFrame from '@/app/svg/component-frame.svg'
 
 interface BuilderAssetsProps {
   className?: string
 }
 
-const keyOfEntity = () => undefined
-
 const Assets: FC<BuilderAssetsProps> = ({ className }) => {
-  const statex = {} //useStore($statex)
+  const { graphState } = useContext(BuilderContext)
   const {
     editColor,
     createColor,
@@ -45,7 +45,7 @@ const Assets: FC<BuilderAssetsProps> = ({ className }) => {
                   <Cell
                     className={styles.componentCell}
                     key={component._id}
-                    before={<Icon className={styles.cellIcon} name='component-frame' width={10} />}
+                    before={<ComponentFrame className={styles.cellIcon} width={10} />}
                     description={
                       <Button
                         className={styles.colorAction}
@@ -55,7 +55,7 @@ const Assets: FC<BuilderAssetsProps> = ({ className }) => {
                         Insert
                       </Button>
                     }
-                    onClick={() => onClickComponent(keyOfEntity(component))}
+                    onClick={() => onClickComponent(graphState.keyOfEntity(component))}
                   >
                     {component.name}
                   </Cell>
@@ -81,7 +81,7 @@ const Assets: FC<BuilderAssetsProps> = ({ className }) => {
             }
           >
             <Touchable action>
-              <Icon name='plus' width={14} height={14} />
+              <Plus width={14} height={14} />
             </Touchable>
           </Dropdown>
         }
@@ -97,11 +97,15 @@ const Assets: FC<BuilderAssetsProps> = ({ className }) => {
                   <ColorCell
                     color={color?.color}
                     description={
-                      <Button mode='secondary' onClick={() => removeColor(keyOfEntity(color))}>
+                      <Button
+                        className={styles.colorAction}
+                        mode='secondary'
+                        onClick={() => removeColor(graphState.keyOfEntity(color))}
+                      >
                         Delete
                       </Button>
                     }
-                    onClick={() => editColor(keyOfEntity(color), { initial: true, position: 'left' })}
+                    onClick={() => editColor(graphState.keyOfEntity(color), { initial: true, position: 'left' })}
                   >
                     {color?.name}
                   </ColorCell>
@@ -115,11 +119,11 @@ const Assets: FC<BuilderAssetsProps> = ({ className }) => {
                 <div className={styles.colorWrapper} key={value?.name}>
                   <CssCell
                     description={
-                      <Button mode='secondary' onClick={() => removeColor(keyOfEntity(value))}>
+                      <Button mode='secondary' onClick={() => removeColor(graphState.keyOfEntity(value))}>
                         Delete
                       </Button>
                     }
-                    onClick={() => editCssOverride(keyOfEntity(value), { initial: true, position: 'left' })}
+                    onClick={() => editCssOverride(graphState.keyOfEntity(value), { initial: true, position: 'left' })}
                   >
                     {value?.name}
                   </CssCell>

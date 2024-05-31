@@ -5,7 +5,7 @@
     width: 100%;
     position: relative;
     padding: var(--gutter-default);
-    background: var(--background);
+    background: var(--background-secondary);
     border-radius: var(--radius-second);
     overflow: hidden;
     cursor: pointer;

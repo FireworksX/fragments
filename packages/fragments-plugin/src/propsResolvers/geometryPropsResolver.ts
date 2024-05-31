@@ -37,9 +37,8 @@ export const geometryPropsResolver: Resolver = (state, entity) => {
     fillType: clonedField(state, entity, 'fillType'),
     border: clonedField(state, entity, 'border'),
     getCurrentFill(): Paint {
-      const fills = state.resolveValue(key, 'fills')
+      const fills = (state.resolveValue(key, 'fills') ?? []).map(state.resolve)
       const type = state.resolveValue(key, 'fillType')
-
       return fills?.find?.(f => f.type === type)
     },
     setFillType(type: keyof typeof builderPaintMode) {
@@ -52,7 +51,7 @@ export const geometryPropsResolver: Resolver = (state, entity) => {
         key,
         () => {
           const resolvedValue = state.resolveValue(key, 'fills')
-          const fills = Array.isArray(resolvedValue) ? [...state.resolveValue(key, 'fills')] : []
+          const fills = (Array.isArray(resolvedValue) ? [...state.resolveValue(key, 'fills')] : []).map(state.resolve)
           const prevIndex = fills.findIndex(f => f.type === fill.type)
 
           if (prevIndex !== -1) {

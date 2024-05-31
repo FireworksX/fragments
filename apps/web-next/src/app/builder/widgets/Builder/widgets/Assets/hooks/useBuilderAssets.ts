@@ -3,6 +3,7 @@ import { useBuilderAssetsCss } from './useBuilderAssetsCss'
 import { useBuilderAssetsComponents } from './useBuilderAssetsComponents'
 import { useStore } from '@nanostores/react'
 import { useBuilderSelection } from '@/app/builder/widgets/Builder/hooks/useBuilderSelection'
+import { popoutsStore } from '@/app/stories/popouts.store'
 
 export const useBuilderAssets = () => {
   const statex = {} //useStore($statex)
@@ -20,7 +21,7 @@ export const useBuilderAssets = () => {
   return {
     editColor,
     createColor: () => {
-      // createColor({ onSubmit: $closePopout, initial: true })
+      createColor({ onSubmit: popoutsStore.close, initial: true })
     },
     colorVariables,
     removeColor,

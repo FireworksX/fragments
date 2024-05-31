@@ -3,6 +3,7 @@ import { FC, PropsWithChildren } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import Icon from '@adstore/web/src/components/Icon/Icon'
+import CaretRight from '@/app/svg/caret-right.svg'
 
 interface CollapseBaseHeaderProps extends PropsWithChildren {
   isOpen?: boolean
@@ -12,8 +13,8 @@ interface CollapseBaseHeaderProps extends PropsWithChildren {
 
 const CollapseBaseHeader: FC<CollapseBaseHeaderProps> = ({ className, children, isOpen, onClick }) => {
   return (
-    <div className={cn(styles.root, className)} onClick={() => onClick && onClick(!isOpen)}>
-      <Icon className={styles.caret} name='caret-right' width={9} height={9} />
+    <div className={cn(styles.root, className, { [styles.open]: isOpen })} onClick={() => onClick && onClick(!isOpen)}>
+      <CaretRight className={styles.caret} width={9} height={9} />
       <div className={styles.text}>{children}</div>
     </div>
   )

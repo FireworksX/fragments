@@ -1,8 +1,6 @@
 import { FC, useEffect } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { ImageFill } from '../../data/promos/creators/createFill'
-import { ImagePaint } from '../../types/props'
 import Panel from '@/app/builder/widgets/Builder/components/Panel/Panel'
 import ImageSelector from '@/app/components/ImageSelector/ImageSelector'
 import ControlRow from '@/app/builder/widgets/Builder/components/ControlRow/ControlRow'
@@ -10,6 +8,7 @@ import ControlRowWide from '@/app/builder/widgets/Builder/components/ControlRow/
 import Select from '@/app/components/Select/Select'
 import Button from '@/app/components/Button'
 import { useUploadFile } from '@/app/hooks/useUploadFile'
+import { builderImagePaintScaleModes } from '@fragments/fragments-plugin'
 
 export type ImagePickerValue = ImagePaint
 
@@ -33,12 +32,12 @@ const ImagePicker: FC<ImagePickerProps> = ({ className, value, onChange }) => {
 
   return (
     <div className={cn(styles.root, className)}>
-      <ImageSelector value={value.url} progress={progress} isUploading={fetching} onChange={onUpload} />
+      <ImageSelector value={value?.url} progress={progress} isUploading={fetching} onChange={onUpload} />
       <Panel>
         <ControlRow title='Sizing'>
           <ControlRowWide>
             <Select
-              value={value.scaleMode}
+              value={value?.scaleMode}
               onChange={(scaleMode: ImageFill['size']) =>
                 onChange({
                   ...value,
@@ -46,11 +45,11 @@ const ImagePicker: FC<ImagePickerProps> = ({ className, value, onChange }) => {
                 })
               }
             >
-              {/*{Object.keys(builderImagePaintScaleModes).map(mode => (*/}
-              {/*  <option key={mode} value={mode}>*/}
-              {/*    {mode}*/}
-              {/*  </option>*/}
-              {/*))}*/}
+              {Object.keys(builderImagePaintScaleModes).map(mode => (
+                <option key={mode} value={mode}>
+                  {mode}
+                </option>
+              ))}
             </Select>
           </ControlRowWide>
         </ControlRow>

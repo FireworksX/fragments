@@ -8,7 +8,7 @@ import { viewportNode } from './nodes/viewportNode'
 import { screenNode } from './nodes/screenNode'
 import { empty, EntityKey, mixed, override } from './types/props'
 import { frameNode } from './nodes/frameNode'
-import { getKey } from './helpers'
+import { getKey, OVERRIDE } from './helpers'
 import { textNode } from './nodes/textNode'
 import { createComponent as createComponentNode, CreateComponentOptions } from 'src/creators/createComponent'
 import { createScreen as createScreenNode, CreateScreenOptions } from 'src/creators/createScreen'
@@ -217,11 +217,11 @@ export const fragmentsPlugin: Plugin = graphState => {
     const graph = graphState.resolve(link)
 
     if (graph && field in graph && graph[field] !== undefined) {
-      // if (entity[field] !== empty && entity[field] !== override) {
-      return graph[field]
-      // } else if (entity.overrideFrom) {
-      //   return graphState.resolveValue(entity.overrideFrom, field)
-      // }
+      if (!graphState.isEmpty(graph[field]) && graph[field] !== OVERRIDE) {
+        return graph[field]
+      } else if (graph.overrideFrom) {
+        return graphState.resolveValue(graph.overrideFrom, field)
+      }
     }
 
     return undefined

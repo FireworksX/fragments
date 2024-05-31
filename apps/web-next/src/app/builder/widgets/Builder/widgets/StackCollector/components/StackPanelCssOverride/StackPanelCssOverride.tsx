@@ -7,6 +7,8 @@ import Panel from '@/app/builder/widgets/Builder/components/Panel/Panel'
 import Textarea from '@/app/components/Textarea/Textarea'
 import InputText from '@/app/components/InputText/InputText'
 import Button from '@/app/components/Button'
+import { useGraph } from '@graph-state/react'
+import { POPOUT_TYPE, popoutsStore } from '@/app/stories/popouts.store'
 
 export type StackPanelCssOverrideNew = { name: string; cssText: string }
 
@@ -23,7 +25,8 @@ interface StackPanelCssOverrideProps extends StackPanel {
 }
 
 const StackPanelCssOverride: FC<StackPanelCssOverrideProps> = ({ className }) => {
-  const selfContext = {} //useStore($getContextPopout('cssOverride'))
+  const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:cssOverride`)
+  const selfContext = popout?.context
   const [localCss, setLocalCss] = useState(selfContext?.value || '')
   const [localName, setLocalName] = useState(selfContext?.name || '')
 

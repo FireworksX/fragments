@@ -3,6 +3,7 @@ import { useLayerInvokerNew } from '@/app/builder/widgets/Builder/hooks/useLayer
 import { useContext } from 'react'
 import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
 import { LinkKey } from '@graph-state/core'
+import { popoutsStore } from '@/app/stories/popouts.store'
 
 export const useBuilderCssOverride = () => {
   const { graphState } = useContext(BuilderContext)
@@ -19,9 +20,10 @@ export const useBuilderCssOverride = () => {
   })
   const cssOverride = layerInvoker('cssText')
   const cssOverrideVariables = layerInvoker('cssLinks')
+  const isEmpty = graphState.isEmpty(cssOverride.value)
 
   const onClickHeader = () => {
-    if (cssOverride.value !== graphState.empty) {
+    if (!isEmpty) {
       cssOverride.onChange(undefined)
       cssOverrideVariables.value?.forEach(removeVariable)
     } else {
@@ -30,7 +32,7 @@ export const useBuilderCssOverride = () => {
   }
 
   const selectCss = () => {
-    // $openPopout('cssOverrideList', {})
+    popoutsStore.open('cssOverrideList', {})
   }
 
   const removeVariable = (variableKey: LinkKey) => {
@@ -38,6 +40,7 @@ export const useBuilderCssOverride = () => {
   }
 
   return {
+    isEmpty,
     css: cssOverride,
     variables: cssOverrideVariables,
     onClick: onClickHeader,

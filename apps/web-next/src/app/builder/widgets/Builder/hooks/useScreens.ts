@@ -18,7 +18,7 @@ export const useScreens = () => {
       isPrimary: false
     })
 
-    graphState.resolve(graphState.documentNode).appendChild(nextScreenKey)
+    graphState.resolve(graphState.resolve().document).appendChild(nextScreenKey)
   }
 
   return {

@@ -5,6 +5,7 @@ export const template = {
     {
       _type: 'Screen',
       _id: 'fffce172bf956',
+      isPrimary: true,
       children: [
         {
           _type: 'Frame',

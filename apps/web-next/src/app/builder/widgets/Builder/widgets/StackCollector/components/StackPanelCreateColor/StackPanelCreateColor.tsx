@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useContext, useState } from 'react'
 import { Color } from 'react-color'
 import cn from 'classnames'
 import styles from './styles.module.css'
@@ -10,7 +10,7 @@ import Button from '@/app/components/Button'
 import { useGraph } from '@graph-state/react'
 import { POPOUT_TYPE, popoutsStore } from '@/app/stories/popouts.store'
 import { StackPanel } from '@/app/builder/widgets/Builder/widgets/StackCollector/hooks/useStackCollector'
-import { createColor } from '@fragments/fragments-plugin'
+import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
 
 export type StackPanelColorEntity = { name: string; color: Color }
 
@@ -23,10 +23,13 @@ interface StackPanelCreateColorProps extends StackPanel {
   className?: string
 }
 
+const DEFAULT_COLOR = '#56b1c4'
+
 const StackPanelCreateColor: FC<StackPanelCreateColorProps> = ({ className }) => {
+  const { graphState } = useContext(BuilderContext)
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:createColor`)
   const context = popout?.context
-  const [color, setColor] = useState<Color>(context?.initialColor || createColor())
+  const [color, setColor] = useState<Color>(context?.initialColor || DEFAULT_COLOR)
   const [name, setName] = useState('')
 
   return (

@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react'
+import { FC, useContext, useEffect } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import StackColors from '../StackColors/StackColors'
@@ -9,6 +9,9 @@ import { useDisplayColor } from '@/app/builder/widgets/Builder/hooks/useDisplayC
 import Panel from '@/app/builder/widgets/Builder/components/Panel/Panel'
 import ImagePicker from '@/app/builder/widgets/Builder/components/ImagePicker/ImagePicker'
 import { useLayerInvokerNew } from '@/app/builder/widgets/Builder/hooks/useLayerInvokerNew'
+import { builderPaintMode, getDefaultImageFill, getDefaultSolidFill } from '@fragments/fragments-plugin'
+import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
+import { GraphValue } from '@graph-state/react'
 
 export interface StackPanelFillOptions {}
 
@@ -17,18 +20,18 @@ interface StackPanelFillProps {
 }
 
 const tabs: TabsSelectorItem[] = [
-  // {
-  //   name: builderPaintMode.Solid,
-  //   label: 'Solid'
-  // },
-  // {
-  //   name: builderPaintMode.Image,
-  //   label: 'Image'
-  // }
+  {
+    name: builderPaintMode.Solid,
+    label: 'Solid'
+  },
+  {
+    name: builderPaintMode.Image,
+    label: 'Image'
+  }
 ]
 
 const StackPanelFill: FC<StackPanelFillProps> = ({ className }) => {
-  const statex = {} //useStore($statex)
+  const { graphState } = useContext(BuilderContext)
   const { selection } = useBuilderSelection()
   const { getColor } = useDisplayColor()
   const layerInvoker = useLayerInvokerNew(
@@ -39,14 +42,14 @@ const StackPanelFill: FC<StackPanelFillProps> = ({ className }) => {
           node.setFill(value)
           break
         case 'fillType':
-          const currentFills = statex.resolveValue(node, 'fills')
-          if (currentFills?.findIndex?.(f => f.type === value) === -1) {
-            // if (value === builderPaintMode.Solid) {
-            //   layerInvoker('fills').onChange(getDefaultSolidFill())
-            // }
-            // if (value === builderPaintMode.Image) {
-            //   layerInvoker('fills').onChange(getDefaultImageFill())
-            // }
+          const currentFills = graphState.resolveValue(node, 'fills')
+          if (!currentFills || currentFills?.findIndex?.(f => f.type === value) === -1) {
+            if (value === builderPaintMode.Solid) {
+              layerInvoker('fills').onChange(getDefaultSolidFill())
+            }
+            if (value === builderPaintMode.Image) {
+              layerInvoker('fills').onChange(getDefaultImageFill())
+            }
           }
 
           node.setFillType(value)
@@ -63,7 +66,6 @@ const StackPanelFill: FC<StackPanelFillProps> = ({ className }) => {
   const fills = layerInvoker('fills')
   const fillType = layerInvoker('fillType')
   const currentFill = layerInvoker('currentFill')
-
   const type = fillType.value
 
   const changeColor = (color: Color) => {
@@ -74,10 +76,10 @@ const StackPanelFill: FC<StackPanelFillProps> = ({ className }) => {
   }
 
   useEffect(() => {
-    if (fillType.value === statex.empty) {
+    if (graphState.isEmpty(fillType.value)) {
       fillType.onChange(builderPaintMode.Solid)
     }
-  }, [fillType, statex.empty])
+  }, [fillType, graphState])
 
   return (
     <div className={cn(styles.root, className)}>
@@ -85,20 +87,20 @@ const StackPanelFill: FC<StackPanelFillProps> = ({ className }) => {
       {type === builderPaintMode.Solid && (
         <>
           <Panel>
-            {/*<StatexValue statex={statex} field={currentFill.value}>*/}
-            {/*  {value => {*/}
-            {/*    return (*/}
-            {/*      <ColorPicker*/}
-            {/*        color={getColor(value?.color)}*/}
-            {/*        onChange={color => {*/}
-            {/*          if (color) {*/}
-            {/*            changeColor(color.rgb)*/}
-            {/*          }*/}
-            {/*        }}*/}
-            {/*      />*/}
-            {/*    )*/}
-            {/*  }}*/}
-            {/*</StatexValue>*/}
+            <GraphValue graphState={graphState} field={currentFill.value}>
+              {value => {
+                return (
+                  <ColorPicker
+                    color={getColor(value?.color)}
+                    onChange={color => {
+                      if (color) {
+                        changeColor(color.rgb)
+                      }
+                    }}
+                  />
+                )
+              }}
+            </GraphValue>
           </Panel>
           <StackColors
             initialColor={getColor(currentFill.value?.color)}

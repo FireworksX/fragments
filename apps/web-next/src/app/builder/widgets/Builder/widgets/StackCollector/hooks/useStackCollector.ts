@@ -25,8 +25,6 @@ export const useStackCollector = ({ panels, onPrev, onClose }: Options) => {
   const isBack = !!nextPopout //activePanel === prevPopout?.name || !prevPopout
   const isInitial = !prevPopout && !nextPopout
 
-  console.log(prevPopout, nextPopout)
-
   const panelTransition = useTransition(activePanel, {
     ref: transitionRef,
     from: {

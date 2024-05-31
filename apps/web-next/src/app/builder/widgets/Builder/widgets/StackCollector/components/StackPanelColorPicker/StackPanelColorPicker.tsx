@@ -52,7 +52,10 @@ const StackPanelColorPicker: FC<StackPanelColorPickerProps> = ({ className }) =>
         <StackColors
           initialColor={getColor(color)}
           activeColorId={color?._id}
-          onSelect={value => updateColor(value)}
+          onSelect={value => {
+            updateColor(value)
+            popoutsStore.goPrev()
+          }}
           onCreate={popoutsStore.goPrev}
         />
       )}

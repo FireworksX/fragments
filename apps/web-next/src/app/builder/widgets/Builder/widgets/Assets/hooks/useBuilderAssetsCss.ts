@@ -1,4 +1,8 @@
-import { builderNodes } from 'src/data/promos/creators'
+import { useContext } from 'react'
+import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
+import { useGraphFields, useGraphStack } from '@graph-state/react'
+import { builderNodes } from '@fragments/fragments-plugin'
+import { popoutsStore } from '@/app/stories/popouts.store'
 
 type ExtendOptions = Partial<OpenPopoutOptions<'cssOverride'>>
 
@@ -7,13 +11,13 @@ export interface BuilderAssetsCssOverrideOptions extends ExtendOptions {
 }
 
 export const useBuilderAssetsCss = () => {
-  const statex = {} //useStore($statex)
-  const fields = [] //useFields(statex, builderNodes.CssLink)
-  const values = [] //useStatexStack(statex, fields)
+  const { graphState } = useContext(BuilderContext)
+  const fields = useGraphFields(graphState, builderNodes.CssLink)
+  const values = useGraphStack(graphState, fields)
 
   const editCssOverride = (variableKey: EntityKey, options?: ExtendOptions) => {
-    if (variableKey && statex) {
-      const variableValue = statex.resolve(variableKey)
+    if (variableKey && graphState) {
+      const variableValue = graphState.resolve(variableKey)
 
       // $openPopout('cssOverride', {
       //   position: 'left',
@@ -32,21 +36,21 @@ export const useBuilderAssetsCss = () => {
   }
 
   const createCssOverride = ({ onSubmit: optionsOnSubmit, ...popoutOptions }: BuilderAssetsCssOverrideOptions) => {
-    // $openPopout('cssOverride', {
-    //   context: {
-    //     name: '',
-    //     onSubmit: override => {
-    //       const cssLink = statex.createCssLink(override)
-    //       optionsOnSubmit && optionsOnSubmit(cssLink)
-    //     }
-    //   },
-    //   position: 'left',
-    //   ...popoutOptions
-    // })
+    popoutsStore.open('cssOverride', {
+      context: {
+        name: '',
+        onSubmit: override => {
+          const cssLink = graphState.createCssLink(override)
+          optionsOnSubmit && optionsOnSubmit(cssLink)
+        }
+      },
+      position: 'left',
+      ...popoutOptions
+    })
   }
 
   const removeCssOverride = (key: EntityKey) => {
-    statex?.invalidate(key)
+    graphState?.invalidate(key)
   }
 
   return {

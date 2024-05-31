@@ -48,7 +48,6 @@ export const useBuilderAssetsColors = () => {
         initialColor,
         onSubmit: newColor => {
           const styleKey = graphState.createSolidPaintStyle(newColor)
-          console.log(styleKey)
           optionsOnSubmit && optionsOnSubmit(styleKey)
         },
         ...popoutOptions

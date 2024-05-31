@@ -1,4 +1,4 @@
-import { FC, useMemo, useState } from 'react'
+import { FC, useContext, useMemo, useState } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 // import { useBuilderAssetsCss } from 'src/routes/BuilderRoute/widgets/BuilderAssets/hooks/useBuilderAssetsCss'
@@ -10,6 +10,11 @@ import Button from '@/app/components/Button'
 import { useBuilderSelection } from '@/app/builder/widgets/Builder/hooks/useBuilderSelection'
 import { useLayerInvokerNew } from '@/app/builder/widgets/Builder/hooks/useLayerInvokerNew'
 import InputText from '@/app/components/InputText/InputText'
+import { useGraph } from '@graph-state/react'
+import { POPOUT_TYPE, popoutsStore } from '@/app/stories/popouts.store'
+import { useBuilderAssetsCss } from '@/app/builder/widgets/Builder/widgets/Assets/hooks/useBuilderAssetsCss'
+import Plus from '@/app/svg/plus.svg'
+import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
 
 export interface StackPanelCssOverrideListOptions {
   selectKeys?: string[]
@@ -21,7 +26,7 @@ interface StackPanelCssOverrideListProps extends StackPanel {
 }
 
 const StackPanelCssOverrideList: FC<StackPanelCssOverrideListProps> = ({ className }) => {
-  const statex = {} //useStore($statex)
+  const { graphState } = useContext(BuilderContext)
   const { selection } = useBuilderSelection()
   const layerInvoker = useLayerInvokerNew(selection, ({ key, node, value }) => {
     switch (key) {
@@ -32,7 +37,7 @@ const StackPanelCssOverrideList: FC<StackPanelCssOverrideListProps> = ({ classNa
   })
   const cssLinksInvoker = layerInvoker('cssLinks')
   const [search, setSearch] = useState('')
-  const { cssVariables, editCssOverride, createCssOverride } = {} //useBuilderAssetsCss()
+  const { cssVariables, editCssOverride, createCssOverride } = useBuilderAssetsCss()
   const selectedList = cssLinksInvoker.value || []
   const filtered = useMemo(() => cssVariables.filter(({ name }) => name?.search(search) !== -1), [cssVariables, search])
 
@@ -53,26 +58,27 @@ const StackPanelCssOverrideList: FC<StackPanelCssOverrideListProps> = ({ classNa
       <InputSelect
         className={styles.newCell}
         color='var(--border)'
-        icon={<Styled.IconWrapper name='plus' width={15} height={15} />}
+        icon={<Plus name='plus' width={15} height={15} />}
         placeholder='New css override'
-        // onClick={() => createCssOverride({ onSubmit: $goPrevPopout })}
+        onClick={() => createCssOverride({ onSubmit: popoutsStore.goPrev })}
       />
 
       {filtered.map(variable => (
         <CssCell
-          className={styles.cell}
+          className={cn(styles.cell, {
+            [styles.active]: selectedList.includes(graphState.keyOfEntity(variable))
+          })}
           key={variable?.name}
           description={
             <Button
               className={styles.cellButton}
               mode='secondary'
-              onClick={() => editCssOverride(keyOfEntity(variable))}
+              onClick={() => editCssOverride(graphState.keyOfEntity(variable))}
             >
               Edit
             </Button>
           }
-          isActive={selectedList.includes(keyOfEntity(variable))}
-          onClick={() => clickItem(keyOfEntity(variable))}
+          onClick={() => clickItem(graphState.keyOfEntity(variable))}
         >
           {variable?.name}
         </CssCell>

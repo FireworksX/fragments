@@ -56,9 +56,9 @@ export const useBuilderStyles = () => {
   }
 
   const openFill = () => {
-    // $openPopout('fill', {
-    //   initial: true
-    // })
+    popoutsStore.open('fill', {
+      initial: true
+    })
   }
 
   const clickZIndex = () => {

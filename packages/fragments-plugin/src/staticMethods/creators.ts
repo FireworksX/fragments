@@ -39,7 +39,7 @@ export const creators: Plugin = state => {
   }
 
   const createScreen = (createScreenOptions: CreateScreenOptions) => {
-    const entity = createScreenNode(state, createScreenOptions)
+    const entity = createScreenNode(createScreenOptions)
     return state.mutate(state.root, {
       children: [entity]
     })
@@ -56,7 +56,7 @@ export const creators: Plugin = state => {
 
   const createCssLink = (options: CreateSolidPaintStyleOptions) => {
     if (options) {
-      const entity = createCssLinkNode(state, options)
+      const entity = createCssLinkNode(options)
       return state.mutate(entity)
     }
 

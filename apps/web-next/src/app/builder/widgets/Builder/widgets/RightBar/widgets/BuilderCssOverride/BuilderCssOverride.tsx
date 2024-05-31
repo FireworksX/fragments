@@ -21,15 +21,11 @@ interface BuilderCssOverrideProps {
 
 const BuilderCssOverride: FC<BuilderCssOverrideProps> = ({ className }) => {
   const { graphState } = useContext(BuilderContext)
-  const { css, variables, selectCss, onClick, removeVariable } = useBuilderCssOverride()
+  const { isEmpty, css, variables, selectCss, onClick, removeVariable } = useBuilderCssOverride()
 
   return (
-    <Panel
-      className={className}
-      title='CSS Override'
-      aside={<PanelHeadAside isOpen={css.value !== graphState.empty} onClick={onClick} />}
-    >
-      {css.value !== graphState.empty && (
+    <Panel className={className} title='CSS Override' aside={<PanelHeadAside isOpen={!isEmpty} onClick={onClick} />}>
+      {!isEmpty && (
         <>
           <div className={styles.wrapper}>
             <ControlRow title='Variables'>

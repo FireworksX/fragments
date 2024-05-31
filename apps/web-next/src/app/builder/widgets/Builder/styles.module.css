@@ -17,8 +17,9 @@
     right: 3%;
     z-index: var(--z-index-builder-popout);
 
-    &[position="left"] {
-        left: 3%
+    &.left {
+        left: 3%;
+        right: initial;
     }
 }
 

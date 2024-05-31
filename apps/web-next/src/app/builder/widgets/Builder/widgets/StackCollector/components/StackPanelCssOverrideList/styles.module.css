@@ -20,10 +20,10 @@
 }
 
 .cell {
-
+  margin-bottom: 5px;
+  transition: var(--animation-transition-default);
   &.active {
     background-color: var(--secondary-bg);
-
   }
 
   &:hover {
