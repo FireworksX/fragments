@@ -35,5 +35,7 @@
     "escape-html": "^1.0.3",
     "preact": "^10.13.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "vite": "^5.2.12"
+  }
 }
