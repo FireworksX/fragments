@@ -1,5 +1,4 @@
 import { clonedField, Resolver } from '../helpers'
-import { Effect } from '@adstore/web/src/types/props'
 import { builderEffectType } from 'src/defenitions'
 
 export const effectsPropsResolver: Resolver = (state, entity) => {

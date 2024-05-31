@@ -1,10 +1,8 @@
 import { getKey, Resolver } from '../helpers'
-import { BaseProps } from '@adstore/web/src/types/props'
-import { keyOfEntity } from '@adstore/statex'
 import { EntityKey } from '../types/props'
 
 export const basePropsResolver: Resolver = (statex, entity): BaseProps => {
-  const key = keyOfEntity(entity) ?? ''
+  const key = statex.keyOfEntity(entity) ?? ''
   const getParents = (key: EntityKey): ReadonlyArray<BaseProps[]> | null => statex.resolveParents(key)
 
   /*

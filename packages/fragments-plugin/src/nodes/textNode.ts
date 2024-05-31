@@ -1,5 +1,4 @@
 import { TextNode } from '../types/nodes'
-import { keyOfEntity, Statex } from '@adstore/statex'
 import { pipeResolvers } from '../helpers'
 import { basePropsResolver } from '../propsResolvers/basePropsResolver'
 import { clonePropsResolver } from '../propsResolvers/clonePropsResolver'
@@ -9,8 +8,8 @@ import { hyperlinkPropsResolver } from '../propsResolvers/hyperlinkPropsResolver
 import { textContentPropsResolver } from '../propsResolvers/textContentPropsResolver'
 import { layoutPropsResolver } from '../propsResolvers/layoutPropsResolver'
 
-export const textNode = (statex: Statex, initialEntity?: TextNode): TextNode => {
-  const key = keyOfEntity(initialEntity) ?? ''
+export const textNode = (state: any, initialEntity?: TextNode): TextNode => {
+  // const key = state.keyOfEntity(initialEntity) ?? ''
 
   const node = initialEntity
 
@@ -22,5 +21,5 @@ export const textNode = (statex: Statex, initialEntity?: TextNode): TextNode => 
     cssPropsResolver,
     hyperlinkPropsResolver,
     layoutPropsResolver
-  )(node, statex)
+  )(node, state)
 }

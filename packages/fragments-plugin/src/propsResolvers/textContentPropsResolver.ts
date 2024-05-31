@@ -1,8 +1,7 @@
 import { clonedField, Resolver } from '../helpers'
-import { keyOfEntity } from '@adstore/statex'
 
 export const textContentPropsResolver: Resolver = (statex, entity) => {
-  const key = keyOfEntity(entity)
+  const key = statex.keyOfEntity(entity)
 
   return {
     ...entity,

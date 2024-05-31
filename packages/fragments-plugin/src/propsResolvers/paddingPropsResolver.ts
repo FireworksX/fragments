@@ -1,6 +1,5 @@
 import { clonedField, OVERRIDE, Resolver } from '../helpers'
 import { isValue } from '@fragments/utils'
-import { capitalize } from '@adstore/web/src/utils/helpers'
 import { PaddingProps } from '../types/props'
 
 const isValidValue = (value: any) => typeof value === 'number'
@@ -25,8 +24,8 @@ export const paddingPropsResolver: Resolver = (state, entity: any): PaddingProps
       if (isMixed) {
         if (typeof args[0] === 'string' && isValidValue(args[1])) {
           state.mutate(key, {
-            padding: state.mixed,
-            [`padding${capitalize(args[0])}`]: isValidValue(args[1]) ? args[1] ?? 0 : 0
+            padding: state.mixed
+            // [`padding${capitalize(args[0])}`]: isValidValue(args[1]) ? args[1] ?? 0 : 0
           })
         }
       } else {

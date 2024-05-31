@@ -1,9 +1,7 @@
 import { builderComponentControlType } from 'src/defenitions'
-import { Entity } from '@adstore/statex/src'
-
 export type ComponentProperty = StringType | BooleanType | NumberType | ArrayType
 
-interface TypeWithValue<T> extends Entity {
+interface TypeWithValue<T> {
   name: string
   /**
    * Значение на которое можно вернуться, если удалить переменную

@@ -1,4 +1,3 @@
-import { keyOfEntity, Statex } from '@adstore/statex'
 import { ViewportNode } from '../types/nodes'
 import { builderNodes } from '../defenitions'
 import { generateId } from '../helpers'
@@ -8,7 +7,7 @@ import { GraphState } from '@graph-state/core'
 export const viewportNode = (graphState: GraphState): ViewportNode => {
   const _type = builderNodes.Viewport
   const _id = generateId()
-  const key = keyOfEntity({ _type, _id }) ?? ''
+  const key = graphState.keyOfEntity({ _type, _id }) ?? ''
 
   const viewportData: ViewportNode = {
     center: { x: 0, y: 0 },

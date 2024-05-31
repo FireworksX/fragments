@@ -1,6 +1,3 @@
-import { EntityKey } from '@adstore/web/src/types/props'
-import { createComponentVariant } from '@adstore/web/src/statexModules/creators/createComponentVariant'
-import { ComponentProperty } from '@adstore/web/src/types/componentProperties'
 import { ComponentInstanceNode, ComponentNode } from '../types/nodes'
 import { pipeResolvers, ResolverNode, setKey } from '../helpers'
 import { childrenPropsResolver } from '../propsResolvers/childrenPropsResolver'
@@ -34,10 +31,10 @@ export const componentNode: ResolverNode = (graphState, initialEntity: Component
           name: nextName,
           isPrimary: false
         }) ??
-        createComponentVariant(graphState, {
-          isPrimary: !defaultVariant,
-          name: nextName
-        })
+        // createComponentVariant(graphState, {
+        //   isPrimary: !defaultVariant,
+        //   name: nextName
+        // })
 
       if (defaultVariant) {
         graphState.resolve(nextVariant).rename(nextName)

@@ -1,9 +1,8 @@
 import { builderConstrain, builderSizing } from 'src/defenitions'
-import { keyOfEntity } from '@adstore/statex'
 import { clonedField, Resolver } from '../helpers'
 
 export const layoutPropsResolver: Resolver = (state, entity) => {
-  const key = keyOfEntity(entity)
+  const key = state.keyOfEntity(entity)
 
   return {
     ...entity,

@@ -1,9 +1,8 @@
 import { clonedField, Resolver } from '../helpers'
-import { keyOfEntity } from '@adstore/statex'
 import { builderTextDecorations, builderTextTransform } from '../defenitions'
 
 export const textRangePropsResolver: Resolver = (statex, entity) => {
-  const key = keyOfEntity(entity)
+  const key = statex.keyOfEntity(entity)
 
   return {
     ...entity,

@@ -1,15 +1,10 @@
 import { clonedField, Resolver } from '../helpers'
-import {
-  builderLayerAlign,
-  builderLayerDirection,
-  builderLayerDistribute,
-  builderLayerMode
-} from '@adstore/web/src/data/promos/creators'
-import { keyOfEntity } from '@adstore/statex'
+
 import { LayerProps } from '../types/props'
+import { builderLayerAlign, builderLayerDirection, builderLayerDistribute, builderLayerMode } from 'src'
 
 export const layerPropsResolver: Resolver = (statex, entity): LayerProps => {
-  const key = keyOfEntity(entity)
+  const key = statex.keyOfEntity(entity)
 
   return {
     ...entity,
@@ -22,42 +17,42 @@ export const layerPropsResolver: Resolver = (statex, entity): LayerProps => {
 
     setLayerMode(mode: typeof builderLayerMode) {
       if (Object.keys(builderLayerMode).includes(mode)) {
-        statex.mutate(keyOfEntity(this), {
+        statex.mutate(statex.keyOfEntity(this), {
           layerMode: mode
         })
       }
     },
     setLayerDirection(direction: typeof builderLayerDirection) {
       if (Object.keys(builderLayerDirection).includes(direction)) {
-        statex.mutate(keyOfEntity(this), {
+        statex.mutate(statex.keyOfEntity(this), {
           layerDirection: direction
         })
       }
     },
     setLayerDistribute(distribute: typeof builderLayerDistribute) {
       if (Object.keys(builderLayerDistribute).includes(distribute)) {
-        statex.mutate(keyOfEntity(this), {
+        statex.mutate(statex.keyOfEntity(this), {
           layerDistribute: distribute
         })
       }
     },
     setLayerAlign(align: typeof builderLayerAlign) {
       if (Object.keys(builderLayerAlign).includes(align)) {
-        statex.mutate(keyOfEntity(this), {
+        statex.mutate(statex.keyOfEntity(this), {
           layerAlign: align
         })
       }
     },
     setLayerWrap(isWrap: boolean) {
       if (typeof isWrap === 'boolean') {
-        statex.mutate(keyOfEntity(this), {
+        statex.mutate(statex.keyOfEntity(this), {
           layerWrap: isWrap
         })
       }
     },
     setLayerGap(gap: number) {
       if (typeof gap === 'number') {
-        statex.mutate(keyOfEntity(this), {
+        statex.mutate(statex.keyOfEntity(this), {
           layerGap: gap
         })
       }

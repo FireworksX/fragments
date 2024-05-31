@@ -1,4 +1,3 @@
-import { EntityKey } from '@adstore/web/src/types/props'
 import { ComponentInstanceNode } from '../types/nodes'
 import { pipeResolvers, ResolverNode } from '../helpers'
 import { clonePropsResolver } from '../propsResolvers/clonePropsResolver'

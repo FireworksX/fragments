@@ -1,5 +1,4 @@
 import { clonedField, Resolver } from '../helpers'
-import { keyOfEntity } from '@adstore/statex'
 
 export const scenePropsResolver: Resolver = (state, entity) => {
   const key = state.keyOfEntity(entity)

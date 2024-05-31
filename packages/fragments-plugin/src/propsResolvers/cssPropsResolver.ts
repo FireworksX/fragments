@@ -1,9 +1,7 @@
 import { clonedField, Resolver } from '../helpers'
-import { keyOfEntity } from '@adstore/statex'
-import { EntityKey } from '@adstore/web/src/types/props'
 
 export const cssPropsResolver: Resolver = (statex, entity) => {
-  const key = keyOfEntity(entity)
+  const key = statex.keyOfEntity(entity)
 
   return {
     ...entity,
