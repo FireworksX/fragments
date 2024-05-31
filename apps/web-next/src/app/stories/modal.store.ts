@@ -20,19 +20,25 @@ interface ModalStore extends GraphState {
 }
 
 export const modalStore = createState({
+  initialState: {
+    name: null,
+    context: null
+  },
   plugins: [
     loggerPlugin({ onlyBrowser: true }),
     graphState => {
       graphState.open = <TName extends keyof ModalPanelMap>(name: TName, context: ModalPanelMap[TName]) => {
         graphState.mutate({
-          _type: MODAL_TYPE,
-          _id: name,
-          ...(context ?? {})
+          name,
+          context
         })
       }
 
       graphState.close = () => {
-        graphState.inspectFields(MODAL_TYPE).forEach(link => graphState.invalidate(link))
+        graphState.mutate({
+          name: null,
+          context: null
+        })
       }
 
       return graphState

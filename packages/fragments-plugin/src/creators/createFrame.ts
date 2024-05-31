@@ -1,8 +1,7 @@
-import { Entity, Statex } from '@adstore/statex'
-import { builderNodes } from '../defenitions'
 import { generateId } from '../helpers'
+import { builderNodes } from 'src'
 
-export const createFrame = (statex: Statex): Entity => ({
+export const createFrame = (): Entity => ({
   _type: builderNodes.Frame,
   _id: generateId()
 })

@@ -2,7 +2,7 @@ import { useGraph } from '@graph-state/react'
 import { builderStore } from '@/app/stories/builder.store'
 
 export const useBuilderSelection = () => {
-  const [{ selection }] = useGraph(builderStore, builderStore.builderLink)
+  const [{ selection }] = useGraph(builderStore)
   const firstLink = selection[0]
   const [selectionGraph] = useGraph(builderStore, firstLink)
 

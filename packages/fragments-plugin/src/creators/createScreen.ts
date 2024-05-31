@@ -1,4 +1,3 @@
-import { Entity, Statex } from '@adstore/statex'
 import { builderNodes } from '../defenitions'
 import { generateId } from '../helpers'
 
@@ -7,7 +6,7 @@ export interface CreateScreenOptions {
   name?: string
 }
 
-export const createScreen = (statex: Statex, { width, name }: CreateScreenOptions): Entity => ({
+export const createScreen = ({ width, name }: CreateScreenOptions): Entity => ({
   _type: builderNodes.Screen,
   _id: generateId(),
   width,

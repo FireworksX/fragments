@@ -1,12 +1,12 @@
-import { Entity, Statex } from '@adstore/statex'
-import { builderNodes, generateId } from '../../data/promos/creators'
+import { builderNodes } from 'src'
+import { generateId } from '../helpers'
 
 export interface CreateCssLinkOptions {
   cssText: string
   name: string
 }
 
-export const createCssLink = (statex: Statex, { cssText, name }: CreateCssLinkOptions): Entity => ({
+export const createCssLink = ({ cssText, name }: CreateCssLinkOptions): Entity => ({
   _type: builderNodes.CssLink,
   _id: generateId(),
   cssText,

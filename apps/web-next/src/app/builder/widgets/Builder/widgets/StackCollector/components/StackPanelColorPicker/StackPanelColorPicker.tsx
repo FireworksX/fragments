@@ -8,6 +8,9 @@ import { useStore } from '@nanostores/react'
 import ColorPicker from '@/app/builder/widgets/Builder/components/ColorPicker/ColorPicker'
 import Panel from '@/app/builder/widgets/Builder/components/Panel/Panel'
 import { useDisplayColor } from '@/app/builder/widgets/Builder/hooks/useDisplayColor'
+import { useGraph } from '@graph-state/react'
+import { POPOUT_TYPE, popoutsStore } from '@/app/stories/popouts.store'
+import { builderStore } from '@/app/stories/builder.store'
 
 export interface StackPanelColorPickerOptions {
   value?: Color
@@ -20,14 +23,15 @@ interface StackPanelColorPickerProps extends StackPanel {
 }
 
 const StackPanelColorPicker: FC<StackPanelColorPickerProps> = ({ className }) => {
-  const selfContext = {} //useStore($getContextPopout('colorPicker'))
+  const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:colorPicker`)
+  const context = popout.context ?? {}
   const { getColor } = useDisplayColor()
-  const color = selfContext?.value
+  const [color] = useGraph(builderStore, context?.value)
 
   const updateColor = (color?: Color) => {
-    if (color && selfContext?.onChange) {
+    if (color && context?.onChange) {
       // $updateContextPopout('colorPicker', { value: color })
-      selfContext.onChange(color)
+      context.onChange(color)
     }
   }
 
@@ -37,19 +41,19 @@ const StackPanelColorPicker: FC<StackPanelColorPickerProps> = ({ className }) =>
         <ColorPicker
           color={getColor(color)}
           onChange={color => {
-            if (color && selfContext?.onChange) {
+            if (color && context?.onChange) {
               updateColor(color.rgb)
             }
           }}
         />
       </Panel>
 
-      {!selfContext?.withoutStack && (
+      {!context?.withoutStack && (
         <StackColors
           initialColor={getColor(color)}
           activeColorId={color?._id}
           onSelect={value => updateColor(value)}
-          // onCreate={$goPrevPopout}
+          onCreate={popoutsStore.goPrev}
         />
       )}
     </div>

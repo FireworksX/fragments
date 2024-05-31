@@ -1,12 +1,11 @@
-import { Entity, Statex } from '@adstore/statex'
-import { builderNodes } from '../defenitions'
 import { generateId } from '../helpers'
+import { builderNodes } from 'src'
 
 export interface CreateComponentOptions {
   name?: string
 }
 
-export const createComponent = (statex: Statex, options?: CreateComponentOptions): Entity => ({
+export const createComponent = (options?: CreateComponentOptions): Entity => ({
   _type: builderNodes.Component,
   _id: generateId(),
   ...(options ?? {})

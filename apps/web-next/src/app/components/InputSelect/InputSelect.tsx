@@ -38,7 +38,7 @@ const InputSelect: FC<InputSelectProps> = ({
           {icon ? (
             <div className={styles.iconTarget}>{icon}</div>
           ) : (
-            <div className={styles.iconTarget}>
+            <div className={styles.iconPlaceholder}>
               <Checkerboard width={20} height={20} />
             </div>
           )}

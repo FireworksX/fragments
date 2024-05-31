@@ -8,6 +8,7 @@ import ColorCell from '@/app/builder/widgets/Builder/components/ColorCell/ColorC
 import Button from '@/app/components/Button'
 import InputText from '@/app/components/InputText/InputText'
 import { useBuilderAssetsColors } from '@/app/builder/widgets/Builder/widgets/Assets/hooks/useBuilderAssetsColors'
+import Plus from '@/app/svg/plus.svg'
 
 export type StackColorsValue = Color
 
@@ -37,7 +38,7 @@ const StackColors: FC<StackColorsProps> = ({ className, activeColorKey, initialC
         <InputSelect
           className={styles.newCell}
           color='var(--border)'
-          icon={<Icon className={styles.iconWrapper} name='plus' width={15} height={15} />}
+          icon={<Plus className={styles.iconWrapper} width={15} height={15} />}
           placeholder='New color'
           onClick={() =>
             createColor({

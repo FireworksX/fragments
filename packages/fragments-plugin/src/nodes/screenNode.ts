@@ -1,6 +1,5 @@
 import { ScreenNode } from 'src/types/nodes'
 import { builderNodes, builderSizing } from 'src/defenitions'
-import { keyOfEntity, Statex } from '@adstore/statex'
 import { pipeResolvers, ResolverNode } from 'src/helpers'
 import { basePropsResolver } from 'src/propsResolvers/basePropsResolver'
 import { childrenPropsResolver } from 'src/propsResolvers/childrenPropsResolver'
@@ -13,7 +12,7 @@ import { scenePropsResolver } from 'src/propsResolvers/scenePropsResolver'
 import { GraphState } from '@graph-state/core'
 
 export const screenNode: ResolverNode = (state, initialEntity?: ScreenNode): ScreenNode => {
-  const key = keyOfEntity(initialEntity) ?? ''
+  const key = state.keyOfEntity(initialEntity) ?? ''
 
   const initialNode = {
     ...initialEntity,
@@ -29,7 +28,7 @@ export const screenNode: ResolverNode = (state, initialEntity?: ScreenNode): Scr
       })
 
       if (primaryScreen) {
-        state.mutate(keyOfEntity(primaryScreen), {
+        state.mutate(state.keyOfEntity(primaryScreen), {
           isPrimary: false
         })
       }

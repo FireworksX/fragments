@@ -8,7 +8,7 @@ export interface CreateSolidPaintStyleOptions {
   name: string
 }
 
-export const createSolidPaintStyle = (statex: Statex, { color, name }: CreateSolidPaintStyleOptions): Entity => ({
+export const createSolidPaintStyle = ({ color, name }: CreateSolidPaintStyleOptions): Entity => ({
   _type: builderNodes.SolidPaintStyle,
   _id: generateId(),
   color,

@@ -7,6 +7,10 @@ import Panel from '@/app/builder/widgets/Builder/components/Panel/Panel'
 import InputText from '@/app/components/InputText/InputText'
 import ColorPicker from '@/app/builder/widgets/Builder/components/ColorPicker/ColorPicker'
 import Button from '@/app/components/Button'
+import { useGraph } from '@graph-state/react'
+import { POPOUT_TYPE, popoutsStore } from '@/app/stories/popouts.store'
+import { StackPanel } from '@/app/builder/widgets/Builder/widgets/StackCollector/hooks/useStackCollector'
+import { createColor } from '@fragments/fragments-plugin'
 
 export type StackPanelColorEntity = { name: string; color: Color }
 
@@ -20,13 +24,14 @@ interface StackPanelCreateColorProps extends StackPanel {
 }
 
 const StackPanelCreateColor: FC<StackPanelCreateColorProps> = ({ className }) => {
-  const selfContext = {} //useStore($getContextPopout('createColor'))
-  const [color, setColor] = useState<Color>(selfContext?.initialColor || createColor())
+  const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:createColor`)
+  const context = popout?.context
+  const [color, setColor] = useState<Color>(context?.initialColor || createColor())
   const [name, setName] = useState('')
 
   return (
     <div className={cn(styles.root, className)}>
-      <div>
+      <div className={styles.body}>
         <InputText placeholder='Color name' value={name} onChange={setName} />
         <Panel>
           <ColorPicker
@@ -40,8 +45,8 @@ const StackPanelCreateColor: FC<StackPanelCreateColorProps> = ({ className }) =>
           stretched
           disabled={name.length === 0 || !color}
           onClick={() => {
-            selfContext?.onSubmit &&
-              selfContext.onSubmit({
+            context?.onSubmit &&
+              context.onSubmit({
                 name,
                 color
               })

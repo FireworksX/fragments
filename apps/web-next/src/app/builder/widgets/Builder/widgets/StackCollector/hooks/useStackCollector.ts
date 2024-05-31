@@ -1,6 +1,8 @@
 import { ComponentType, useCallback, useEffect, useMemo } from 'react'
 import { useSpringRef, useTransition } from '@react-spring/web'
 import { useStore } from '@nanostores/react'
+import { useGraph } from '@graph-state/react'
+import { popoutsStore } from '@/app/stories/popouts.store'
 // import { $closePopout, $currentPopout, $goPrevPopout, $prevPopout } from '../../../store/popoutStore'
 // import { $nextPopout } from '../../../store/popoutStore/computed/$nextPopout'
 
@@ -13,14 +15,17 @@ interface Options {
 }
 
 export const useStackCollector = ({ panels, onPrev, onClose }: Options) => {
-  const currentPopout = null //useStore($currentPopout)
+  const [{ history, cursor }] = useGraph(popoutsStore)
+  const [currentPopout] = useGraph(popoutsStore, history.at(cursor))
   const activePanel = currentPopout?.name || ''
-  const prevPopout = null //useStore($prevPopout)
-  const nextPopout = null //useStore($nextPopout)
+  const prevPopout = popoutsStore.prevPopout()
+  const nextPopout = popoutsStore.nextPopout()
   const currentPanel = useMemo(() => panels.find(comp => comp?.props?.name === activePanel), [activePanel, panels])
   const transitionRef = useSpringRef()
   const isBack = !!nextPopout //activePanel === prevPopout?.name || !prevPopout
   const isInitial = !prevPopout && !nextPopout
+
+  console.log(prevPopout, nextPopout)
 
   const panelTransition = useTransition(activePanel, {
     ref: transitionRef,
@@ -47,12 +52,12 @@ export const useStackCollector = ({ panels, onPrev, onClose }: Options) => {
   const getPanel = useCallback((name: string) => panels.find(comp => comp?.props?.name === name), [panels])
 
   const proxyPrevHandler = () => {
-    // $goPrevPopout()
+    popoutsStore.goPrev()
     if (onPrev) onPrev()
   }
 
   const proxyCloseHandler = () => {
-    // $closePopout()
+    popoutsStore.close()
     if (onClose) onClose()
   }
 

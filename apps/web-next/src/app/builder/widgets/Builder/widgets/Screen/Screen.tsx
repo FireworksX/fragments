@@ -24,7 +24,7 @@ const Screen: FC<BuilderScreenProps> = ({ className, children, screenKey }) => {
     <div className={cn(styles.root, className)} data-root-node style={{ minWidth: width }}>
       <ScreenTitle
         className={styles.title}
-        name={screenGraph.name}
+        name={screenGraph.name ?? screenGraph._id}
         activeWidths={activeBreakpointWidths}
         onClickBreakpoint={addScreen}
         onClickCustom={() => {

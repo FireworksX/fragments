@@ -16,8 +16,7 @@ export interface OnClickSelectorOptions {
 export const useBuilderLayerRefs = () => {
   const { graphState } = useContext(BuilderContext)
   const { selection, select } = useBuilderSelection()
-  const [builder, updateBuilder] = useGraph(builderStore, builderStore.builderLink)
-  const builderView = builder.view
+  const [{ view }, updateBuilder] = useGraph(builderStore)
   // const { activeLayerField, rootLayerField, fullLayerKey } = useStore($layers)
   // const builderView = useStore($builderView)
   // const { open: openComponent } = useBuilderAssetsComponents()

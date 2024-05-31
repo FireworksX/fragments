@@ -5,6 +5,8 @@ import { StackPanel, useStackCollector } from './hooks/useStackCollector'
 import { animated } from '@react-spring/web'
 import Touchable from '@/app/components/Touchable'
 import Icon from '@adstore/web/src/components/Icon/Icon'
+import CaretLeft from '@/app/svg/caret-left.svg'
+import Close from '@/app/svg/close.svg'
 
 export interface StackCollectorProps {
   className?: string
@@ -26,7 +28,7 @@ const StackCollector: FC<StackCollectorProps> = ({ className, children, onPrev, 
     const onClick = e => {
       const container = e.target.closest('[data-stack-container]')
       if (!container) {
-        proxyCloseHandler()
+        // proxyCloseHandler()
       }
       // if (e.target !== ref.current) {
       //   let hasParent = false
@@ -58,12 +60,12 @@ const StackCollector: FC<StackCollectorProps> = ({ className, children, onPrev, 
       <div className={styles.head}>
         {hasPrev && (
           <Touchable className={styles.actionButton} onClick={proxyPrevHandler}>
-            <Icon name='caret-left' width={13} height={13} />
+            <CaretLeft width={13} height={13} />
           </Touchable>
         )}
         <div className={styles.title}>{title}</div>
         <Touchable className={styles.actionButton} onClick={proxyCloseHandler}>
-          <Icon name='close' width={13} height={13} />
+          <Close width={13} height={13} />
         </Touchable>
       </div>
       <div className={styles.body}>

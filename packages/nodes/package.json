@@ -28,8 +28,8 @@
   "dependencies": {
     "@adstore/utils": "*",
     "@fragments/fragments-plugin": "*",
-    "@graph-state/core": "^0.4.0",
-    "@graph-state/react": "^0.3.0",
+    "@graph-state/core": "^0.5.0",
+    "@graph-state/react": "^0.3.1",
     "@juggle/resize-observer": "^3.4.0",
     "classnames": "^2.3.2",
     "escape-html": "^1.0.3",

@@ -10,6 +10,8 @@ import Select from '@/app/components/Select/Select'
 import { useBuilderSelection } from '@/app/builder/widgets/Builder/hooks/useBuilderSelection'
 import { useDisplayColor } from '@/app/builder/widgets/Builder/hooks/useDisplayColor'
 import { useLayerInvokerNew } from '@/app/builder/widgets/Builder/hooks/useLayerInvokerNew'
+import { popoutsStore } from '@/app/stories/popouts.store'
+import { builderBorderType, getDefaultBorder } from '@fragments/fragments-plugin'
 
 export interface StackPanelBorderOptions {
   value?: BorderData
@@ -35,7 +37,7 @@ const StackPanelBorder: FC<StackPanelBorderProps> = ({ className }) => {
 
   useEffect(() => {
     if (!borderInvoker.value) {
-      // borderInvoker.onChange(getDefaultBorder())
+      borderInvoker.onChange(getDefaultBorder())
     }
   }, [])
 
@@ -45,14 +47,14 @@ const StackPanelBorder: FC<StackPanelBorderProps> = ({ className }) => {
         <ControlRowWide>
           <InputSelect
             color={getColor(borderInvoker.value?.color)}
-            // onClick={() =>
-            //   $openPopout('colorPicker', {
-            //     context: {
-            //       value: borderInvoker.value?.color,
-            //       onChange: nextColor => borderInvoker.onChange({ color: nextColor })
-            //     }
-            //   })
-            // }
+            onClick={() =>
+              popoutsStore.open('colorPicker', {
+                context: {
+                  value: borderInvoker.value?.color,
+                  onChange: nextColor => borderInvoker.onChange({ color: nextColor })
+                }
+              })
+            }
           >
             {getNameColor(borderInvoker.value?.color)}
           </InputSelect>
@@ -75,7 +77,7 @@ const StackPanelBorder: FC<StackPanelBorderProps> = ({ className }) => {
       <ControlRow title='Style'>
         <ControlRowWide>
           <Select value={borderInvoker?.value?.type} onChange={type => borderInvoker.onChange({ type })}>
-            {Object.keys({}).map(type => (
+            {Object.keys(builderBorderType).map(type => (
               <option key={type} value={type}>
                 {type}
               </option>

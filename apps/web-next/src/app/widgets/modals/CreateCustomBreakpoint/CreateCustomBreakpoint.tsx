@@ -21,12 +21,12 @@ export interface CreateCustomBreakpointContext {
 const NAME = 'createCustomBreakpoint'
 
 const CreateCustomBreakpoint: FC<CreateCustomBreakpointProps> = ({ className }) => {
-  const [modal] = useGraph(modalStore, `${MODAL_TYPE}:${NAME}`)
+  const [modal] = useGraph(modalStore)
   const [name, setName] = useState('')
   const [width, setWidth] = useState(0)
 
   return (
-    <Modal className={cn(styles.root, className)} isOpen={modal}>
+    <Modal className={cn(styles.root, className)} isOpen={modal?.name === NAME}>
       <ModalContainer
         title='Custom Breakpoint'
         description='Add a new custom Breakpoint. If you wish to update it, simply change its width.'

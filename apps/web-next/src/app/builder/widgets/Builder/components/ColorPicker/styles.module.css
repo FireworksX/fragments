@@ -1,42 +1,41 @@
 .root {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .hueWrapper {
-  position: relative;
-  height: 8px;
-  .hue-horizontal {
-    border-radius: var(--radius-second) !important;
-}
+    position: relative;
+    height: 8px;
+    border-radius: var(--radius-second);
+    overflow: hidden;
 }
 
 .saturationWrapper {
-  width: 100%;
-  height: 125px;
-  position: relative;
-  overflow: hidden;
-  border-radius: var(--radius-second);
+    width: 100%;
+    height: 125px;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-second);
 }
 
 .controls {
-  display: flex;
-  gap: 10px;
+    display: flex;
+    gap: 10px;
 }
 
 .colorControls {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
 }
 
 .pointer {
-  width: 14px;
-  height: 14px;
-  box-shadow: white 0 0 0 3px inset, rgba(0, 0, 0, 0.1) 0 0 0 4px inset, rgba(0, 0, 0, 0.1) 0 0 0 1px;
-  border-radius: 50%;
-  transform: translateX(-9px) translateY(-20%);
+    width: 14px;
+    height: 14px;
+    box-shadow: white 0 0 0 3px inset, rgba(0, 0, 0, 0.1) 0 0 0 4px inset, rgba(0, 0, 0, 0.1) 0 0 0 1px;
+    border-radius: 50%;
+    transform: translateX(-9px) translateY(-20%);
 }
 

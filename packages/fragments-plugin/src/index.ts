@@ -23,6 +23,7 @@ import { componentNode } from './nodes/componentNode'
 import { componentVariantNode } from './nodes/componentVariantNode'
 import { componentInstanceNode } from './nodes/componentInstanceNode'
 import { createBooleanProperty, createNumberProperty } from './creators/createComponentProperty'
+import { creators } from './staticMethods/creators'
 
 // export const statexBuilderPlugin = (statex: Statex) => {
 //   const originalMutate = statex.mutate
@@ -228,22 +229,17 @@ export const fragmentsPlugin: Plugin = graphState => {
 
   // graphState.mutate(rootNode, {})
 
-  graphState.declareExtendGraph(builderNodes.Document, (graph, cache) => documentNode(cache, graph), { replace: true })
-  graphState.declareExtendGraph(builderNodes.Screen, (graph, cache) => screenNode(cache, graph), { replace: true })
-  graphState.declareExtendGraph(builderNodes.Frame, (graph, cache) => frameNode(cache, graph), { replace: true })
-  graphState.declareExtendGraph(builderNodes.Text, (graph, cache) => textNode(cache, graph), { replace: true })
-  graphState.declareExtendGraph(builderNodes.Component, (graph, cache) => componentNode(cache, graph), {
-    replace: true
-  })
-  graphState.declareExtendGraph(builderNodes.ComponentVariant, (graph, cache) => componentVariantNode(cache, graph), {
-    replace: true
-  })
-  graphState.declareExtendGraph(builderNodes.ComponentInstance, (graph, cache) => componentInstanceNode(cache, graph), {
-    replace: true
-  })
+  graphState.declareExtendGraph(builderNodes.Document, (graph, cache) => documentNode(cache, graph))
+  graphState.declareExtendGraph(builderNodes.Screen, (graph, cache) => screenNode(cache, graph))
+  graphState.declareExtendGraph(builderNodes.Frame, (graph, cache) => frameNode(cache, graph))
+  graphState.declareExtendGraph(builderNodes.Text, (graph, cache) => textNode(cache, graph))
+  graphState.declareExtendGraph(builderNodes.Component, (graph, cache) => componentNode(cache, graph))
+  graphState.declareExtendGraph(builderNodes.ComponentVariant, (graph, cache) => componentVariantNode(cache, graph))
+  graphState.declareExtendGraph(builderNodes.ComponentInstance, (graph, cache) => componentInstanceNode(cache, graph))
 
-  return graphState
+  return creators(graphState)
 }
 
 export default fragmentsPlugin
 export * from './defenitions'
+export { getDefaultBorder, getDefaultImageFill, getDefaultSolidFill } from './propsResolvers/geometryPropsResolver'

@@ -77,11 +77,7 @@
     }
 
     &.selectedComponent {
-        color: var(--text-color);
-        .labelInput {
-            color: var(--text-color);
-        }
-        .primaryIcon, .actions {
+        &, .titleCaret ,.labelInput, .primaryIcon, .actions {
             color: var(--text-color);
         }
         &:after {
@@ -90,7 +86,10 @@
     }
 
     &.partialSelected {
-        color: var(--text-color);
+        &, .titleCaret {
+            color: var(--text-color-accent);
+        }
+
         &:after {
             background: rgba(var(--primary--rgb), .1);
         }

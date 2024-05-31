@@ -1,32 +1,31 @@
 import { Color } from 'react-color'
 // import { useStore } from '@nanostores/react'
 // import { $statex } from '../store/builderRouterStore'
-import { useCallback } from 'react'
+import { useCallback, useContext } from 'react'
 import { displayColor } from '@/app/utils/displayColor'
-
-const builderNodes = {}
+import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
+import { builderNodes } from '@fragments/fragments-plugin'
 
 export const useDisplayColor = (inputColor?: Color) => {
-  const statex = {} //useStore($statex)
+  const { graphState } = useContext(BuilderContext)
 
   const getColor = useCallback(
     (color?: Color) => {
-      const resolveValue = statex?.resolve?.(color)
+      const resolveValue = graphState?.resolve?.(color)
       const variableValue = resolveValue && resolveValue?._type === builderNodes.SolidPaintStyle && resolveValue?.color
-
-      return displayColor(variableValue ?? color)
+      return displayColor(variableValue || color)
     },
-    [statex]
+    [graphState]
   )
 
   const getNameColor = useCallback(
     (color?: Color) => {
-      const resolveValue = statex?.resolve?.(color)
+      const resolveValue = graphState?.resolve?.(color)
       const variableValue = resolveValue && resolveValue?._type === builderNodes.SolidPaintStyle
 
       return variableValue ? resolveValue?.name : displayColor(color)
     },
-    [statex]
+    [graphState]
   )
 
   return {

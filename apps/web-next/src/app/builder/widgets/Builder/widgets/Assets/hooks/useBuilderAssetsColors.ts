@@ -1,7 +1,9 @@
 import { Color } from 'react-color'
-import { useStore } from '@nanostores/react'
-import { builderNodes } from 'src/data/promos/creators'
-import { StackPanelColorEntity } from 'src/widgets/StackCollector/components/StackPanelCreateColor/StackPanelCreateColor'
+import { popoutsStore } from '@/app/stories/popouts.store'
+import { useContext } from 'react'
+import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
+import { builderNodes, createSolidPaintStyle } from '@fragments/fragments-plugin'
+import { useGraphFields, useGraphStack } from '@graph-state/react'
 
 export interface BuilderAssetsColorsOptions extends Partial<OpenPopoutOptions<'colorPicker'>> {
   initialColor?: Color
@@ -9,27 +11,27 @@ export interface BuilderAssetsColorsOptions extends Partial<OpenPopoutOptions<'c
 }
 
 export const useBuilderAssetsColors = () => {
-  const statex = {} //useStore($statex)
-  const solidStyles = [] //useFields(statex, builderNodes.SolidPaintStyle)
-  const solidStyleValues = [] //useStatexStack(statex, solidStyles)
+  const { graphState } = useContext(BuilderContext)
+  const solidStyles = useGraphFields(graphState, builderNodes.SolidPaintStyle)
+  const solidStyleValues = useGraphStack(graphState, solidStyles)
 
   const editColor = (styleKey: string, options?: OpenPopoutOptions<'colorPicker'>) => {
-    if (styleKey && statex) {
-      const variableValue = statex.resolve?.(styleKey)
+    if (styleKey && graphState) {
+      const variableValue = graphState.resolve?.(styleKey)
 
-      // $openPopout('colorPicker', {
-      //   position: 'left',
-      //   context: {
-      //     value: variableValue?.color,
-      //     withoutStack: true,
-      //     onChange: newColor => {
-      //       statex.mutate(styleKey, {
-      //         color: newColor
-      //       })
-      //     }
-      //   },
-      //   ...options
-      // })
+      popoutsStore.open('colorPicker', {
+        position: 'left',
+        context: {
+          value: variableValue?.color,
+          withoutStack: true,
+          onChange: newColor => {
+            graphState.mutate(styleKey, {
+              color: newColor
+            })
+          }
+        },
+        ...options
+      })
     }
   }
 
@@ -39,22 +41,23 @@ export const useBuilderAssetsColors = () => {
     initial,
     ...popoutOptions
   }: BuilderAssetsColorsOptions) => {
-    // $openPopout('createColor', {
-    //   initial,
-    //   position: 'left',
-    //   context: {
-    //     initialColor,
-    //     onSubmit: newColor => {
-    //       const styleKey = statex?.createSolidPaintStyle(newColor)
-    //       optionsOnSubmit && optionsOnSubmit(styleKey)
-    //     },
-    //     ...popoutOptions
-    //   }
-    // })
+    popoutsStore.open('createColor', {
+      initial,
+      position: 'left',
+      context: {
+        initialColor,
+        onSubmit: newColor => {
+          const styleKey = graphState.createSolidPaintStyle(newColor)
+          console.log(styleKey)
+          optionsOnSubmit && optionsOnSubmit(styleKey)
+        },
+        ...popoutOptions
+      }
+    })
   }
 
   const removeColor = (styleKey: string) => {
-    statex?.invalidate(styleKey)
+    graphState?.invalidate(styleKey)
   }
 
   return {
