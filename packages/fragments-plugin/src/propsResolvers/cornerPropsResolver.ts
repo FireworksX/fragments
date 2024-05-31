@@ -1,11 +1,10 @@
 import { clonedField, OVERRIDE, Resolver } from '../helpers'
-import { keyOfEntity } from '@adstore/statex'
-import { isValue } from '@adstore/utils'
+import { isValue } from '@fragments/utils'
 
 const isValidValue = (value: any) => typeof value === 'number'
 
-export const cornerPropsResolver: Resolver = (state, entity) => {
-  const key = keyOfEntity(entity)
+export const cornerPropsResolver: Resolver = (state, entity: any) => {
+  const key = state.keyOfEntity(entity)
   const isMixed = [entity.topLeftRadius, entity.topRightRadius, entity.bottomLeftRadius, entity.bottomRightRadius].some(
     value => isValue(value) && value !== OVERRIDE && value > 0
   )

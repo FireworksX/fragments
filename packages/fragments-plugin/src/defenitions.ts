@@ -1,4 +1,4 @@
-import { createConstants } from '@adstore/utils'
+import { createConstants } from '@fragments/utils'
 
 export const builderNodes = createConstants(
   'Viewport',

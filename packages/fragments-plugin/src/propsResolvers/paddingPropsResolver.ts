@@ -1,13 +1,12 @@
 import { clonedField, OVERRIDE, Resolver } from '../helpers'
-import { isValue } from '@adstore/utils'
-import { keyOfEntity } from '@adstore/statex'
+import { isValue } from '@fragments/utils'
 import { capitalize } from '@adstore/web/src/utils/helpers'
 import { PaddingProps } from '../types/props'
 
 const isValidValue = (value: any) => typeof value === 'number'
 
-export const paddingPropsResolver: Resolver = (state, entity): PaddingProps => {
-  const key = keyOfEntity(entity)
+export const paddingPropsResolver: Resolver = (state, entity: any): PaddingProps => {
+  const key = state.keyOfEntity(entity)
   const isMixed = [entity.paddingLeft, entity.paddingRight, entity.paddingTop, entity.paddingBottom].some(
     value => isValue(value) && value !== OVERRIDE && value > 0
   )

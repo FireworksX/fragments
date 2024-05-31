@@ -1,12 +1,12 @@
 import { ChildrenRelatedProps } from '../types/props'
 import { Resolver, setKey } from '../helpers'
 import { BaseNode, SceneNode } from '../types'
-import { filterDeep, findDeep } from '@adstore/utils'
+import { filterDeep, findDeep } from '@fragments/utils'
 import { GraphState, isPartialKey } from '@graph-state/core'
 
 export const childrenPropsResolver: Resolver = <TChild extends SceneNode = SceneNode>(
   graphState: GraphState,
-  entity
+  entity: any
 ): ChildrenRelatedProps<TChild> => {
   const key = graphState.keyOfEntity(entity) ?? ''
 
