@@ -26,15 +26,14 @@ export const componentNode: ResolverNode = (graphState, initialEntity: Component
       const variants = componentNode.children ?? []
       const nextName = `Variant ${variants.length + 1}`
 
-      const nextVariant =
-        defaultVariant?.clone({
-          name: nextName,
-          isPrimary: false
-        }) ??
-        // createComponentVariant(graphState, {
-        //   isPrimary: !defaultVariant,
-        //   name: nextName
-        // })
+      const nextVariant = defaultVariant?.clone({
+        name: nextName,
+        isPrimary: false
+      }) // ??
+      // createComponentVariant(graphState, {
+      //   isPrimary: !defaultVariant,
+      //   name: nextName
+      // })
 
       if (defaultVariant) {
         graphState.resolve(nextVariant).rename(nextName)
