@@ -1,0 +1,93 @@
+declare const isObject: (input: unknown) => input is Record<string, unknown>;
+
+declare const isValue: <T>(value: T) => value is Exclude<T, null | undefined>;
+
+declare const isEmptyValue: (value: unknown) => value is null | undefined;
+
+declare const isAbsoluteUrl: (input: any) => boolean;
+
+declare const isHTMLNode: (o: any) => any;
+
+declare const promiseWaiter: <T = unknown>(duration?: number, payload?: T) => Promise<unknown>;
+
+type Visitor<TReturn = unknown, TValue = unknown> = (key: PropertyKey, value: TValue, path: string, options?: IteratorOptions) => TReturn;
+type FilterIteratorPredicate = (nextValue: unknown, key: string | number, input: unknown) => boolean;
+type SkipIteratorPredicate = (value: unknown) => boolean;
+interface IteratorOptions {
+    filterPredicate?: FilterIteratorPredicate;
+    skipPredicate?: SkipIteratorPredicate;
+    metaInfo?: Record<PropertyKey, any>;
+}
+declare const iterator: <TVisitor extends Visitor<unknown, unknown>>(input: unknown, visitor: TVisitor, basePath?: string, options?: IteratorOptions) => any;
+
+interface EventEmitter<TEvents extends AnyEvents = AnyEvents> {
+    on<TKey extends keyof TEvents>(event: TKey, callback: TEvents[TKey]): ReturnType<TEvents[TKey]>;
+    /**
+     * Метод emit() принимает event который нужно вызвать + параметры
+     * Возвращает массив того что вернули подписчики
+     */
+    emit<TKey extends keyof TEvents>(event: TKey, ...args: Parameters<TEvents[TKey]>): ReturnType<TEvents[TKey]>[];
+    has<TKey extends keyof TEvents>(event: TKey): boolean;
+    get<TKey extends keyof TEvents>(event: TKey): unknown;
+    reset(): void;
+}
+type AnyEvents = Record<any, () => any>;
+declare const eventEmitter: <TEvents extends AnyEvents = AnyEvents>() => EventEmitter<TEvents>;
+
+type AnyObject<T = any> = Record<string, T>;
+
+declare const replace: (text: string, variables?: AnyObject) => string;
+
+declare const get: (obj: AnyObject, path: string, defValue?: unknown) => any;
+
+declare const set: (obj: AnyObject, path: string, value: unknown) => AnyObject;
+
+declare const createConstants: <K extends string>(...constants: K[]) => { [P in K]: P; };
+
+declare const isPrimitive: (value: unknown) => boolean;
+
+declare const toKebabCase: (value: string) => string;
+
+/**
+ * #f0f -> #ff00ff
+ */
+declare const toLongHex: (hex: string) => string;
+
+declare const hexToRgb: (hex: string) => {
+    r: number;
+    g: number;
+    b: number;
+} | undefined;
+
+declare const rgbToRgba: (rgb: string, alpha?: number) => string;
+
+/**
+ *
+ * @param target - Объект, который будет заполняться
+ * @param input - Данные, которыми будет заполняться target
+ * @param customFilter - Кастомный Фильтр, если возвращает true - данные заменяются, иначе нет
+ */
+declare const mergeIterator: (target: AnyObject, input: AnyObject, customFilter?: Visitor<boolean, [
+    unknown,
+    unknown
+]>) => any;
+
+declare const noop: () => undefined;
+
+declare const filterDeep: (input: unknown[] | AnyObject, predicate: (key: PropertyKey, value: unknown, path: string, resultArray: unknown[]) => boolean) => unknown[];
+
+declare const findDeep: (input: unknown[] | AnyObject, predicate: (key: PropertyKey, value: unknown, path: string) => boolean) => unknown | undefined;
+
+declare const pick: <TValue extends AnyObject>(obj: TValue, ...props: (keyof TValue)[]) => any;
+
+declare function omit<T extends AnyObject, P extends string[]>(obj: T, ...props: P): Omit<T, P[number]>;
+
+declare const times: (amount?: number) => number[];
+
+interface InjectLinkOptions {
+    rel: string;
+    href: string;
+}
+declare const injectLink: (options: InjectLinkOptions) => void;
+
+export { createConstants, eventEmitter, filterDeep, findDeep, get, hexToRgb, injectLink, isAbsoluteUrl, isEmptyValue, isHTMLNode, isObject, isPrimitive, isValue, iterator, mergeIterator, noop, omit, pick, promiseWaiter, replace, rgbToRgba, set, times, toKebabCase, toLongHex };

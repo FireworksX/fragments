@@ -1,0 +1,7 @@
+{
+  "extends": ["@adstore/eslint-config-custom"],
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2020,
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "name": "@fragments/utils",
+  "version": "0.0.9",
+  "private": true,
+  "main": "index.js",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "source": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "lint": "eslint **/*.ts*",
+    "lint:fix": "eslint **/*.ts* --fix",
+    "typecheck": "tsc --noEmit",
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "dependencies": {
+    "tsup": "^6.2.3"
+  },
+  "devDependencies": {
+    "@adstore/eslint-config-custom": "*",
+    "@adstore/tsconfig": "*",
+    "eslint": "^7",
+    "typescript": "^4.5.2"
+  }
+}
