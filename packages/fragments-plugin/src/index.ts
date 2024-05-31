@@ -1,28 +1,17 @@
-import { LinkKey, Plugin } from '@graph-state/core'
+import { Entity, LinkKey, Plugin } from '@graph-state/core'
 import loggerPlugin from '@graph-state/plugin-logger'
 import extendPlugin from '@graph-state/plugin-extend'
-import { Entity, keyOfEntity, Statex } from '@adstore/statex'
 import { builderNodes } from 'src/defenitions'
 import { documentNode } from './nodes/documentNode'
 import { viewportNode } from './nodes/viewportNode'
 import { screenNode } from './nodes/screenNode'
-import { empty, EntityKey, mixed, override } from './types/props'
+import { override } from './types/props'
 import { frameNode } from './nodes/frameNode'
-import { getKey, OVERRIDE } from './helpers'
+import { OVERRIDE } from './helpers'
 import { textNode } from './nodes/textNode'
-import { createComponent as createComponentNode, CreateComponentOptions } from 'src/creators/createComponent'
-import { createScreen as createScreenNode, CreateScreenOptions } from 'src/creators/createScreen'
-import {
-  createSolidPaintStyle as createSolidPaintStyleNode,
-  CreateSolidPaintStyleOptions
-} from 'src/creators/createSolidPaintStyle'
-import { createCssLink as createCssLinkNode } from '@adstore/web/src/statexModules/creators/createCssLink'
-import { createFrame as createFrameNode } from 'src/creators/createFrame'
-import { createText as createTextNode } from 'src/creators/createText'
 import { componentNode } from './nodes/componentNode'
 import { componentVariantNode } from './nodes/componentVariantNode'
 import { componentInstanceNode } from './nodes/componentInstanceNode'
-import { createBooleanProperty, createNumberProperty } from './creators/createComponentProperty'
 import { creators } from './staticMethods/creators'
 
 // export const statexBuilderPlugin = (statex: Statex) => {
@@ -177,7 +166,7 @@ import { creators } from './staticMethods/creators'
 //   })
 // }
 
-export const fragmentsPlugin: Plugin = graphState => {
+export const fragmentsPlugin: Plugin = (graphState: any) => {
   const hasLoggerPlugin = 'debugLog' in graphState
   const hasExtenderPlugin = 'declareExtendGraph' in graphState
 
@@ -191,12 +180,12 @@ export const fragmentsPlugin: Plugin = graphState => {
   const [rootLink] = graphState.inspectFields(builderNodes.Document)
   graphState.root = rootLink
   // graphState.empty = empty
-  graphState.viewport = graphState.keyOfEntity(viewportNode(graphState))
+  graphState.viewport = graphState.keyOfEntity(viewportNode(graphState) as any)
   graphState.isEmpty = (value: unknown) => typeof value === undefined || value == null
 
   graphState.hasOverride = (entity: Entity, field?: string) => {
-    const resolvedEntity = typeof entity === 'string' ? graphState.resolve(entity) : entity
-    const resolvedOverride = graphState.resolve(resolvedEntity?.overrideFrom)
+    const resolvedEntity: any = typeof entity === 'string' ? graphState.resolve(entity) : entity
+    const resolvedOverride: any = graphState.resolve(resolvedEntity?.overrideFrom)
     const isOverride = field
       ? resolvedEntity[field] === graphState.override || resolvedEntity[field] === undefined
       : true
@@ -205,7 +194,7 @@ export const fragmentsPlugin: Plugin = graphState => {
   }
 
   graphState.resetOverride = (entity: Entity, field: string) => {
-    graphState.mutate(keyOfEntity(entity), {
+    graphState.mutate(graphState.keyOfEntity(entity) as any, {
       [field]: override
     })
   }
@@ -214,7 +203,7 @@ export const fragmentsPlugin: Plugin = graphState => {
     if (field == 'visible') {
       // console.trace(link, field)
     }
-    const graph = graphState.resolve(link)
+    const graph: any = graphState.resolve(link)
 
     if (graph && field in graph && graph[field] !== undefined) {
       if (!graphState.isEmpty(graph[field]) && graph[field] !== OVERRIDE) {
@@ -229,13 +218,17 @@ export const fragmentsPlugin: Plugin = graphState => {
 
   // graphState.mutate(rootNode, {})
 
-  graphState.declareExtendGraph(builderNodes.Document, (graph, cache) => documentNode(cache, graph))
-  graphState.declareExtendGraph(builderNodes.Screen, (graph, cache) => screenNode(cache, graph))
-  graphState.declareExtendGraph(builderNodes.Frame, (graph, cache) => frameNode(cache, graph))
-  graphState.declareExtendGraph(builderNodes.Text, (graph, cache) => textNode(cache, graph))
-  graphState.declareExtendGraph(builderNodes.Component, (graph, cache) => componentNode(cache, graph))
-  graphState.declareExtendGraph(builderNodes.ComponentVariant, (graph, cache) => componentVariantNode(cache, graph))
-  graphState.declareExtendGraph(builderNodes.ComponentInstance, (graph, cache) => componentInstanceNode(cache, graph))
+  graphState.declareExtendGraph(builderNodes.Document, (graph: any, cache: any) => documentNode(cache, graph))
+  graphState.declareExtendGraph(builderNodes.Screen, (graph: any, cache: any) => screenNode(cache, graph))
+  graphState.declareExtendGraph(builderNodes.Frame, (graph: any, cache: any) => frameNode(cache, graph))
+  graphState.declareExtendGraph(builderNodes.Text, (graph: any, cache: any) => textNode(cache, graph))
+  graphState.declareExtendGraph(builderNodes.Component, (graph: any, cache: any) => componentNode(cache, graph))
+  graphState.declareExtendGraph(builderNodes.ComponentVariant, (graph: any, cache: any) =>
+    componentVariantNode(cache, graph)
+  )
+  graphState.declareExtendGraph(builderNodes.ComponentInstance, (graph: any, cache: any) =>
+    componentInstanceNode(cache, graph)
+  )
 
   return creators(graphState)
 }

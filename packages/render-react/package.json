@@ -16,8 +16,8 @@
     }
   },
   "scripts": {
-    "dev": "tsup --watch",
-    "build": "tsup",
+    "dev": "echo 'mock'",
+    "build": "echo 'mock'",
     "test": "vitest",
     "lint": "eslint . --ext .ts,.tsx --fix"
   },

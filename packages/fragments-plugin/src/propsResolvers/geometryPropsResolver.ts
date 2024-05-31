@@ -1,6 +1,5 @@
 import { Border, ImagePaint, Paint, SolidPaint } from 'src/types/props'
 import { builderBorderType, builderImagePaintScaleModes, builderPaintMode } from 'src/defenitions'
-import { keyOfEntity, Statex } from '@adstore/statex'
 import { clonedField, Resolver } from '../helpers'
 
 export const getDefaultSolidFill = (): SolidPaint => ({
@@ -12,11 +11,12 @@ export const getDefaultSolidFill = (): SolidPaint => ({
   }
 })
 
-export const getDefaultImageFill = (): ImagePaint => ({
-  type: builderPaintMode.Image,
-  url: undefined,
-  scaleMode: builderImagePaintScaleModes.Fill
-})
+export const getDefaultImageFill = (): ImagePaint =>
+  ({
+    type: builderPaintMode.Image,
+    url: undefined,
+    scaleMode: builderImagePaintScaleModes.Fill
+  } as any)
 
 export const getDefaultBorder = (): Border => ({
   type: builderBorderType.Solid,
@@ -28,8 +28,8 @@ export const getDefaultBorder = (): Border => ({
   }
 })
 
-export const geometryPropsResolver: Resolver = (state, entity) => {
-  const key = keyOfEntity(entity)
+export const geometryPropsResolver: Resolver = (state: any, entity: any) => {
+  const key = state.keyOfEntity(entity)
 
   return {
     ...entity,
@@ -39,7 +39,7 @@ export const geometryPropsResolver: Resolver = (state, entity) => {
     getCurrentFill(): Paint {
       const fills = (state.resolveValue(key, 'fills') ?? []).map(state.resolve)
       const type = state.resolveValue(key, 'fillType')
-      return fills?.find?.(f => f.type === type)
+      return fills?.find?.((f: any) => f.type === type)
     },
     setFillType(type: keyof typeof builderPaintMode) {
       state.mutate(key, {
@@ -52,7 +52,7 @@ export const geometryPropsResolver: Resolver = (state, entity) => {
         () => {
           const resolvedValue = state.resolveValue(key, 'fills')
           const fills = (Array.isArray(resolvedValue) ? [...state.resolveValue(key, 'fills')] : []).map(state.resolve)
-          const prevIndex = fills.findIndex(f => f.type === fill.type)
+          const prevIndex = fills.findIndex((f: any) => f.type === fill.type)
 
           if (prevIndex !== -1) {
             fills.splice(prevIndex, 1, fill)
@@ -69,7 +69,7 @@ export const geometryPropsResolver: Resolver = (state, entity) => {
         }
       )
     },
-    setBorder(border) {
+    setBorder(border: any) {
       state.mutate(key, {
         border
       })

@@ -1,4 +1,3 @@
-import { Entity } from '@adstore/statex'
 import {
   builderBorderType,
   builderConstrain,
@@ -16,6 +15,8 @@ import {
 } from 'src/defenitions'
 import { Constrains } from './index'
 import { ComponentProperty, TypeValue } from './componentProperties'
+
+type Entity = any
 
 export const mixed: unique symbol = Symbol('mixed')
 export const empty: unique symbol = Symbol('empty')

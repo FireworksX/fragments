@@ -20,7 +20,8 @@ import {
 } from './props'
 import { SceneNode } from './index'
 import { builderNodes } from 'src/defenitions'
-import { Entity } from '@adstore/statex'
+
+type Entity = any
 
 export type SelectionType = Entity | string
 export type SetSelection = SelectionType[] | ((prevNodes: string) => SelectionType[])
