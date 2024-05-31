@@ -19,7 +19,6 @@
     "release:force": "turbo run build && turbo run release --filter web"
   },
   "devDependencies": {
-    "@adstore/eslint-config-custom": "*",
     "@changesets/cli": "^2.25.0",
     "husky": "^8.0.2",
     "lint-staged": "^13.0.3",
