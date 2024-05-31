@@ -1,5 +1,4 @@
 {
-  "extends": "@adstore/tsconfig/base.json",
   "compilerOptions": {
     "module": "ESNext",
     "target": "es6",

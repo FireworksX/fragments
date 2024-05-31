@@ -27,8 +27,6 @@
     "tsup": "^6.2.3"
   },
   "devDependencies": {
-    "@adstore/eslint-config-custom": "*",
-    "@adstore/tsconfig": "*",
     "eslint": "^7",
     "typescript": "^4.5.2"
   }
