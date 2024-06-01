@@ -1,7 +1,6 @@
 import { FC, PropsWithChildren } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import Icon from '@adstore/web/src/components/Icon/Icon'
 import Touchable from '@/app/components/Touchable'
 
 export interface DropdownOptionProps extends PropsWithChildren {

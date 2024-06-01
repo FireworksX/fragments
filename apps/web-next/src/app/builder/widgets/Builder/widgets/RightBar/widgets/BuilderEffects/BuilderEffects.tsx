@@ -5,9 +5,7 @@ import styles from './styles.module.css'
 import { useBuilderEffects } from './hooks/useBuilderEffects'
 import ControlRow from '@/app/builder/widgets/Builder/components/ControlRow/ControlRow'
 import ControlRowWide from '@/app/builder/widgets/Builder/components/ControlRow/components/ControlRowWide/ControlRowWide'
-import { useTheme } from 'styled-components'
 import Panel from '@/app/builder/widgets/Builder/components/Panel/Panel'
-import Icon from '@adstore/web/src/components/Icon/Icon'
 import Dropdown from '@/app/components/Dropdown/Dropdown'
 import DropdownGroup from '@/app/components/Dropdown/components/DropdownGroup/DropdownGroup'
 import DropdownOption from '@/app/components/Dropdown/components/DropdownOption/DropdownOption'
@@ -16,6 +14,7 @@ import InputSelect from '@/app/components/InputSelect/InputSelect'
 import { capitalize } from '@/app/utils/capitalize'
 import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
 import { builderEffectType } from '@fragments/fragments-plugin'
+import Star2 from '@/app/svg/star-2.svg'
 
 interface BuilderEffectsProps {
   className?: string
@@ -52,7 +51,7 @@ const BuilderEffects: FC<BuilderEffectsProps> = ({ className }) => {
           <ControlRow key={effect.type} title={capitalize(effect.type)}>
             <ControlRowWide>
               <InputSelect
-                icon={<Icon className={styles.iconContainer} name='star-2' width={14} />}
+                icon={<Star2 className={styles.iconContainer} width={14} />}
                 // color={colors.primary}
                 onClick={() => clickEffect(effect.type)}
                 onReset={() => resetEffect(effect.type)}

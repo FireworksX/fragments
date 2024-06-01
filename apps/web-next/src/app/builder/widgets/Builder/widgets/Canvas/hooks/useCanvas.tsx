@@ -3,7 +3,7 @@ import { useGesture } from '@use-gesture/react'
 import { animated } from '@react-spring/web'
 import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
 import { useGraph } from '@graph-state/react'
-import { debounce } from '@adstore/web/src/utils/debounce'
+// import { debounce } from '@fragments/utils'
 
 const SCALE = {
   min: 0.25,
@@ -30,14 +30,14 @@ export const useCanvas = (pointerRef: MutableRefObject<ElementRef<'div'>>) => {
   const viewportRef = useRef()
   const saveOffset = useRef([0, 0])
 
-  const setDebounceValue = debounce(({ scale, x, y }) => {
-    if (!!x && !!y) {
-      setCenter({ x, y })
-    }
-    if (scale) {
-      setZoom({ zoom: scale })
-    }
-  }, 100)
+  // const setDebounceValue = debounce(({ scale, x, y }) => {
+  //   if (!!x && !!y) {
+  //     setCenter({ x, y })
+  //   }
+  //   if (scale) {
+  //     setZoom({ zoom: scale })
+  //   }
+  // }, 100)
   //
   // const zoomIn = useCallback(() => {
   //   if (!(zoom >= SCALE.max)) {
@@ -96,7 +96,7 @@ export const useCanvas = (pointerRef: MutableRefObject<ElementRef<'div'>>) => {
 
         canvas?.x.start(calcX)
         canvas?.y.start(calcY)
-        setDebounceValue({ x: calcX, y: calcY })
+        // setDebounceValue({ x: calcX, y: calcY })
       },
       onWheelEnd: ({ event, movement: [mx, my] }) => {
         event.preventDefault()

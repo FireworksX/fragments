@@ -1,5 +1,5 @@
 import { FC, useState } from 'react'
-import { isValue } from '@adstore/utils'
+import { isValue } from '@fragments/utils'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { StackPanel } from '../../hooks/useStackCollector'

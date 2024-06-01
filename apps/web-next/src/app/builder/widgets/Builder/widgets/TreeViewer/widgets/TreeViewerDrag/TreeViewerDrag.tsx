@@ -3,7 +3,6 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import { AnimateLayoutChanges, useSortable } from '@dnd-kit/sortable'
 import { useSpring, animated } from '@react-spring/web'
-import TreeViewerIndicator from '../../components/TreeViewerIndicator/TreeViewerIndicator'
 
 interface TreeViewerDragProps extends PropsWithChildren {
   indicator?: boolean
@@ -65,7 +64,8 @@ const TreeViewerDrag: FC<TreeViewerDragProps> = ({
       {...attributes}
       {...listeners}
     >
-      {indicator ? isOver ? undefined : <TreeViewerIndicator /> : children}
+      {children}
+      {/*{indicator ? isOver ? undefined : <TreeViewerIndicator /> : children}*/}
     </animated.div>
   )
 }

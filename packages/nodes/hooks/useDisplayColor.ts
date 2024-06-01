@@ -1,9 +1,9 @@
 import { Color } from "react-color";
-import { builderNodes } from "@adstore/web/src/data/promos/creators";
-import { displayColor } from "@adstore/web/src/utils/helpers.ts";
 import { useContext } from "preact/compat";
 import { useCallback } from "react";
 import { GraphStateContext } from "../src/GraphStateProvider.tsx";
+import { builderNodes } from "@fragments/fragments-plugin";
+import { displayColor } from "../helpers/displayColor.ts";
 
 export const useDisplayColor = (inputColor?: Color) => {
   const { graphState } = useContext(GraphStateContext);
@@ -16,7 +16,7 @@ export const useDisplayColor = (inputColor?: Color) => {
         resolveValue?._type === builderNodes.SolidPaintStyle &&
         resolveValue?.color;
 
-      return displayColor(variableValue ?? color);
+      return displayColor(variableValue || color);
     },
     [graphState]
   );

@@ -2,7 +2,6 @@
 import { FC, PropsWithChildren } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import Icon from '@adstore/web/src/components/Icon/Icon'
 import CaretRight from '@/app/svg/caret-right.svg'
 
 interface CollapseBaseHeaderProps extends PropsWithChildren {

@@ -1,17 +1,14 @@
-import { useCallback, useMemo } from 'react'
-import { builderNodes } from '../../../data/promos/creators'
-import { useStore } from '@nanostores/react'
-import { $statex } from '../../../store/builderRouterStore'
-import { useStatex } from '@adstore/statex-react'
-import { useBuilderSelection } from '../../../hooks/useBuilderSelection'
+import { useCallback, useContext, useMemo } from 'react'
+import { useBuilderSelection } from '@/app/builder/widgets/Builder/hooks/useBuilderSelection'
+import { builderNodes } from '@fragments/fragments-plugin'
+import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
 
 export const useBuilderActions = () => {
-  const statex = useStore($statex)
-  const { selection } = useBuilderSelection()
-  const node = useStatex(statex, selection)
-  const type = node?._type
+  const { graphState } = useContext(BuilderContext)
+  const { selection, selectionGraph } = useBuilderSelection()
+  const type = selectionGraph?._type
   const isComponentType = type === builderNodes.Component || type === builderNodes.ComponentSet
-  const isPrimary = (type === builderNodes.Screen || type === builderNodes.ComponentSet) && node?.isPrimary
+  const isPrimary = (type === builderNodes.Screen || type === builderNodes.ComponentSet) && selectionGraph?.isPrimary
 
   const features = useMemo(() => {
     return {
@@ -48,15 +45,15 @@ export const useBuilderActions = () => {
   //   })
   // }, [activeLayerField, features.canAddFrame, statex])
 
-  const wrapFrame = () => node.wrapFrameNode()
+  const wrapFrame = () => selectionGraph.wrapFrameNode()
 
-  const toggleVisible = () => node.toggleVisible?.()
+  const toggleVisible = () => selectionGraph.toggleVisible?.()
 
-  const remove = () => node.remove()
+  const remove = () => selectionGraph.remove()
 
-  const setPrimary = () => node.setPrimary()
+  const setPrimary = () => selectionGraph.setPrimary()
 
-  const duplicate = () => node.duplicate()
+  const duplicate = () => selectionGraph.duplicate()
 
   const convertToComponent = () => {
     // const parents = statex.resolveParents(activeLayerField)
@@ -88,20 +85,20 @@ export const useBuilderActions = () => {
   }
 
   const addFrame = useCallback(() => {
-    if (node && statex && features.canInsert) {
-      const frame = statex.createFrame()
-      node.appendChild(frame)
-      statex.resolve(statex.root).removeChild(frame)
+    if (selectionGraph && graphState && features.canInsert) {
+      const frame = graphState.createFrame()
+      selectionGraph.appendChild(frame)
+      graphState.resolve(graphState.root).removeChild(frame)
     }
-  }, [features.canInsert, node, statex])
+  }, [features.canInsert, selectionGraph, graphState])
 
   const addText = useCallback(() => {
-    if (node && statex && features.canInsert) {
-      const frame = statex.createText()
-      node.appendChild(frame)
-      statex.resolve(statex.root).removeChild(frame)
+    if (selectionGraph && graphState && features.canInsert) {
+      const frame = graphState.createText()
+      selectionGraph.appendChild(frame)
+      graphState.resolve(graphState.root).removeChild(frame)
     }
-  }, [features.canInsert, node, statex])
+  }, [features.canInsert, selectionGraph, graphState])
 
   return {
     features,

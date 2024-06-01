@@ -5,7 +5,6 @@ import Touchable from '@/app/components/Touchable'
 import Dropdown from '@/app/components/Dropdown/Dropdown'
 import DropdownGroup from '@/app/components/Dropdown/components/DropdownGroup/DropdownGroup'
 import DropdownOption from '@/app/components/Dropdown/components/DropdownOption/DropdownOption'
-import Icon from '@adstore/web/src/components/Icon/Icon'
 import Plus from '@/app/svg/plus.svg'
 
 interface BuilderScreenTitleProps {

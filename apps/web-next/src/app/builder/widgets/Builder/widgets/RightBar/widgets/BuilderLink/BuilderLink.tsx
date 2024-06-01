@@ -5,16 +5,12 @@ import styles from './styles.module.css'
 import { useBuilderLink } from './hooks/useBuilderLink'
 import ControlRow from '@/app/builder/widgets/Builder/components/ControlRow/ControlRow'
 import ControlRowWide from '@/app/builder/widgets/Builder/components/ControlRow/components/ControlRowWide/ControlRowWide'
-import { useStore } from '@nanostores/react'
 import Touchable from '@/app/components/Touchable'
-import BuilderPanel from '@adstore/web/src/routes/BuilderRoute/components/BuilderPanel/BuilderPanel'
 import TabsSelector from '@/app/components/TabsSelector'
 import SelectMimicry from '@/app/components/SelectMimicry/SelectMimicry'
 import Panel from '@/app/builder/widgets/Builder/components/Panel/Panel'
-import Icon from '@adstore/web/src/components/Icon/Icon'
 import Minus from '@/app/svg/minus.svg'
 import Plus from '@/app/svg/plus.svg'
-import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
 
 interface BuilderLinkProps {
   className?: string

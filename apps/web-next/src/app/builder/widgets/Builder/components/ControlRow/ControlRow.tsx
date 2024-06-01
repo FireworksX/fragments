@@ -1,13 +1,8 @@
 import { FC, PropsWithChildren } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import * as Styled from './styles'
-import { ComponentProperty } from '../../../../../../types/componentProperties'
 import Touchable from '@/app/components/Touchable'
-import Icon from '@adstore/web/src/components/Icon/Icon'
 import RenderDropdown, { RenderDropdownProps } from '@/app/components/RenderDropdown/RenderDropdown'
-import ControlRowWide from '@/app/builder/widgets/Builder/components/ControlRow/components/ControlRowWide/ControlRowWide'
-import InputSelectComponentProperty from '@adstore/web/src/components/InputSelectComponentProperty/InputSelectComponentProperty'
 
 interface BuilderControlRowProps extends PropsWithChildren {
   title?: string

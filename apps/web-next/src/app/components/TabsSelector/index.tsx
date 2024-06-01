@@ -2,7 +2,6 @@
 import { ElementRef, FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import * as Styled from '@adstore/web/src/components/TabsSelector/styles'
 import Touchable from '@/app/components/Touchable'
 
 export interface TabsSelectorItem {

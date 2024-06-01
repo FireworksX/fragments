@@ -1,9 +1,4 @@
 import { Field } from 'react-hook-form'
-import { useStore } from '@nanostores/react'
-import { useStatex } from '@adstore/statex-react'
-import { keyOfEntity } from '@adstore/statex'
-import { useContext } from 'react'
-import { ModalContext } from '../routes/BuilderRoute/ModalContext'
 import { capitalize } from '@/app/utils/capitalize'
 
 export type BuilderFieldVariable = ReturnType<ReturnType<typeof useBuilderFieldVariable>>
@@ -35,12 +30,12 @@ export const useBuilderFieldVariable = (layer: Field) => {
       if (key === 'opacity') {
         const property = statex.createComponentPropertyMap.createNumberProperty(basePropertyData)
         componentNode.addComponentProperty(property)
-        node.setOpacity(keyOfEntity(property))
+        // node.setOpacity(keyOfEntity(property))
       }
       if (key === 'visible') {
         const property = statex.createComponentPropertyMap.createBooleanProperty(basePropertyData)
         componentNode.addComponentProperty(property)
-        node.toggleVisible(keyOfEntity(property))
+        // node.toggleVisible(keyOfEntity(property))
       }
     }
 

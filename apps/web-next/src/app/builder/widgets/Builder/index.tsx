@@ -26,6 +26,7 @@ import { builderStore } from '@/app/stories/builder.store'
 import LayerHighlight from '@/app/builder/widgets/Builder/widgets/LayerHighlight/LayerHighlight'
 import { useGraph } from '@graph-state/react'
 import { popoutsStore } from '@/app/stories/popouts.store'
+import { useBuilder } from '@/app/builder/widgets/Builder/hooks/useBuilder'
 
 if (isBrowser) {
   window.builderStore = builderStore
@@ -34,6 +35,7 @@ if (isBrowser) {
 const Builder = () => {
   const { canvas } = useContext(BuilderContext)
   const [currentPopout] = useGraph(popoutsStore, popoutsStore.getCurrent())
+  const { addFrame } = useBuilder()
 
   return (
     <>
@@ -50,8 +52,8 @@ const Builder = () => {
             scale={<animated.div>{canvas?.scale.to(scale => Math.floor(scale * 100).toFixed(0))}</animated.div>}
             onAction={action => {
               switch (action) {
-                // case 'addFrame':
-                //   return addFrame()
+                case 'addFrame':
+                  return addFrame()
                 // case 'addText':
                 //   return addText()
                 // case 'zoomIn':

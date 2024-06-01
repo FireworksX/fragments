@@ -3,7 +3,6 @@ import { ElementRef, FC, InputHTMLAttributes, useRef } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import Touchable from '@/app/components/Touchable'
-import Icon from '@adstore/web/src/components/Icon/Icon'
 import CaretUp from '@/app/svg/caret-up.svg'
 import CaretDown from '@/app/svg/caret-down.svg'
 

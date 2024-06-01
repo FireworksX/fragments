@@ -32,10 +32,10 @@ const Popover: FC<PopoverProps> = ({ className, content, children, trigger, appe
     <Tippy
       className={className}
       content={content}
-      onCreate={onCreate}
       trigger={trigger === 'rightClick' ? 'manual' : trigger}
       appendTo={appendTo === 'body' && isBrowser ? document.body : appendTo}
       {...restProps}
+      onCreate={onCreate}
     >
       <div ref={targetRef}>{children}</div>
     </Tippy>

@@ -1,8 +1,7 @@
-import { Field } from "@adstore/statex/src";
 import * as CSS from "csstype";
 import { useLayerInvokerNew } from "../useLayerInvokerNew.ts";
+import { builderEffectType } from "@fragments/fragments-plugin";
 // import styles from './../../styles/animations.module.scss'
-import { builderEffectType } from "@adstore/web/src/data/promos/creators";
 
 export const useEffectsRules = (layerField: Field) => {
   const layerInvoker = useLayerInvokerNew(layerField);

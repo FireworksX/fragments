@@ -1,5 +1,4 @@
 import { useContext, useState } from 'react'
-import Icon from '@adstore/web/src/components/Icon/Icon'
 import { useBuilderSelection } from '@/app/builder/widgets/Builder/hooks/useBuilderSelection'
 import { useLayerInvokerNew } from '@/app/builder/widgets/Builder/hooks/useLayerInvokerNew'
 import { TabsSelectorItem } from '@/app/components/TabsSelector'

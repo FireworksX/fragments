@@ -1,4 +1,3 @@
-import { Field } from "@adstore/statex/src";
 import * as CSS from "csstype";
 import { toPx } from "../../helpers/toPx.ts";
 import { useDisplayColor } from "../useDisplayColor.ts";
@@ -6,7 +5,7 @@ import { useLayerInvokerNew } from "../useLayerInvokerNew.ts";
 import {
   builderImagePaintScaleModes,
   builderPaintMode,
-} from "@adstore/web/src/data/promos/creators";
+} from "@fragments/fragments-plugin";
 
 const scaleModeMap: Record<
   keyof typeof builderImagePaintScaleModes,
@@ -46,6 +45,7 @@ export const useParseStyleRules = (layerField: Field) => {
   }
 
   const currentFill = layerInvoker("currentFill").value;
+
   if (currentFill) {
     if (currentFill.type === builderPaintMode.Solid) {
       rules.backgroundColor = getColor(currentFill.color);

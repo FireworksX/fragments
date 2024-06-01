@@ -1,9 +1,7 @@
-import { entityOfKey, Field } from '@adstore/statex'
-import { SetOptions } from '@adstore/statex/src/createState'
 import { SceneNode } from '../types'
 import { BuilderFieldOverrides, useBuilderFieldOverrides } from './useBuilderFieldOverrides'
 import { BuilderFieldVariable, useBuilderFieldVariable } from './useBuilderFieldVariable'
-import { omit } from '@adstore/utils'
+import { omit } from '@fragments/utils'
 import { useGraph } from '@graph-state/react'
 import { useContext } from 'react'
 import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
@@ -44,7 +42,7 @@ export const useLayerInvokerNew = (field: Field, setter?: Setter, getter?: Gette
         value: newValue,
         options
       })
-    const propertyKey = entityOfKey(resultValue)?._type === {}.ComponentProperty ? resultValue : undefined
+    const propertyKey = graphState.entityOfKey(resultValue)?._type === {}.ComponentProperty ? resultValue : undefined
     const overrides = getOverrides(key)
     const variables = getVariables(key, resultValue)
     const actions = [overrides.actions, variables.actions]

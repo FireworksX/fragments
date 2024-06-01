@@ -4,7 +4,6 @@ import styles from './styles.module.css'
 import { StackPanel, useStackCollector } from './hooks/useStackCollector'
 import { animated } from '@react-spring/web'
 import Touchable from '@/app/components/Touchable'
-import Icon from '@adstore/web/src/components/Icon/Icon'
 import CaretLeft from '@/app/svg/caret-left.svg'
 import Close from '@/app/svg/close.svg'
 

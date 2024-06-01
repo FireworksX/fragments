@@ -5,6 +5,7 @@ import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
 import { useGraph } from '@graph-state/react'
 import { builderLayerMode, builderNodes } from '@fragments/fragments-plugin'
 import { useLayerInvokerNew } from '@/app/builder/widgets/Builder/hooks/useLayerInvokerNew'
+import { useBuilder } from '@/app/builder/widgets/Builder/hooks/useBuilder'
 
 export const useTreeViewerCell = (layerKey: string) => {
   const { graphState } = useContext(BuilderContext)
@@ -13,7 +14,7 @@ export const useTreeViewerCell = (layerKey: string) => {
   // const rootKey = builderView === 'component' ? activeComponentField : layerPath.at(0)
   const layerInvoker = useLayerInvokerNew(layerKey)
   const parents = layerValue?.getAllParents?.() ?? []
-  // const { features, ...builderActions } = useBuilder()
+  const { features, ...builderActions } = useBuilder()
 
   const type = layerValue?._type
   // const fullKey = [builderView === 'component' ? currentKey : rootKey, layerKey].join('/')
@@ -83,8 +84,8 @@ export const useTreeViewerCell = (layerKey: string) => {
       isComponentInstance: type === builderNodes.ComponentInstance,
       isPartialComponent:
         type === builderNodes.Component || type === builderNodes.ComponentInstance || parentIsComponent,
-      isComponentVariant: type === builderNodes.ComponentVariant
-      // ...features
+      isComponentVariant: type === builderNodes.ComponentVariant,
+      ...features
     },
     // ...builderActions,
     rename: (name: string) => {

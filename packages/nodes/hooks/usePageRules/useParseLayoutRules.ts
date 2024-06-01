@@ -1,13 +1,12 @@
-import { Field } from "@adstore/statex/src";
 import * as CSS from "csstype";
 import { toPx } from "../../helpers/toPx.ts";
 import { useLayerInvokerNew } from "../useLayerInvokerNew.ts";
+import { useContext } from "preact/compat";
+import { GraphStateContext } from "../../src/GraphStateProvider.tsx";
 import {
   builderLayerDirection,
   builderLayerMode,
-} from "@adstore/web/src/data/promos/creators";
-import { useContext } from "preact/compat";
-import { GraphStateContext } from "../../src/GraphStateProvider.tsx";
+} from "@fragments/fragments-plugin";
 
 export const useParseLayoutRules = (layerField: Field) => {
   const { graphState } = useContext(GraphStateContext);

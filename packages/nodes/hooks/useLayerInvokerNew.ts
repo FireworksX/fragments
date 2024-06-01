@@ -1,6 +1,3 @@
-import { Field } from "@adstore/statex";
-import { SetOptions } from "@adstore/statex/src/createState";
-import { SceneNode } from "../types";
 import { useContext } from "preact/compat";
 import { GraphStateContext } from "../src/GraphStateProvider.tsx";
 import { useGraph } from "@graph-state/react";

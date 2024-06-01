@@ -3,7 +3,8 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import { useBreadcrumbs } from './hooks/useBreadcrumbs'
 import Touchable from '@/app/components/Touchable'
-import Icon from '@adstore/web/src/components/Icon/Icon'
+import ComponentFrame from '@/app/svg/component-frame.svg'
+import CaretRight from '@/app/svg/caret-right.svg'
 
 interface BuilderBreadcrumbsProps {
   className?: string
@@ -24,10 +25,10 @@ const Breadcrumbs: FC<BuilderBreadcrumbsProps> = ({ className }) => {
             key={crumb.label}
             onClick={crumb.onClick}
           >
-            {crumb.isComponent && <Icon name='component-frame' width={10} />}
+            {crumb.isComponent && <ComponentFrame width={10} />}
             {crumb.label}
           </Touchable>
-          {index < list.length - 1 && <Icon name='caret-right' width={11} />}
+          {index < list.length - 1 && <CaretRight width={11} />}
         </>
       ))}
     </div>

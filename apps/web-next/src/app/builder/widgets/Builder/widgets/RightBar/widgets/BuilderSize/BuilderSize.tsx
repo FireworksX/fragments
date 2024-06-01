@@ -13,7 +13,7 @@ import InputNumber from '@/app/components/InputNumber/InputNumber'
 import Select from '@/app/components/Select/Select'
 import { builderSizing } from '@fragments/fragments-plugin'
 import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
-import { isValue } from '@adstore/utils'
+import { isValue } from '@fragments/utils'
 
 interface BuilderSizeProps {
   className?: string

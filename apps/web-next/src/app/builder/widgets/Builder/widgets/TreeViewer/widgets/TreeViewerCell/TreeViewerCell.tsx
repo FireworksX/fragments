@@ -1,5 +1,5 @@
 import { FC, FocusEventHandler, useMemo, useState } from 'react'
-import { isValue } from '@adstore/utils'
+import { isValue } from '@fragments/utils'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { useTreeViewerCell } from './hooks/useTreeViewerCell'
@@ -67,20 +67,18 @@ const TreeViewerCell: FC<TreeViewerCellProps> = ({
     flags,
     min,
     max,
-    // duplicate,
-    // remove,
-    // toggleVisible,
-    // setPrimary,
-    // click,
+    duplicate,
+    remove,
+    toggleVisible,
+    setPrimary,
+    click,
     // rename,
-    // remove,
-    // duplicate,
     // setPrimary,
     // toggleVisible,
     // buildFullKey,
     // convertToComponent,
-    // wrapFrame,
-    // removeWrapper
+    wrapFrame,
+    removeWrapper,
     rename
   } = useTreeViewerCell(layerKey)
   // const isOpen = layerKey in openMap ? openMap[layerKey] : false
@@ -155,29 +153,29 @@ const TreeViewerCell: FC<TreeViewerCellProps> = ({
       options={
         <>
           <DropdownGroup minWidth={200}>
-            {/*<DropdownOption description='⌘;' disabled={!flags.canHide} onClick={toggleVisible}>*/}
-            {/*  {flags.hidden ? 'Show' : 'Hide'}*/}
+            <DropdownOption description='⌘;' disabled={!flags.canHide} onClick={toggleVisible}>
+              {flags.hidden ? 'Show' : 'Hide'}
+            </DropdownOption>
+            <DropdownOption description='⌘D' disabled={!flags.canDuplicate} onClick={duplicate}>
+              Duplicate
+            </DropdownOption>
+            <DropdownOption description='⌫' disabled={!flags.canRemove} onClick={remove}>
+              Remove
+            </DropdownOption>
+            <DropdownOption disabled={!flags.canSetPrimary} onClick={setPrimary}>
+              Set Primary
+            </DropdownOption>
+            {/*<DropdownOption description='⌘K' disabled={!flags.canConvertToComponent} onClick={convertToComponent}>*/}
+            {/*  To Component*/}
             {/*</DropdownOption>*/}
-            {/*<DropdownOption description='⌘D' disabled={!flags.canDuplicate} onClick={duplicate}>*/}
-            {/*  Duplicate*/}
-            {/*</DropdownOption>*/}
-            {/*<DropdownOption description='⌫' disabled={!flags.canRemove} onClick={remove}>*/}
-            {/*  Remove*/}
-            {/*</DropdownOption>*/}
-            {/*<DropdownOption disabled={!flags.canSetPrimary} onClick={setPrimary}>*/}
-            {/*  Set Primary*/}
-            {/*</DropdownOption>*/}
-            {/*  <DropdownOption description='⌘K' disabled={!flags.canConvertToComponent} onClick={convertToComponent}>*/}
-            {/*    To Component*/}
-            {/*  </DropdownOption>*/}
-            {/*</DropdownGroup>*/}
-            {/*<DropdownGroup>*/}
-            {/*<DropdownOption disabled={!flags.canAddFrame} onClick={wrapFrame}>*/}
-            {/*  Wrap Frame*/}
-            {/*</DropdownOption>*/}
-            {/*  <DropdownOption disabled={!flags.canRemoveWrapper} onClick={removeWrapper}>*/}
-            {/*    Remove Frame*/}
-            {/*  </DropdownOption>*/}
+          </DropdownGroup>
+          <DropdownGroup>
+            <DropdownOption disabled={!flags.canAddFrame} onClick={wrapFrame}>
+              Wrap Frame
+            </DropdownOption>
+            <DropdownOption disabled={!flags.canRemoveWrapper} onClick={removeWrapper}>
+              Remove Frame
+            </DropdownOption>
           </DropdownGroup>
         </>
       }

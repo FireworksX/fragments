@@ -1,8 +1,6 @@
-import { OnClickSelectorOptions } from "@adstore/web/src/widgets/Builder/hooks/useBuilderLayerRefs.ts";
 import { FC, PropsWithChildren, useContext } from "preact/compat";
 import { GraphState } from "@graph-state/core";
 import { useGraph } from "@graph-state/react";
-import { omit } from "@adstore/utils";
 import { useParseRules } from "../hooks/usePageRules/useParseRules.ts";
 import { GraphStateContext } from "./GraphStateProvider.tsx";
 

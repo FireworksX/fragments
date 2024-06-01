@@ -8,7 +8,7 @@ declare const isAbsoluteUrl: (input: any) => boolean;
 
 declare const isHTMLNode: (o: any) => any;
 
-declare const promiseWaiter: <T = unknown>(duration?: number, payload?: T) => Promise<unknown>;
+declare const promiseWaiter: <T = unknown>(duration?: number, payload?: T | undefined) => Promise<unknown>;
 
 type Visitor<TReturn = unknown, TValue = unknown> = (key: PropertyKey, value: TValue, path: string, options?: IteratorOptions) => TReturn;
 type FilterIteratorPredicate = (nextValue: unknown, key: string | number, input: unknown) => boolean;
@@ -40,7 +40,7 @@ declare const replace: (text: string, variables?: AnyObject) => string;
 
 declare const get: (obj: AnyObject, path: string, defValue?: unknown) => any;
 
-declare const set: (obj: AnyObject, path: string, value: unknown) => AnyObject;
+declare const set: (obj: AnyObject, path: string, value: unknown) => AnyObject<any>;
 
 declare const createConstants: <K extends string>(...constants: K[]) => { [P in K]: P; };
 
@@ -78,7 +78,7 @@ declare const filterDeep: (input: unknown[] | AnyObject, predicate: (key: Proper
 
 declare const findDeep: (input: unknown[] | AnyObject, predicate: (key: PropertyKey, value: unknown, path: string) => boolean) => unknown | undefined;
 
-declare const pick: <TValue extends AnyObject>(obj: TValue, ...props: (keyof TValue)[]) => any;
+declare const pick: <TValue extends AnyObject<any>>(obj: TValue, ...props: (keyof TValue)[]) => any;
 
 declare function omit<T extends AnyObject, P extends string[]>(obj: T, ...props: P): Omit<T, P[number]>;
 
