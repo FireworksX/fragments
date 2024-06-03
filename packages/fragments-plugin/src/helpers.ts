@@ -22,6 +22,4 @@ export const OVERRIDE = 'override'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 export const clonedField = (graphState: GraphState, entity: Entity, key: string, fallback?: unknown = null) =>
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  graphState.hasOverride(entity, key) ? OVERRIDE : entity[key] ?? fallback
+  graphState.isOverrideFromField(entity, key) ? null : entity[key] ?? fallback

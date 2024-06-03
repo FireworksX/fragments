@@ -1,4 +1,4 @@
-import { FC, FocusEventHandler, useMemo, useState } from 'react'
+import { ElementRef, FC, FocusEventHandler, useMemo, useRef, useState } from 'react'
 import { isValue } from '@fragments/utils'
 import cn from 'classnames'
 import styles from './styles.module.css'
@@ -56,6 +56,7 @@ const TreeViewerCell: FC<TreeViewerCellProps> = ({
   handleClick,
   ...selectedProps
 }) => {
+  const inputRef = useRef<ElementRef<'input'>>(null)
   const [editLabel, setEditLabel] = useState<string | undefined>()
   const isActiveEdit = isValue(editLabel)
 
@@ -100,10 +101,12 @@ const TreeViewerCell: FC<TreeViewerCellProps> = ({
     return <Frame className={styles.primaryIcon} />
   }, [flags, type])
 
-  const onBlurEdit: FocusEventHandler<HTMLInputElement> = e => {
-    const saveValue = e.target.value
-    setEditLabel(undefined)
-    rename(saveValue)
+  const onEdit = () => {
+    if (editLabel) {
+      rename(editLabel)
+      setEditLabel(undefined)
+      inputRef?.current?.blur()
+    }
   }
 
   const asideProps = {
@@ -204,17 +207,30 @@ const TreeViewerCell: FC<TreeViewerCellProps> = ({
           {flags.hasChildren && <CaretRight className={styles.titleCaret} width={10} collapsed={collapsed} />}
         </Touchable>
         <div className={styles.headIcon}>{TypeIcon}</div>
-        <div className={styles.label} onDoubleClick={() => setEditLabel('')}>
+        <div
+          className={styles.label}
+          onDoubleClick={() => {
+            inputRef?.current?.focus()
+            setEditLabel('')
+          }}
+        >
           <input
             className={cn(styles.labelInput, { [styles.editable]: isActiveEdit })}
             value={!isActiveEdit ? name : undefined}
+            ref={inputRef}
             placeholder={editLabel}
             type='text'
             autoComplete='nope'
             autoCorrect='off'
             spellCheck={false}
             autoFocus={isActiveEdit}
-            onBlur={onBlurEdit}
+            onBlur={onEdit}
+            onKeyUp={e => {
+              if (e.key === 'Enter') {
+                onEdit()
+              }
+            }}
+            onChange={e => setEditLabel(e.target.value)}
           />
         </div>
         <TreeViewerCellAside className={styles.actions} type={type} {...asideProps} />

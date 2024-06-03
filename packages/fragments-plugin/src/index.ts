@@ -13,6 +13,7 @@ import { componentNode } from './nodes/componentNode'
 import { componentVariantNode } from './nodes/componentVariantNode'
 import { componentInstanceNode } from './nodes/componentInstanceNode'
 import { creators } from './staticMethods/creators'
+import { isValue } from '@fragments/utils'
 
 // export const statexBuilderPlugin = (statex: Statex) => {
 //   const originalMutate = statex.mutate
@@ -168,14 +169,20 @@ import { creators } from './staticMethods/creators'
 
 export const fragmentsPlugin: Plugin = (graphState: any) => {
   const hasLoggerPlugin = 'debugLog' in graphState
-  const hasExtenderPlugin = 'declareExtendGraph' in graphState
 
   if (!hasLoggerPlugin) {
     loggerPlugin({ onlyBrowser: true })(graphState)
   }
-  if (!hasExtenderPlugin) {
-    extendPlugin()(graphState)
-  }
+
+  // const org = graphState.mutate
+  // graphState.mutate = (...args) => {
+  //   console.log(...args)
+  //   return org(...args)
+  // }
+
+  // graphState.subscribe(state => {
+  //   console.log(state)
+  // })
 
   const [rootLink] = graphState.inspectFields(builderNodes.Document)
   graphState.root = rootLink
@@ -183,14 +190,47 @@ export const fragmentsPlugin: Plugin = (graphState: any) => {
   graphState.viewport = graphState.keyOfEntity(viewportNode(graphState) as any)
   graphState.isEmpty = (value: unknown) => typeof value === undefined || value == null
 
+  /**
+   * If field has override from overrideFrom value.
+   */
+  graphState.isOverrideFromField = (entity: Entity, fieldKey: string) => {
+    const resolvedEntity: any = typeof entity === 'string' ? graphState.resolve(entity) : entity
+    const resolvedOverride: any = graphState.resolve(resolvedEntity?.overrideFrom ?? '')
+    const fieldValue = entity?.[fieldKey]
+    return !!resolvedOverride && !fieldValue
+  }
+
   graphState.hasOverride = (entity: Entity, field?: string) => {
     const resolvedEntity: any = typeof entity === 'string' ? graphState.resolve(entity) : entity
-    const resolvedOverride: any = graphState.resolve(resolvedEntity?.overrideFrom)
-    const isOverride = field
-      ? resolvedEntity[field] === graphState.override || resolvedEntity[field] === undefined
-      : true
+    const resolvedOverride: any = graphState.resolve(resolvedEntity?.overrideFrom ?? '')
+    const fieldValue = entity?.[field]
 
-    return isOverride && resolvedOverride?._type === resolvedEntity?._type
+    // console.log(
+    //   entity,
+    //   field,
+    //   resolvedEntity?.overrideFrom,
+    //   resolvedOverride,
+    //   fieldValue,
+    //   !!resolvedOverride && fieldValue
+    // )
+    return !!resolvedOverride && fieldValue
+
+    // if (isValue(fieldValue)) return false
+
+    // console.log(resolvedEntity, resolvedEntity?.overrideFrom, resolvedOverride)
+    // if (resolvedOverride) {
+    // }
+    // // const isOverride = field
+    // //   ? resolvedEntity[field] === graphState.override || resolvedEntity[field] === undefined
+    // //   : true
+    // //
+    // // const res = isOverride && resolvedOverride?._type === resolvedEntity?._type
+    // //
+    // // console.log(resolvedEntity, entity, field, res)
+    // //
+    // // return res
+    //
+    // return false
   }
 
   graphState.resetOverride = (entity: Entity, field: string) => {
@@ -200,17 +240,13 @@ export const fragmentsPlugin: Plugin = (graphState: any) => {
   }
 
   graphState.resolveValue = (link: LinkKey, field: string) => {
-    if (field == 'visible') {
-      // console.trace(link, field)
-    }
     const graph: any = graphState.resolve(link)
+    const value = graph?.[field]
 
-    if (graph && field in graph && graph[field] !== undefined) {
-      if (!graphState.isEmpty(graph[field]) && graph[field] !== OVERRIDE) {
-        return graph[field]
-      } else if (graph.overrideFrom) {
-        return graphState.resolveValue(graph.overrideFrom, field)
-      }
+    if (!graphState.isEmpty(value) && !graphState.isOverrideFromField(value)) {
+      return value
+    } else if (graph.overrideFrom) {
+      return graphState.resolveValue(graph.overrideFrom, field)
     }
 
     return undefined
@@ -218,17 +254,20 @@ export const fragmentsPlugin: Plugin = (graphState: any) => {
 
   // graphState.mutate(rootNode, {})
 
-  graphState.declareExtendGraph(builderNodes.Document, (graph: any, cache: any) => documentNode(cache, graph))
-  graphState.declareExtendGraph(builderNodes.Screen, (graph: any, cache: any) => screenNode(cache, graph))
-  graphState.declareExtendGraph(builderNodes.Frame, (graph: any, cache: any) => frameNode(cache, graph))
-  graphState.declareExtendGraph(builderNodes.Text, (graph: any, cache: any) => textNode(cache, graph))
-  graphState.declareExtendGraph(builderNodes.Component, (graph: any, cache: any) => componentNode(cache, graph))
-  graphState.declareExtendGraph(builderNodes.ComponentVariant, (graph: any, cache: any) =>
-    componentVariantNode(cache, graph)
-  )
-  graphState.declareExtendGraph(builderNodes.ComponentInstance, (graph: any, cache: any) =>
-    componentInstanceNode(cache, graph)
-  )
+  extendPlugin(
+    {
+      [builderNodes.Document]: (graph, cache) => documentNode(cache, graph),
+      [builderNodes.Screen]: (graph, cache) => screenNode(cache, graph),
+      [builderNodes.Frame]: (graph, cache) => frameNode(cache, graph),
+      [builderNodes.Text]: (graph, cache) => textNode(cache, graph),
+      [builderNodes.Component]: (graph, cache) => componentNode(cache, graph),
+      [builderNodes.ComponentVariant]: (graph, cache) => componentVariantNode(cache, graph),
+      [builderNodes.ComponentInstance]: (graph, cache) => componentInstanceNode(cache, graph)
+    },
+    {
+      excludePartialGraph: true
+    }
+  )(graphState)
 
   return creators(graphState)
 }

@@ -12,7 +12,7 @@ export const builderStore = createState({
   initialState: {
     document: template,
     view: 'default',
-    selection: ['Frame:45b080252568c']
+    selection: []
   },
   plugins: [
     fragmentsPlugin,

@@ -9,16 +9,6 @@ export const template = {
       children: [
         {
           _type: 'Frame',
-          _id: '45b080252568c',
-          children: [
-            {
-              _type: 'Frame',
-              _id: '45b080252533'
-            }
-          ]
-        },
-        {
-          _type: 'Frame',
           _id: '342325463'
         }
       ]

@@ -9,7 +9,6 @@ import { layerPropsResolver } from 'src/propsResolvers/layerPropsResolver'
 import { layoutPropsResolver } from 'src/propsResolvers/layoutPropsResolver'
 import { paddingPropsResolver } from 'src/propsResolvers/paddingPropsResolver'
 import { scenePropsResolver } from 'src/propsResolvers/scenePropsResolver'
-import { GraphState } from '@graph-state/core'
 
 export const screenNode: ResolverNode = (state, initialEntity?: ScreenNode): ScreenNode => {
   const key = state.keyOfEntity(initialEntity) ?? ''
