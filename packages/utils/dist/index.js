@@ -38,6 +38,7 @@ __export(src_exports, {
   eventEmitter: () => eventEmitter,
   filterDeep: () => filterDeep,
   findDeep: () => findDeep,
+  generateId: () => generateId,
   get: () => get,
   hexToRgb: () => hexToRgb,
   injectLink: () => injectLink,
@@ -284,12 +285,16 @@ var injectLink = (options) => {
   Object.entries(options).forEach(([key, value]) => link.setAttribute(key, value));
   head.appendChild(link);
 };
+
+// src/generateId.ts
+var generateId = () => Math.random().toString(16).slice(2);
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   createConstants,
   eventEmitter,
   filterDeep,
   findDeep,
+  generateId,
   get,
   hexToRgb,
   injectLink,

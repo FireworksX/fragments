@@ -7,7 +7,7 @@ import { viewportNode } from './nodes/viewportNode'
 import { screenNode } from './nodes/screenNode'
 import { override } from './types/props'
 import { frameNode } from './nodes/frameNode'
-import { OVERRIDE } from './helpers'
+import { getKey, OVERRIDE } from './helpers'
 import { textNode } from './nodes/textNode'
 import { componentNode } from './nodes/componentNode'
 import { componentVariantNode } from './nodes/componentVariantNode'
@@ -189,6 +189,7 @@ export const fragmentsPlugin: Plugin = (graphState: any) => {
   // graphState.empty = empty
   graphState.viewport = graphState.keyOfEntity(viewportNode(graphState) as any)
   graphState.isEmpty = (value: unknown) => typeof value === undefined || value == null
+  graphState.getKey = getKey
 
   /**
    * If field has override from overrideFrom value.
@@ -245,7 +246,7 @@ export const fragmentsPlugin: Plugin = (graphState: any) => {
 
     if (!graphState.isEmpty(value) && !graphState.isOverrideFromField(value)) {
       return value
-    } else if (graph.overrideFrom) {
+    } else if (graph?.overrideFrom) {
       return graphState.resolveValue(graph.overrideFrom, field)
     }
 

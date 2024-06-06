@@ -12,7 +12,21 @@ import { createComponent as createComponentNode, CreateComponentOptions } from '
 
 export const creators: Plugin = state => {
   const createFrame = () => {
-    const entity = createFrameNode()
+    const node = createFrameNode()
+    const documentNode = state.resolve(state.root)
+    documentNode.appendChild(node)
+    return state.keyOfEntity(node)
+  }
+
+  const createComponent = (options: CreateComponentOptions) => {
+    const node = createComponentNode(options)
+    const documentNode = state.resolve(state.root)
+    documentNode.appendChild(node)
+    return state.keyOfEntity(node)
+  }
+
+  const createText = () => {
+    const entity = createTextNode()
     state.mutate(state.root, {
       children: [entity]
     })
@@ -20,29 +34,11 @@ export const creators: Plugin = state => {
     return state.keyOfEntity(entity)
   }
 
-  const createComponent = (options: CreateComponentOptions) => {
-    const componentNode = createComponentNode(options)
-
-    state.mutate(state.root, {
-      children: [componentNode]
-    })
-    state.resolve(componentNode).addVariant()
-
-    return componentNode
-  }
-
-  const createText = () => {
-    const entity = createTextNode(state)
-    return state.mutate(state.root, {
-      children: [entity]
-    })
-  }
-
   const createScreen = (createScreenOptions: CreateScreenOptions) => {
-    const entity = createScreenNode(createScreenOptions)
-    return state.mutate(state.root, {
-      children: [entity]
-    })
+    const node = createScreenNode(createScreenOptions)
+    const documentNode = state.resolve(state.root)
+    documentNode.appendChild(node)
+    return state.keyOfEntity(node)
   }
 
   const createSolidPaintStyle = (options: CreateSolidPaintStyleOptions) => {

@@ -8,7 +8,7 @@ import InputText from '@/app/components/InputText/InputText'
 import InputNumber from '@/app/components/InputNumber/InputNumber'
 import { ModalContext } from '@/app/builder/widgets/Builder/ModalContext'
 import { useGraph, useGraphFields } from '@graph-state/react'
-import { MODAL_TYPE, modalStore } from '@/app/stories/modal.store'
+import { MODAL_TYPE, modalStore } from '@/app/store/modal.store'
 
 interface CreateCustomBreakpointProps {
   className?: string
@@ -42,7 +42,7 @@ const CreateCustomBreakpoint: FC<CreateCustomBreakpointProps> = ({ className }) 
         }
       >
         <div className={styles.body}>
-          <InputText placeholder='Name' value={name} onChange={setName} />
+          <InputText placeholder='Name' value={name} autoFocus onChange={setName} />
           <InputNumber placeholder='Width' value={width} onChange={setWidth} />
         </div>
       </ModalContainer>

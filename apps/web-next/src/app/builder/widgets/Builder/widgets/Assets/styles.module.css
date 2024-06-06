@@ -13,25 +13,3 @@
     align-items: center;
     justify-content: center;
 }
-
-.colorAction {
-    transition: var(--animation-transition-default);
-    opacity: 0;
-}
-
-.colorWrapper {
-    &:hover {
-        .colorAction {
-            opacity: 1;
-        }
-    }
-}
-
-.cellIcon {
-}
-
-.componentCell {
-    .cellIcon {
-        color: var(--component);
-    }
-}

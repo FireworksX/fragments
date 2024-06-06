@@ -1,4 +1,6 @@
 import { Layer as LayerNode } from "./Layer.tsx";
+import { Component as ComponentNode } from "./Component.tsx";
+import { ComponentInstance as ComponentInstanceNode } from "./ComponentInstance.tsx";
 import { ComponentChild, render as preactRender, cloneElement } from "preact";
 import GraphStateProvider from "./GraphStateProvider.tsx";
 
@@ -16,3 +18,5 @@ const renderNode =
   };
 
 export const Layer = renderNode(<LayerNode />);
+export const Component = renderNode(<ComponentNode />);
+export const ComponentInstance = renderNode(<ComponentInstanceNode />);

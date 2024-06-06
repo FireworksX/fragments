@@ -6,7 +6,7 @@ import { useScreens } from '@/app/builder/widgets/Builder/hooks/useScreens'
 import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
 import { useGraph, useGraphFields, useGraphStack } from '@graph-state/react'
 import { LinkKey } from '@graph-state/core'
-import { modalStore } from '@/app/stories/modal.store'
+import { modalStore } from '@/app/store/modal.store'
 
 interface BuilderScreenProps extends PropsWithChildren {
   screenKey: LinkKey

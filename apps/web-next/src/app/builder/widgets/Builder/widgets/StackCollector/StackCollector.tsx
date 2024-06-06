@@ -27,7 +27,7 @@ const StackCollector: FC<StackCollectorProps> = ({ className, children, onPrev, 
     const onClick = e => {
       const container = e.target.closest('[data-stack-container]')
       if (!container) {
-        // proxyCloseHandler()
+        proxyCloseHandler()
       }
       // if (e.target !== ref.current) {
       //   let hasParent = false
@@ -48,7 +48,7 @@ const StackCollector: FC<StackCollectorProps> = ({ className, children, onPrev, 
     return () => {
       document.removeEventListener('click', onClick)
     }
-  }, [onClose])
+  }, [onClose, proxyCloseHandler])
 
   if (!activePanel) {
     return null

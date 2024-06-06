@@ -1,47 +1,46 @@
-import { FC } from 'react'
-import { Template } from '@adstore/templates'
-import { Render } from '@adstore/templates-react'
-import { useStatex } from '@adstore/statex-react'
-import { useStore } from '@nanostores/react'
-import * as Styled from './styles'
-import { $layers, $statex } from '../../../../store/builderRouterStore'
-import { useBuilderLayerRefs } from '../../../../widgets/Builder/hooks/useBuilderLayerRefs'
-import BuilderFragmentWrapper from '../BuilderFragmentWrapper/BuilderFragmentWrapper'
-import Icon from '../../../../components/Icon/Icon'
-import { useComponentVariants } from '../../hooks/useComponentVariants'
+import { FC, useContext } from 'react'
+import cn from 'classnames'
+import styles from './styles.module.css'
+import { FragmentsRender } from '@fragments/render-react'
+import { Component } from '@fragments/nodes'
+import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
+import { useGraph } from '@graph-state/react'
+import Touchable from '@/app/components/Touchable'
+import PlusCircle from '@/app/svg/plus-circle.svg'
+import BuilderFragmentWrapper from '@/app/builder/widgets/Builder/components/BuilderFragmentWrapper/BuilderFragmentWrapper'
+import { useBuilderLayerRefs } from '@/app/builder/widgets/Builder/hooks/useBuilderLayerRefs'
+import { useComponentVariants } from '@/app/builder/widgets/Builder/hooks/useComponentVariants'
 
 interface BuilderDisplayComponentProps {
   className?: string
 }
 
 const DisplayComponent: FC<BuilderDisplayComponentProps> = ({ className }) => {
-  const statex = useStore($statex)
-  const { openLayerField } = useStore($layers)
-  const componentValue = useStatex(statex, openLayerField)
+  const { graphState } = useContext(BuilderContext)
+  const [{ focusComponent }] = useGraph(graphState)
+  const [componentValue] = useGraph(graphState, focusComponent)
   const componentVariants: string[] = componentValue?.children ?? []
   const { onClick } = useBuilderLayerRefs()
-  const { addVariant } = useComponentVariants()
+  // const { addVariant } = useComponentVariants()
 
   return (
-    <Styled.Root className={className}>
+    <div className={cn(styles.root, className)}>
       {componentVariants.map(variantKey => (
         <BuilderFragmentWrapper key={variantKey} variantKey={variantKey}>
-          <Render
-            statex={statex}
-            rootField={openLayerField}
+          <FragmentsRender
+            FragmentNode={Component}
+            graphState={graphState}
+            componentKey={focusComponent}
             variantKey={variantKey}
-            mode='development'
             onClick={onClick}
-          >
-            {Template}
-          </Render>
+          />
         </BuilderFragmentWrapper>
       ))}
-      <Styled.CreateVariant onClick={() => componentValue.addVariant()}>
-        <Icon name='plus-circle' />
+      <Touchable TagName='button' className={styles.createVariant} onClick={() => componentValue.addVariant()}>
+        <PlusCircle name='plus-circle' />
         Add variant
-      </Styled.CreateVariant>
-    </Styled.Root>
+      </Touchable>
+    </div>
   )
 }
 

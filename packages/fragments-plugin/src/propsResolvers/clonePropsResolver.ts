@@ -1,6 +1,7 @@
-import { generateId, Resolver, setKey } from '../helpers'
+import { Resolver, setKey } from '../helpers'
 import { CloneProps } from '../types/props'
 import { BaseNode } from '../types'
+import { generateId } from '@fragments/utils'
 
 export const clonePropsResolver: Resolver = (state, entity): CloneProps => {
   const key = state.keyOfEntity(entity)

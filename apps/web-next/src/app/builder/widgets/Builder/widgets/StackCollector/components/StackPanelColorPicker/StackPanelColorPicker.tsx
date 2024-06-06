@@ -9,8 +9,8 @@ import ColorPicker from '@/app/builder/widgets/Builder/components/ColorPicker/Co
 import Panel from '@/app/builder/widgets/Builder/components/Panel/Panel'
 import { useDisplayColor } from '@/app/builder/widgets/Builder/hooks/useDisplayColor'
 import { useGraph } from '@graph-state/react'
-import { POPOUT_TYPE, popoutsStore } from '@/app/stories/popouts.store'
-import { builderStore } from '@/app/stories/builder.store'
+import { POPOUT_TYPE, popoutsStore } from '@/app/store/popouts.store'
+import { builderStore } from '@/app/store/builder/builder.store'
 
 export interface StackPanelColorPickerOptions {
   value?: Color

@@ -1,6 +1,6 @@
 import { BooleanType, NumberType } from '../types/componentProperties'
 import { builderComponentControlType, builderNodes } from '../defenitions'
-import { generateId } from '../helpers'
+import { generateId } from '@fragments/utils'
 
 export const createNumberProperty = (custom?: Partial<NumberType>): NumberType => ({
   _type: builderNodes.ComponentProperty,

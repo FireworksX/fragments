@@ -90,4 +90,6 @@ interface InjectLinkOptions {
 }
 declare const injectLink: (options: InjectLinkOptions) => void;
 
-export { createConstants, eventEmitter, filterDeep, findDeep, get, hexToRgb, injectLink, isAbsoluteUrl, isEmptyValue, isHTMLNode, isObject, isPrimitive, isValue, iterator, mergeIterator, noop, omit, pick, promiseWaiter, replace, rgbToRgba, set, times, toKebabCase, toLongHex };
+declare const generateId: () => string;
+
+export { createConstants, eventEmitter, filterDeep, findDeep, generateId, get, hexToRgb, injectLink, isAbsoluteUrl, isEmptyValue, isHTMLNode, isObject, isPrimitive, isValue, iterator, mergeIterator, noop, omit, pick, promiseWaiter, replace, rgbToRgba, set, times, toKebabCase, toLongHex };

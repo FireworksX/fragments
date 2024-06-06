@@ -8,6 +8,7 @@
         border: none;
         position: relative;
         width: initial !important;
+        transition: background-color var(--animation-transition-default);
 
         &.primary {
             background-color: var(--primary);
@@ -75,6 +76,10 @@
 
         &.stretched {
             width: 100% !important;
+        }
+
+        &:disabled {
+            cursor: default;
         }
     }
 

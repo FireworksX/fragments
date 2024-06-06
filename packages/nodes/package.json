@@ -26,8 +26,8 @@
     "lint": "eslint . --ext .ts,.tsx --fix"
   },
   "dependencies": {
-    "@fragments/utils": "workspace:*",
     "@fragments/fragments-plugin": "workspace:*",
+    "@fragments/utils": "workspace:*",
     "@graph-state/core": "^0.5.0",
     "@graph-state/react": "^0.3.1",
     "@juggle/resize-observer": "^3.4.0",
@@ -36,7 +36,7 @@
     "preact": "^10.13.1"
   },
   "devDependencies": {
-    "vite": "^5.2.12",
-    "@preact/preset-vite": "^2.8.2"
+    "@preact/preset-vite": "^2.8.2",
+    "vite": "^5.2.12"
   }
 }

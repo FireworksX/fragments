@@ -1,5 +1,5 @@
 import { Color } from 'react-color'
-import { popoutsStore } from '@/app/stories/popouts.store'
+import { popoutsStore } from '@/app/store/popouts.store'
 import { useContext } from 'react'
 import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
 import { builderNodes, createSolidPaintStyle } from '@fragments/fragments-plugin'

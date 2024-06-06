@@ -16,6 +16,7 @@ import PanelHeadAside from '@/app/builder/widgets/Builder/components/PanelHeadAs
 import Plus from '@/app/svg/plus.svg'
 import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
 import ComponentFrame from '@/app/svg/component-frame.svg'
+import ComponentCell from '@/app/builder/widgets/Builder/components/ComponentCell/ComponentCell'
 
 interface BuilderAssetsProps {
   className?: string
@@ -41,25 +42,13 @@ const Assets: FC<BuilderAssetsProps> = ({ className }) => {
           <div className={styles.panelBody}>
             <Collapse title='Local'>
               {componentsList.map(component => (
-                <div className={styles.colorWrapper} key={component._id}>
-                  <Cell
-                    className={styles.componentCell}
-                    key={component._id}
-                    before={<ComponentFrame className={styles.cellIcon} width={10} />}
-                    description={
-                      <Button
-                        className={styles.colorAction}
-                        mode='secondary'
-                        onClick={() => insertComponent(component)}
-                      >
-                        Insert
-                      </Button>
-                    }
-                    onClick={() => onClickComponent(graphState.keyOfEntity(component))}
-                  >
-                    {component.name}
-                  </Cell>
-                </div>
+                <ComponentCell
+                  key={component._id}
+                  onInsert={() => insertComponent(component)}
+                  onClick={() => onClickComponent(graphState.keyOfEntity(component))}
+                >
+                  {component.name}
+                </ComponentCell>
               ))}
             </Collapse>
           </div>
@@ -93,41 +82,27 @@ const Assets: FC<BuilderAssetsProps> = ({ className }) => {
           {colorVariables.length > 0 && (
             <Collapse title='Colors'>
               {colorVariables.map(color => (
-                <div className={styles.colorWrapper} key={color?.name}>
-                  <ColorCell
-                    color={color?.color}
-                    description={
-                      <Button
-                        className={styles.colorAction}
-                        mode='secondary'
-                        onClick={() => removeColor(graphState.keyOfEntity(color))}
-                      >
-                        Delete
-                      </Button>
-                    }
-                    onClick={() => editColor(graphState.keyOfEntity(color), { initial: true, position: 'left' })}
-                  >
-                    {color?.name}
-                  </ColorCell>
-                </div>
+                <ColorCell
+                  key={color?.name}
+                  color={color?.color}
+                  onClick={() => editColor(graphState.keyOfEntity(color), { initial: true, position: 'left' })}
+                  onDelete={() => removeColor(graphState.keyOfEntity(color))}
+                >
+                  {color?.name}
+                </ColorCell>
               ))}
             </Collapse>
           )}
           {cssVariables.length > 0 && (
             <Collapse title='CSS Overrides'>
               {cssVariables.map(value => (
-                <div className={styles.colorWrapper} key={value?.name}>
-                  <CssCell
-                    description={
-                      <Button mode='secondary' onClick={() => removeColor(graphState.keyOfEntity(value))}>
-                        Delete
-                      </Button>
-                    }
-                    onClick={() => editCssOverride(graphState.keyOfEntity(value), { initial: true, position: 'left' })}
-                  >
-                    {value?.name}
-                  </CssCell>
-                </div>
+                <CssCell
+                  key={value?.name}
+                  onClick={() => editCssOverride(graphState.keyOfEntity(value), { initial: true, position: 'left' })}
+                  onDelete={() => removeColor(graphState.keyOfEntity(value))}
+                >
+                  {value?.name}
+                </CssCell>
               ))}
             </Collapse>
           )}

@@ -237,11 +237,15 @@ var injectLink = (options) => {
   Object.entries(options).forEach(([key, value]) => link.setAttribute(key, value));
   head.appendChild(link);
 };
+
+// src/generateId.ts
+var generateId = () => Math.random().toString(16).slice(2);
 export {
   createConstants,
   eventEmitter,
   filterDeep,
   findDeep,
+  generateId,
   get,
   hexToRgb,
   injectLink,

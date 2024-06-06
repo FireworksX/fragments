@@ -11,7 +11,7 @@ import { useBuilderSelection } from '@/app/builder/widgets/Builder/hooks/useBuil
 import { useLayerInvokerNew } from '@/app/builder/widgets/Builder/hooks/useLayerInvokerNew'
 import InputText from '@/app/components/InputText/InputText'
 import { useGraph } from '@graph-state/react'
-import { POPOUT_TYPE, popoutsStore } from '@/app/stories/popouts.store'
+import { POPOUT_TYPE, popoutsStore } from '@/app/store/popouts.store'
 import { useBuilderAssetsCss } from '@/app/builder/widgets/Builder/widgets/Assets/hooks/useBuilderAssetsCss'
 import Plus from '@/app/svg/plus.svg'
 import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'

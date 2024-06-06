@@ -12,6 +12,7 @@ import { useLayerInvokerNew } from '@/app/builder/widgets/Builder/hooks/useLayer
 import { builderPaintMode, getDefaultImageFill, getDefaultSolidFill } from '@fragments/fragments-plugin'
 import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
 import { GraphValue } from '@graph-state/react'
+import { popoutsStore } from '@/app/store/popouts.store'
 
 export interface StackPanelFillOptions {}
 
@@ -106,7 +107,7 @@ const StackPanelFill: FC<StackPanelFillProps> = ({ className }) => {
             initialColor={getColor(currentFill.value?.color)}
             activeColorKey={currentFill.value?.color}
             onSelect={changeColor}
-            // onCreate={$goPrevPopout}
+            onCreate={popoutsStore.goPrev}
           />
         </>
       )}

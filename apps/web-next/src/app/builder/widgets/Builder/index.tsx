@@ -22,31 +22,44 @@ import Canvas from '@/app/builder/widgets/Builder/widgets/Canvas/Canvas'
 import { animated } from '@react-spring/web'
 import CreateCustomBreakpoint from '@/app/widgets/modals/CreateCustomBreakpoint/CreateCustomBreakpoint'
 import CreateComponentModal from '@/app/widgets/modals/CreateComponentModal/CreateComponentModal'
-import { builderStore } from '@/app/stories/builder.store'
 import LayerHighlight from '@/app/builder/widgets/Builder/widgets/LayerHighlight/LayerHighlight'
 import { useGraph } from '@graph-state/react'
-import { popoutsStore } from '@/app/stories/popouts.store'
+import { popoutsStore } from '@/app/store/popouts.store'
 import { useBuilder } from '@/app/builder/widgets/Builder/hooks/useBuilder'
+import Tools from '@/app/builder/widgets/Builder/widgets/Tools/Tools'
+import BuilderRichText from '@/app/builder/widgets/Builder/widgets/BuilderRichText/BuilderRichText'
+import { builderStore } from '@/app/store/builder/builder.store'
+import DisplayComponent from '@/app/builder/widgets/Builder/widgets/DisplayComponent/DisplayComponent'
+import Breadcrumbs from '@/app/builder/widgets/Builder/widgets/Breadcrumbs/Breadcrumbs'
 
 if (isBrowser) {
   window.builderStore = builderStore
 }
 
 const Builder = () => {
-  const { canvas } = useContext(BuilderContext)
+  const { canvas, graphState } = useContext(BuilderContext)
   const [currentPopout] = useGraph(popoutsStore, popoutsStore.getCurrent())
-  const { addFrame } = useBuilder()
+  const { addFrame, addText } = useBuilder()
+  const [{ view }] = useGraph(graphState)
 
   return (
     <>
-      <div className={styles.root}>
+      <div
+        className={cn(styles.root, {
+          [styles.componentView]: view === 'component'
+        })}
+      >
         <div className={styles.background}></div>
         <AsideBar className={styles.left}>{<LeftBar />}</AsideBar>
         <div className={styles.body}>
-          <Canvas>
+          {view === 'component' && <Breadcrumbs />}
+
+          <Tools>
             <LayerHighlight />
-            <DisplayBreakpoints />
-          </Canvas>
+            <BuilderRichText />
+          </Tools>
+
+          <Canvas>{view === 'component' ? <DisplayComponent /> : <DisplayBreakpoints />}</Canvas>
 
           <FloatingBar
             scale={<animated.div>{canvas?.scale.to(scale => Math.floor(scale * 100).toFixed(0))}</animated.div>}
@@ -54,8 +67,8 @@ const Builder = () => {
               switch (action) {
                 case 'addFrame':
                   return addFrame()
-                // case 'addText':
-                //   return addText()
+                case 'addText':
+                  return addText()
                 // case 'zoomIn':
                 //   return zoomIn()
                 // case 'zoomOut':

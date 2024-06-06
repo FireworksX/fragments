@@ -126,14 +126,12 @@ const TreeViewerCell: FC<TreeViewerCellProps> = ({
     }
 
     if (selectedProps.prevSelected && !selectedProps.nextSelected) {
-      background =
-        flags.isPartialComponent && selectedProps.selected ? styles.partialSelectedComponent : styles.partialSelected
+      background = flags.isPartialComponent ? styles.partialSelectedComponent : styles.partialSelected
       radius = [styles.borderBottom]
     }
 
     if (selectedProps.prevSelected) {
-      background =
-        flags.isPartialComponent && selectedProps.selected ? styles.partialSelectedComponent : styles.partialSelected
+      background = flags.isPartialComponent ? styles.partialSelectedComponent : styles.partialSelected
     }
 
     if (!selectedProps.prevSelected && !selectedProps.nextSelected && selectedProps.partialSelection) {

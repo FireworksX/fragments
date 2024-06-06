@@ -37,6 +37,7 @@ const Touchable: React.FC<TouchableProps> = ({
         [styles.asButton]: TagName === 'button'
       })}
       onClick={!disabled ? proxyOnClick : () => undefined}
+      disabled={disabled}
       {...rest}
     >
       {children}

@@ -1,5 +1,5 @@
-import { generateId } from '../helpers'
 import { builderNodes } from 'src'
+import { generateId } from '@fragments/utils'
 
 export interface CreateComponentOptions {
   name?: string

@@ -1,7 +1,5 @@
 import { GraphState, Entity, Graph } from '@graph-state/core'
 
-export const generateId = () => Math.random().toString(16).slice(2)
-
 export const setKey = (key: string) => `$${key}`
 export const getKey = (key: string) => (typeof key === 'string' && key.startsWith('$') ? key.slice(1) : key)
 

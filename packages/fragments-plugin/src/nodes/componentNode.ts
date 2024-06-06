@@ -5,6 +5,7 @@ import { clonePropsResolver } from '../propsResolvers/clonePropsResolver'
 import { basePropsResolver } from '../propsResolvers/basePropsResolver'
 import { createComponentInstance } from '../creators/createComponentInstance'
 import { ComponentPropertyKey } from '../types/props'
+import { createComponentVariant } from '../creators/createComponentVariant'
 
 export const componentNode: ResolverNode = (graphState, initialEntity: ComponentNode): ComponentNode => {
   const key = graphState.keyOfEntity(initialEntity)
@@ -26,14 +27,15 @@ export const componentNode: ResolverNode = (graphState, initialEntity: Component
       const variants = componentNode.children ?? []
       const nextName = `Variant ${variants.length + 1}`
 
-      const nextVariant = defaultVariant?.clone({
-        name: nextName,
-        isPrimary: false
-      }) // ??
-      // createComponentVariant(graphState, {
-      //   isPrimary: !defaultVariant,
-      //   name: nextName
-      // })
+      const nextVariant =
+        defaultVariant?.clone({
+          name: nextName,
+          isPrimary: false
+        }) ??
+        createComponentVariant({
+          isPrimary: !defaultVariant,
+          name: nextName
+        })
 
       if (defaultVariant) {
         graphState.resolve(nextVariant).rename(nextName)
@@ -72,7 +74,7 @@ export const componentNode: ResolverNode = (graphState, initialEntity: Component
     },
     createInstance(): ComponentInstanceNode {
       const componentNode = graphState.resolve(key)
-      const instanceEntity = createComponentInstance(graphState, {
+      const instanceEntity = createComponentInstance({
         name: componentNode.name,
         mainComponent: setKey(key),
         variant: componentNode.defaultVariant

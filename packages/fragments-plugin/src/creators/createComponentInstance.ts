@@ -1,6 +1,6 @@
 import { builderNodes } from 'src/defenitions'
-import { generateId } from '../helpers'
 import { EntityKey } from '../types/props'
+import { generateId } from '@fragments/utils'
 
 export interface CreateComponentInstanceOptions {
   name?: string

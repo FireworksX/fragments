@@ -1,5 +1,5 @@
 import { builderNodes } from '../defenitions'
-import { generateId } from '../helpers'
+import { generateId } from '@fragments/utils'
 
 export interface CreateScreenOptions {
   width: number

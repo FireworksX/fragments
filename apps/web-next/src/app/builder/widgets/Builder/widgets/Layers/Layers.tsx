@@ -11,14 +11,14 @@ interface BuilderLayersProps {
 
 const Layers: FC<BuilderLayersProps> = ({ className }) => {
   const { graphState } = useContext(BuilderContext)
-  const [{ view }] = useGraph(graphState, graphState.builderLink)
+  const [{ view, focusComponent }] = useGraph(graphState)
   // const statex = useStore($statex)
   // const { openLayerField } = useStore($layers)
   // const builderView = useStore($builderView)
 
   return (
     <div className={cn(styles.root, className)}>
-      <TreeViewer rootLayerKey={view === 'default' ? graphState.root : ''} />
+      <TreeViewer rootLayerKey={view === 'default' ? graphState.root : focusComponent} />
     </div>
   )
 }

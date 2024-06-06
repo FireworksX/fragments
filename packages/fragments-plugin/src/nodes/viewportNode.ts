@@ -1,8 +1,8 @@
 import { ViewportNode } from '../types/nodes'
 import { builderNodes } from '../defenitions'
-import { generateId } from '../helpers'
 import { Rect, Vector } from '../types/props'
 import { GraphState } from '@graph-state/core'
+import { generateId } from '@fragments/utils'
 
 export const viewportNode = (graphState: GraphState): ViewportNode => {
   const _type = builderNodes.Viewport
@@ -14,7 +14,7 @@ export const viewportNode = (graphState: GraphState): ViewportNode => {
     zoom: 1,
     bounds: { x: 0, y: 0, width: 0, height: 0 },
     _type: builderNodes.Viewport,
-    _id: generateId(),
+    _id,
     setZoom(zoom: number) {
       graphState.mutate(key, {
         zoom

@@ -1,7 +1,7 @@
 import { Color } from '../../types/props'
 import { builderNodes } from '../defenitions'
-import { generateId } from '../helpers'
 import { Entity } from '@graph-state/core'
+import { generateId } from '@fragments/utils'
 
 export interface CreateSolidPaintStyleOptions {
   color: Color

@@ -1,27 +1,30 @@
-import { useStore } from '@nanostores/react'
-import { builderNodes } from 'src/data/promos/creators'
 import { useCallback, useContext } from 'react'
 import { useBuilderSelection } from '@/app/builder/widgets/Builder/hooks/useBuilderSelection'
+import { modalStore } from '@/app/store/modal.store'
+import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
+import { useGraphFields, useGraphStack } from '@graph-state/react'
+import { builderNodes } from '@fragments/fragments-plugin'
 
 export const useBuilderAssetsComponents = () => {
-  // const { open, close } = useContext(ModalContext)
-  const statex = {} //useStore($statex)
-  const componentKeys = [] //useFields(statex, builderNodes.Component)
-  const values = [] //useStatexStack(statex, componentKeys)
+  const { graphState } = useContext(BuilderContext)
+  const componentKeys = useGraphFields(graphState, builderNodes.Component)
+  const values = useGraphStack(graphState, componentKeys)
   const { select } = useBuilderSelection()
 
   const addComponent = () => {
-    open('createComponent', {
+    modalStore.open('createComponent', {
       onCreate: name => {
-        statex.createComponent({ name })
-        close()
+        const componentLink = graphState.createComponent({ name })
+        graphState.resolve(componentLink).addVariant()
+        modalStore.close()
       }
     })
   }
 
   const openComponent = useCallback((componentKey: string) => {
-    // $layers.setKey('openLayerField', componentKey)
-    // select(statex.resolve(componentKey).defaultVariant)
+    graphState.setView('component')
+    graphState.focusComponent(componentKey)
+    select(graphState.resolve(componentKey).defaultVariant)
   }, [])
 
   return {

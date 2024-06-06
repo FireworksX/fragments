@@ -2,7 +2,7 @@ import { ComponentType, useCallback, useEffect, useMemo } from 'react'
 import { useSpringRef, useTransition } from '@react-spring/web'
 import { useStore } from '@nanostores/react'
 import { useGraph } from '@graph-state/react'
-import { popoutsStore } from '@/app/stories/popouts.store'
+import { popoutsStore } from '@/app/store/popouts.store'
 // import { $closePopout, $currentPopout, $goPrevPopout, $prevPopout } from '../../../store/popoutStore'
 // import { $nextPopout } from '../../../store/popoutStore/computed/$nextPopout'
 
@@ -16,7 +16,7 @@ interface Options {
 
 export const useStackCollector = ({ panels, onPrev, onClose }: Options) => {
   const [{ history, cursor }] = useGraph(popoutsStore)
-  const [currentPopout] = useGraph(popoutsStore, history.at(cursor))
+  const [currentPopout] = useGraph(popoutsStore, history.at(cursor) ?? 'nil')
   const activePanel = currentPopout?.name || ''
   const prevPopout = popoutsStore.prevPopout()
   const nextPopout = popoutsStore.nextPopout()
@@ -55,8 +55,11 @@ export const useStackCollector = ({ panels, onPrev, onClose }: Options) => {
   }
 
   const proxyCloseHandler = () => {
-    popoutsStore.close()
-    if (onClose) onClose()
+    console.log(currentPopout)
+    if (currentPopout) {
+      popoutsStore.close()
+      if (onClose) onClose()
+    }
   }
 
   return {

@@ -1,10 +1,11 @@
-import { FC, PropsWithChildren, ReactNode } from 'react'
+import React, { FC, PropsWithChildren, ReactNode } from 'react'
 import { Color } from 'react-color'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import Touchable from '@/app/components/Touchable'
 import { useDisplayColor } from '@/app/builder/widgets/Builder/hooks/useDisplayColor'
 import Cell from '@/app/builder/widgets/Builder/components/Cell/Cell'
+import Button from '@/app/components/Button'
 
 interface ColorCellProps extends PropsWithChildren {
   color: Color
@@ -12,9 +13,18 @@ interface ColorCellProps extends PropsWithChildren {
   description?: ReactNode
   className?: string
   onClick?: () => void
+  onDelete?: () => void
 }
 
-const ColorCell: FC<ColorCellProps> = ({ className, sizeColor = 10, color, children, description, onClick }) => {
+const ColorCell: FC<ColorCellProps> = ({
+  className,
+  sizeColor = 10,
+  color,
+  children,
+  description,
+  onClick,
+  onDelete
+}) => {
   const { color: parsedColor } = useDisplayColor(color)
 
   return (
@@ -30,7 +40,15 @@ const ColorCell: FC<ColorCellProps> = ({ className, sizeColor = 10, color, child
             color={parsedColor}
           />
         }
-        description={description}
+        description={
+          onDelete && (
+            <div>
+              <Button className={styles.actions} mode='secondary' onClick={() => onDelete()}>
+                Delete
+              </Button>
+            </div>
+          )
+        }
       >
         {children}
       </Cell>

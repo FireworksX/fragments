@@ -10,7 +10,7 @@ import Select from '@/app/components/Select/Select'
 import { useBuilderSelection } from '@/app/builder/widgets/Builder/hooks/useBuilderSelection'
 import { useDisplayColor } from '@/app/builder/widgets/Builder/hooks/useDisplayColor'
 import { useLayerInvokerNew } from '@/app/builder/widgets/Builder/hooks/useLayerInvokerNew'
-import { popoutsStore } from '@/app/stories/popouts.store'
+import { popoutsStore } from '@/app/store/popouts.store'
 import { builderBorderType, getDefaultBorder } from '@fragments/fragments-plugin'
 
 export interface StackPanelBorderOptions {

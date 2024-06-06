@@ -5,7 +5,8 @@ import Modal from '@/app/components/Modal/Modal'
 import Button from '@/app/components/Button'
 import InputText from '@/app/components/InputText/InputText'
 import ModalContainer from '@/app/components/ModalContainer/ModalContainer'
-import { modalStore } from '@/app/stories/modal.store'
+import { modalStore } from '@/app/store/modal.store'
+import { useGraph } from '@graph-state/react'
 
 interface CreateComponentModalProps {
   className?: string
@@ -18,11 +19,11 @@ export interface CreateComponentContext {
 const NAME = 'createComponent'
 
 const CreateComponentModal: FC<CreateComponentModalProps> = ({ className }) => {
-  // const { close, name: modalName, context } = useContext(ModalContext)
+  const [{ name: modalName, context }] = useGraph(modalStore)
   const [name, setName] = useState('')
 
   return (
-    <Modal className={cn(styles.root, className)} isOpen={name === NAME}>
+    <Modal className={cn(styles.root, className)} isOpen={modalName === NAME}>
       <ModalContainer
         title='Create Component'
         description='Components can be edited in their own canvas. Double-click on any instance to add visual variants and interactions.'
@@ -31,13 +32,13 @@ const CreateComponentModal: FC<CreateComponentModalProps> = ({ className }) => {
             <Button mode='secondary' stretched onClick={modalStore.close}>
               Cancel
             </Button>
-            {/*<Button stretched onClick={() => context?.onCreate(name)}>*/}
-            {/*  Create*/}
-            {/*</Button>*/}
+            <Button stretched onClick={() => context?.onCreate(name)}>
+              Create
+            </Button>
           </>
         }
       >
-        <InputText value={name} onChange={setName} />
+        <InputText value={name} autoFocus onChange={setName} />
       </ModalContainer>
     </Modal>
   )

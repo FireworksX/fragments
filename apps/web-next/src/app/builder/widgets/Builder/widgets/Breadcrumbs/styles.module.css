@@ -4,9 +4,10 @@
     padding: 15px;
     position: relative;
     gap: 10px;
-    background: rgba(var(--background-secondary--rgb, .8));
+    background: rgba(var(--background--rgb), .3);
     border-bottom: 1px solid var(--border);
     backdrop-filter: blur(5px);
+    z-index: var(--z-index-header);
 }
 
 .crumb {

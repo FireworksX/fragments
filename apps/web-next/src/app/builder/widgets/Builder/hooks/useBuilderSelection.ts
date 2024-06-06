@@ -1,14 +1,16 @@
 import { useGraph } from '@graph-state/react'
-import { builderStore } from '@/app/stories/builder.store'
+import { useContext } from 'react'
+import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
 
 export const useBuilderSelection = () => {
-  const [{ selection }] = useGraph(builderStore)
+  const { graphState } = useContext(BuilderContext)
+  const [{ selection }] = useGraph(graphState)
   const firstLink = selection[0]
-  const [selectionGraph] = useGraph(builderStore, firstLink)
+  const [selectionGraph] = useGraph(graphState, firstLink)
 
   const select = (field: any) => {
-    const inputKey = typeof field === 'string' ? field : builderStore.keyOfEntity(field)
-    builderStore.setSelection(inputKey)
+    const inputKey = typeof field === 'string' ? field : graphState.keyOfEntity(field)
+    graphState.setSelection(inputKey)
   }
 
   return { selection: firstLink, selectionGraph, select }

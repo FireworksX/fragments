@@ -1,5 +1,5 @@
 import { builderNodes } from 'src'
-import { generateId } from '../helpers'
+import { generateId } from '@fragments/utils'
 
 export interface CreateComponentOptions {
   isPrimary?: boolean

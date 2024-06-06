@@ -8,7 +8,7 @@ import InputText from '@/app/components/InputText/InputText'
 import ColorPicker from '@/app/builder/widgets/Builder/components/ColorPicker/ColorPicker'
 import Button from '@/app/components/Button'
 import { useGraph } from '@graph-state/react'
-import { POPOUT_TYPE, popoutsStore } from '@/app/stories/popouts.store'
+import { POPOUT_TYPE, popoutsStore } from '@/app/store/popouts.store'
 import { StackPanel } from '@/app/builder/widgets/Builder/widgets/StackCollector/hooks/useStackCollector'
 import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
 

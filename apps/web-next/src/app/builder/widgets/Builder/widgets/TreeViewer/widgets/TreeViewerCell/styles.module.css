@@ -68,7 +68,7 @@
         .labelInput {
             color: var(--text-color);
         }
-        .primaryIcon, .actions {
+        .primaryIcon, .actions, .textIcon {
             color: var(--text-color);
         }
         &:after {
@@ -98,7 +98,7 @@
     &.partialSelectedComponent {
         color: var(--text-color);
         &:after {
-            background: var(--component);
+            background: var(--component-bg);
         }
     }
 

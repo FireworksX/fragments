@@ -4,7 +4,7 @@ import { useLayerInvokerNew } from '@/app/builder/widgets/Builder/hooks/useLayer
 import { useContext } from 'react'
 import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
 import { builderNodes } from '@fragments/fragments-plugin'
-import { popoutsStore } from '@/app/stories/popouts.store'
+import { popoutsStore } from '@/app/store/popouts.store'
 
 const visible: TabsSelectorItem[] = [
   {

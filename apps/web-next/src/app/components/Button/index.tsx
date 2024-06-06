@@ -24,7 +24,10 @@ const Button: FC<ButtonProps> = ({
 }) => {
   return (
     <Touchable
-      className={cn(styles.root, className, styles[mode], styles[size], { [styles.stretched]: stretched })}
+      disabled={disabled}
+      className={cn(styles.root, className, styles[mode], styles[size], {
+        [styles.stretched]: stretched
+      })}
       TagName='button'
       {...touchProps}
     >

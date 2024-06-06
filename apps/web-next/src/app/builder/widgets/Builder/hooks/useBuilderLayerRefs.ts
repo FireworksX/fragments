@@ -3,8 +3,8 @@ import { useStore } from '@nanostores/react'
 import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
 import { useBuilderSelection } from '@/app/builder/widgets/Builder/hooks/useBuilderSelection'
 import { useGraph } from '@graph-state/react'
-import { builderStore } from '@/app/stories/builder.store'
 import isBrowser from '@/app/utils/isBrowser'
+import { builderNodes } from '@fragments/fragments-plugin'
 
 export interface OnClickSelectorOptions {
   layerKey: string
@@ -16,7 +16,7 @@ export interface OnClickSelectorOptions {
 export const useBuilderLayerRefs = () => {
   const { graphState } = useContext(BuilderContext)
   const { selection, select } = useBuilderSelection()
-  const [{ view }, updateBuilder] = useGraph(builderStore)
+  const [builder] = useGraph(graphState)
   // const { activeLayerField, rootLayerField, fullLayerKey } = useStore($layers)
   // const builderView = useStore($builderView)
   // const { open: openComponent } = useBuilderAssetsComponents()
@@ -114,13 +114,15 @@ export const useBuilderLayerRefs = () => {
 
       const clickedLayerValue = graphState.resolve(options.layerKey)
 
-      // if (clickedLayerValue?._type === builderNodes.Text) {
-      //   if (e.detail === 2) {
-      //     $layers.setKey('openLayerField', options.layerKey)
-      //     select(options.layerKey)
-      //     return
-      //   }
-      // }
+      if (clickedLayerValue?._type === builderNodes.Text) {
+        if (e.detail === 2) {
+          // $layers.setKey('openLayerField', options.layerKey)
+          select(options.layerKey)
+          graphState.setView('text')
+          // graphState.richEditor.enable(options.layerKey, findRefNode(options.layerKey))
+          return
+        }
+      }
 
       // if (selection !== options.layerKey) {
       // $layers.setKey('openLayerField', undefined)

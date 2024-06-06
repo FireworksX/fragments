@@ -3,6 +3,8 @@ import { GraphState } from "@graph-state/core";
 import { useGraph } from "@graph-state/react";
 import { useParseRules } from "../hooks/usePageRules/useParseRules.ts";
 import { GraphStateContext } from "./GraphStateProvider.tsx";
+import { builderNodes } from "@fragments/fragments-plugin";
+import { ComponentInstance } from "./ComponentInstance.tsx";
 
 interface LayerProps extends PropsWithChildren {
   graphState: GraphState;
@@ -11,17 +13,15 @@ interface LayerProps extends PropsWithChildren {
   onClick?: (e, options: OnClickSelectorOptions) => void;
 }
 
-const builderNodes = {};
-
 export const Layer: FC<LayerProps> = ({ layerKey, mode, onClick, ...rest }) => {
   const { graphState } = useContext(GraphStateContext);
 
   const isDevelopment = mode === "development";
   const componentContext = {}; //useContext(ComponentContext);
-  const layerValue = useGraph(graphState, layerKey);
-
+  const [layerValue] = useGraph(graphState, layerKey);
   // const options = omit(rest, "id", "componentKey");
   const { cssRules, attrs, textContent, children } = useParseRules(layerKey);
+
   //
   if (!layerValue) return null;
 
@@ -47,24 +47,29 @@ export const Layer: FC<LayerProps> = ({ layerKey, mode, onClick, ...rest }) => {
   //   return <Component componentKey={layerKey} {...options} onClick={onClick} />;
   // }
   //
-  // if (layerValue?._type === builderNodes.ComponentInstance) {
-  //   /**
-  //    * В Dev режиме можно кликать только на компонент верхнего уровня
-  //    */
-  //   const onClick = isDevelopment
-  //     ? !componentContext.componentKey && options.onClick
-  //     : options.onClick;
-  //
-  //   return (
-  //     <div data-key={layerKey} onClick={proxyOnClick}>
-  //       <ComponentInstance
-  //         instanceKey={layerKey}
-  //         {...options}
-  //         onClick={onClick}
-  //       />
-  //     </div>
-  //   );
-  // }
+  console.log(layerValue);
+  if (layerValue?._type === builderNodes.ComponentInstance) {
+    /**
+     * В Dev режиме можно кликать только на компонент верхнего уровня
+     */
+    // const onClick = isDevelopment
+    //   ? !componentContext.componentKey && options.onClick
+    //   : options.onClick;
+
+    return (
+      <ComponentInstance instanceKey={layerKey} {...rest} onClick={onClick} />
+    );
+    //
+    // return (
+    //   <div data-key={layerKey} onClick={proxyOnClick}>
+    //     <ComponentInstance
+    //       instanceKey={layerKey}
+    //       {...options}
+    //       onClick={onClick}
+    //     />
+    //   </div>
+    // );
+  }
 
   // if (layerValue?._type === builderNodes.Text) {
   //   return (
@@ -82,14 +87,15 @@ export const Layer: FC<LayerProps> = ({ layerKey, mode, onClick, ...rest }) => {
 
   return (
     <Tag data-key={layerKey} style={cssRules} onClick={proxyOnClick}>
-      {(children || []).map((child) => (
-        <Layer
-          key={child}
-          // componentKey={componentContext.componentKey}
-          layerKey={child}
-          onClick={onClick}
-        />
-      ))}
+      {textContent ||
+        (children || []).map((child) => (
+          <Layer
+            key={child}
+            // componentKey={componentContext.componentKey}
+            layerKey={child}
+            onClick={onClick}
+          />
+        ))}
     </Tag>
   );
 };

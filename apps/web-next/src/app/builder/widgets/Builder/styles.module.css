@@ -1,6 +1,12 @@
 .root {
     display: grid;
     grid-template-columns: var(--app-size-left-bar) auto var(--app-size-right-bar);
+
+    &.componentView {
+        --primary: var(--component);
+        --primary-bg: var(--component-bg);
+        --primary-disabled: var(--component-disabled);
+    }
 }
 
 

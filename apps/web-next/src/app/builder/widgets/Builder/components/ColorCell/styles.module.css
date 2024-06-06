@@ -1,6 +1,12 @@
 .root {
     border-radius: var(--radius-second);
     padding: 0 10px;
+
+    &:hover {
+        .actions {
+            opacity: 1;
+        }
+    }
 }
 
 .color {
@@ -8,4 +14,9 @@
     height: var(--size);
     border-radius: 50%;
     box-shadow: var(--shadow-basic);
+}
+
+.actions {
+    transition: var(--animation-transition-default);
+    opacity: 0;
 }
