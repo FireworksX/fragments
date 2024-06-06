@@ -16,8 +16,7 @@ const newTabItems: TabsSelectorItem[] = [
 ]
 
 export const useBuilderLink = () => {
-  const { graphState } = useContext(BuilderContext)
-  const { selection } = useBuilderSelection()
+  const { selection, selectionGraph } = useBuilderSelection()
   const layerInvoker = useLayerInvokerNew(selection, ({ key, node, value }) => {
     switch (key) {
       case 'hyperlinkHref':
@@ -40,6 +39,7 @@ export const useBuilderLink = () => {
   }
 
   return {
+    selectionGraph,
     href: hrefInvoker,
     isNewTab: {
       ...newTabInvoker,

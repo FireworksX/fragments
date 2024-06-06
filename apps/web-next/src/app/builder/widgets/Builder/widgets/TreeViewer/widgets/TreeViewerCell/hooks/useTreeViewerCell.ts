@@ -9,6 +9,7 @@ import { useBuilder } from '@/app/builder/widgets/Builder/hooks/useBuilder'
 
 export const useTreeViewerCell = (layerKey: string) => {
   const { graphState } = useContext(BuilderContext)
+  const [{ view }] = useGraph(graphState)
   const [layerValue] = useGraph(graphState, layerKey)
   // const { currentKey } = useComponentVariants()
   // const rootKey = builderView === 'component' ? activeComponentField : layerPath.at(0)
@@ -72,7 +73,7 @@ export const useTreeViewerCell = (layerKey: string) => {
     max: undefined,
     flags: {
       hasLayout: layerInvoker('layerMode').value === builderLayerMode.flex,
-      hasChildren: layerValue?.children?.length > 0, //isComponent && builderView !== 'component' ? false : layerValue?.children?.length > 0,
+      hasChildren: isComponent && view !== 'component' ? false : layerValue?.children?.length > 0,
       layoutDirection: layerInvoker('layerDirection').value,
       hasLink: !graphState.isEmpty(layerInvoker('hyperlinkHref').value),
       hasEffects: !!effects && Object.values(effects).some(Boolean),

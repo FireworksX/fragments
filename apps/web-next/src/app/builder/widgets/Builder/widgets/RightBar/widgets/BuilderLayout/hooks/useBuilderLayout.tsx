@@ -56,7 +56,7 @@ const wrap: TabsSelectorItem[] = [
 
 export const useBuilderLayout = () => {
   const { graphState } = useContext(BuilderContext)
-  const { selection } = useBuilderSelection()
+  const { selection, selectionGraph } = useBuilderSelection()
   const layerInvoker = useLayerInvokerNew(
     selection,
     ({ node, key, value }) => {
@@ -125,6 +125,7 @@ export const useBuilderLayout = () => {
   }
 
   return {
+    selectionGraph,
     mode: layerInvoker('layerMode'),
     direction: {
       items: directions,

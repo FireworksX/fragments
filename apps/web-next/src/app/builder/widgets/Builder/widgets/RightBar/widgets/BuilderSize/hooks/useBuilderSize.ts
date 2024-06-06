@@ -3,7 +3,7 @@ import { useLayerInvokerNew } from '@/app/builder/widgets/Builder/hooks/useLayer
 import { builderSizing } from '@fragments/fragments-plugin'
 
 export const useBuilderSize = () => {
-  const { selection } = useBuilderSelection()
+  const { selection, selectionGraph } = useBuilderSelection()
   const layerInvoker = useLayerInvokerNew(selection, ({ node, key, value }) => {
     switch (key) {
       case 'width':
@@ -26,6 +26,7 @@ export const useBuilderSize = () => {
   })
 
   return {
+    selectionGraph,
     hasSync:
       layerInvoker('layoutSizingHorizontal').value !== builderSizing.Hug &&
       layerInvoker('layoutSizingVertical').value !== builderSizing.Hug,

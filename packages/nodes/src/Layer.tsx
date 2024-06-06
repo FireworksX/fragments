@@ -5,6 +5,7 @@ import { useParseRules } from "../hooks/usePageRules/useParseRules.ts";
 import { GraphStateContext } from "./GraphStateProvider.tsx";
 import { builderNodes } from "@fragments/fragments-plugin";
 import { ComponentInstance } from "./ComponentInstance.tsx";
+import { ComponentContext } from "./Component.tsx";
 
 interface LayerProps extends PropsWithChildren {
   graphState: GraphState;
@@ -17,7 +18,7 @@ export const Layer: FC<LayerProps> = ({ layerKey, mode, onClick, ...rest }) => {
   const { graphState } = useContext(GraphStateContext);
 
   const isDevelopment = mode === "development";
-  const componentContext = {}; //useContext(ComponentContext);
+  const componentContext = useContext(ComponentContext);
   const [layerValue] = useGraph(graphState, layerKey);
   // const options = omit(rest, "id", "componentKey");
   const { cssRules, attrs, textContent, children } = useParseRules(layerKey);
@@ -47,7 +48,6 @@ export const Layer: FC<LayerProps> = ({ layerKey, mode, onClick, ...rest }) => {
   //   return <Component componentKey={layerKey} {...options} onClick={onClick} />;
   // }
   //
-  console.log(layerValue);
   if (layerValue?._type === builderNodes.ComponentInstance) {
     /**
      * В Dev режиме можно кликать только на компонент верхнего уровня
@@ -57,7 +57,13 @@ export const Layer: FC<LayerProps> = ({ layerKey, mode, onClick, ...rest }) => {
     //   : options.onClick;
 
     return (
-      <ComponentInstance instanceKey={layerKey} {...rest} onClick={onClick} />
+      // <div data-key={layerKey} onClick={proxyOnClick}>
+      <ComponentInstance
+        instanceKey={layerKey}
+        {...rest}
+        onClick={proxyOnClick}
+      />
+      // </div>
     );
     //
     // return (

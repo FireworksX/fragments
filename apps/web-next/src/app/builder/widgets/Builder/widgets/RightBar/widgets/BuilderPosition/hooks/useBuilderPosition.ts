@@ -6,7 +6,7 @@ import { useGraph } from '@graph-state/react'
 
 export const useBuilderPosition = () => {
   const { graphState } = useContext(BuilderContext)
-  const { selection } = useBuilderSelection()
+  const { selection, selectionGraph } = useBuilderSelection()
   const [selectionNode] = useGraph(graphState, selection)
   const layerInvoker = useLayerInvokerNew(selection, () => {})
 
@@ -20,6 +20,7 @@ export const useBuilderPosition = () => {
   }, [selectionNode])
 
   return {
+    selectionGraph,
     type: {
       options: [
         {

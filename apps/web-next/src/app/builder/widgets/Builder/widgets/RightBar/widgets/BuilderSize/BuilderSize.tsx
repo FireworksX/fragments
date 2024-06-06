@@ -11,7 +11,7 @@ import BuilderSizeLocker from './components/BuilderSizeLocker/BuilderSizeLocker'
 import Panel from '@/app/builder/widgets/Builder/components/Panel/Panel'
 import InputNumber from '@/app/components/InputNumber/InputNumber'
 import Select from '@/app/components/Select/Select'
-import { builderSizing } from '@fragments/fragments-plugin'
+import { builderNodes, builderSizing } from '@fragments/fragments-plugin'
 import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
 import { isValue } from '@fragments/utils'
 
@@ -22,8 +22,12 @@ interface BuilderSizeProps {
 const DISABLE_UTILS: (keyof typeof builderSizing)[] = [builderSizing.Fill, builderSizing.Hug]
 
 const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
-  const { graphState } = useContext(BuilderContext)
-  const { sync, layoutSizingHorizontal, layoutSizingVertical, hasSync, width, height } = useBuilderSize()
+  const { selectionGraph, sync, layoutSizingHorizontal, layoutSizingVertical, hasSync, width, height } =
+    useBuilderSize()
+
+  if (![builderNodes.Frame, builderNodes.ComponentVariant].some(type => type === selectionGraph._type)) {
+    return null
+  }
 
   const Options = (
     <>

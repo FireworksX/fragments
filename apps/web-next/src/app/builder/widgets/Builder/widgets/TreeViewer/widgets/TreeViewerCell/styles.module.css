@@ -22,6 +22,10 @@
     color: var(--primary);
 }
 
+.componentIcon {
+    color: var(--component);
+}
+
 .textIcon {
     color: var(--secondary);
 }
@@ -68,7 +72,7 @@
         .labelInput {
             color: var(--text-color);
         }
-        .primaryIcon, .actions, .textIcon {
+        .primaryIcon, .actions, .textIcon, .componentIcon {
             color: var(--text-color);
         }
         &:after {
@@ -77,7 +81,7 @@
     }
 
     &.selectedComponent {
-        &, .titleCaret ,.labelInput, .primaryIcon, .actions {
+        &, .titleCaret ,.labelInput, .primaryIcon, .actions, .componentIcon {
             color: var(--text-color);
         }
         &:after {

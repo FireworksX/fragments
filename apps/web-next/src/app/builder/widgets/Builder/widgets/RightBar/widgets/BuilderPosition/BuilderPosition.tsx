@@ -8,13 +8,18 @@ import ControlRow from '@/app/builder/widgets/Builder/components/ControlRow/Cont
 import ControlRowWide from '@/app/builder/widgets/Builder/components/ControlRow/components/ControlRowWide/ControlRowWide'
 import Panel from '@/app/builder/widgets/Builder/components/Panel/Panel'
 import Select from '@/app/components/Select/Select'
+import { builderNodes } from '@fragments/fragments-plugin'
 
 interface BuilderPositionProps {
   className?: string
 }
 
 const BuilderPosition: FC<BuilderPositionProps> = ({ className }) => {
-  const { type, top, right, bottom, left } = useBuilderPosition()
+  const { selectionGraph, type, top, right, bottom, left } = useBuilderPosition()
+
+  if (!selectionGraph?.position && selectionGraph._type !== builderNodes.Screen) {
+    return null
+  }
 
   return (
     <Panel className={cn(styles.root, className)} title='Position'>

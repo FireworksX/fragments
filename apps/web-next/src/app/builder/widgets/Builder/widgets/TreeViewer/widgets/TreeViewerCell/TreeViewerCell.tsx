@@ -15,6 +15,8 @@ import Frame from '@/app/svg/frame.svg'
 import ColumnsFrame from '@/app/svg/columns-frame.svg'
 import RowsFrame from '@/app/svg/rows-frame.svg'
 import TextFrame from '@/app/svg/text-frame.svg'
+import Component from '@/app/svg/component.svg'
+import ComponentInstance from '@/app/svg/component-instance.svg'
 
 export interface ViewerCellFlags {
   hasLayout: boolean
@@ -85,8 +87,8 @@ const TreeViewerCell: FC<TreeViewerCellProps> = ({
   // const isOpen = layerKey in openMap ? openMap[layerKey] : false
 
   const TypeIcon = useMemo(() => {
-    // if (flags.isComponentInstance) return Styled.ComponentInstanceIcon
-    // if (flags.isComponent) return Styled.ComponentIcon
+    if (flags.isComponentInstance) return <ComponentInstance className={styles.componentIcon} />
+    if (flags.isComponent) return <Component className={styles.componentIcon} />
 
     if (type === builderNodes.Text) return <TextFrame className={styles.textIcon} />
 
@@ -190,12 +192,6 @@ const TreeViewerCell: FC<TreeViewerCellProps> = ({
           },
           classNames
         )}
-        isPrimary={flags.isPrimary}
-        disabled={flags.disabled}
-        isPartialComponent={flags.isPartialComponent}
-        hasChildren={flags.hasChildren}
-        {...selectedProps}
-        collapsed={collapsed}
         onClick={handleClick}
       >
         <Touchable

@@ -10,15 +10,23 @@ import InputNumber from '@/app/components/InputNumber/InputNumber'
 import Slider from '@/app/components/Slider/Slider'
 import InputGroup from '@/app/components/InputGroup/InputGroup'
 import Panel from '@/app/builder/widgets/Builder/components/Panel/Panel'
-import { builderLayerMode } from '@fragments/fragments-plugin'
+import { builderLayerMode, builderNodes } from '@fragments/fragments-plugin'
 
 interface BuilderLayoutProps {
   className?: string
 }
 
 const BuilderLayout: FC<BuilderLayoutProps> = ({ className }) => {
-  const { direction, mode, align, wrap, distribute, gap, padding } = useBuilderLayout()
+  const { selectionGraph, direction, mode, align, wrap, distribute, gap, padding } = useBuilderLayout()
   const enabled = mode.value === builderLayerMode.flex
+
+  if (
+    ![builderNodes.Frame, builderNodes.Screen, builderNodes.ComponentVariant].some(
+      type => type === selectionGraph._type
+    )
+  ) {
+    return null
+  }
 
   return (
     <Panel className={className} title='Layout' aside={<PanelHeadAside isOpen={enabled} onClick={mode.onChange} />}>

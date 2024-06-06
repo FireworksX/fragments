@@ -11,14 +11,19 @@ import SelectMimicry from '@/app/components/SelectMimicry/SelectMimicry'
 import Panel from '@/app/builder/widgets/Builder/components/Panel/Panel'
 import Minus from '@/app/svg/minus.svg'
 import Plus from '@/app/svg/plus.svg'
+import { builderNodes } from '@fragments/fragments-plugin'
 
 interface BuilderLinkProps {
   className?: string
 }
 
 const BuilderLink: FC<BuilderLinkProps> = ({ className }) => {
-  const { href, isNewTab, onClick } = useBuilderLink()
+  const { selectionGraph, href, isNewTab, onClick } = useBuilderLink()
   const isEmpty = !href.value
+
+  if (![builderNodes.Frame, builderNodes.ComponentVariant].some(type => type === selectionGraph._type)) {
+    return null
+  }
 
   return (
     <Panel

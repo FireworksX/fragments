@@ -20,7 +20,7 @@ import Stepper from '@/app/components/Stepper/Stepper'
 import { useDisplayColor } from '@/app/builder/widgets/Builder/hooks/useDisplayColor'
 import { GraphValue } from '@graph-state/react'
 import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
-import { builderPaintMode } from '@fragments/fragments-plugin'
+import { builderNodes, builderPaintMode } from '@fragments/fragments-plugin'
 
 interface BuilderStylesProps {
   className?: string
@@ -28,8 +28,12 @@ interface BuilderStylesProps {
 
 const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
   const { graphState } = useContext(BuilderContext)
-  const { opacity, visible, zIndex, radius, fill, border } = useBuilderStyles()
+  const { selectionGraph, opacity, visible, zIndex, radius, fill, border } = useBuilderStyles()
   const { getColor, getNameColor } = useDisplayColor()
+
+  if (![builderNodes.Frame, builderNodes.ComponentVariant].some(type => type === selectionGraph._type)) {
+    return null
+  }
 
   return (
     <Panel

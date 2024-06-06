@@ -6,7 +6,7 @@ import { builderEffectType } from '@fragments/fragments-plugin'
 
 export const useBuilderEffects = () => {
   const { graphState } = useContext(BuilderContext)
-  const { selection } = useBuilderSelection()
+  const { selection, selectionGraph } = useBuilderSelection()
   const layerInvoker = useLayerInvokerNew(selection, ({ key, value, node }) => {
     switch (key) {
       case 'effects':
@@ -41,6 +41,7 @@ export const useBuilderEffects = () => {
   }
 
   return {
+    selectionGraph,
     addEffect,
     effects: effects.value,
     clickEffect,

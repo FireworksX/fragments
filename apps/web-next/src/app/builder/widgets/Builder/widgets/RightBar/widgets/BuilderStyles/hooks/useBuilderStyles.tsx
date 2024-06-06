@@ -66,6 +66,7 @@ export const useBuilderStyles = () => {
   }
 
   return {
+    selectionGraph,
     visible: {
       items: visible,
       ...layerInvoker('visible')

@@ -14,6 +14,7 @@ import InputSelect from '@/app/components/InputSelect/InputSelect'
 import Textarea from '@/app/components/Textarea/Textarea'
 import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
 import { GraphValue } from '@graph-state/react'
+import { builderNodes } from '@fragments/fragments-plugin'
 
 interface BuilderCssOverrideProps {
   className?: string
@@ -21,7 +22,11 @@ interface BuilderCssOverrideProps {
 
 const BuilderCssOverride: FC<BuilderCssOverrideProps> = ({ className }) => {
   const { graphState } = useContext(BuilderContext)
-  const { isEmpty, css, variables, selectCss, onClick, removeVariable } = useBuilderCssOverride()
+  const { selectionGraph, isEmpty, css, variables, selectCss, onClick, removeVariable } = useBuilderCssOverride()
+
+  if ([builderNodes.Screen, builderNodes.ComponentInstance].some(type => type === selectionGraph._type)) {
+    return null
+  }
 
   return (
     <Panel className={className} title='CSS Override' aside={<PanelHeadAside isOpen={!isEmpty} onClick={onClick} />}>

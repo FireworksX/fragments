@@ -8,6 +8,7 @@ import BuilderLayout from '@/app/builder/widgets/Builder/widgets/RightBar/widget
 import BuilderEffects from '@/app/builder/widgets/Builder/widgets/RightBar/widgets/BuilderEffects/BuilderEffects'
 import BuilderStyles from '@/app/builder/widgets/Builder/widgets/RightBar/widgets/BuilderStyles/BuilderStyles'
 import BuilderCssOverride from '@/app/builder/widgets/Builder/widgets/RightBar/widgets/BuilderCssOverride/BuilderCssOverride'
+import BuilderComponent from '@/app/builder/widgets/Builder/widgets/RightBar/widgets/BuilderComponent/BuilderComponent'
 
 interface RightBarProps {
   className?: string
@@ -15,6 +16,7 @@ interface RightBarProps {
 
 const RightBar: FC<RightBarProps> = ({ className }) => (
   <div className={cn(className, styles.root)}>
+    <BuilderComponent />
     <BuilderLink />
     <BuilderPosition />
     <BuilderSize />

@@ -13,7 +13,7 @@ import PanelHeadAside from '@/app/builder/widgets/Builder/components/PanelHeadAs
 import InputSelect from '@/app/components/InputSelect/InputSelect'
 import { capitalize } from '@/app/utils/capitalize'
 import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
-import { builderEffectType } from '@fragments/fragments-plugin'
+import { builderEffectType, builderNodes } from '@fragments/fragments-plugin'
 import Star2 from '@/app/svg/star-2.svg'
 
 interface BuilderEffectsProps {
@@ -22,7 +22,11 @@ interface BuilderEffectsProps {
 
 const BuilderEffects: FC<BuilderEffectsProps> = ({ className }) => {
   const { graphState } = useContext(BuilderContext)
-  const { effects, addEffect, clickEffect, resetEffect } = useBuilderEffects()
+  const { selectionGraph, effects, addEffect, clickEffect, resetEffect } = useBuilderEffects()
+
+  if ([builderNodes.Screen, builderNodes.ComponentInstance].some(type => type === selectionGraph._type)) {
+    return null
+  }
 
   return (
     <Panel

@@ -7,7 +7,7 @@ import { popoutsStore } from '@/app/store/popouts.store'
 
 export const useBuilderCssOverride = () => {
   const { graphState } = useContext(BuilderContext)
-  const { selection } = useBuilderSelection()
+  const { selection, selectionGraph } = useBuilderSelection()
   const layerInvoker = useLayerInvokerNew(selection, ({ key, node, value }) => {
     switch (key) {
       case 'cssText':
@@ -40,6 +40,7 @@ export const useBuilderCssOverride = () => {
   }
 
   return {
+    selectionGraph,
     isEmpty,
     css: cssOverride,
     variables: cssOverrideVariables,

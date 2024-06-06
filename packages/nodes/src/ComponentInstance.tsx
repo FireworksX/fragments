@@ -12,6 +12,7 @@ export const ComponentInstance: FC<ComponentInstanceProps> = ({
   instanceKey,
   ...rest
 }) => {
+  const { componentKey } = useContext(ComponentContext);
   const { graphState } = useContext(GraphStateContext);
   const [instanceValue] = useGraph(graphState, instanceKey);
   const variantKey = instanceValue?.variant;
@@ -28,7 +29,15 @@ export const ComponentInstance: FC<ComponentInstanceProps> = ({
         instanceKey,
       }}
     >
-      <Layer layerKey={variantKey} {...rest} />
+      <div
+        style={{
+          display: "inline-flex",
+        }}
+        data-key={instanceKey}
+        onClick={() => !componentKey && rest.onClick()}
+      >
+        <Layer layerKey={variantKey} {...rest} />
+      </div>
     </ComponentContext.Provider>
   );
 };
