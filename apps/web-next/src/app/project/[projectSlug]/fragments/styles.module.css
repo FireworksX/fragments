@@ -1,0 +1,11 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gutter-default);
+}
+
+.body {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}

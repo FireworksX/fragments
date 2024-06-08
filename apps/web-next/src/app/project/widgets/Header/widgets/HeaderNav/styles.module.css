@@ -1,0 +1,13 @@
+.root {
+    display: flex;
+    gap: var(--gutter-default);
+}
+
+.nav {
+    display: flex;
+    gap: 5px;
+}
+
+.button {
+    height: 100%;
+}

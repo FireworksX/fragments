@@ -1,15 +1,17 @@
-.root {
-    font-size: 12px;
-    color: var(--text-color-accent);
-    background: var(--background-secondary);
-    border-radius: var(--radius-second);
-    font-variant-numeric: tabular-nums;
-    font-weight: 500;
-    border: none;
-    outline: none;
-    min-height: 70px;
-    width: 100%;
-    padding: 7px;
-    resize: none;
+@layer {
+    .root {
+        font-size: 12px;
+        color: var(--text-color-accent);
+        background: var(--background-secondary);
+        border-radius: var(--radius-second);
+        font-variant-numeric: tabular-nums;
+        font-weight: 500;
+        border: none;
+        outline: none;
+        min-height: 70px;
+        width: 100%;
+        padding: 7px;
+        resize: none;
+    }
 }
 

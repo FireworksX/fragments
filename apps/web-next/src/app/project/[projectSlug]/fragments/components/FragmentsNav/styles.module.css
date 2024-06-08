@@ -1,0 +1,19 @@
+.root {
+    padding-top: var(--gutter-default);
+    display: flex;
+    gap: var(--gutter-default);
+}
+
+.search {
+    flex: 1;
+}
+
+.sort {
+    min-width: 150px;
+    background: var(--background);
+    height: 100%;
+    padding-inline: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid var(--border);
+}

@@ -1,3 +1,4 @@
+'use client'
 import { FC, InputHTMLAttributes } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
 import cn from 'classnames'
@@ -17,6 +18,7 @@ const Textarea: FC<TextareaProps> = ({ className, value, onChange, ...rest }) =>
       className={cn(styles.root, className)}
       value={value}
       onChange={({ target: { value } }) => onChange(value)}
+      {...rest}
     />
   )
 }

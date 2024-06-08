@@ -1,26 +1,26 @@
-.root {
-    position: relative;
-    width: 100%;
-}
+@layer {
+    .root {
+        position: relative;
+    }
 
-.caret {
-    position: absolute;
-    right: 10px;
-    top: 8px;
-}
+    .caret {
+        position: absolute;
+        right: 10px;
+        top: calc(50% - 6px);
+    }
 
-.inner {
-    height: 30px;
-    border-radius: var(--radius-second);
-    font-size: 12px;
-    font-weight: 500;
-    padding: 0 26px 1px 7px;
-    color: var(--text-color-accent);
-    background: var(--background-secondary);
-    border: none;
-    width: 100%;
-    outline: none;
-    display: flex;
-    align-items: center;
+    .inner {
+        height: 30px;
+        border-radius: var(--radius-second);
+        font-size: 12px;
+        font-weight: 500;
+        padding: 0 26px 1px 7px;
+        color: var(--text-color-accent);
+        background: var(--background-secondary);
+        border: none;
+        width: 100%;
+        outline: none;
+        display: flex;
+        align-items: center;
+    }
 }
-

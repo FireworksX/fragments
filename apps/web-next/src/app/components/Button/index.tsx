@@ -4,13 +4,14 @@ import Touchable, { TouchableProps } from '@/app/components/Touchable'
 import { FC, PropsWithChildren, ReactNode } from 'react'
 
 export interface ButtonProps extends TouchableProps, PropsWithChildren {
-  size?: 'small' | 'medium' | 'large' | 'xlarge'
-  mode?: 'primary' | 'secondary' | 'tertiary' | 'outline' | 'danger' | 'success'
+  size?: 'small' | 'regular' | 'medium' | 'large' | 'xlarge'
+  mode?: 'primary' | 'secondary' | 'tertiary' | 'tertiary-secondary' | 'outline' | 'danger' | 'success'
   stretched?: boolean
   disabled?: boolean
   loading?: boolean
   className?: string
   icon?: ReactNode
+  suffix?: ReactNode
 }
 
 const Button: FC<ButtonProps> = ({
@@ -20,6 +21,7 @@ const Button: FC<ButtonProps> = ({
   disabled,
   stretched,
   children,
+  suffix,
   ...touchProps
 }) => {
   return (
@@ -32,6 +34,7 @@ const Button: FC<ButtonProps> = ({
       {...touchProps}
     >
       {children}
+      {suffix && <div className={styles.suffix}>{suffix}</div>}
     </Touchable>
   )
 }

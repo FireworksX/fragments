@@ -1,0 +1,12 @@
+.root {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    color: var(--text-color-accent);
+
+    &.withRadius {
+        border-radius: 50%;
+    }
+}

@@ -1,0 +1,49 @@
+.root {
+    display: flex;
+    align-items: center;
+    background: var(--background-secondary);
+    border-radius: var(--radius-second);
+    transition: var(--animation-transition-default);
+
+    &.primary {
+        background: var(--background);
+        border: 1px solid var(--border);
+    }
+
+    &.large {
+        --form-height: 40px;
+        font-size: 14px;
+    }
+
+    &:hover {
+        border-color: var(--border-hover);
+    }
+
+    &:focus-within {
+        border-color: var(--primary);
+    }
+}
+
+.input {
+    width: 100%;
+    border: none;
+    outline: none;
+    height: var(--form-height, 30px);
+    font-size: 12px;
+    font-weight: 500;
+    padding-left: 7px;
+    border-radius: var(--radius-second);
+
+    &::placeholder {
+        color: var(--secondary);
+    }
+
+}
+
+.prefix {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-inline: 10px;
+    color: var(--secondary);
+}
