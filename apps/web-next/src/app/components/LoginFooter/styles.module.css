@@ -1,0 +1,11 @@
+.root {
+    padding-block: 28px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.link {
+    font-size: 16px;
+}

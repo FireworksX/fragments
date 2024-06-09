@@ -1,0 +1,14 @@
+@layer {
+    .root {
+        color: var(--link);
+        transition: var(--animation-transition-default);
+
+        &:hover {
+            color: var(--link-hover);
+        }
+
+        &:active {
+            color: var(--link-active);
+        }
+    }
+}

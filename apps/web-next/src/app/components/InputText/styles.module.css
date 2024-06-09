@@ -1,15 +1,49 @@
-.root {
-    position: relative;
-}
+@layer {
+    .root {
+        position: relative;
+        &.large {
+            .input {
+                font-size: 1rem;
+                padding-inline: 12px;
+                height: 48px;
+            }
+        }
 
-.inner {
-    width: 100%;
-    background: var(--background-secondary);
-    border-radius: var(--radius-second);
-    border: none;
-    outline: none;
-    height: 30px;
-    font-size: 12px;
-    font-weight: 500;
-    padding-left: 7px;
+        &.primary {
+            .input {
+                background: var(--background-secondary);
+            }
+        }
+
+        &.secondary {
+            .input {
+                background: var(--background);
+                border: 1px solid var(--border);
+
+                &:hover {
+                    border-color: var(--primary-disabled);
+                }
+                &:focus {
+                    border-color: var(--primary);
+                }
+            }
+        }
+    }
+
+    .input {
+        width: 100%;
+        transition: var(--animation-transition-default);
+        background: var(--background-secondary);
+        border-radius: var(--radius-second);
+        border: none;
+        outline: none;
+        height: 30px;
+        font-size: 12px;
+        font-weight: 500;
+        padding-left: 7px;
+
+        &::placeholder {
+            color: var(--secondary);
+        }
+    }
 }

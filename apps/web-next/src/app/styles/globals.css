@@ -38,9 +38,12 @@
     --border: #DAE0E4;
     --border--rgb: 218, 224, 228;
     --border-hover: #b7bcc0;
-    --border--rgb: 183, 188, 192;
     --border-secondary: #FEFEFE;
     --border-accent: #DAE0E4;
+
+    --link: #0070f3;
+    --link-hover: #0363d3;
+    --link-active: #004dab;
 
     --app-size-header: 0px;
     --app-size-builder-header: 50px;
