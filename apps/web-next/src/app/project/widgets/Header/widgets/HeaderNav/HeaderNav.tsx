@@ -5,6 +5,7 @@ import Button from '@/app/components/Button'
 import Avatar from '@/app/components/Avatar/Avatar'
 import Dropdown from '@/app/components/Dropdown/Dropdown'
 import { FeedbackForm } from '@/app/project/widgets/FeedbackForm/FeedbackForm'
+import { CurrentProfileDropdown } from '@/app/project/widgets/Header/widgets/HeaderNav/components/CurrentProfileDropdown/CurrentProfileDropdown'
 
 interface HeaderNavProps {
   className?: string
@@ -30,6 +31,8 @@ export const HeaderNav: FC<HeaderNavProps> = ({ className }) => (
       </Button>
     </div>
 
-    <Avatar size={34} uniqueId={'test'} />
+    <Dropdown trigger='click' options={<CurrentProfileDropdown />}>
+      <Avatar size={34} uniqueId={'test'} />
+    </Dropdown>
   </div>
 )

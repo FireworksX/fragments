@@ -1,5 +1,11 @@
-export default function (props) {
-    console.log(props);
+import { PageHeading } from '@/app/components/PageHeading/PageHeading'
 
-    return 'Project'
+export default function (props) {
+  console.log(props)
+
+  return (
+    <div>
+      <PageHeading>Project overview</PageHeading>
+    </div>
+  )
 }

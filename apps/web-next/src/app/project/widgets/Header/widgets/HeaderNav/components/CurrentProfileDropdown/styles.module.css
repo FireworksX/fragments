@@ -1,0 +1,18 @@
+.root {
+    width: 256px;
+}
+
+.user {
+    margin-block: 10px;
+}
+
+.name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-color-accent);
+}
+
+.email {
+    font-size: 14px;
+    color: var(--secondary);
+}

@@ -1,0 +1,18 @@
+.root {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gutter-default);
+    padding-block: 40px;
+    border-bottom: 1px solid var(--border);
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 500;
+}
+
+.actions {
+    display: flex;
+    gap: var(--gutter-default);
+}

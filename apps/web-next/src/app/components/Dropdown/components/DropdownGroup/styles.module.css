@@ -1,6 +1,6 @@
 .root {
     padding: 5px;
-    border-bottom: 1px solid var(--secondary-light);
+    border-bottom: 1px solid var(--background-secondary);
 
     &:last-child {
         border-bottom: none;
