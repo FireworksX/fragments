@@ -3,32 +3,49 @@ import {
   Controller,
   Get,
   HttpCode,
+  HttpException,
   HttpStatus,
   Post,
   Req,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthGuard } from './auth.guard';
+import { SupabaseAuthGuard } from './auth.guard';
+import { LoginDto } from './dto/login.dto';
+import { SignUpDto } from './dto/sign-up.dto';
+import { CurrentUser } from '../decorators/currentUser.decorator';
+import { AuthUser } from './interface/AuthUser';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Get()
-  test() {
-    return 'test';
+  @HttpCode(HttpStatus.OK)
+  @Post('signUp')
+  signIn(@Body() body: SignUpDto) {
+    return this.authService.signIn(body.email, body.password, {
+      first_name: body.first_name,
+    });
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('signOut')
+  async signOut() {
+    const error = await this.authService.signOut();
+    if (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_GATEWAY);
+    }
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Body() signInDto: Record<string, any>) {
-    return this.authService.signIn(signInDto.username, signInDto.password);
+  login(@Body() body: LoginDto) {
+    return this.authService.login(body.email, body.password);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   @Get('profile')
-  getProfile(@Req() req) {
-    return req.user;
+  getProfile(@CurrentUser() user: AuthUser) {
+    return user;
   }
 }
