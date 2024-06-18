@@ -5,18 +5,23 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import e from 'express';
 import { SupabaseService } from '../../supabase/supabase.service';
 import { AuthUser } from '../interface/AuthUser';
+import { UsersService } from '../../users/users.service';
 
 @Injectable()
 export class SupabaseStrategy extends PassportStrategy(Strategy, 'supabase') {
   static key = 'supabase';
   private extractor = ExtractJwt.fromAuthHeaderAsBearerToken();
 
-  constructor(private supabaseService: SupabaseService) {
+  constructor(
+    private supabaseService: SupabaseService,
+    private usersService: UsersService,
+  ) {
     super();
   }
 
-  async validate(payload: AuthUser): Promise<AuthUser> {
-    return payload;
+  async validate(payload: AuthUser): Promise<any> {
+    const { data } = await this.usersService.findOneUserByEmail(payload?.email);
+    return data;
   }
 
   async authenticate(req: e.Request) {
@@ -27,16 +32,17 @@ export class SupabaseStrategy extends PassportStrategy(Strategy, 'supabase') {
       return;
     }
 
-    this.supabaseService.auth
+    const authUser = await this.supabaseService.auth
       .getUser(idToken)
-      .then((res) => this.validateSupabaseResponse(res))
       .catch((err) => {
         this.fail(err.message, 401);
       });
+
+    await this.validateSupabaseResponse(authUser);
   }
 
   private async validateSupabaseResponse({ data }: any) {
-    const result = await this.validate(data);
+    const result = await this.validate(data?.user);
     if (result) {
       this.success(result, {});
       return;

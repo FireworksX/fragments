@@ -5,5 +5,5 @@ export class CreateFragmentDto {
   name: string;
 
   @IsUUID()
-  author: string;
+  author: number;
 }

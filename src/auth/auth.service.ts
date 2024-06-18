@@ -10,20 +10,25 @@ export class AuthService {
     private usersService: UsersService,
   ) {}
 
-  async login(username: string, pass: string): Promise<any> {
+  async login(email: string, password: string): Promise<any> {
     const { data, error } = await this.supabase.client.auth.signInWithPassword({
-      email: username,
-      password: pass,
+      email,
+      password,
     });
 
     if (error) {
       throw new HttpException(error.message, HttpStatus.BAD_GATEWAY);
     }
+    const { data: user } = await this.usersService.findOneUserByEmail(email);
 
-    return data;
+    return {
+      user,
+      access_token: data.session.access_token,
+      refresh_token: data.session.refresh_token,
+    };
   }
 
-  async signIn(
+  async signUp(
     email: string,
     password: string,
     meta: { first_name: string },

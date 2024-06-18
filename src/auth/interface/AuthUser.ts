@@ -1,2 +1,4 @@
-import type { AuthUser as SupabaseAuthUser } from '@supabase/supabase-js';
-export type AuthUser = SupabaseAuthUser;
+export interface AuthUser {
+  id: number;
+  email: string;
+}

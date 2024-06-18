@@ -8,11 +8,13 @@ import { SupabaseService } from 'src/supabase/supabase.service';
 import { SupabaseModule } from 'src/supabase/supabase.module';
 import { ProjectModule } from 'src/project/project.module';
 import { FragmentsModule } from 'src/project/fragments/fragments.module';
-import { RouterModule } from '@nestjs/core';
+import { NestjsFormDataModule } from 'nestjs-form-data';
+import { MediaModule } from './media/media.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    MediaModule,
     AuthModule,
     UsersModule,
     SupabaseModule,

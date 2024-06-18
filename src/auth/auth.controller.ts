@@ -22,8 +22,8 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('signUp')
-  signIn(@Body() body: SignUpDto) {
-    return this.authService.signIn(body.email, body.password, {
+  signUp(@Body() body: SignUpDto) {
+    return this.authService.signUp(body.email, body.password, {
       first_name: body.first_name,
     });
   }
@@ -35,6 +35,10 @@ export class AuthController {
     if (error) {
       throw new HttpException(error.message, HttpStatus.BAD_GATEWAY);
     }
+
+    return {
+      error,
+    };
   }
 
   @HttpCode(HttpStatus.OK)

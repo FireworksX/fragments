@@ -14,7 +14,9 @@ export class FragmentsService {
   async create(createFragmentDto: CreateFragmentDto) {
     return await this.supabaseService.client
       .from(TABLE_NAME)
-      .insert(createFragmentDto);
+      .insert(createFragmentDto)
+      .select()
+      .single();
   }
 
   async findAll(query: GetFragmentQueryDto) {

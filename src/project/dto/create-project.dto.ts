@@ -6,6 +6,6 @@ export class CreateProjectDto {
   name: string;
 
   @IsOptional()
-  @IsString()
-  logo?: string;
+  @IsInt()
+  logo?: number;
 }

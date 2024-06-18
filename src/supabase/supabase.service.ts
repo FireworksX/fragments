@@ -6,6 +6,7 @@ import * as process from 'process';
 export class SupabaseService {
   public client: SupabaseClient;
   public auth: SupabaseClient['auth'];
+  public storage: SupabaseClient['storage'];
 
   constructor() {
     this.client = createClient(
@@ -19,5 +20,6 @@ export class SupabaseService {
     );
 
     this.auth = this.client.auth;
+    this.storage = this.client.storage;
   }
 }
