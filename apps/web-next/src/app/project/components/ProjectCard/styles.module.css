@@ -1,0 +1,43 @@
+.root {
+    padding: var(--gutter-default);
+    background: var(--background);
+    border-radius: var(--radius-small);
+    border: 1px solid var(--border);
+    transition: var(--animation-transition-default);
+    cursor: pointer;
+
+    &:hover {
+        background: var(--secondary-bg);
+    }
+
+    &:active {
+        background: var(--secondary-disabled);
+    }
+}
+
+.head {
+    display: flex;
+    align-items: center;
+    gap: var(--gutter-default);
+}
+
+.logo {}
+
+.metaInfo {
+    flex: 1;
+}
+
+.name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-color-accent);
+}
+
+.updatedAt {
+    font-size: 12px;
+    color: var(--secondary);
+}
+
+.actions {
+    display: flex;
+}

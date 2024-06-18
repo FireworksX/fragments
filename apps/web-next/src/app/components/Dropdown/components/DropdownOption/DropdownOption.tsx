@@ -9,6 +9,7 @@ export interface DropdownOptionProps extends PropsWithChildren {
   description?: string
   className?: string
   disabled?: boolean
+  fetching?: boolean
   hasNested?: boolean
   suffix?: ReactNode
   onClick?: () => void
@@ -20,6 +21,7 @@ const DropdownOption: FC<DropdownOptionProps> = ({
   disabled,
   hasNested,
   children,
+  fetching,
   description,
   suffix,
   onClick
@@ -37,8 +39,9 @@ const DropdownOption: FC<DropdownOptionProps> = ({
         {children} <div className={styles.description}>{description}</div>
       </div>
 
-      {(suffix || hasNested) && (
+      {(suffix || hasNested || fetching) && (
         <div>
+          {fetching && <div></div>}
           {suffix && <div>{suffix}</div>}
           {hasNested && <CaretRight className={styles.arrow} width={13} height={13} />}
         </div>

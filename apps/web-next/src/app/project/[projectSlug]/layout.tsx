@@ -3,9 +3,10 @@ import AsideBar from '@/app/project/[projectSlug]/widgets/AsideBar/AsideBar'
 import { HeaderSubNav } from '@/app/project/widgets/HeaderSubNav/HeaderSubNav'
 import { HeaderSubNavCell } from '@/app/project/widgets/HeaderSubNav/components/HeaderSubNavCell/HeaderSubNavCell'
 import { useParams } from 'next/navigation'
+import { Link } from '@/app/widgets/Link/Link'
 
 export default function ({ children }) {
-  const { fragmentSlug } = useParams()
+  const { fragmentSlug, projectSlug } = useParams()
   const isFragmentView = !!fragmentSlug
 
   return (
@@ -22,7 +23,10 @@ export default function ({ children }) {
         ) : (
           <>
             <HeaderSubNavCell isActive>Overview</HeaderSubNavCell>
-            <HeaderSubNavCell>Fragments</HeaderSubNavCell>
+            <Link type='fragments' projectSlug={projectSlug}>
+              <HeaderSubNavCell>Fragments</HeaderSubNavCell>
+            </Link>
+
             <HeaderSubNavCell>Campaigns</HeaderSubNavCell>
             <HeaderSubNavCell>Settings</HeaderSubNavCell>
           </>

@@ -3,10 +3,14 @@ import { CreateComponentContext } from '@/app/widgets/modals/CreateComponentModa
 import { CreateCustomBreakpointContext } from '@/app/widgets/modals/CreateCustomBreakpoint/CreateCustomBreakpoint'
 import loggerPlugin from '@graph-state/plugin-logger'
 import isBrowser from '@/app/utils/isBrowser'
+import { CreateProjectModalContext } from '@/app/widgets/modals/CreateProjectModal/CreateProjectModal'
+import { CreateFragmentModalContext } from '@/app/widgets/modals/CreateFragmentModal/CreateFragmentModal'
 
 export type ModalPanelMap = {
   createComponent: CreateComponentContext
   createCustomBreakpoint: CreateCustomBreakpointContext
+  createProject: CreateProjectModalContext
+  createFragment: CreateFragmentModalContext
   aboutTemplate: unknown
   createLanding: unknown
   componentVariables: unknown

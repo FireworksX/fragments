@@ -29,7 +29,7 @@ const InputText: FC<InputTextProps> = ({
         className={cn(styles.input, classNameInput)}
         value={value}
         placeholder={placeholder}
-        onChange={({ target }) => onChange(target.value)}
+        onChange={({ target }) => onChange?.(target.value)}
         {...inputProps}
       />
     </div>

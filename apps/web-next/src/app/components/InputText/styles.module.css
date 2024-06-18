@@ -1,6 +1,7 @@
 @layer {
     .root {
         position: relative;
+        width: 100%;
         &.large {
             .input {
                 font-size: 1rem;

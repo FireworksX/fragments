@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "cc": "pnpm dlx generate-react-cli"
+    "cc": "pnpm dlx generate-react-cli component"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.1.0",
@@ -22,8 +22,11 @@
     "@react-spring/web": "^9.7.3",
     "@tippyjs/react": "^4.2.6",
     "@use-gesture/react": "^10.3.1",
+    "axios": "^1.7.2",
     "classnames": "^2.5.1",
+    "jwt-decode": "^4.0.0",
     "next": "14.2.3",
+    "next-auth": "^4.24.7",
     "react": "^18",
     "react-collapse": "^5.1.1",
     "react-color": "^2.19.3",

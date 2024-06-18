@@ -8,7 +8,7 @@ interface ImageSelectorProps {
   isUploading?: boolean
   progress?: number
   className?: string
-  onChange(value: string): void
+  onChange(file: File): void
 }
 
 const ImageSelector: FC<ImageSelectorProps> = ({ className, value, isUploading = false, progress = 0, onChange }) => {

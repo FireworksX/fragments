@@ -1,0 +1,10 @@
+.root {
+    width: 260px;
+}
+
+
+.body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gutter-default);
+}

@@ -9,9 +9,9 @@ interface LinkProps extends PropsWithChildren {
   type: LinkType
 }
 
-export const Link: FC<LinkProps> = ({ className, type, children }) => {
+export const Link: FC<LinkProps> = ({ className, type, children, ...linkParams }) => {
   const link = linkConfig[type]
-  const href = typeof link === 'function' ? link() : link
+  const href = typeof link === 'function' ? link(linkParams) : link
 
   return (
     <NextLink className={cn(styles.root, className)} href={href}>

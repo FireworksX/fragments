@@ -5,6 +5,16 @@
     border-radius: var(--radius-second);
     display: flex;
     gap: var(--gutter-default);
+    transition: var(--animation-transition-default);
+    color: var(--text-color-accent);
+
+    &:hover {
+        background: var(--secondary-bg);
+    }
+
+    &:active {
+        background: var(--secondary-disabled);
+    }
 }
 
 .body {
@@ -14,6 +24,9 @@
 
 .bodySection {
     flex-basis: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .name {

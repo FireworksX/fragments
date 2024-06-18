@@ -1,3 +1,4 @@
+'use client'
 import { FC } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
@@ -6,33 +7,46 @@ import Avatar from '@/app/components/Avatar/Avatar'
 import Dropdown from '@/app/components/Dropdown/Dropdown'
 import { FeedbackForm } from '@/app/project/widgets/FeedbackForm/FeedbackForm'
 import { CurrentProfileDropdown } from '@/app/project/widgets/Header/widgets/HeaderNav/components/CurrentProfileDropdown/CurrentProfileDropdown'
+import { useRequest } from '@/app/hooks/requests/useRequest'
+import { requestConfig, requestType } from '@/app/hooks/requests/requestConfig'
 
 interface HeaderNavProps {
   className?: string
 }
 
-export const HeaderNav: FC<HeaderNavProps> = ({ className }) => (
-  <div className={cn(styles.root, className)} data-testid='HeaderNav'>
-    <div className={styles.nav}>
-      <Dropdown trigger='click' options={<FeedbackForm />}>
-        <Button className={styles.button} size='regular' mode='outline'>
-          Feedback
+export const HeaderNav: FC<HeaderNavProps> = ({ className }) => {
+  const { data: currentUser } = useRequest(requestType.profile)
+
+  return (
+    <div className={cn(styles.root, className)} data-testid='HeaderNav'>
+      <div className={styles.nav}>
+        <Dropdown trigger='click' options={<FeedbackForm />}>
+          <Button className={styles.button} size='regular' mode='outline'>
+            Feedback
+          </Button>
+        </Dropdown>
+
+        <Button className={styles.button} size='regular' mode='tertiary-secondary'>
+          Changelog
         </Button>
-      </Dropdown>
+        <Button className={styles.button} size='regular' mode='tertiary-secondary'>
+          Help
+        </Button>
+        <Button className={styles.button} size='regular' mode='tertiary-secondary'>
+          Docs
+        </Button>
+      </div>
 
-      <Button className={styles.button} size='regular' mode='tertiary-secondary'>
-        Changelog
-      </Button>
-      <Button className={styles.button} size='regular' mode='tertiary-secondary'>
-        Help
-      </Button>
-      <Button className={styles.button} size='regular' mode='tertiary-secondary'>
-        Docs
-      </Button>
+      {currentUser && (
+        <Dropdown trigger='click' options={<CurrentProfileDropdown />}>
+          <Avatar
+            size={34}
+            uniqueId={currentUser.email}
+            firstName={currentUser.first_name}
+            lastName={currentUser.last_name}
+          />
+        </Dropdown>
+      )}
     </div>
-
-    <Dropdown trigger='click' options={<CurrentProfileDropdown />}>
-      <Avatar size={34} uniqueId={'test'} />
-    </Dropdown>
-  </div>
-)
+  )
+}
