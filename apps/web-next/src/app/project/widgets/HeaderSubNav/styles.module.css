@@ -1,4 +1,5 @@
 .root {
+    height: var(--app-size-navigation);
     position: sticky;
     top: 0;
     background: var(--background);

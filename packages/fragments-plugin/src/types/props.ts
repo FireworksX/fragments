@@ -15,6 +15,7 @@ import {
 } from 'src/defenitions'
 import { Constrains } from './index'
 import { ComponentProperty, TypeValue } from './componentProperties'
+import { SpringValue } from '@react-spring/web'
 
 type Entity = any
 
@@ -35,9 +36,9 @@ export interface Vector {
 }
 
 interface RGB {
-  r: number
-  g: number
-  b: number
+  r: number | SpringValue<number>
+  g: number | SpringValue<number>
+  b: number | SpringValue<number>
 }
 
 interface RGBA extends RGB {
@@ -55,7 +56,7 @@ export interface Rect {
 
 export interface Border {
   type: keyof typeof builderBorderType
-  width: number
+  width: number | SpringValue<number>
   color: Color
 }
 

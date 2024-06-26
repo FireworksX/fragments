@@ -1,0 +1,10 @@
+.root {
+    position: relative;
+}
+
+.lockerWrapper {
+    position: absolute;
+    right: 140px;
+    bottom: 20px;
+    z-index: 2;
+}

@@ -1,4 +1,4 @@
-import { builderNodes } from 'src'
+import { builderNodes } from '../index.optimized'
 import { generateId } from '@fragments/utils'
 
 export interface CreateComponentOptions {

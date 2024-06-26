@@ -1,4 +1,37 @@
 .page {
-    background: var(--secondary-light);
+    background: var(--background-secondary);
     min-height: 100vh;
+}
+
+.root {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    background: var(--background-secondary);
+    height: calc(100vh - var(--app-size-header) - var(--app-size-navigation));
+    overflow: hidden;
+    position: relative;
+}
+
+.previewContainer {
+    position: relative;
+    flex: 1;
+}
+
+.floatingBar {
+    position: absolute;
+    bottom: 30px;
+}
+
+.overlays {
+    position: absolute;
+    inset: 0;
+}
+
+.popoutsOverlay {
+    position: absolute;
+    top: calc(var(--app-size-header) + var(--app-size-navigation));
+    bottom: 0;
+    right: var(--builder-size-right-bar);
+    left: var(--builder-size-left-bar);
 }

@@ -6,6 +6,7 @@ import styles from './styles.module.css'
 import { BreadcrumbProject } from '@/app/project/widgets/Header/widgets/Breadcrumbs/components/BreadcrumbProject/BreadcrumbProject'
 import { BreadcrumbFragment } from '@/app/project/widgets/Header/widgets/Breadcrumbs/components/BreadcrumbFragment/BreadcrumbFragment'
 import { useProjectDetail } from '@/app/project/[projectSlug]/hooks/useProjectDetail'
+import { Link } from '@/app/widgets/Link/Link'
 
 export const Breadcrumbs = () => {
   const { fragmentSlug, projectSlug } = useParams()
@@ -13,9 +14,11 @@ export const Breadcrumbs = () => {
 
   return (
     <div className={styles.root}>
-      <Touchable>
-        <FragmentsLogo width={24} height={24} />
-      </Touchable>
+      <Link type='projectsList'>
+        <Touchable>
+          <FragmentsLogo width={24} height={24} />
+        </Touchable>
+      </Link>
 
       {projectDetail && (
         <>

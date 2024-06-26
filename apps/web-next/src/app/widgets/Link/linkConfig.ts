@@ -4,6 +4,7 @@ export const linkConfig = {
   login: '/login',
   loginEmail: '/login/email',
   project: ({ projectSlug }) => `/project/${projectSlug}`,
+  projectsList: '/project',
   createProject: '/project/create',
   fragments: ({ projectSlug }) => `/project/${projectSlug}/fragments`,
   fragmentDetail: ({ projectSlug, fragmentSlug }) => `/project/${projectSlug}/fragments/${fragmentSlug}`

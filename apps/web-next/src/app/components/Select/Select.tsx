@@ -3,6 +3,7 @@ import { FC, PropsWithChildren } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import CaretDown from '@/app/svg/caret-down.svg'
+import { animated } from '@react-spring/web'
 
 interface SelectProps extends PropsWithChildren {
   className?: string
@@ -10,7 +11,7 @@ interface SelectProps extends PropsWithChildren {
   onChange(value: string): void
 }
 
-const Select: FC<SelectProps> = ({ className, children, value, onChange }) => {
+const Select: FC<SelectProps> = animated(({ className, children, value, onChange }) => {
   return (
     <div className={cn(styles.root, className)}>
       <CaretDown className={styles.caret} width={11} />
@@ -25,6 +26,6 @@ const Select: FC<SelectProps> = ({ className, children, value, onChange }) => {
       </select>
     </div>
   )
-}
+})
 
 export default Select

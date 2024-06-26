@@ -1,0 +1,11 @@
+.root {
+  min-width: 320px;
+  position: relative;
+}
+
+.title {
+  position: absolute;
+  bottom: calc(100% + 15px);
+  left: 0;
+  right: 0;
+}

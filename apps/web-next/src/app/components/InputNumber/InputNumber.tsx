@@ -5,6 +5,8 @@ import styles from './styles.module.css'
 import Touchable from '@/app/components/Touchable'
 import CaretUp from '@/app/svg/caret-up.svg'
 import CaretDown from '@/app/svg/caret-down.svg'
+import { SpringValue, animated } from '@react-spring/web'
+import { getFixedRationByStep } from '@/app/utils/getFixedRationByStep'
 
 interface InputNumberProps extends InputHTMLAttributes<HTMLInputElement> {
   value: number | string
@@ -18,72 +20,66 @@ interface InputNumberProps extends InputHTMLAttributes<HTMLInputElement> {
   onChange: (value: number | string) => void
 }
 
-const InputNumber: FC<InputNumberProps> = ({
-  className,
-  value,
-  suffix,
-  withoutTicker = false,
-  disabled,
-  min = 0,
-  max,
-  step = 1,
-  onChange
-}) => {
-  const ref = useRef<ElementRef<'input'>>()
+const InputNumber: FC<InputNumberProps> = animated(
+  ({ className, value, suffix, withoutTicker = false, disabled, min = 0, max, step = 1, onChange }) => {
+    const ref = useRef<ElementRef<'input'>>()
+    const fixedValue = +value?.toFixed(getFixedRationByStep(step)) ?? value
 
-  const refCreator = (target?: ElementRef<'input'> | null) => {
-    const listener = () => {
-      target?.blur()
+    const refCreator = (target?: ElementRef<'input'> | null) => {
+      const listener = () => {
+        target?.blur()
+      }
+
+      if (target) {
+        target.addEventListener('wheel', listener, { passive: true })
+      } else {
+        ref.current?.removeEventListener('wheel', listener)
+      }
     }
 
-    if (target) {
-      target.addEventListener('wheel', listener, { passive: true })
-    } else {
-      ref.current?.removeEventListener('wheel', listener)
+    const inc = () => {
+      const nextValue = +(+fixedValue + step)
+      if (typeof max !== 'undefined') {
+        onChange(nextValue > max ? fixedValue : nextValue)
+      } else {
+        onChange(nextValue)
+      }
     }
-  }
 
-  const inc = () => {
-    const nextValue = +(+value + step).toFixed(1)
-
-    if (typeof max !== 'undefined') {
-      onChange(nextValue > max ? value : nextValue)
-    } else {
-      onChange(nextValue)
+    const dec = () => {
+      const nextValue = +(+fixedValue - step)
+      onChange(nextValue < min ? fixedValue : nextValue)
     }
-  }
 
-  const dec = () => {
-    const nextValue = +(+value - step).toFixed(1)
-    onChange(nextValue < min ? value : nextValue)
-  }
-
-  return (
-    <div className={cn(styles.root, className)}>
-      <input
-        className={styles.inner}
-        ref={refCreator}
-        type='number'
-        value={value}
-        min={min}
-        max={max}
-        step={step}
-        disabled={disabled}
-        onChange={({ target }) => onChange(target.value)}
-      />
-      {suffix && <div className={styles.suffix}>{suffix}</div>}
-      {!withoutTicker && !disabled && (
-        <div className={styles.tickers}>
-          <Touchable className={styles.ticker} onClick={inc}>
-            <CaretUp width={8} height={11} />
-          </Touchable>
-          <Touchable className={styles.ticker} onClick={dec}>
-            <CaretDown width={8} height={11} />
-          </Touchable>
+    return (
+      <>
+        <div className={cn(styles.root, className)}>
+          <input
+            className={styles.inner}
+            ref={refCreator}
+            type='number'
+            value={fixedValue}
+            min={min}
+            max={max}
+            step={step}
+            disabled={disabled}
+            onChange={({ target }) => onChange(+target.value)}
+          />
+          {suffix && <div className={styles.suffix}>{suffix}</div>}
+          {!withoutTicker && !disabled && (
+            <div className={styles.tickers}>
+              <Touchable className={styles.ticker} onClick={inc}>
+                <CaretUp width={8} height={11} />
+              </Touchable>
+              <Touchable className={styles.ticker} onClick={dec}>
+                <CaretDown width={8} height={11} />
+              </Touchable>
+            </div>
+          )}
         </div>
-      )}
-    </div>
-  )
-}
+      </>
+    )
+  }
+)
 
 export default InputNumber

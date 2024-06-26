@@ -1,0 +1,19 @@
+.root {
+    border-radius: var(--radius-second);
+    padding: 0 10px;
+
+    &:hover {
+        .actions {
+            opacity: 1;
+        }
+    }
+}
+
+.icon {
+    color: var(--component);
+}
+
+.actions {
+    transition: var(--animation-transition-default);
+    opacity: 0;
+}

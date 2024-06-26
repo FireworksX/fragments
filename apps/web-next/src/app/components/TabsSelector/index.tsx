@@ -3,6 +3,7 @@ import { ElementRef, FC, ReactNode, useCallback, useEffect, useRef, useState } f
 import cn from 'classnames'
 import styles from './styles.module.css'
 import Touchable from '@/app/components/Touchable'
+import { animated, useSpring } from '@react-spring/web'
 
 export interface TabsSelectorItem {
   name: string | number | boolean
@@ -17,10 +18,12 @@ interface TabsSelectorProps {
   className?: string
 }
 
-const TabsSelector: FC<TabsSelectorProps> = ({ className, items, value, onChange }) => {
+const TabsSelector: FC<TabsSelectorProps> = animated(({ className, items, value, onChange }) => {
   const rootRef = useRef<ElementRef<'div'>>(null)
-  const [switcherWidth, setSwitcherWidth] = useState(0)
-  const [switcherOffset, setSwitcherOffset] = useState(0)
+  const [switcherStyles, switcherApi] = useSpring(() => ({
+    width: 0,
+    x: 0
+  }))
 
   const activeIndex = items.findIndex(({ name }) => name === value)
 
@@ -28,10 +31,12 @@ const TabsSelector: FC<TabsSelectorProps> = ({ className, items, value, onChange
     const activeCell = rootRef.current?.querySelector('[data-active="true"]')
 
     if (activeCell && activeCell instanceof HTMLElement) {
-      setSwitcherWidth(activeCell.getBoundingClientRect().width - 6)
-      setSwitcherOffset(activeCell.offsetLeft)
+      switcherApi.start({
+        width: activeCell.getBoundingClientRect().width - 6,
+        x: activeCell.offsetLeft
+      })
     }
-  }, [rootRef])
+  }, [switcherApi])
 
   useEffect(() => {
     const debounceUpdate = update //TODO debounce(update, 300)
@@ -49,12 +54,10 @@ const TabsSelector: FC<TabsSelectorProps> = ({ className, items, value, onChange
       ref={rootRef}
       className={cn(styles.root, className)}
       style={{
-        '--count': items.length,
-        '--width': `${switcherWidth}px`,
-        '--offset': `${switcherOffset}px`
+        '--count': items.length
       }}
     >
-      <div className={styles.switcher} />
+      <animated.div className={styles.switcher} style={switcherStyles} />
       {items.map((el, index) => (
         <Touchable
           className={cn(styles.cell, {
@@ -71,6 +74,6 @@ const TabsSelector: FC<TabsSelectorProps> = ({ className, items, value, onChange
       ))}
     </div>
   )
-}
+})
 
 export default TabsSelector

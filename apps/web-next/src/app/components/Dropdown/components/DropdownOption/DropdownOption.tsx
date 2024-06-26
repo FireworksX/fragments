@@ -7,6 +7,7 @@ import CaretRight from '@/app/svg/caret-right.svg'
 export interface DropdownOptionProps extends PropsWithChildren {
   size?: 'large' | 'medium'
   description?: string
+  indicator?: string | number
   className?: string
   disabled?: boolean
   fetching?: boolean
@@ -18,6 +19,7 @@ export interface DropdownOptionProps extends PropsWithChildren {
 const DropdownOption: FC<DropdownOptionProps> = ({
   className,
   size = 'medium',
+  indicator,
   disabled,
   hasNested,
   children,
@@ -35,9 +37,10 @@ const DropdownOption: FC<DropdownOptionProps> = ({
       })}
       onClick={onClick}
     >
-      <div>
-        {children} <div className={styles.description}>{description}</div>
+      <div className={styles.body}>
+        {children} <div className={styles.description}>{indicator}</div>
       </div>
+      {description && <div className={styles.description}>{description}</div>}
 
       {(suffix || hasNested || fetching) && (
         <div>

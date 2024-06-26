@@ -1,0 +1,60 @@
+.root {
+    display: grid;
+    grid-template-columns: var(--app-size-left-bar) auto var(--app-size-right-bar);
+
+    &.componentView {
+        --primary: var(--component);
+        --primary-bg: var(--component-bg);
+        --primary-disabled: var(--component-disabled);
+    }
+}
+
+
+.body {
+    position: relative;
+    height: calc(100vh - var(--app-size-header));
+    width: calc(100vw - var(--app-size-left-bar) - var(--app-size-right-bar));
+    overflow: hidden;
+}
+
+.popout {
+    position: absolute;
+    top: 10%;
+    right: 3%;
+    z-index: var(--z-index-builder-popout);
+
+    &.left {
+        left: 3%;
+        right: initial;
+    }
+}
+
+
+.bodyHead {
+    display: flex;
+    align-items: center;
+    padding: var(--gutter-default);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    transition: var(--animation-transition-default);
+    z-index: var(--z-index-header);
+}
+
+.background {
+    position: absolute;
+    inset: 0;
+    background: var(--background-secondary);
+}
+
+
+.head {
+    position: relative;
+    z-index: var(--z-index-builder-tools);
+}
+
+.left, .right {
+    position: relative;
+    z-index: var(--z-index-builder-tools);
+}

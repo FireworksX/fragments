@@ -1,7 +1,7 @@
 import { clonedField, Resolver } from '../helpers'
 
 import { LayerProps } from '../types/props'
-import { builderLayerAlign, builderLayerDirection, builderLayerDistribute, builderLayerMode } from 'src'
+import { builderLayerAlign, builderLayerDirection, builderLayerDistribute, builderLayerMode } from '../index.optimized'
 
 export const layerPropsResolver: Resolver = (statex, entity): LayerProps => {
   const key = statex.keyOfEntity(entity)

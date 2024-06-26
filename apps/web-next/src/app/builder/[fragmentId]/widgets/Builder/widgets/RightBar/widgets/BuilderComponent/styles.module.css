@@ -1,0 +1,13 @@
+.root {
+  position: relative;
+}
+
+.description {
+  font-size: 11px;
+  color: var(--secondary);
+}
+
+.editButton {
+  margin-top: 10px;
+
+}

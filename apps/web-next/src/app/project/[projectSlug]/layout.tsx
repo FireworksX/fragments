@@ -1,5 +1,5 @@
 'use client'
-import AsideBar from '@/app/project/[projectSlug]/widgets/AsideBar/AsideBar'
+import styles from './styles.module.css'
 import { HeaderSubNav } from '@/app/project/widgets/HeaderSubNav/HeaderSubNav'
 import { HeaderSubNavCell } from '@/app/project/widgets/HeaderSubNav/components/HeaderSubNavCell/HeaderSubNavCell'
 import { useParams } from 'next/navigation'

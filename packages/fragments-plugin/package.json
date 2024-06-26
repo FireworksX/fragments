@@ -13,6 +13,18 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs",
       "source": "./src/index.ts"
+    },
+    "./performance": {
+      "types": "./dist/index.performance.d.ts",
+      "import": "./dist/index.performance.js",
+      "require": "./dist/index.performance.cjs",
+      "source": "./src/index.performance.ts"
+    },
+    "./optimized": {
+      "types": "./dist/index.optimized.d.ts",
+      "import": "./dist/index.optimized.js",
+      "require": "./dist/index.optimized.cjs",
+      "source": "./src/index.optimized.ts"
     }
   },
   "scripts": {
@@ -27,6 +39,7 @@
     "@graph-state/core": "^0.5.0",
     "@graph-state/plugin-extend": "^0.3.1",
     "@graph-state/plugin-logger": "^0.2.0",
+    "@react-spring/web": "^9.7.3",
     "tsup": "^7.2.0"
   },
   "devDependencies": {

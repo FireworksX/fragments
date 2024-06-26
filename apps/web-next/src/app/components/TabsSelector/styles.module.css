@@ -12,9 +12,6 @@
     left: 3px;
     top: 3px;
     height: calc(100% - 6px);
-    transition: var(--animation-transition-default);
-    width: var(--width);
-    transform: translateX(var(--offset));
     background: var(--background);
     border-radius: var(--radius-small);
 }

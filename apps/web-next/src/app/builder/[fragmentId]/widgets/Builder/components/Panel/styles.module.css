@@ -1,0 +1,36 @@
+.root {
+    border-bottom: 1px solid rgba(var(--border--rgb), .6);
+
+    &:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+
+        .body {
+            padding-bottom: 0;
+        }
+    }
+}
+
+.body {
+    padding-bottom: 15px;
+
+    &:empty {
+        padding-bottom: 0;
+    }
+}
+
+.head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 48px;
+}
+
+.title {
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--text-color-accent);
+    display: flex;
+    align-items: center;
+    flex: 1;
+}

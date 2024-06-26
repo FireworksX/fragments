@@ -1,0 +1,8 @@
+.root {}
+
+.highlight {
+  border: 1px solid var(--primary);
+  pointer-events: none;
+  z-index: var(--z-index-builder-tools);
+}
+
