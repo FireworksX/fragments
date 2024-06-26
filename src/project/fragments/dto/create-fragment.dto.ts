@@ -4,6 +4,9 @@ export class CreateFragmentDto {
   @IsString()
   name: string;
 
-  @IsUUID()
+  @IsInt()
   author: number;
+
+  @IsInt()
+  projectId: number;
 }

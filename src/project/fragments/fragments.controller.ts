@@ -32,10 +32,12 @@ export class FragmentsController {
   create(
     @Body() createFragmentDto: CreateFragmentControllerDto,
     @CurrentUser() user: AuthUser,
+    @Param() { id: projectId },
   ) {
     return this.fragmentsService.create({
       ...createFragmentDto,
       author: user.id,
+      projectId,
     });
   }
 

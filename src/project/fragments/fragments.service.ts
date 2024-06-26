@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateFragmentDto } from './dto/create-fragment.dto';
 import { UpdateFragmentDto } from './dto/update-fragment.dto';
 import { SupabaseService } from 'src/supabase/supabase.service';
 import { GetFragmentQueryDto } from './dto/get-fragment-query.dto';
+import { omit } from '@fragments/utils';
 
 const TABLE_NAME = 'fragments';
+const PROJECT_FRAGMENTS_PIVOT = 'pivot_project_fragment';
 const DEFAULT_LIMIT = 30;
 
 @Injectable()
@@ -12,11 +14,34 @@ export class FragmentsService {
   constructor(private supabaseService: SupabaseService) {}
 
   async create(createFragmentDto: CreateFragmentDto) {
-    return await this.supabaseService.client
+    const fragmentResponse = await this.supabaseService.client
       .from(TABLE_NAME)
-      .insert(createFragmentDto)
+      .insert(omit(createFragmentDto, 'projectId'))
       .select()
       .single();
+
+    if (fragmentResponse.error) {
+      throw new HttpException(
+        fragmentResponse.error.message,
+        HttpStatus.BAD_GATEWAY,
+      );
+    }
+
+    const pivotResponse = await this.supabaseService.client
+      .from(PROJECT_FRAGMENTS_PIVOT)
+      .insert({
+        project: createFragmentDto.projectId,
+        fragment: fragmentResponse.data.id,
+      });
+
+    if (pivotResponse.error) {
+      throw new HttpException(
+        pivotResponse.error.message,
+        HttpStatus.BAD_GATEWAY,
+      );
+    }
+
+    return fragmentResponse;
   }
 
   async findAll(query: GetFragmentQueryDto) {

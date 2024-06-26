@@ -35,7 +35,8 @@
     "passport-local": "^1.0.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "@fragments/utils": "workspace:*"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
