@@ -1,0 +1,8 @@
+.root {
+    position: absolute;
+    bottom: 30px;
+}
+
+.zoomSelect {
+    min-width: 65px;
+}

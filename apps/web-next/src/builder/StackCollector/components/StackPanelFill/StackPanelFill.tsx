@@ -33,8 +33,8 @@ const tabs: TabsSelectorItem[] = [
 
 const StackPanelFill: FC<StackPanelFillProps> = ({ className }) => {
   const { documentManager } = useContext(BuilderContext)
-  const { selection } = useBuilderSelection()
-  const { getColor } = useDisplayColor()
+  const { selection, selectionGraph } = useBuilderSelection()
+  const { getColor, getColorStatic } = useDisplayColor()
   const layerInvoker = useLayerInvoker(
     selection,
     ({ key, value, node }) => {
@@ -43,15 +43,17 @@ const StackPanelFill: FC<StackPanelFillProps> = ({ className }) => {
           node.setFill(value)
           break
         case 'fillType':
-          const currentFills = documentManager.resolveValue(node, 'fills')
-          if (!currentFills || currentFills?.findIndex?.(f => f.type === value) === -1) {
-            if (value === builderPaintMode.Solid) {
-              layerInvoker('fills').onChange(getDefaultSolidFill())
-            }
-            if (value === builderPaintMode.Image) {
-              layerInvoker('fills').onChange(getDefaultImageFill())
-            }
+          // if (!currentFills || currentFills?.findIndex?.(f => f.type === value) === -1) {
+          if (value === builderPaintMode.Solid) {
+            node.setDefaultSolidFill()
           }
+          if (value === builderPaintMode.Image) {
+            node.setImageFill()
+          }
+          //   if (value === builderPaintMode.Image) {
+          //     layerInvoker('fills').onChange(getDefaultImageFill())
+          //   }
+          // }
 
           node.setFillType(value)
           break
@@ -69,11 +71,16 @@ const StackPanelFill: FC<StackPanelFillProps> = ({ className }) => {
   const currentFill = layerInvoker('currentFill')
   const type = fillType.value
 
+  console.log(currentFill)
+
+  // console.log(fills, type, currentFill.value)
+
   const changeColor = (color: Color) => {
-    fills.onChange({
-      type: builderPaintMode.Solid,
-      color
-    })
+    selectionGraph.setSolidFill(color)
+    // fills.onChange({
+    //   type: builderPaintMode.Solid,
+    //   color
+    // })
   }
 
   useEffect(() => {
@@ -82,36 +89,38 @@ const StackPanelFill: FC<StackPanelFillProps> = ({ className }) => {
     }
   }, [fillType, documentManager])
 
+  console.log(currentFill)
+
   return (
     <div className={cn(styles.root, className)}>
       <TabsSelector items={tabs} value={type} onChange={({ name }) => fillType.onChange(name)} />
       {type === builderPaintMode.Solid && (
         <>
           <Panel>
-            <GraphValue graphState={documentManager} field={currentFill.value}>
-              {value => {
-                return (
-                  <ColorPicker
-                    color={getColor(value?.color)}
-                    onChange={color => {
-                      if (color) {
-                        changeColor(color.rgb)
-                      }
-                    }}
-                  />
-                )
+            <ColorPicker
+              color={getColor(currentFill.value?.color)}
+              onChange={color => {
+                if (color) {
+                  changeColor(color.rgb)
+                }
               }}
-            </GraphValue>
+            />
           </Panel>
           <StackColors
-            initialColor={getColor(currentFill.value?.color)}
+            getInitialColor={() => currentFill.value.clone().toJSON().color}
             activeColorKey={currentFill.value?.color}
             onSelect={changeColor}
             onCreate={popoutsStore.goPrev}
           />
         </>
       )}
-      {type === builderPaintMode.Image && <ImagePicker value={currentFill.value} onChange={fills.onChange} />}
+      {type === builderPaintMode.Image && (
+        <GraphValue graphState={documentManager} field={currentFill.value}>
+          {value => (
+            <ImagePicker value={value} onChange={selectionGraph.setImageFill} onReset={() => value?.reset?.()} />
+          )}
+        </GraphValue>
+      )}
     </div>
   )
 }

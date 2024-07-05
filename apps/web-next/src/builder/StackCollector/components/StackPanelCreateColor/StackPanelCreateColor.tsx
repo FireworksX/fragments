@@ -1,4 +1,4 @@
-import { FC, useContext, useState } from 'react'
+import { FC, useContext, useEffect, useRef, useState } from 'react'
 import { Color } from 'react-color'
 import cn from 'classnames'
 import styles from './styles.module.css'
@@ -9,6 +9,9 @@ import { POPOUT_TYPE, popoutsStore } from '@/app/store/popouts.store'
 import { StackPanel } from '@/builder/StackCollector/hooks/useStackCollector'
 import Panel from '@/builder/components/Panel/Panel'
 import ColorPicker from '@/builder/components/ColorPicker/ColorPicker'
+import { SpringValue } from '@react-spring/web'
+import { useDisplayColor } from '@/builder/hooks/useDisplayColor'
+import { pick } from '@fragments/utils'
 
 export type StackPanelColorEntity = { name: string; color: Color }
 
@@ -21,12 +24,18 @@ interface StackPanelCreateColorProps extends StackPanel {
   className?: string
 }
 
-const DEFAULT_COLOR = '#56b1c4'
+const getDefaultColor = () => ({
+  r: new SpringValue(86),
+  g: new SpringValue(177),
+  b: new SpringValue(196),
+  a: new SpringValue(1)
+})
 
 const StackPanelCreateColor: FC<StackPanelCreateColorProps> = ({ className }) => {
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:createColor`)
   const context = popout?.context
-  const [color, setColor] = useState<Color>(context?.initialColor || DEFAULT_COLOR)
+  const { getColor, getColorStatic } = useDisplayColor()
+  const color = useRef<Color>(getColorStatic(context?.initialColor) || getDefaultColor())
   const [name, setName] = useState('')
 
   return (
@@ -35,9 +44,11 @@ const StackPanelCreateColor: FC<StackPanelCreateColorProps> = ({ className }) =>
         <InputText placeholder='Color name' value={name} onChange={setName} />
         <Panel>
           <ColorPicker
-            color={color}
-            onChange={color => {
-              setColor(color?.rgb)
+            color={getColor(color.current)}
+            onChange={({ rgb }) => {
+              Object.entries(rgb).forEach(([k, v]) => {
+                color.current[k].start(v)
+              })
             }}
           />
         </Panel>
@@ -48,7 +59,7 @@ const StackPanelCreateColor: FC<StackPanelCreateColorProps> = ({ className }) =>
             context?.onSubmit &&
               context.onSubmit({
                 name,
-                color
+                color: pick(color.current, 'r', 'g', 'b', 'a')
               })
           }}
         >

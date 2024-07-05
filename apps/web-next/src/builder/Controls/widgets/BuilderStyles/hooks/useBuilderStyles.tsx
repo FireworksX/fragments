@@ -24,7 +24,7 @@ export const useBuilderStyles = () => {
   const layerInvoker = useLayerInvoker(selection, ({ node, key, value }) => {
     switch (key) {
       case 'visible':
-        node.toggleVisible()
+        node.toggleVisible(value)
         break
       case 'opacity':
         node.setOpacity(value)
@@ -34,6 +34,9 @@ export const useBuilderStyles = () => {
         break
       case 'cornerRadius':
         node.setCornerRadius(+value)
+        break
+      case 'border':
+        node.setBorder(value)
         break
       case 'fillType':
         node.setFillType(value)

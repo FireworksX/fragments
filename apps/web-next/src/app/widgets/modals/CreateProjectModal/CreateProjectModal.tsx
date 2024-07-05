@@ -32,7 +32,7 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({ className }) => {
   const [name, setName] = useState('')
   const context = modal.context
   const creating = context?.creating ?? false
-  const { fetching: uploadingLogo, progress, data, onUpload } = useUploadFile()
+  const { fetching: uploadingLogo, progress, data, onUpload } = useUploadFile('projectLogo')
 
   const handleCreate = () => {
     context?.onCreate({

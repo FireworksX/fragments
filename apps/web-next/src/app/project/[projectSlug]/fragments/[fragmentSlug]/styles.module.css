@@ -18,11 +18,6 @@
     flex: 1;
 }
 
-.floatingBar {
-    position: absolute;
-    bottom: 30px;
-}
-
 .overlays {
     position: absolute;
     inset: 0;
@@ -30,7 +25,7 @@
 
 .popoutsOverlay {
     position: absolute;
-    top: calc(var(--app-size-header) + var(--app-size-navigation));
+    top: 0;
     bottom: 0;
     right: var(--builder-size-right-bar);
     left: var(--builder-size-left-bar);

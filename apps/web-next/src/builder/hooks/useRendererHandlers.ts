@@ -7,7 +7,6 @@ export const useRendererHandlers = () => {
   const handleClick = (e, options: OnClickSelectorOptions) => {
     e.preventDefault()
     e.stopPropagation()
-
     setFocusNode(options.layerKey)
   }
 

@@ -16,23 +16,30 @@ interface ImagePickerProps {
   value: ImagePickerValue
   className?: string
   onChange: (value: ImagePickerValue) => void
+  onReset?: () => void
 }
 
-const ImagePicker: FC<ImagePickerProps> = ({ className, value, onChange }) => {
-  const { data, progress, fetching, onUpload } = useUploadFile()
+const ImagePicker: FC<ImagePickerProps> = ({ className, value, onChange, onReset }) => {
+  const { data, progress, fetching, onUpload } = useUploadFile('projectAssets')
 
   useEffect(() => {
-    if (data?.result?.url && data?.result?.url !== value.src) {
+    if (data?.url && data?.url !== value?.src) {
       onChange({
         ...value,
-        url: data.result.url
+        url: data.url
       })
     }
   }, [data])
 
   return (
     <div className={cn(styles.root, className)}>
-      <ImageSelector value={value?.url} progress={progress} isUploading={fetching} onChange={onUpload} />
+      <ImageSelector
+        value={value?.url}
+        progress={progress}
+        isUploading={fetching}
+        onChange={onUpload}
+        onReset={onReset}
+      />
       <Panel>
         <ControlRow title='Sizing'>
           <ControlRowWide>

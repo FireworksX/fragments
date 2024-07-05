@@ -13,13 +13,14 @@ import PanelHeadAside from '@/builder/components/PanelHeadAside/PanelHeadAside'
 import ComponentCell from '@/builder/components/ComponentCell/ComponentCell'
 import ColorCell from '@/builder/components/ColorCell/ColorCell'
 import CssCell from '@/builder/components/CssCell/CssCell'
+import { BuilderContext } from '@/builder/BuilderContext'
 
 interface BuilderAssetsProps {
   className?: string
 }
 
 const Assets: FC<BuilderAssetsProps> = ({ className }) => {
-  const { graphState } = useContext(BuilderContext)
+  const { documentManager } = useContext(BuilderContext)
   const {
     editColor,
     createColor,
@@ -41,7 +42,7 @@ const Assets: FC<BuilderAssetsProps> = ({ className }) => {
                 <ComponentCell
                   key={component._id}
                   onInsert={() => insertComponent(component)}
-                  onClick={() => onClickComponent(graphState.keyOfEntity(component))}
+                  onClick={() => onClickComponent(documentManager.keyOfEntity(component))}
                 >
                   {component.name}
                 </ComponentCell>
@@ -81,8 +82,8 @@ const Assets: FC<BuilderAssetsProps> = ({ className }) => {
                 <ColorCell
                   key={color?.name}
                   color={color?.color}
-                  onClick={() => editColor(graphState.keyOfEntity(color), { initial: true, position: 'left' })}
-                  onDelete={() => removeColor(graphState.keyOfEntity(color))}
+                  onClick={() => editColor(documentManager.keyOfEntity(color), { initial: true, position: 'left' })}
+                  onDelete={() => removeColor(documentManager.keyOfEntity(color))}
                 >
                   {color?.name}
                 </ColorCell>
@@ -94,8 +95,10 @@ const Assets: FC<BuilderAssetsProps> = ({ className }) => {
               {cssVariables.map(value => (
                 <CssCell
                   key={value?.name}
-                  onClick={() => editCssOverride(graphState.keyOfEntity(value), { initial: true, position: 'left' })}
-                  onDelete={() => removeColor(graphState.keyOfEntity(value))}
+                  onClick={() =>
+                    editCssOverride(documentManager.keyOfEntity(value), { initial: true, position: 'left' })
+                  }
+                  onDelete={() => removeColor(documentManager.keyOfEntity(value))}
                 >
                   {value?.name}
                 </CssCell>

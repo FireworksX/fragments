@@ -1,16 +1,17 @@
 import { Color } from 'react-color'
 import { popoutsStore } from '@/app/store/popouts.store'
 import { useContext } from 'react'
-import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
-import { builderNodes, createSolidPaintStyle } from '@fragments/fragments-plugin'
+import { builderNodes, createSolidPaintStyle } from '@fragments/fragments-plugin/performance'
 import { useGraphFields, useGraphStack } from '@graph-state/react'
+import { BuilderContext } from '@/builder/BuilderContext'
 
 export interface BuilderAssetsColorsOptions extends Partial<OpenPopoutOptions<'colorPicker'>> {
   initialColor?: Color
   onSubmit?: (colorVariable: Variable<string, StackPanelColorEntity>) => void
 }
 
-export const useBuilderAssetsColors = documentManager => {
+export const useBuilderAssetsColors = () => {
+  const { documentManager } = useContext(BuilderContext)
   const solidStyles = useGraphFields(documentManager, builderNodes.SolidPaintStyle)
   const solidStyleValues = useGraphStack(documentManager, solidStyles)
 
@@ -24,9 +25,8 @@ export const useBuilderAssetsColors = documentManager => {
           value: variableValue?.color,
           withoutStack: true,
           onChange: newColor => {
-            documentManager.mutate(styleKey, {
-              color: newColor
-            })
+            const style = documentManager.resolve(styleKey)
+            style.update(newColor)
           }
         },
         ...options

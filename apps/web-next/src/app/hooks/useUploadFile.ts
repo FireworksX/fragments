@@ -4,6 +4,8 @@ import { axios } from '@/app/lib/axios'
 import { usePathByType } from '@/app/hooks/requests/usePathByType'
 import { requestType } from '@/app/hooks/requests/requestConfig'
 
+type UploadFileType = 'projectLogo' | 'projectAssets'
+
 const uploadMethod = async (url: string, { arg }) => {
   const file = arg.file
 
@@ -21,8 +23,13 @@ const uploadMethod = async (url: string, { arg }) => {
     .then(res => res.data)
 }
 
-export const useUploadFile = () => {
-  const apiPath = usePathByType(requestType.projectsUploadLogo)
+const fetchTypeMap = {
+  projectLogo: requestType.projectsUploadLogo,
+  projectAssets: requestType.projectsUploadAssets
+}
+
+export const useUploadFile = (type: UploadFileType = 'projectAssets') => {
+  const apiPath = usePathByType(fetchTypeMap[type])
   const [progress, setProgress] = useState(0)
   const { trigger, data, isMutating } = useSWRMutation(apiPath, uploadMethod)
 

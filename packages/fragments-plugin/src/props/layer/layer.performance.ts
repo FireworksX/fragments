@@ -13,46 +13,56 @@ export const layerProps: Resolver = (state, entity): LayerProps => {
 
   return {
     ...entity,
-    layerMode: clonedField(state, entity, 'layerMode', builderLayerMode.none),
-    layerAlign: clonedField(state, entity, 'layerAlign', builderLayerAlign.start),
-    layerDirection: clonedField(state, entity, 'layerDirection', builderLayerDirection.horizontal),
-    layerDistribute: clonedField(state, entity, 'layerDistribute', builderLayerDistribute.start),
-    layerWrap: clonedField(state, entity, 'layerWrap', false),
+    layerMode: clonedField(state, entity, 'layerMode', new SpringValue(builderLayerMode.none)),
+    layerAlign: clonedField(state, entity, 'layerAlign', new SpringValue(builderLayerAlign.start)),
+    layerDirection: clonedField(state, entity, 'layerDirection', new SpringValue(builderLayerDirection.horizontal)),
+    layerDistribute: clonedField(state, entity, 'layerDistribute', new SpringValue(builderLayerDistribute.start)),
+    layerWrap: clonedField(state, entity, 'layerWrap', new SpringValue(false)),
     layerGap: clonedField(state, entity, 'layerGap', new SpringValue(0)),
 
     setLayerMode(mode: typeof builderLayerMode) {
       if (Object.keys(builderLayerMode).includes(mode)) {
-        state.mutate(state.keyOfEntity(this), {
-          layerMode: mode
-        })
+        const currentValue = state.resolve(key).layerMode
+        currentValue.start(mode)
+        // state.mutate(state.keyOfEntity(this), {
+        //   layerMode: mode
+        // })
       }
     },
     setLayerDirection(direction: typeof builderLayerDirection) {
       if (Object.keys(builderLayerDirection).includes(direction)) {
-        state.mutate(state.keyOfEntity(this), {
-          layerDirection: direction
-        })
+        const currentValue = state.resolve(key).layerDirection
+        currentValue.start(direction)
+        // state.mutate(state.keyOfEntity(this), {
+        //   layerDirection: direction
+        // })
       }
     },
     setLayerDistribute(distribute: typeof builderLayerDistribute) {
       if (Object.keys(builderLayerDistribute).includes(distribute)) {
-        state.mutate(state.keyOfEntity(this), {
-          layerDistribute: distribute
-        })
+        const currentValue = state.resolve(key).layerDistribute
+        currentValue.start(distribute)
+        // state.mutate(state.keyOfEntity(this), {
+        //   layerDistribute: distribute
+        // })
       }
     },
     setLayerAlign(align: typeof builderLayerAlign) {
       if (Object.keys(builderLayerAlign).includes(align)) {
-        state.mutate(state.keyOfEntity(this), {
-          layerAlign: align
-        })
+        const currentValue = state.resolve(key).layerAlign
+        currentValue.start(align)
+        // state.mutate(state.keyOfEntity(this), {
+        //   layerAlign: align
+        // })
       }
     },
     setLayerWrap(isWrap: boolean) {
       if (typeof isWrap === 'boolean') {
-        state.mutate(state.keyOfEntity(this), {
-          layerWrap: isWrap
-        })
+        const currentValue = state.resolve(key).layerWrap
+        currentValue.start(isWrap)
+        // state.mutate(state.keyOfEntity(this), {
+        //   layerWrap: isWrap
+        // })
       }
     },
     setLayerGap(gap: number) {

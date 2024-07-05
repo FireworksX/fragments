@@ -13,16 +13,16 @@ export type StackColorsValue = Color
 
 interface StackColorsProps {
   className?: string
-  initialColor?: Color
+  getInitialColor?: () => Color
   activeColorKey?: string
   onSelect?: (colorKey: StackColorsValue) => void
   onCreate?: (colorKey: StackColorsValue) => void
 }
 
-const StackColors: FC<StackColorsProps> = ({ className, activeColorKey, initialColor, onSelect, onCreate }) => {
+const StackColors: FC<StackColorsProps> = ({ className, activeColorKey, getInitialColor, onSelect, onCreate }) => {
   const { documentManager } = useContext(BuilderContext)
   const [search, setSearch] = useState('')
-  const { colorVariables, editColor, createColor } = useBuilderAssetsColors(documentManager)
+  const { colorVariables, editColor, createColor } = useBuilderAssetsColors()
 
   const filteredColors = useMemo(
     () => colorVariables.filter(({ name }) => name?.search(search) !== -1),
@@ -42,7 +42,7 @@ const StackColors: FC<StackColorsProps> = ({ className, activeColorKey, initialC
           placeholder='New color'
           onClick={() =>
             createColor({
-              initialColor,
+              initialColor: getInitialColor(),
               onSubmit: onCreate
             })
           }

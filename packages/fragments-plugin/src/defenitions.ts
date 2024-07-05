@@ -11,7 +11,9 @@ export const builderNodes = createConstants(
   'ComponentInstance',
   'SolidPaintStyle',
   'CssLink',
-  'ComponentProperty'
+  'ComponentProperty',
+  'Fill',
+  'ImageFill'
 )
 
 export const builderBorderType = createConstants('Solid', 'Dashed', 'Dotted')

@@ -14,7 +14,7 @@ import { CSS } from '@dnd-kit/utilities'
 import { useTreeProjection } from './useTreeProjection'
 import { arrayMove } from '@dnd-kit/sortable'
 import { buildTree } from '../utils'
-import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
+import { BuilderContext } from '@/builder/BuilderContext'
 
 const dropAnimationConfig: DropAnimation = {
   keyframes({ transform }) {
@@ -47,7 +47,7 @@ const adjustTranslate: Modifier = ({ transform }) => {
 }
 
 export const useTreeViewer = (rootLayerKey: string) => {
-  const { graphState } = useContext(BuilderContext)
+  const { documentManager } = useContext(BuilderContext)
   const [activeKey, setActiveKey] = useState<string | null>(null)
   const [overKey, setOverKey] = useState<string | null>(null)
   const [offsetLeft, setOffsetLeft] = useState(0)
@@ -123,7 +123,7 @@ export const useTreeViewer = (rootLayerKey: string) => {
 
   return {
     list: flattenedTree,
-    keys: flattenedTree.map(graphState.keyOfEntity) as string[],
+    keys: flattenedTree.map(documentManager.keyOfEntity) as string[],
     overlayModifiers: [adjustTranslate],
     overlayDropAnimation: dropAnimationConfig,
     activeItem,

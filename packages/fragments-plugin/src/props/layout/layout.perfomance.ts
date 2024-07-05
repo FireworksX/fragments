@@ -13,9 +13,9 @@ export const layoutProps: Resolver = (state, entity) => {
     zIndex: clonedField(state, entity, 'zIndex'),
     width: clonedField(state, entity, 'width', new SpringValue(100)),
     height: clonedField(state, entity, 'height', new SpringValue(100)),
-    rotation: clonedField(state, entity, 'rotation', 0),
-    layoutSizingHorizontal: clonedField(state, entity, 'layoutSizingHorizontal', builderSizing.Fixed),
-    layoutSizingVertical: clonedField(state, entity, 'layoutSizingVertical', builderSizing.Fixed),
+    rotation: clonedField(state, entity, 'rotation', new SpringValue(0)),
+    layoutSizingHorizontal: clonedField(state, entity, 'layoutSizingHorizontal', new SpringValue(builderSizing.Fixed)),
+    layoutSizingVertical: clonedField(state, entity, 'layoutSizingVertical', new SpringValue(builderSizing.Fixed)),
     // constrains: clonedField(state, entity, 'constrains', {
     //   vertical: entity?.constrains?.vertical ?? builderConstrain.Center,
     //   horizontal: entity?.constrains?.horizontal ?? builderConstrain.Center
@@ -32,7 +32,7 @@ export const layoutProps: Resolver = (state, entity) => {
       }
       const currentZindex = state.resolve(key).zIndex
       if (currentZindex) {
-        currentZindex.set(value)
+        currentZindex.start(value)
       } else {
         state.mutate(key, {
           zIndex: new SpringValue(0)
@@ -107,14 +107,15 @@ export const layoutProps: Resolver = (state, entity) => {
     setSizeMode(mode: 'horizontal' | 'vertical', value: typeof builderSizing) {
       if (Object.keys(builderSizing).includes(value)) {
         if (mode === 'horizontal') {
-          state.mutate(key, {
-            layoutSizingHorizontal: value
-          })
+          const currentHorizontalSizing = state.resolve(key).layoutSizingHorizontal
+          currentHorizontalSizing.start(value)
         }
         if (mode === 'vertical') {
-          state.mutate(key, {
-            layoutSizingVertical: value
-          })
+          const currentVerticalSizing = state.resolve(key).layoutSizingVertical
+          currentVerticalSizing.start(value)
+          // state.mutate(key, {
+          //   layoutSizingVertical: value
+          // })
         }
       }
     },

@@ -22,7 +22,7 @@ const Controls: FC<ControlsProps> = ({ className, documentManager, ...asideProps
     <AsideBar className={cn(className, styles.root)} {...asideProps}>
       {/*<BuilderComponent />*/}
       {/*<BuilderLink />*/}
-      {/*<BuilderPosition />*/}
+      <BuilderPosition />
       <BuilderSize />
       <BuilderLayout />
       {/*<BuilderEffects />*/}

@@ -11,7 +11,7 @@ interface BuilderScreenProps extends PropsWithChildren {
   screenKey: LinkKey
   className?: string
   mode?: 'preview' | 'edit'
-  onClickScreen?: () => void
+  onClickScreen?: (screen) => void
   onClickCustom?: () => void
 }
 

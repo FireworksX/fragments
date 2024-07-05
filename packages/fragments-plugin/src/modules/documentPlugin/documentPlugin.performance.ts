@@ -2,12 +2,13 @@ import { Plugin } from '@graph-state/core'
 import extendPlugin from '@graph-state/plugin-extend'
 import { builderNodes } from 'src'
 import { frameNode } from 'src/nodes/frame/frameNode.performance'
+import { screenNode } from 'src/nodes/screen/screenNode.performance'
 
 export const documentPlugin: Plugin = state => {
   extendPlugin(
     {
       // [builderNodes.Document]: (graph, cache) => documentNode(cache, graph),
-      // [builderNodes.Screen]: (graph, cache) => screenNode(cache, graph),
+      [builderNodes.Screen]: (graph, cache) => screenNode(cache, graph),
       [builderNodes.Frame]: (graph, cache) => frameNode(cache, graph)
       // [builderNodes.Text]: (graph, cache) => textNode(cache, graph),
       // [builderNodes.Component]: (graph, cache) => componentNode(cache, graph),

@@ -68,10 +68,10 @@ const InputNumber: FC<InputNumberProps> = animated(
           {suffix && <div className={styles.suffix}>{suffix}</div>}
           {!withoutTicker && !disabled && (
             <div className={styles.tickers}>
-              <Touchable className={styles.ticker} onClick={inc}>
+              <Touchable TagName='button' className={styles.ticker} onClick={inc}>
                 <CaretUp width={8} height={11} />
               </Touchable>
-              <Touchable className={styles.ticker} onClick={dec}>
+              <Touchable TagName='button' className={styles.ticker} onClick={dec}>
                 <CaretDown width={8} height={11} />
               </Touchable>
             </div>

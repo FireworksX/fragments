@@ -16,8 +16,8 @@ const DisplayBreakpoints: FC<BuilderDisplayBreakpointsProps> = ({ className, ren
   const { screensKeys, addScreen } = useScreens()
   const { isEdit } = useBuilderManager()
 
-  const handleNewScreen = screen => {
-    console.log(screen)
+  const handleNewScreen = (name, width) => {
+    addScreen(name, width)
   }
 
   const handleCustomBreakpoint = () => {

@@ -9,6 +9,7 @@ export const requestConfig = {
   signOut: '/auth/signOut',
   profile: '/auth/profile',
   projectsUploadLogo: '/project/upload-logo',
+  projectsUploadAssets: '/project/upload-assets',
   projectCreate: '/project',
   projectList: '/project',
   projectDetail: ({ projectSlug }) => `/project/${projectSlug}`,

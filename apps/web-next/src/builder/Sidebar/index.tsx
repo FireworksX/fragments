@@ -32,7 +32,7 @@ const Sidebar: FC<SidebarProps> = ({ ...asideProps }) => {
       </div>
 
       <div className={styles.delimiter} />
-      {/*{mode === 'layers' && <Layers />}*/}
+      {mode === 'layers' && <Layers />}
       {mode === 'assets' && <Assets />}
     </AsideBar>
   )

@@ -2,6 +2,7 @@ import { FC } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import BaseImage from '@/app/components/BaseImage/BaseImage'
+import Button from '@/app/components/Button'
 
 interface ImageSelectorProps {
   value?: string | null
@@ -9,11 +10,26 @@ interface ImageSelectorProps {
   progress?: number
   className?: string
   onChange(file: File): void
+  onReset?(): void
 }
 
-const ImageSelector: FC<ImageSelectorProps> = ({ className, value, isUploading = false, progress = 0, onChange }) => {
+const ImageSelector: FC<ImageSelectorProps> = ({
+  className,
+  value,
+  isUploading = false,
+  progress = 0,
+  onChange,
+  onReset
+}) => {
   return (
     <label className={cn(styles.root)}>
+      {value && onReset && (
+        <div className={styles.resetBody}>
+          <Button mode='secondary' onClick={onReset}>
+            Reset
+          </Button>
+        </div>
+      )}
       {isUploading && (
         <div className={styles.loaderBody}>
           <div className={styles.progressBar}>

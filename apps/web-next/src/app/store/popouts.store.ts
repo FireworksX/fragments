@@ -1,5 +1,6 @@
 import { createState } from '@graph-state/core'
 import extendPlugin from '@graph-state/plugin-extend'
+import loggerPlugin from '@graph-state/plugin-logger'
 
 export const POPOUT_TYPE = 'Popout'
 
@@ -45,6 +46,8 @@ export const popoutsStore = createState({
               { replace: true }
             )
           } else {
+            // Is pass new context, need update graph
+            state.mutate(nextCell)
             state.mutate(
               {
                 history: history.slice(0, indexHistoryPopout + 1),

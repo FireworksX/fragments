@@ -17,7 +17,6 @@ import { FragmentsRender } from '@fragments/render-react'
 import { createState } from '@graph-state/core'
 import { template } from '@/app/builder/[fragmentId]/widgets/Builder/template'
 import { managerPlugin, documentPlugin } from '@fragments/fragments-plugin/performance'
-import { Layer } from '@fragments/nodes'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Sidebar from '@/builder/Sidebar'
@@ -33,6 +32,10 @@ import LayerHighlight from '@/builder/LayerHighlight/LayerHighlight'
 import { BuilderContext } from '@/builder/BuilderContext'
 import { isInstanceOf } from '@graph-state/checkers'
 import loggerPlugin from '@graph-state/plugin-logger'
+import { Layer } from '@/builder/renderer/Layer'
+import isBrowser from '@/app/utils/isBrowser'
+import { useBuilderActions } from '@/builder/hooks/useBuilderActions'
+import { BuilderFloatBar } from '@/builder/BuilderFloatBar/BuilderFloatBar'
 
 const canvasManager = createCanvasManager()
 
@@ -42,7 +45,9 @@ const documentManager = createState({
   skip: [isInstanceOf(SpringValue)]
 })
 
-window.doc = documentManager
+if (isBrowser) {
+  window.doc = documentManager
+}
 
 const BuilderModals = dynamic(() => import('@/builder/BuilderModals/BuilderModals').then(m => m.BuilderModals), {
   ssr: false
@@ -54,7 +59,6 @@ const BuilderPopouts = dynamic(() => import('@/builder/BuilderPopouts/BuilderPop
 
 export default function () {
   const { isEdit, changeMode, focus } = useBuilderManager()
-  const [canvas] = useGraph(canvasManager)
   const { handleClick } = useRendererHandlers()
 
   return (
@@ -65,62 +69,11 @@ export default function () {
 
           <BuilderCanvas>
             <LayerHighlight />
-            <DisplayBreakpoints
-              documentManager={documentManager}
-              renderer={screenKey => (
-                <FragmentsRender
-                  FragmentNode={Layer}
-                  graphState={documentManager}
-                  layerKey={screenKey}
-                  onClick={handleClick}
-                />
-              )}
-            />
+            <DisplayBreakpoints renderer={screenKey => <Layer layerKey={screenKey} onClick={handleClick} />} />
           </BuilderCanvas>
           <Controls isOpen={isEdit} position='right' documentManager={documentManager} />
 
-          <FloatingBar
-            actions={[
-              {
-                kind: 'action',
-                hidden: !isEdit,
-                icon: <DefaultCursor width={20} height={20} />,
-                onClick: () => undefined
-              },
-              {
-                kind: 'action',
-                hidden: !isEdit,
-                icon: <GrabCursor width={20} height={20} />,
-                onClick: () => undefined
-              },
-              { kind: 'action', hidden: !isEdit, icon: <Lightning width={20} height={20} />, onClick: () => undefined },
-              {
-                kind: 'component',
-                component: (
-                  <SelectMimicry>
-                    <animated.div>
-                      {canvas.scale.to(scale =>
-                        Math.floor(scale * 100)
-                          .toFixed(0)
-                          .concat('%')
-                      )}
-                    </animated.div>
-                  </SelectMimicry>
-                )
-              },
-              {
-                kind: 'component',
-                hidden: isEdit,
-                component: <Button onClick={() => changeMode(builderModes.edit)}>Edit</Button>
-              },
-              { kind: 'delimiter', hidden: !isEdit },
-              {
-                kind: 'component',
-                hidden: !isEdit,
-                component: <Button>Publish</Button>
-              }
-            ]}
-          />
+          <BuilderFloatBar />
         </div>
 
         {isEdit && (

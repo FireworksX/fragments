@@ -6,6 +6,7 @@ import Touchable from '@/app/components/Touchable'
 import Button from '@/app/components/Button'
 import { useDisplayColor } from '@/builder/hooks/useDisplayColor'
 import Cell from '@/builder/components/Cell/Cell'
+import { animated } from '@react-spring/web'
 
 interface ColorCellProps extends PropsWithChildren {
   color: Color
@@ -22,7 +23,7 @@ const ColorCell: FC<ColorCellProps> = ({ className, sizeColor = 10, color, child
     <Touchable className={cn(styles.root, className)} TagName='button' onClick={onClick}>
       <Cell
         before={
-          <div
+          <animated.div
             className={styles.color}
             style={{
               '--size': `${sizeColor}px`,

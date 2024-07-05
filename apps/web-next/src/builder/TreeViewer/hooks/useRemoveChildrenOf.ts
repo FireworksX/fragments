@@ -1,9 +1,9 @@
-import { FlattenedItem } from './useFlattenTree'
 import { useContext } from 'react'
-import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
+import { FlattenedItem } from './useFlattenTree'
+import { BuilderContext } from '@/builder/BuilderContext'
 
 export const useRemoveChildrenOf = (items: FlattenedItem[], keys: string[]) => {
-  const { graphState } = useContext(BuilderContext)
+  const { documentManager } = useContext(BuilderContext)
 
   const removeChildrenOf = (items: FlattenedItem[], keys: string[]) => {
     const excludeParentIds = [...keys]
@@ -11,7 +11,7 @@ export const useRemoveChildrenOf = (items: FlattenedItem[], keys: string[]) => {
     return items.filter(item => {
       if (item.parentKey && excludeParentIds.includes(item.parentKey)) {
         if (item.children?.length) {
-          excludeParentIds.push(graphState.keyOfEntity(item))
+          excludeParentIds.push(documentManager.keyOfEntity(item))
         }
         return false
       }

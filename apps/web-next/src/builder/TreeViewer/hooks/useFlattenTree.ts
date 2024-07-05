@@ -1,10 +1,9 @@
 import { useCallback, useContext, useMemo, useState } from 'react'
 import { useRemoveChildrenOf } from './useRemoveChildrenOf'
-import { useBuilderSelection } from '@/app/builder/widgets/Builder/hooks/useBuilderSelection'
-import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
-import { builderNodes } from '@fragments/fragments-plugin'
-import { SceneNode } from '@fragments/fragments-plugin/src/types'
+import { builderNodes } from '@fragments/fragments-plugin/performance'
 import { useGraph } from '@graph-state/react'
+import { BuilderContext } from '@/builder/BuilderContext'
+import { useBuilderSelection } from '@/builder/hooks/useBuilderSelection'
 
 export interface TreeItem {
   _id: string
@@ -28,9 +27,8 @@ export interface FlattenedItem extends TreeItem {
 
 export const useFlattenTree = (inputKey: string, activeKey: string) => {
   const [openKeys, setOpenKeys] = useState<string[]>([])
-  const { graphState } = useContext(BuilderContext)
-  const [{ view }] = useGraph(graphState, graphState.builderLink)
-  const [inputValue] = useGraph(graphState, inputKey)
+  const { documentManager } = useContext(BuilderContext)
+  const [inputValue] = useGraph(documentManager, inputKey)
   const { selection, select } = useBuilderSelection()
 
   const handleClick = useCallback((key: string) => {
@@ -40,13 +38,13 @@ export const useFlattenTree = (inputKey: string, activeKey: string) => {
   const flatten = useCallback(
     (items: TreeItem[], parentItem: FlattenedItem | null = null, depth = 0): FlattenedItem[] => {
       return items.filter(Boolean).reduce<FlattenedItem[]>((acc, item, index) => {
-        const node: SceneNode = graphState.resolve(item)
-        const itemKey = graphState.keyOfEntity(item)
+        const node = documentManager.resolve(item)
+        const itemKey = documentManager.keyOfEntity(item)
         const selected = selection?.includes(itemKey)
 
         const partialSelection = selected || parentItem?.partialSelection
         const isComponent = node._type === builderNodes.Component
-        const children = view === 'default' && isComponent ? [] : node.children?.map(graphState.resolve)
+        const children = node.children?.map(documentManager.resolve) //view === 'default' && isComponent ? [] : node.children?.map(graphState.resolve)
         const renderKey = [...(parentItem?.renderKey ?? []), itemKey]
 
         const cellItem: FlattenedItem = {
@@ -69,7 +67,7 @@ export const useFlattenTree = (inputKey: string, activeKey: string) => {
         return [...acc, cellItem, ...flatten(cellItem.children ?? [], cellItem, depth + 1)]
       }, [])
     },
-    [view, handleClick, openKeys, graphState, selection]
+    [handleClick, openKeys, documentManager, selection]
   )
 
   const flattenedTree = useMemo(() => flatten(inputValue?.children ?? []), [flatten, inputValue])

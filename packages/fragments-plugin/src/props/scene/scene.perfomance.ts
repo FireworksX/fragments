@@ -13,20 +13,37 @@ export const sceneProps: Resolver = (state, entity) => {
     setOpacity(value: number) {
       // if (typeof value === 'number') { // or variale
       const currentOpacity = state.resolve(key).opacity
-      currentOpacity.set(value)
+      if (currentOpacity) {
+        currentOpacity.start(value)
+      } else {
+        state.mutate(key, {
+          opacity: new SpringValue(1)
+        })
+      }
       // state.mutate(key, {
       //   opacity: value
       // })
       // }
     },
-    // toggleLock(forceValue?: boolean) {
+    // toggleLock(forceValue?: boolean) {0
     //   state.mutate(key, prev => ({
     //     locked: typeof forceValue === 'boolean' ? forceValue : !prev.locked
     //   }))
     // },
     toggleVisible(forceValue?: boolean) {
       const currentVisible = state.resolve(key).visible
-      currentVisible.set(forceValue ?? !currentVisible.get())
+
+      if (currentVisible) {
+        currentVisible.start(forceValue ?? !currentVisible.get())
+      } else {
+        state.mutate(key, {
+          visible: new SpringValue(false)
+        })
+      }
+
+      // state.mutate(key, prev => ({
+      //   visible: forceValue ?? !prev.visible
+      // }))
     }
   }
 }

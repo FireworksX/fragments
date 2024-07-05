@@ -1,21 +1,22 @@
 import { useContext, useMemo } from 'react'
-// import { useComponentVariants } from '../../../../../routes/BuilderRoute/hooks/useComponentVariants'
-// import { useBuilder } from '../../../../Builder/hooks/useBuilder'
-import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
 import { useGraph } from '@graph-state/react'
-import { builderLayerMode, builderNodes } from '@fragments/fragments-plugin'
-import { useLayerInvokerNew } from '@/app/builder/widgets/Builder/hooks/useLayerInvokerNew'
-import { useBuilder } from '@/app/builder/widgets/Builder/hooks/useBuilder'
+import { builderLayerMode, builderNodes } from '@fragments/fragments-plugin/performance'
+import { BuilderContext } from '@/builder/BuilderContext'
+import { useLayerInvoker } from '@/builder/hooks/useLayerInvoker'
+import { useBuilderManager } from '@/builder/hooks/useBuilderManager'
+import { to } from '@react-spring/web'
+import { useBuilderActions } from '@/builder/hooks/useBuilderActions'
 
 export const useTreeViewerCell = (layerKey: string) => {
-  const { graphState } = useContext(BuilderContext)
-  const [{ view }] = useGraph(graphState)
-  const [layerValue] = useGraph(graphState, layerKey)
+  const { documentManager } = useContext(BuilderContext)
+  const view = ''
+  // const [{ view }] = useGraph(graphState)
+  const [layerValue] = useGraph(documentManager, layerKey)
   // const { currentKey } = useComponentVariants()
   // const rootKey = builderView === 'component' ? activeComponentField : layerPath.at(0)
-  const layerInvoker = useLayerInvokerNew(layerKey)
+  const layerInvoker = useLayerInvoker(layerKey)
   const parents = layerValue?.getAllParents?.() ?? []
-  const { features, ...builderActions } = useBuilder()
+  const { features, ...builderActions } = useBuilderActions()
 
   const type = layerValue?._type
   // const fullKey = [builderView === 'component' ? currentKey : rootKey, layerKey].join('/')
@@ -24,8 +25,8 @@ export const useTreeViewerCell = (layerKey: string) => {
   const isComponent = type === builderNodes.Component
   const isVisible = layerInvoker('visible').value
   const parentIsVisible = useMemo(
-    () => parents.every(parent => graphState.resolveValue(parent, 'visible') ?? true),
-    [parents, graphState]
+    () => parents.every(parent => documentManager.resolveValue(parent, 'visible') ?? true),
+    [parents, documentManager]
   )
 
   const parentIsComponent = useMemo(() => parents.some(parent => parent._type === builderNodes.Component), [parents])
@@ -75,12 +76,12 @@ export const useTreeViewerCell = (layerKey: string) => {
       hasLayout: layerInvoker('layerMode').value === builderLayerMode.flex,
       hasChildren: isComponent && view !== 'component' ? false : layerValue?.children?.length > 0,
       layoutDirection: layerInvoker('layerDirection').value,
-      hasLink: !graphState.isEmpty(layerInvoker('hyperlinkHref').value),
+      hasLink: !documentManager.isEmpty(layerInvoker('hyperlinkHref').value),
       hasEffects: !!effects && Object.values(effects).some(Boolean),
       isPrimary,
       isVisible,
       disabled: !isVisible || !parentIsVisible,
-      hidden: !isVisible,
+      hidden: to(isVisible, v => !v),
       isComponent,
       isComponentInstance: type === builderNodes.ComponentInstance,
       isPartialComponent:
@@ -88,7 +89,7 @@ export const useTreeViewerCell = (layerKey: string) => {
       isComponentVariant: type === builderNodes.ComponentVariant,
       ...features
     },
-    // ...builderActions,
+    ...builderActions,
     rename: (name: string) => {
       layerValue.rename(name)
     }

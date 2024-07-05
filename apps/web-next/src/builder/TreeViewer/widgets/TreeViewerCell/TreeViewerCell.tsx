@@ -4,12 +4,11 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import { useTreeViewerCell } from './hooks/useTreeViewerCell'
 import Touchable from '@/app/components/Touchable'
-import TreeViewerCellAside from '@/app/builder/widgets/Builder/widgets/TreeViewer/widgets/TreeViewerCell/components/TreeViewerCellAside/TreeViewerCellAside'
 import Dropdown from '@/app/components/Dropdown/Dropdown'
 import DropdownGroup from '@/app/components/Dropdown/components/DropdownGroup/DropdownGroup'
 import DropdownOption from '@/app/components/Dropdown/components/DropdownOption/DropdownOption'
 import CaretRight from '@/app/svg/caret-right.svg'
-import { builderLayerDirection, builderNodes } from '@fragments/fragments-plugin'
+import { builderLayerDirection, builderNodes } from '@fragments/fragments-plugin/performance'
 // import { getLayerValue } from 'src/hooks/useLayerInvoker'
 import Frame from '@/app/svg/frame.svg'
 import ColumnsFrame from '@/app/svg/columns-frame.svg'
@@ -17,6 +16,8 @@ import RowsFrame from '@/app/svg/rows-frame.svg'
 import TextFrame from '@/app/svg/text-frame.svg'
 import Component from '@/app/svg/component.svg'
 import ComponentInstance from '@/app/svg/component-instance.svg'
+import TreeViewerCellAside from '@/builder/TreeViewer/widgets/TreeViewerCell/components/TreeViewerCellAside/TreeViewerCellAside'
+import { to } from '@react-spring/web'
 
 export interface ViewerCellFlags {
   hasLayout: boolean
@@ -157,7 +158,7 @@ const TreeViewerCell: FC<TreeViewerCellProps> = ({
         <>
           <DropdownGroup minWidth={200}>
             <DropdownOption description='⌘;' disabled={!flags.canHide} onClick={toggleVisible}>
-              {flags.hidden ? 'Show' : 'Hide'}
+              {to(flags.hidden, v => (v ? 'Show' : 'Hide'))}
             </DropdownOption>
             <DropdownOption description='⌘D' disabled={!flags.canDuplicate} onClick={duplicate}>
               Duplicate

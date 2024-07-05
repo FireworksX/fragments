@@ -27,6 +27,8 @@ interface BuilderStylesProps {
   className?: string
 }
 
+const ALLOW_FILL_TYPES = [builderPaintMode.Solid, builderPaintMode.SolidPaintStyle]
+
 const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
   const { documentManager } = useContext(BuilderContext)
   const { selectionGraph, opacity, visible, zIndex, radius, fill, border } = useBuilderStyles()
@@ -67,20 +69,22 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
       {!fill.disabled && (
         <ControlRow title='Fill' actions={fill.actions} isHighlight={fill.isOverride}>
           <ControlRowWide>
-            <GraphValue graphState={documentManager} field={fill.value?.color}>
+            <GraphValue graphState={documentManager} field={fill.value}>
               {value => (
-                <InputSelect
-                  hasIcon={fill.value?.type === builderPaintMode.Solid}
-                  color={getColor(value)}
-                  onReset={fill.onReset}
-                  onClick={fill.onClick}
-                >
-                  {fill?.type === builderPaintMode.Solid
-                    ? getNameColor(value)
-                    : fill?.type === builderPaintMode.Image
-                    ? 'Image'
-                    : null}
-                </InputSelect>
+                <>
+                  <InputSelect
+                    hasIcon={ALLOW_FILL_TYPES.includes(fill?.value?.type)}
+                    color={getColor(value?.color)}
+                    onReset={fill.onReset}
+                    onClick={fill.onClick}
+                  >
+                    {ALLOW_FILL_TYPES.includes(fill?.value?.type)
+                      ? getNameColor(value)
+                      : fill?.type === builderPaintMode.Image
+                      ? 'Image'
+                      : null}
+                  </InputSelect>
+                </>
               )}
             </GraphValue>
           </ControlRowWide>
@@ -100,7 +104,12 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
           <ControlRowWide>
             <GraphValue graphState={documentManager} field={border.value?.color}>
               {value => (
-                <InputSelect color={getColor(value)} onReset={border.onReset} onClick={border.onClick}>
+                <InputSelect
+                  placeholder='Add...'
+                  color={getColor(value)}
+                  onReset={border.onReset}
+                  onClick={border.onClick}
+                >
                   {border.value?.type}
                 </InputSelect>
               )}

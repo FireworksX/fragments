@@ -1,4 +1,5 @@
 export * from 'src/defenitions'
-export { getDefaultBorder, getDefaultImageFill, getDefaultSolidFill } from 'src/props/geometry/geometry.perfomance'
+export { getDefaultBorder } from 'src/props/border/border.performance'
+export { getDefaultImageFill, getDefaultSolidFill, createSolidPaint } from 'src/props/fill/fill.performance'
 export { managerPlugin } from 'src/modules/managerPlugin/managerPlugin.performance'
 export { documentPlugin } from 'src/modules/documentPlugin/documentPlugin.performance'

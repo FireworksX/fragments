@@ -10,15 +10,7 @@ export const useScreens = () => {
   const primaryScreen = screensValues.find(breakpoint => breakpoint.isPrimary)
 
   const addScreen = (name: string, width: number) => {
-    const nextScreenKey = primaryScreen.clone()
-
-    // graphState.mutate(nextScreenKey, {
-    //   name,
-    //   width,
-    //   isPrimary: false
-    // })
-    //
-    // graphState.resolve(graphState.root).appendChild(nextScreenKey)
+    documentManager.createScreen({ name, width })
   }
 
   return {

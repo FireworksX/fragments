@@ -1,10 +1,15 @@
 import { FrameNode } from '../types/nodes'
 import { pipeResolvers, ResolverNode } from 'src/helpers'
+import { baseProps } from 'src/props/base/base.performance'
 import { sceneProps } from 'src/props/scene/scene.perfomance'
 import { cornerProps } from 'src/props/corner/corner.perfomance'
-import { geometryProps } from 'src/props/geometry/geometry.perfomance'
+import { borderProps } from 'src/props/border/border.performance'
+import { fillProps } from 'src/props/fill/fill.performance'
 import { layoutProps } from 'src/props/layout/layout.perfomance'
 import { layerProps } from 'src/props/layer/layer.performance'
+import { paddingProps } from 'src/props/padding/padding.performance'
+import { childrenProps } from 'src/props/children/children.performance'
+import { cloneProps } from 'src/props/clone/clone.performance'
 // import { basePropsResolver } from '../propsResolvers/basePropsResolver'
 // import { childrenPropsResolver } from '../propsResolvers/childrenPropsResolver'
 // import { geometryPropsResolver } from '../propsResolvers/geometryPropsResolver'
@@ -20,11 +25,16 @@ import { layerProps } from 'src/props/layer/layer.performance'
 
 export const frameNode: ResolverNode = (state, initialEntity?: FrameNode): FrameNode => {
   return pipeResolvers(
+    baseProps,
     sceneProps,
     cornerProps,
-    geometryProps,
+    borderProps,
+    fillProps,
     layoutProps,
-    layerProps
+    layerProps,
+    paddingProps,
+    childrenProps,
+    cloneProps
     // basePropsResolver,
     // childrenPropsResolver,
     // geometryPropsResolver,

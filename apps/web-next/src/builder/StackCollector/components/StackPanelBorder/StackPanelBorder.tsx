@@ -13,6 +13,7 @@ import Panel from '@/builder/components/Panel/Panel'
 import ControlRow from '@/builder/components/ControlRow/ControlRow'
 import ControlRowWide from '@/builder/components/ControlRow/components/ControlRowWide/ControlRowWide'
 import { BuilderContext } from '@/builder/BuilderContext'
+import { animated } from '@react-spring/web'
 
 export interface StackPanelBorderOptions {
   value?: BorderData
@@ -41,8 +42,6 @@ const StackPanelBorder: FC<StackPanelBorderProps> = ({ className }) => {
       borderInvoker.onChange(getDefaultBorder())
     }
   }, [])
-
-  console.log(borderInvoker.value?.color)
 
   return (
     <Panel className={className}>
