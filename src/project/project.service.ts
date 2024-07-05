@@ -9,7 +9,9 @@ import { generateUuid } from '../utils/uuid';
 
 const TABLE_NAME = 'projects';
 const MEMBERS_TABLE_NAME = 'pivot_project_member';
-const LOGOS_BUCKET = 'project-logos';
+const PROJECT_BUCKET = 'project';
+const LOGOS_FOLDER = 'logos';
+const ASSETS_FOLDER = 'assets';
 
 @Injectable()
 export class ProjectService {
@@ -134,9 +136,9 @@ export class ProjectService {
 
   async uploadLogo(uploadLogo: UploadProjectLogoDto) {
     const fileName = uploadLogo.file.originalName;
-    const filePath = `public/${generateUuid()}.${uploadLogo.file.extension}`;
+    const filePath = `${LOGOS_FOLDER}/${generateUuid()}.${uploadLogo.file.extension}`;
     const { error } = await this.supabaseService.storage
-      .from(LOGOS_BUCKET)
+      .from(PROJECT_BUCKET)
       .upload(filePath, uploadLogo.file.buffer, {
         cacheControl: '3600',
         upsert: false,
@@ -146,11 +148,45 @@ export class ProjectService {
     if (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    const mediaResponse = await this.mediaService.createMedia(LOGOS_BUCKET, {
+    const mediaResponse = await this.mediaService.createMedia(PROJECT_BUCKET, {
       path: filePath,
       name: fileName,
       ext: uploadLogo.file?.extension,
       user: uploadLogo.userId,
+    });
+
+    if (mediaResponse.error) {
+      throw new HttpException(
+        mediaResponse.error.message,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    return {
+      url: mediaResponse.data.public_path,
+      id: mediaResponse.data.id,
+    };
+  }
+
+  async uploadAssets(uploadAssets: UploadProjectLogoDto) {
+    const fileName = uploadAssets.file.originalName;
+    const filePath = `${ASSETS_FOLDER}/${generateUuid()}.${uploadAssets.file.extension}`;
+    const { error } = await this.supabaseService.storage
+      .from(PROJECT_BUCKET)
+      .upload(filePath, uploadAssets.file.buffer, {
+        cacheControl: '3600',
+        upsert: false,
+        contentType: uploadAssets.file.mimeType,
+      });
+
+    if (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    const mediaResponse = await this.mediaService.createMedia(PROJECT_BUCKET, {
+      path: filePath,
+      name: fileName,
+      ext: uploadAssets.file?.extension,
+      user: uploadAssets.userId,
     });
 
     if (mediaResponse.error) {

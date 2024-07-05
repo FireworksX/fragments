@@ -83,4 +83,19 @@ export class ProjectController {
 
     return media;
   }
+
+  @Post('upload-assets')
+  @FormDataRequest()
+  async uploadAssets(
+    @Body() data: UploadProjectLogoControllerDto,
+    @CurrentUser() authUser: AuthUser,
+  ) {
+    const file = data.file;
+    const media = await this.projectService.uploadAssets({
+      file,
+      userId: authUser.id,
+    });
+
+    return media;
+  }
 }
