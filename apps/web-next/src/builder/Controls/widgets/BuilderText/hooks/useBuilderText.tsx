@@ -1,24 +1,24 @@
-import { TabsSelectorItem } from '../../../../../../../components/TabsSelector/TabsSelector'
-import Icon from '../../../../../../../components/Icon/Icon'
-import { useLayerInvoker } from '../../../../../../../hooks/useLayerInvoker'
-import { TextTransform } from '../../../../../../../data/promos/creators/createText'
-import { useStore } from '@nanostores/react'
-import { $builderView, $statex } from '../../../../../../../store/builderRouterStore'
-import { $openPopout } from '../../../../../../../store/popoutStore'
-import { useStatex } from '@adstore/statex-react'
+import { TabsSelectorItem } from '@/app/components/TabsSelector'
+import TextAlignLeft from '@/app/svg/text-align-left.svg'
+import TextAlignRight from '@/app/svg/text-align-right.svg'
+import TextAlignCenter from '@/app/svg/text-align-center.svg'
+import { useContext } from 'react'
+import { BuilderContext } from '@/builder/BuilderContext'
+import { useGraph } from '@graph-state/react'
+import { useLayerInvoker } from '@/builder/hooks/useLayerInvoker'
 
 const aligns: TabsSelectorItem[] = [
   {
     name: 'left',
-    label: <Icon name='text-align-left' width={16} height={16} />
+    label: <TextAlignLeft width={16} height={16} />
   },
   {
     name: 'center',
-    label: <Icon name='text-align-center' width={16} height={16} />
+    label: <TextAlignCenter width={16} height={16} />
   },
   {
     name: 'right',
-    label: <Icon name='text-align-right' width={16} height={16} />
+    label: <TextAlignRight width={16} height={16} />
   }
 ]
 
@@ -42,32 +42,31 @@ const weights: string[] = ['regular', 'medium', 'bold']
 const transforms: TextTransform[] = ['none', 'uppercase', 'lowercase', 'capitalize']
 
 export const useBuilderText = () => {
-  const statex = useStore($statex)
-  const builderView = useStore($builderView)
-  const richEditor = statex.richEditor
-  const selectedMarks = useStatex(statex, richEditor.key, state => state.selectedMarks)
+  const { documentManager } = useContext(BuilderContext)
+  const [richEditor] = useGraph(documentManager, documentManager.richEditor)
+  const selectedMarks = richEditor.selectedMarks ?? []
   const layerInvoker = useLayerInvoker('')
   const fontInvoker = layerInvoker('text.font')
   const contentInvoker = layerInvoker('text.content')
 
   const openColor = () => {
-    $openPopout('colorPicker', {
-      context: {
-        value: getSelectionValue('color', '#000'),
-        onChange: value => onChangeValue('color', value)
-      },
-      initial: true
-    })
+    // $openPopout('colorPicker', {
+    //   context: {
+    //     value: getSelectionValue('color', '#000'),
+    //     onChange: value => onChangeValue('color', value)
+    //   },
+    //   initial: true
+    // })
   }
 
   const openFonts = () => {
-    $openPopout('fonts', {
-      context: {
-        value: getSelectionValue('font', 'auto'),
-        onChange: fontInvoker.onChange
-      },
-      initial: true
-    })
+    // $openPopout('fonts', {
+    //   context: {
+    //     value: getSelectionValue('font', 'auto'),
+    //     onChange: fontInvoker.onChange
+    //   },
+    //   initial: true
+    // })
   }
 
   const onChangeValue = (key, value) => {
@@ -83,7 +82,6 @@ export const useBuilderText = () => {
   }
 
   return {
-    enabled: builderView === 'text',
     content: layerInvoker('text.content'),
     font: {
       onClick: openFonts,

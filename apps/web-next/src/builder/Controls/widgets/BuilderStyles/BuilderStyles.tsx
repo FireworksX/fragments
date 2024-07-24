@@ -34,7 +34,9 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
   const { selectionGraph, opacity, visible, zIndex, radius, fill, border } = useBuilderStyles()
   const { getColor, getNameColor } = useDisplayColor(documentManager)
 
-  if (![builderNodes.Frame, builderNodes.ComponentVariant].some(type => type === selectionGraph?._type)) {
+  if (
+    ![builderNodes.Frame, builderNodes.ComponentVariant, builderNodes.Text].some(type => type === selectionGraph?._type)
+  ) {
     return null
   }
 

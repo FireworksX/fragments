@@ -1,21 +1,21 @@
-import { useContext } from "preact/compat";
-import { useSerializeText } from "../useSerializeText.tsx";
-import { useLayerInvokerNew } from "../useLayerInvokerNew.ts";
-import { GraphStateContext } from "../../src/GraphStateProvider.tsx";
-import { useGraph } from "@graph-state/react";
-import { builderNodes } from "@fragments/fragments-plugin";
+import { useGraph } from '@graph-state/react'
+import { builderNodes } from '@fragments/fragments-plugin'
+import { useContext } from 'react'
+import { BuilderContext } from '@/builder/BuilderContext'
+import { useLayerInvoker } from '@/builder/hooks/useLayerInvoker'
+import { useSerializeText } from '@/builder/hooks/useSerializeText'
 
 export const useParseTextRules = (layerField: Field) => {
-  const { graphState } = useContext(GraphStateContext);
-  const [layerValue] = useGraph(graphState, layerField);
-  const layerInvoker = useLayerInvokerNew(layerField);
-  const serialize = useSerializeText();
+  const { documentManager } = useContext(BuilderContext)
+  const [layerValue] = useGraph(documentManager, layerField)
+  const layerInvoker = useLayerInvoker(layerField)
+  const serialize = useSerializeText()
 
-  let content = "";
+  let content = ''
 
   if (layerValue?._type === builderNodes.Text) {
-    content = "hello world"; //serialize(layerInvoker("content").value);
+    content = serialize(layerInvoker('content').value)
   }
 
-  return content;
-};
+  return content
+}

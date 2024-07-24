@@ -14,7 +14,7 @@ export const useParseRules = (layerEntity: Entity) => {
   const styleRules = useParseStyleRules(layerEntity)
   const sizeRules = useParseSizeRules(layerEntity)
   // const positionRules = useParsePositionRules(layerEntity)
-  // const textContent = useParseTextRules(layerEntity)
+  const textContent = useParseTextRules(layerEntity)
   // const effects = useEffectsRules(layerEntity)
   // const children = useParseChildren(layerEntity)
   // const cssRules = useParseCssRules(layerEntity)
@@ -32,11 +32,11 @@ export const useParseRules = (layerEntity: Entity) => {
       // ...positionRules,
       // ...effects,
       // ...cssRules
-    }
+    },
     // attrs: {
     //   ...linkAttrs
     // }
-    // textContent,
+    textContent
     // children: children
   }
 }

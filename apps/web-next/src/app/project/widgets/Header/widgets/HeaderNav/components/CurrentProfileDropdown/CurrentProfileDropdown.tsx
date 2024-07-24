@@ -29,8 +29,8 @@ export const CurrentProfileDropdown: FC<CurrentProfileDropdownProps> = ({ classN
           <div className={styles.email}>{currentUser.email}</div>
         </Container>
 
-        <DropdownOption size='large'>Account Settings</DropdownOption>
-        <DropdownOption size='large' fetching={fetching} onClick={trigger}>
+        <DropdownOption>Account Settings</DropdownOption>
+        <DropdownOption fetching={fetching} onClick={trigger}>
           Log Out
         </DropdownOption>
       </DropdownGroup>

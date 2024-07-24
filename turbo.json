@@ -2,7 +2,7 @@
   "$schema": "https://turborepo.org/schema.json",
   "globalEnv": ["NODE_ENV", "ENABLE_HMR_IN_BACKGROUND_SCRIPT"],
   "globalDependencies": ["**/.env.*local"],
-  "pipeline": {
+  "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"]

@@ -1,20 +1,21 @@
-import { clonedField, Resolver } from 'src/helpers'
+import { Resolver } from 'src/helpers'
 import { SpringValue } from '@react-spring/web'
+import { clonedField } from 'src/utils/cloneField/cloneField.performance'
 
 export const sceneProps: Resolver = (state, entity) => {
   const key = state.keyOfEntity(entity)
 
   return {
     ...entity,
-    visible: clonedField(state, entity, 'visible', new SpringValue(true)),
+    visible: clonedField(state, entity, 'visible', true),
     // locked: clonedField(state, entity, 'locked', false),
-    opacity: clonedField(state, entity, 'opacity', new SpringValue(1)),
+    opacity: clonedField(state, entity, 'opacity', 1),
 
     setOpacity(value: number) {
       // if (typeof value === 'number') { // or variale
       const currentOpacity = state.resolve(key).opacity
       if (currentOpacity) {
-        currentOpacity.start(value)
+        currentOpacity.set(value)
       } else {
         state.mutate(key, {
           opacity: new SpringValue(1)
@@ -34,7 +35,7 @@ export const sceneProps: Resolver = (state, entity) => {
       const currentVisible = state.resolve(key).visible
 
       if (currentVisible) {
-        currentVisible.start(forceValue ?? !currentVisible.get())
+        currentVisible.set(forceValue ?? !currentVisible.get())
       } else {
         state.mutate(key, {
           visible: new SpringValue(false)

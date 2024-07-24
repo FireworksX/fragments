@@ -1,33 +1,36 @@
-import { FC } from 'react'
-import * as Styled from './styles'
-import ControlRow from '@/app/builder/widgets/Builder/components/ControlRow/ControlRow'
-import ControlRowWide from '@/app/builder/widgets/Builder/components/ControlRow/components/ControlRowWide/ControlRowWide'
-import InputSelect from 'src/components/InputSelect/InputSelect'
-import Select from 'src/components/Select/Select'
-import InputNumber from 'src/components/InputNumber/InputNumber'
-import Stepper from 'src/components/Stepper/Stepper'
-import TabsSelector from 'src/components/TabsSelector/TabsSelector'
+import { FC, useContext } from 'react'
 import { useBuilderText } from './hooks/useBuilderText'
-import { StatexValue } from '@adstore/statex-react'
-import { useStore } from '@nanostores/react'
-import { $statex } from '../../../../../../store/builderRouterStore'
-import { useDisplayColor } from '../../../../../../hooks/useDisplayColor'
+import ControlRow from '@/builder/components/ControlRow/ControlRow'
+import ControlRowWide from '@/builder/components/ControlRow/components/ControlRowWide/ControlRowWide'
+import Select from '@/app/components/Select/Select'
+import { GraphValue } from '@graph-state/react'
+import InputSelect from '@/app/components/InputSelect/InputSelect'
+import InputNumber from '@/app/components/InputNumber/InputNumber'
+import Stepper from '@/app/components/Stepper/Stepper'
+import TabsSelector from '@/app/components/TabsSelector'
+import { BuilderContext } from '@/builder/BuilderContext'
+import { useDisplayColor } from '@/builder/hooks/useDisplayColor'
+import Panel from '@/builder/components/Panel/Panel'
+import { builderNodes } from '@fragments/fragments-plugin/performance'
+import { useBuilderStyles } from '@/builder/Controls/widgets/BuilderStyles/hooks/useBuilderStyles'
+import { useBuilderSelection } from '@/builder/hooks/useBuilderSelection'
 
 interface BuilderTextProps {
   className?: string
 }
 
 const BuilderText: FC<BuilderTextProps> = ({ className }) => {
-  const statex = useStore($statex)
-  const { enabled, weight, color, fontSize, lineHeight, letterSpacing, transform, decoration } = useBuilderText()
+  const { documentManager } = useContext(BuilderContext)
+  const { selectionGraph } = useBuilderSelection()
+  const { weight, color, fontSize, lineHeight, letterSpacing, transform, decoration } = useBuilderText()
   const { getColor, getNameColor } = useDisplayColor()
 
-  if (!enabled) {
+  if (![builderNodes.Text].some(type => type === selectionGraph?._type)) {
     return null
   }
 
   return (
-    <Styled.Root className={className} title='Text'>
+    <Panel className={className} title='Text'>
       {/*<BuilderControlRow title='Styles'>*/}
       {/*  <BuilderControlRowWide>*/}
       {/*    <InputSelect icon={<InputSelectTextIcon />}>{colors.secondary}</InputSelect>*/}
@@ -60,13 +63,13 @@ const BuilderText: FC<BuilderTextProps> = ({ className }) => {
 
       <ControlRow title='Color'>
         <ControlRowWide>
-          <StatexValue statex={statex} field={color.value}>
+          <GraphValue graphState={documentManager} field={color.value}>
             {value => (
               <InputSelect color={getColor(value)} onClick={color.onClick}>
                 {getNameColor(value)}
               </InputSelect>
             )}
-          </StatexValue>
+          </GraphValue>
         </ControlRowWide>
       </ControlRow>
 
@@ -106,7 +109,7 @@ const BuilderText: FC<BuilderTextProps> = ({ className }) => {
           />
         </ControlRowWide>
       </ControlRow>
-    </Styled.Root>
+    </Panel>
   )
 }
 

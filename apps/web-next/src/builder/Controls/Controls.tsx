@@ -11,6 +11,7 @@ import BuilderSize from '@/builder/Controls/widgets/BuilderSize/BuilderSize'
 import BuilderPosition from '@/builder/Controls/widgets/BuilderPosition/BuilderPosition'
 import BuilderEffects from '@/builder/Controls/widgets/BuilderEffects/BuilderEffects'
 import { BuilderContext } from '@/builder/BuilderContext'
+import BuilderText from '@/builder/Controls/widgets/BuilderText/BuilderText'
 
 interface ControlsProps extends AsideBarProps {
   documentManager: unknown
@@ -27,6 +28,7 @@ const Controls: FC<ControlsProps> = ({ className, documentManager, ...asideProps
       <BuilderLayout />
       {/*<BuilderEffects />*/}
       <BuilderStyles />
+      <BuilderText />
       {/*<BuilderCssOverride />*/}
     </AsideBar>
   )

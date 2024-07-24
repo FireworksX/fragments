@@ -36,13 +36,19 @@ import { Layer } from '@/builder/renderer/Layer'
 import isBrowser from '@/app/utils/isBrowser'
 import { useBuilderActions } from '@/builder/hooks/useBuilderActions'
 import { BuilderFloatBar } from '@/builder/BuilderFloatBar/BuilderFloatBar'
+import { richTextPlugin } from '@/app/store/builder/builderRichTextPlugin'
+import BuilderRichText from '@/builder/BuilderRichText/BuilderRichText'
+import { builderNodes } from '@fragments/fragments-plugin'
 
 const canvasManager = createCanvasManager()
 
 const documentManager = createState({
   initialState: template,
-  plugins: [managerPlugin, documentPlugin, loggerPlugin()],
-  skip: [isInstanceOf(SpringValue)]
+  plugins: [managerPlugin, documentPlugin, richTextPlugin, loggerPlugin()],
+  skip: [
+    isInstanceOf(SpringValue),
+    graph => graph && graph._type === builderNodes.Text && graph._id.includes('content')
+  ]
 })
 
 if (isBrowser) {
@@ -59,7 +65,6 @@ const BuilderPopouts = dynamic(() => import('@/builder/BuilderPopouts/BuilderPop
 
 export default function () {
   const { isEdit, changeMode, focus } = useBuilderManager()
-  const { handleClick } = useRendererHandlers()
 
   return (
     <BuilderContext.Provider value={{ documentManager, canvasManager }}>
@@ -68,8 +73,11 @@ export default function () {
           <Sidebar isOpen={isEdit} />
 
           <BuilderCanvas>
+            <BuilderRichText />
             <LayerHighlight />
-            <DisplayBreakpoints renderer={screenKey => <Layer layerKey={screenKey} onClick={handleClick} />} />
+            <DisplayBreakpoints
+              renderer={(screenKey, handleClick) => <Layer layerKey={screenKey} onClick={handleClick} />}
+            />
           </BuilderCanvas>
           <Controls isOpen={isEdit} position='right' documentManager={documentManager} />
 

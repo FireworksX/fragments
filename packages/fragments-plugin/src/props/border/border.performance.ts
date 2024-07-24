@@ -1,9 +1,10 @@
 import { Border, ImagePaint, Paint, SolidPaint } from 'src/types/props'
 import { builderBorderType, builderImagePaintScaleModes, builderPaintMode } from 'src/defenitions'
-import { clonedField, Resolver } from 'src/helpers'
+import { Resolver } from 'src/helpers'
 import { SpringValue } from '@react-spring/web'
 import { isObject } from '@fragments/utils'
 import { isGraphOrKey } from '@graph-state/core'
+import { clonedField } from 'src/utils/cloneField/cloneField.performance'
 
 export const getDefaultBorder = (): Border => ({
   type: builderBorderType.Solid,
@@ -42,12 +43,12 @@ export const borderProps: Resolver = (state, entity: any) => {
               } else {
                 Object.entries(value).forEach(([colorKey, colorValue]) => {
                   if (colorKey in currentBorder.color) {
-                    currentBorder.color[colorKey].start(colorValue)
+                    currentBorder.color[colorKey].set(colorValue)
                   }
                 })
               }
             } else {
-              currentBorder[key].start(value)
+              currentBorder[key].set(value)
             }
           })
         }

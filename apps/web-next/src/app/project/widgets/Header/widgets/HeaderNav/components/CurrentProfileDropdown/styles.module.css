@@ -1,5 +1,5 @@
 .root {
-    width: 256px;
+    width: 200px;
 }
 
 .user {
@@ -7,12 +7,12 @@
 }
 
 .name {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
     color: var(--text-color-accent);
 }
 
 .email {
-    font-size: 14px;
+    font-size: 12px;
     color: var(--secondary);
 }

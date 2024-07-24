@@ -11,7 +11,7 @@ interface LayerProps {
 
 export const Layer: FC<LayerProps> = ({ layerKey, onClick }) => {
   const { documentManager } = useContext(BuilderContext)
-  const { cssRules } = useParseRules(layerKey)
+  const { cssRules, textContent } = useParseRules(layerKey)
   const [layerValue] = useGraph(documentManager, layerKey)
   const children = layerValue.children ?? []
 
@@ -29,9 +29,7 @@ export const Layer: FC<LayerProps> = ({ layerKey, onClick }) => {
 
   return (
     <animated.div data-key={layerKey} style={cssRules} onClick={proxyOnClick}>
-      {children.map(child => (
-        <Layer key={child} layerKey={child} onClick={onClick} />
-      ))}
+      {textContent || children.map(child => <Layer key={child} layerKey={child} onClick={onClick} />)}
     </animated.div>
   )
 }

@@ -4,6 +4,7 @@ import { useLayerInvoker } from '@/builder/hooks/useLayerInvoker'
 import { useDisplayColor } from '@/builder/hooks/useDisplayColor'
 import { to } from '@react-spring/web'
 import { toPx } from '@/app/utils/toPx'
+import { builderLayerMode } from '@fragments/fragments-plugin'
 
 const scaleModeMap: Record<keyof typeof builderImagePaintScaleModes, CSS.Properties['backgroundSize']> = {
   Fill: 'cover',
@@ -20,6 +21,7 @@ export const useParseStyleRules = (layerField: Field) => {
   })
   const { getColor } = useDisplayColor()
   const rules: CSS.Properties = {}
+  const isFlex = to(layerInvoker('layerMode').value, mode => mode === builderLayerMode.flex)
 
   // rules.opacity = layerInvoker('opacity').value
   // rules.borderRadius = toPx(layerInvoker('cornerRadius').value)
@@ -49,7 +51,9 @@ export const useParseStyleRules = (layerField: Field) => {
   return {
     opacity: layerInvoker('opacity').value,
     borderRadius: layerInvoker('cornerRadius').value,
-    display: to(layerInvoker('visible').value, value => (value ? 'block' : 'none')),
+    display: to([layerInvoker('visible').value, isFlex], (value, isFlex) =>
+      value ? (isFlex ? 'flex' : 'block') : 'none'
+    ),
     borderWidth: borderValue?.width,
     borderStyle: borderValue?.type,
     borderColor: getColor(borderValue?.color),

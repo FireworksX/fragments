@@ -6,15 +6,19 @@ import { useScreens } from '@/builder/DisplayBreakpoints/hooks/useScreens'
 import Screen from '@/builder/DisplayBreakpoints/components/Screen/Screen'
 import { useBuilderManager } from '@/builder/hooks/useBuilderManager'
 import { modalStore } from '@/app/store/modal.store'
+import { useRendererHandlers } from '@/builder/hooks/useRendererHandlers'
+import { BuilderContext } from '@/builder/BuilderContext'
 
 interface BuilderDisplayBreakpointsProps {
-  renderer: (screenKey: LinkKey) => ReactNode
+  renderer: (screenKey: LinkKey, onClick?: any) => ReactNode
   className?: string
 }
 
 const DisplayBreakpoints: FC<BuilderDisplayBreakpointsProps> = ({ className, renderer }) => {
+  const { documentManager } = useContext(BuilderContext)
   const { screensKeys, addScreen } = useScreens()
   const { isEdit } = useBuilderManager()
+  const { handleClick } = useRendererHandlers(documentManager)
 
   const handleNewScreen = (name, width) => {
     addScreen(name, width)
@@ -38,7 +42,7 @@ const DisplayBreakpoints: FC<BuilderDisplayBreakpointsProps> = ({ className, ren
           onClickScreen={isEdit ? handleNewScreen : undefined}
           onClickCustom={handleCustomBreakpoint}
         >
-          {renderer(screenKey)}
+          {renderer(screenKey, handleClick)}
         </Screen>
       ))}
     </div>

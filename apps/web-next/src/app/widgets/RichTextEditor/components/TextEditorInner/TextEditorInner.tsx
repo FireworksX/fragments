@@ -1,9 +1,9 @@
 import { FC, useCallback, useContext } from 'react'
 import { Editable } from 'slate-react'
 import { CSS } from '@react-spring/web'
-import { useDisplayColor } from '@/app/builder/widgets/Builder/hooks/useDisplayColor'
-import { BuilderContext } from '@/app/builder/widgets/Builder/BuilderContext'
 import { GraphValue } from '@graph-state/react'
+import { BuilderContext } from '@/builder/BuilderContext'
+import { useDisplayColor } from '@/builder/hooks/useDisplayColor'
 
 interface TextEditorInnerProps {
   className?: string
@@ -11,7 +11,7 @@ interface TextEditorInnerProps {
 
 const Leaf = ({ attributes, children, leaf }) => {
   // const statex = useStore($statex)
-  const { graphState } = useContext(BuilderContext)
+  const { documentManager } = useContext(BuilderContext)
   const { getColor } = useDisplayColor()
   const style: CSS.Properties = {}
 
@@ -45,7 +45,7 @@ const Leaf = ({ attributes, children, leaf }) => {
   })
 
   return (
-    <GraphValue graphState={graphState} field={style.color}>
+    <GraphValue graphState={documentManager} field={style.color}>
       {value => (
         <span
           {...attributes}

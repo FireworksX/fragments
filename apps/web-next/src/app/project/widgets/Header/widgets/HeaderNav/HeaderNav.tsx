@@ -9,6 +9,7 @@ import { FeedbackForm } from '@/app/project/widgets/FeedbackForm/FeedbackForm'
 import { CurrentProfileDropdown } from '@/app/project/widgets/Header/widgets/HeaderNav/components/CurrentProfileDropdown/CurrentProfileDropdown'
 import { useRequest } from '@/app/hooks/requests/useRequest'
 import { requestConfig, requestType } from '@/app/hooks/requests/requestConfig'
+import Touchable from '@/app/components/Touchable'
 
 interface HeaderNavProps {
   className?: string
@@ -39,12 +40,14 @@ export const HeaderNav: FC<HeaderNavProps> = ({ className }) => {
 
       {currentUser && (
         <Dropdown trigger='click' options={<CurrentProfileDropdown />}>
-          <Avatar
-            size={34}
-            uniqueId={currentUser.email}
-            firstName={currentUser.first_name}
-            lastName={currentUser.last_name}
-          />
+          <Touchable TagName='button'>
+            <Avatar
+              size={34}
+              uniqueId={currentUser.email}
+              firstName={currentUser.first_name}
+              lastName={currentUser.last_name}
+            />
+          </Touchable>
         </Dropdown>
       )}
     </div>

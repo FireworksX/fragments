@@ -30,6 +30,7 @@ export const useBuilderSize = () => {
       layerInvoker('layoutSizingHorizontal').value !== builderSizing.Hug &&
       layerInvoker('layoutSizingVertical').value !== builderSizing.Hug,
     sync: layerInvoker('aspectRatio'),
+    isSynced: selectionGraph?.isSynced(),
     width: layerInvoker('width'),
     height: layerInvoker('height'),
     layoutSizingHorizontal: layerInvoker('layoutSizingHorizontal'),

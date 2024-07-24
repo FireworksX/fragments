@@ -25,11 +25,11 @@ const Stepper: FC<StepperProps> = animated(({ className, value, step = 1, min = 
 
   return (
     <div className={cn(styles.root, className)}>
-      <Touchable className={styles.step} TagName='button' onClick={() => onChange(incNextValue)}>
-        <Plus name='plus' width={15} height={15} />
-      </Touchable>
       <Touchable className={styles.step} TagName='button' onClick={() => onChange(decNextValue)}>
         <Minus width={15} height={15} />
+      </Touchable>
+      <Touchable className={styles.step} TagName='button' onClick={() => onChange(incNextValue)}>
+        <Plus name='plus' width={15} height={15} />
       </Touchable>
     </div>
   )

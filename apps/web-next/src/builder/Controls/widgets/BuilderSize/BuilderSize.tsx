@@ -19,10 +19,12 @@ interface BuilderSizeProps {
 const DISABLE_UTILS: (keyof typeof builderSizing)[] = [builderSizing.Fill, builderSizing.Hug]
 
 const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
-  const { selectionGraph, sync, layoutSizingHorizontal, layoutSizingVertical, hasSync, width, height } =
+  const { selectionGraph, sync, isSynced, layoutSizingHorizontal, layoutSizingVertical, hasSync, width, height } =
     useBuilderSize()
 
-  if (![builderNodes.Frame, builderNodes.ComponentVariant].some(type => type === selectionGraph?._type)) {
+  if (
+    ![builderNodes.Frame, builderNodes.ComponentVariant, builderNodes.Text].some(type => type === selectionGraph?._type)
+  ) {
     return null
   }
 
@@ -39,7 +41,7 @@ const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
     <Panel className={cn(styles.root, className)} title='Size'>
       {hasSync && (
         <div className={styles.lockerWrapper}>
-          <BuilderSizeLocker isLocked={isValue(sync.value)} onClick={sync.onChange} />
+          <BuilderSizeLocker isLocked={isSynced} onClick={sync.onChange} />
         </div>
       )}
 

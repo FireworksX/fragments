@@ -1,6 +1,7 @@
-import { clonedField, OVERRIDE, Resolver } from 'src/helpers'
+import { OVERRIDE, Resolver } from 'src/helpers'
 import { isValue } from '@fragments/utils'
 import { SpringValue } from '@react-spring/web'
+import { clonedField } from 'src/utils/cloneField/cloneField.performance'
 
 const isValidValue = (value: any) => typeof value === 'number'
 
@@ -12,7 +13,7 @@ export const cornerProps: Resolver = (state, entity: any) => {
 
   return {
     ...entity,
-    cornerRadius: clonedField(state, entity, 'cornerRadius', isMixed ? state.mixed : new SpringValue(0)),
+    cornerRadius: clonedField(state, entity, 'cornerRadius', isMixed ? state.mixed : 0),
     topLeftRadius: clonedField(state, entity, 'topLeftRadius', isMixed ? state.mixed : 0),
     topRightRadius: clonedField(state, entity, 'topRightRadius', isMixed ? state.mixed : 0),
     bottomLeftRadius: clonedField(state, entity, 'bottomLeftRadius', isMixed ? state.mixed : 0),
@@ -30,7 +31,7 @@ export const cornerProps: Resolver = (state, entity: any) => {
         // }
       } else {
         const currentRadius = state.resolve(key).cornerRadius
-        currentRadius.start(isValidValue(args[0]) ? args[0] ?? 0 : 0)
+        currentRadius.set(isValidValue(args[0]) ? args[0] ?? 0 : 0)
         // state.mutate(key, {
         //   cornerRadius: isValidValue(args[0]) ? args[0] ?? 0 : 0
         // })

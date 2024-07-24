@@ -1,5 +1,5 @@
 'use client'
-import { ElementRef, FC, InputHTMLAttributes, useRef } from 'react'
+import { ElementRef, FC, InputHTMLAttributes, useRef, useState } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import Touchable from '@/app/components/Touchable'
@@ -24,6 +24,7 @@ const InputNumber: FC<InputNumberProps> = animated(
   ({ className, value, suffix, withoutTicker = false, disabled, min = 0, max, step = 1, onChange }) => {
     const ref = useRef<ElementRef<'input'>>()
     const fixedValue = +value?.toFixed(getFixedRationByStep(step)) ?? value
+    const [localValue, setLocalValue] = useState()
 
     const refCreator = (target?: ElementRef<'input'> | null) => {
       const listener = () => {

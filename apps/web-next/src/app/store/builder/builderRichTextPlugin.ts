@@ -1,9 +1,10 @@
 import { ReactEditor } from 'slate-react'
-import { createState, Entity, Plugin } from '@graph-state/core'
+import { createState, Entity, LinkKey, Plugin } from '@graph-state/core'
 import isBrowser from '@/app/utils/isBrowser'
 import { noop } from 'swr/_internal'
 import { generateId } from '@fragments/utils'
 import { getNodePosition } from '@/app/utils/getNodePosition'
+import { findRefNode } from '@/builder/utils/findRefNode'
 
 const aa = [
   {
@@ -42,11 +43,38 @@ const operationsForMarks = ['set_selection', 'set_node']
 
 export const richTextPlugin: Plugin = state => {
   let slateEditor: ReactEditor
-  const richTextKey = state.mutate({
+  const richTextKey = state.keyOfEntity({
     _type: 'RichText',
-    _id: generateId(),
-    selectedMarks: {}
+    _id: generateId()
   })
+  const syncedNodes = new Set<LinkKey>([])
+
+  const handleMountEditor = (editor: ReactEditor) => {
+    slateEditor = editor
+    const originalOnChange = slateEditor.onChange
+
+    slateEditor.onChange = options => {
+      syncedNodes.forEach(link => {
+        const entity = state.resolve(link)
+
+        if (options?.operation?.type !== 'set_selection') {
+          entity.setContent(slateEditor.children ?? [])
+        }
+
+        if (operationsForMarks.includes(options?.operation?.type)) {
+          state.mutate(
+            richTextKey,
+            prev => ({
+              ...prev,
+              selectedMarks: slateEditor.getMarks()
+            }),
+            { replace: true }
+          )
+        }
+      })
+      originalOnChange(options)
+    }
+  }
 
   const hideFromDOM = (node: HTMLElement) => {
     if (isBrowser) {
@@ -59,47 +87,37 @@ export const richTextPlugin: Plugin = state => {
     return noop
   }
 
-  const syncEntity = (inputEntity: Entity, renderNode: HTMLElement) => {
-    const entity = state.resolve(inputEntity)
-    const originalOnChange = slateEditor.onChange
+  const setEditable = (value?: boolean) => {
+    state.mutate(richTextKey, {
+      editable: value ?? false
+    })
+  }
 
-    // slateEditor.children = state.resolveValue(inputEntity, 'content')
-    const showElement = hideFromDOM(renderNode)
-
-    slateEditor.onChange = options => {
-      originalOnChange(options)
-
-      if (options?.operation?.type !== 'set_selection') {
-        entity.setContent(slateEditor.children ?? [])
-      }
-
-      if (operationsForMarks.includes(options?.operation?.type)) {
-        state.mutate(
-          richTextKey,
-          {
-            selectedMarks: slateEditor.getMarks()
-          },
-          { replace: true }
-        )
-      }
-    }
+  const syncEntity = (inputEntity: Entity) => {
+    setEditable(true)
+    const showElement = hideFromDOM(findRefNode(inputEntity))
+    syncedNodes.add(inputEntity)
+    console.log(state.resolve(inputEntity))
+    // slateEditor.children = state.resolve(inputEntity).content
 
     return () => {
       showElement()
+      setEditable(false)
+      syncedNodes.delete(inputEntity)
     }
   }
 
-  state.richEditor = {
-    ...state.entityOfKey(richTextKey),
-    key: richTextKey,
-    setSlateEditor: editor => {
-      slateEditor = editor
-    },
+  state.mutate(richTextKey, {
+    selectedMarks: {},
+    editable: false,
+    setSlateEditor: handleMountEditor,
     updateStyle: (styleKey: string, value) => {
       slateEditor.addMark(styleKey, value)
     },
+    setEditable,
     sync: syncEntity
-  }
+  })
+  state.richEditor = richTextKey
 
   return state
 }

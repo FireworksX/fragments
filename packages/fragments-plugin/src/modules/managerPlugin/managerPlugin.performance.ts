@@ -3,7 +3,9 @@ import { builderNodes } from 'src'
 import { getKey } from 'src/helpers'
 import { override } from 'src/types/props'
 import { CreateSolidPaintStyleOptions } from 'src/creators'
-import { createSolidPaintStyle, createFrame } from 'src/creators/index.performance'
+import { createSolidPaintStyle, createFrame, createText } from 'src/creators/index.performance'
+import { isObject, isPrimitive } from '@fragments/utils'
+import { SpringValue } from '@react-spring/web'
 
 export const managerPlugin: Plugin = state => {
   const [rootLink] = state.inspectFields(builderNodes.Document)
@@ -77,6 +79,40 @@ export const managerPlugin: Plugin = state => {
   state.createFrame = () => {
     const entity = createFrame(state)
     return state.mutate(entity)
+  }
+
+  state.createText = () => {
+    const entity = createText(state)
+    return state.mutate(entity)
+  }
+
+  const nodeToJSON = (node: unknown) => {
+    const resultNode = Object.entries(node).reduce((acc, [key, value]) => {
+      if (isPrimitive(value) && value) {
+        return { ...acc, [key]: value }
+      }
+
+      if (Array.isArray(value) && value.length) {
+        return { ...acc, [key]: value.map(nodeToJSON) }
+      }
+
+      if (isObject(value)) {
+        return { ...acc, [key]: value instanceof SpringValue ? value.toJSON() : nodeToJSON(value) }
+      }
+
+      return acc
+    }, {})
+
+    return resultNode
+  }
+
+  state.toJSON = () => {
+    const document = state.resolve(state.root, { deep: true })
+    if (!document) {
+      return
+    }
+
+    return nodeToJSON(document)
   }
 
   return state

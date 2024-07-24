@@ -4,6 +4,7 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import { useTheme } from 'styled-components'
 import Touchable from '@/app/components/Touchable'
+import { animated } from '@react-spring/web'
 
 interface BuilderSizeLockerProps {
   isLocked?: boolean
@@ -54,4 +55,4 @@ const BuilderSizeLocker: FC<BuilderSizeLockerProps> = ({ className, isLocked, on
   )
 }
 
-export default BuilderSizeLocker
+export default animated(BuilderSizeLocker)

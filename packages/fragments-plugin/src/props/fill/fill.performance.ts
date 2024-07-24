@@ -1,9 +1,10 @@
 import { Border, ImagePaint, Paint, SolidPaint } from 'src/types/props'
 import { builderBorderType, builderImagePaintScaleModes, builderNodes, builderPaintMode } from 'src/defenitions'
-import { clonedField, Resolver } from 'src/helpers'
+import { Resolver } from 'src/helpers'
 import { SpringValue } from '@react-spring/web'
 import { generateId, isObject } from '@fragments/utils'
 import { GraphState, isGraphOrKey } from '@graph-state/core'
+import { clonedField } from '../../utils/cloneField/cloneField.performance'
 
 export const getDefaultSolidFill = (): SolidPaint => ({
   type: builderPaintMode.Solid,
@@ -48,7 +49,7 @@ export const createSolidPaint = (state: GraphState) => {
     update(color) {
       const currentColor = state.resolve(key).color
       Object.entries(color).forEach(
-        ([key, value]) => currentColor[key] instanceof SpringValue && currentColor[key].start(value)
+        ([key, value]) => currentColor[key] instanceof SpringValue && currentColor[key].set(value)
       ) // TODO: add validation for color
     },
     clone() {
