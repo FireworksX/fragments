@@ -7,6 +7,7 @@ import CaretUp from '@/app/svg/caret-up.svg'
 import CaretDown from '@/app/svg/caret-down.svg'
 import { SpringValue, animated } from '@react-spring/web'
 import { getFixedRationByStep } from '@/app/utils/getFixedRationByStep'
+import { mergeRefs } from 'react-merge-refs'
 
 interface InputNumberProps extends InputHTMLAttributes<HTMLInputElement> {
   value: number | string
@@ -17,14 +18,28 @@ interface InputNumberProps extends InputHTMLAttributes<HTMLInputElement> {
   withoutTicker?: boolean
   disabled?: boolean
   suffix?: string
+  empty?: boolean
+  inputRef?: ElementRef<'input'>
   onChange: (value: number | string) => void
 }
 
 const InputNumber: FC<InputNumberProps> = animated(
-  ({ className, value, suffix, withoutTicker = false, disabled, min = 0, max, step = 1, onChange }) => {
+  ({
+    className,
+    inputRef,
+    empty,
+    value,
+    suffix,
+    withoutTicker = false,
+    disabled,
+    min = 0,
+    max,
+    step = 1,
+    onChange,
+    ...rest
+  }) => {
     const ref = useRef<ElementRef<'input'>>()
     const fixedValue = +value?.toFixed(getFixedRationByStep(step)) ?? value
-    const [localValue, setLocalValue] = useState()
 
     const refCreator = (target?: ElementRef<'input'> | null) => {
       const listener = () => {
@@ -57,14 +72,15 @@ const InputNumber: FC<InputNumberProps> = animated(
         <div className={cn(styles.root, className)}>
           <input
             className={styles.inner}
-            ref={refCreator}
+            ref={mergeRefs([refCreator, inputRef])}
             type='number'
-            value={fixedValue}
+            value={!empty ? fixedValue : ''}
             min={min}
             max={max}
             step={step}
             disabled={disabled}
             onChange={({ target }) => onChange(+target.value)}
+            {...rest}
           />
           {suffix && <div className={styles.suffix}>{suffix}</div>}
           {!withoutTicker && !disabled && (

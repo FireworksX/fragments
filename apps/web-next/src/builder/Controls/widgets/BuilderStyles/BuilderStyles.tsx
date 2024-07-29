@@ -21,13 +21,15 @@ import PanelHeadAside from '@/builder/components/PanelHeadAside/PanelHeadAside'
 import ControlRow from '@/builder/components/ControlRow/ControlRow'
 import ControlRowWide from '@/builder/components/ControlRow/components/ControlRowWide/ControlRowWide'
 import { BuilderContext } from '@/builder/BuilderContext'
-import { SpringValue } from '@react-spring/web'
+import { SpringValue, to } from '@react-spring/web'
+import BuilderStylesCorners from '@/builder/Controls/widgets/BuilderStyles/components/BuilderStylesCorners/BuilderStylesCorners'
+import { AnimatedVisible } from '@/app/components/AnimatedVisible/AnimatedVisible'
 
 interface BuilderStylesProps {
   className?: string
 }
 
-const ALLOW_FILL_TYPES = [builderPaintMode.Solid, builderPaintMode.SolidPaintStyle]
+const ALLOW_FILL_TYPES = [builderPaintMode.Solid]
 
 const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
   const { documentManager } = useContext(BuilderContext)
@@ -72,33 +74,49 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
         <ControlRow title='Fill' actions={fill.actions} isHighlight={fill.isOverride}>
           <ControlRowWide>
             <GraphValue graphState={documentManager} field={fill.value}>
-              {value => (
-                <>
-                  <InputSelect
-                    hasIcon={ALLOW_FILL_TYPES.includes(fill?.value?.type)}
-                    color={getColor(value?.color)}
-                    onReset={fill.onReset}
-                    onClick={fill.onClick}
-                  >
-                    {ALLOW_FILL_TYPES.includes(fill?.value?.type)
-                      ? getNameColor(value)
-                      : fill?.type === builderPaintMode.Image
-                      ? 'Image'
-                      : null}
-                  </InputSelect>
-                </>
-              )}
+              {value => {
+                return (
+                  <>
+                    <InputSelect
+                      hasIcon={to(fill.type, v => ALLOW_FILL_TYPES.includes(v))}
+                      color={getColor(value)}
+                      onReset={fill.onReset}
+                      onClick={fill.onClick}
+                    >
+                      {to(fill.type, v =>
+                        ALLOW_FILL_TYPES.includes(v)
+                          ? getNameColor(value)
+                          : fill?.type === builderPaintMode.Image
+                          ? 'Image'
+                          : null
+                      )}
+                    </InputSelect>
+                  </>
+                )
+              }}
             </GraphValue>
           </ControlRowWide>
         </ControlRow>
       )}
 
       {!radius.disabled && (
-        <ControlRow title='Radius' actions={radius.actions} isHighlight={radius.isOverride}>
-          <ControlRowWide>
-            <InputNumber value={radius.value} onChange={radius.onChange} />
-          </ControlRowWide>
-        </ControlRow>
+        <>
+          <ControlRow title='Radius' actions={radius.actions} isHighlight={radius.isOverride}>
+            <InputNumber value={radius.value} empty={radius.isMixed} onChange={radius.onChange} />
+            <TabsSelector
+              items={radius.items}
+              value={radius.mode}
+              onChange={({ name }) => radius.onChangeRadiusMode(name)}
+            />
+          </ControlRow>
+          <AnimatedVisible visible={radius.isMixed}>
+            <BuilderStylesCorners
+              values={radius.sidesInvoker.value}
+              focusCorner={radius.setCornerSide}
+              onChange={(side, value) => radius.sidesInvoker.onChange({ side, value })}
+            />
+          </AnimatedVisible>
+        </>
       )}
 
       {!border.disabled && (

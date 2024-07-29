@@ -5,6 +5,8 @@ import { SpringValue } from '@react-spring/web'
 import { generateId, isObject } from '@fragments/utils'
 import { GraphState, isGraphOrKey } from '@graph-state/core'
 import { clonedField } from '../../utils/cloneField/cloneField.performance'
+import { solidFillProps } from './solidFill/solidFill.performance'
+import { imageFillProps } from './imageFill/imageFill.performance'
 
 export const getDefaultSolidFill = (): SolidPaint => ({
   type: builderPaintMode.Solid,
@@ -85,12 +87,17 @@ export const createImagePaint = (state: GraphState) => {
 export const fillProps: Resolver = (state, entity: any) => {
   const entityKey = state.keyOfEntity(entity)
 
+  const solidFill = solidFillProps(state, entity)
+  const imageFill = imageFillProps(state, entity)
+
   return {
     ...entity,
-    fills: clonedField(state, entity, 'fills', {
-      [builderPaintMode.Solid]: null,
-      [builderPaintMode.Image]: null
-    }),
+    ...solidFill,
+    ...imageFill,
+    // fills: clonedField(state, entity, 'fills', {
+    //   [builderPaintMode.Solid]: null,
+    //   [builderPaintMode.Image]: null
+    // }),
     fillType: clonedField(state, entity, 'fillType'),
     getCurrentFill(): Paint {
       const fills = state.resolveValue(entityKey, 'fills')
@@ -98,61 +105,67 @@ export const fillProps: Resolver = (state, entity: any) => {
       return state.resolve(fills?.[type])
     },
     setFillType(type: keyof typeof builderPaintMode) {
-      state.mutate(entityKey, {
-        fillType: type
-      })
-    },
-    setImageFill(image: Partial<ImagePaint>) {
-      if (isGraphOrKey(image)) {
-        state.mutate(entityKey, {
-          fills: {
-            [builderPaintMode.Image]: image
-          }
-        })
-      } else {
-        const node = state.resolve(entityKey)
-        const currentValue = state.resolve(node.fills[builderPaintMode.Image])
+      const value$ = state.resolve(entityKey).fillType
 
-        if (currentValue && image && currentValue._type === builderNodes.ImageFill) {
-          currentValue.update(image)
-        } else {
-          state.mutate(entityKey, {
-            fills: {
-              [builderPaintMode.Image]: createImagePaint(state)
-            }
-          })
-        }
+      if (value$) {
+        value$.set(type)
+      } else {
+        state.mutate(entityKey, {
+          fillType: new SpringValue(type)
+        })
       }
     },
-    setSolidFill(color: SolidPaint['color']) {
-      if (isGraphOrKey(color)) {
-        state.mutate(entityKey, {
-          fills: {
-            [builderPaintMode.Solid]: color
-          }
-        })
-      } else {
-        const node = state.resolve(entityKey)
-        const currentValue = state.resolve(node.fills[builderPaintMode.Solid])
-
-        if (currentValue && color && currentValue._type === builderNodes.Fill) {
-          currentValue.update(color)
-        } else {
-          node.setDefaultSolidFill()
-        }
-      }
-    },
-    setDefaultSolidFill() {
-      const currentValue = state.resolve(entityKey).fills[builderPaintMode.Solid]
-
-      // if (!currentValue) {
-      state.mutate(entityKey, {
-        fills: {
-          [builderPaintMode.Solid]: createSolidPaint(state)
-        }
-      })
-      // }
-    },
+    // setImageFill(image: Partial<ImagePaint>) {
+    //   if (isGraphOrKey(image)) {
+    //     state.mutate(entityKey, {
+    //       fills: {
+    //         [builderPaintMode.Image]: image
+    //       }
+    //     })
+    //   } else {
+    //     const node = state.resolve(entityKey)
+    //     const currentValue = state.resolve(node.fills[builderPaintMode.Image])
+    //
+    //     if (currentValue && image && currentValue._type === builderNodes.ImageFill) {
+    //       currentValue.update(image)
+    //     } else {
+    //       state.mutate(entityKey, {
+    //         fills: {
+    //           [builderPaintMode.Image]: createImagePaint(state)
+    //         }
+    //       })
+    //     }
+    //   }
+    // },
+    // setSolidFill(color: SolidPaint['color']) {
+    //   if (isGraphOrKey(color)) {
+    //     state.mutate(entityKey, {
+    //       fills: {
+    //         [builderPaintMode.Solid]: color
+    //       }
+    //     })
+    //   } else {
+    //     const node = state.resolve(entityKey)
+    //     const currentValue = state.resolve(node.fills[builderPaintMode.Solid])
+    //
+    //     if (currentValue && color && currentValue._type === builderNodes.Fill) {
+    //       currentValue.update(color)
+    //     } else {
+    //       node.setDefaultSolidFill()
+    //     }
+    //   }
+    // },
+    // setDefaultSolidFill() {
+    //   const currentValue = state.resolve(entityKey).fills[builderPaintMode.Solid]
+    //
+    //   // if (!currentValue) {
+    //   state.mutate(entityKey, {
+    //     fills: {
+    //       [builderPaintMode.Solid]: createSolidPaint(state)
+    //     }
+    //   })
+    //   // }
+    // },
     setFill(fill: Paint) {
       const currentFills = state.resolve(entityKey).fills
 

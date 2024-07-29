@@ -62,9 +62,14 @@ export const useBuilderLayout = () => {
     ({ node, key, value }) => {
       switch (key) {
         case 'layerMode':
-          node.setLayerMode(
-            node.layerMode.get() === builderLayerMode.none ? builderLayerMode.flex : builderLayerMode.none
-          )
+          if (!node.layerMode) {
+            node.setLayerMode(builderLayerMode.flex)
+          } else {
+            node.setLayerMode(
+              node.layerMode?.get() === builderLayerMode.none ? builderLayerMode.flex : builderLayerMode.none
+            )
+          }
+
           break
         case 'layerDirection':
           node.setLayerDirection(value)

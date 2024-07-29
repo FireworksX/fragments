@@ -3,6 +3,7 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import BaseImage from '@/app/components/BaseImage/BaseImage'
 import Button from '@/app/components/Button'
+import { animated } from '@react-spring/web'
 
 interface ImageSelectorProps {
   value?: string | null
@@ -56,4 +57,4 @@ const ImageSelector: FC<ImageSelectorProps> = ({
   )
 }
 
-export default ImageSelector
+export default animated(ImageSelector)

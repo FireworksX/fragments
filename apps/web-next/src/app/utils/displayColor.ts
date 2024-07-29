@@ -17,10 +17,10 @@ export const displayColor = (color?: Color) => {
 
 export const displayColorInterpolate = (color: Color = {}) =>
   to([color?.r, color?.g, color?.b, color?.a], (r, g, b, a) => {
-    const resR = Number(r?.toFixed(0))
-    const resG = Number(g?.toFixed(0))
-    const resB = Number(b?.toFixed(0))
-    const resA = Number(a?.toFixed(0))
+    const resR = Number(r)
+    const resG = Number(g)
+    const resB = Number(b)
+    const resA = Number(a)
 
     return r ? (a < 1 ? `rgba(${resR}, ${resG}, ${resB}, ${resA})` : `rgb(${resR}, ${resG}, ${resB})`) : undefined
   })

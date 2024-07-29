@@ -1,40 +1,52 @@
-import { OVERRIDE, Resolver } from 'src/helpers'
-import { isValue } from '@fragments/utils'
-import { SpringValue } from '@react-spring/web'
+import { Resolver } from 'src/helpers'
+import { SpringValue, to } from '@react-spring/web'
 import { clonedField } from 'src/utils/cloneField/cloneField.performance'
-
-const isValidValue = (value: any) => typeof value === 'number'
 
 export const cornerProps: Resolver = (state, entity: any) => {
   const key = state.keyOfEntity(entity)
-  const isMixed = [entity.topLeftRadius, entity.topRightRadius, entity.bottomLeftRadius, entity.bottomRightRadius].some(
-    value => isValue(value) && value !== OVERRIDE && value > 0
-  )
+
+  const isMixedRadius = () => {
+    const value$ = state.resolveValue(key, 'cornerRadius')
+    return to(value$, v => v === -1)
+  }
+
+  const setRadius = (fieldKey: string, value: number) => {
+    const valueRadius$ = state.resolve(key)[fieldKey]
+
+    if (valueRadius$) {
+      valueRadius$.set(value)
+    } else {
+      state.mutate(key, {
+        [fieldKey]: new SpringValue(value)
+      })
+    }
+  }
 
   return {
     ...entity,
-    cornerRadius: clonedField(state, entity, 'cornerRadius', isMixed ? state.mixed : 0),
-    topLeftRadius: clonedField(state, entity, 'topLeftRadius', isMixed ? state.mixed : 0),
-    topRightRadius: clonedField(state, entity, 'topRightRadius', isMixed ? state.mixed : 0),
-    bottomLeftRadius: clonedField(state, entity, 'bottomLeftRadius', isMixed ? state.mixed : 0),
-    bottomRightRadius: clonedField(state, entity, 'bottomRightRadius', isMixed ? state.mixed : 0),
+    cornerRadius: clonedField(state, entity, 'cornerRadius', 0),
+    topLeftRadius: clonedField(state, entity, 'topLeftRadius', 0),
+    topRightRadius: clonedField(state, entity, 'topRightRadius', 0),
+    bottomLeftRadius: clonedField(state, entity, 'bottomLeftRadius', 0),
+    bottomRightRadius: clonedField(state, entity, 'bottomRightRadius', 0),
+    isMixedRadius,
 
     setCornerRadius(...args) {
-      const isMixed = args.length > 1
+      const isSide = args.length > 1
+      const side = isSide ? args[0] : undefined
+      const value = isSide ? args[1] : args[0]
 
-      if (isMixed) {
-        // if (typeof args[0] === 'string' && isValidValue(args[1])) {
-        //   state.mutate(key, {
-        //     cornerRadius: state.mixed,
-        //     [`${args[0]}Radius`]: isValidValue(args[1]) ? args[1] ?? 0 : 0
-        //   })
-        // }
+      if (isSide) {
+        setRadius('cornerRadius', -1)
+        const fieldKeyMap = {
+          tl: 'topLeftRadius',
+          tr: 'topRightRadius',
+          bl: 'bottomLeftRadius',
+          br: 'bottomRightRadius'
+        }
+        setRadius(fieldKeyMap[side], value)
       } else {
-        const currentRadius = state.resolve(key).cornerRadius
-        currentRadius.set(isValidValue(args[0]) ? args[0] ?? 0 : 0)
-        // state.mutate(key, {
-        //   cornerRadius: isValidValue(args[0]) ? args[0] ?? 0 : 0
-        // })
+        setRadius('cornerRadius', value)
       }
     }
   }

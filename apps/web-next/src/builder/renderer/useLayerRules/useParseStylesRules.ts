@@ -13,12 +13,7 @@ const scaleModeMap: Record<keyof typeof builderImagePaintScaleModes, CSS.Propert
 }
 
 export const useParseStyleRules = (layerField: Field) => {
-  const layerInvoker = useLayerInvoker(layerField, undefined, ({ node, key }) => {
-    switch (key) {
-      case 'currentFill':
-        return node?.getCurrentFill?.()
-    }
-  })
+  const layerInvoker = useLayerInvoker(layerField)
   const { getColor } = useDisplayColor()
   const rules: CSS.Properties = {}
   const isFlex = to(layerInvoker('layerMode').value, mode => mode === builderLayerMode.flex)
@@ -38,15 +33,23 @@ export const useParseStyleRules = (layerField: Field) => {
   // }
   //
   const currentFill = layerInvoker('currentFill').value
+  const fillType = layerInvoker('fillType').value
+  const solidFill = layerInvoker('solidFill').value
   //
-  if (currentFill) {
-    if (currentFill.type === builderPaintMode.Solid || currentFill._type === builderNodes.SolidPaintStyle) {
-      rules.backgroundColor = getColor(currentFill.color)
-    } else if (currentFill.type === builderPaintMode.Image) {
-      rules.background = `url(${currentFill?.url}) no-repeat`
-      rules.backgroundSize = scaleModeMap[currentFill.scaleMode]
+  // if (currentFill) {
+  //   if (currentFill.type === builderPaintMode.Solid || currentFill._type === builderNodes.SolidPaintStyle) {
+  //     rules.backgroundColor = getColor(currentFill.color)
+  //   } else if (currentFill.type === builderPaintMode.Image) {
+  //     rules.background = `url(${currentFill?.url}) no-repeat`
+  //     rules.backgroundSize = scaleModeMap[currentFill.scaleMode]
+  //   }
+  // }
+
+  rules.background = to([fillType, getColor(solidFill)], (fillType, solidFill) => {
+    if (fillType === builderPaintMode.Solid) {
+      return solidFill
     }
-  }
+  })
 
   return {
     opacity: layerInvoker('opacity').value,
