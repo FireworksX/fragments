@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useRef, useState } from 'react'
+import { ElementRef, FC, useContext, useEffect, useRef, useState } from 'react'
 import { Color } from 'react-color'
 import cn from 'classnames'
 import styles from './styles.module.css'
@@ -34,14 +34,21 @@ const getDefaultColor = () => ({
 const StackPanelCreateColor: FC<StackPanelCreateColorProps> = ({ className }) => {
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:createColor`)
   const context = popout?.context
+  const nameRef = useRef<ElementRef<'input'>>()
   const { getColor, getColorStatic } = useDisplayColor()
   const color = useRef<Color>(getColorStatic(context?.initialColor) || getDefaultColor())
   const [name, setName] = useState('')
 
+  useEffect(() => {
+    if (context) {
+      setTimeout(() => nameRef.current?.focus(), 250)
+    }
+  }, [context])
+
   return (
     <div className={cn(styles.root, className)}>
       <div className={styles.body}>
-        <InputText placeholder='Color name' value={name} onChange={setName} />
+        <InputText inputRef={nameRef} placeholder='Color name' value={name} onChange={setName} />
         <Panel>
           <ColorPicker
             color={getColor(color.current)}

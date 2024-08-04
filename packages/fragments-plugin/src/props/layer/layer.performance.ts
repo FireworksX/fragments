@@ -14,12 +14,12 @@ export const layerProps: Resolver = (state, entity): LayerProps => {
 
   return {
     ...entity,
-    layerMode: clonedField(state, entity, 'layerMode', new SpringValue(builderLayerMode.none)),
-    layerAlign: clonedField(state, entity, 'layerAlign', new SpringValue(builderLayerAlign.start)),
-    layerDirection: clonedField(state, entity, 'layerDirection', new SpringValue(builderLayerDirection.horizontal)),
-    layerDistribute: clonedField(state, entity, 'layerDistribute', new SpringValue(builderLayerDistribute.start)),
-    layerWrap: clonedField(state, entity, 'layerWrap', new SpringValue(false)),
-    layerGap: clonedField(state, entity, 'layerGap', new SpringValue(0)),
+    layerMode: clonedField(state, entity, 'layerMode', builderLayerMode.none),
+    layerAlign: clonedField(state, entity, 'layerAlign', builderLayerAlign.start),
+    layerDirection: clonedField(state, entity, 'layerDirection', builderLayerDirection.horizontal),
+    layerDistribute: clonedField(state, entity, 'layerDistribute', builderLayerDistribute.start),
+    layerWrap: clonedField(state, entity, 'layerWrap', false),
+    layerGap: clonedField(state, entity, 'layerGap', 0),
 
     setLayerMode(mode: typeof builderLayerMode) {
       if (Object.keys(builderLayerMode).includes(mode)) {

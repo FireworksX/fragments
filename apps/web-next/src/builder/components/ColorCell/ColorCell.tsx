@@ -13,10 +13,11 @@ interface ColorCellProps extends PropsWithChildren {
   sizeColor?: number
   className?: string
   onClick?: () => void
+  onEdit?: () => void
   onDelete?: () => void
 }
 
-const ColorCell: FC<ColorCellProps> = ({ className, sizeColor = 10, color, children, onClick, onDelete }) => {
+const ColorCell: FC<ColorCellProps> = ({ className, sizeColor = 10, color, children, onClick, onDelete, onEdit }) => {
   const { color: parsedColor } = useDisplayColor(color)
 
   return (
@@ -32,13 +33,22 @@ const ColorCell: FC<ColorCellProps> = ({ className, sizeColor = 10, color, child
           />
         }
         description={
-          onDelete && (
-            <div>
-              <Button className={styles.actions} mode='secondary' onClick={() => onDelete()}>
-                Delete
-              </Button>
-            </div>
-          )
+          <>
+            {onEdit && (
+              <div>
+                <Button className={styles.actions} mode='secondary' onClick={() => onEdit()}>
+                  Edit
+                </Button>
+              </div>
+            )}
+            {onDelete && (
+              <div>
+                <Button className={styles.actions} mode='secondary' onClick={() => onDelete()}>
+                  Delete
+                </Button>
+              </div>
+            )}
+          </>
         }
       >
         {children}

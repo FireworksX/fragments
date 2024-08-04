@@ -8,6 +8,7 @@ import Plus from '@/app/svg/plus.svg'
 import ColorCell from '@/builder/components/ColorCell/ColorCell'
 import { useBuilderAssetsColors } from '@/builder/Assets/hooks/useBuilderAssetsColors'
 import { BuilderContext } from '@/builder/BuilderContext'
+import { omit } from '@fragments/utils'
 
 export type StackColorsValue = Color
 
@@ -42,7 +43,7 @@ const StackColors: FC<StackColorsProps> = ({ className, activeColorKey, getIniti
           placeholder='New color'
           onClick={() =>
             createColor({
-              initialColor: getInitialColor(),
+              initialColor: omit(getInitialColor(), '_type'),
               onSubmit: onCreate
             })
           }
@@ -55,15 +56,7 @@ const StackColors: FC<StackColorsProps> = ({ className, activeColorKey, getIniti
             key={variable?.name}
             sizeColor={15}
             color={variable?.color}
-            description={
-              <Button
-                className={styles.cellButton}
-                mode='secondary'
-                onClick={() => editColor(documentManager.keyOfEntity(variable))}
-              >
-                Edit
-              </Button>
-            }
+            onEdit={() => editColor(documentManager.keyOfEntity(variable))}
             onClick={() => onSelect && onSelect(documentManager.keyOfEntity(variable))}
           >
             {variable?.name}

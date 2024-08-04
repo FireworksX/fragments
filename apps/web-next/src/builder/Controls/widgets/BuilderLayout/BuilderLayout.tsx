@@ -6,13 +6,15 @@ import Select from '@/app/components/Select/Select'
 import InputNumber from '@/app/components/InputNumber/InputNumber'
 import Slider from '@/app/components/Slider/Slider'
 import InputGroup from '@/app/components/InputGroup/InputGroup'
-import { builderLayerMode, builderNodes } from '@fragments/fragments-plugin'
+import { builderLayerMode, builderNodes } from '@fragments/fragments-plugin/performance'
 import Panel from '@/builder/components/Panel/Panel'
 import PanelHeadAside from '@/builder/components/PanelHeadAside/PanelHeadAside'
 import ControlRow from '@/builder/components/ControlRow/ControlRow'
 import ControlRowWide from '@/builder/components/ControlRow/components/ControlRowWide/ControlRowWide'
 import { BuilderContext } from '@/builder/BuilderContext'
 import { animated, to } from '@react-spring/web'
+import { BuilderLayoutPaddings } from '@/builder/Controls/widgets/BuilderLayout/components/BuilderLayoutPaddings/BuilderLayoutPaddings'
+import { AnimatedVisible } from '@/app/components/AnimatedVisible/AnimatedVisible'
 
 interface BuilderLayoutProps {
   className?: string
@@ -21,14 +23,6 @@ interface BuilderLayoutProps {
 const BuilderLayout: FC<BuilderLayoutProps> = ({ className }) => {
   const { selectionGraph, direction, mode, align, wrap, distribute, gap, padding } = useBuilderLayout()
   const enabled = to(mode.value, mode => mode === builderLayerMode.flex)
-
-  if (
-    ![builderNodes.Frame, builderNodes.Screen, builderNodes.ComponentVariant].some(
-      type => type === selectionGraph?._type
-    )
-  ) {
-    return null
-  }
 
   return (
     <Panel
@@ -77,45 +71,16 @@ const BuilderLayout: FC<BuilderLayoutProps> = ({ className }) => {
       </ControlRow>
 
       <ControlRow title='Padding' actions={padding.actions} isHighlight={padding.isOverride}>
-        <InputNumber value={padding.value} onChange={padding.onChange} />
+        <InputNumber value={padding.value} empty={padding.isMixed} onChange={padding.onChange} />
         <TabsSelector items={padding.items} value={padding.mode} onChange={({ name }) => padding.onChangeMode(name)} />
       </ControlRow>
-      {padding.mode === 'sides' && (
-        <ControlRow>
-          <ControlRowWide>
-            <InputGroup>
-              <InputNumber
-                value={padding.paddingSide.value.paddingTop}
-                withoutTicker={true}
-                onChange={value => padding.paddingSide.onChange({ side: 'top', value })}
-                onFocus={() => padding.setPaddingSide('top')}
-                onBlur={() => padding.setPaddingSide(undefined)}
-              />
-              <InputNumber
-                value={padding.paddingSide.value.paddingRight}
-                withoutTicker={true}
-                onChange={value => padding.paddingSide.onChange({ side: 'right', value })}
-                onFocus={() => padding.setPaddingSide('right')}
-                onBlur={() => padding.setPaddingSide(undefined)}
-              />
-              <InputNumber
-                value={padding.paddingSide.value.paddingBottom}
-                withoutTicker={true}
-                onChange={value => padding.paddingSide.onChange({ side: 'bottom', value })}
-                onFocus={() => padding.setPaddingSide('bottom')}
-                onBlur={() => padding.setPaddingSide(undefined)}
-              />
-              <InputNumber
-                value={padding.paddingSide.value.paddingLeft}
-                withoutTicker={true}
-                onChange={value => padding.paddingSide.onChange({ side: 'left', value })}
-                onFocus={() => padding.setPaddingSide('left')}
-                onBlur={() => padding.setPaddingSide(undefined)}
-              />
-            </InputGroup>
-          </ControlRowWide>
-        </ControlRow>
-      )}
+      <AnimatedVisible visible={padding.isMixed}>
+        <BuilderLayoutPaddings
+          values={padding.sidesInvoker.value}
+          focusSide={padding.setPaddingSide}
+          onChange={(side, value) => padding.sidesInvoker.onChange({ side, value })}
+        />
+      </AnimatedVisible>
     </Panel>
   )
 }

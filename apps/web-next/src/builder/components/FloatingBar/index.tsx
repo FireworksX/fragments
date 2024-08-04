@@ -14,15 +14,6 @@ import GrabCursor from '@/app/svg/grab-cursor.svg'
 import Lightning from '@/app/svg/lightning.svg'
 import Variables from '@/app/svg/variables.svg'
 
-type FloatinBarAction = 'zoomIn' | 'zoomOut' | 'publish' | 'addFrame' | 'addText' | 'variables'
-
-interface ActionItem {
-  kind: 'action'
-  icon: ReactNode
-  hidden?: boolean
-  onClick: () => void
-}
-
 interface ComponentItem {
   kind: 'component'
   component: ReactNode
@@ -36,7 +27,7 @@ interface DelimiterItem {
 
 interface BuilderFloatingBarProps {
   className?: string
-  actions: (ActionItem | ComponentItem | DelimiterItem)[]
+  actions: (ComponentItem | DelimiterItem)[]
 }
 
 const BuilderFloatingBar: FC<BuilderFloatingBarProps> = ({ className, actions = [] }) => {
@@ -47,13 +38,6 @@ const BuilderFloatingBar: FC<BuilderFloatingBarProps> = ({ className, actions = 
         .map((cell, index) => {
           if (cell.kind === 'delimiter') {
             return <div key={index} className={styles.delimiter} />
-          }
-          if (cell.kind === 'action') {
-            return (
-              <Touchable key={index} TagName='button' className={styles.cell} onClick={cell.onClick}>
-                {cell.icon}
-              </Touchable>
-            )
           }
           if (cell.kind === 'component') {
             return cell.component

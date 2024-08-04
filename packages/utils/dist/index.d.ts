@@ -53,6 +53,9 @@ declare const toKebabCase: (value: string) => string;
  */
 declare const toLongHex: (hex: string) => string;
 
+declare const rgbToHex: (r: number, g: number, b: number) => string;
+declare const rgbStringToHex: (rgb: string) => string;
+
 declare const hexToRgb: (hex: string) => {
     r: number;
     g: number;
@@ -92,4 +95,4 @@ declare const injectLink: (options: InjectLinkOptions) => void;
 
 declare const generateId: () => string;
 
-export { createConstants, eventEmitter, filterDeep, findDeep, generateId, get, hexToRgb, injectLink, isAbsoluteUrl, isEmptyValue, isHTMLNode, isObject, isPrimitive, isValue, iterator, mergeIterator, noop, omit, pick, promiseWaiter, replace, rgbToRgba, set, times, toKebabCase, toLongHex };
+export { createConstants, eventEmitter, filterDeep, findDeep, generateId, get, hexToRgb, injectLink, isAbsoluteUrl, isEmptyValue, isHTMLNode, isObject, isPrimitive, isValue, iterator, mergeIterator, noop, omit, pick, promiseWaiter, replace, rgbStringToHex, rgbToHex, rgbToRgba, set, times, toKebabCase, toLongHex };

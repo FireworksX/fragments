@@ -16,6 +16,7 @@ import Rectangle from '@/app/svg/rectangle.svg'
 import { useLayerInvoker } from '@/builder/hooks/useLayerInvoker'
 import { useBuilderSelection } from '@/builder/hooks/useBuilderSelection'
 import { BuilderContext } from '@/builder/BuilderContext'
+import { to } from '@react-spring/web'
 
 const directions: TabsSelectorItem[] = [
   {
@@ -87,7 +88,7 @@ export const useBuilderLayout = () => {
           node.setLayerGap(+value)
           break
         case 'padding':
-          node.setPadding(value === documentManager.mixed ? documentManager.mixed : +value)
+          node.setPadding(+value)
           break
         case 'paddingSide':
           node.setPadding(value.side, +value.value)
@@ -98,10 +99,10 @@ export const useBuilderLayout = () => {
       switch (key) {
         case 'paddingSide':
           return {
-            paddingTop: documentManager.resolveValue?.(node, 'paddingTop'),
-            paddingRight: documentManager.resolveValue?.(node, 'paddingRight'),
-            paddingBottom: documentManager.resolveValue?.(node, 'paddingBottom'),
-            paddingLeft: documentManager.resolveValue?.(node, 'paddingLeft')
+            top: documentManager.resolveValue?.(node, 'paddingTop'),
+            right: documentManager.resolveValue?.(node, 'paddingRight'),
+            bottom: documentManager.resolveValue?.(node, 'paddingBottom'),
+            left: documentManager.resolveValue?.(node, 'paddingLeft')
           }
       }
     }
@@ -109,26 +110,9 @@ export const useBuilderLayout = () => {
   const [paddingSide, setPaddingSide] = useState<BoxSide | undefined>()
   const padding = layerInvoker('padding')
   const paddingSideInvoker = layerInvoker('paddingSide')
-  const paddingTop = layerInvoker('paddingTop')
 
   const onChangePaddingMode = (mode: 'plain' | 'sides') => {
-    if (mode === 'plain') {
-      padding.onChange(padding.value)
-    } else if (mode === 'sides') {
-      paddingSideInvoker.onChange({
-        side: 'top',
-        value: paddingTop.value
-      })
-    }
-  }
-
-  const onChangePadding = (value: number, side?: BoxSide) => {
-    if (!side) return padding.onChange(value)
-
-    paddingSideInvoker.onChange({
-      side,
-      value
-    })
+    padding.onChange(mode === 'plain' ? 0 : -1)
   }
 
   return {
@@ -153,6 +137,8 @@ export const useBuilderLayout = () => {
     gap: layerInvoker('layerGap'),
     padding: {
       ...padding,
+      mode: to(selectionGraph?.isMixedPadding(), v => (!v ? 'plain' : 'sides')),
+      isMixed: selectionGraph?.isMixedPadding(),
       items: [
         {
           name: 'plain',
@@ -166,9 +152,8 @@ export const useBuilderLayout = () => {
       side: paddingSide,
       setPaddingSide,
       paddingSide: paddingSideInvoker,
-      mode: padding.value === documentManager.mixed ? 'sides' : 'plain',
       onChangeMode: onChangePaddingMode,
-      onChange: onChangePadding
+      sidesInvoker: paddingSideInvoker
     }
   }
 }

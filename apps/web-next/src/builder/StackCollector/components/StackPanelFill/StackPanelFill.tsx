@@ -3,8 +3,7 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import StackColors from '../StackColors/StackColors'
 import TabsSelector, { TabsSelectorItem } from '@/app/components/TabsSelector'
-import { builderPaintMode, getDefaultImageFill, getDefaultSolidFill } from '@fragments/fragments-plugin/performance'
-import { GraphValue } from '@graph-state/react'
+import { builderPaintMode } from '@fragments/fragments-plugin/performance'
 import { popoutsStore } from '@/app/store/popouts.store'
 import { useBuilderSelection } from '@/builder/hooks/useBuilderSelection'
 import { useDisplayColor } from '@/builder/hooks/useDisplayColor'
@@ -15,6 +14,9 @@ import ImagePicker from '@/builder/components/ImagePicker/ImagePicker'
 import { BuilderContext } from '@/builder/BuilderContext'
 import { animated, to } from '@react-spring/web'
 import { AnimatedVisible } from '@/app/components/AnimatedVisible/AnimatedVisible'
+import { cloneColor } from '@/builder/utils/cloneColor'
+import { isLinkKey } from '@graph-state/core'
+import { isObject } from '@fragments/utils'
 
 export interface StackPanelFillOptions {}
 
@@ -37,59 +39,32 @@ const StackPanelFill: FC<StackPanelFillProps> = ({ className }) => {
   const { documentManager } = useContext(BuilderContext)
   const { selection, selectionGraph } = useBuilderSelection()
   const { getColor, getColorStatic } = useDisplayColor()
-  const layerInvoker = useLayerInvoker(
-    selection,
-    ({ key, value, node }) => {
-      switch (key) {
-        case 'solidFill':
-          node.setSolidFill(value)
-          break
-        case 'imageFill':
-          node.setImageFill(value)
-          break
-        case 'fills':
-          node.setFill(value)
-          break
-        case 'fillType':
-          // if (!currentFills || currentFills?.findIndex?.(f => f.type === value) === -1) {
-          // if (value === builderPaintMode.Solid) {
-          //   node.setDefaultSolidFill()
-          // }
-          // if (value === builderPaintMode.Image) {
-          //   node.setImageFill()
-          // }
-          //   if (value === builderPaintMode.Image) {
-          //     layerInvoker('fills').onChange(getDefaultImageFill())
-          //   }
-          // }
+  const layerInvoker = useLayerInvoker(selection, ({ key, prevValue, documentManager, value, node }) => {
+    switch (key) {
+      case 'solidFill':
+        node.setSolidFill(value)
 
-          node.setFillType(value)
-          break
-      }
-    },
-    ({ key, node }) => {
-      switch (key) {
-        case 'currentFill':
-          return node.getCurrentFill()
-      }
+        if (isLinkKey(prevValue) && isObject(value)) {
+          popoutsStore.updateCurrentContext({ value: documentManager.resolveValue(node, 'borderColor') })
+        }
+        break
+      case 'imageFill':
+        node.setImageFill(value)
+        break
+      case 'imageFillScaleMode':
+        node.setImageFillScaleMode(value)
+        break
+      case 'fills':
+        node.setFill(value)
+        break
+      case 'fillType':
+        node.setFillType(value)
+        break
     }
-  )
-  const fills = layerInvoker('fills')
+  })
   const fillType = layerInvoker('fillType')
-  const currentFill = layerInvoker('currentFill')
   const solidFill = layerInvoker('solidFill')
   const type = fillType.value
-
-  // console.log(fills, type, currentFill.value)
-
-  const changeColor = (color: Color) => {
-    solidFill.onChange(color)
-    // selectionGraph.setSolidFill(color)
-    // fills.onChange({
-    //   type: builderPaintMode.Solid,
-    //   color
-    // })
-  }
 
   useEffect(() => {
     if (!fillType.value?.get()) {
@@ -106,21 +81,21 @@ const StackPanelFill: FC<StackPanelFillProps> = ({ className }) => {
             color={getColor(solidFill.value)}
             onChange={color => {
               if (color) {
-                changeColor(color.rgb)
+                solidFill.onChange(color.rgb)
               }
             }}
           />
         </Panel>
         <StackColors
-          getInitialColor={() => currentFill.value.clone().toJSON().color}
-          activeColorKey={currentFill.value?.color}
-          onSelect={changeColor}
+          getInitialColor={() => cloneColor(solidFill.value)}
+          // activeColorKey={currentFill.value?.color}
+          onSelect={solidFill.onChange}
           onCreate={popoutsStore.goPrev}
         />
       </AnimatedVisible>
 
       <AnimatedVisible visible={to(type, t => t === builderPaintMode.Image)}>
-        <ImagePicker urlInvoker={layerInvoker('imageFill')} />
+        <ImagePicker urlInvoker={layerInvoker('imageFill')} scaleModeInvoker={layerInvoker('imageFillScaleMode')} />
       </AnimatedVisible>
     </div>
   )

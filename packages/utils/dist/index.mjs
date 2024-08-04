@@ -152,6 +152,26 @@ var toLongHex = (hex) => {
   return hex;
 };
 
+// src/rgbToHex.ts
+var componentToHex = (c) => {
+  const hex = c.toString(16);
+  return hex.length == 1 ? "0" + hex : hex;
+};
+var rgbToHex = (r, g, b) => {
+  return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+};
+var rgbStringToHex = (rgb) => {
+  var _a;
+  const match = (_a = rgb == null ? void 0 : rgb.match) == null ? void 0 : _a.call(
+    rgb,
+    /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/
+  );
+  const r = Number(match == null ? void 0 : match[1]);
+  const g = Number(match == null ? void 0 : match[2]);
+  const b = Number(match == null ? void 0 : match[3]);
+  return isNaN(r) ? rgb : rgbToHex(r, g, b);
+};
+
 // src/hexToRgb.ts
 var hexToRgb = (hex) => {
   const longHex = toLongHex(hex);
@@ -262,6 +282,8 @@ export {
   pick,
   promiseWaiter,
   replace,
+  rgbStringToHex,
+  rgbToHex,
   rgbToRgba,
   set,
   times,

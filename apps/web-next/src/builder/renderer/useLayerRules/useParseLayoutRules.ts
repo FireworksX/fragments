@@ -4,6 +4,7 @@ import { useContext } from 'react'
 import { BuilderContext } from '@/builder/BuilderContext'
 import { useLayerInvoker } from '@/builder/hooks/useLayerInvoker'
 import { to } from '@react-spring/web'
+import { toPx } from '@/app/utils/toPx'
 
 export const useParseLayoutRules = (layerField: Field) => {
   const { documentManager } = useContext(BuilderContext)
@@ -21,6 +22,10 @@ export const useParseLayoutRules = (layerField: Field) => {
   // }
 
   const padding = layerInvoker('padding').value
+  const paddingTop = layerInvoker('paddingTop').value
+  const paddingRight = layerInvoker('paddingRight').value
+  const paddingBottom = layerInvoker('paddingBottom').value
+  const paddingLeft = layerInvoker('paddingLeft').value
   // if (padding === graphState.mixed) {
   // try {
   //   rules.paddingTop = toPx(layerInvoker('paddingTop').value)
@@ -31,7 +36,17 @@ export const useParseLayoutRules = (layerField: Field) => {
   //   // console.error(e, padding, layerField, statex, statex?.resolve(layerField))
   // }
   // } else {
-  rules.padding = padding
+
+  rules.padding = to(
+    [padding, paddingTop, paddingRight, paddingBottom, paddingLeft],
+    (padding, paddingTop, paddingRight, paddingBottom, paddingLeft) => {
+      if (padding === -1) {
+        return `${toPx(paddingTop)} ${toPx(paddingRight)} ${toPx(paddingBottom)} ${toPx(paddingLeft)}`
+      }
+
+      return `${toPx(padding)}`
+    }
+  )
   // }
 
   return {
@@ -42,6 +57,7 @@ export const useParseLayoutRules = (layerField: Field) => {
     alignItems: layerInvoker('layerAlign').value,
     justifyContent: layerInvoker('layerDistribute').value,
     flexWrap: to(layerInvoker('layerWrap').value, v => (v ? 'wrap' : 'nowrap')),
-    gap: layerInvoker('layerGap').value
+    gap: layerInvoker('layerGap').value,
+    ...rules
   }
 }

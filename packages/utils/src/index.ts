@@ -13,6 +13,7 @@ export { createConstants } from "./createConstants";
 export { isPrimitive } from "./isPrimitive";
 export { toKebabCase } from "./toKebabCase";
 export { toLongHex } from "./toLongHex";
+export { rgbToHex, rgbStringToHex } from "./rgbToHex";
 export { hexToRgb } from "./hexToRgb";
 export { rgbToRgba } from "./rgbToRgba";
 export { mergeIterator } from "./mergeIterator";

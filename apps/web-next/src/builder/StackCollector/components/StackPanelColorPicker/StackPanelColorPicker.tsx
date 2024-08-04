@@ -11,6 +11,7 @@ import { useDisplayColor } from '@/builder/hooks/useDisplayColor'
 import Panel from '@/builder/components/Panel/Panel'
 import ColorPicker from '@/builder/components/ColorPicker/ColorPicker'
 import { BuilderContext } from '@/builder/BuilderContext'
+import { cloneColor } from '@/builder/utils/cloneColor'
 
 export interface StackPanelColorPickerOptions {
   value?: Color
@@ -28,6 +29,8 @@ const StackPanelColorPicker: FC<StackPanelColorPickerProps> = ({ className }) =>
   const context = popout.context ?? {}
   const { getColor } = useDisplayColor(documentManager)
   const [color] = useGraph(documentManager, context?.value)
+
+  console.log(popout)
 
   const updateColor = (color?: Color) => {
     if (color && context?.onChange) {
@@ -51,7 +54,7 @@ const StackPanelColorPicker: FC<StackPanelColorPickerProps> = ({ className }) =>
 
       {!context?.withoutStack && (
         <StackColors
-          initialColor={getColor(color)}
+          getInitialColor={() => cloneColor(color)}
           activeColorId={color?._id}
           onSelect={value => {
             updateColor(value)

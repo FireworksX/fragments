@@ -19,7 +19,7 @@ interface ImagePickerProps {
   scaleModeInvoker: LayerInvokerValue<keyof typeof builderImagePaintScaleModes>
 }
 
-const ImagePicker: FC<ImagePickerProps> = ({ className, urlInvoker, scaleModeInvoker, onReset }) => {
+const ImagePicker: FC<ImagePickerProps> = ({ className, urlInvoker, scaleModeInvoker }) => {
   const { data, progress, fetching, onUpload } = useUploadFile('projectAssets')
 
   useEffect(() => {
@@ -28,8 +28,6 @@ const ImagePicker: FC<ImagePickerProps> = ({ className, urlInvoker, scaleModeInv
     }
   }, [data])
 
-  console.log(urlInvoker.value)
-
   return (
     <div className={cn(styles.root, className)}>
       <ImageSelector
@@ -37,28 +35,22 @@ const ImagePicker: FC<ImagePickerProps> = ({ className, urlInvoker, scaleModeInv
         progress={progress}
         isUploading={fetching}
         onChange={onUpload}
-        onReset={onReset}
+        onReset={() => urlInvoker.onChange('')}
       />
       <Panel>
-        {/*<ControlRow title='Sizing'>*/}
-        {/*  <ControlRowWide>*/}
-        {/*    <Select*/}
-        {/*      value={value?.scaleMode}*/}
-        {/*      onChange={(scaleMode: ImageFill['size']) =>*/}
-        {/*        onChange({*/}
-        {/*          ...value,*/}
-        {/*          scaleMode*/}
-        {/*        })*/}
-        {/*      }*/}
-        {/*    >*/}
-        {/*      {Object.keys(builderImagePaintScaleModes).map(mode => (*/}
-        {/*        <option key={mode} value={mode}>*/}
-        {/*          {mode}*/}
-        {/*        </option>*/}
-        {/*      ))}*/}
-        {/*    </Select>*/}
-        {/*  </ControlRowWide>*/}
-        {/*</ControlRow>*/}
+        {scaleModeInvoker && (
+          <ControlRow title='Sizing'>
+            <ControlRowWide>
+              <Select value={scaleModeInvoker.value} onChange={scaleModeInvoker.onChange}>
+                {Object.keys(builderImagePaintScaleModes).map(mode => (
+                  <option key={mode} value={mode}>
+                    {mode}
+                  </option>
+                ))}
+              </Select>
+            </ControlRowWide>
+          </ControlRow>
+        )}
         {/*<BuilderControlRow title='Position'>*/}
         {/*  <BuilderControlRowWide>*/}
         {/*    <Select value='fit'>*/}

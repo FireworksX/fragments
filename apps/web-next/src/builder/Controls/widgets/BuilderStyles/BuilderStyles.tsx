@@ -14,7 +14,7 @@ import DropdownOption from '@/app/components/Dropdown/components/DropdownOption/
 import InputSelect from '@/app/components/InputSelect/InputSelect'
 import Stepper from '@/app/components/Stepper/Stepper'
 import { GraphValue } from '@graph-state/react'
-import { builderNodes, builderPaintMode } from '@fragments/fragments-plugin'
+import { builderBorderType, builderNodes, builderPaintMode } from '@fragments/fragments-plugin/performance'
 import { useDisplayColor } from '@/builder/hooks/useDisplayColor'
 import Panel from '@/builder/components/Panel/Panel'
 import PanelHeadAside from '@/builder/components/PanelHeadAside/PanelHeadAside'
@@ -78,18 +78,19 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
                 return (
                   <>
                     <InputSelect
-                      hasIcon={to(fill.type, v => ALLOW_FILL_TYPES.includes(v))}
+                      hasIcon={value && to(fill.type, v => ALLOW_FILL_TYPES.includes(v))}
                       color={getColor(value)}
                       onReset={fill.onReset}
                       onClick={fill.onClick}
                     >
-                      {to(fill.type, v =>
-                        ALLOW_FILL_TYPES.includes(v)
-                          ? getNameColor(value)
-                          : fill?.type === builderPaintMode.Image
-                          ? 'Image'
-                          : null
-                      )}
+                      {value &&
+                        to(fill.type, v =>
+                          ALLOW_FILL_TYPES.includes(v)
+                            ? getNameColor(value)
+                            : v === builderPaintMode.Image
+                            ? 'Image'
+                            : ''
+                        )}
                     </InputSelect>
                   </>
                 )
@@ -122,15 +123,16 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
       {!border.disabled && (
         <ControlRow title='Border' actions={border.actions} isHighlight={border.isOverride}>
           <ControlRowWide>
-            <GraphValue graphState={documentManager} field={border.value?.color}>
+            <GraphValue graphState={documentManager} field={border.borderColorInvoker.value}>
               {value => (
                 <InputSelect
                   placeholder='Add...'
+                  hasIcon={value && to(border.borderTypeInvoker.value, v => v !== builderBorderType.None)}
                   color={getColor(value)}
                   onReset={border.onReset}
                   onClick={border.onClick}
                 >
-                  {border.value?.type}
+                  {value && to(border.borderTypeInvoker.value, v => (v !== builderBorderType.None ? v : ''))}
                 </InputSelect>
               )}
             </GraphValue>

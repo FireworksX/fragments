@@ -5,6 +5,7 @@ import Touchable from '@/app/components/Touchable'
 import Checkerboard from '@/app/svg/checkerboard.svg'
 import Close from '@/app/svg/close.svg'
 import { animated } from '@react-spring/web'
+import { rgbToHex } from '@fragments/utils'
 
 export interface InputSelectProps extends PropsWithChildren {
   icon?: ReactNode
@@ -39,13 +40,9 @@ const InputSelect: FC<InputSelectProps> = animated(
           </div>
         )}
 
-        <div className={cn(styles.body, bodyClassName)}>
-          {children ? (
-            <animated.div>{children}</animated.div>
-          ) : (
-            <span className={styles.placeholder}>{placeholder}</span>
-          )}
-        </div>
+        <animated.div className={cn(styles.body, bodyClassName)}>
+          {children ? children : <span className={styles.placeholder}>{placeholder}</span>}
+        </animated.div>
 
         {children && onReset && (
           <Touchable className={styles.reset} onClick={onReset}>

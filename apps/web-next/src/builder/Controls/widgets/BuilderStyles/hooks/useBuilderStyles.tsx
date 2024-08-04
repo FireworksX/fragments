@@ -1,6 +1,6 @@
 import { TabsSelectorItem } from '@/app/components/TabsSelector'
 import { useContext, useState } from 'react'
-import { builderNodes } from '@fragments/fragments-plugin'
+import { builderBorderType, builderNodes } from '@fragments/fragments-plugin/performance'
 import { popoutsStore } from '@/app/store/popouts.store'
 import { useBuilderSelection } from '@/builder/hooks/useBuilderSelection'
 import { useLayerInvoker } from '@/builder/hooks/useLayerInvoker'
@@ -41,8 +41,8 @@ export const useBuilderStyles = () => {
         case 'cornerRadius':
           node.setCornerRadius(+value)
           break
-        case 'border':
-          node.setBorder(value)
+        case 'borderType':
+          node.setBorderType(value)
           break
         case 'fillType':
           node.setFillType(value)
@@ -68,9 +68,10 @@ export const useBuilderStyles = () => {
       }
     }
   )
-  const borderInvoker = layerInvoker('border')
+  const borderTypeInvoker = layerInvoker('borderType')
+  const borderWidthInvoker = layerInvoker('borderWidth')
+  const borderColorInvoker = layerInvoker('borderColor')
   const fillTypeInvoker = layerInvoker('fillType')
-  const fillsInvoker = layerInvoker('fills')
   const solidFillInvoker = layerInvoker('solidFill')
   const zIndexInvoker = layerInvoker('zIndex')
   const cornerRadiusSideInvoker = layerInvoker('cornerRadiusSide')
@@ -130,11 +131,12 @@ export const useBuilderStyles = () => {
       onClick: clickZIndex
     },
     border: {
-      ...borderInvoker,
-      value: borderInvoker.value,
+      borderTypeInvoker,
+      borderWidthInvoker,
+      borderColorInvoker,
       disabled: isTextLayer,
       onClick: openBorder,
-      onReset: () => borderInvoker.onChange(null)
+      onReset: () => borderTypeInvoker.onChange(builderBorderType.None)
     },
     fill: {
       ...solidFillInvoker,

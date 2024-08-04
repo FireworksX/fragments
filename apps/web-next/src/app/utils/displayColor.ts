@@ -1,5 +1,6 @@
 import { Color } from 'react-color'
 import { to } from '@react-spring/web'
+import { rgbToHex } from '@fragments/utils'
 
 export const displayColor = (color?: Color) => {
   if (color) {
@@ -22,5 +23,12 @@ export const displayColorInterpolate = (color: Color = {}) =>
     const resB = Number(b)
     const resA = Number(a)
 
-    return r ? (a < 1 ? `rgba(${resR}, ${resG}, ${resB}, ${resA})` : `rgb(${resR}, ${resG}, ${resB})`) : undefined
+    if ([r, g, b].every(isFinite)) {
+      if (resA < 1) {
+        return `rgba(${resR}, ${resG}, ${resB}, ${resA})`
+      }
+
+      return `rgb(${resR}, ${resG}, ${resB})`
+    }
+    return undefined
   })

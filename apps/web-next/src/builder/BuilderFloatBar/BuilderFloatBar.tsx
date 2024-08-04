@@ -15,6 +15,7 @@ import FloatingBar from '@/builder/components/FloatingBar'
 import { useGraph } from '@graph-state/react'
 import { BuilderContext } from '@/builder/BuilderContext'
 import { useBuilderActions } from '@/builder/hooks/useBuilderActions'
+import Touchable from '@/app/components/Touchable'
 
 interface BuilderFloatBarProps {
   className?: string
@@ -30,21 +31,27 @@ export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
     <FloatingBar
       actions={[
         {
-          kind: 'action',
+          kind: 'component',
           hidden: !isEdit,
-          icon: <DefaultCursor width={20} height={20} />,
-          onClick: () => undefined
+          component: (
+            <Touchable className={styles.actionButton} TagName='button' onClick={() => undefined}>
+              <DefaultCursor width={20} height={20} />
+            </Touchable>
+          )
         },
         {
-          kind: 'action',
+          kind: 'component',
           hidden: !isEdit,
-          icon: <GrabCursor width={20} height={20} />,
-          onClick: () => undefined
+          component: (
+            <Touchable className={styles.actionButton} TagName='button' onClick={() => undefined}>
+              <GrabCursor width={20} height={20} />
+            </Touchable>
+          )
         },
         {
-          kind: 'action',
+          kind: 'component',
           hidden: !isEdit,
-          icon: (
+          component: (
             <Dropdown
               trigger='click'
               options={
@@ -54,10 +61,11 @@ export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
                 </DropdownGroup>
               }
             >
-              <Lightning width={20} height={20} />
+              <Touchable className={styles.actionButton} TagName='button' onClick={() => undefined}>
+                <Lightning width={20} height={20} />
+              </Touchable>
             </Dropdown>
-          ),
-          onClick: () => undefined
+          )
         },
         {
           kind: 'component',

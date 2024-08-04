@@ -1,6 +1,8 @@
 import { createState } from '@graph-state/core'
 import extendPlugin from '@graph-state/plugin-extend'
 import loggerPlugin from '@graph-state/plugin-logger'
+import { isInstanceOf } from '@graph-state/checkers'
+import { SpringValue } from '@react-spring/web'
 
 export const POPOUT_TYPE = 'Popout'
 
@@ -10,11 +12,16 @@ export const popoutsStore = createState({
     cursor: 0
   },
   plugins: [
+    loggerPlugin(),
     state => {
       state.getCurrent = () => state.resolve().history.at(state.resolve().cursor)
       state.nextPopout = () => state.resolve().history.at(state.resolve().cursor + 1)
       state.prevPopout = () =>
         state.resolve().cursor > 0 ? state.resolve().history.at(state.resolve().cursor - 1) : undefined
+
+      state.updateCurrentContext = context => {
+        state.mutate(state.getCurrent(), { context })
+      }
 
       state.open = (name, { context, position, initial }) => {
         const { history, cursor } = state.resolve() || {}
@@ -74,5 +81,6 @@ export const popoutsStore = createState({
           cursor: cursor > 1 ? cursor - 1 : 0
         }))
     }
-  ]
+  ],
+  skip: [isInstanceOf(SpringValue)]
 })

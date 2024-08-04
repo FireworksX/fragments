@@ -1,4 +1,4 @@
-import { Entity, GraphState } from '@graph-state/core'
+import { Entity, GraphState, isLinkKey } from '@graph-state/core'
 import { SpringValue } from '@react-spring/web'
 import { isPrimitive, isValue } from '@fragments/utils'
 
@@ -7,11 +7,13 @@ export const clonedField = (graphState: GraphState, entity: Entity, key: string,
     return null
   }
 
-  if (isValue(entity[key])) {
-    if (isPrimitive(entity[key])) {
-      return new SpringValue(entity[key])
+  const value = entity[key]
+
+  if (isValue(value)) {
+    if (isPrimitive(value) && !isLinkKey(value)) {
+      return new SpringValue(value)
     }
-    return entity[key]
+    return value
   }
 
   if (isValue(fallback)) {

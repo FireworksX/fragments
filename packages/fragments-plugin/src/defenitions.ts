@@ -16,7 +16,7 @@ export const builderNodes = createConstants(
   'ImageFill'
 )
 
-export const builderBorderType = createConstants('Solid', 'Dashed', 'Dotted')
+export const builderBorderType = createConstants('None', 'Solid', 'Dashed', 'Dotted')
 export const builderPaintMode = createConstants('Solid', 'Image')
 export const builderImagePaintScaleModes = createConstants('Fill', 'Fit', 'Crop', 'Tile')
 export const builderConstrain = createConstants('Min', 'Center', 'Max', 'Stretch', 'Scale')

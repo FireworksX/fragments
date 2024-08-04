@@ -13,7 +13,9 @@ import Panel from '@/builder/components/Panel/Panel'
 import ControlRow from '@/builder/components/ControlRow/ControlRow'
 import ControlRowWide from '@/builder/components/ControlRow/components/ControlRowWide/ControlRowWide'
 import { BuilderContext } from '@/builder/BuilderContext'
-import { animated } from '@react-spring/web'
+import { animated, to } from '@react-spring/web'
+import { isObject, omit } from '@fragments/utils'
+import { isLinkKey } from '@graph-state/core'
 
 export interface StackPanelBorderOptions {
   value?: BorderData
@@ -27,19 +29,31 @@ interface StackPanelBorderProps extends StackPanel {
 const StackPanelBorder: FC<StackPanelBorderProps> = ({ className }) => {
   const { selection } = useBuilderSelection()
   const { getColor, getNameColor } = useDisplayColor()
-  const layerInvoker = useLayerInvoker(selection, ({ node, value, key }) => {
+  const layerInvoker = useLayerInvoker(selection, ({ node, documentManager, value, prevValue, key }) => {
     switch (key) {
-      case 'border':
-        node.setBorder(value)
+      case 'borderType':
+        node.setBorderType(value)
+        break
+      case 'borderWidth':
+        node.setBorderWidth(value)
+        break
+      case 'borderColor':
+        node.setBorderColor(value)
+
+        if (isLinkKey(prevValue) && isObject(value)) {
+          popoutsStore.updateCurrentContext({ value: documentManager.resolveValue(node, 'borderColor') })
+        }
         break
     }
   })
 
-  const borderInvoker = layerInvoker('border')
+  const borderTypeInvoker = layerInvoker('borderType')
+  const borderWidthInvoker = layerInvoker('borderWidth')
+  const borderColorInvoker = layerInvoker('borderColor')
 
   useEffect(() => {
-    if (!borderInvoker.value) {
-      borderInvoker.onChange(getDefaultBorder())
+    if (borderTypeInvoker.value?.get() === builderBorderType.None) {
+      borderTypeInvoker.onChange(builderBorderType.Solid)
     }
   }, [])
 
@@ -48,38 +62,34 @@ const StackPanelBorder: FC<StackPanelBorderProps> = ({ className }) => {
       <ControlRow title='Color'>
         <ControlRowWide>
           <InputSelect
-            color={getColor(borderInvoker.value?.color)}
+            color={getColor(borderColorInvoker.value)}
             onClick={() =>
               popoutsStore.open('colorPicker', {
                 context: {
-                  value: borderInvoker.value?.color,
-                  onChange: nextColor => borderInvoker.onChange({ color: nextColor })
+                  value: borderColorInvoker.value,
+                  onChange: nextColor => borderColorInvoker.onChange(nextColor)
                 }
               })
             }
           >
-            {getNameColor(borderInvoker.value?.color)}
+            {getNameColor(borderColorInvoker.value)}
           </InputSelect>
         </ControlRowWide>
       </ControlRow>
 
       <ControlRow title='Width'>
         <InputNumber
-          value={borderInvoker?.value?.width}
+          value={borderWidthInvoker?.value}
           min={0}
-          onChange={width => borderInvoker.onChange({ width: +width })}
+          onChange={width => borderWidthInvoker.onChange(+width)}
         />
-        <Stepper
-          value={borderInvoker?.value?.width}
-          min={0}
-          onChange={width => borderInvoker.onChange({ width: +width })}
-        />
+        <Stepper value={borderWidthInvoker?.value} min={0} onChange={width => borderWidthInvoker.onChange(+width)} />
       </ControlRow>
 
       <ControlRow title='Style'>
         <ControlRowWide>
-          <Select value={borderInvoker?.value?.type} onChange={type => borderInvoker.onChange({ type })}>
-            {Object.keys(builderBorderType).map(type => (
+          <Select value={borderTypeInvoker?.value} onChange={type => borderTypeInvoker.onChange(type)}>
+            {Object.keys(omit(builderBorderType, builderBorderType.None)).map(type => (
               <option key={type} value={type}>
                 {type}
               </option>

@@ -12,6 +12,8 @@ import BuilderPosition from '@/builder/Controls/widgets/BuilderPosition/BuilderP
 import BuilderEffects from '@/builder/Controls/widgets/BuilderEffects/BuilderEffects'
 import { BuilderContext } from '@/builder/BuilderContext'
 import BuilderText from '@/builder/Controls/widgets/BuilderText/BuilderText'
+import { useBuilderSelection } from '@/builder/hooks/useBuilderSelection'
+import { builderNodes } from '@fragments/fragments-plugin/performance'
 
 interface ControlsProps extends AsideBarProps {
   documentManager: unknown
@@ -19,13 +21,17 @@ interface ControlsProps extends AsideBarProps {
 }
 
 const Controls: FC<ControlsProps> = ({ className, documentManager, ...asideProps }) => {
+  const { selectionGraph } = useBuilderSelection()
+
+  const hasLayout = selectionGraph?._type === builderNodes.Frame || selectionGraph?._type === builderNodes.Screen
+
   return (
     <AsideBar className={cn(className, styles.root)} {...asideProps}>
       {/*<BuilderComponent />*/}
       {/*<BuilderLink />*/}
       <BuilderPosition />
       <BuilderSize />
-      <BuilderLayout />
+      {hasLayout && <BuilderLayout />}
       {/*<BuilderEffects />*/}
       <BuilderStyles />
       <BuilderText />

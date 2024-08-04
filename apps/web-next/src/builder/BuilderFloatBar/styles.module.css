@@ -3,6 +3,10 @@
     bottom: 30px;
 }
 
+.actionButton {
+    color: var(--secondary);
+}
+
 .zoomSelect {
     min-width: 65px;
 }

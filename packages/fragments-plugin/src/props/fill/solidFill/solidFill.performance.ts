@@ -2,6 +2,8 @@ import { SpringValue } from '@react-spring/web'
 import { Resolver } from 'src/helpers'
 import { clonedField } from '../../../utils/cloneField/cloneField.performance'
 import { SolidPaint } from '../../../types/props'
+import { isLinkKey, LinkKey } from '@graph-state/core'
+import { builderNodes } from 'src'
 
 export const getDefaultFillColor = ({ r, g, b, a } = {}): SolidPaint => ({
   r: new SpringValue(r ?? 86),
@@ -11,21 +13,33 @@ export const getDefaultFillColor = ({ r, g, b, a } = {}): SolidPaint => ({
 })
 
 export const solidFillProps: Resolver = (state, graph) => {
-  const setSolidFill = color => {
-    const solidFill = state.resolve(graph).solidFill
-
-    if (solidFill) {
-      Object.entries(color).forEach(([key, value]) => {
-        if (key in solidFill) {
-          solidFill[key].set(value)
-        }
-      })
-    } else {
+  const setSolidFillLink = (link: LinkKey) => {
+    const linkGraph = state.resolve(link)
+    if (linkGraph && linkGraph._type === builderNodes.SolidPaintStyle) {
       state.mutate(state.keyOfEntity(graph), {
-        solidFill: {
-          ...getDefaultFillColor(color)
-        }
+        solidFill: link
       })
+    }
+  }
+
+  const setSolidFill = colorOrLink => {
+    if (isLinkKey(colorOrLink)) {
+      setSolidFillLink(colorOrLink)
+    } else {
+      const solidFill = state.resolve(graph).solidFill
+      const linkGraph = state.resolve(colorOrLink)
+
+      if (solidFill && linkGraph) {
+        Object.entries(colorOrLink).forEach(([key, value]) => {
+          if (key in solidFill) {
+            solidFill[key].set(value)
+          }
+        })
+      } else {
+        state.mutate(state.keyOfEntity(graph), {
+          solidFill: getDefaultFillColor(colorOrLink)
+        })
+      }
     }
   }
 

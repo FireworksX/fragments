@@ -3,7 +3,7 @@ import { BuilderFieldOverrides, useBuilderFieldOverrides } from './useBuilderFie
 import { BuilderFieldVariable, useBuilderFieldVariable } from './useBuilderFieldVariable'
 import { omit } from '@fragments/utils'
 import { useGraph } from '@graph-state/react'
-import { SetOptions } from '@graph-state/core'
+import { GraphState, SetOptions } from '@graph-state/core'
 import { useContext } from 'react'
 import { BuilderContext } from '@/builder/BuilderContext'
 // import { builderNodes } from '../data/promos/creators'
@@ -20,7 +20,9 @@ export type LayerInvokerValue<TValue = unknown> = {
 type SetterOptions = {
   node: SceneNode
   key: string
+  documentManager: GraphState
   value: unknown
+  prevValue: unknown
   options?: SetOptions
 }
 
@@ -34,24 +36,27 @@ export const useLayerInvoker = (field: Field, setter?: Setter, getter?: Getter) 
   const getVariables = useBuilderFieldVariable(field)
 
   return (key: string): LayerInvokerValue => {
-    const resultValue =
+    const resultValue = () =>
       getter?.({ node: entity, key, value: documentManager.resolveValue(field, key) }) ??
       documentManager.resolveValue(field, key)
+
     const resultSetter = (newValue: any, options?: SetOptions) =>
       setter?.({
         node: entity,
         key,
+        documentManager,
         value: newValue,
+        prevValue: resultValue(),
         options
       })
     const propertyKey =
-      documentManager.entityOfKey(resultValue)?._type === {}.ComponentProperty ? resultValue : undefined
+      documentManager.entityOfKey(resultValue)?._type === {}.ComponentProperty ? resultValue() : undefined
     const overrides = getOverrides(key)
     const variables = getVariables(key, resultValue)
     const actions = [overrides.actions, variables.actions]
 
     return {
-      value: resultValue,
+      value: resultValue(),
       onChange: resultSetter,
       ...omit(overrides, 'actions'),
       ...omit(variables, 'actions'),
