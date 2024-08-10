@@ -6,6 +6,11 @@ import { CreateSolidPaintStyleOptions } from 'src/creators'
 import { createSolidPaintStyle, createFrame, createText } from 'src/creators/index.performance'
 import { isObject, isPrimitive } from '@fragments/utils'
 import { SpringValue } from '@react-spring/web'
+import extendPlugin from '@graph-state/plugin-extend'
+import { breakpointNode } from '../../nodes/breakpoint/breakpointNode.performance'
+import { frameNode } from '../../nodes/frame/frameNode.performance'
+import { textNode } from '../../nodes/text/textNode.performance'
+import { documentNode } from '../../nodes/document/document.performance'
 
 export const managerPlugin: Plugin = state => {
   const [rootLink] = state.inspectFields(builderNodes.Document)
@@ -50,19 +55,23 @@ export const managerPlugin: Plugin = state => {
    * Creators
    */
 
-  state.findPrimaryScreen = () =>
+  state.findPrimaryBreakpoint = () =>
     state
-      .inspectFields(builderNodes.Screen)
+      .inspectFields(builderNodes.Breakpoint)
       .map(state.resolve)
       .filter(s => s.isPrimary)[0]
 
-  state.createScreen = (options: { name: string; width: number }) => {
-    const primaryScreen = state.findPrimaryScreen()
-    if (primaryScreen) {
-      const nextScreenLink = primaryScreen.clone()
-      state.mutate(nextScreenLink, {
+  state.createBreakpoint = (options: { name: string; width: number }) => {
+    const primaryBreakpoint = state.findPrimaryBreakpoint()
+    if (primaryBreakpoint) {
+      const nextScreenLink = primaryBreakpoint.clone()
+      const nextBreakpoint = state.mutate(nextScreenLink, {
         ...options,
         isPrimary: false
+      })
+
+      state.mutate(state.root, {
+        children: [nextBreakpoint]
       })
     }
   }
@@ -114,6 +123,42 @@ export const managerPlugin: Plugin = state => {
 
     return nodeToJSON(document)
   }
+
+  /**
+   * Передаём ссылку на ноду, которую хотим переместить.
+   * Мы можем переместить ноду в другую ноду, если toLink - null,
+   * то родитель будет Document.
+   *
+   * Так же можно изменить порядок вложенных нод, передав order.
+   */
+  state.moveNode = (nodeLink: LinkKey, toLink: LinkKey | null, order?: number) => {
+    const node = state.resolve(nodeLink)
+    const nodeParent = node?.getParent()
+    const toNode = state.resolve(toLink) || state.resolve(state.root)
+    const parentKey = state.keyOfEntity(nodeParent)
+
+    if (toLink !== parentKey) {
+      nodeParent?.removeChild(node)
+      toNode?.insertChild(order || 0, node)
+    } else if (typeof order === 'number') {
+      nodeParent?.changeOrder(nodeLink, order)
+    }
+  }
+
+  extendPlugin(
+    {
+      [builderNodes.Document]: (graph, cache) => documentNode(cache, graph),
+      [builderNodes.Breakpoint]: (graph, cache) => breakpointNode(cache, graph),
+      [builderNodes.Frame]: (graph, cache) => frameNode(cache, graph),
+      [builderNodes.Text]: (graph, cache) => textNode(cache, graph)
+      // [builderNodes.Component]: (graph, cache) => componentNode(cache, graph),
+      // [builderNodes.ComponentVariant]: (graph, cache) => componentVariantNode(cache, graph),
+      // [builderNodes.ComponentInstance]: (graph, cache) => componentInstanceNode(cache, graph)
+    },
+    {
+      excludePartialGraph: true
+    }
+  )(state)
 
   return state
 }

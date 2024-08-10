@@ -8,8 +8,7 @@ import { useGraph } from '@graph-state/react'
 
 export const useRendererHandlers = () => {
   const { documentManager } = useContext(BuilderContext)
-  const { setFocusNode, changeMode } = useBuilderManager()
-  const [richEditor] = useGraph(documentManager, documentManager.richEditor)
+  const { updateParams } = useBuilderManager()
 
   const handleClick = (e, options: OnClickSelectorOptions) => {
     e.preventDefault()
@@ -21,11 +20,18 @@ export const useRendererHandlers = () => {
       // $layers.setKey('openLayerField', options.layerKey)
       // setFocusNode(options.layerKey)
       // graphState.setView('text')
+      updateParams({
+        textEditing: true,
+        focus: options.layerKey
+      })
 
-      richEditor.setEditable(true)
+      return
     }
 
-    setFocusNode(options.layerKey)
+    updateParams({
+      textEditing: false,
+      focus: options.layerKey
+    })
   }
 
   return {

@@ -23,7 +23,7 @@ interface BuilderFloatBarProps {
 
 export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
   const { canvasManager } = useContext(BuilderContext)
-  const { isEdit, changeMode, focus } = useBuilderManager()
+  const { isEdit, focus, updateParams } = useBuilderManager()
   const [canvas] = useGraph(canvasManager)
   const { addFrame, addText } = useBuilderActions()
 
@@ -84,7 +84,7 @@ export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
         {
           kind: 'component',
           hidden: isEdit,
-          component: <Button onClick={() => changeMode(builderModes.edit)}>Edit</Button>
+          component: <Button onClick={() => updateParams({ mode: builderModes.edit })}>Edit</Button>
         },
         { kind: 'delimiter', hidden: !isEdit },
         {

@@ -108,7 +108,7 @@ export const baseProps: Resolver = (state, entity): BaseProps => {
 
       return stack
     },
-    toString: (): string => JSON.stringify(state.resolve(entity)),
+    toStringState: (): string => JSON.stringify(state.resolve(entity)),
     rename: (name: string) => state.mutate(key, { name }),
     remove: () => state.invalidate(key),
     // getValue,

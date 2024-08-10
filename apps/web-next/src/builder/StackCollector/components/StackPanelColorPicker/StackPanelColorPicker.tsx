@@ -29,8 +29,9 @@ const StackPanelColorPicker: FC<StackPanelColorPickerProps> = ({ className }) =>
   const context = popout.context ?? {}
   const { getColor } = useDisplayColor(documentManager)
   const [color] = useGraph(documentManager, context?.value)
+  const resultColor = color ?? (context?.value as Color)
 
-  console.log(popout)
+  console.log(resultColor, context)
 
   const updateColor = (color?: Color) => {
     if (color && context?.onChange) {

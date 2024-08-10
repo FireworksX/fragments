@@ -5,12 +5,12 @@ import { BuilderContext } from '@/builder/BuilderContext'
 
 export const useBuilderSelection = () => {
   const { documentManager } = useContext(BuilderContext)
-  const { focus, setFocusNode } = useBuilderManager()
+  const { focus, updateParams } = useBuilderManager()
   const [selectionGraph] = useGraph(documentManager, focus)
 
   const select = (field: any) => {
     const inputKey = typeof field === 'string' ? field : documentManager.keyOfEntity(field)
-    setFocusNode(inputKey)
+    updateParams({ focus: inputKey })
   }
 
   return { selection: focus, selectionGraph, select }

@@ -48,6 +48,8 @@ export interface ScreenNode
   setPrimary(): void
 }
 
+export interface BreakpointNode extends ScreenNode {}
+
 export interface FrameNode
   extends Entity,
     BaseProps,

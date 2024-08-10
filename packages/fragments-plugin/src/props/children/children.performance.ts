@@ -2,7 +2,7 @@ import { ChildrenRelatedProps } from 'src/types/props'
 import { Resolver, setKey } from 'src/helpers'
 import { BaseNode, SceneNode } from 'src/types'
 import { filterDeep, findDeep } from '@fragments/utils'
-import { GraphState, isPartialKey } from '@graph-state/core'
+import { GraphState, isPartialKey, LinkKey } from '@graph-state/core'
 
 export const childrenProps: Resolver = <TChild extends SceneNode = SceneNode>(
   graphState: GraphState,
@@ -59,6 +59,26 @@ export const childrenProps: Resolver = <TChild extends SceneNode = SceneNode>(
             ...childNode,
             parentKey: setKey(key)
           })
+
+          return {
+            children
+          }
+        },
+        { replace: true }
+      )
+    },
+
+    changeOrder(childLink: LinkKey, to: number): void {
+      graphState.mutate(
+        key,
+        prev => {
+          const children = prev?.children ?? []
+          const index = children.indexOf(childLink)
+
+          if (index !== -1) {
+            children.splice(index, 1)
+            children.splice(to, 0, childLink)
+          }
 
           return {
             children

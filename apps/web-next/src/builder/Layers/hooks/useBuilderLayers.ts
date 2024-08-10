@@ -1,36 +1,69 @@
-import { useCallback } from 'react'
-import { useStore } from '@nanostores/react'
-import { $statex } from '../../../../../store/builderRouterStore'
-import { entityOfKey } from '@adstore/statex'
+import { useCallback, useContext, useState } from 'react'
+import { BuilderContext } from '@/builder/BuilderContext'
+import { useGraph, useGraphFields, useGraphStack } from '@graph-state/react'
+import { LinkKey } from '@graph-state/core'
+import { builderNodes } from '@fragments/fragments-plugin/performance'
+
+const findIndexOfNode = (items: unknown[], linkNode: LinkKey) => {
+  const index = items.findIndex(item => item.id === linkNode)
+
+  if (index !== -1) {
+    return index
+  }
+
+  return findIndexOfNode(
+    items.flatMap(item => item.children),
+    linkNode
+  )
+}
 
 export const useBuilderLayers = () => {
-  const statex = useStore($statex)
+  const { documentManager } = useContext(BuilderContext)
+  const [expandedLinkKeys, setExpandedLinkKeys] = useState<string[]>([])
+  const allBreakpoints = useGraphFields(documentManager, builderNodes.Breakpoint)
+  const allFrames = useGraphFields(documentManager, builderNodes.Frame)
 
-  /*
-  Здесь была вервсия с вариантом, когда на разных breakpoint`ах
-  можно задачать свой порядок элементов. Посмотри в гите: fb6714748aac024965bf6b8cd4db8b2ebdafd7e8
+  /**
+   * Реагируем на каждое изменение любого графа и обновляем стэк
    */
-  const onDragEnd = useCallback(
-    result => {
-      const destinationIndex = result.destination.index
-      const sourceIndex = result.source.index
-      const [, parentLayerKey] = result.destination.droppableId?.split?.('/')
-      const children = statex.resolve(parentLayerKey)?.children || []
-      const [removed] = children.splice(sourceIndex, 1)
-      children.splice(destinationIndex, 0, removed)
+  useGraphStack(documentManager, [...allBreakpoints, ...allFrames])
 
-      statex.mutate(
-        {
-          ...entityOfKey(parentLayerKey),
-          children
-        },
-        { replace: true }
-      )
-    },
-    [statex]
-  )
+  const getNode = (layerKey: LinkKey) => {
+    const node = documentManager.resolve(layerKey)
+    const collapsed = !expandedLinkKeys.includes(layerKey)
+
+    return {
+      id: documentManager.keyOfEntity(node),
+      collapsed,
+      children: (node?.children || []).map(key => getNode(key)),
+      canHaveChildren: [builderNodes.Frame, builderNodes.Breakpoint].includes(node._type)
+    }
+  }
+
+  const items = getNode(documentManager.root).children
+
+  const handleCollapse = (type: 'collapse' | 'expanded', key: LinkKey) => {
+    setExpandedLinkKeys(prev => (type === 'expanded' ? [...prev, key] : prev.filter(k => k !== key)))
+  }
+
+  const handleChangeItems = (nextItemsTree, reason) => {
+    const { draggedFromParent: from, draggedItem, item, droppedToParent: to, type } = reason
+
+    if (type === 'collapsed' || type === 'expanded') {
+      handleCollapse(type, item.id)
+    }
+
+    if (type === 'dropped') {
+      const itemKey = draggedItem?.id
+      const toKey = to?.id
+      const itemOrder = findIndexOfNode(nextItemsTree, itemKey)
+
+      documentManager.moveNode(itemKey, toKey, itemOrder)
+    }
+  }
 
   return {
-    onDragEnd
+    items,
+    handleChangeItems
   }
 }

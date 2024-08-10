@@ -2,7 +2,7 @@ import { ElementRef, MutableRefObject, useCallback, useContext, useEffect, useRe
 import { useGesture } from '@use-gesture/react'
 import { animated, useSpring } from '@react-spring/web'
 import { useGraph } from '@graph-state/react'
-import { CanvasManager } from '@/builder/BuilderCanvas/canvasManager'
+import { CanvasManager } from '@/builder/managers/canvasManager'
 import { BuilderContext } from '@/builder/BuilderContext'
 // import { debounce } from '@fragments/utils'
 

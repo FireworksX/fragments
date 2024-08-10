@@ -1,5 +1,0 @@
-.root {
-    transition: box-shadow var(--animation-transition-default);
-    background: var(--background);
-    position: relative;
-}

@@ -1,9 +1,0 @@
-.root {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-}
-
-.label {
-  font-size: 10px;
-}

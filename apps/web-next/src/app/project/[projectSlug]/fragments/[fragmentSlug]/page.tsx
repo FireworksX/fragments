@@ -3,7 +3,7 @@ import React, { useEffect, useMemo } from 'react'
 import styles from './styles.module.css'
 import { PageHeading } from '@/app/components/PageHeading/PageHeading'
 import BuilderCanvas from '@/builder/BuilderCanvas/BuilderCanvas'
-import { createCanvasManager } from '@/builder/BuilderCanvas/canvasManager'
+import { createCanvasManager } from '@/builder/managers/canvasManager'
 import { useGraph } from '@graph-state/react'
 import { animated, SpringValue, useSpring, useSpringValue } from '@react-spring/web'
 import FloatingBar from '@/builder/components/FloatingBar'
@@ -15,8 +15,7 @@ import Button from '@/app/components/Button'
 import DisplayBreakpoints from '@/builder/DisplayBreakpoints/DisplayBreakpoints'
 import { FragmentsRender } from '@fragments/render-react'
 import { createState } from '@graph-state/core'
-import { template } from '@/app/builder/[fragmentId]/widgets/Builder/template'
-import { managerPlugin, documentPlugin } from '@fragments/fragments-plugin/performance'
+import { managerPlugin, skips } from '@fragments/fragments-plugin/performance'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Sidebar from '@/builder/Sidebar'
@@ -39,16 +38,33 @@ import { BuilderFloatBar } from '@/builder/BuilderFloatBar/BuilderFloatBar'
 import { richTextPlugin } from '@/app/store/builder/builderRichTextPlugin'
 import BuilderRichText from '@/builder/BuilderRichText/BuilderRichText'
 import { builderNodes } from '@fragments/fragments-plugin'
+import { BuilderTextEditorComposer } from '@/builder/BuilderTextEditor/BuilderTextEditorComposer'
+import { BuilderTextEditor } from '@/builder/BuilderTextEditor/BuilderTextEditor'
 
 const canvasManager = createCanvasManager()
 
+const template = {
+  _type: 'Document',
+  _id: 'gdfhfdghsf',
+  children: [
+    {
+      _type: 'Breakpoint',
+      _id: 'fdfgg',
+      isPrimary: true,
+      children: [
+        { _type: 'Frame', _id: '1' },
+        { _type: 'Frame', _id: '2' },
+        { _type: 'Frame', _id: '3' },
+        { _type: 'Frame', _id: '4' }
+      ]
+    }
+  ]
+}
+
 const documentManager = createState({
   initialState: template,
-  plugins: [managerPlugin, documentPlugin, richTextPlugin, loggerPlugin()],
-  skip: [
-    isInstanceOf(SpringValue),
-    graph => graph && graph._type === builderNodes.Text && graph._id.includes('content')
-  ]
+  plugins: [managerPlugin, richTextPlugin, loggerPlugin()],
+  skip: [...skips]
 })
 
 if (isBrowser) {
@@ -64,35 +80,37 @@ const BuilderPopouts = dynamic(() => import('@/builder/BuilderPopouts/BuilderPop
 })
 
 export default function () {
-  const { isEdit, changeMode, focus } = useBuilderManager()
+  const { isEdit } = useBuilderManager()
 
   return (
     <BuilderContext.Provider value={{ documentManager, canvasManager }}>
-      <div className={styles.root}>
-        <div className={styles.previewContainer}>
-          <Sidebar isOpen={isEdit} />
+      <BuilderTextEditorComposer>
+        <div className={styles.root}>
+          <div className={styles.previewContainer}>
+            <Sidebar isOpen={isEdit} />
 
-          <BuilderCanvas>
-            <BuilderRichText />
-            <LayerHighlight />
-            <DisplayBreakpoints
-              renderer={(screenKey, handleClick) => <Layer layerKey={screenKey} onClick={handleClick} />}
-            />
-          </BuilderCanvas>
-          <Controls isOpen={isEdit} position='right' documentManager={documentManager} />
+            <BuilderCanvas>
+              <BuilderTextEditor />
+              <LayerHighlight />
+              <DisplayBreakpoints
+                renderer={(screenKey, handleClick) => <Layer layerKey={screenKey} onClick={handleClick} />}
+              />
+            </BuilderCanvas>
+            <Controls isOpen={isEdit} position='right' documentManager={documentManager} />
 
-          <BuilderFloatBar />
-        </div>
-
-        {isEdit && (
-          <div className={styles.overlays}>
-            <BuilderModals />
-            <div className={styles.popoutsOverlay}>
-              <BuilderPopouts documentManager={documentManager} />
-            </div>
+            <BuilderFloatBar />
           </div>
-        )}
-      </div>
+
+          {isEdit && (
+            <div className={styles.overlays}>
+              <BuilderModals />
+              <div className={styles.popoutsOverlay}>
+                <BuilderPopouts documentManager={documentManager} />
+              </div>
+            </div>
+          )}
+        </div>
+      </BuilderTextEditorComposer>
     </BuilderContext.Provider>
   )
 }

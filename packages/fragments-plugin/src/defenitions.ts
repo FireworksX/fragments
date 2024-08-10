@@ -3,7 +3,7 @@ import { createConstants } from '@fragments/utils'
 export const builderNodes = createConstants(
   'Viewport',
   'Document',
-  'Screen',
+  'Breakpoint',
   'Frame',
   'Text',
   'Component',

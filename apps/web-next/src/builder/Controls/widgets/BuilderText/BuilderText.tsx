@@ -14,6 +14,7 @@ import Panel from '@/builder/components/Panel/Panel'
 import { builderNodes } from '@fragments/fragments-plugin/performance'
 import { useBuilderStyles } from '@/builder/Controls/widgets/BuilderStyles/hooks/useBuilderStyles'
 import { useBuilderSelection } from '@/builder/hooks/useBuilderSelection'
+import Button from '@/app/components/Button'
 
 interface BuilderTextProps {
   className?: string
@@ -22,7 +23,7 @@ interface BuilderTextProps {
 const BuilderText: FC<BuilderTextProps> = ({ className }) => {
   const { documentManager } = useContext(BuilderContext)
   const { selectionGraph } = useBuilderSelection()
-  const { weight, color, fontSize, lineHeight, letterSpacing, transform, decoration } = useBuilderText()
+  const { weight, color, align, fontSize, lineHeight, letterSpacing, transform, decoration } = useBuilderText()
   const { getColor, getNameColor } = useDisplayColor()
 
   if (![builderNodes.Text].some(type => type === selectionGraph?._type)) {
@@ -52,9 +53,9 @@ const BuilderText: FC<BuilderTextProps> = ({ className }) => {
       <ControlRow title='Weight'>
         <ControlRowWide>
           <Select value={weight.value} onChange={weight.onChange}>
-            {weight.items.map(val => (
-              <option key={val} value={val}>
-                {val}
+            {weight.items.map(({ label, value }) => (
+              <option key={label} value={value}>
+                {label}
               </option>
             ))}
           </Select>
@@ -107,6 +108,12 @@ const BuilderText: FC<BuilderTextProps> = ({ className }) => {
             value={decoration.value}
             onChange={({ name }) => decoration.onChange(name)}
           />
+        </ControlRowWide>
+      </ControlRow>
+
+      <ControlRow title='Align'>
+        <ControlRowWide>
+          <TabsSelector items={align.items} value={align.value} onChange={({ name }) => align.onChange(name)} />
         </ControlRowWide>
       </ControlRow>
     </Panel>

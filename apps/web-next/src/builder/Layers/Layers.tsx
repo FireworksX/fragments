@@ -1,26 +1,39 @@
-import React, { FC, useContext } from 'react'
+import React, { FC, useContext, useState } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { useGraph } from '@graph-state/react'
-import { BuilderContext } from '@/builder/BuilderContext'
-import { useBuilderManager } from '@/builder/hooks/useBuilderManager'
-import TreeViewer from '@/builder/TreeViewer/TreeViewer'
+import { SortableTree } from 'dnd-kit-sortable-tree'
+import { BuilderLayerCell } from '@/builder/Layers/components/BuilderLayerCell/BuilderLayerCell'
+import { useBuilderLayers } from '@/builder/Layers/hooks/useBuilderLayers'
+import { BuilderLayerSortingCell } from '@/builder/Layers/components/BuilderLayerSortingCell/BuilderLayerSortingCell'
 
 interface BuilderLayersProps {
   className?: string
 }
 
 const Layers: FC<BuilderLayersProps> = ({ className }) => {
-  const { documentManager } = useContext(BuilderContext)
-  const { mode, focus } = useBuilderManager()
-  // const [{ view, focusComponent }] = useGraph(graphState)
-  // const statex = useStore($statex)
-  // const { openLayerField } = useStore($layers)
-  // const builderView = useStore($builderView)
+  const { items, handleChangeItems } = useBuilderLayers()
 
   return (
     <div className={cn(styles.root, className)}>
-      <TreeViewer rootLayerKey={documentManager.root} />
+      <SortableTree
+        sortableProps={{ animateLayoutChanges: () => false }}
+        dropAnimation={null}
+        indicator={false}
+        items={items}
+        onItemsChanged={(items, reason) => {
+          handleChangeItems(items, reason)
+        }}
+        TreeItemComponent={React.forwardRef((props, ref) => (
+          <BuilderLayerSortingCell {...props} ref={ref}>
+            <BuilderLayerCell
+              layerKey={props.item.id}
+              collapsed={props.collapsed}
+              isLast={props.isLast}
+              onCollapse={props.onCollapse}
+            />
+          </BuilderLayerSortingCell>
+        ))}
+      />
     </div>
   )
 }

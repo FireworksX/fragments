@@ -24,6 +24,7 @@ const Controls: FC<ControlsProps> = ({ className, documentManager, ...asideProps
   const { selectionGraph } = useBuilderSelection()
 
   const hasLayout = selectionGraph?._type === builderNodes.Frame || selectionGraph?._type === builderNodes.Screen
+  const hasStyles = selectionGraph?._type === builderNodes.Frame || selectionGraph?._type === builderNodes.Screen
 
   return (
     <AsideBar className={cn(className, styles.root)} {...asideProps}>
@@ -33,7 +34,7 @@ const Controls: FC<ControlsProps> = ({ className, documentManager, ...asideProps
       <BuilderSize />
       {hasLayout && <BuilderLayout />}
       {/*<BuilderEffects />*/}
-      <BuilderStyles />
+      {hasStyles && <BuilderStyles />}
       <BuilderText />
       {/*<BuilderCssOverride />*/}
     </AsideBar>
