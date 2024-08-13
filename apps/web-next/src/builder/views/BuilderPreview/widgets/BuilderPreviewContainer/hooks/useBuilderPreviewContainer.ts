@@ -12,7 +12,7 @@ export const useBuilderPreviewContainer = () => {
   const bindWidth = useDrag(
     ({ movement: [mx], last, args: [handlerDirection] }) => {
       const calcWidth = handlerDirection === 'left' ? saveSize.current[0] + mx * -1 : saveSize.current[0] + mx
-      width.start(calcWidth)
+      previewManager.setWidth(calcWidth)
       if (last) {
         saveSize.current[0] = calcWidth
       }
@@ -26,7 +26,8 @@ export const useBuilderPreviewContainer = () => {
   const bindHeight = useDrag(
     ({ movement: [, my], last }) => {
       const calcHeight = saveSize.current[1] + my
-      height.start(calcHeight)
+      previewManager.setHeight(calcHeight)
+
       if (last) {
         saveSize.current[1] = calcHeight
       }

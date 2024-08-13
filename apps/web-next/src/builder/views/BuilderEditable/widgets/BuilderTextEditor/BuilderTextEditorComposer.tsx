@@ -1,5 +1,7 @@
-import { LexicalComposer } from '@lexical/react/LexicalComposer'
+import { InitialConfigType, LexicalComposer } from '@lexical/react/LexicalComposer'
 import { FC, PropsWithChildren } from 'react'
+import { ExtendedTextNode } from '@/builder/views/BuilderEditable/widgets/BuilderTextEditor/nodes/ExtendedTextNode'
+import { ParagraphNode, TextNode } from 'lexical'
 
 interface BuilderTextEditorComposerProps extends PropsWithChildren {}
 
@@ -15,9 +17,10 @@ function onError(error) {
   console.error(error)
 }
 
-const initialConfig = {
+const initialConfig: InitialConfigType = {
   namespace: 'BuilderTextEditor',
   theme,
+  nodes: [ExtendedTextNode, { replace: TextNode, with: (node: TextNode) => new ExtendedTextNode(node.__text) }],
   onError
 }
 

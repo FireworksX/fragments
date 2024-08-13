@@ -5,8 +5,8 @@ import TextAlignCenter from '@/app/svg/text-align-center.svg'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { BuilderContext } from '@/builder/BuilderContext'
 import { useGraph } from '@graph-state/react'
-import { $isAtNodeEnd } from '@lexical/selection'
-import { $getRoot, $insertNodes, ElementNode, RangeSelection, TextNode } from 'lexical'
+import { $isAtNodeEnd, $selectAll } from '@lexical/selection'
+import { $createRangeSelection, $getRoot, $insertNodes, ElementNode, RangeSelection, TextNode } from 'lexical'
 import { useLayerInvoker } from '@/builder/hooks/useLayerInvoker'
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 import {
@@ -130,19 +130,21 @@ export const useBuilderText = () => {
   }, [])
 
   useEffect(() => {
-    return mergeRegister(
-      editor.registerUpdateListener(({ editorState }) => {
-        editorState.read(() => {
-          updateSelection()
-          const htmlString = $generateHtmlFromNodes(editor)
+    if (isTextEditing) {
+      return mergeRegister(
+        editor.registerUpdateListener(({ editorState }) => {
+          editorState.read(() => {
+            updateSelection()
+            const htmlString = $generateHtmlFromNodes(editor)
 
-          if (htmlString.length > 0) {
-            contentInvoker.onChange(htmlString)
-          }
+            if (htmlString.length > 0) {
+              contentInvoker.onChange(htmlString)
+            }
+          })
         })
-      })
-    )
-  }, [editor, updateSelection, contentInvoker])
+      )
+    }
+  }, [editor, updateSelection, contentInvoker, isTextEditing])
 
   useEffect(() => {
     if (isTextEditing) {
@@ -165,9 +167,6 @@ export const useBuilderText = () => {
         value: { r: new SpringValue(0), g: new SpringValue(0), b: new SpringValue(0), a: new SpringValue(1) },
         onChange: newColor => {
           onChangeValue('color', getColor(newColor).get())
-          // graphState.mutate(styleKey, {
-          //   color: newColor
-          // })
         }
       },
       initial: true

@@ -32,8 +32,8 @@ export const useBuilderTextEditor = () => {
         const { top, left, width, height } = getNodePosition({ node: target, stopNode: rootNode })
 
         editorSpringApi.set({
-          width,
-          height,
+          width: width + 2,
+          height: height + 2,
           y: top,
           x: left
         })

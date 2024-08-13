@@ -16,11 +16,11 @@ export const createPreviewManager = () =>
       state => {
         state.setWidth = (width: number) => {
           const width$ = state.resolve(state.key)?.width
-          width$.start(width)
+          width$.set(width)
         }
         state.setHeight = (height: number) => {
           const height$ = state.resolve(state.key)?.height
-          height$.start(height)
+          height$.set(height)
         }
       }
     ]

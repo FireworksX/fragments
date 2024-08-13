@@ -7,7 +7,7 @@ import { findRefNode } from '@/builder/utils/findRefNode'
 import { useGraph } from '@graph-state/react'
 
 export const useRendererHandlers = () => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager, builderManager } = useContext(BuilderContext)
   const { updateParams } = useBuilderManager()
 
   const handleClick = (e, options: OnClickSelectorOptions) => {
@@ -17,19 +17,16 @@ export const useRendererHandlers = () => {
     const clickedLayerValue = documentManager.resolve(options.layerKey)
 
     if (clickedLayerValue?._type === builderNodes.Text && e.detail === 2) {
-      // $layers.setKey('openLayerField', options.layerKey)
-      // setFocusNode(options.layerKey)
-      // graphState.setView('text')
       updateParams({
-        textEditing: true,
         focus: options.layerKey
       })
+      builderManager.toggleTextEditor(true)
 
       return
     }
 
+    builderManager.toggleTextEditor(false)
     updateParams({
-      textEditing: false,
       focus: options.layerKey
     })
   }
