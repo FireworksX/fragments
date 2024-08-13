@@ -12,7 +12,6 @@ dist-ssr
 *.local
 old
 
-apps/backend/**/*
 
 # Editor directories and files
 .vscode/*
