@@ -6,7 +6,7 @@ import Button from '@/app/components/Button'
 import InputText from '@/app/components/InputText/InputText'
 import Plus from '@/app/svg/plus.svg'
 import ColorCell from '@/builder/components/ColorCell/ColorCell'
-import { useBuilderAssetsColors } from '@/builder/Assets/hooks/useBuilderAssetsColors'
+import { useBuilderAssetsColors } from '@/builder/views/BuilderEditable/widgets/BuilderAssets/hooks/useBuilderAssetsColors'
 import { BuilderContext } from '@/builder/BuilderContext'
 import { omit } from '@fragments/utils'
 

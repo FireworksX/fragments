@@ -17,7 +17,7 @@ export default function () {
       <FragmentsNav onCreate={handleCreateFragment} />
       <ul className={styles.body}>
         {list.map(fragment => (
-          <Link type='fragmentDetail' projectSlug={projectSlug} fragmentSlug={fragment.id}>
+          <Link type='fragmentPreview' projectSlug={projectSlug} fragmentSlug={fragment.id}>
             <FragmentCard name={fragment.name} />
           </Link>
         ))}

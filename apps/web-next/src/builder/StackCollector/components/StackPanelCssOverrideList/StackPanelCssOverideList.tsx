@@ -11,7 +11,7 @@ import { POPOUT_TYPE, popoutsStore } from '@/app/store/popouts.store'
 import Plus from '@/app/svg/plus.svg'
 import { useLayerInvoker } from '@/builder/hooks/useLayerInvoker'
 import { useBuilderSelection } from '@/builder/hooks/useBuilderSelection'
-import { useBuilderAssetsCss } from '@/builder/Assets/hooks/useBuilderAssetsCss'
+import { useBuilderAssetsCss } from '@/builder/views/BuilderEditable/widgets/BuilderAssets/hooks/useBuilderAssetsCss'
 import CssCell from '@/builder/components/CssCell/CssCell'
 import { BuilderContext } from '@/builder/BuilderContext'
 

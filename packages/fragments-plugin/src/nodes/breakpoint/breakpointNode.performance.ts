@@ -47,20 +47,18 @@ export const breakpointNode: ResolverNode = (state, initialEntity?: ScreenNode):
     paddingProps,
     childrenProps,
     cloneProps
-    // basePropsResolver,
-    // childrenPropsResolver,
-    // geometryPropsResolver,
-    // layerPropsResolver,
-    // layoutPropsResolver,
-    // paddingPropsResolver,
-    // scenePropsResolver,
-    // clonePropsResolver
-  )(initialNode, state)
+  )(
+    {
+      ...initialNode,
+      isPrimary: initialEntity?.isPrimary ?? false,
+      width: initialEntity?.width ?? 320,
+      layoutSizingVertical: initialEntity?.layoutSizingVertical ?? builderSizing.Hug,
+      layoutSizingHorizontal: initialEntity?.layoutSizingHorizontal ?? builderSizing.Fill
+    },
+    state
+  )
 
   return {
-    ...resolvedNode,
-    isPrimary: initialEntity?.isPrimary ?? false,
-    width: initialEntity?.width ?? 320,
-    layoutSizingVertical: builderSizing.Hug
+    ...resolvedNode
   }
 }

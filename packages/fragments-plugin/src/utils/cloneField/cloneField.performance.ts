@@ -1,10 +1,16 @@
-import { Entity, GraphState, isLinkKey } from '@graph-state/core'
+import { Entity, GraphState, isGraphOrKey, isLinkKey } from '@graph-state/core'
 import { SpringValue } from '@react-spring/web'
-import { isPrimitive, isValue } from '@fragments/utils'
+import { isObject, isPrimitive, isValue } from '@fragments/utils'
 
 const isLink = input => typeof input === 'string' && (input.startsWith('http') || input.startsWith('/'))
 
-export const clonedField = (graphState: GraphState, entity: Entity, key: string, fallback?: unknown = null) => {
+export const clonedField = (
+  graphState: GraphState,
+  entity: Entity,
+  key: string,
+  fallback?: unknown = null,
+  isSpring = true
+) => {
   if (graphState.isOverrideFromField(entity, key)) {
     return null
   }
@@ -13,14 +19,25 @@ export const clonedField = (graphState: GraphState, entity: Entity, key: string,
 
   if (isValue(value)) {
     if ((isPrimitive(value) && !isLinkKey(value)) || isLink(value)) {
-      return new SpringValue(value)
+      return isSpring ? new SpringValue(value) : value
     }
+
+    if (!isPrimitive(value)) {
+      if (isObject(value) && isGraphOrKey(value)) {
+        return Object.keys(value).reduce((acc, key) => {
+          acc[key] = clonedField(graphState, value, key, null, isSpring)
+
+          return acc
+        }, {})
+      }
+    }
+
     return value
   }
 
   if (isValue(fallback)) {
     if (isPrimitive(fallback)) {
-      return new SpringValue(fallback)
+      return isSpring ? new SpringValue(fallback) : fallback
     }
     return fallback
   }

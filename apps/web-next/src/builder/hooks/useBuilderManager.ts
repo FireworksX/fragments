@@ -1,12 +1,11 @@
-import { usePathname, useSearchParams, useRouter } from 'next/navigation'
+import { usePathname, useSearchParams, useRouter, useParams } from 'next/navigation'
 import { createConstants } from '@fragments/utils'
 import { LinkKey } from '@graph-state/core'
 
-export const builderModes = createConstants('preview', 'edit')
-export const builderOptions = createConstants('mode', 'focus', 'textEditing')
+export const builderViews = createConstants('preview', 'edit')
+export const builderOptions = createConstants('focus', 'textEditing')
 
 interface BuilderManagerParameters {
-  mode?: keyof typeof builderModes
   focus?: LinkKey
   textEditing?: boolean
 }
@@ -15,9 +14,10 @@ export const useBuilderManager = () => {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const urlMode = searchParams.get(builderOptions.mode)
+  const { fragment } = useParams()
+  const [fragmentSlug, view] = fragment || []
   const textEditing = searchParams.get(builderOptions.textEditing)
-  const resolvedMode = Object.keys(builderModes).some(mode => mode === urlMode) ? urlMode : builderModes.preview
+  const resolvedMode = Object.keys(builderViews).some(mode => mode === view) ? view : builderViews.preview
 
   const updateUrl = (searchParams: URLSearchParams) => {
     const search = searchParams.toString()
@@ -30,14 +30,6 @@ export const useBuilderManager = () => {
     const current = new URLSearchParams(Array.from(searchParams.entries()))
 
     Object.entries(params).forEach(([key, value]) => {
-      if (key === 'mode') {
-        if (value === builderModes.preview) {
-          current.delete(builderOptions.mode)
-        } else {
-          current.set(builderOptions.mode, value)
-        }
-      }
-
       if (key === 'textEditing') {
         if (!value) {
           current.delete(builderOptions.textEditing)
@@ -60,7 +52,7 @@ export const useBuilderManager = () => {
 
   return {
     mode: resolvedMode,
-    isEdit: resolvedMode === builderModes.edit,
+    isEdit: resolvedMode === builderViews.edit,
     focus: searchParams.get(builderOptions.focus),
     isTextEditing: textEditing === '1',
     updateParams

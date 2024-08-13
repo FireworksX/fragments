@@ -35,17 +35,5 @@ export const frameNode: ResolverNode = (state, initialEntity?: FrameNode): Frame
     paddingProps,
     childrenProps,
     cloneProps
-    // basePropsResolver,
-    // childrenPropsResolver,
-    // geometryPropsResolver,
-    // layerPropsResolver,
-    // layoutPropsResolver,
-    // paddingPropsResolver,
-    // scenePropsResolver,
-    // cssPropsResolver,
-    // effectsPropsResolver,
-    // cornerPropsResolver,
-    // hyperlinkPropsResolver,
-    // clonePropsResolver
   )(initialEntity, state)
 }

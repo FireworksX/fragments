@@ -7,7 +7,8 @@ export const linkConfig = {
   projectsList: '/project',
   createProject: '/project/create',
   fragments: ({ projectSlug }) => `/project/${projectSlug}/fragments`,
-  fragmentDetail: ({ projectSlug, fragmentSlug }) => `/project/${projectSlug}/fragments/${fragmentSlug}`
+  fragmentPreview: ({ projectSlug, fragmentSlug }) => `/project/${projectSlug}/fragments/${fragmentSlug}`,
+  fragmentEdit: ({ projectSlug, fragmentSlug }) => `/project/${projectSlug}/fragments/${fragmentSlug}/edit`
 }
 
 export type LinkType = keyof typeof linkConfig

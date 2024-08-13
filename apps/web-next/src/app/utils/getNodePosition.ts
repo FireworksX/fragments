@@ -20,17 +20,24 @@ export const getNodePosition = ({ node, stopNode }: Options) => {
   let top = node.offsetTop
   let left = node.offsetLeft
 
-  iterateParentOfNode(node, parent => {
-    if (stopNode) {
-      if (stopNode.contains(parent)) {
-        top += parent.offsetTop
-        left += parent.offsetLeft
-      }
-    } else {
-      top += parent.offsetTop
-      left += parent.offsetLeft
-    }
-  })
+  if (stopNode) {
+    top += stopNode.offsetTop
+    left += stopNode.offsetLeft
+  }
+
+  // iterateParentOfNode(node, parent => {
+  //   console.log(left, parent)
+  //
+  //   if (stopNode) {
+  //     if (stopNode.contains(parent)) {
+  //       top += parent.offsetTop
+  //       left += parent.offsetLeft
+  //     }
+  //   } else {
+  //     top += parent.offsetTop
+  //     left += parent.offsetLeft
+  //   }
+  // })
 
   return {
     width,

@@ -1,5 +1,6 @@
 import { getKey, Resolver } from 'src/helpers'
 import { EntityKey } from 'src/types/props'
+import { builderNodes } from 'src'
 
 export const baseProps: Resolver = (state, entity): BaseProps => {
   const key = state.keyOfEntity(entity) ?? ''
@@ -9,19 +10,20 @@ export const baseProps: Resolver = (state, entity): BaseProps => {
   Если удаляемый элемент является ребёнком основного Экрана, то
   он удаляется, иначе скрывается
    */
-  // const remove = () => {
-  //   const node = state.resolve(key)
-  //   const nodeTree = getParents(key)
-  //
-  //   if (nodeTree) {
-  //     const treeScreen = nodeTree.find(({ _type }) => _type === builderNodes.Screen)
-  //     if (treeScreen?.isPrimary || !treeScreen) {
-  //       state.invalidate(entityKey)
-  //     } else {
-  //       node.toggleVisible(false)
-  //     }
-  //   }
-  // }
+  const remove = () => {
+    const node = state.resolve(key)
+    const nodeParents = node.getAllParents()
+
+    if (nodeParents) {
+      const treeScreen = nodeParents.find(({ _type }) => _type === builderNodes.Breakpoint)
+
+      if (treeScreen?.isPrimary || !treeScreen) {
+        state.invalidate(key)
+      } else {
+        node.toggleVisible(false)
+      }
+    }
+  }
 
   // const getValue = (key: string) => {
   //   const entityValue = state.resolve(key)
@@ -42,7 +44,6 @@ export const baseProps: Resolver = (state, entity): BaseProps => {
     const parentNode = node.getParent()
 
     if (parentNode) {
-      console.log(parentNode, cloneNode)
       parentNode.appendChild(cloneNode)
     }
   }
@@ -110,7 +111,7 @@ export const baseProps: Resolver = (state, entity): BaseProps => {
     },
     toStringState: (): string => JSON.stringify(state.resolve(entity)),
     rename: (name: string) => state.mutate(key, { name }),
-    remove: () => state.invalidate(key),
+    remove,
     // getValue,
     duplicate
     // wrapFrameNode,

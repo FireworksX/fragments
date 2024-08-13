@@ -27,7 +27,7 @@ export const solidFillProps: Resolver = (state, graph) => {
       setSolidFillLink(colorOrLink)
     } else {
       const solidFill = state.resolve(graph).solidFill
-      const linkGraph = state.resolve(colorOrLink)
+      const linkGraph = state.safeResolve(colorOrLink)
 
       if (solidFill && linkGraph) {
         Object.entries(colorOrLink).forEach(([key, value]) => {

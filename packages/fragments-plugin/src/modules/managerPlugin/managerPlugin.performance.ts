@@ -63,6 +63,7 @@ export const managerPlugin: Plugin = state => {
 
   state.createBreakpoint = (options: { name: string; width: number }) => {
     const primaryBreakpoint = state.findPrimaryBreakpoint()
+
     if (primaryBreakpoint) {
       const nextScreenLink = primaryBreakpoint.clone()
       const nextBreakpoint = state.mutate(nextScreenLink, {
@@ -93,6 +94,35 @@ export const managerPlugin: Plugin = state => {
   state.createText = () => {
     const entity = createText(state)
     return state.mutate(entity)
+  }
+
+  state.createWrapper = (targetLink: LinkKey) => {
+    const node = state.resolve(targetLink)
+    const parent = node.getParent()
+
+    if (parent) {
+      const targetIndex = parent.findChildIndex(child => child._id === node._id)
+      const wrapperFrameLink = state.createFrame()
+      state.moveNode(targetLink, wrapperFrameLink)
+
+      parent.insertChild(targetIndex, wrapperFrameLink)
+    }
+  }
+
+  state.removeWrapper = (targetLink: LinkKey) => {
+    const node = state.resolve(targetLink)
+    const parent = node.getParent()
+
+    if (node._type === builderNodes.Frame && node.children.length > 0) {
+      const targetIndex = parent.findChildIndex(child => child._id === node._id)
+      const children = node.children
+
+      children.forEach(childLink => {
+        state.moveNode(childLink, parent, targetIndex)
+      })
+
+      node.remove()
+    }
   }
 
   const nodeToJSON = (node: unknown) => {

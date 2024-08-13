@@ -6,16 +6,21 @@ import { useParams } from 'next/navigation'
 import { Link } from '@/app/widgets/Link/Link'
 
 export default function ({ children }) {
-  const { fragmentSlug, projectSlug } = useParams()
-  const isFragmentView = !!fragmentSlug
+  const { fragment, projectSlug } = useParams()
+  const isFragmentView = !!fragment
+  const [fragmentSlug, fragmentView] = fragment || []
 
   return (
     <main>
       <HeaderSubNav>
         {isFragmentView ? (
           <>
-            <HeaderSubNavCell isActive>Fragment</HeaderSubNavCell>
-            <HeaderSubNavCell>Preview</HeaderSubNavCell>
+            <Link type='fragmentPreview' projectSlug={projectSlug} fragmentSlug={fragmentSlug}>
+              <HeaderSubNavCell isActive={!fragmentView}>Preview</HeaderSubNavCell>
+            </Link>
+            <Link type='fragmentEdit' projectSlug={projectSlug} fragmentSlug={fragmentSlug}>
+              <HeaderSubNavCell isActive={fragmentView === 'edit'}>Edit</HeaderSubNavCell>
+            </Link>
             <HeaderSubNavCell>Integrations</HeaderSubNavCell>
             <HeaderSubNavCell>Analytics</HeaderSubNavCell>
             <HeaderSubNavCell>Settings</HeaderSubNavCell>

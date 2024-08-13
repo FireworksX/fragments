@@ -1,0 +1,1166 @@
+'use client'
+import React, { useEffect, useMemo } from 'react'
+import styles from './styles.module.css'
+import { PageHeading } from '@/app/components/PageHeading/PageHeading'
+import BuilderCanvas from '@/builder/BuilderCanvas/BuilderCanvas'
+import { createCanvasManager } from '@/builder/managers/canvasManager'
+import { useGraph } from '@graph-state/react'
+import { animated, SpringValue, useSpring, useSpringValue } from '@react-spring/web'
+import FloatingBar from '@/builder/components/FloatingBar'
+import DropdownGroup from '@/app/components/Dropdown/components/DropdownGroup/DropdownGroup'
+import DropdownOption from '@/app/components/Dropdown/components/DropdownOption/DropdownOption'
+import SelectMimicry from '@/app/components/SelectMimicry/SelectMimicry'
+import Dropdown from '@/app/components/Dropdown/Dropdown'
+import Button from '@/app/components/Button'
+import DisplayBreakpoints from '@/builder/views/BuilderEditable/widgets/DisplayBreakpoints/DisplayBreakpoints'
+import { FragmentsRender } from '@fragments/render-react'
+import { createState } from '@graph-state/core'
+import { managerPlugin, skips } from '@fragments/fragments-plugin/performance'
+import { useSearchParams } from 'next/navigation'
+import Link from 'next/link'
+import Sidebar from '@/builder/views/BuilderEditable/widgets/BuilderSidebar/BuilderSidebar'
+import BuilderControls from '@/builder/BuilderControls/BuilderControls'
+import GrabCursor from '@/app/svg/grab-cursor.svg'
+import DefaultCursor from '@/app/svg/default-cursor.svg'
+import Lightning from '@/app/svg/lightning.svg'
+import { builderModes, useBuilderManager } from '@/builder/hooks/useBuilderManager'
+import dynamic from 'next/dynamic'
+import { useRendererHandlers } from '@/builder/hooks/useRendererHandlers'
+import Tools from '@/builder/Tools/Tools'
+import LayerHighlight from '@/builder/LayerHighlight/LayerHighlight'
+import { BuilderContext } from '@/builder/BuilderContext'
+import { isInstanceOf } from '@graph-state/checkers'
+import loggerPlugin from '@graph-state/plugin-logger'
+import { Layer } from '@/builder/renderer/Layer/Layer'
+import isBrowser from '@/app/utils/isBrowser'
+import { useBuilderActions } from '@/builder/hooks/useBuilderActions'
+import { BuilderFloatBar } from '@/builder/BuilderFloatBar/BuilderFloatBar'
+import { richTextPlugin } from '@/app/store/builder/builderRichTextPlugin'
+import BuilderRichText from '@/builder/BuilderRichText/BuilderRichText'
+import { builderNodes } from '@fragments/fragments-plugin'
+import { BuilderTextEditorComposer } from '@/builder/BuilderTextEditor/BuilderTextEditorComposer'
+import { BuilderTextEditor } from '@/builder/BuilderTextEditor/BuilderTextEditor'
+import { useBuilderSelection } from '@/builder/hooks/useBuilderSelection'
+import { BuilderEditable } from '@/builder/views/BuilderEditable/BuilderEditable'
+import { BuilderPreview } from '@/builder/views/BuilderPreview/BuilderPreview'
+import { createPreviewManager } from '@/builder/managers/previewManager'
+import { useHotkeysContext } from 'react-hotkeys-hook'
+import { hotKeysScope } from '@/app/hooks/hotkeys/HotKeysProvider'
+import { useBuilderHotKeys } from '@/app/hooks/hotkeys/useBuilderHotKeys'
+
+const canvasManager = createCanvasManager()
+const previewManager = createPreviewManager()
+
+const template = {
+  _type: 'Document',
+  _id: 'gdfhfdghsf',
+  children: [
+    {
+      _type: 'Breakpoint',
+      _id: 'mobile',
+      isPrimary: true,
+      width: 320,
+      children: [
+        {
+          _type: 'Frame',
+          _id: '1',
+          parentKey: '$Breakpoint:mobile',
+          children: [
+            {
+              _type: 'Text',
+              _id: '64bc371fa3b4c',
+              x: 0,
+              y: 0,
+              width: 100,
+              height: 100,
+              layoutSizingHorizontal: 'Fill',
+              layoutSizingVertical: 'Hug',
+              rotation: 0,
+              opacity: 1,
+              visible: true,
+              parentKey: '$Frame:1',
+              content:
+                '<p dir="ltr"><span style="font-size: 16px; white-space: pre-wrap;">Смотри рейтинг букмекеров в России</span></p>',
+              overrides: [
+                {
+                  '0': '$',
+                  '1': 'T',
+                  '2': 'e',
+                  '3': 'x',
+                  '4': 't',
+                  '5': ':',
+                  '6': '4',
+                  '7': '0',
+                  '8': '6',
+                  '9': 'b',
+                  '10': '9',
+                  '11': 'd',
+                  '12': 'c',
+                  '13': '3',
+                  '14': '3',
+                  '15': '6',
+                  '16': '2',
+                  '17': '2',
+                  '18': 'f'
+                }
+              ]
+            },
+            {
+              _type: 'Frame',
+              _id: '2',
+              parentKey: '$Frame:1',
+              children: [
+                {
+                  _type: 'Text',
+                  _id: 'e4bcfa71c6b39',
+                  x: 0,
+                  y: 0,
+                  width: 100,
+                  height: 100,
+                  layoutSizingHorizontal: 'Hug',
+                  layoutSizingVertical: 'Hug',
+                  rotation: 0,
+                  opacity: 1,
+                  visible: true,
+                  parentKey: '$Frame:2',
+                  content:
+                    '<p dir="ltr"><b><strong style="text-transform: uppercase; white-space: pre-wrap;">Забрать</strong></b></p>',
+                  overrides: [
+                    {
+                      '0': '$',
+                      '1': 'T',
+                      '2': 'e',
+                      '3': 'x',
+                      '4': 't',
+                      '5': ':',
+                      '6': '1',
+                      '7': 'b',
+                      '8': 'c',
+                      '9': '2',
+                      '10': '9',
+                      '11': 'd',
+                      '12': '5',
+                      '13': '1',
+                      '14': '5',
+                      '15': 'c',
+                      '16': '6',
+                      '17': '6',
+                      '18': '1'
+                    }
+                  ]
+                }
+              ],
+              padding: -1,
+              paddingLeft: 20,
+              paddingRight: 20,
+              paddingTop: 10,
+              paddingBottom: 10,
+              layerMode: 'flex',
+              layerAlign: 'start',
+              layerDirection: 'horizontal',
+              layerDistribute: 'start',
+              layerWrap: false,
+              layerGap: 0,
+              x: 0,
+              y: 0,
+              width: 100,
+              height: 100,
+              layoutSizingHorizontal: 'Hug',
+              layoutSizingVertical: 'Hug',
+              rotation: 0,
+              solidFill: {
+                r: 93,
+                g: 238,
+                b: 226,
+                a: 1,
+                _type: 'Frame',
+                _id: '2.solidFill'
+              },
+              borderType: 'None',
+              borderWidth: 1,
+              borderColor: {
+                r: 13,
+                g: 196,
+                b: 45,
+                a: 1,
+                _type: 'Frame',
+                _id: '2.borderColor'
+              },
+              cornerRadius: 24,
+              topLeftRadius: 0,
+              topRightRadius: 0,
+              bottomLeftRadius: 0,
+              bottomRightRadius: 0,
+              opacity: 1,
+              visible: true,
+              name: 'Button',
+              fillType: 'Solid',
+              overrides: [
+                {
+                  '0': '$',
+                  '1': 'F',
+                  '2': 'r',
+                  '3': 'a',
+                  '4': 'm',
+                  '5': 'e',
+                  '6': ':',
+                  '7': '1',
+                  '8': '6',
+                  '9': 'b',
+                  '10': 'b',
+                  '11': 'c',
+                  '12': 'c',
+                  '13': '9',
+                  '14': 'a',
+                  '15': '2',
+                  '16': '5',
+                  '17': 'c',
+                  '18': '3',
+                  '19': 'b'
+                }
+              ]
+            }
+          ],
+          padding: -1,
+          paddingLeft: 20,
+          paddingRight: 20,
+          paddingTop: 0,
+          paddingBottom: 0,
+          layerMode: 'flex',
+          layerAlign: 'center',
+          layerDirection: 'horizontal',
+          layerDistribute: 'space-between',
+          layerWrap: false,
+          layerGap: 10,
+          x: 0,
+          y: 0,
+          width: 100,
+          height: 80,
+          layoutSizingHorizontal: 'Relative',
+          layoutSizingVertical: 'Fixed',
+          rotation: 0,
+          solidFill: {
+            r: 86,
+            g: 196,
+            b: 187,
+            a: 1,
+            _type: 'Frame',
+            _id: '1.solidFill'
+          },
+          borderType: 'None',
+          borderWidth: 1,
+          borderColor: {
+            r: 13,
+            g: 196,
+            b: 45,
+            a: 1,
+            _type: 'Frame',
+            _id: '1.borderColor'
+          },
+          cornerRadius: 0,
+          topLeftRadius: 0,
+          topRightRadius: 0,
+          bottomLeftRadius: 0,
+          bottomRightRadius: 0,
+          opacity: 1,
+          visible: true,
+          name: 'Content',
+          overrides: [
+            {
+              '0': '$',
+              '1': 'F',
+              '2': 'r',
+              '3': 'a',
+              '4': 'm',
+              '5': 'e',
+              '6': ':',
+              '7': '5',
+              '8': '9',
+              '9': '0',
+              '10': 'd',
+              '11': '6',
+              '12': '0',
+              '13': 'a',
+              '14': '8',
+              '15': 'e',
+              '16': '8',
+              '17': '6',
+              '18': 'f',
+              '19': 'b'
+            }
+          ]
+        }
+      ],
+      layoutSizingVertical: 'Hug',
+      layoutSizingHorizontal: 'Fill',
+      padding: 0,
+      paddingLeft: 0,
+      paddingRight: 0,
+      paddingTop: 0,
+      paddingBottom: 0,
+      layerMode: 'none',
+      layerAlign: 'center',
+      layerDirection: 'horizontal',
+      layerDistribute: 'start',
+      layerWrap: false,
+      layerGap: 0,
+      x: 0,
+      y: 0,
+      height: 100,
+      rotation: 0,
+      solidFill: {
+        r: 232,
+        g: 232,
+        b: 232,
+        a: 1,
+        _type: 'Breakpoint',
+        _id: 'mobile.solidFill'
+      },
+      fillType: 'Solid',
+      borderType: 'None',
+      borderWidth: 1,
+      borderColor: {
+        r: 13,
+        g: 196,
+        b: 45,
+        a: 1,
+        _type: 'Breakpoint',
+        _id: 'mobile.borderColor'
+      },
+      cornerRadius: 10,
+      topLeftRadius: 0,
+      topRightRadius: 0,
+      bottomLeftRadius: 0,
+      bottomRightRadius: 0,
+      opacity: 1,
+      visible: true,
+      parentKey: '$Document:gdfhfdghsf',
+      overrides: [
+        {
+          '0': '$',
+          '1': 'B',
+          '2': 'r',
+          '3': 'e',
+          '4': 'a',
+          '5': 'k',
+          '6': 'p',
+          '7': 'o',
+          '8': 'i',
+          '9': 'n',
+          '10': 't',
+          '11': ':',
+          '12': '4',
+          '13': '3',
+          '14': 'e',
+          '15': '2',
+          '16': '4',
+          '17': 'e',
+          '18': '1',
+          '19': '8',
+          '20': 'a',
+          '21': '9',
+          '22': '8',
+          '23': 'b',
+          '24': 'c'
+        }
+      ]
+    },
+    {
+      overrideFrom: {
+        _type: 'Breakpoint',
+        _id: 'mobile',
+        isPrimary: true,
+        width: 320,
+        children: [
+          {
+            _type: 'Frame',
+            _id: '1',
+            parentKey: '$Breakpoint:mobile',
+            children: [
+              {
+                _type: 'Text',
+                _id: '64bc371fa3b4c',
+                x: 0,
+                y: 0,
+                width: 100,
+                height: 100,
+                layoutSizingHorizontal: 'Fill',
+                layoutSizingVertical: 'Hug',
+                rotation: 0,
+                opacity: 1,
+                visible: true,
+                parentKey: '$Frame:1',
+                content:
+                  '<p dir="ltr"><span style="font-size: 16px; white-space: pre-wrap;">Смотри рейтинг букмекеров в России</span></p>',
+                overrides: [
+                  {
+                    '0': '$',
+                    '1': 'T',
+                    '2': 'e',
+                    '3': 'x',
+                    '4': 't',
+                    '5': ':',
+                    '6': '4',
+                    '7': '0',
+                    '8': '6',
+                    '9': 'b',
+                    '10': '9',
+                    '11': 'd',
+                    '12': 'c',
+                    '13': '3',
+                    '14': '3',
+                    '15': '6',
+                    '16': '2',
+                    '17': '2',
+                    '18': 'f'
+                  }
+                ]
+              },
+              {
+                _type: 'Frame',
+                _id: '2',
+                parentKey: '$Frame:1',
+                children: [
+                  {
+                    _type: 'Text',
+                    _id: 'e4bcfa71c6b39',
+                    x: 0,
+                    y: 0,
+                    width: 100,
+                    height: 100,
+                    layoutSizingHorizontal: 'Hug',
+                    layoutSizingVertical: 'Hug',
+                    rotation: 0,
+                    opacity: 1,
+                    visible: true,
+                    parentKey: '$Frame:2',
+                    content:
+                      '<p dir="ltr"><b><strong style="text-transform: uppercase; white-space: pre-wrap;">Забрать</strong></b></p>',
+                    overrides: [
+                      {
+                        '0': '$',
+                        '1': 'T',
+                        '2': 'e',
+                        '3': 'x',
+                        '4': 't',
+                        '5': ':',
+                        '6': '1',
+                        '7': 'b',
+                        '8': 'c',
+                        '9': '2',
+                        '10': '9',
+                        '11': 'd',
+                        '12': '5',
+                        '13': '1',
+                        '14': '5',
+                        '15': 'c',
+                        '16': '6',
+                        '17': '6',
+                        '18': '1'
+                      }
+                    ]
+                  }
+                ],
+                padding: -1,
+                paddingLeft: 20,
+                paddingRight: 20,
+                paddingTop: 10,
+                paddingBottom: 10,
+                layerMode: 'flex',
+                layerAlign: 'start',
+                layerDirection: 'horizontal',
+                layerDistribute: 'start',
+                layerWrap: false,
+                layerGap: 0,
+                x: 0,
+                y: 0,
+                width: 100,
+                height: 100,
+                layoutSizingHorizontal: 'Hug',
+                layoutSizingVertical: 'Hug',
+                rotation: 0,
+                solidFill: {
+                  r: 93,
+                  g: 238,
+                  b: 226,
+                  a: 1,
+                  _type: 'Frame',
+                  _id: '2.solidFill'
+                },
+                borderType: 'None',
+                borderWidth: 1,
+                borderColor: {
+                  r: 13,
+                  g: 196,
+                  b: 45,
+                  a: 1,
+                  _type: 'Frame',
+                  _id: '2.borderColor'
+                },
+                cornerRadius: 24,
+                topLeftRadius: 0,
+                topRightRadius: 0,
+                bottomLeftRadius: 0,
+                bottomRightRadius: 0,
+                opacity: 1,
+                visible: true,
+                name: 'Button',
+                fillType: 'Solid',
+                overrides: [
+                  {
+                    '0': '$',
+                    '1': 'F',
+                    '2': 'r',
+                    '3': 'a',
+                    '4': 'm',
+                    '5': 'e',
+                    '6': ':',
+                    '7': '1',
+                    '8': '6',
+                    '9': 'b',
+                    '10': 'b',
+                    '11': 'c',
+                    '12': 'c',
+                    '13': '9',
+                    '14': 'a',
+                    '15': '2',
+                    '16': '5',
+                    '17': 'c',
+                    '18': '3',
+                    '19': 'b'
+                  }
+                ]
+              }
+            ],
+            padding: -1,
+            paddingLeft: 20,
+            paddingRight: 20,
+            paddingTop: 0,
+            paddingBottom: 0,
+            layerMode: 'flex',
+            layerAlign: 'center',
+            layerDirection: 'horizontal',
+            layerDistribute: 'space-between',
+            layerWrap: false,
+            layerGap: 10,
+            x: 0,
+            y: 0,
+            width: 100,
+            height: 80,
+            layoutSizingHorizontal: 'Relative',
+            layoutSizingVertical: 'Fixed',
+            rotation: 0,
+            solidFill: {
+              r: 86,
+              g: 196,
+              b: 187,
+              a: 1,
+              _type: 'Frame',
+              _id: '1.solidFill'
+            },
+            borderType: 'None',
+            borderWidth: 1,
+            borderColor: {
+              r: 13,
+              g: 196,
+              b: 45,
+              a: 1,
+              _type: 'Frame',
+              _id: '1.borderColor'
+            },
+            cornerRadius: 0,
+            topLeftRadius: 0,
+            topRightRadius: 0,
+            bottomLeftRadius: 0,
+            bottomRightRadius: 0,
+            opacity: 1,
+            visible: true,
+            name: 'Content',
+            overrides: [
+              {
+                '0': '$',
+                '1': 'F',
+                '2': 'r',
+                '3': 'a',
+                '4': 'm',
+                '5': 'e',
+                '6': ':',
+                '7': '5',
+                '8': '9',
+                '9': '0',
+                '10': 'd',
+                '11': '6',
+                '12': '0',
+                '13': 'a',
+                '14': '8',
+                '15': 'e',
+                '16': '8',
+                '17': '6',
+                '18': 'f',
+                '19': 'b'
+              }
+            ]
+          }
+        ],
+        layoutSizingVertical: 'Hug',
+        layoutSizingHorizontal: 'Fill',
+        padding: 0,
+        paddingLeft: 0,
+        paddingRight: 0,
+        paddingTop: 0,
+        paddingBottom: 0,
+        layerMode: 'none',
+        layerAlign: 'center',
+        layerDirection: 'horizontal',
+        layerDistribute: 'start',
+        layerWrap: false,
+        layerGap: 0,
+        x: 0,
+        y: 0,
+        height: 100,
+        rotation: 0,
+        solidFill: {
+          r: 232,
+          g: 232,
+          b: 232,
+          a: 1,
+          _type: 'Breakpoint',
+          _id: 'mobile.solidFill'
+        },
+        fillType: 'Solid',
+        borderType: 'None',
+        borderWidth: 1,
+        borderColor: {
+          r: 13,
+          g: 196,
+          b: 45,
+          a: 1,
+          _type: 'Breakpoint',
+          _id: 'mobile.borderColor'
+        },
+        cornerRadius: 10,
+        topLeftRadius: 0,
+        topRightRadius: 0,
+        bottomLeftRadius: 0,
+        bottomRightRadius: 0,
+        opacity: 1,
+        visible: true,
+        parentKey: '$Document:gdfhfdghsf',
+        overrides: [
+          {
+            '0': '$',
+            '1': 'B',
+            '2': 'r',
+            '3': 'e',
+            '4': 'a',
+            '5': 'k',
+            '6': 'p',
+            '7': 'o',
+            '8': 'i',
+            '9': 'n',
+            '10': 't',
+            '11': ':',
+            '12': '4',
+            '13': '3',
+            '14': 'e',
+            '15': '2',
+            '16': '4',
+            '17': 'e',
+            '18': '1',
+            '19': '8',
+            '20': 'a',
+            '21': '9',
+            '22': '8',
+            '23': 'b',
+            '24': 'c'
+          }
+        ]
+      },
+      _type: 'Breakpoint',
+      _id: '43e24e18a98bc',
+      children: [
+        {
+          overrideFrom: {
+            _type: 'Frame',
+            _id: '1',
+            parentKey: '$Breakpoint:mobile',
+            children: [
+              {
+                _type: 'Text',
+                _id: '64bc371fa3b4c',
+                x: 0,
+                y: 0,
+                width: 100,
+                height: 100,
+                layoutSizingHorizontal: 'Fill',
+                layoutSizingVertical: 'Hug',
+                rotation: 0,
+                opacity: 1,
+                visible: true,
+                parentKey: '$Frame:1',
+                content:
+                  '<p dir="ltr"><span style="font-size: 16px; white-space: pre-wrap;">Смотри рейтинг букмекеров в России</span></p>',
+                overrides: [
+                  {
+                    '0': '$',
+                    '1': 'T',
+                    '2': 'e',
+                    '3': 'x',
+                    '4': 't',
+                    '5': ':',
+                    '6': '4',
+                    '7': '0',
+                    '8': '6',
+                    '9': 'b',
+                    '10': '9',
+                    '11': 'd',
+                    '12': 'c',
+                    '13': '3',
+                    '14': '3',
+                    '15': '6',
+                    '16': '2',
+                    '17': '2',
+                    '18': 'f'
+                  }
+                ]
+              },
+              {
+                _type: 'Frame',
+                _id: '2',
+                parentKey: '$Frame:1',
+                children: [
+                  {
+                    _type: 'Text',
+                    _id: 'e4bcfa71c6b39',
+                    x: 0,
+                    y: 0,
+                    width: 100,
+                    height: 100,
+                    layoutSizingHorizontal: 'Hug',
+                    layoutSizingVertical: 'Hug',
+                    rotation: 0,
+                    opacity: 1,
+                    visible: true,
+                    parentKey: '$Frame:2',
+                    content:
+                      '<p dir="ltr"><b><strong style="text-transform: uppercase; white-space: pre-wrap;">Забрать</strong></b></p>',
+                    overrides: [
+                      {
+                        '0': '$',
+                        '1': 'T',
+                        '2': 'e',
+                        '3': 'x',
+                        '4': 't',
+                        '5': ':',
+                        '6': '1',
+                        '7': 'b',
+                        '8': 'c',
+                        '9': '2',
+                        '10': '9',
+                        '11': 'd',
+                        '12': '5',
+                        '13': '1',
+                        '14': '5',
+                        '15': 'c',
+                        '16': '6',
+                        '17': '6',
+                        '18': '1'
+                      }
+                    ]
+                  }
+                ],
+                padding: -1,
+                paddingLeft: 20,
+                paddingRight: 20,
+                paddingTop: 10,
+                paddingBottom: 10,
+                layerMode: 'flex',
+                layerAlign: 'start',
+                layerDirection: 'horizontal',
+                layerDistribute: 'start',
+                layerWrap: false,
+                layerGap: 0,
+                x: 0,
+                y: 0,
+                width: 100,
+                height: 100,
+                layoutSizingHorizontal: 'Hug',
+                layoutSizingVertical: 'Hug',
+                rotation: 0,
+                solidFill: {
+                  r: 93,
+                  g: 238,
+                  b: 226,
+                  a: 1,
+                  _type: 'Frame',
+                  _id: '2.solidFill'
+                },
+                borderType: 'None',
+                borderWidth: 1,
+                borderColor: {
+                  r: 13,
+                  g: 196,
+                  b: 45,
+                  a: 1,
+                  _type: 'Frame',
+                  _id: '2.borderColor'
+                },
+                cornerRadius: 24,
+                topLeftRadius: 0,
+                topRightRadius: 0,
+                bottomLeftRadius: 0,
+                bottomRightRadius: 0,
+                opacity: 1,
+                visible: true,
+                name: 'Button',
+                fillType: 'Solid',
+                overrides: [
+                  {
+                    '0': '$',
+                    '1': 'F',
+                    '2': 'r',
+                    '3': 'a',
+                    '4': 'm',
+                    '5': 'e',
+                    '6': ':',
+                    '7': '1',
+                    '8': '6',
+                    '9': 'b',
+                    '10': 'b',
+                    '11': 'c',
+                    '12': 'c',
+                    '13': '9',
+                    '14': 'a',
+                    '15': '2',
+                    '16': '5',
+                    '17': 'c',
+                    '18': '3',
+                    '19': 'b'
+                  }
+                ]
+              }
+            ],
+            padding: -1,
+            paddingLeft: 20,
+            paddingRight: 20,
+            paddingTop: 0,
+            paddingBottom: 0,
+            layerMode: 'flex',
+            layerAlign: 'center',
+            layerDirection: 'horizontal',
+            layerDistribute: 'space-between',
+            layerWrap: false,
+            layerGap: 10,
+            x: 0,
+            y: 0,
+            width: 100,
+            height: 80,
+            layoutSizingHorizontal: 'Relative',
+            layoutSizingVertical: 'Fixed',
+            rotation: 0,
+            solidFill: {
+              r: 86,
+              g: 196,
+              b: 187,
+              a: 1,
+              _type: 'Frame',
+              _id: '1.solidFill'
+            },
+            borderType: 'None',
+            borderWidth: 1,
+            borderColor: {
+              r: 13,
+              g: 196,
+              b: 45,
+              a: 1,
+              _type: 'Frame',
+              _id: '1.borderColor'
+            },
+            cornerRadius: 0,
+            topLeftRadius: 0,
+            topRightRadius: 0,
+            bottomLeftRadius: 0,
+            bottomRightRadius: 0,
+            opacity: 1,
+            visible: true,
+            name: 'Content',
+            overrides: [
+              {
+                '0': '$',
+                '1': 'F',
+                '2': 'r',
+                '3': 'a',
+                '4': 'm',
+                '5': 'e',
+                '6': ':',
+                '7': '5',
+                '8': '9',
+                '9': '0',
+                '10': 'd',
+                '11': '6',
+                '12': '0',
+                '13': 'a',
+                '14': '8',
+                '15': 'e',
+                '16': '8',
+                '17': '6',
+                '18': 'f',
+                '19': 'b'
+              }
+            ]
+          },
+          _type: 'Frame',
+          _id: '590d60a8e86fb',
+          children: [
+            {
+              overrideFrom: {
+                _type: 'Text',
+                _id: '64bc371fa3b4c',
+                x: 0,
+                y: 0,
+                width: 100,
+                height: 100,
+                layoutSizingHorizontal: 'Fill',
+                layoutSizingVertical: 'Hug',
+                rotation: 0,
+                opacity: 1,
+                visible: true,
+                parentKey: '$Frame:1',
+                content:
+                  '<p dir="ltr"><span style="font-size: 16px; white-space: pre-wrap;">Смотри рейтинг букмекеров в России</span></p>',
+                overrides: [
+                  {
+                    '0': '$',
+                    '1': 'T',
+                    '2': 'e',
+                    '3': 'x',
+                    '4': 't',
+                    '5': ':',
+                    '6': '4',
+                    '7': '0',
+                    '8': '6',
+                    '9': 'b',
+                    '10': '9',
+                    '11': 'd',
+                    '12': 'c',
+                    '13': '3',
+                    '14': '3',
+                    '15': '6',
+                    '16': '2',
+                    '17': '2',
+                    '18': 'f'
+                  }
+                ]
+              },
+              _type: 'Text',
+              _id: '406b9dc33622f',
+              parentKey: '$Frame:590d60a8e86fb'
+            },
+            {
+              overrideFrom: {
+                _type: 'Frame',
+                _id: '2',
+                parentKey: '$Frame:1',
+                children: [
+                  {
+                    _type: 'Text',
+                    _id: 'e4bcfa71c6b39',
+                    x: 0,
+                    y: 0,
+                    width: 100,
+                    height: 100,
+                    layoutSizingHorizontal: 'Hug',
+                    layoutSizingVertical: 'Hug',
+                    rotation: 0,
+                    opacity: 1,
+                    visible: true,
+                    parentKey: '$Frame:2',
+                    content:
+                      '<p dir="ltr"><b><strong style="text-transform: uppercase; white-space: pre-wrap;">Забрать</strong></b></p>',
+                    overrides: [
+                      {
+                        '0': '$',
+                        '1': 'T',
+                        '2': 'e',
+                        '3': 'x',
+                        '4': 't',
+                        '5': ':',
+                        '6': '1',
+                        '7': 'b',
+                        '8': 'c',
+                        '9': '2',
+                        '10': '9',
+                        '11': 'd',
+                        '12': '5',
+                        '13': '1',
+                        '14': '5',
+                        '15': 'c',
+                        '16': '6',
+                        '17': '6',
+                        '18': '1'
+                      }
+                    ]
+                  }
+                ],
+                padding: -1,
+                paddingLeft: 20,
+                paddingRight: 20,
+                paddingTop: 10,
+                paddingBottom: 10,
+                layerMode: 'flex',
+                layerAlign: 'start',
+                layerDirection: 'horizontal',
+                layerDistribute: 'start',
+                layerWrap: false,
+                layerGap: 0,
+                x: 0,
+                y: 0,
+                width: 100,
+                height: 100,
+                layoutSizingHorizontal: 'Hug',
+                layoutSizingVertical: 'Hug',
+                rotation: 0,
+                solidFill: {
+                  r: 93,
+                  g: 238,
+                  b: 226,
+                  a: 1,
+                  _type: 'Frame',
+                  _id: '2.solidFill'
+                },
+                borderType: 'None',
+                borderWidth: 1,
+                borderColor: {
+                  r: 13,
+                  g: 196,
+                  b: 45,
+                  a: 1,
+                  _type: 'Frame',
+                  _id: '2.borderColor'
+                },
+                cornerRadius: 24,
+                topLeftRadius: 0,
+                topRightRadius: 0,
+                bottomLeftRadius: 0,
+                bottomRightRadius: 0,
+                opacity: 1,
+                visible: true,
+                name: 'Button',
+                fillType: 'Solid',
+                overrides: [
+                  {
+                    '0': '$',
+                    '1': 'F',
+                    '2': 'r',
+                    '3': 'a',
+                    '4': 'm',
+                    '5': 'e',
+                    '6': ':',
+                    '7': '1',
+                    '8': '6',
+                    '9': 'b',
+                    '10': 'b',
+                    '11': 'c',
+                    '12': 'c',
+                    '13': '9',
+                    '14': 'a',
+                    '15': '2',
+                    '16': '5',
+                    '17': 'c',
+                    '18': '3',
+                    '19': 'b'
+                  }
+                ]
+              },
+              _type: 'Frame',
+              _id: '16bbcc9a25c3b',
+              children: [
+                {
+                  overrideFrom: {
+                    _type: 'Text',
+                    _id: 'e4bcfa71c6b39',
+                    x: 0,
+                    y: 0,
+                    width: 100,
+                    height: 100,
+                    layoutSizingHorizontal: 'Hug',
+                    layoutSizingVertical: 'Hug',
+                    rotation: 0,
+                    opacity: 1,
+                    visible: true,
+                    parentKey: '$Frame:2',
+                    content:
+                      '<p dir="ltr"><b><strong style="text-transform: uppercase; white-space: pre-wrap;">Забрать</strong></b></p>',
+                    overrides: [
+                      {
+                        '0': '$',
+                        '1': 'T',
+                        '2': 'e',
+                        '3': 'x',
+                        '4': 't',
+                        '5': ':',
+                        '6': '1',
+                        '7': 'b',
+                        '8': 'c',
+                        '9': '2',
+                        '10': '9',
+                        '11': 'd',
+                        '12': '5',
+                        '13': '1',
+                        '14': '5',
+                        '15': 'c',
+                        '16': '6',
+                        '17': '6',
+                        '18': '1'
+                      }
+                    ]
+                  },
+                  _type: 'Text',
+                  _id: '1bc29d515c661',
+                  parentKey: '$Frame:16bbcc9a25c3b'
+                }
+              ],
+              padding: -1,
+              paddingLeft: 40,
+              paddingRight: 40,
+              paddingTop: 15,
+              paddingBottom: 15,
+              parentKey: '$Frame:590d60a8e86fb'
+            }
+          ],
+          parentKey: '$Breakpoint:43e24e18a98bc'
+        }
+      ],
+      width: 768,
+      layoutSizingVertical: 'Hug',
+      layoutSizingHorizontal: 'Fill',
+      name: 'Tablet',
+      parentKey: '$Document:gdfhfdghsf'
+    }
+  ]
+}
+
+const documentManager = createState({
+  initialState: template,
+  plugins: [managerPlugin, richTextPlugin, loggerPlugin()],
+  skip: [...skips]
+})
+
+if (isBrowser) {
+  window.doc = documentManager
+}
+
+export default function () {
+  const { isEdit } = useBuilderManager()
+  const { toggleScope } = useHotkeysContext()
+
+  useEffect(() => {
+    toggleScope(hotKeysScope.builder)
+  }, [])
+
+  return (
+    <BuilderContext.Provider value={{ documentManager, canvasManager, previewManager }}>
+      {isEdit ? <BuilderEditable /> : <BuilderPreview />}
+    </BuilderContext.Provider>
+  )
+}

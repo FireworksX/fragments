@@ -8,14 +8,13 @@ import CaretLeft from '@/app/svg/caret-left.svg'
 import Close from '@/app/svg/close.svg'
 
 export interface StackCollectorProps {
-  documentManager: unknown
   className?: string
   children: StackPanel[]
   onPrev?: () => void
   onClose?: () => void
 }
 
-const StackCollector: FC<StackCollectorProps> = ({ className, documentManager, children, onPrev, onClose }) => {
+const StackCollector: FC<StackCollectorProps> = ({ className, children, onPrev, onClose }) => {
   const ref = useRef<ElementRef<'div'>>(null)
   const { activePanel, getPanel, panelTransition, hasPrev, title, proxyPrevHandler, proxyCloseHandler } =
     useStackCollector({

@@ -182,11 +182,11 @@ importers:
         specifier: workspace:*
         version: link:../../packages/utils
       '@graph-state/checkers':
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.1.1
+        version: 0.1.1
       '@graph-state/core':
-        specifier: ^0.6.1
-        version: 0.6.1
+        specifier: ^0.6.2
+        version: 0.6.2
       '@graph-state/plugin-extend':
         specifier: ^0.3.2
         version: 0.3.2
@@ -196,6 +196,9 @@ importers:
       '@graph-state/react':
         specifier: ^0.3.2
         version: 0.3.2(react@18.3.1)
+      '@lexical/html':
+        specifier: ^0.17.0
+        version: 0.17.0
       '@lexical/react':
         specifier: ^0.17.0
         version: 0.17.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(yjs@13.6.18)
@@ -250,6 +253,9 @@ importers:
       react-dom:
         specifier: ^18
         version: 18.3.1(react@18.3.1)
+      react-hotkeys-hook:
+        specifier: ^4.5.0
+        version: 4.5.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-merge-refs:
         specifier: ^2.1.1
         version: 2.1.1
@@ -312,11 +318,11 @@ importers:
         specifier: workspace:*
         version: link:../utils
       '@graph-state/checkers':
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.1.1
+        version: 0.1.1
       '@graph-state/core':
-        specifier: ^0.5.0
-        version: 0.5.0
+        specifier: ^0.6.2
+        version: 0.6.2
       '@graph-state/plugin-extend':
         specifier: ^0.3.1
         version: 0.3.1
@@ -1579,14 +1585,14 @@ packages:
     resolution: {integrity: sha512-Ys+3g2TaW7gADOJzPt83SJtCDhMjndcDMFVQ/Tj9iA1BfJzFKD9mAUXT3OenpuPHbI6P/myECxRJrofUsDx/5g==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  '@graph-state/checkers@0.1.0':
-    resolution: {integrity: sha512-JuaKxi6K3I/hjchZ8BuuufVd3RDJOVjsOQXtCI4i+Gc3II55AnxK8pH+hDpMkrKRvkH/aVztH8wzjPHN4UGcMg==}
+  '@graph-state/checkers@0.1.1':
+    resolution: {integrity: sha512-QJNL0WJqwPMS7dVgCbVUrPJWRdvoh8DVcTK4/5C2zw2v09+CZVdtJ0UECa7DDQ6qdcOAXF7aC/fYTBjBb7SlpQ==}
 
   '@graph-state/core@0.5.0':
     resolution: {integrity: sha512-IMeZwXhlFIl1ILcJby2Zz7xpcmo72WezejFZFq53BxIxeZSagnLbTvOEfWYPz7fsLHUj71oM8mBSA+mx6cstjQ==}
 
-  '@graph-state/core@0.6.1':
-    resolution: {integrity: sha512-PjE7h0fFNSUnCHNzM5UeN64uAtG1IG8cxr+c3i08TAatyNZIwe17GhqmTK6RmalBWHl1t7bgEo/ycre0NpBCrQ==}
+  '@graph-state/core@0.6.2':
+    resolution: {integrity: sha512-eydI0G1WYXt0DvbcBGW5QVPXFcK4xmJZ4RoJ3lGmKoqb+mh22ceBCPDIn0FJcn/VV60ULj3tuL9mrPskLCx9KQ==}
 
   '@graph-state/plugin-extend@0.3.1':
     resolution: {integrity: sha512-1lQJUUzYhE+zvz73fYINRBUoYe3ZD0EVJta25pWGRgZYRlGDRNUqXoMsYUDgAC8DtFCkVuaW2ImAI7ZJj/YgQg==}
@@ -5306,6 +5312,12 @@ packages:
     peerDependencies:
       react: '>=16.13.1'
 
+  react-hotkeys-hook@4.5.0:
+    resolution: {integrity: sha512-Samb85GSgAWFQNvVt3PS90LPPGSf9mkH/r4au81ZP1yOIFayLC3QAvqTgGtJ8YEDMXtPmaVBs6NgipHO6h4Mug==}
+    peerDependencies:
+      react: '>=16.8.1'
+      react-dom: '>=16.8.1'
+
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
@@ -7739,23 +7751,23 @@ snapshots:
 
   '@eslint/js@8.57.0': {}
 
-  '@graph-state/checkers@0.1.0': {}
+  '@graph-state/checkers@0.1.1': {}
 
   '@graph-state/core@0.5.0': {}
 
-  '@graph-state/core@0.6.1': {}
+  '@graph-state/core@0.6.2': {}
 
   '@graph-state/plugin-extend@0.3.1':
     dependencies:
-      '@graph-state/core': 0.5.0
+      '@graph-state/core': 0.6.2
 
   '@graph-state/plugin-extend@0.3.2':
     dependencies:
-      '@graph-state/core': 0.6.1
+      '@graph-state/core': 0.6.2
 
   '@graph-state/plugin-logger@0.2.1':
     dependencies:
-      '@graph-state/core': 0.6.1
+      '@graph-state/core': 0.6.2
 
   '@graph-state/react@0.3.1(react@18.3.1)':
     dependencies:
@@ -7765,7 +7777,7 @@ snapshots:
 
   '@graph-state/react@0.3.2(react@18.3.1)':
     dependencies:
-      '@graph-state/core': 0.6.1
+      '@graph-state/core': 0.6.2
       react: 18.3.1
       use-sync-external-store: 1.2.2(react@18.3.1)
 
@@ -12288,6 +12300,11 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.24.6
       react: 18.3.1
+
+  react-hotkeys-hook@4.5.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
   react-is@16.13.1: {}
 

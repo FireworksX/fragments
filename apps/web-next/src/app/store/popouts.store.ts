@@ -14,17 +14,17 @@ export const popoutsStore = createState({
   plugins: [
     loggerPlugin(),
     state => {
-      state.getCurrent = () => state.resolve().history.at(state.resolve().cursor)
-      state.nextPopout = () => state.resolve().history.at(state.resolve().cursor + 1)
+      state.getCurrent = () => state.resolve(state).history.at(state.resolve(state).cursor)
+      state.nextPopout = () => state.resolve(state).history.at(state.resolve(state).cursor + 1)
       state.prevPopout = () =>
-        state.resolve().cursor > 0 ? state.resolve().history.at(state.resolve().cursor - 1) : undefined
+        state.resolve(state).cursor > 0 ? state.resolve(state).history.at(state.resolve(state).cursor - 1) : undefined
 
       state.updateCurrentContext = context => {
         state.mutate(state.getCurrent(), { context })
       }
 
       state.open = (name, { context, position, initial }) => {
-        const { history, cursor } = state.resolve() || {}
+        const { history, cursor } = state.resolve(state) || {}
 
         const nextCell = { _type: POPOUT_TYPE, _id: name, name, context, position: (initial && position) || 'right' }
         const nextCellKey = state.keyOfEntity(nextCell)
