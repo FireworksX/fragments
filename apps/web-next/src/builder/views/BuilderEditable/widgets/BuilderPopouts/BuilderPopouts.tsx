@@ -11,6 +11,22 @@ import StackPanelCssOverride from '@/builder/StackCollector/components/StackPane
 import StackPanelCssOverrideList from '@/builder/StackCollector/components/StackPanelCssOverrideList/StackPanelCssOverideList'
 import StackLoopEffect from '@/builder/StackCollector/components/StackLoopEffect/StackLoopEffect'
 import { popoutsStore } from '@/app/store/popouts.store'
+import StackNumberVariable, {
+  stackNumberVariableName,
+  stackVariableName
+} from '@/builder/StackCollector/components/StackNumberVariable/StackNumberVariable'
+import StackBooleanVariable, {
+  stackBooleanVariableName
+} from '@/builder/StackCollector/components/StackBooleanVariable/StackBooleanVariable'
+import StackObjectVariable, {
+  stackObjectVariableName
+} from '@/builder/StackCollector/components/StackObjectVariable/StackObjectVariable'
+import StackObjectFieldsVariable, {
+  stackObjectFieldsVariableName
+} from '@/builder/StackCollector/components/StackObjectFieldsVariable/StackObjectFieldsVariable'
+import StackStringVariable, {
+  stackStringVariableName
+} from '@/builder/StackCollector/components/StackStringVariable/StackStringVariable'
 
 interface BuilderPopoutsProps {
   className?: string
@@ -34,6 +50,12 @@ export const BuilderPopouts: FC<BuilderPopoutsProps> = ({ className }) => {
         <StackPanelCssOverride name='cssOverride' title='CSS override' />
         {/*<StackPanelCssOverrideList name='cssOverrideList' title='CSS overrides' />*/}
         {/*<StackLoopEffect name='loopEffect' title='Loop Effect' />*/}
+
+        <StackNumberVariable name={stackNumberVariableName} title='Number' />
+        <StackBooleanVariable name={stackBooleanVariableName} title='Boolean' />
+        <StackObjectVariable name={stackObjectVariableName} title='Object' />
+        <StackObjectFieldsVariable name={stackObjectFieldsVariableName} title='Object Fields' />
+        <StackStringVariable name={stackStringVariableName} title='String' />
       </StackCollector>
     </div>
   )

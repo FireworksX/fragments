@@ -24,4 +24,6 @@ export { pick } from "./pick";
 export { omit } from "./omit";
 export { times } from "./times";
 export { injectLink } from "./injectLink";
+export { debounce } from "./debounce";
 export { generateId } from "./generateId";
+export { colorToObject } from "./colors/colorToObject";

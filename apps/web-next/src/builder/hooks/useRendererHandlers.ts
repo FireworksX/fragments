@@ -1,10 +1,11 @@
 import { OnClickSelectorOptions } from '@/app/builder/[fragmentId]/widgets/Builder/hooks/useBuilderLayerRefs'
 import { builderModes, useBuilderManager } from '@/builder/hooks/useBuilderManager'
-import { useContext } from 'react'
+import { useCallback, useContext } from 'react'
 import { BuilderContext } from '@/builder/BuilderContext'
 import { builderNodes } from '@fragments/fragments-plugin/performance'
 import { findRefNode } from '@/builder/utils/findRefNode'
 import { useGraph } from '@graph-state/react'
+import { debounce } from '@fragments/utils'
 
 export const useRendererHandlers = () => {
   const { documentManager, builderManager } = useContext(BuilderContext)
@@ -31,7 +32,27 @@ export const useRendererHandlers = () => {
     })
   }
 
+  const mouseOver = useCallback(
+    debounce((e, options) => {
+      e.preventDefault()
+      e.stopPropagation()
+      // builderManager.mouseOverLayer(options.layerKey)
+    }),
+    [builderManager]
+  )
+
+  const mouseLeave = useCallback(
+    debounce(e => {
+      e.preventDefault()
+      e.stopPropagation()
+      // builderManager.mouseLeaveLayer()
+    }),
+    [builderManager]
+  )
+
   return {
-    handleClick
+    handleClick,
+    mouseOver,
+    mouseLeave
   }
 }

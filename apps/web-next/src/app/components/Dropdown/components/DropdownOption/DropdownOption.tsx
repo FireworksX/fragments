@@ -1,11 +1,11 @@
 import { FC, PropsWithChildren, ReactNode } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import Touchable from '@/app/components/Touchable'
+import Touchable, { TouchableProps } from '@/app/components/Touchable'
 import CaretRight from '@/app/svg/caret-right.svg'
 import { animated } from '@react-spring/web'
 
-export interface DropdownOptionProps extends PropsWithChildren {
+export interface DropdownOptionProps extends PropsWithChildren, TouchableProps {
   size?: 'large' | 'medium'
   description?: string
   indicator?: string | number
@@ -28,7 +28,7 @@ const DropdownOption: FC<DropdownOptionProps> = animated(
     fetching,
     description,
     suffix,
-    onClick
+    ...touchableProps
   }) => {
     return (
       <Touchable
@@ -37,7 +37,7 @@ const DropdownOption: FC<DropdownOptionProps> = animated(
         className={cn(styles.root, className, styles[size], {
           [styles.disabled]: disabled
         })}
-        onClick={onClick}
+        {...touchableProps}
       >
         <div className={styles.body}>
           {children} <div className={styles.description}>{indicator}</div>

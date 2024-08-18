@@ -30,6 +30,8 @@ import { useDisplayColor } from '@/builder/hooks/useDisplayColor'
 import { $generateHtmlFromNodes, $generateNodesFromDOM } from '@lexical/html'
 import { useBuilderSelection } from '@/builder/hooks/useBuilderSelection'
 import { useBuilderManager } from '@/builder/hooks/useBuilderManager'
+import { colorToObject, hexToRgb, rgbToRgba } from '@fragments/utils'
+import { getSpringColor } from '@/builder/utils/getSpringColor'
 
 const aligns: TabsSelectorItem[] = [
   {
@@ -136,7 +138,6 @@ export const useBuilderText = () => {
           editorState.read(() => {
             updateSelection()
             const htmlString = $generateHtmlFromNodes(editor)
-
             if (htmlString.length > 0) {
               contentInvoker.onChange(htmlString)
             }
@@ -161,12 +162,18 @@ export const useBuilderText = () => {
   }, [selection, isTextEditing])
 
   const openColor = () => {
+    const currentColor = getSpringColor(marks.color || '#000')
+
     popoutsStore.open('colorPicker', {
       position: 'right',
       context: {
-        value: { r: new SpringValue(0), g: new SpringValue(0), b: new SpringValue(0), a: new SpringValue(1) },
+        value: currentColor,
         onChange: newColor => {
           onChangeValue('color', getColor(newColor).get())
+
+          Object.entries(newColor).forEach(([key, value]) => {
+            currentColor[key].set(value)
+          })
         }
       },
       initial: true
@@ -197,22 +204,6 @@ export const useBuilderText = () => {
         }
       }
     })
-  }
-
-  const getSelectionValue = (key: string, fallbackValue: number) => {
-    if ($isRangeSelection(selection)) {
-      editor.read(() => {
-        if (key === 'font-size') {
-          const value = $getSelectionStyleValueForProperty(selection, key, fallbackValue)
-          return fromPx(value)
-        }
-      })
-    }
-    // if (selectedMarks && key in selectedMarks) {
-    //   return selectedMarks[key]
-    // }
-    //
-    // return fallbackValue
   }
 
   return {

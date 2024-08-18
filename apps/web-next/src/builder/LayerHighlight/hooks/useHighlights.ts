@@ -1,15 +1,13 @@
 import { useEffect } from 'react'
-import { useSpringRef, useSprings } from '@react-spring/web'
+import { useSpring, useSpringRef, useSprings } from '@react-spring/web'
 import { useBuilderLayerRefs } from '@/app/builder/widgets/Builder/hooks/useBuilderLayerRefs'
 import { getNodePosition } from '@/app/utils/getNodePosition'
 import { useBuilderManager } from '@/builder/hooks/useBuilderManager'
 import { findRefNode } from '@/builder/utils/findRefNode'
 
 export const useHighlights = () => {
-  const { focus } = useBuilderManager()
-  const toolRef = useSpringRef()
-  const [highlights, api] = useSprings(1, () => ({
-    ref: toolRef,
+  const { focus, mouseOverLayer } = useBuilderManager()
+  const [focusHighlight, apiFocusHighlight] = useSpring(() => ({
     width: 0,
     height: 0,
     x: 0,
@@ -20,7 +18,7 @@ export const useHighlights = () => {
 
   useEffect(() => {
     const observer = new ResizeObserver(() => {
-      api.start(() => {
+      apiFocusHighlight.start(() => {
         const target = findRefNode(focus)
         const rootNode = target?.closest(`[data-root-node]`)
         const { top, left, width, height } = getNodePosition({ node: target, stopNode: rootNode })
@@ -40,7 +38,7 @@ export const useHighlights = () => {
     if (node) {
       observer.observe(node)
     } else {
-      api.start(() => ({
+      apiFocusHighlight.start(() => ({
         opacity: 0
       }))
     }
@@ -52,6 +50,6 @@ export const useHighlights = () => {
   }, [focus])
 
   return {
-    highlights
+    focusHighlight
   }
 }

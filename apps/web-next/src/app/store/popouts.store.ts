@@ -25,8 +25,9 @@ export const popoutsStore = createState({
 
       state.open = (name, { context, position, initial }) => {
         const { history, cursor } = state.resolve(state) || {}
-
-        const nextCell = { _type: POPOUT_TYPE, _id: name, name, context, position: (initial && position) || 'right' }
+        const currentPopout = state.resolve(state.getCurrent())
+        const resultPosition = initial ? position || 'right' : position || currentPopout?.position || 'right'
+        const nextCell = { _type: POPOUT_TYPE, _id: name, name, context, position: resultPosition }
         const nextCellKey = state.keyOfEntity(nextCell)
         const currentHistory = history[cursor]
         const indexHistoryPopout = history.findLastIndex(historyLink => historyLink === nextCellKey)
@@ -45,23 +46,16 @@ export const popoutsStore = createState({
           if (indexHistoryPopout === -1) {
             const nextHistory = [...history, nextCell]
 
-            state.mutate(
-              {
-                history: nextHistory,
-                cursor: nextHistory.length - 1
-              },
-              { replace: true }
-            )
+            state.mutate({
+              history: [nextCell],
+              cursor: nextHistory.length - 1
+            })
           } else {
             // Is pass new context, need update graph
             state.mutate(nextCell)
-            state.mutate(
-              {
-                history: history.slice(0, indexHistoryPopout + 1),
-                cursor: indexHistoryPopout
-              },
-              { replace: true }
-            )
+            state.mutate(state.key, {
+              cursor: indexHistoryPopout
+            })
           }
         }
       }

@@ -42,9 +42,7 @@ export const BuilderEditable: FC<BuilderEditableProps> = ({ className }) => {
           <BuilderCanvas>
             <BuilderTextEditor />
             <LayerHighlight />
-            <DisplayBreakpoints
-              renderer={(screenKey, handleClick) => <Layer layerKey={screenKey} onClick={handleClick} />}
-            />
+            <DisplayBreakpoints renderer={(screenKey, props) => <Layer layerKey={screenKey} {...props} />} />
           </BuilderCanvas>
           <BuilderControls isOpen={isEdit} position='right' />
 

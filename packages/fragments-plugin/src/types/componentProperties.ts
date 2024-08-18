@@ -1,4 +1,4 @@
-import { builderComponentControlType } from 'src/defenitions'
+import { builderVariableType } from 'src/defenitions'
 export type ComponentProperty = StringType | BooleanType | NumberType | ArrayType
 
 interface TypeWithValue<T> {
@@ -17,14 +17,14 @@ export type TypeValue<TProperty> = TProperty extends {
   : unknown
 
 export type StringType = {
-  type: typeof builderComponentControlType.String
+  type: typeof builderVariableType.String
   defaultValue: string
   placeholder: string
   displayTextArea: boolean
 } & TypeWithValue<string>
 
 export type BooleanType = {
-  type: typeof builderComponentControlType.Boolean
+  type: typeof builderVariableType.Boolean
   title?: string
   defaultValue?: boolean
   enabledTitle: string
@@ -32,7 +32,7 @@ export type BooleanType = {
 } & TypeWithValue<boolean>
 
 export type NumberType = {
-  type: typeof builderComponentControlType.Number
+  type: typeof builderVariableType.Number
   defaultValue: number
   min: number
   max: number
@@ -40,4 +40,4 @@ export type NumberType = {
   displayStepper: boolean
 } & TypeWithValue<number>
 
-export type ArrayType = { type: typeof builderComponentControlType.Array } & TypeWithValue<unknown[]>
+export type ArrayType = { type: typeof builderVariableType.Array } & TypeWithValue<unknown[]>

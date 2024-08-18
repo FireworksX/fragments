@@ -1,25 +1,28 @@
 .root {
-  height: 30px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .before {
-  width: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    min-width: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .text {
-  flex: 1;
-  font-size: 12px;
-font-weight: 500;
-color: var(--text-color-accent-secondary);
+    flex: 1;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-color-accent-secondary);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .description {
-  color: var(--secondary);
+    color: var(--secondary);
 }
 

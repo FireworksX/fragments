@@ -4,12 +4,13 @@
     flex: 1;
     justify-content: center;
     align-items: center;
+    background: var(--background-secondary);
 }
 
 .inner {
     overflow: hidden;
     border: 2px solid var(--border);
-    border-radius: var(--radius-small);
+    background: var(--background);
 }
 
 .horizontal {

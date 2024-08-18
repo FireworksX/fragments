@@ -1,19 +1,13 @@
 import { createConstants } from '@fragments/utils'
 
 export const builderNodes = createConstants(
-  'Viewport',
   'Document',
   'Breakpoint',
   'Frame',
   'Text',
-  'Component',
-  'ComponentVariant',
-  'ComponentInstance',
   'SolidPaintStyle',
   'CssLink',
-  'ComponentProperty',
-  'Fill',
-  'ImageFill'
+  'Variable'
 )
 
 export const builderBorderType = createConstants('None', 'Solid', 'Dashed', 'Dotted')
@@ -29,7 +23,7 @@ export const builderTextTransform = createConstants('none', 'uppercase', 'lowerc
 export const builderTextDecorations = createConstants('none', 'underline', 'line-through')
 export const builderEffectType = createConstants('loop', 'appear', 'hover', 'tap')
 export const builderEffectName = createConstants('fade', 'slide', 'bounce', 'wiggle', 'increase')
-export const builderComponentControlType = createConstants(
+export const builderVariableType = createConstants(
   'String',
   'Boolean',
   'Array',

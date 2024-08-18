@@ -11,6 +11,8 @@ export interface PopoverProps extends TippyProps, PropsWithChildren {
   className?: string
 }
 
+export type Instance = Parameters<NonNullable<TippyProps['onCreate']>>[0]
+
 const Popover: FC<PopoverProps> = ({ className, content, children, trigger, appendTo, ...restProps }) => {
   const targetRef = useRef<ElementRef<'div'>>()
 
@@ -28,6 +30,8 @@ const Popover: FC<PopoverProps> = ({ className, content, children, trigger, appe
     }
   }
 
+  const closeHandler = (instance: Instance) => instance.hide()
+
   return (
     <Tippy
       className={className}
@@ -36,6 +40,12 @@ const Popover: FC<PopoverProps> = ({ className, content, children, trigger, appe
       appendTo={appendTo === 'body' && isBrowser ? document.body : appendTo}
       {...restProps}
       onCreate={onCreate}
+      onShown={instance => {
+        if (restProps.hideOnClick) {
+          instance.popper.addEventListener('click', () => closeHandler(instance))
+        }
+      }}
+      onHide={instance => instance.popper.removeEventListener('click', () => closeHandler(instance))}
     >
       <div ref={targetRef}>{children}</div>
     </Tippy>

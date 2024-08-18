@@ -24,31 +24,20 @@ const StackCollector: FC<StackCollectorProps> = ({ className, children, onPrev, 
     })
 
   useEffect(() => {
-    const onClick = e => {
-      const container = e.target.closest('[data-stack-container]')
-      if (!container) {
-        proxyCloseHandler()
+    if (activePanel) {
+      const onClick = e => {
+        const container = e.target.closest('[data-stack-container]')
+        if (!container) {
+          proxyCloseHandler()
+        }
       }
-      // if (e.target !== ref.current) {
-      //   let hasParent = false
-      //   iterateParentOfNode(e.target, parent => {
-      //     if (parent === ref.current && !hasParent) {
-      //       hasParent = true
-      //     }
-      //   })
-      //
-      //   if (!hasParent) {
-      //     proxyCloseHandler()
-      //   }
-      // }
-    }
 
-    document.addEventListener('click', onClick)
-
-    return () => {
-      document.removeEventListener('click', onClick)
+      document.addEventListener('click', onClick)
+      return () => {
+        document.removeEventListener('click', onClick)
+      }
     }
-  }, [onClose, proxyCloseHandler])
+  }, [activePanel])
 
   if (!activePanel) {
     return null

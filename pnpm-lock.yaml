@@ -185,8 +185,8 @@ importers:
         specifier: ^0.1.1
         version: 0.1.1
       '@graph-state/core':
-        specifier: ^0.6.2
-        version: 0.6.2
+        specifier: ^0.6.4
+        version: 0.6.4
       '@graph-state/plugin-extend':
         specifier: ^0.3.2
         version: 0.3.2
@@ -321,11 +321,11 @@ importers:
         specifier: ^0.1.1
         version: 0.1.1
       '@graph-state/core':
-        specifier: ^0.6.2
-        version: 0.6.2
+        specifier: ^0.6.4
+        version: 0.6.4
       '@graph-state/plugin-extend':
-        specifier: ^0.3.1
-        version: 0.3.1
+        specifier: ^0.3.2
+        version: 0.3.2
       '@graph-state/plugin-logger':
         specifier: ^0.2.0
         version: 0.2.1
@@ -1591,11 +1591,8 @@ packages:
   '@graph-state/core@0.5.0':
     resolution: {integrity: sha512-IMeZwXhlFIl1ILcJby2Zz7xpcmo72WezejFZFq53BxIxeZSagnLbTvOEfWYPz7fsLHUj71oM8mBSA+mx6cstjQ==}
 
-  '@graph-state/core@0.6.2':
-    resolution: {integrity: sha512-eydI0G1WYXt0DvbcBGW5QVPXFcK4xmJZ4RoJ3lGmKoqb+mh22ceBCPDIn0FJcn/VV60ULj3tuL9mrPskLCx9KQ==}
-
-  '@graph-state/plugin-extend@0.3.1':
-    resolution: {integrity: sha512-1lQJUUzYhE+zvz73fYINRBUoYe3ZD0EVJta25pWGRgZYRlGDRNUqXoMsYUDgAC8DtFCkVuaW2ImAI7ZJj/YgQg==}
+  '@graph-state/core@0.6.4':
+    resolution: {integrity: sha512-epYCdGekhXtg6r9ld0cJorab1uX0/aUAESWY+8S16y9P1V/yHpsuihSXbn34qNWjwcAPrtJsXHOthJKhebD2+Q==}
 
   '@graph-state/plugin-extend@0.3.2':
     resolution: {integrity: sha512-hDcu2Ej6xT1GNSeSvVwaK44p8y8XrrXAorzMH2jHHiZcPydcDi+55ul5YAbABAcNDSOongrAuqgECECIlS5NJQ==}
@@ -7755,19 +7752,15 @@ snapshots:
 
   '@graph-state/core@0.5.0': {}
 
-  '@graph-state/core@0.6.2': {}
-
-  '@graph-state/plugin-extend@0.3.1':
-    dependencies:
-      '@graph-state/core': 0.6.2
+  '@graph-state/core@0.6.4': {}
 
   '@graph-state/plugin-extend@0.3.2':
     dependencies:
-      '@graph-state/core': 0.6.2
+      '@graph-state/core': 0.6.4
 
   '@graph-state/plugin-logger@0.2.1':
     dependencies:
-      '@graph-state/core': 0.6.2
+      '@graph-state/core': 0.6.4
 
   '@graph-state/react@0.3.1(react@18.3.1)':
     dependencies:
@@ -7777,7 +7770,7 @@ snapshots:
 
   '@graph-state/react@0.3.2(react@18.3.1)':
     dependencies:
-      '@graph-state/core': 0.6.2
+      '@graph-state/core': 0.6.4
       react: 18.3.1
       use-sync-external-store: 1.2.2(react@18.3.1)
 

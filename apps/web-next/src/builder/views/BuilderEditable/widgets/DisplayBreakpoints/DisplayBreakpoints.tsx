@@ -10,7 +10,14 @@ import { useRendererHandlers } from '@/builder/hooks/useRendererHandlers'
 import { BuilderContext } from '@/builder/BuilderContext'
 
 interface BuilderDisplayBreakpointsProps {
-  renderer: (breakpointKey: LinkKey, onClick?: any) => ReactNode
+  renderer: (
+    breakpointKey: LinkKey,
+    props: {
+      onClick?: any
+      onMouseOver?: any
+      onMouseLeave?: any
+    }
+  ) => ReactNode
   className?: string
 }
 
@@ -18,7 +25,7 @@ const DisplayBreakpoints: FC<BuilderDisplayBreakpointsProps> = ({ className, ren
   const { documentManager } = useContext(BuilderContext)
   const { breakpointKeys, addBreakpoint } = useBreakpoints()
   const { isEdit } = useBuilderManager()
-  const { handleClick } = useRendererHandlers(documentManager)
+  const { handleClick, mouseLeave, mouseOver } = useRendererHandlers(documentManager)
 
   const handleNewBreakpoint = (name, width) => {
     addBreakpoint(name, width)
@@ -42,7 +49,7 @@ const DisplayBreakpoints: FC<BuilderDisplayBreakpointsProps> = ({ className, ren
           onClickBreakpoint={isEdit ? handleNewBreakpoint : undefined}
           onClickCustom={handleCustomBreakpoint}
         >
-          {renderer(breakpointKey, handleClick)}
+          {renderer(breakpointKey, { onClick: handleClick, onMouseOver: mouseOver, onMouseLeave: mouseLeave })}
         </Breakpoint>
       ))}
     </div>

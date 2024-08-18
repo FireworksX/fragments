@@ -11,6 +11,11 @@ import { breakpointNode } from '../../nodes/breakpoint/breakpointNode.performanc
 import { frameNode } from '../../nodes/frame/frameNode.performance'
 import { textNode } from '../../nodes/text/textNode.performance'
 import { documentNode } from '../../nodes/document/document.performance'
+import { createNumberVariable, CreateNumberOptions } from '../../creators/controls/numberVariable'
+import { variableNode } from '../../nodes/variable/variable.performance'
+import { createBooleanVariable } from '../../creators/controls/booleanVariable'
+import { CreateObjectOptions, createObjectVariable } from '../../creators/controls/objectVariable'
+import { CreateStringOptions, createStringVariable } from '../../creators/controls/stringVariable'
 
 export const managerPlugin: Plugin = state => {
   const [rootLink] = state.inspectFields(builderNodes.Document)
@@ -88,6 +93,26 @@ export const managerPlugin: Plugin = state => {
 
   state.createFrame = () => {
     const entity = createFrame(state)
+    return state.mutate(entity)
+  }
+
+  state.createNumberVariable = (options: CreateNumberOptions) => {
+    const entity = createNumberVariable(state, options)
+    return state.mutate(entity)
+  }
+
+  state.createBooleanVariable = (options: CreateNumberOptions) => {
+    const entity = createBooleanVariable(state, options)
+    return state.mutate(entity)
+  }
+
+  state.createObjectVariable = (options: CreateObjectOptions) => {
+    const entity = createObjectVariable(state, options)
+    return state.mutate(entity)
+  }
+
+  state.createStringVariable = (options: CreateStringOptions) => {
+    const entity = createStringVariable(state, options)
     return state.mutate(entity)
   }
 
@@ -180,7 +205,8 @@ export const managerPlugin: Plugin = state => {
       [builderNodes.Document]: (graph, cache) => documentNode(cache, graph),
       [builderNodes.Breakpoint]: (graph, cache) => breakpointNode(cache, graph),
       [builderNodes.Frame]: (graph, cache) => frameNode(cache, graph),
-      [builderNodes.Text]: (graph, cache) => textNode(cache, graph)
+      [builderNodes.Text]: (graph, cache) => textNode(cache, graph),
+      [builderNodes.Variable]: (graph, cache) => variableNode(cache, graph)
       // [builderNodes.Component]: (graph, cache) => componentNode(cache, graph),
       // [builderNodes.ComponentVariant]: (graph, cache) => componentVariantNode(cache, graph),
       // [builderNodes.ComponentInstance]: (graph, cache) => componentInstanceNode(cache, graph)

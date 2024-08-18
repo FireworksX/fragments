@@ -2,6 +2,7 @@ import { builderNodes } from 'src/index.performance'
 import { pipeResolvers, ResolverNode } from 'src/helpers'
 import { childrenProps } from 'src/props/children/children.performance'
 import { baseProps } from 'src/props/base/base.performance'
+import { props } from 'src/props/props/props.performance'
 import { generateId } from '@fragments/utils'
 import { DocumentNode } from '../../types/nodes'
 
@@ -12,5 +13,5 @@ export const documentNode: ResolverNode = (state, initialEntity?: DocumentNode):
     _id: initialEntity?._id ?? generateId()
   }
 
-  return pipeResolvers(baseProps, childrenProps)(node, state)
+  return pipeResolvers(baseProps, childrenProps, props)(node, state)
 }

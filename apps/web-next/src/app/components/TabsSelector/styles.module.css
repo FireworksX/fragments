@@ -1,6 +1,6 @@
 .root {
-    display: grid;
-    grid-template-columns: repeat(var(--count), auto);
+    display: flex;
+    align-items: center;
     background: var(--background-secondary);
     border-radius: var(--radius-second);
     position: relative;
@@ -34,4 +34,10 @@
     &.disabled {
         color: var(--primary-disabled);
     }
+}
+
+.divider {
+    width: 1px;
+    height: 14px;
+    background: var(--border);
 }

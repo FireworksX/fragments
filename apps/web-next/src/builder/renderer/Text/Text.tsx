@@ -9,9 +9,11 @@ import { useLayerInvoker } from '@/builder/hooks/useLayerInvoker'
 interface TextProps {
   layerKey: string
   onClick?: (e, options) => void
+  onMouseOver?: (e, options) => void
+  onMouseLeave?: (e, options) => void
 }
 
-export const Text: FC<TextProps> = ({ layerKey, onClick }) => {
+export const Text: FC<TextProps> = ({ layerKey, onClick, onMouseOver, onMouseLeave }) => {
   const { documentManager } = useContext(BuilderContext)
   const { cssRules } = useParseRules(layerKey)
   const [layerValue] = useGraph(documentManager, layerKey)
@@ -20,14 +22,25 @@ export const Text: FC<TextProps> = ({ layerKey, onClick }) => {
 
   const proxyOnClick = useCallback(
     (e: any) => {
-      if (onClick) {
-        onClick(e, {
-          layerKey
-          // ...componentContext,
-        })
-      }
+      onClick?.(e, {
+        layerKey
+      })
     },
     [layerKey, onClick]
+  )
+
+  const proxyOnMouseOver = useCallback(
+    (e: any) => {
+      onMouseOver?.(e, { layerKey })
+    },
+    [layerKey, onMouseOver]
+  )
+
+  const proxyOnMouseLeave = useCallback(
+    (e: any) => {
+      onMouseLeave?.(e, { layerKey })
+    },
+    [layerKey, onMouseLeave]
   )
 
   return (
@@ -36,6 +49,8 @@ export const Text: FC<TextProps> = ({ layerKey, onClick }) => {
       data-key={layerKey}
       style={cssRules}
       onClick={proxyOnClick}
+      onMouseOver={proxyOnMouseOver}
+      onMouseLeave={proxyOnMouseLeave}
       dangerouslySetInnerHTML={{ __html: textContent }}
     />
   )

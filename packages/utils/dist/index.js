@@ -34,7 +34,9 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // src/index.ts
 var src_exports = {};
 __export(src_exports, {
+  colorToObject: () => colorToObject,
   createConstants: () => createConstants,
+  debounce: () => debounce,
   eventEmitter: () => eventEmitter,
   filterDeep: () => filterDeep,
   findDeep: () => findDeep,
@@ -308,11 +310,74 @@ var injectLink = (options) => {
   head.appendChild(link);
 };
 
+// src/debounce.ts
+function debounce(func, timeout = 300) {
+  let timer;
+  return (...args) => {
+    if (!timer) {
+      func.apply(this, args);
+    }
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      timer = void 0;
+    }, timeout);
+  };
+}
+
 // src/generateId.ts
 var generateId = () => Math.random().toString(16).slice(2);
+
+// src/colors/getRgbFromColor.ts
+var getRgbFromColor = (color) => {
+  var _a;
+  if (!color)
+    return null;
+  if (typeof color === "string" && color.startsWith("#")) {
+    return hexToRgb(color) || null;
+  }
+  if (typeof color === "string") {
+    const [r, g, b, a] = (_a = color.match(/\d+/g)) != null ? _a : [];
+    if (!r) {
+      return null;
+    }
+    return {
+      r: +r,
+      g: +g,
+      b: +b,
+      a: +a
+    };
+  }
+  return color;
+};
+
+// src/colors/colorToObject.ts
+var colorToObject = (color) => {
+  if (!color)
+    return null;
+  const isHex = typeof color === "string" && color.startsWith("#");
+  if (isHex) {
+    const rgbColor = hexToRgb(color);
+    if (!rgbColor)
+      return null;
+    return {
+      r: rgbColor.r,
+      g: rgbColor.g,
+      b: rgbColor.b
+    };
+  }
+  if (typeof color === "string") {
+    return getRgbFromColor(color);
+  }
+  if (["r", "g", "b"].every((v) => v in color)) {
+    return color;
+  }
+  return null;
+};
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
+  colorToObject,
   createConstants,
+  debounce,
   eventEmitter,
   filterDeep,
   findDeep,

@@ -10,17 +10,11 @@ interface BuilderLayerHighlightProps {
 }
 
 const LayerHighlight: FC<BuilderLayerHighlightProps> = ({ className }) => {
-  const { highlights } = useHighlights()
+  const { focusHighlight } = useHighlights()
 
   return (
     <div className={cn(className, styles.root)}>
-      {highlights.map((highlight, index) => (
-        <animated.div
-          className={styles.highlight}
-          key={index}
-          style={{ ...highlight, position: 'absolute', inset: 0 }}
-        />
-      ))}
+      <animated.div className={styles.highlight} style={{ ...focusHighlight, position: 'absolute', inset: 0 }} />
     </div>
   )
 }

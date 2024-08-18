@@ -66,6 +66,7 @@ function patchStyleConversion(
     const fontSize = node.style.fontSize
     const lineHeight = node.style.lineHeight
     const textDecoration = node.style.textDecoration
+    const textTransform = node.style.textTransform
 
     return {
       ...originalOutput,
@@ -73,7 +74,6 @@ function patchStyleConversion(
         const originalForChild = originalOutput?.forChild ?? (x => x)
         const result = originalForChild(lexicalNode, parent)
 
-        console.log(result, $isTextNode(result))
         if ($isTextNode(result)) {
           const style = [
             backgroundColor ? `background-color: ${backgroundColor}` : null,
@@ -82,12 +82,12 @@ function patchStyleConversion(
             fontWeight ? `font-weight: ${fontWeight}` : null,
             fontSize ? `font-size: ${fontSize}` : null,
             textDecoration ? `text-decoration: ${textDecoration}` : null,
+            textTransform ? `text-transform: ${textTransform}` : null,
             lineHeight ? `line-height: ${lineHeight}` : null
           ]
             .filter(value => value != null)
             .join('; ')
 
-          console.log(style)
           if (style.length) {
             return result.setStyle(style)
           }

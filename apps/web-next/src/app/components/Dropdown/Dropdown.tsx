@@ -1,10 +1,9 @@
 import { FC, PropsWithChildren, ReactNode } from 'react'
 import cn from 'classnames'
 import { TippyProps } from '@tippyjs/react'
-import { Instance } from 'tippy.js'
 import styles from './styles.module.css'
 import './styles.css'
-import Popover, { PopoverProps } from '../Popover/Popover'
+import Popover, { Instance, PopoverProps } from '../Popover/Popover'
 
 export interface DropdownProps extends PropsWithChildren {
   options?: ReactNode | ReactNode[]
@@ -13,6 +12,7 @@ export interface DropdownProps extends PropsWithChildren {
   trigger?: PopoverProps['trigger']
   appendTo?: PopoverProps['appendTo']
   placement?: TippyProps['placement']
+  hideOnClick?: TippyProps['hideOnClick']
   arrow?: TippyProps['arrow']
   onCreate?: (instance: Instance) => void
 }
@@ -23,6 +23,7 @@ const Dropdown: FC<DropdownProps> = ({
   placement,
   trigger,
   appendTo,
+  hideOnClick,
   disabled,
   options,
   arrow,
@@ -38,6 +39,7 @@ const Dropdown: FC<DropdownProps> = ({
       appendTo={appendTo}
       arrow={arrow}
       content={<div>{options}</div>}
+      hideOnClick={hideOnClick}
       onCreate={onCreate}
     >
       {children}

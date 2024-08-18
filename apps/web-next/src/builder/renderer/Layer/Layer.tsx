@@ -9,9 +9,11 @@ import { Text } from '@/builder/renderer/Text/Text'
 interface LayerProps {
   layerKey: string
   onClick?: (e, options) => void
+  onMouseOver?: (e, options) => void
+  onMouseLeave?: (e, options) => void
 }
 
-export const Layer: FC<LayerProps> = ({ layerKey, onClick }) => {
+export const Layer: FC<LayerProps> = ({ layerKey, onClick, onMouseOver, onMouseLeave }) => {
   const { documentManager } = useContext(BuilderContext)
   const { cssRules } = useParseRules(layerKey)
   const [layerValue] = useGraph(documentManager, layerKey)
@@ -19,24 +21,43 @@ export const Layer: FC<LayerProps> = ({ layerKey, onClick }) => {
 
   const proxyOnClick = useCallback(
     (e: any) => {
-      if (onClick) {
-        onClick(e, {
-          layerKey
-          // ...componentContext,
-        })
-      }
+      onClick?.(e, {
+        layerKey
+      })
     },
     [layerKey, onClick]
   )
 
+  const proxyOnMouseOver = useCallback(
+    (e: any) => {
+      onMouseOver?.(e, { layerKey })
+    },
+    [layerKey, onMouseOver]
+  )
+
+  const proxyOnMouseLeave = useCallback(
+    (e: any) => {
+      onMouseLeave?.(e, { layerKey })
+    },
+    [layerKey, onMouseLeave]
+  )
+
   if (layerValue?._type === builderNodes.Text) {
-    return <Text layerKey={layerKey} onClick={onClick} />
+    return (
+      <Text layerKey={layerKey} onClick={onClick} onMouseOver={proxyOnMouseOver} onMouseLeave={proxyOnMouseLeave} />
+    )
   }
 
   return (
-    <animated.div data-key={layerKey} style={cssRules} onClick={proxyOnClick}>
+    <animated.div
+      data-key={layerKey}
+      style={cssRules}
+      onClick={proxyOnClick}
+      onMouseOver={proxyOnMouseOver}
+      onMouseLeave={proxyOnMouseLeave}
+    >
       {children.map(child => (
-        <Layer key={child} layerKey={child} onClick={onClick} />
+        <Layer key={child} layerKey={child} onClick={onClick} onMouseLeave={onMouseLeave} onMouseOver={onMouseOver} />
       ))}
     </animated.div>
   )

@@ -6,6 +6,7 @@ import { FC, useState } from 'react'
 import AsideBar, { AsideBarProps } from '@/builder/components/AsideBar'
 import BuilderLayers from '@/builder/views/BuilderEditable/widgets/BuilderLayers/BuilderLayers'
 import BuilderAssets from '@/builder/views/BuilderEditable/widgets/BuilderAssets/BuilderAssets'
+import { BuilderVariables } from '@/builder/views/BuilderEditable/widgets/BuilderVariables/BuilderVariables'
 
 const modes: TabsSelectorItem[] = [
   {
@@ -15,13 +16,17 @@ const modes: TabsSelectorItem[] = [
   {
     name: 'assets',
     label: 'Assets'
+  },
+  {
+    name: 'variables',
+    label: 'Variables'
   }
 ]
 
 interface BuilderSidebarProps extends AsideBarProps {}
 
 const BuilderSidebar: FC<BuilderSidebarProps> = ({ ...asideProps }) => {
-  const [mode, setMode] = useState<'layers' | 'assets'>('layers')
+  const [mode, setMode] = useState<'layers' | 'assets' | 'variables'>('layers')
 
   return (
     <AsideBar className={styles.root} {...asideProps}>
@@ -34,6 +39,7 @@ const BuilderSidebar: FC<BuilderSidebarProps> = ({ ...asideProps }) => {
       <div className={styles.delimiter} />
       {mode === 'layers' && <BuilderLayers />}
       {mode === 'assets' && <BuilderAssets />}
+      {mode === 'variables' && <BuilderVariables />}
     </AsideBar>
   )
 }

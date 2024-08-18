@@ -59,18 +59,21 @@ const TabsSelector: FC<TabsSelectorProps> = animated(({ className, items, value,
     >
       <animated.div className={styles.switcher} style={switcherStyles} />
       {items.map((el, index) => (
-        <Touchable
-          className={cn(styles.cell, {
-            [styles.active]: el.name === value,
-            [styles.disabled]: el.disabled
-          })}
-          TagName='button'
-          data-active={el.name === value}
-          key={index}
-          onClick={() => onChange && onChange(el)}
-        >
-          {el.label}
-        </Touchable>
+        <>
+          <div className={styles.divider} />
+          <Touchable
+            className={cn(styles.cell, {
+              [styles.active]: el.name === value,
+              [styles.disabled]: el.disabled
+            })}
+            TagName='button'
+            data-active={el.name === value}
+            key={index}
+            onClick={() => onChange && onChange(el)}
+          >
+            {el.label}
+          </Touchable>
+        </>
       ))}
     </div>
   )

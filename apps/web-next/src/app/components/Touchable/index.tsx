@@ -9,6 +9,7 @@ export interface TouchableProps {
   TagName?: 'div' | 'a' | 'button' | 'span'
   effect?: 'scale' | 'none'
   disabled?: boolean
+  preventDefault?: boolean
   onClick?: (e?: any) => any
   [key: string]: any
 }
@@ -19,13 +20,17 @@ const Touchable: React.FC<TouchableProps> = ({
   disabled,
   children,
   effect = 'scale',
+  preventDefault,
   onClick,
   ...rest
 }) => {
   const proxyOnClick = e => {
     if (onClick) {
-      e.preventDefault()
-      e.stopPropagation()
+      if (preventDefault) {
+        e.preventDefault()
+        e.stopPropagation()
+      }
+
       onClick(e)
     }
   }

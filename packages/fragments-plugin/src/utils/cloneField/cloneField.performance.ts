@@ -1,4 +1,4 @@
-import { Entity, GraphState, isGraphOrKey, isLinkKey } from '@graph-state/core'
+import { Entity, GraphState, isGraph, isGraphOrKey, isLinkKey } from '@graph-state/core'
 import { SpringValue } from '@react-spring/web'
 import { isObject, isPrimitive, isValue } from '@fragments/utils'
 
@@ -23,13 +23,19 @@ export const clonedField = (
     }
 
     if (!isPrimitive(value)) {
-      if (isObject(value) && isGraphOrKey(value)) {
+      if (isObject(value) && isGraph(value)) {
         return Object.keys(value).reduce((acc, key) => {
           acc[key] = clonedField(graphState, value, key, null, isSpring)
 
           return acc
         }, {})
       }
+
+      // if (Array.isArray(value)) {
+      //   const res = value.map(v => clonedField(graphState, v, key, fallback, isSpring))
+      //   console.log(res, value, key)
+      //   return res
+      // }
     }
 
     return value

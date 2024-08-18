@@ -51,6 +51,7 @@ export const useBuilderManager = () => {
     isEdit: resolvedMode === builderViews.edit,
     focus: searchParams.get(builderOptions.focus),
     isTextEditing: builderState.showTextEditor,
+    mouseOverLayer: builderState.mouseOverLayer,
     updateParams
   }
 }
