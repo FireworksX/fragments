@@ -24,14 +24,14 @@ const ControlRow: FC<BuilderControlRowProps> = ({
   actions = [],
   onResetProperty
 }) => {
-  const hasActions = actions.length > 0
+  const hasActions = actions.some(action => action.length > 0)
 
   return (
     <div className={cn(styles.root, className)}>
       <RenderDropdown disabled={!hasActions} trigger='click' options={actions}>
         <div
           className={cn(styles.titleWrapper, {
-            [styles.highlight]: isHighlight,
+            [styles.highlight]: isHighlight || hasActions,
             [styles.withAction]: hasActions
           })}
         >

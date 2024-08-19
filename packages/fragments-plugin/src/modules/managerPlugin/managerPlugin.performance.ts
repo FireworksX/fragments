@@ -23,23 +23,27 @@ export const managerPlugin: Plugin = state => {
   state.isEmpty = (value: unknown) => typeof value === undefined || value == null
   state.getKey = getKey
 
+  /**
+   * Перезаписывается ли в данный момент это поле
+   */
   state.isOverrideFromField = (entity: Entity, fieldKey: string) => {
     const resolvedEntity: any = typeof entity === 'string' ? state.resolve(entity) : entity
     const resolvedOverride: any = state.resolve(resolvedEntity?.overrideFrom ?? '')
-    const fieldValue = entity?.[fieldKey]
+    const fieldValue = resolvedEntity?.[fieldKey]
     return !!resolvedOverride && !fieldValue
   }
 
-  state.hasOverride = (entity: Entity, field?: string) => {
+  /**
+   * true - если кто-то перезаписывает Entity
+   */
+  state.hasOverrider = (entity: Entity) => {
     const resolvedEntity: any = typeof entity === 'string' ? state.resolve(entity) : entity
-    const resolvedOverride: any = state.resolve(resolvedEntity?.overrideFrom ?? '')
-    const fieldValue = entity?.[field]
-    return !!resolvedOverride && fieldValue
+    return !!resolvedEntity?.overrideFrom
   }
 
   state.resetOverride = (entity: Entity, field: string) => {
     state.mutate(state.keyOfEntity(entity) as any, {
-      [field]: override
+      [field]: null
     })
   }
 
@@ -170,8 +174,9 @@ export const managerPlugin: Plugin = state => {
     return resultNode
   }
 
-  state.toJSON = () => {
+  state.toJSONState = () => {
     const document = state.resolve(state.root, { deep: true })
+
     if (!document) {
       return
     }

@@ -36,6 +36,8 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
   const { selectionGraph, opacity, visible, zIndex, radius, fill, border } = useBuilderStyles()
   const { getColor, getNameColor } = useDisplayColor(documentManager)
 
+  console.log(opacity)
+
   return (
     <Panel
       className={cn(styles.root, className)}

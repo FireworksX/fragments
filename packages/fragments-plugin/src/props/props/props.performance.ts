@@ -14,15 +14,7 @@ export const props: Resolver = (state, entity: any) => {
       })
     },
     removeProp: (prop: Entity) => {
-      const removeKey = state.keyOfEntity(prop)
-      // state.mutate(
-      //   key,
-      //   prev => ({
-      //     props: prev.props.filter(v => removeKey !== v)
-      //   }),
-      //   { replace: true }
-      // )
-      state.invalidate(removeKey)
+      state.invalidate(prop)
     }
   }
 }

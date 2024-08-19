@@ -1,10 +1,10 @@
 import React, { FC, useContext, useEffect, useState } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { SortableTree } from 'dnd-kit-sortable-tree'
 import { BuilderLayerCell } from '@/builder/views/BuilderEditable/widgets/BuilderLayers/components/BuilderLayerCell/BuilderLayerCell'
 import { useBuilderLayers } from '@/builder/views/BuilderEditable/widgets/BuilderLayers/hooks/useBuilderLayers'
 import { BuilderLayerSortingCell } from '@/builder/views/BuilderEditable/widgets/BuilderLayers/components/BuilderLayerSortingCell/BuilderLayerSortingCell'
+import dynamic from 'next/dynamic'
 
 interface BuilderLayersProps {
   className?: string
@@ -22,6 +22,8 @@ const LayerComponent = React.forwardRef((props, ref) => {
     </BuilderLayerSortingCell>
   )
 })
+
+const SortableTree = dynamic(() => import('dnd-kit-sortable-tree').then(m => m.SortableTree), { ssr: false })
 
 const BuilderLayers: FC<BuilderLayersProps> = ({ className }) => {
   const { items, handleChangeItems } = useBuilderLayers()

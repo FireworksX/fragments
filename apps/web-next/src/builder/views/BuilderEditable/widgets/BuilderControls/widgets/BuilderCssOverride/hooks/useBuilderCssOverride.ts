@@ -4,6 +4,9 @@ import { useBuilderSelection } from '@/builder/hooks/useBuilderSelection'
 import { useLayerInvoker } from '@/builder/hooks/useLayerInvoker'
 import { useContext } from 'react'
 import { BuilderContext } from '@/builder/BuilderContext'
+import { to } from '@react-spring/web'
+import { isValue } from '@fragments/utils'
+import { animatableValue } from '@/builder/utils/animatableValue'
 
 export const useBuilderCssOverride = () => {
   const { documentManager } = useContext(BuilderContext)
@@ -20,12 +23,12 @@ export const useBuilderCssOverride = () => {
   })
   const cssOverride = layerInvoker('cssText')
   const cssOverrideVariables = layerInvoker('cssLinks')
-  const isEmpty = documentManager.isEmpty(cssOverride.value)
+  const hasCssOverride = to(cssOverride.value, cssText => isValue(cssText))
 
   const onClickHeader = () => {
-    if (!isEmpty) {
-      cssOverride.onChange(undefined)
-      cssOverrideVariables.value?.forEach(removeVariable)
+    if (animatableValue(hasCssOverride)) {
+      cssOverride.onChange(null)
+      // cssOverrideVariables.value?.forEach(removeVariable)
     } else {
       cssOverride.onChange('/* Write custom css */')
     }
@@ -41,8 +44,8 @@ export const useBuilderCssOverride = () => {
 
   return {
     selectionGraph,
-    isEmpty,
-    css: cssOverride,
+    hasCssOverride,
+    cssOverride,
     variables: cssOverrideVariables,
     onClick: onClickHeader,
     selectCss,

@@ -25,6 +25,7 @@ const BuilderControls: FC<ControlsProps> = ({ className, ...asideProps }) => {
   const hasLayout = [builderNodes.Frame, builderNodes.Breakpoint].some(type => type === selectionGraph?._type)
   const hasStyles = [builderNodes.Frame, builderNodes.Breakpoint].some(type => type === selectionGraph?._type)
   const hasText = [builderNodes.Text].some(type => type === selectionGraph?._type)
+  const hasCssOverride = [builderNodes.Frame].some(type => type === selectionGraph?._type)
 
   return (
     <AsideBar className={cn(className, styles.root)} {...asideProps}>
@@ -36,7 +37,7 @@ const BuilderControls: FC<ControlsProps> = ({ className, ...asideProps }) => {
       {/*<BuilderEffects />*/}
       {hasStyles && <BuilderStyles />}
       {hasText && <BuilderText />}
-      {/*<BuilderCssOverride />*/}
+      {hasCssOverride && <BuilderCssOverride />}
     </AsideBar>
   )
 }

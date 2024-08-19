@@ -16,8 +16,7 @@ export const useParseRules = (layerEntity: Entity) => {
   // const positionRules = useParsePositionRules(layerEntity)
   // const effects = useEffectsRules(layerEntity)
   // const children = useParseChildren(layerEntity)
-  // const cssRules = useParseCssRules(layerEntity)
-
+  const cssRules = useParseCssRules(layerEntity)
   // const linkAttrs = useParseLinkRules(layerEntity)
 
   return {

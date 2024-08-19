@@ -3,6 +3,7 @@ import { FC, InputHTMLAttributes } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
 import cn from 'classnames'
 import styles from './styles.module.css'
+import { animated } from '@react-spring/web'
 
 interface TextareaProps extends InputHTMLAttributes<HTMLTextAreaElement> {
   value: string
@@ -23,4 +24,4 @@ const Textarea: FC<TextareaProps> = ({ className, value, onChange, ...rest }) =>
   )
 }
 
-export default Textarea
+export default animated(Textarea)

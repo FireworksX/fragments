@@ -1,11 +1,17 @@
+import { LinkKey } from '@graph-state/core'
+import { useContext } from 'react'
+import { BuilderContext } from '@/builder/BuilderContext'
+import { useGraph } from '@graph-state/react'
+
 export type BuilderFieldOverrides = ReturnType<ReturnType<typeof useBuilderFieldOverrides>>
 
-export const useBuilderFieldOverrides = layer => {
-  const statex = null //useStore($statex)
+export const useBuilderFieldOverrides = (layerLink: LinkKey) => {
+  const { documentManager } = useContext(BuilderContext)
+  const [layerGraph] = useGraph(documentManager, layerLink)
 
   return (key: string) => {
-    const hasOverrideField = !statex?.hasOverride(layer, key)
-    const hasOverrideEntity = statex?.hasOverride(layer)
+    const hasOverrideField = !documentManager.isOverrideFromField(layerLink, key)
+    const hasOverrideEntity = documentManager?.hasOverrider(layerLink)
     const hasOverride = !!(hasOverrideField && hasOverrideEntity)
 
     return {
@@ -14,7 +20,7 @@ export const useBuilderFieldOverrides = layer => {
         ? [
             {
               label: 'Reset override',
-              onClick: () => statex.resetOverride(layer, key)
+              onClick: () => documentManager.resetOverride(layerLink, key)
             }
           ]
         : []

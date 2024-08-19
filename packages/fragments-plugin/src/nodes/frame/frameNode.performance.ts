@@ -10,18 +10,7 @@ import { layerProps } from 'src/props/layer/layer.performance'
 import { paddingProps } from 'src/props/padding/padding.performance'
 import { childrenProps } from 'src/props/children/children.performance'
 import { cloneProps } from 'src/props/clone/clone.performance'
-// import { basePropsResolver } from '../propsResolvers/basePropsResolver'
-// import { childrenPropsResolver } from '../propsResolvers/childrenPropsResolver'
-// import { geometryPropsResolver } from '../propsResolvers/geometryPropsResolver'
-// import { clonePropsResolver } from '../propsResolvers/clonePropsResolver'
-// import { layerPropsResolver } from '../propsResolvers/layerPropsResolver'
-// import { layoutPropsResolver } from '../propsResolvers/layoutPropsResolver'
-// import { paddingPropsResolver } from '../propsResolvers/paddingPropsResolver'
-// import { scenePropsResolver } from '../propsResolvers/scenePropsResolver'
-// import { cssPropsResolver } from '../propsResolvers/cssPropsResolver'
-// import { effectsPropsResolver } from '../propsResolvers/effectsPropsResolver'
-// import { cornerPropsResolver } from '../propsResolvers/cornerPropsResolver'
-// import { hyperlinkPropsResolver } from '../propsResolvers/hyperlinkPropsResolver'
+import { cssOverride } from 'src/props/cssOverride/cssOverride.performance'
 
 export const frameNode: ResolverNode = (state, initialEntity?: FrameNode): FrameNode => {
   return pipeResolvers(
@@ -34,6 +23,7 @@ export const frameNode: ResolverNode = (state, initialEntity?: FrameNode): Frame
     layerProps,
     paddingProps,
     childrenProps,
-    cloneProps
+    cloneProps,
+    cssOverride
   )(initialEntity, state)
 }

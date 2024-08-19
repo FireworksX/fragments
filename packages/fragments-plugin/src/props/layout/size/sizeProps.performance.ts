@@ -18,8 +18,6 @@ export const sizeProps: Resolver = (state, entity) => {
     const localAspectRatio$ = state.resolve(key).aspectRatio
     const isSynced$ = state.resolve(key)?.isSynced()
 
-    console.log(localWidth$, key)
-
     if (localWidth$) {
       if (isSynced$.get()) {
         localWidth$.set(value)
