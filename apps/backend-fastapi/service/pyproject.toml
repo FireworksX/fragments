@@ -9,7 +9,7 @@ python = ">=3.9,<3.13"
 # Base
 fastapi = {extras = ["full"], version = "^0.111.1"}
 #supabase-py-async = "*"
-
+strawberry-graphql = "^0.237.3"
 
 
 # Low level

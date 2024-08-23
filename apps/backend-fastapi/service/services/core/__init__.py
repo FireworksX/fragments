@@ -36,7 +36,7 @@ async def log_and_trace(request: Request, call_next: Callable[[Request], Any]) -
 
 from .routes import *  # pylint: disable=C0413  # isort:skip
 
-app.include_router(api, tags=['api'], prefix='/api')
+app.include_router(api, tags=['api'])
 
 
 def json_api_schema() -> Dict[Any, Any]:
