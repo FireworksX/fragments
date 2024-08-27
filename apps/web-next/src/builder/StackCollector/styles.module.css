@@ -32,6 +32,26 @@
     color: var(--text-color-accent);
     font-weight: 500;
     padding: 0 10px;
+    display: flex;
+    align-items: center;
+}
+
+.description {
+    padding-left: 22px;
+    position: relative;
+    color: var(--secondary);
+    text-transform: capitalize;
+
+    &:before {
+        content: '';
+        position: absolute;
+        top: 7px;
+        left: 10px;
+        width: 3px;
+        height: 3px;
+        background: var(--secondary);
+        border-radius: 20px;
+    }
 }
 
 .actionButton {

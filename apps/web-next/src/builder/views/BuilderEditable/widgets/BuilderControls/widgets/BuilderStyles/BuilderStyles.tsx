@@ -36,8 +36,6 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
   const { selectionGraph, opacity, visible, zIndex, radius, fill, border } = useBuilderStyles()
   const { getColor, getNameColor } = useDisplayColor(documentManager)
 
-  console.log(opacity)
-
   return (
     <Panel
       className={cn(styles.root, className)}
@@ -67,7 +65,7 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
       </ControlRow>
 
       {!fill.disabled && (
-        <ControlRow title='Fill' actions={fill.actions} isHighlight={fill.isOverride}>
+        <ControlRow title='Fill' {...fill}>
           <ControlRowWide>
             <GraphValue graphState={documentManager} field={fill.value}>
               {value => {

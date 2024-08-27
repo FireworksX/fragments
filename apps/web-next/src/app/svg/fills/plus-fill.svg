@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10">
+    <path d="M 4.75 0 C 7.373 0 9.5 2.127 9.5 4.75 C 9.5 7.373 7.373 9.5 4.75 9.5 C 2.127 9.5 0 7.373 0 4.75 C 0 2.127 2.127 0 4.75 0 Z"
+          fill="currentColor"></path>
+    <path d="M 4.75 7 L 4.75 2.5" fill="transparent" stroke-width="1.5"
+          stroke="var(--color, #ffffff)" stroke-linecap="round"></path>
+    <path d="M 7 4.75 L 2.5 4.75" fill="transparent" stroke-width="1.5"
+          stroke="var(--color, #ffffff)" stroke-linecap="round"></path>
+</svg>

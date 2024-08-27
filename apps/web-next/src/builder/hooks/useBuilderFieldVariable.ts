@@ -1,67 +1,99 @@
 import { Field } from 'react-hook-form'
 import { capitalize } from '@/app/utils/capitalize'
+import { useContext } from 'react'
+import { BuilderContext } from '@/builder/BuilderContext'
+import { useBuilderVariableCreator } from '@/builder/views/BuilderEditable/widgets/BuilderVariables/hooks/useBuilderVariableCreator'
+import { builderVariableType } from '@fragments/fragments-plugin/performance'
+import { useBuilderVariables } from '@/builder/views/BuilderEditable/widgets/BuilderVariables/hooks/useBuilderVariables'
+import { LinkKey } from '@graph-state/core'
+import { ResultSetter } from '@/builder/hooks/useLayerInvoker'
+import { animatableValue } from '@/builder/utils/animatableValue'
+import { popoutsStore } from '@/app/store/popouts.store'
+import { stackVariableTransformName } from '@/builder/StackCollector/components/variables/StackVariableTransform/StackVariableTransform'
 
 export type BuilderFieldVariable = ReturnType<ReturnType<typeof useBuilderFieldVariable>>
 
+const variableFields = { opacity: builderVariableType.Number, visible: builderVariableType.Boolean }
+
 export const useBuilderFieldVariable = (layer: Field) => {
-  const statex = {}
-  const builderView = ''
-  // const { open } = useContext(ModalContext)
-  // const builderView = useStore($builderView)
-  // const { openLayerField } = useStore($layers)
-  // const statex = useStore($statex)
-  const node = null //useStatex(statex, layer)
-  const componentNode = null //statex.resolve(openLayerField)
-  const componentProperties = [] //(componentNode?.componentPropertyDefinitions ?? []).map(statex.resolve)
+  const { documentManager } = useContext(BuilderContext)
+  const { variables, propsLinks, getAllowedVariablesByType } = useBuilderVariables()
 
-  /**
-   * initialValue - это значение, которое было на момент создания переменной.
-   * Нужно для того, чтобы если сделать reset переменной, то она была равна initialValue
-   */
-  const createVariable = (key: string, initialValue: unknown) => {
-    const nextName = capitalize(key)
-    const countOfSameNames = componentProperties.filter(prop => statex.resolve(prop).name.startsWith(nextName)).length
-    const basePropertyData = {
-      name: countOfSameNames > 0 ? `${nextName} ${countOfSameNames + 1}` : nextName,
-      initialValue
-    }
-
-    if (componentNode) {
-      if (key === 'opacity') {
-        const property = statex.createComponentPropertyMap.createNumberProperty(basePropertyData)
-        componentNode.addComponentProperty(property)
-        // node.setOpacity(keyOfEntity(property))
-      }
-      if (key === 'visible') {
-        const property = statex.createComponentPropertyMap.createBooleanProperty(basePropertyData)
-        componentNode.addComponentProperty(property)
-        // node.toggleVisible(keyOfEntity(property))
-      }
-    }
-
-    // open('componentVariables')
+  const getVariableName = (preferredNAme: string) => {
+    const currentLinks = propsLinks.map(documentManager.resolve)
+    const countOfSameNames = currentLinks.filter(prop => prop.name.startsWith(preferredNAme)).length
+    return countOfSameNames > 0 ? `${preferredNAme}_${countOfSameNames + 1}` : preferredNAme
   }
 
-  return (key: string, initialValue: unknown) => ({
-    hasConnector: builderView === 'component',
-    actions:
-      builderView === 'component'
+  const handleReset = (key: string) => {
+    documentManager.restoreField(layer, key)
+  }
+
+  const handleCreateVariable = (key: string, setter: ResultSetter, currentValue: unknown) => {
+    if (key === 'opacity') {
+      const variableCreator = variables.find(v => v.type === builderVariableType.Number)
+      const variableLink = variableCreator.createAndAppend(
+        {
+          name: getVariableName('opacity'),
+          step: 0.1,
+          min: 0,
+          max: 1,
+          displayStepper: false,
+          defaultValue: animatableValue(currentValue)
+        },
+        { initial: true, position: 'right' }
+      )
+      setter(variableLink)
+    }
+  }
+
+  const handleConnectVariable = ({ key, selection, setter }) => {
+    const { value, transform } = selection
+
+    if (transform) {
+      popoutsStore.open(stackVariableTransformName, {
+        description: key,
+        position: 'right',
+        initial: true,
+        context: {
+          fieldKey: key,
+          value,
+          onReset: () => {
+            handleReset(key)
+            popoutsStore.close()
+          }
+        }
+      })
+    }
+
+    setter(value)
+  }
+
+  return (key: string, setter: ResultSetter, currentValue: unknown) => {
+    const hasConnector = key in variableFields
+    const allowedVariables = getAllowedVariablesByType(variableFields[key], selection =>
+      handleConnectVariable({ selection, setter, key })
+    ).map(variable => ({
+      ...variable,
+      options: [variable.transforms]
+    }))
+
+    return {
+      hasConnector,
+      handleReset: () => handleReset(key),
+      actions: hasConnector
         ? [
             {
               label: 'Create variable',
-              onClick: () => createVariable(key, initialValue)
+              onClick: () => handleCreateVariable(key, setter, currentValue)
             },
             {
               label: 'Set variable',
-              disabled: componentProperties.length === 0,
-              options: [
-                componentProperties.map(prop => ({
-                  label: prop.name,
-                  onClick: () => alert(1)
-                }))
-              ]
+              options: [allowedVariables],
+              disabled: allowedVariables.length === 0
             }
           ]
         : []
-  })
+    }
+  }
 }

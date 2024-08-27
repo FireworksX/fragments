@@ -17,7 +17,7 @@
     "@fragments/render-react": "workspace:*",
     "@fragments/utils": "workspace:*",
     "@graph-state/checkers": "^0.1.1",
-    "@graph-state/core": "^0.6.4",
+    "@graph-state/core": "^0.6.5",
     "@graph-state/plugin-extend": "^0.3.2",
     "@graph-state/plugin-logger": "^0.2.1",
     "@graph-state/react": "^0.3.2",

@@ -1,0 +1,57 @@
+.root {
+    height: 30px;
+    border-radius: var(--radius-second);
+    color: var(--light);
+    background: var(--primary);
+    display: flex;
+    align-items: center;
+}
+
+.body {
+    font-size: 12px;
+    flex-grow: 1;
+    font-weight: 500;
+    margin-left: 8px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+
+.iconWrapper {
+    margin-left: 5px;
+    width: 22px;
+    min-width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    --primary: rgba(var(--background--rgb), .2)
+}
+
+.iconPlaceholder {
+    position: absolute;
+    inset: 0;
+}
+
+.iconTarget {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.iconValue {
+    position: absolute;
+    inset: 0;
+}
+
+.reset {
+    width: 24px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

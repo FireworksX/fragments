@@ -1,7 +1,7 @@
 import { useParseRules } from './hooks/useLayerRules/useParseRules'
 import { FC, useCallback, useContext } from 'react'
 import { BuilderContext } from '@/builder/BuilderContext'
-import { animated } from '@react-spring/web'
+import { animated, Interpolation, SpringValue, to } from '@react-spring/web'
 import { useGraph } from '@graph-state/react'
 import { builderNodes } from '@fragments/fragments-plugin/performance'
 import { Text } from '@/builder/renderer/Text/Text'
@@ -12,6 +12,9 @@ interface LayerProps {
   onMouseOver?: (e, options) => void
   onMouseLeave?: (e, options) => void
 }
+
+const One = new SpringValue(0.3)
+const Two = new SpringValue(0.7)
 
 export const Layer: FC<LayerProps> = ({ layerKey, onClick, onMouseOver, onMouseLeave }) => {
   const { documentManager } = useContext(BuilderContext)
@@ -49,16 +52,18 @@ export const Layer: FC<LayerProps> = ({ layerKey, onClick, onMouseOver, onMouseL
   }
 
   return (
-    <animated.div
-      data-key={layerKey}
-      style={cssRules}
-      onClick={proxyOnClick}
-      onMouseOver={proxyOnMouseOver}
-      onMouseLeave={proxyOnMouseLeave}
-    >
-      {children.map(child => (
-        <Layer key={child} layerKey={child} onClick={onClick} onMouseLeave={onMouseLeave} onMouseOver={onMouseOver} />
-      ))}
-    </animated.div>
+    <>
+      <animated.div
+        data-key={layerKey}
+        style={cssRules}
+        onClick={proxyOnClick}
+        onMouseOver={proxyOnMouseOver}
+        onMouseLeave={proxyOnMouseLeave}
+      >
+        {children.map(child => (
+          <Layer key={child} layerKey={child} onClick={onClick} onMouseLeave={onMouseLeave} onMouseOver={onMouseOver} />
+        ))}
+      </animated.div>
+    </>
   )
 }

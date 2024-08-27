@@ -6,6 +6,7 @@ import { animated } from '@react-spring/web'
 import Touchable from '@/app/components/Touchable'
 import CaretLeft from '@/app/svg/caret-left.svg'
 import Close from '@/app/svg/close.svg'
+import { nextTick } from '@/builder/utils/nextTick'
 
 export interface StackCollectorProps {
   className?: string
@@ -16,7 +17,7 @@ export interface StackCollectorProps {
 
 const StackCollector: FC<StackCollectorProps> = ({ className, children, onPrev, onClose }) => {
   const ref = useRef<ElementRef<'div'>>(null)
-  const { activePanel, getPanel, panelTransition, hasPrev, title, proxyPrevHandler, proxyCloseHandler } =
+  const { activePanel, getPanel, panelTransition, hasPrev, title, description, proxyPrevHandler, proxyCloseHandler } =
     useStackCollector({
       panels: React.Children.toArray(children) as StackPanel[],
       onClose,
@@ -32,7 +33,9 @@ const StackCollector: FC<StackCollectorProps> = ({ className, children, onPrev, 
         }
       }
 
-      document.addEventListener('click', onClick)
+      nextTick(() => {
+        document.addEventListener('click', onClick)
+      })
       return () => {
         document.removeEventListener('click', onClick)
       }
@@ -51,7 +54,10 @@ const StackCollector: FC<StackCollectorProps> = ({ className, children, onPrev, 
             <CaretLeft width={13} height={13} />
           </Touchable>
         )}
-        <div className={styles.title}>{title}</div>
+        <div className={styles.title}>
+          {title}
+          {description && <div className={styles.description}>{description}</div>}
+        </div>
         <Touchable className={styles.actionButton} onClick={proxyCloseHandler}>
           <Close width={13} height={13} />
         </Touchable>

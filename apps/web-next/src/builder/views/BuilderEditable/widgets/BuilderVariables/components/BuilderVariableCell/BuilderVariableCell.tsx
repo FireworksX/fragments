@@ -5,10 +5,10 @@ import Cell from '@/builder/components/Cell/Cell'
 import { BuilderContext } from '@/builder/BuilderContext'
 import { useGraph } from '@graph-state/react'
 import { LinkKey } from '@graph-state/core'
-import HashTagFillIcon from '@/app/svg/hashtag-fill.svg'
-import ToggleFillIcon from '@/app/svg/toggle-fill.svg'
+import HashTagFillIcon from '@/app/svg/fills/hashtag-fill.svg'
+import ToggleFillIcon from '@/app/svg/fills/toggle-fill.svg'
 import BarHorizontalIcon from '@/app/svg/bar-horizontal.svg'
-import TextFrameFillIcon from '@/app/svg/text-frame-fill.svg'
+import TextFrameFillIcon from '@/app/svg/fills/text-frame-fill.svg'
 import Button from '@/app/components/Button'
 import { builderVariableType } from '@fragments/fragments-plugin/performance'
 
@@ -17,6 +17,13 @@ interface BuilderVariableCellProps {
   className?: string
   actionsClassName?: string
   onClick?: () => unknown
+}
+
+export const VariableIconsMap = {
+  [builderVariableType.Number]: <HashTagFillIcon style={{ color: 'var(--primary)' }} width={22} height={22} />,
+  [builderVariableType.Boolean]: <ToggleFillIcon style={{ color: 'var(--primary)' }} width={22} height={22} />,
+  [builderVariableType.Object]: <BarHorizontalIcon width={18} height={18} />,
+  [builderVariableType.String]: <TextFrameFillIcon style={{ color: 'var(--primary)' }} width={22} height={22} />
 }
 
 export const BuilderVariableCell: FC<BuilderVariableCellProps> = ({
@@ -28,13 +35,7 @@ export const BuilderVariableCell: FC<BuilderVariableCellProps> = ({
   const { documentManager } = useContext(BuilderContext)
   const [variable] = useGraph(documentManager, variableKey)
   const [documentGraph] = useGraph(documentManager, documentManager.root)
-
-  const IconTag = {
-    [builderVariableType.Number]: <HashTagFillIcon style={{ color: 'var(--primary)' }} width={22} height={22} />,
-    [builderVariableType.Boolean]: <ToggleFillIcon style={{ color: 'var(--primary)' }} width={22} height={22} />,
-    [builderVariableType.Object]: <BarHorizontalIcon width={18} height={18} />,
-    [builderVariableType.String]: <TextFrameFillIcon style={{ color: 'var(--primary)' }} width={22} height={22} />
-  }[variable?.type]
+  const Icon = VariableIconsMap[variable.type]
 
   const description = {
     [builderVariableType.Object]: !!variable?.fields?.length && `Fields: ${variable?.fields?.length}`
@@ -51,9 +52,6 @@ export const BuilderVariableCell: FC<BuilderVariableCellProps> = ({
             <Button
               mode='secondary'
               onClick={e => {
-                console.log('cell', e)
-                e.preventDefault()
-                e.stopPropagation()
                 documentGraph.removeProp(variableKey)
               }}
             >
@@ -62,7 +60,7 @@ export const BuilderVariableCell: FC<BuilderVariableCellProps> = ({
           </div>
         </>
       }
-      before={<div className={styles.iconWrapper}>{IconTag}</div>}
+      before={<div className={styles.iconWrapper}>{Icon}</div>}
       onClick={onClick}
     >
       {variable?.name}

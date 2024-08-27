@@ -2,6 +2,7 @@
 import { ElementRef, FC, InputHTMLAttributes, MutableRefObject } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
+import { animated } from '@react-spring/web'
 
 interface InputTextProps extends InputHTMLAttributes<HTMLInputElement> {
   className?: string
@@ -39,4 +40,4 @@ const InputText: FC<InputTextProps> = ({
   )
 }
 
-export default InputText
+export default animated(InputText)

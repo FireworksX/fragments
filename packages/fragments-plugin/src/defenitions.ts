@@ -7,7 +7,9 @@ export const builderNodes = createConstants(
   'Text',
   'SolidPaintStyle',
   'CssLink',
-  'Variable'
+  'Variable',
+  'ComputedValue',
+  'TransformValue'
 )
 
 export const builderBorderType = createConstants('None', 'Solid', 'Dashed', 'Dotted')
@@ -33,4 +35,24 @@ export const builderVariableType = createConstants(
   'Enum',
   'Number',
   'Object'
+)
+
+export const builderVariableTransforms = createConstants(
+  'convert',
+  'exists',
+  'equals',
+  'startWith',
+  'endWith',
+  'contains',
+  'dateBefore',
+  'dateAfter',
+  'dateBetween',
+  'feature',
+  'notFeature',
+  'gt', // Greater than
+  'gte', // Greater than or equals
+  'lt', // Less than
+  'lte', // Less than or equals,
+  'convertFromBoolean',
+  'negative'
 )

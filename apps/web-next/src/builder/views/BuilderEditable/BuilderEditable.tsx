@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect } from 'react'
+import React, { FC, useContext, useEffect, useState } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import Sidebar from '@/builder/views/BuilderEditable/widgets/BuilderSidebar/BuilderSidebar'
@@ -15,6 +15,10 @@ import { BuilderTextEditor } from '@/builder/views/BuilderEditable/widgets/Build
 import BuilderControls from '@/builder/views/BuilderEditable/widgets/BuilderControls/BuilderControls'
 import { BuilderFloatBar } from '@/builder/views/BuilderEditable/widgets/BuilderFloatBar/BuilderFloatBar'
 import { useBuilderHotKeys } from '@/app/hooks/hotkeys/useBuilderHotKeys'
+import { builderVariableTransforms, builderVariableType } from '@fragments/fragments-plugin'
+import { SpringValue, animated } from '@react-spring/web'
+import Panel from '@/builder/components/Panel/Panel'
+import Slider from '@/app/components/Slider/Slider'
 
 interface BuilderEditableProps {
   className?: string
@@ -22,7 +26,7 @@ interface BuilderEditableProps {
 
 export const BuilderEditable: FC<BuilderEditableProps> = ({ className }) => {
   const { isEdit, focus } = useBuilderManager()
-  const { canvasManager } = useContext(BuilderContext)
+  const { canvasManager, documentManager } = useContext(BuilderContext)
   useBuilderHotKeys()
 
   useEffect(() => {

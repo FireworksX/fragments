@@ -60,6 +60,7 @@ export const useStackCollector = ({ panels, onPrev, onClose }: Options) => {
 
   return {
     title: currentPanel?.props?.title,
+    description: currentPopout?.description,
     activePanel,
     getPanel,
     currentPanel,

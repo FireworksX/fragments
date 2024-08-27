@@ -28,6 +28,7 @@ type SetterOptions = {
 
 type Setter = (options: SetterOptions) => void
 type Getter = (options: Omit<SetterOptions, 'options'>) => void
+export type ResultSetter = (nextValue: unknown, options: Omit<SetterOptions, 'options'>) => void
 
 export const useLayerInvoker = (field: Field, setter?: Setter, getter?: Getter) => {
   const { documentManager } = useContext(BuilderContext)
@@ -36,9 +37,10 @@ export const useLayerInvoker = (field: Field, setter?: Setter, getter?: Getter) 
   const getVariables = useBuilderFieldVariable(field)
 
   return (key: string): LayerInvokerValue => {
-    const resultValue = () =>
+    const resultValueGetter = () =>
       getter?.({ node: entity, key, value: documentManager.resolveValue(field, key) }) ??
       documentManager.resolveValue(field, key)
+    const resultValue = resultValueGetter()
 
     const resultSetter = (newValue: any, options?: SetOptions) =>
       setter?.({
@@ -46,24 +48,20 @@ export const useLayerInvoker = (field: Field, setter?: Setter, getter?: Getter) 
         key,
         documentManager,
         value: newValue,
-        prevValue: resultValue(),
+        prevValue: resultValue,
         options
       })
-    const propertyKey =
-      documentManager.entityOfKey(resultValue)?._type === {}.ComponentProperty ? resultValue() : undefined
     const overrides = getOverrides(key)
-    const variables = getVariables(key, resultValue)
+    const variables = getVariables(key, resultSetter, resultValue)
     const actions = [overrides.actions, variables.actions]
 
     return {
-      value: resultValue(),
+      value: resultValue,
       onChange: resultSetter,
-      ...omit(overrides, 'actions'),
-      ...omit(variables, 'actions'),
       actions,
-      property: propertyKey,
-      onResetProperty: propertyKey ? () => resultSetter(null) : undefined
-      // onResetProperty: propertyKey ? () => resultSetter(statex.resolve(propertyKey)?.initialValue) : undefined
+      isHighlight: overrides.isOverride,
+      hasConnector: variables.hasConnector,
+      onResetVariable: variables.handleReset
     }
   }
 }

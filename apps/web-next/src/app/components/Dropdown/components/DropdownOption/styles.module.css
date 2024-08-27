@@ -10,7 +10,7 @@
     transition: var(--animation-transition-default);
     cursor: pointer;
     color: var(--text-color-accent);
-
+    gap: 5px;
 
     &:hover:not(.disabled) {
         background: var(--primary-bg);

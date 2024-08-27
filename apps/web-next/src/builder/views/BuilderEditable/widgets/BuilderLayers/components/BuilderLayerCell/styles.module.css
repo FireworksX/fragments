@@ -21,12 +21,12 @@
     transition: transform var(--animation-transition-default);
 
     &.selected {
-        color: var(--text-color);
+        color: var(--light);
         .labelInput {
-            color: var(--text-color);
+            color: var(--light);
         }
         .primaryIcon, .actions, .textIcon, .componentIcon {
-            color: var(--text-color);
+            color: var(--light);
         }
         &:after {
             background: var(--primary);

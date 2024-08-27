@@ -22,7 +22,7 @@ const RenderDropdown: FC<RenderDropdownProps> = ({ className, children, options,
         <DropdownGroup key={index}>
           {group.map(option => {
             const Option = (
-              <DropdownOption {...option} hasNested={Array.isArray(option.options)}>
+              <DropdownOption {...option} hasNested={Array.isArray(option.options) && option.options[0].length > 0}>
                 {option.label}
               </DropdownOption>
             )

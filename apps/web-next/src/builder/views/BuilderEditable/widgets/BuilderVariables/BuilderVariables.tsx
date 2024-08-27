@@ -12,7 +12,6 @@ import { useBuilderVariables } from '@/builder/views/BuilderEditable/widgets/Bui
 import { builderVariableType } from '@fragments/fragments-plugin/performance'
 import Cell from '@/builder/components/Cell/Cell'
 import { BuilderVariableCell } from '@/builder/views/BuilderEditable/widgets/BuilderVariables/components/BuilderVariableCell/BuilderVariableCell'
-import { useBuilderVariablesDep } from '@/builder/views/BuilderEditable/widgets/BuilderVariables/hooks/useBuilderVariablesDep'
 
 interface BuilderVariablesProps {
   className?: string
@@ -21,7 +20,7 @@ interface BuilderVariablesProps {
 const types = Object.keys(builderVariableType)
 
 export const BuilderVariables: FC<BuilderVariablesProps> = ({ className }) => {
-  const { createProp, propsLinks, openVariable } = useBuilderVariables()
+  const { propsLinks, variables, openVariable } = useBuilderVariables()
 
   return (
     <div className={cn(styles.root, className)} data-testid='BuilderVariables'>
@@ -34,9 +33,12 @@ export const BuilderVariables: FC<BuilderVariablesProps> = ({ className }) => {
             options={
               <>
                 <DropdownGroup>
-                  {types.map(type => (
-                    <DropdownOption key={type} onClick={() => createProp(type)}>
-                      {type}
+                  {variables.map(variableCell => (
+                    <DropdownOption
+                      key={variableCell.type}
+                      onClick={() => variableCell.createAndAppend({}, { intital: true })}
+                    >
+                      {variableCell.type}
                     </DropdownOption>
                   ))}
                 </DropdownGroup>
@@ -49,7 +51,7 @@ export const BuilderVariables: FC<BuilderVariablesProps> = ({ className }) => {
       >
         <div className={styles.body}>
           {propsLinks.map(link => (
-            <BuilderVariableCell key={link} variableKey={link} onClick={() => openVariable(link)}></BuilderVariableCell>
+            <BuilderVariableCell key={link} variableKey={link} onClick={() => openVariable(link, { initial: true })} />
           ))}
         </div>
       </Panel>

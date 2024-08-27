@@ -22,18 +22,18 @@ export const HeaderNav: FC<HeaderNavProps> = ({ className }) => {
     <div className={cn(styles.root, className)} data-testid='HeaderNav'>
       <div className={styles.nav}>
         <Dropdown trigger='click' options={<FeedbackForm />}>
-          <Button className={styles.button} size='regular' mode='outline'>
+          <Button className={styles.button} size='medium' mode='outline'>
             Feedback
           </Button>
         </Dropdown>
 
-        <Button className={styles.button} size='regular' mode='tertiary-secondary'>
+        <Button className={styles.button} size='medium' mode='tertiary-secondary'>
           Changelog
         </Button>
-        <Button className={styles.button} size='regular' mode='tertiary-secondary'>
+        <Button className={styles.button} size='medium' mode='tertiary-secondary'>
           Help
         </Button>
-        <Button className={styles.button} size='regular' mode='tertiary-secondary'>
+        <Button className={styles.button} size='medium' mode='tertiary-secondary'>
           Docs
         </Button>
       </div>

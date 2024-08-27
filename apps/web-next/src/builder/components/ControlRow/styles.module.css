@@ -12,6 +12,7 @@
 .titleWrapper {
     display: flex;
     align-items: center;
+    gap: 5px;
     padding-left: 15px;
     height: 30px;
     position: relative;
@@ -40,4 +41,12 @@
     position: absolute;
     left: 0;
     top: 6px;
+}
+
+.connectorIcon {
+    position: absolute;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

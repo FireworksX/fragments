@@ -14,19 +14,19 @@ import { popoutsStore } from '@/app/store/popouts.store'
 import StackNumberVariable, {
   stackNumberVariableName,
   stackVariableName
-} from '@/builder/StackCollector/components/StackNumberVariable/StackNumberVariable'
+} from '@/builder/StackCollector/components/variables/StackNumberVariable/StackNumberVariable'
 import StackBooleanVariable, {
   stackBooleanVariableName
-} from '@/builder/StackCollector/components/StackBooleanVariable/StackBooleanVariable'
+} from '@/builder/StackCollector/components/variables/StackBooleanVariable/StackBooleanVariable'
 import StackObjectVariable, {
   stackObjectVariableName
-} from '@/builder/StackCollector/components/StackObjectVariable/StackObjectVariable'
-import StackObjectFieldsVariable, {
-  stackObjectFieldsVariableName
-} from '@/builder/StackCollector/components/StackObjectFieldsVariable/StackObjectFieldsVariable'
+} from '@/builder/StackCollector/components/variables/StackObjectVariable/StackObjectVariable'
 import StackStringVariable, {
   stackStringVariableName
-} from '@/builder/StackCollector/components/StackStringVariable/StackStringVariable'
+} from '@/builder/StackCollector/components/variables/StackStringVariable/StackStringVariable'
+import StackVariableTransform, {
+  stackVariableTransformName
+} from '@/builder/StackCollector/components/variables/StackVariableTransform/StackVariableTransform'
 
 interface BuilderPopoutsProps {
   className?: string
@@ -54,8 +54,8 @@ export const BuilderPopouts: FC<BuilderPopoutsProps> = ({ className }) => {
         <StackNumberVariable name={stackNumberVariableName} title='Number' />
         <StackBooleanVariable name={stackBooleanVariableName} title='Boolean' />
         <StackObjectVariable name={stackObjectVariableName} title='Object' />
-        <StackObjectFieldsVariable name={stackObjectFieldsVariableName} title='Object Fields' />
         <StackStringVariable name={stackStringVariableName} title='String' />
+        <StackVariableTransform name={stackVariableTransformName} title='Transform' />
       </StackCollector>
     </div>
   )

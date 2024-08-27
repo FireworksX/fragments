@@ -15,11 +15,13 @@
     border-radius: var(--radius-second);
     font-size: 12px;
     font-weight: 500;
-    padding: 0 16px 1px 7px;
+    padding: 0 25px 1px 7px;
     color: var(--text-color-accent);
     background: var(--background-secondary);
     border: none;
     width: 100%;
     outline: none;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
