@@ -29,6 +29,8 @@ class ServiceSettings(BaseSettings):
     SUPABASE_KEY: str = Field(default_factory=lambda: os.getenv("SUPABASE_KEY"))
     SUPERUSER_EMAIL: str = Field(default_factory=lambda: os.getenv("SUPERUSER_EMAIL"))
     SUPERUSER_PASSWORD: str = Field(default=lambda: os.getenv("SUPERUSER_PASSWORD"))
+    TELEGRAM_BOT_TOKEN: str = Field(default_factory=lambda: os.getenv("TELEGRAM_BOT_TOKEN"))
+    TELEGRAM_CHAT_ID: str = Field(default_factory=lambda: os.getenv("TELEGRAM_CHAT_ID"))
 
 
 service_settings = ServiceSettings()
@@ -36,11 +38,11 @@ service_settings = ServiceSettings()
 
 def uri_maker(conf_object, driver):
     def make_uri(
-        user: Optional[str] = conf_object.USER,
-        password: Optional[str] = conf_object.PASSWORD,
-        host: str = conf_object.HOST,
-        port: str = conf_object.PORT,
-        db: Optional[str] = getattr(conf_object, 'NAME', None),
+            user: Optional[str] = conf_object.USER,
+            password: Optional[str] = conf_object.PASSWORD,
+            host: str = conf_object.HOST,
+            port: str = conf_object.PORT,
+            db: Optional[str] = getattr(conf_object, 'NAME', None),
     ) -> str:
         if user:
             if password:
@@ -55,5 +57,5 @@ def uri_maker(conf_object, driver):
         if db:
             connection_string += f'/{db}'
         return connection_string
-    
+
     return make_uri

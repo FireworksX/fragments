@@ -1,4 +1,4 @@
-from .schemas import AuthPayload, User, Fragment, Media, FragmentIn, Project, ProjectIn
+from .schemas import AuthPayload, User, Fragment, Media, FragmentIn, Project, ProjectIn, FeedbackIn, Feedback
 
 import strawberry
 from typing import Optional, List
@@ -7,6 +7,7 @@ from .user import login, logout, refresh, profile, signup
 from .fragments import fragments, fragment_by_id, create_fragment, update_fragment
 from .project import projects, project_by_id, create_project, update_project
 from .media import upload_asset
+from .feedback import create_feedback
 from fastapi import FastAPI, File, UploadFile
 @strawberry.type
 class Query:
@@ -62,4 +63,8 @@ class Mutation:
     @strawberry.mutation
     async def asset(self, info: strawberry.Info[Context], file: UploadFile) -> Media:
         return await upload_asset(info, file)
+
+    @strawberry.mutation
+    async def feedback(self, info: strawberry.Info[Context], fd: FeedbackIn) -> Feedback:
+        return await create_feedback(info, fd)
 
