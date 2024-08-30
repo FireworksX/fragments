@@ -6,11 +6,14 @@ import RenderDropdown, { RenderDropdownProps } from '@/app/components/RenderDrop
 import PlusIcon from '@/app/svg/fills/plus-fill.svg'
 import { LinkKey } from '@graph-state/core'
 import { isVariableLink } from '@/builder/utils/isVariableLink'
+import { isComputedValueLink } from '@/builder/utils/isComputedValueLink'
 import { GraphValue } from '@graph-state/react'
 import { BuilderContext } from '@/builder/BuilderContext'
 import ControlRowWide from '@/builder/components/ControlRow/components/ControlRowWide/ControlRowWide'
 import { InputSelectVariable } from '@/app/components/InputSelectVariable/InputSelectVariable'
 import { builderNodes } from '@fragments/fragments-plugin'
+import { useBuilderVariableCreator } from '@/builder/views/BuilderEditable/widgets/BuilderVariables/hooks/useBuilderVariableCreator'
+import { isValue } from '@fragments/utils'
 
 interface BuilderControlRowProps extends PropsWithChildren {
   value?: unknown | LinkKey
@@ -36,7 +39,7 @@ const ControlRow: FC<BuilderControlRowProps> = ({
 }) => {
   const { documentManager } = useContext(BuilderContext)
   const hasActions = actions.some(action => action.length > 0)
-  const isVariable = isVariableLink(value)
+  const isVariable = isVariableLink(value) || isComputedValueLink(value)
 
   return (
     <div className={cn(styles.root, className)}>

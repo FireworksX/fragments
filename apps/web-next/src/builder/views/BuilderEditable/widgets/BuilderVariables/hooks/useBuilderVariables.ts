@@ -5,55 +5,6 @@ import { builderVariableType, builderVariableTransforms } from '@fragments/fragm
 import { useBuilderVariableCreator } from '@/builder/views/BuilderEditable/widgets/BuilderVariables/hooks/useBuilderVariableCreator'
 import { useBuilderVariableTransforms } from '@/builder/hooks/useBuilderVariableTransforms'
 
-type PropType = keyof typeof builderVariableType
-
-const numberTransforms = [
-  builderVariableTransforms.equals,
-  builderVariableTransforms.notEquals,
-  builderVariableTransforms.gt,
-  builderVariableTransforms.gte,
-  builderVariableTransforms.lt,
-  builderVariableTransforms.lte
-]
-
-const booleanTransforms = [builderVariableTransforms.convert]
-const stringTransforms = [
-  builderVariableTransforms.convert,
-  builderVariableTransforms.exists,
-  builderVariableTransforms.notExists,
-  builderVariableTransforms.equals,
-  builderVariableTransforms.notEquals,
-  builderVariableTransforms.startWith,
-  builderVariableTransforms.notStartWith,
-  builderVariableTransforms.endWith,
-  builderVariableTransforms.notEndWith,
-  builderVariableTransforms.contains,
-  builderVariableTransforms.notContains
-]
-
-const transformsLabels = {
-  [builderVariableTransforms.feature]: 'Feature',
-  [builderVariableTransforms.notFeature]: 'Not Feature',
-  [builderVariableTransforms.convert]: 'Convert',
-  [builderVariableTransforms.exists]: 'Is Set',
-  [builderVariableTransforms.notExists]: 'Is`t Set',
-  [builderVariableTransforms.equals]: 'Equals',
-  [builderVariableTransforms.notEquals]: 'Not Equals',
-  [builderVariableTransforms.startWith]: 'Start With',
-  [builderVariableTransforms.endWith]: 'End With',
-  [builderVariableTransforms.notStartWith]: 'Not Start With',
-  [builderVariableTransforms.notEndWith]: 'Not End With',
-  [builderVariableTransforms.contains]: 'Contains',
-  [builderVariableTransforms.notContains]: 'Not Contains',
-  [builderVariableTransforms.dateBefore]: 'Before',
-  [builderVariableTransforms.dateAfter]: 'After',
-  [builderVariableTransforms.dateBetween]: 'Between',
-  [builderVariableTransforms.gt]: 'Greater Than',
-  [builderVariableTransforms.gte]: 'Greater Than or Equals',
-  [builderVariableTransforms.lt]: 'Less Than',
-  [builderVariableTransforms.lte]: 'Less Than or Equals'
-}
-
 export const useBuilderVariables = () => {
   const { documentManager } = useContext(BuilderContext)
   const [documentGraph] = useGraph(documentManager, documentManager.root)
@@ -81,13 +32,13 @@ export const useBuilderVariables = () => {
   ) => {
     const transforms = getTransformsByType(variableGraph.type)
 
-    // if (targetType === variableGraph.type) {
-    //   if (targetType === builderVariableType.Boolean) {
-    //     // allowConditions = [builderVariableTransforms.feature, builderVariableTransforms.notFeature]
-    //   } else {
-    //     allowConditions = []
-    //   }
-    // }
+    if (targetType === variableGraph.type) {
+      if (targetType === builderVariableType.Boolean) {
+        // allowConditions = [builderVariableTransforms.feature, builderVariableTransforms.notFeature]
+      } else {
+        return []
+      }
+    }
 
     return transforms.map(transform => {
       return {
@@ -99,6 +50,7 @@ export const useBuilderVariables = () => {
             inputType: variableGraph.type,
             outputType: targetType
           })
+
           onSelect({ transform, value: computedValue })
         }
       }

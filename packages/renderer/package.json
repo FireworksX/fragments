@@ -1,0 +1,41 @@
+{
+  "name": "@fragments/renderer",
+  "private": false,
+  "version": "0.0.1",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.optimized.d.ts",
+      "import": "./dist/optimized/renderer.modern.js",
+      "require": "./dist/optimized/renderer.cjs",
+      "source": "./src/index.optimized.ts"
+    }
+  },
+  "scripts": {
+    "clear": "rm -r -f ./dist",
+    "build": "microbundle -f cjs,modern -i ./src/index.optimized.ts -o dist/optimized --jsxImportSource preact --external none",
+    "dev": "echo 'mock'",
+    "dev:s": "microbundle -f cjs,modern -i ./src/index.optimized.ts -o dist/optimized --jsxImportSource preact --external none --no-compress -w",
+    "test": "vitest",
+    "lint": "eslint . --ext .ts,.tsx --fix"
+  },
+  "peerDependencies": {
+    "preact": "10.23.2"
+  },
+  "dependencies": {
+    "@graph-state/core": "^0.6.6",
+    "@graph-state/react": "^0.3.2",
+    "@react-spring/core": "^9.7.4",
+    "@react-spring/web": "^9.7.3",
+    "microbundle": "^0.15.1",
+    "react-use-measure": "^2.1.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.4",
+    "@types/react-dom": "^18.3.0"
+  }
+}

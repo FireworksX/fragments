@@ -71,7 +71,7 @@ export const useParseStyleRules = (layerField: Field) => {
 
   return {
     opacity: getVariableValue$(documentManager, opacityValue),
-    display: to([layerInvoker('visible').value, isFlex], (value, isFlex) =>
+    display: to([getVariableValue$(documentManager, layerInvoker('visible').value), isFlex], (value, isFlex) =>
       value ? (isFlex ? 'flex' : 'block') : 'none'
     ),
     ...rules

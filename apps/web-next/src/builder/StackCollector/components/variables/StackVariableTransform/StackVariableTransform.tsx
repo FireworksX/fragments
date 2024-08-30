@@ -36,22 +36,9 @@ const controls: TabsSelectorItem[] = [
 const StackVariableTransform: FC<StackBooleanVariableProps> = ({ className }) => {
   const { documentManager } = useContext(BuilderContext)
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${stackVariableTransformName}`)
-  const { value: computedValueLink, onReset } = popout.context ?? {}
+  const { value: computedValueLink, valueReferenceOptions, onReset } = popout.context ?? {}
   const [computedValue] = useGraph(documentManager, computedValueLink)
   const [inputVariable] = useGraph(documentManager, computedValue.inputValue)
-  // const layerInvoker = useLayerInvoker(context.variableKey, ({ node, value, prevValue, key }) => {
-  //   if (key === 'name') {
-  //     node.rename(value)
-  //   }
-  //
-  //   if (['required', 'defaultValue'].includes(key)) {
-  //     node[`set${capitalize(key)}`](value)
-  //   }
-  // })
-
-  // const nameInvoker = layerInvoker('name')
-  // const requiredInvoker = layerInvoker('required')
-  // const defaultValueInvoker = layerInvoker('defaultValue')
 
   return (
     <div className={cn(styles.root, className)}>
@@ -68,34 +55,9 @@ const StackVariableTransform: FC<StackBooleanVariableProps> = ({ className }) =>
           isFirst={index === 0}
           inputType={inputVariable.type}
           transformLink={transformLink}
+          valueReferenceOptions={valueReferenceOptions}
         />
       ))}
-
-      {/*<ControlRow title='Name'>*/}
-      {/*  <ControlRowWide>*/}
-      {/*    <InputText {...nameInvoker} />*/}
-      {/*  </ControlRowWide>*/}
-      {/*</ControlRow>*/}
-
-      {/*<ControlRow title='Required'>*/}
-      {/*  <ControlRowWide>*/}
-      {/*    <TabsSelector*/}
-      {/*      items={controls}*/}
-      {/*      value={requiredInvoker.value}*/}
-      {/*      onChange={({ name }) => requiredInvoker.onChange(name)}*/}
-      {/*    />*/}
-      {/*  </ControlRowWide>*/}
-      {/*</ControlRow>*/}
-
-      {/*<ControlRow title='Default value'>*/}
-      {/*  <ControlRowWide>*/}
-      {/*    <TabsSelector*/}
-      {/*      items={controls}*/}
-      {/*      value={defaultValueInvoker.value}*/}
-      {/*      onChange={({ name }) => defaultValueInvoker.onChange(name)}*/}
-      {/*    />*/}
-      {/*  </ControlRowWide>*/}
-      {/*</ControlRow>*/}
     </div>
   )
 }

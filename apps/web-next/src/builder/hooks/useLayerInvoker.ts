@@ -61,7 +61,8 @@ export const useLayerInvoker = (field: Field, setter?: Setter, getter?: Getter) 
       actions,
       isHighlight: overrides.isOverride,
       hasConnector: variables.hasConnector,
-      onResetVariable: variables.handleReset
+      onResetVariable: variables.handleReset,
+      onClickVariable: variables.handleClickTransform
     }
   }
 }

@@ -19,9 +19,21 @@ import { builderVariableTransforms, builderVariableType } from '@fragments/fragm
 import { SpringValue, animated } from '@react-spring/web'
 import Panel from '@/builder/components/Panel/Panel'
 import Slider from '@/app/components/Slider/Slider'
+import data from '@/app/project/[projectSlug]/fragments/[...fragment]/data.json'
+import { Fragment, Layer as LayerRenderer, createContext } from '@fragments/renderer/performance'
+import { Fragment as ReactFrag } from '@fragments/renderer-react/performance'
+import isBrowser from '@/app/utils/isBrowser'
 
 interface BuilderEditableProps {
   className?: string
+}
+
+const globalContext = createContext()
+const fragmentNode = Fragment({ globalContext, document: data })
+const layerNode = LayerRenderer({ globalContext, document: data.children[0] })
+
+if (isBrowser) {
+  window.globalContext = globalContext
 }
 
 export const BuilderEditable: FC<BuilderEditableProps> = ({ className }) => {
@@ -33,6 +45,9 @@ export const BuilderEditable: FC<BuilderEditableProps> = ({ className }) => {
     if (focus) {
       setTimeout(() => {
         canvasManager.scrollAndZoomIntoView(focus)
+        fragmentNode.render(document.querySelector('#dd'))
+        console.log(layerNode)
+        layerNode.render(document.querySelector('#layer'))
       }, 1000)
     }
   }, [])
@@ -44,6 +59,10 @@ export const BuilderEditable: FC<BuilderEditableProps> = ({ className }) => {
           <Sidebar isOpen={isEdit} />
 
           <BuilderCanvas>
+            <div id='dd'></div>
+            <h1>fsdg</h1>
+            <div id='layer'></div>
+            <ReactFrag context={globalContext} document={data} />
             <BuilderTextEditor />
             <LayerHighlight />
             <DisplayBreakpoints renderer={(screenKey, props) => <Layer layerKey={screenKey} {...props} />} />
