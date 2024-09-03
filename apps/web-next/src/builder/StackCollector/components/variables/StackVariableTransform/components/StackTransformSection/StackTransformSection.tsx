@@ -41,12 +41,10 @@ export const StackTransformSection: FC<StackTransformSectionProps> = ({
       <TransformConvertFromBooleanValue {...transform} valueReferenceOptions={valueReferenceOptions} />
     ) : (
       {
-        [builderVariableType.Number]: <TransformNumberValue value={transform.value} />,
-        [builderVariableType.Boolean]: <TransformBooleanValue value={transform.value} />
+        [builderVariableType.Number]: <TransformNumberValue value={transform.value} onChange={transform.setValue} />,
+        [builderVariableType.Boolean]: <TransformBooleanValue value={transform.value} onChange={transform.setValue} />
       }[inputType]
     )
-
-  console.log(transform, inputType, Control)
 
   return (
     <Panel

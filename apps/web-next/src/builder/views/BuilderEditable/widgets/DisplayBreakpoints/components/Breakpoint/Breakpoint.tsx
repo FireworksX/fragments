@@ -2,14 +2,14 @@ import { FC, PropsWithChildren, useContext } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { useGraph, useGraphFields, useGraphStack } from '@graph-state/react'
-import { GraphState, LinkKey } from '@graph-state/core'
+import { Graph, GraphState, LinkKey } from '@graph-state/core'
 import BreakpointTitle from '@/builder/views/BuilderEditable/widgets/DisplayBreakpoints/components/BreakpointTitle/BreakpointTitle'
 import { useBreakpoints } from '@/builder/views/BuilderEditable/widgets/DisplayBreakpoints/hooks/useBreakpoints'
 import { BuilderContext } from '@/builder/BuilderContext'
 import { animated, to } from '@react-spring/web'
 
 interface BuilderBreakpointProps extends PropsWithChildren {
-  breakpointKey: LinkKey
+  breakpoint: Graph
   className?: string
   mode?: 'preview' | 'edit'
   onClickBreakpoint?: (breakpoint) => void
@@ -19,12 +19,11 @@ interface BuilderBreakpointProps extends PropsWithChildren {
 const Breakpoint: FC<BuilderBreakpointProps> = ({
   className,
   children,
-  breakpointKey,
+  breakpoint,
   onClickBreakpoint,
   onClickCustom
 }) => {
   const { documentManager } = useContext(BuilderContext)
-  const [breakpoint] = useGraph(documentManager, breakpointKey)
   const { breakpointValues, addBreakpoint } = useBreakpoints(documentManager)
   const width = breakpoint?.width
   const activeBreakpointWidths = breakpointValues.map(bp => bp?.width)

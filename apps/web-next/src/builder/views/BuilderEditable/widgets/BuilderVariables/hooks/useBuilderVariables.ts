@@ -1,14 +1,14 @@
 import { useContext } from 'react'
 import { BuilderContext } from '@/builder/BuilderContext'
 import { useGraph } from '@graph-state/react'
-import { builderVariableType, builderVariableTransforms } from '@fragments/fragments-plugin/performance'
+import { variableType } from '@fragments/plugin-state'
 import { useBuilderVariableCreator } from '@/builder/views/BuilderEditable/widgets/BuilderVariables/hooks/useBuilderVariableCreator'
 import { useBuilderVariableTransforms } from '@/builder/hooks/useBuilderVariableTransforms'
 
 export const useBuilderVariables = () => {
   const { documentManager } = useContext(BuilderContext)
-  const [documentGraph] = useGraph(documentManager, documentManager.root)
-  const propsLinks = documentGraph.props ?? []
+  const [documentGraph] = useGraph(documentManager, documentManager.key)
+  const propsLinks = documentGraph?.props ?? []
   const { allowVariables, openVariable } = useBuilderVariableCreator()
   const { getTransformsByType, createComputedValue } = useBuilderVariableTransforms()
 
@@ -26,14 +26,14 @@ export const useBuilderVariables = () => {
   }))
 
   const getTransformsVariableByType = (
-    targetType: keyof typeof builderVariableType,
-    variableGraph: keyof typeof builderVariableType,
+    targetType: keyof typeof variableType,
+    variableGraph: keyof typeof variableType,
     onSelect
   ) => {
     const transforms = getTransformsByType(variableGraph.type)
 
     if (targetType === variableGraph.type) {
-      if (targetType === builderVariableType.Boolean) {
+      if (targetType === variableType.Boolean) {
         // allowConditions = [builderVariableTransforms.feature, builderVariableTransforms.notFeature]
       } else {
         return []
@@ -57,7 +57,7 @@ export const useBuilderVariables = () => {
     })
   }
 
-  const getAllowedVariablesByType = (type: keyof typeof builderVariableType, onSelect: (selection) => unknown) => {
+  const getAllowedVariablesByType = (type: keyof typeof variableType, onSelect: (selection) => unknown) => {
     if (!type) return []
     return propsLinks.map(variableLink => {
       const variableGraph = documentManager.resolve(variableLink)

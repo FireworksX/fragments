@@ -23,7 +23,7 @@ interface BuilderDisplayBreakpointsProps {
 
 const DisplayBreakpoints: FC<BuilderDisplayBreakpointsProps> = ({ className, renderer }) => {
   const { documentManager } = useContext(BuilderContext)
-  const { breakpointKeys, addBreakpoint } = useBreakpoints()
+  const { breakpointKeys, breakpointValues, addBreakpoint } = useBreakpoints()
   const { isEdit } = useBuilderManager()
   const { handleClick, mouseLeave, mouseOver } = useRendererHandlers(documentManager)
 
@@ -42,14 +42,14 @@ const DisplayBreakpoints: FC<BuilderDisplayBreakpointsProps> = ({ className, ren
 
   return (
     <div className={cn(styles.root, className)}>
-      {breakpointKeys.map(breakpointKey => (
+      {breakpointValues.map(breakpoint => (
         <Breakpoint
-          key={breakpointKey}
-          breakpointKey={breakpointKey}
+          key={breakpoint._id}
+          breakpoint={breakpoint}
           onClickBreakpoint={isEdit ? handleNewBreakpoint : undefined}
           onClickCustom={handleCustomBreakpoint}
         >
-          {renderer(breakpointKey, { onClick: handleClick, onMouseOver: mouseOver, onMouseLeave: mouseLeave })}
+          {renderer({ ...breakpoint, onClick: handleClick, onMouseOver: mouseOver, onMouseLeave: mouseLeave })}
         </Breakpoint>
       ))}
     </div>

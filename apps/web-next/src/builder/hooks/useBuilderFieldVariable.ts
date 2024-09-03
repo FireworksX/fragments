@@ -63,6 +63,7 @@ export const useBuilderFieldVariable = (layer: Field) => {
 
   const openTransform = ({ key, value }) => {
     const valueOptions = variableFields[key]?.valueOptions ?? {}
+
     popoutsStore.open(stackVariableTransformName, {
       description: key,
       position: 'right',
@@ -102,7 +103,7 @@ export const useBuilderFieldVariable = (layer: Field) => {
     return {
       hasConnector,
       handleReset: () => handleReset(key),
-      handleClickTransform: () => openTransform({ key, value: currentValue }),
+      handleClickTransform: () => isComputedValue && openTransform({ key, value: currentValue }),
       actions: hasConnector
         ? [
             {

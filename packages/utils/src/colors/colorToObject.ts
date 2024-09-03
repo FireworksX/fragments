@@ -1,4 +1,4 @@
-import { hexToRgb, rgbToRgba } from "src";
+import { hexToRgb } from "src";
 import { getRgbFromColor } from "./getRgbFromColor";
 
 interface OutputColor {

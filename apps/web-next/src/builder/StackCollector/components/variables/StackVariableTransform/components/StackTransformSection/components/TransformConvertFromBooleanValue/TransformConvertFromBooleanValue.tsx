@@ -13,20 +13,22 @@ import TabsSelector from '@/app/components/TabsSelector'
 import { tabsSelectorItemsBoolean } from '@/builder/data'
 
 interface TransformConvertFromBooleanValueProps {
-  truthy: SpringValue<unknown>
-  falsy: SpringValue<unknown>
+  truthy: SpringValue<unknown> | unknown
+  falsy: SpringValue<unknown> | unknown
+  setTruthy(next: unknown): void
+  setFalsy(next: unknown): void
   outputType: keyof typeof builderVariableType
   className?: string
   valueReferenceOptions?: unknown
 }
 
-const NumberValue = ({ value, min, max, step, withSlider }) => {
+const NumberValue = ({ value, min, max, step, withSlider, onChange }) => {
   const totalProps = {
     value,
     step,
     min,
     max,
-    onChange: next => value.set(next)
+    onChange
   }
 
   return (
@@ -37,10 +39,10 @@ const NumberValue = ({ value, min, max, step, withSlider }) => {
   )
 }
 
-const BooleanValue = ({ value }) => {
+const BooleanValue = ({ value, onChange }) => {
   return (
     <ControlRowWide>
-      <TabsSelector items={tabsSelectorItemsBoolean} value={value} onChange={({ name }) => value.set(name)} />
+      <TabsSelector items={tabsSelectorItemsBoolean} value={value} onChange={({ name }) => onChange(name)} />
     </ControlRowWide>
   )
 }
@@ -50,6 +52,8 @@ export const TransformConvertFromBooleanValue: FC<TransformConvertFromBooleanVal
   outputType,
   truthy,
   falsy,
+  setTruthy,
+  setFalsy,
   valueReferenceOptions
 }) => {
   const Children =
@@ -61,10 +65,10 @@ export const TransformConvertFromBooleanValue: FC<TransformConvertFromBooleanVal
   return (
     <>
       <ControlRow title='Yes'>
-        <Children {...valueReferenceOptions} value={truthy} />
+        <Children {...valueReferenceOptions} value={truthy} onChange={setTruthy} />
       </ControlRow>
       <ControlRow title='No'>
-        <Children {...valueReferenceOptions} value={falsy} />
+        <Children {...valueReferenceOptions} value={falsy} onChange={setFalsy} />
       </ControlRow>
     </>
   )

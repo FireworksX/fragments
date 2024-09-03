@@ -9,6 +9,7 @@ import Rectangle from '@/app/svg/rectangle.svg'
 import BoxSizingSides, { BoxSide } from '@/app/components/BoxSizingSides/BoxSizingSides'
 import CornerSides, { CornerSide } from '@/app/components/CornerSides/CornerSides'
 import { to } from '@react-spring/web'
+import { animatableValue } from '@/builder/utils/animatableValue'
 
 const visible: TabsSelectorItem[] = [
   {
@@ -39,7 +40,7 @@ export const useBuilderStyles = () => {
           node.setZIndex(value)
           break
         case 'cornerRadius':
-          node.setCornerRadius(+value)
+          node.setCornerRadius(value ? +value : value)
           break
         case 'borderType':
           node.setBorderType(value)
@@ -96,7 +97,7 @@ export const useBuilderStyles = () => {
   }
 
   const onChangeRadiusMode = (mode: 'plain' | 'sides') => {
-    cornerRadiusInvoker.onChange(mode === 'plain' ? 0 : -1)
+    cornerRadiusInvoker.onChange(mode === 'plain' ? 0 : null)
   }
 
   return {
@@ -108,8 +109,8 @@ export const useBuilderStyles = () => {
     opacity: layerInvoker('opacity'),
     radius: {
       disabled: isTextLayer,
-      mode: to(selectionGraph?.isMixedRadius(), v => (!v ? 'plain' : 'sides')),
-      isMixed: selectionGraph?.isMixedRadius(),
+      mode: to(animatableValue(selectionGraph?.isMixedRadius?.()), v => (!v ? 'plain' : 'sides')),
+      isMixed: animatableValue(selectionGraph?.isMixedRadius?.()),
       setCornerSide,
       onChangeRadiusMode,
       items: [

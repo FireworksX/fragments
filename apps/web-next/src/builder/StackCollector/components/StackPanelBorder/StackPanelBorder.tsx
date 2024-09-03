@@ -5,17 +5,16 @@ import InputNumber from '@/app/components/InputNumber/InputNumber'
 import Stepper from '@/app/components/Stepper/Stepper'
 import Select from '@/app/components/Select/Select'
 import { popoutsStore } from '@/app/store/popouts.store'
-import { builderBorderType, getDefaultBorder } from '@fragments/fragments-plugin'
 import { useLayerInvoker } from '@/builder/hooks/useLayerInvoker'
 import { useBuilderSelection } from '@/builder/hooks/useBuilderSelection'
 import { useDisplayColor } from '@/builder/hooks/useDisplayColor'
 import Panel from '@/builder/components/Panel/Panel'
 import ControlRow from '@/builder/components/ControlRow/ControlRow'
 import ControlRowWide from '@/builder/components/ControlRow/components/ControlRowWide/ControlRowWide'
-import { BuilderContext } from '@/builder/BuilderContext'
-import { animated, to } from '@react-spring/web'
 import { isObject, omit } from '@fragments/utils'
 import { isLinkKey } from '@graph-state/core'
+import { borderType } from '@fragments/plugin-state'
+import { animatableValue } from '@/builder/utils/animatableValue'
 
 export interface StackPanelBorderOptions {
   value?: BorderData
@@ -52,8 +51,8 @@ const StackPanelBorder: FC<StackPanelBorderProps> = ({ className }) => {
   const borderColorInvoker = layerInvoker('borderColor')
 
   useEffect(() => {
-    if (borderTypeInvoker.value?.get() === builderBorderType.None) {
-      borderTypeInvoker.onChange(builderBorderType.Solid)
+    if (animatableValue(borderTypeInvoker.value) === borderType.None) {
+      borderTypeInvoker.onChange(borderType.Solid)
     }
   }, [])
 
@@ -89,7 +88,7 @@ const StackPanelBorder: FC<StackPanelBorderProps> = ({ className }) => {
       <ControlRow title='Style'>
         <ControlRowWide>
           <Select value={borderTypeInvoker?.value} onChange={type => borderTypeInvoker.onChange(type)}>
-            {Object.keys(omit(builderBorderType, builderBorderType.None)).map(type => (
+            {Object.keys(omit(borderType, borderType.None)).map(type => (
               <option key={type} value={type}>
                 {type}
               </option>

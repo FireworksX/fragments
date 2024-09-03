@@ -1,10 +1,11 @@
 import { FC, useCallback, useContext } from 'react'
 import styles from './styles.module.css'
 import { BuilderContext } from '@/builder/BuilderContext'
-import { useParseRules } from '@/builder/renderer/Layer/hooks/useLayerRules/useParseRules'
+import { useParseRules } from '@/builder/renderer/Frame/hooks/useLayerRules/useParseRules'
 import { useGraph } from '@graph-state/react'
 import { animated } from '@react-spring/web'
 import { useLayerInvoker } from '@/builder/hooks/useLayerInvoker'
+import { withProps } from '@/builder/renderer/providers/withProps'
 
 interface TextProps {
   layerKey: string
@@ -13,45 +14,27 @@ interface TextProps {
   onMouseLeave?: (e, options) => void
 }
 
-export const Text: FC<TextProps> = ({ layerKey, onClick, onMouseOver, onMouseLeave }) => {
+export const Text: FC<TextProps> = withProps(props => {
   const { documentManager } = useContext(BuilderContext)
-  const { cssRules } = useParseRules(layerKey)
-  const [layerValue] = useGraph(documentManager, layerKey)
-  const layerInvoker = useLayerInvoker(layerKey)
+  const { cssRules } = useParseRules(props)
+  const [layerValue] = useGraph(documentManager, props)
+  const layerInvoker = useLayerInvoker(props)
   const textContent = layerInvoker('content').value
+  const key = documentManager.keyOfEntity(props)
 
-  const proxyOnClick = useCallback(
-    (e: any) => {
-      onClick?.(e, {
-        layerKey
-      })
-    },
-    [layerKey, onClick]
-  )
-
-  const proxyOnMouseOver = useCallback(
-    (e: any) => {
-      onMouseOver?.(e, { layerKey })
-    },
-    [layerKey, onMouseOver]
-  )
-
-  const proxyOnMouseLeave = useCallback(
-    (e: any) => {
-      onMouseLeave?.(e, { layerKey })
-    },
-    [layerKey, onMouseLeave]
-  )
+  const proxyOnClick = (e: any) => {
+    props.onClick?.(e, {
+      layerKey: key
+    })
+  }
 
   return (
     <animated.div
       className={styles.root}
-      data-key={layerKey}
+      data-key={key}
       style={cssRules}
       onClick={proxyOnClick}
-      onMouseOver={proxyOnMouseOver}
-      onMouseLeave={proxyOnMouseLeave}
       dangerouslySetInnerHTML={{ __html: textContent }}
     />
   )
-}
+})
