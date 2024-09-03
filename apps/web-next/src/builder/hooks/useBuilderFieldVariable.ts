@@ -10,10 +10,24 @@ import { ResultSetter } from '@/builder/hooks/useLayerInvoker'
 import { animatableValue } from '@/builder/utils/animatableValue'
 import { popoutsStore } from '@/app/store/popouts.store'
 import { stackVariableTransformName } from '@/builder/StackCollector/components/variables/StackVariableTransform/StackVariableTransform'
+import { isComputedValueLink } from '@/builder/utils/isComputedValueLink'
 
 export type BuilderFieldVariable = ReturnType<ReturnType<typeof useBuilderFieldVariable>>
 
-const variableFields = { opacity: builderVariableType.Number, visible: builderVariableType.Boolean }
+const variableFields = {
+  opacity: {
+    type: builderVariableType.Number,
+    valueOptions: {
+      step: 0.1,
+      max: 1,
+      min: 0,
+      withSlider: true
+    }
+  },
+  visible: {
+    type: builderVariableType.Boolean
+  }
+}
 
 export const useBuilderFieldVariable = (layer: Field) => {
   const { documentManager } = useContext(BuilderContext)
@@ -47,23 +61,30 @@ export const useBuilderFieldVariable = (layer: Field) => {
     }
   }
 
+  const openTransform = ({ key, value }) => {
+    const valueOptions = variableFields[key]?.valueOptions ?? {}
+
+    popoutsStore.open(stackVariableTransformName, {
+      description: key,
+      position: 'right',
+      initial: true,
+      context: {
+        fieldKey: key,
+        value,
+        valueReferenceOptions: valueOptions,
+        onReset: () => {
+          handleReset(key)
+          popoutsStore.close()
+        }
+      }
+    })
+  }
+
   const handleConnectVariable = ({ key, selection, setter }) => {
     const { value, transform } = selection
 
     if (transform) {
-      popoutsStore.open(stackVariableTransformName, {
-        description: key,
-        position: 'right',
-        initial: true,
-        context: {
-          fieldKey: key,
-          value,
-          onReset: () => {
-            handleReset(key)
-            popoutsStore.close()
-          }
-        }
-      })
+      openTransform({ key, value })
     }
 
     setter(value)
@@ -71,28 +92,37 @@ export const useBuilderFieldVariable = (layer: Field) => {
 
   return (key: string, setter: ResultSetter, currentValue: unknown) => {
     const hasConnector = key in variableFields
-    const allowedVariables = getAllowedVariablesByType(variableFields[key], selection =>
+    const allowedVariables = getAllowedVariablesByType(variableFields[key]?.type, selection =>
       handleConnectVariable({ selection, setter, key })
     ).map(variable => ({
       ...variable,
       options: [variable.transforms]
     }))
+    const isComputedValue = isComputedValueLink(currentValue)
 
     return {
       hasConnector,
       handleReset: () => handleReset(key),
+      handleClickTransform: () => isComputedValue && openTransform({ key, value: currentValue }),
       actions: hasConnector
         ? [
             {
+              key: 'createVariable',
               label: 'Create variable',
               onClick: () => handleCreateVariable(key, setter, currentValue)
             },
             {
+              key: 'setVariable',
               label: 'Set variable',
               options: [allowedVariables],
               disabled: allowedVariables.length === 0
+            },
+            isComputedValue && {
+              key: 'editTransform',
+              label: 'Edit Transform',
+              onClick: () => openTransform({ key, value: currentValue })
             }
-          ]
+          ].filter(Boolean)
         : []
     }
   }

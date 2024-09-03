@@ -17,6 +17,7 @@ import { AnimatedVisible } from '@/app/components/AnimatedVisible/AnimatedVisibl
 import { cloneColor } from '@/builder/utils/cloneColor'
 import { isLinkKey } from '@graph-state/core'
 import { isObject } from '@fragments/utils'
+import { animatableValue } from '@/builder/utils/animatableValue'
 
 export interface StackPanelFillOptions {}
 
@@ -67,7 +68,7 @@ const StackPanelFill: FC<StackPanelFillProps> = ({ className }) => {
   const type = fillType.value
 
   useEffect(() => {
-    if (!fillType.value?.get()) {
+    if (!animatableValue(fillType.value)) {
       fillType.onChange(builderPaintMode.Solid)
     }
   }, [])

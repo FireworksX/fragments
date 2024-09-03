@@ -12,6 +12,7 @@ import ColorPicker from '@/builder/components/ColorPicker/ColorPicker'
 import { SpringValue } from '@react-spring/web'
 import { useDisplayColor } from '@/builder/hooks/useDisplayColor'
 import { pick } from '@fragments/utils'
+import { getStaticColor } from '@/builder/utils/getStaticColor'
 
 export type StackPanelColorEntity = { name: string; color: Color }
 
@@ -66,7 +67,7 @@ const StackPanelCreateColor: FC<StackPanelCreateColorProps> = ({ className }) =>
             context?.onSubmit &&
               context.onSubmit({
                 name,
-                color: pick(color.current, 'r', 'g', 'b', 'a')
+                color: getStaticColor(pick(color.current, 'r', 'g', 'b', 'a'))
               })
           }}
         >

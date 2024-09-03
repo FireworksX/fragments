@@ -31,7 +31,7 @@ import LayerHighlight from '@/builder/LayerHighlight/LayerHighlight'
 import { BuilderContext } from '@/builder/BuilderContext'
 import { isInstanceOf } from '@graph-state/checkers'
 import loggerPlugin from '@graph-state/plugin-logger'
-import { Layer } from '@/builder/renderer/Layer/Layer'
+import { Frame } from '@/builder/renderer/Frame/Frame'
 import isBrowser from '@/app/utils/isBrowser'
 import { useBuilderActions } from '@/builder/hooks/useBuilderActions'
 import { BuilderFloatBar } from '@/builder/BuilderFloatBar/BuilderFloatBar'
@@ -48,6 +48,8 @@ import { useHotkeysContext } from 'react-hotkeys-hook'
 import { hotKeysScope } from '@/app/hooks/hotkeys/HotKeysProvider'
 import { useBuilderHotKeys } from '@/app/hooks/hotkeys/useBuilderHotKeys'
 import { createBuilderManager } from '@/builder/managers/builderManager'
+import fragmentData from '@/app/project/[projectSlug]/fragments/[...fragment]/fragment.json'
+import pluginState, { skips as stateSkips } from '@fragments/plugin-state'
 
 const canvasManager = createCanvasManager()
 const previewManager = createPreviewManager()
@@ -398,8 +400,17 @@ const documentManager = createState({
   skip: [...skips]
 })
 
+const fragmentState = createState({
+  type: 'Fragment',
+  id: fragmentData._id,
+  initialState: fragmentData,
+  plugins: [pluginState, loggerPlugin()],
+  skip: [...stateSkips]
+})
+
 if (isBrowser) {
   window.doc = documentManager
+  window.frag = fragmentState
 }
 
 const Page = () => {
@@ -415,7 +426,7 @@ const Page = () => {
 
 export default function () {
   return (
-    <BuilderContext.Provider value={{ documentManager, canvasManager, previewManager, builderManager }}>
+    <BuilderContext.Provider value={{ documentManager: fragmentState, canvasManager, previewManager, builderManager }}>
       <Page />
     </BuilderContext.Provider>
   )

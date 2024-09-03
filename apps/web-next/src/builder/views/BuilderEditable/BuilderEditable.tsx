@@ -4,7 +4,7 @@ import styles from './styles.module.css'
 import Sidebar from '@/builder/views/BuilderEditable/widgets/BuilderSidebar/BuilderSidebar'
 import LayerHighlight from '@/builder/LayerHighlight/LayerHighlight'
 import DisplayBreakpoints from '@/builder/views/BuilderEditable/widgets/DisplayBreakpoints/DisplayBreakpoints'
-import { Layer } from '@/builder/renderer/Layer/Layer'
+import { Frame } from '@/builder/renderer/Frame/Frame'
 import { useBuilderManager } from '@/builder/hooks/useBuilderManager'
 import { BuilderModals } from '@/builder/views/BuilderEditable/widgets/BuilderModals/BuilderModals'
 import { BuilderPopouts } from '@/builder/views/BuilderEditable/widgets/BuilderPopouts/BuilderPopouts'
@@ -15,10 +15,6 @@ import { BuilderTextEditor } from '@/builder/views/BuilderEditable/widgets/Build
 import BuilderControls from '@/builder/views/BuilderEditable/widgets/BuilderControls/BuilderControls'
 import { BuilderFloatBar } from '@/builder/views/BuilderEditable/widgets/BuilderFloatBar/BuilderFloatBar'
 import { useBuilderHotKeys } from '@/app/hooks/hotkeys/useBuilderHotKeys'
-import { builderVariableTransforms, builderVariableType } from '@fragments/fragments-plugin'
-import { SpringValue, animated } from '@react-spring/web'
-import Panel from '@/builder/components/Panel/Panel'
-import Slider from '@/app/components/Slider/Slider'
 
 interface BuilderEditableProps {
   className?: string
@@ -46,7 +42,7 @@ export const BuilderEditable: FC<BuilderEditableProps> = ({ className }) => {
           <BuilderCanvas>
             <BuilderTextEditor />
             <LayerHighlight />
-            <DisplayBreakpoints renderer={(screenKey, props) => <Layer layerKey={screenKey} {...props} />} />
+            <DisplayBreakpoints renderer={props => <Frame {...props} />} />
           </BuilderCanvas>
           <BuilderControls isOpen={isEdit} position='right' />
 

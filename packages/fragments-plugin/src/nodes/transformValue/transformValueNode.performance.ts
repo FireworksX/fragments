@@ -7,7 +7,7 @@ import { transformValueStartWith } from '../../props/transformValue/transformVal
 import { transformValueEndWith } from '../../props/transformValue/transformValueEndWith/transformValueEndWith.performance'
 import { transformValueContains } from '../../props/transformValue/transformValueContains/transformValueContains.performance'
 import { transformValueExists } from '../../props/transformValue/transformValueExists/transformValueExists.performance'
-import { transformValueValueSize } from '../../props/transformValue/transformValueValueSize/transformValueValueSize.performance'
+import { transformValueValueSize } from '../../props/transformValue/transformValueSize/transformValueSize.performance'
 
 export const transformValueNode: ResolverNode = (state, entity?: unknown): unknown => {
   const variableType = state.safeResolve(entity)?.name

@@ -13,53 +13,63 @@ import InputNumber from '@/app/components/InputNumber/InputNumber'
 import { TransformNumberValue } from './components/TransformNumberValue/TransformNumberValue'
 import { TransformConvertFromBooleanValue } from '@/builder/StackCollector/components/variables/StackVariableTransform/components/StackTransformSection/components/TransformConvertFromBooleanValue/TransformConvertFromBooleanValue'
 import Panel from '@/builder/components/Panel/Panel'
+import { TransformBooleanValue } from '@/builder/StackCollector/components/variables/StackVariableTransform/components/StackTransformSection/components/TransformBooleanValue/TransformBooleanValue'
 
 interface StackTransformSectionProps {
   className?: string
   transformLink: LinkKey
   inputType: keyof typeof builderVariableType
   isFirst?: boolean
+  valueReferenceOptions: unknown
 }
 
 export const StackTransformSection: FC<StackTransformSectionProps> = ({
   className,
   isFirst,
   transformLink,
-  inputType
+  inputType,
+  valueReferenceOptions = {}
 }) => {
   const { documentManager } = useContext(BuilderContext)
   const [transform] = useGraph(documentManager, transformLink)
   const { getTransformsByType } = useBuilderVariableTransforms()
   const allTransforms = getTransformsByType(inputType)
+  const withoutReplace = transform.name === builderVariableTransforms.convertFromBoolean
 
-  const typeChildren = {
-    [builderVariableTransforms.equals]: <TransformNumberValue value={transform.value} />,
-    [builderVariableTransforms.gte]: <TransformNumberValue value={transform.value} />,
-    [builderVariableTransforms.convertFromBoolean]: <TransformConvertFromBooleanValue {...transform} />
-  }[transform.name]
+  const Control =
+    transform.name === builderVariableTransforms.convertFromBoolean ? (
+      <TransformConvertFromBooleanValue {...transform} valueReferenceOptions={valueReferenceOptions} />
+    ) : (
+      {
+        [builderVariableType.Number]: <TransformNumberValue value={transform.value} onChange={transform.setValue} />,
+        [builderVariableType.Boolean]: <TransformBooleanValue value={transform.value} onChange={transform.setValue} />
+      }[inputType]
+    )
 
   return (
     <Panel
       className={cn(styles.root, className, { [styles.withPaddingTop]: !isFirst })}
       data-testid='StackTransformSection'
     >
-      <ControlRow title='Type'>
-        <ControlRowWide>
-          <Select
-            value={transform.name}
-            onChange={value => {
-              console.log(value)
-            }}
-          >
-            {allTransforms.map(otherTransform => (
-              <option key={otherTransform.type} value={otherTransform.key}>
-                {otherTransform.label}
-              </option>
-            ))}
-          </Select>
-        </ControlRowWide>
-      </ControlRow>
-      {typeChildren}
+      {!withoutReplace && (
+        <ControlRow title='Type'>
+          <ControlRowWide>
+            <Select
+              value={transform.name}
+              onChange={value => {
+                console.log(value)
+              }}
+            >
+              {allTransforms.map(otherTransform => (
+                <option key={otherTransform.type} value={otherTransform.key}>
+                  {otherTransform.label}
+                </option>
+              ))}
+            </Select>
+          </ControlRowWide>
+        </ControlRow>
+      )}
+      {Control}
     </Panel>
   )
 }

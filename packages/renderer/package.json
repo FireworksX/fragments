@@ -1,0 +1,37 @@
+{
+  "name": "@fragments/renderer",
+  "private": false,
+  "version": "0.0.1",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.optimized.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "source": "./src/index.optimized.ts"
+    }
+  },
+  "scripts": {
+    "clear": "rm -r -f ./dist",
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest",
+    "lint": "eslint . --ext .ts,.tsx --fix"
+  },
+  "peerDependencies": {
+    "preact": "10.23.2"
+  },
+  "dependencies": {
+    "@graph-state/core": "^0.6.7",
+    "@graph-state/react": "^0.3.2",
+    "react-use-measure": "^2.1.1"
+  },
+  "devDependencies": {
+    "tsup": "^7.2.0",
+    "typescript": "^5.5.4"
+  }
+}

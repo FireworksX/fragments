@@ -2,6 +2,8 @@ import { builderVariableTransforms, builderVariableType } from '@fragments/fragm
 import { useContext, useMemo } from 'react'
 import { BuilderContext } from '@/builder/BuilderContext'
 import { LinkKey } from '@graph-state/core'
+import { popoutsStore } from '@/app/store/popouts.store'
+import { stackVariableTransformName } from '@/builder/StackCollector/components/variables/StackVariableTransform/StackVariableTransform'
 
 const variableTransforms = {
   convertFromBoolean: {
@@ -29,61 +31,51 @@ const variableTransforms = {
       builderVariableTransforms.convertFromBoolean
     ]
   },
+  gt: {
+    type: builderVariableTransforms.gt,
+    key: builderVariableTransforms.gt,
+    isNegative: false,
+    label: 'Greater than',
+    transforms: [builderVariableTransforms.gt, builderVariableTransforms.convertFromBoolean]
+  },
   gte: {
     type: builderVariableTransforms.gte,
     key: builderVariableTransforms.gte,
     isNegative: false,
     label: 'Greater than or Equals',
     transforms: [builderVariableTransforms.gte, builderVariableTransforms.convertFromBoolean]
+  },
+  lt: {
+    type: builderVariableTransforms.lt,
+    key: builderVariableTransforms.lt,
+    isNegative: false,
+    label: 'Less than',
+    transforms: [builderVariableTransforms.lt, builderVariableTransforms.convertFromBoolean]
+  },
+  lte: {
+    type: builderVariableTransforms.lte,
+    key: builderVariableTransforms.lte,
+    isNegative: false,
+    label: 'Less than or Equals',
+    transforms: [builderVariableTransforms.lte, builderVariableTransforms.convertFromBoolean]
   }
 }
 
 const defaultValueByType = {
-  [builderVariableType.Number]: 0
-}
-
-const numberTransforms = [variableTransforms.equals, variableTransforms.notEquals, variableTransforms.gte]
-
-const booleanTransforms = [builderVariableTransforms.convert]
-const stringTransforms = [
-  builderVariableTransforms.convert,
-  builderVariableTransforms.exists,
-  builderVariableTransforms.notExists,
-  builderVariableTransforms.equals,
-  builderVariableTransforms.notEquals,
-  builderVariableTransforms.startWith,
-  builderVariableTransforms.notStartWith,
-  builderVariableTransforms.endWith,
-  builderVariableTransforms.notEndWith,
-  builderVariableTransforms.contains,
-  builderVariableTransforms.notContains
-]
-
-const transformsLabels = {
-  [builderVariableTransforms.feature]: 'Feature',
-  [builderVariableTransforms.notFeature]: 'Not Feature',
-  [builderVariableTransforms.convert]: 'Convert',
-  [builderVariableTransforms.exists]: 'Is Set',
-  [builderVariableTransforms.notExists]: 'Is`t Set',
-  [builderVariableTransforms.equals]: 'Equals',
-  [builderVariableTransforms.notEquals]: 'Not Equals',
-  [builderVariableTransforms.startWith]: 'Start With',
-  [builderVariableTransforms.endWith]: 'End With',
-  [builderVariableTransforms.notStartWith]: 'Not Start With',
-  [builderVariableTransforms.notEndWith]: 'Not End With',
-  [builderVariableTransforms.contains]: 'Contains',
-  [builderVariableTransforms.notContains]: 'Not Contains',
-  [builderVariableTransforms.dateBefore]: 'Before',
-  [builderVariableTransforms.dateAfter]: 'After',
-  [builderVariableTransforms.dateBetween]: 'Between',
-  [builderVariableTransforms.gt]: 'Greater Than',
-  [builderVariableTransforms.gte]: 'Greater Than or Equals',
-  [builderVariableTransforms.lt]: 'Less Than',
-  [builderVariableTransforms.lte]: 'Less Than or Equals'
+  [builderVariableType.Number]: 0,
+  [builderVariableType.Boolean]: true
 }
 
 const transformsByType = {
-  [builderVariableType.Number]: [variableTransforms.equals, variableTransforms.notEquals, variableTransforms.gte]
+  [builderVariableType.Number]: [
+    variableTransforms.equals,
+    variableTransforms.notEquals,
+    variableTransforms.gte,
+    variableTransforms.gt,
+    variableTransforms.lte,
+    variableTransforms.lt
+  ],
+  [builderVariableType.Boolean]: [variableTransforms.equals, variableTransforms.notEquals]
 }
 
 interface ComputedValueEntity {
@@ -98,6 +90,8 @@ interface ComputedValueEntity {
   outputType: keyof typeof builderVariableType
 }
 
+interface OpenComputedValueOptions {}
+
 export const useBuilderVariableTransforms = () => {
   const { documentManager } = useContext(BuilderContext)
 
@@ -105,20 +99,21 @@ export const useBuilderVariableTransforms = () => {
 
   const createComputedValue = ({ inputValue, transform, outputType, inputType }: ComputedValueEntity) => {
     const transformLinks = transform.transforms.map(transform => {
-      const defaultValue = defaultValueByType[inputType]
       if (transform === builderVariableTransforms.convertFromBoolean) {
+        const defaultOutputValue = defaultValueByType[outputType]
         return documentManager.createTransformValue(builderVariableTransforms.convertFromBoolean, {
           outputType,
-          truthy: defaultValue,
-          falsy: defaultValue
+          truthy: defaultOutputValue,
+          falsy: defaultOutputValue
         })
       }
 
-      return documentManager.createTransformValue(transform, { value: defaultValue })
+      return documentManager.createTransformValue(transform, { value: defaultValueByType[inputType] })
     })
 
     const computedValueLink = documentManager.createComputedValue({
       inputValue,
+      inputType,
       outputType,
       transforms: transformLinks
     })

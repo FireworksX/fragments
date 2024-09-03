@@ -2,7 +2,7 @@ import { useCallback, useContext, useState } from 'react'
 import { BuilderContext } from '@/builder/BuilderContext'
 import { useGraph, useGraphFields, useGraphStack } from '@graph-state/react'
 import { LinkKey } from '@graph-state/core'
-import { builderNodes } from '@fragments/fragments-plugin/performance'
+import { nodes } from '@fragments/plugin-state'
 
 const findIndexOfNode = (items: unknown[], linkNode: LinkKey) => {
   const index = items.findIndex(item => item.id === linkNode)
@@ -20,8 +20,8 @@ const findIndexOfNode = (items: unknown[], linkNode: LinkKey) => {
 export const useBuilderLayers = () => {
   const { documentManager } = useContext(BuilderContext)
   const [expandedLinkKeys, setExpandedLinkKeys] = useState<string[]>([])
-  const allBreakpoints = useGraphFields(documentManager, builderNodes.Breakpoint)
-  const allFrames = useGraphFields(documentManager, builderNodes.Frame)
+  const allBreakpoints = useGraphFields(documentManager, nodes.Breakpoint)
+  const allFrames = useGraphFields(documentManager, nodes.Frame)
 
   /**
    * Реагируем на каждое изменение любого графа и обновляем стэк
@@ -36,11 +36,11 @@ export const useBuilderLayers = () => {
       id: documentManager.keyOfEntity(node),
       collapsed,
       children: (node?.children || []).map(key => getNode(key)),
-      canHaveChildren: [builderNodes.Frame, builderNodes.Breakpoint].includes(node._type)
+      canHaveChildren: [nodes.Frame, nodes.Breakpoint].includes(node?._type)
     }
   }
 
-  const items = getNode(documentManager.root).children
+  const items = getNode(documentManager.key).children
 
   const handleCollapse = (type: 'collapse' | 'expanded', key: LinkKey) => {
     setExpandedLinkKeys(prev => (type === 'expanded' ? [...prev, key] : prev.filter(k => k !== key)))

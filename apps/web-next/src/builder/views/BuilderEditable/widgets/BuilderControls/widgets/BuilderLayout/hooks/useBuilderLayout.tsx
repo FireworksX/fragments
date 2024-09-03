@@ -17,6 +17,7 @@ import { useLayerInvoker } from '@/builder/hooks/useLayerInvoker'
 import { useBuilderSelection } from '@/builder/hooks/useBuilderSelection'
 import { BuilderContext } from '@/builder/BuilderContext'
 import { to } from '@react-spring/web'
+import { animatableValue } from '@/builder/utils/animatableValue'
 
 const directions: TabsSelectorItem[] = [
   {
@@ -67,7 +68,7 @@ export const useBuilderLayout = () => {
             node.setLayerMode(builderLayerMode.flex)
           } else {
             node.setLayerMode(
-              node.layerMode?.get() === builderLayerMode.none ? builderLayerMode.flex : builderLayerMode.none
+              animatableValue(node.layerMode) === builderLayerMode.none ? builderLayerMode.flex : builderLayerMode.none
             )
           }
 
@@ -88,7 +89,7 @@ export const useBuilderLayout = () => {
           node.setLayerGap(+value)
           break
         case 'padding':
-          node.setPadding(+value)
+          node.setPadding(value ? +value : value)
           break
         case 'paddingSide':
           node.setPadding(value.side, +value.value)
@@ -112,7 +113,7 @@ export const useBuilderLayout = () => {
   const paddingSideInvoker = layerInvoker('paddingSide')
 
   const onChangePaddingMode = (mode: 'plain' | 'sides') => {
-    padding.onChange(mode === 'plain' ? 0 : -1)
+    padding.onChange(mode === 'plain' ? 0 : null)
   }
 
   return {
@@ -137,8 +138,8 @@ export const useBuilderLayout = () => {
     gap: layerInvoker('layerGap'),
     padding: {
       ...padding,
-      mode: to(selectionGraph?.isMixedPadding(), v => (!v ? 'plain' : 'sides')),
-      isMixed: selectionGraph?.isMixedPadding(),
+      mode: to(animatableValue(selectionGraph?.isMixedPadding?.()), v => (!v ? 'plain' : 'sides')),
+      isMixed: animatableValue(selectionGraph?.isMixedPadding?.()),
       items: [
         {
           name: 'plain',

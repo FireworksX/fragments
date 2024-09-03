@@ -1,19 +1,17 @@
 import { Resolver } from 'src/helpers'
 import { clonedField } from '../../../utils/cloneField/cloneField.performance'
-import { SpringValue } from '@react-spring/web'
+import { springValueSetter } from '../../../utils/valueSetter/springValueSetter.performance'
 
 export const visibleProps: Resolver = (state, entity) => {
   const key = state.keyOfEntity(entity)
+  const visibleSetter = springValueSetter(state, key, 'visible')
 
   const toggleVisible = (forceValue?: boolean) => {
     const visible$ = state.resolve(key).visible
-
     if (visible$) {
-      visible$.set(forceValue ?? !visible$.get())
+      visibleSetter(forceValue ?? !visible$.get())
     } else {
-      state.mutate(key, {
-        visible: new SpringValue(false)
-      })
+      visibleSetter(false)
     }
   }
 

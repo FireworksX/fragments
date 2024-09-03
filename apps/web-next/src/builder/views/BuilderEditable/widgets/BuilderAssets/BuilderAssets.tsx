@@ -9,8 +9,6 @@ import DropdownGroup from '@/app/components/Dropdown/components/DropdownGroup/Dr
 import DropdownOption from '@/app/components/Dropdown/components/DropdownOption/DropdownOption'
 import Plus from '@/app/svg/plus.svg'
 import Panel from '@/builder/components/Panel/Panel'
-import PanelHeadAside from '@/builder/components/PanelHeadAside/PanelHeadAside'
-import ComponentCell from '@/builder/components/ComponentCell/ComponentCell'
 import ColorCell from '@/builder/components/ColorCell/ColorCell'
 import CssCell from '@/builder/components/CssCell/CssCell'
 import { BuilderContext } from '@/builder/BuilderContext'
@@ -21,36 +19,11 @@ interface BuilderAssetsProps {
 
 const BuilderAssets: FC<BuilderAssetsProps> = ({ className }) => {
   const { documentManager } = useContext(BuilderContext)
-  const {
-    editColor,
-    createColor,
-    colorVariables,
-    removeColor,
-    createCssOverride,
-    cssVariables,
-    editCssOverride,
-    components: { list: componentsList, add: addComponent, click: onClickComponent, insert: insertComponent }
-  } = useBuilderAssets()
+  const { editColor, createColor, colorVariables, removeColor, createCssOverride, cssVariables, editCssOverride } =
+    useBuilderAssets()
 
   return (
     <div className={cn(styles.root, className)}>
-      <Panel title='Components' aside={<PanelHeadAside onClick={addComponent} />}>
-        {componentsList.length > 0 && (
-          <div className={styles.panelBody}>
-            <Collapse title='Local'>
-              {componentsList.map(component => (
-                <ComponentCell
-                  key={component._id}
-                  onInsert={() => insertComponent(component)}
-                  onClick={() => onClickComponent(documentManager.keyOfEntity(component))}
-                >
-                  {component.name}
-                </ComponentCell>
-              ))}
-            </Collapse>
-          </div>
-        )}
-      </Panel>
       <Panel
         title='Styles'
         aside={
