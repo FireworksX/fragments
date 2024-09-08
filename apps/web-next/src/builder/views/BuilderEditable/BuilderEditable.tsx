@@ -42,7 +42,13 @@ export const BuilderEditable: FC<BuilderEditableProps> = ({ className }) => {
           <BuilderCanvas>
             <BuilderTextEditor />
             <LayerHighlight />
-            <DisplayBreakpoints renderer={props => <Frame {...props} />} />
+            <DisplayBreakpoints
+              renderer={props => (
+                <div style={{ minHeight: 500, background: '#fff' }}>
+                  <Frame {...props} />
+                </div>
+              )}
+            />
           </BuilderCanvas>
           <BuilderControls isOpen={isEdit} position='right' />
 

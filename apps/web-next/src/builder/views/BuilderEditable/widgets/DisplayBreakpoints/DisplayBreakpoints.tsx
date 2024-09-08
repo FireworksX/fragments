@@ -25,7 +25,7 @@ const DisplayBreakpoints: FC<BuilderDisplayBreakpointsProps> = ({ className, ren
   const { documentManager } = useContext(BuilderContext)
   const { breakpointKeys, breakpointValues, addBreakpoint } = useBreakpoints()
   const { isEdit } = useBuilderManager()
-  const { handleClick, mouseLeave, mouseOver } = useRendererHandlers(documentManager)
+  // const { handleClick, mouseLeave, mouseOver } = useRendererHandlers(documentManager)
 
   const handleNewBreakpoint = (name, width) => {
     addBreakpoint(name, width)
@@ -49,7 +49,7 @@ const DisplayBreakpoints: FC<BuilderDisplayBreakpointsProps> = ({ className, ren
           onClickBreakpoint={isEdit ? handleNewBreakpoint : undefined}
           onClickCustom={handleCustomBreakpoint}
         >
-          {renderer({ ...breakpoint, onClick: handleClick, onMouseOver: mouseOver, onMouseLeave: mouseLeave })}
+          {renderer(breakpoint)}
         </Breakpoint>
       ))}
     </div>

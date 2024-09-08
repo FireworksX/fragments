@@ -19,11 +19,9 @@ interface ControlsProps extends AsideBarProps {
 const BuilderControls: FC<ControlsProps> = ({ className, ...asideProps }) => {
   const { selectionGraph } = useBuilderSelection()
 
-  const hasSize = [builderNodes.Frame, builderNodes.Breakpoint, builderNodes.Text].some(
-    type => type === selectionGraph?._type
-  )
-  const hasLayout = [builderNodes.Frame, builderNodes.Breakpoint].some(type => type === selectionGraph?._type)
-  const hasStyles = [builderNodes.Frame, builderNodes.Breakpoint].some(type => type === selectionGraph?._type)
+  const hasSize = [builderNodes.Frame, builderNodes.Text].some(type => type === selectionGraph?._type)
+  const hasLayout = [builderNodes.Frame].some(type => type === selectionGraph?._type)
+  const hasStyles = [builderNodes.Frame].some(type => type === selectionGraph?._type)
   const hasText = [builderNodes.Text].some(type => type === selectionGraph?._type)
   const hasCssOverride = [builderNodes.Frame].some(type => type === selectionGraph?._type)
 

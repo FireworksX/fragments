@@ -3,19 +3,50 @@ import { FC } from 'react'
 import cn from 'classnames'
 import { animated } from '@react-spring/web'
 import styles from './styles.module.css'
-import { useHighlights } from './hooks/useHighlights'
+import { SPRING_INDEXES, useHighlights } from './hooks/useHighlights'
+import { LayerHighlightSelect } from '@/builder/LayerHighlight/components/LayerHighlightSelect/LayerHightlightSelect'
+import { LayerHighlightParent } from '@/builder/LayerHighlight/components/LayerHighlightParent/LayerHighlightParent'
+import { LayerHighlightDragging } from '@/builder/LayerHighlight/components/LayerHighlightDragging/LayerHighlightDragging'
 
 interface BuilderLayerHighlightProps {
   className?: string
 }
 
 const LayerHighlight: FC<BuilderLayerHighlightProps> = ({ className }) => {
-  const { focusHighlight } = useHighlights()
+  const { draggingParentStyles, draggingTargetStyles, hoverStyles, parentStyles, focusStyles, opacity } =
+    useHighlights()
 
   return (
-    <div className={cn(className, styles.root)}>
-      <animated.div className={styles.highlight} style={{ ...focusHighlight, position: 'absolute', inset: 0 }} />
-    </div>
+    <animated.div className={cn(className, styles.root)} style={{ opacity }}>
+      <animated.div
+        key='hover'
+        className={styles.highlight}
+        style={{ ...hoverStyles, position: 'absolute', inset: 0 }}
+      />
+      <animated.div
+        key='focus'
+        className={styles.highlight}
+        style={{ ...focusStyles, position: 'absolute', inset: 0 }}
+      />
+      <LayerHighlightParent {...parentStyles} />
+      <LayerHighlightDragging targetStyle={draggingTargetStyles} parentStyle={draggingParentStyles} />
+      {/*{highlights.map((highlight, index) => {*/}
+      {/*  if ([SPRING_INDEXES.hover, SPRING_INDEXES.focus].includes(index)) {*/}
+      {/*    return (*/}
+      {/*      <>*/}
+      {/*        <animated.div*/}
+      {/*          key='hover'*/}
+      {/*          className={styles.highlight}*/}
+      {/*          style={{ ...highlight, position: 'absolute', inset: 0 }}*/}
+      {/*        >*/}
+      {/*          {index === SPRING_INDEXES.focus && <LayerHighlightSelect {...highlight} />}*/}
+      {/*        </animated.div>*/}
+      {/*      </>*/}
+      {/*    )*/}
+      {/*  }*/}
+      {/*})}*/}
+      {/*<animated.div className={styles.highlight} style={{ ...focusHighlight, position: 'absolute', inset: 0 }} />*/}
+    </animated.div>
   )
 }
 

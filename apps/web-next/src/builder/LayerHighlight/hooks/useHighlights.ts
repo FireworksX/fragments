@@ -1,55 +1,27 @@
-import { useEffect } from 'react'
-import { useSpring, useSpringRef, useSprings } from '@react-spring/web'
-import { useBuilderLayerRefs } from '@/app/builder/widgets/Builder/hooks/useBuilderLayerRefs'
+import { useContext, useEffect } from 'react'
+import { to, useSpring, useSpringRef, useSprings } from '@react-spring/web'
 import { getNodePosition } from '@/app/utils/getNodePosition'
 import { useBuilderManager } from '@/builder/hooks/useBuilderManager'
 import { findRefNode } from '@/builder/utils/findRefNode'
+import { BuilderContext } from '@/builder/BuilderContext'
+import { useGraph } from '@graph-state/react'
+import { useHighlightHover } from '@/builder/LayerHighlight/hooks/useHighlightHover'
+import { useHighlightFocus } from '@/builder/LayerHighlight/hooks/useHighlightFocus'
+import { useHighlightDragging } from '@/builder/LayerHighlight/hooks/useHighlightDragging'
 
 export const useHighlights = () => {
-  const { focus, mouseOverLayer } = useBuilderManager()
-  const [focusHighlight, apiFocusHighlight] = useSpring(() => ({
-    width: 0,
-    height: 0,
-    x: 0,
-    y: 0,
-    opacity: 0,
-    borderColor: ''
-  }))
-
-  useEffect(() => {
-    const observer = new ResizeObserver(() => {
-      apiFocusHighlight.start(() => {
-        const target = findRefNode(focus)
-        const rootNode = target?.closest(`[data-root-node]`)
-        const { top, left, width, height } = getNodePosition({ node: target, stopNode: rootNode })
-
-        return {
-          width,
-          height,
-          y: top,
-          x: left,
-          opacity: focus ? (width > 0 && height > 0 ? 1 : 0) : 0
-        }
-      })
-    })
-
-    const node = findRefNode(focus)
-
-    if (node) {
-      observer.observe(node)
-    } else {
-      apiFocusHighlight.start(() => ({
-        opacity: 0
-      }))
-    }
-    // selection
-    //   .map(findRefNode)
-    //   .filter(Boolean)
-    //   .forEach(node => observer.observe(node))
-    return () => observer.disconnect()
-  }, [focus])
+  const { canvasManager, documentManager } = useContext(BuilderContext)
+  const [canvas] = useGraph(canvasManager, canvasManager.key)
+  const hoverStyles = useHighlightHover()
+  const { parentStyles, focusStyles } = useHighlightFocus()
+  const { draggingParentStyles, draggingTargetStyles } = useHighlightDragging()
 
   return {
-    focusHighlight
+    hoverStyles,
+    focusStyles,
+    parentStyles,
+    draggingTargetStyles,
+    draggingParentStyles,
+    opacity: canvas.isMoving ? 0 : 1
   }
 }

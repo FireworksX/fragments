@@ -1,15 +1,17 @@
 import { LinkKey, Plugin } from "@graph-state/core";
 import { overrides } from "./overrides.ts";
-import { getKey, setKey } from "@/shared/utils";
+import { getKey, setKey } from "@/shared";
 import pkg from "package.json";
 import { moveNode } from "@/static/moveNode.ts";
-import { index } from "@/static/creators";
+import { creators } from "@/static/creators";
 import { restoreVariableField } from "@/shared/restoreVariableField.ts";
+import { toJSON } from "@/static/toJSON.ts";
 
 export const addStatic: Plugin = (state) => {
   overrides(state);
   moveNode(state);
-  index(state);
+  creators(state);
+  toJSON(state);
 
   state.getKey = getKey;
   state.setKey = setKey;

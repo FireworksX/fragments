@@ -1,5 +1,5 @@
 import { LinkKey, Plugin } from "@graph-state/core";
-import { nodes, variableTransforms, variableType } from "@/defenitions.ts";
+import { nodes, variableTransforms, variableType } from "@/definitions.ts";
 import { generateId } from "@fragments/utils";
 import { Color } from "@/types/props.ts";
 import { createTransformValueEquals } from "@/static/creators/transformValue/createTransformValueEquals.ts";
@@ -41,7 +41,7 @@ export interface ComputedValueOptions {
   transforms: unknown[];
 }
 
-export const index: Plugin = (state) => {
+export const creators: Plugin = (state) => {
   state.findPrimaryBreakpoint = () =>
     state
       .inspectFields(nodes.Breakpoint)

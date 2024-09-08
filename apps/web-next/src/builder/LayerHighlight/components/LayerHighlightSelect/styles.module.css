@@ -1,0 +1,29 @@
+.root {}
+
+.sideTop {
+    height: 8px;
+    pointer-events: auto;
+    cursor: n-resize;
+    position: absolute;
+}
+
+.sideRight {
+    width: 8px;
+    pointer-events: auto;
+    cursor: e-resize;
+    position: absolute;
+}
+
+.sideBottom {
+    height: 8px;
+    pointer-events: auto;
+    cursor: s-resize;
+    position: absolute;
+}
+
+.sideLeft {
+    width: 8px;
+    pointer-events: auto;
+    cursor: w-resize;
+    position: absolute;
+}

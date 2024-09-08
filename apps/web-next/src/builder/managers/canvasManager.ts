@@ -2,6 +2,7 @@ import { createState, GraphState, LinkKey } from '@graph-state/core'
 import { SpringValue } from '@react-spring/web'
 import { isInstanceOf } from '@graph-state/checkers'
 import { findRefNode } from '@/builder/utils/findRefNode'
+import loggerPlugin from '@graph-state/plugin-logger'
 
 export type CanvasManager = GraphState
 
@@ -11,11 +12,48 @@ export const createCanvasManager = () =>
       x: new SpringValue(0),
       y: new SpringValue(0),
       scale: new SpringValue(1),
+      hoverLayer: null,
+      draggingLayer: null, // LinkKey слоя который сейчас перетаскиваем
+      isDragging: false, // Перетаскиваем ли сейчас какой-нибудь элемент
+      isMoving: false, // Двигаем ли сейчас canvas
       bounds: [0, 0, 0, 0]
     },
     skip: [isInstanceOf(SpringValue)],
     plugins: [
       state => {
+        state.setDragging = (value: boolean, layerLink?: LinkKey) => {
+          state.mutate(
+            state.key,
+            prev => ({
+              ...prev,
+              isDragging: value,
+              draggingLayer: value ? layerLink ?? null : null
+            }),
+            { replace: true }
+          )
+        }
+        state.setMoving = (value: boolean) => {
+          state.mutate(
+            state.key,
+            prev => ({
+              ...prev,
+              isMoving: value
+            }),
+            { replace: true }
+          )
+        }
+
+        state.setHoverLayer = (layerLink: LinkKey) => {
+          state.mutate(
+            state.key,
+            prev => ({
+              ...prev,
+              hoverLayer: layerLink
+            }),
+            { replace: true }
+          )
+        }
+
         state.toCenter = () => {
           const x$ = state.resolve(state.key)?.x
           const y$ = state.resolve(state.key)?.y
@@ -45,6 +83,7 @@ export const createCanvasManager = () =>
             y$.start(y)
           }
         }
-      }
+      },
+      loggerPlugin()
     ]
   })

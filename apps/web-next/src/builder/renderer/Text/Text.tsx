@@ -5,7 +5,8 @@ import { useParseRules } from '@/builder/renderer/Frame/hooks/useLayerRules/useP
 import { useGraph } from '@graph-state/react'
 import { animated } from '@react-spring/web'
 import { useLayerInvoker } from '@/builder/hooks/useLayerInvoker'
-import { withProps } from '@/builder/renderer/providers/withProps'
+import { withStyle } from '../providers/withStyle'
+import { withDraggable } from '@/builder/renderer/providers/withDraggable'
 
 interface TextProps {
   layerKey: string
@@ -14,27 +15,14 @@ interface TextProps {
   onMouseLeave?: (e, options) => void
 }
 
-export const Text: FC<TextProps> = withProps(props => {
-  const { documentManager } = useContext(BuilderContext)
-  const { cssRules } = useParseRules(props)
-  const [layerValue] = useGraph(documentManager, props)
-  const layerInvoker = useLayerInvoker(props)
-  const textContent = layerInvoker('content').value
-  const key = documentManager.keyOfEntity(props)
+export const Text: FC<TextProps> = withStyle(
+  withDraggable(props => {
+    const { documentManager } = useContext(BuilderContext)
+    const [layerValue] = useGraph(documentManager, props)
+    const layerInvoker = useLayerInvoker(props)
+    const textContent = layerInvoker('content').value
+    const key = documentManager.keyOfEntity(props)
 
-  const proxyOnClick = (e: any) => {
-    props.onClick?.(e, {
-      layerKey: key
-    })
-  }
-
-  return (
-    <animated.div
-      className={styles.root}
-      data-key={key}
-      style={cssRules}
-      onClick={proxyOnClick}
-      dangerouslySetInnerHTML={{ __html: textContent }}
-    />
-  )
-})
+    return <animated.div className={styles.root} data-key={key} dangerouslySetInnerHTML={{ __html: textContent }} />
+  })
+)

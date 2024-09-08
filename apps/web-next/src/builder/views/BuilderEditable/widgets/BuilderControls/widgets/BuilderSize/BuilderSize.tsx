@@ -32,7 +32,7 @@ const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
   )
 
   return (
-    <Panel className={cn(styles.root, className)} title='Size'>
+    <Panel className={cn(styles.root, className)} title='Size & Position'>
       {hasSync && (
         <div className={styles.lockerWrapper}>
           <BuilderSizeLocker isLocked={isSynced} onClick={sync.onChange} />

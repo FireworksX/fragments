@@ -1,12 +1,10 @@
-import { useParseRules } from './hooks/useLayerRules/useParseRules'
-import { FC, useCallback, useContext } from 'react'
+import { FC, useCallback, useContext, useRef } from 'react'
 import { BuilderContext } from '@/builder/BuilderContext'
-import { animated, Interpolation, SpringValue, to } from '@react-spring/web'
-import { useGraph } from '@graph-state/react'
-import { builderNodes } from '@fragments/fragments-plugin/performance'
-import { Text } from '@/builder/renderer/Text/Text'
-import { withProps } from '@/builder/renderer/providers/withProps'
+import { animated, Interpolation, SpringValue, to, useSpring } from '@react-spring/web'
+import { Text } from '@/builder/renderer'
 import { nodes } from '@fragments/plugin-state'
+import { withStyle } from '@/builder/renderer/providers/withStyle'
+import { withDraggable } from '@/builder/renderer/providers/withDraggable'
 
 interface LayerProps {
   layerKey: string
@@ -15,28 +13,25 @@ interface LayerProps {
   onMouseLeave?: (e, options) => void
 }
 
-export const Frame: FC<LayerProps> = withProps(props => {
-  const { documentManager } = useContext(BuilderContext)
-  const { cssRules } = useParseRules(props)
-  const key = documentManager.keyOfEntity(props)
+export const Frame: FC<LayerProps> = withStyle(
+  withDraggable(props => {
+    const { documentManager } = useContext(BuilderContext)
+    const key = documentManager.keyOfEntity(props)
 
-  if (props?._type === nodes.Text) {
-    return <Text {...props} onClick={props.onClick} />
-  }
+    if (props?._type === nodes.Text) {
+      return <Text {...props} onClick={props.onClick} />
+    }
 
-  const proxyOnClick = e => {
-    props.onClick?.(e, {
-      layerKey: key
-    })
-  }
+    const listeners = Object.fromEntries(Object.entries(props).filter(([propKey]) => propKey.startsWith('on')))
 
-  return (
-    <>
-      <animated.div data-key={key} style={cssRules} onClick={proxyOnClick}>
-        {props.children.map(child => (
-          <Frame key={child._id} {...child} onClick={props.onClick} />
-        ))}
-      </animated.div>
-    </>
-  )
-})
+    return (
+      <>
+        <animated.div style={props.style} {...listeners} data-key={key}>
+          {props.children?.map(child => (
+            <Frame key={child._id} {...child} />
+          ))}
+        </animated.div>
+      </>
+    )
+  })
+)

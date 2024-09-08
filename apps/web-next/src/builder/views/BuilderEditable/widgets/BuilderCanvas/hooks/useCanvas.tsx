@@ -1,20 +1,32 @@
 import { ElementRef, MutableRefObject, useCallback, useContext, useEffect, useRef } from 'react'
-import { useGesture } from '@use-gesture/react'
-import { animated, useSpring } from '@react-spring/web'
+import { useDrag, useGesture } from '@use-gesture/react'
+import { animated, SpringValue, useSpring } from '@react-spring/web'
 import { useGraph } from '@graph-state/react'
 import { CanvasManager } from '@/builder/managers/canvasManager'
 import { BuilderContext } from '@/builder/BuilderContext'
 import { useMeasure } from 'react-use'
+import { useBuilderManager } from '@/builder/hooks/useBuilderManager'
+import { definitions } from '@fragments/plugin-state'
+import { animatableValue } from '@/builder/utils/animatableValue'
+import { getNodePosition } from '@/app/utils/getNodePosition'
+import { findRefNode } from '@/builder/utils/findRefNode'
+import { useDragMove } from '@/builder/views/BuilderEditable/widgets/BuilderCanvas/hooks/useDragMove'
+import { useDragCollisions } from '@/builder/views/BuilderEditable/widgets/BuilderCanvas/hooks/useDragCollisions'
 
 const SCALE = {
   min: 0.25,
   max: 3
 }
 
+export type DragEvent = Parameters<Parameters<typeof useDrag>[0]>[0]
+
 export const useCanvas = () => {
-  const { canvasManager } = useContext(BuilderContext)
+  const { documentManager, builderManager, canvasManager } = useContext(BuilderContext)
+  const { updateParams } = useBuilderManager()
   const [canvas] = useGraph(canvasManager)
   const pointerRef = useRef<ElementRef<'div'>>(null)
+  const dragMoveHandler = useDragMove()
+  const dragCollisionsHandler = useDragCollisions()
 
   useEffect(() => {
     const handler = (e: Event) => e.preventDefault()
@@ -38,10 +50,72 @@ export const useCanvas = () => {
 
   useGesture(
     {
-      // onDrag: ({ pinching, cancel, offset: [x, y] }) => {
-      //   if (pinching) cancel()
-      //   position.ref.start({ x, y })
-      // },
+      onMouseMove: ({ event, dragging, moving, wheeling }) => {
+        if (dragging || moving || wheeling) return
+
+        const elementFromPoint = document.elementFromPoint(event.clientX, event.clientY)
+        const layerKey = elementFromPoint.getAttribute('data-key')
+        canvasManager.setHoverLayer(layerKey)
+      },
+      onClick: ({ event }) => {
+        event.preventDefault()
+        event.stopPropagation()
+
+        const elementFromPoint = document.elementFromPoint(event.clientX, event.clientY)
+        if (elementFromPoint && elementFromPoint instanceof HTMLElement && elementFromPoint.getAttribute('data-key')) {
+          const layerKey = elementFromPoint.getAttribute('data-key')
+
+          const clickedLayerValue = documentManager.resolve(layerKey)
+          if (clickedLayerValue?._type === definitions.nodes.Text && event.detail === 2) {
+            updateParams({
+              focus: layerKey
+            })
+            builderManager.toggleTextEditor(true)
+          }
+
+          builderManager.toggleTextEditor(false)
+          updateParams({
+            focus: layerKey
+          })
+        } else {
+          builderManager.toggleTextEditor(false)
+          updateParams({
+            focus: null
+          })
+        }
+      },
+      onDrag: dragEvent => {
+        const {
+          pinching,
+          dragging,
+          cancel,
+          movement: [mx, my],
+          event,
+          first
+        } = dragEvent
+        event.stopPropagation()
+        if (pinching) cancel()
+
+        if (first) {
+          const elementFromPoint = document.elementFromPoint(event.clientX, event.clientY)
+          const layerKey = elementFromPoint.getAttribute('data-key')
+          const layerNode = documentManager.resolve(layerKey)
+
+          dragEvent.memo = {
+            targetLayerLink: layerKey,
+            targetLayer: layerNode
+          }
+        }
+
+        canvasManager.setDragging(dragging, dragEvent.memo?.targetLayerLink)
+
+        let dragPoint = dragMoveHandler(dragEvent)
+        dragPoint = dragCollisionsHandler(dragEvent, dragPoint)
+
+        dragEvent.memo?.targetLayer?.move(dragPoint.x, dragPoint.y)
+
+        return dragEvent.memo
+      },
       onPinch: ({ origin: [ox, oy], first, movement: [ms], offset: [scale], memo }) => {
         if (first) {
           const pointerRect = pointerRef.current.getBoundingClientRect()
@@ -66,12 +140,14 @@ export const useCanvas = () => {
 
         return memo
       },
-      onWheel: ({ event, movement: [mx, my] }) => {
+      onWheel: ({ event, movement: [mx, my], first, last, wheeling }) => {
         event.preventDefault()
         const calcX = saveOffset.current[0] + mx * -1
         const calcY = saveOffset.current[1] + my * -1
         canvas.x.start(calcX)
         canvas.y.start(calcY)
+
+        canvasManager.setMoving(wheeling)
       },
       onWheelEnd: ({ event, movement: [mx, my] }) => {
         event.preventDefault()
@@ -86,7 +162,7 @@ export const useCanvas = () => {
     },
     {
       target: pointerRef,
-      drag: { from: () => [canvas.x.get(), canvas.y.get()] },
+      drag: { from: () => [canvas.x.get(), canvas.y.get()], filterTaps: true },
       pinch: {
         scaleBounds: SCALE,
         rubberband: true
