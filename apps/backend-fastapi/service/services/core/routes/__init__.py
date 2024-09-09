@@ -11,7 +11,6 @@ api: Api = Api()
 # Import routes here
 # from .module import *  # isort:skip
 
-from .health import * # isort:skip
 from .router import Query, Mutation
 import strawberry
 
