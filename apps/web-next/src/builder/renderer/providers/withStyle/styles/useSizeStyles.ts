@@ -4,6 +4,8 @@ import { Graph } from '@graph-state/core'
 import { definitions } from '@fragments/plugin-state'
 
 export const useSizeStyles = (graph: Graph) => {
+  if (!graph) return {}
+
   const layoutSizingHorizontal = graph.resolveField('layoutSizingHorizontal')
   const layoutSizingVertical = graph.resolveField('layoutSizingVertical')
   const widthValue = graph.resolveField('width')

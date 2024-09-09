@@ -3,6 +3,8 @@ import { to } from '@react-spring/web'
 import { toPx } from '@/app/utils/toPx'
 
 export const useCornerStyles = (graph: Graph) => {
+  if (!graph) return {}
+
   const cornerRadius = graph.resolveField('cornerRadius')
   const topLeftRadius = graph.resolveField('topLeftRadius')
   const topRightRadius = graph.resolveField('topRightRadius')

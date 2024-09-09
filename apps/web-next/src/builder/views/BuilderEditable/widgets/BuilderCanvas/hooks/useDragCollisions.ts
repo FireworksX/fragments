@@ -45,13 +45,18 @@ export const useDragCollisions = () => {
       ?.find(p => p._type === definitions.nodes.Breakpoint)
     const currentBreakpointKey = documentManager.keyOfEntity(currentBreakpoint)
 
+    const allParentsOfParent = (documentManager.resolve(parentLayerKey).getAllParents() ?? []).map(
+      documentManager.keyOfEntity
+    )
+
     const allCanvasLayersForParent =
       currentBreakpoint?.findAll(
         child =>
           child._type === definitions.nodes.Frame &&
           !isPartialKey(documentManager.keyOfEntity(child)) &&
           child._id !== parentLayerNode?._id &&
-          child._id !== memo.targetLayer?._id
+          child._id !== memo.targetLayer?._id &&
+          !allParentsOfParent.includes(documentManager.keyOfEntity(child))
       ) ?? []
 
     const alternativeParents = allCanvasLayersForParent.map(layer => ({
@@ -83,10 +88,12 @@ export const useDragCollisions = () => {
       memo.collisions = calculateMemoData(memo, parentLayerKey)
     }
 
+    if (!memo?.collisions) return inputPoint
+
     const targetLayerRect = getNodePosition(findRefNode(memo?.targetLayerLink))
 
     const isInsideOfParent = isIntersecting(memo?.collisions?.parentLayerRect, targetLayerRect)
-    const onNextParent = memo?.collisions?.alternativeParents?.find(layer => {
+    const onNextParent = memo?.collisions?.alternativeParents?.findLast(layer => {
       return isIntersecting(layer.rect, targetLayerRect, true)
     })
 
@@ -104,14 +111,13 @@ export const useDragCollisions = () => {
       memo.collisions.offsetTop = offsetTop - inputPoint.y
     }
 
-    if (memo?.collisions?.onTopLevel && onNextParent) {
+    if (onNextParent) {
       moveNode(onNextParent?.layerKey)
     } else {
       if (!isInsideOfParent) {
-        const resultL = onNextParent?.layerKey ?? memo.collisions?.currentBreakpointKey
-
-        if (memo.collisions?.parentLayerKey !== resultL) {
-          moveNode(resultL)
+        const resultLayerKey = onNextParent?.layerKey ?? memo?.collisions?.currentBreakpointKey
+        if (memo?.collisions?.parentLayerKey !== resultLayerKey) {
+          moveNode(resultLayerKey)
         }
       }
     }

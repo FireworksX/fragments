@@ -9,6 +9,8 @@ import { Graph } from '@graph-state/core'
 export const useLayoutStyles = (graph: Graph) => {
   const rules: CSS.Properties = {}
 
+  if (!graph) return {}
+
   const isFlex = to(graph.resolveField('layerMode'), mode => mode === definitions.layerMode.flex)
   // if (isFlex) {
   //   rules.display = 'flex'

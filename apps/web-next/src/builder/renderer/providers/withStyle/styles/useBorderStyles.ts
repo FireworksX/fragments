@@ -6,6 +6,9 @@ import { useDisplayColor } from '@/builder/hooks/useDisplayColor'
 
 export const useBorderStyles = (graph: Graph) => {
   const { getColor } = useDisplayColor()
+
+  if (!graph) return {}
+
   const borderType = graph.resolveField('borderType')
   const borderWidth = graph.resolveField('borderWidth')
   const borderColor = graph.resolveField('borderColor')

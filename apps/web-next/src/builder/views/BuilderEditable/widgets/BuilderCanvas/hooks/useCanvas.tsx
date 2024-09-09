@@ -58,9 +58,6 @@ export const useCanvas = () => {
         canvasManager.setHoverLayer(layerKey)
       },
       onClick: ({ event }) => {
-        event.preventDefault()
-        event.stopPropagation()
-
         const elementFromPoint = document.elementFromPoint(event.clientX, event.clientY)
         if (elementFromPoint && elementFromPoint instanceof HTMLElement && elementFromPoint.getAttribute('data-key')) {
           const layerKey = elementFromPoint.getAttribute('data-key')

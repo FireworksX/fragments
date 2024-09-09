@@ -2,6 +2,8 @@ import { toPx } from '@/app/utils/toPx'
 import { Graph } from '@graph-state/core'
 
 export const usePositionStyles = (graph: Graph) => {
+  if (!graph) return {}
+
   const positionType = graph.resolveField('positionType') ?? 'absolute'
 
   if (positionType === 'absolute') {

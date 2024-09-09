@@ -5,6 +5,9 @@ import { useDisplayColor } from '@/builder/hooks/useDisplayColor'
 
 export const useFillStyles = (graph: Graph) => {
   const { getColor } = useDisplayColor()
+
+  if (!graph) return {}
+
   const fillType = graph.resolveField('fillType')
   const solidFill = graph.resolveField('solidFill')
   const imageFill = graph.resolveField('imageFill')

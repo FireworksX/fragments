@@ -3,6 +3,8 @@ import { to } from '@react-spring/web'
 import { definitions } from '@fragments/plugin-state'
 
 export const useSceneStyles = (graph: Graph) => {
+  if (!graph) return {}
+
   const isFlex = to(graph.resolveField('layerMode'), mode => mode === definitions.layerMode.flex)
 
   return {
