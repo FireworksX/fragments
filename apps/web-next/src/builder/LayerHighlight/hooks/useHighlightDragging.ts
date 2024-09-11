@@ -21,21 +21,18 @@ const initialStyle = {
 export const useHighlightDragging = () => {
   const { canvasManager, documentManager } = useContext(BuilderContext)
   const [canvas] = useGraph(canvasManager, canvasManager.key)
-  const draggingLayerParent = documentManager.resolve(canvas.draggingLayer)?.getParent()
+  const [dragingLayer] = useGraph(documentManager, canvas.draggingLayer)
+  const draggingLayerParent = dragingLayer?.getParent()
+  const parentTarget = findRefNode(documentManager.keyOfEntity(draggingLayerParent))
+  const parentRect = getNodePosition(parentTarget)
 
   const [draggingTargetStyles, focusStylesApi] = useSpring(() => initialStyle)
   const [draggingParentStyles, parentStylesApi] = useSpring(() => initialStyle)
 
   useEffect(() => {
     const target = findRefNode(canvas.draggingLayer)
-    const viewportNode = document.querySelector('#viewport')
-    const { width, height } = getNodePosition(target, viewportNode)
+    const { width, height } = getNodePosition(target)
     const targetLayer = documentManager.resolve(canvas.draggingLayer)
-
-    const parentTarget = findRefNode(
-      documentManager.keyOfEntity(documentManager.resolve(canvas.draggingLayer)?.getParent())
-    )
-    const parentRect = getNodePosition(parentTarget, viewportNode)
 
     focusStylesApi.set({
       x: to([targetLayer?.x ?? 0], v => v + parentRect.left),
@@ -51,7 +48,7 @@ export const useHighlightDragging = () => {
       y: parentRect.top,
       width: parentRect.width,
       height: parentRect.height,
-      opacity: canvas.isDragging ? 1 : 0,
+      opacity: canvas.isDragging && parentRect.width > 0 && parentRect.height ? 1 : 0,
       borderWidth: PARENT_BORDER_SIZE / canvas.scale.get()
     })
   }, [canvas.draggingLayer, canvas.isDragging, draggingLayerParent?._id])

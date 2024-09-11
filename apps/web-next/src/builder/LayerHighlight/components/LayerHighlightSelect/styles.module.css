@@ -1,29 +1,38 @@
-.root {}
+.root {
+    position: absolute;
+    inset: 0;
+    z-index: var(--z-index-builder-tools);
+    pointer-events: none;
+}
 
-.sideTop {
+.corner {
+    width: 8px;
+    height: 8px;
+    background: var(--background-secondary);
+    border-radius: var(--radius-main);
+    border: 1px solid var(--primary);
+    pointer-events: auto;
+    position: absolute;
+}
+
+.cornerRight {
+    cursor: nesw-resize;
+}
+
+.cornerLeft {
+    cursor: nwse-resize;
+}
+
+.sideVertical {
     height: 8px;
     pointer-events: auto;
-    cursor: n-resize;
+    cursor: ns-resize;
     position: absolute;
 }
 
-.sideRight {
+.sideHorizontal {
     width: 8px;
     pointer-events: auto;
-    cursor: e-resize;
-    position: absolute;
-}
-
-.sideBottom {
-    height: 8px;
-    pointer-events: auto;
-    cursor: s-resize;
-    position: absolute;
-}
-
-.sideLeft {
-    width: 8px;
-    pointer-events: auto;
-    cursor: w-resize;
+    cursor: ew-resize;
     position: absolute;
 }

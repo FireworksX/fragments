@@ -3,6 +3,7 @@ import { nodes } from "@fragments/plugin-state";
 import extendPlugin from "@graph-state/plugin-extend";
 import { collectExtends } from "@/extend";
 import { positionExtend } from "@/extend/positionExtend";
+import { layoutExtend } from "@/extend/layoutExtend";
 
 export const pluginStateBuilder: Plugin = (state) => {
   // addStatic(state);
@@ -33,6 +34,7 @@ export const pluginStateBuilder: Plugin = (state) => {
         // fillExtend,
         // cloneExtend,
         positionExtend,
+        layoutExtend,
       ]),
       // [nodes.SolidPaintStyledPaintStyle]: collectExtends([solidPaintStyleExtend]),
       // [nodes.Variable]: collectExtends([variableExtend]),

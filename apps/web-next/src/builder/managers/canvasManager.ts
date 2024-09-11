@@ -16,6 +16,7 @@ export const createCanvasManager = () =>
       draggingLayer: null, // LinkKey слоя который сейчас перетаскиваем
       isDragging: false, // Перетаскиваем ли сейчас какой-нибудь элемент
       isMoving: false, // Двигаем ли сейчас canvas
+      isResizing: false, // Изменяем ли сейчас размер
       bounds: [0, 0, 0, 0]
     },
     skip: [isInstanceOf(SpringValue)],
@@ -38,6 +39,16 @@ export const createCanvasManager = () =>
             prev => ({
               ...prev,
               isMoving: value
+            }),
+            { replace: true }
+          )
+        }
+        state.setResizing = (value: boolean) => {
+          state.mutate(
+            state.key,
+            prev => ({
+              ...prev,
+              isResizing: value
             }),
             { replace: true }
           )

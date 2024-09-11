@@ -44,7 +44,7 @@ export const BuilderEditable: FC<BuilderEditableProps> = ({ className }) => {
             <LayerHighlight />
             <DisplayBreakpoints
               renderer={props => (
-                <div style={{ minHeight: 500, background: '#fff' }}>
+                <div style={{ minHeight: 500, background: 'rgba(255, 255, 255, .3)' }}>
                   <Frame {...props} />
                 </div>
               )}

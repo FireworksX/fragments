@@ -24,18 +24,17 @@ export const useHighlightHover = () => {
 
   useEffect(() => {
     const target = findRefNode(canvas.hoverLayer)
-    const viewportNode = document.querySelector('#viewport')
-    const { top, left, width, height } = getNodePosition(target, viewportNode)
+    const { top, left, width, height } = getNodePosition(target)
 
     stylesApi.set({
       x: left,
       y: top,
       width: width,
       height: height,
-      opacity: canvas.isDragging ? 0 : 1,
+      opacity: canvas.isDragging || canvas.isResizing ? 0 : 1,
       borderWidth: BORDER_SIZE / canvas.scale.get()
     })
-  }, [canvas.hoverLayer, canvas.isDragging])
+  }, [canvas.hoverLayer, canvas.isDragging, canvas.isResizing])
 
   return styles
 }

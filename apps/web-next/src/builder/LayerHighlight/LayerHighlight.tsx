@@ -13,8 +13,15 @@ interface BuilderLayerHighlightProps {
 }
 
 const LayerHighlight: FC<BuilderLayerHighlightProps> = ({ className }) => {
-  const { draggingParentStyles, draggingTargetStyles, hoverStyles, parentStyles, focusStyles, opacity } =
-    useHighlights()
+  const {
+    dragHandler,
+    draggingParentStyles,
+    draggingTargetStyles,
+    hoverStyles,
+    selectParentStyles,
+    selectStyles,
+    opacity
+  } = useHighlights()
 
   return (
     <animated.div className={cn(className, styles.root)} style={{ opacity }}>
@@ -26,26 +33,11 @@ const LayerHighlight: FC<BuilderLayerHighlightProps> = ({ className }) => {
       <animated.div
         key='focus'
         className={styles.highlight}
-        style={{ ...focusStyles, position: 'absolute', inset: 0 }}
+        style={{ ...selectStyles, position: 'absolute', inset: 0 }}
       />
-      <LayerHighlightParent {...parentStyles} />
+      <LayerHighlightParent {...selectParentStyles} />
+      <LayerHighlightSelect style={selectStyles} dragHandler={dragHandler} />
       <LayerHighlightDragging targetStyle={draggingTargetStyles} parentStyle={draggingParentStyles} />
-      {/*{highlights.map((highlight, index) => {*/}
-      {/*  if ([SPRING_INDEXES.hover, SPRING_INDEXES.focus].includes(index)) {*/}
-      {/*    return (*/}
-      {/*      <>*/}
-      {/*        <animated.div*/}
-      {/*          key='hover'*/}
-      {/*          className={styles.highlight}*/}
-      {/*          style={{ ...highlight, position: 'absolute', inset: 0 }}*/}
-      {/*        >*/}
-      {/*          {index === SPRING_INDEXES.focus && <LayerHighlightSelect {...highlight} />}*/}
-      {/*        </animated.div>*/}
-      {/*      </>*/}
-      {/*    )*/}
-      {/*  }*/}
-      {/*})}*/}
-      {/*<animated.div className={styles.highlight} style={{ ...focusHighlight, position: 'absolute', inset: 0 }} />*/}
     </animated.div>
   )
 }

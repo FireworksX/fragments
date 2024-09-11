@@ -82,6 +82,8 @@ export const useCanvas = () => {
         }
       },
       onDrag: dragEvent => {
+        if (canvas?.isResizing) return
+
         const {
           pinching,
           dragging,
