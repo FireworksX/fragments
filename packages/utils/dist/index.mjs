@@ -321,6 +321,30 @@ var colorToObject = (color) => {
   }
   return null;
 };
+
+// src/finiiteNumber.ts
+function isFiniteNumber(value) {
+  return typeof value === "number" && isFinite(value);
+}
+function finiteNumber(value) {
+  return isFiniteNumber(value) ? value : void 0;
+}
+
+// src/valueToDimensionType.ts
+function valueToDimensionType(value) {
+  if (typeof value === "string") {
+    const trimmedValue = value.trim();
+    if (trimmedValue === "auto")
+      return 2;
+    if (trimmedValue.endsWith("fr"))
+      return 3;
+    if (trimmedValue.endsWith("%"))
+      return 1;
+    if (trimmedValue.endsWith("vw") || trimmedValue.endsWith("vh"))
+      return 4;
+  }
+  return 0;
+}
 export {
   colorToObject,
   createConstants,
@@ -328,12 +352,14 @@ export {
   eventEmitter,
   filterDeep,
   findDeep,
+  finiteNumber,
   generateId,
   get,
   hexToRgb,
   injectLink,
   isAbsoluteUrl,
   isEmptyValue,
+  isFiniteNumber,
   isHTMLNode,
   isObject,
   isPrimitive,
@@ -351,6 +377,7 @@ export {
   set,
   times,
   toKebabCase,
-  toLongHex
+  toLongHex,
+  valueToDimensionType
 };
 //# sourceMappingURL=index.mjs.map

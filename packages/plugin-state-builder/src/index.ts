@@ -4,9 +4,10 @@ import extendPlugin from "@graph-state/plugin-extend";
 import { collectExtends } from "@/extend";
 import { positionExtend } from "@/extend/positionExtend";
 import { layoutExtend } from "@/extend/layoutExtend";
+import { addStatic } from "@/static";
 
 export const pluginStateBuilder: Plugin = (state) => {
-  // addStatic(state);
+  addStatic(state);
 
   extendPlugin<typeof state>(
     {

@@ -40,12 +40,14 @@ __export(src_exports, {
   eventEmitter: () => eventEmitter,
   filterDeep: () => filterDeep,
   findDeep: () => findDeep,
+  finiteNumber: () => finiteNumber,
   generateId: () => generateId,
   get: () => get,
   hexToRgb: () => hexToRgb,
   injectLink: () => injectLink,
   isAbsoluteUrl: () => isAbsoluteUrl,
   isEmptyValue: () => isEmptyValue,
+  isFiniteNumber: () => isFiniteNumber,
   isHTMLNode: () => isHTMLNode,
   isObject: () => isObject,
   isPrimitive: () => isPrimitive,
@@ -63,7 +65,8 @@ __export(src_exports, {
   set: () => set,
   times: () => times,
   toKebabCase: () => toKebabCase,
-  toLongHex: () => toLongHex
+  toLongHex: () => toLongHex,
+  valueToDimensionType: () => valueToDimensionType
 });
 module.exports = __toCommonJS(src_exports);
 
@@ -373,6 +376,30 @@ var colorToObject = (color) => {
   }
   return null;
 };
+
+// src/finiiteNumber.ts
+function isFiniteNumber(value) {
+  return typeof value === "number" && isFinite(value);
+}
+function finiteNumber(value) {
+  return isFiniteNumber(value) ? value : void 0;
+}
+
+// src/valueToDimensionType.ts
+function valueToDimensionType(value) {
+  if (typeof value === "string") {
+    const trimmedValue = value.trim();
+    if (trimmedValue === "auto")
+      return 2;
+    if (trimmedValue.endsWith("fr"))
+      return 3;
+    if (trimmedValue.endsWith("%"))
+      return 1;
+    if (trimmedValue.endsWith("vw") || trimmedValue.endsWith("vh"))
+      return 4;
+  }
+  return 0;
+}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   colorToObject,
@@ -381,12 +408,14 @@ var colorToObject = (color) => {
   eventEmitter,
   filterDeep,
   findDeep,
+  finiteNumber,
   generateId,
   get,
   hexToRgb,
   injectLink,
   isAbsoluteUrl,
   isEmptyValue,
+  isFiniteNumber,
   isHTMLNode,
   isObject,
   isPrimitive,
@@ -404,6 +433,7 @@ var colorToObject = (color) => {
   set,
   times,
   toKebabCase,
-  toLongHex
+  toLongHex,
+  valueToDimensionType
 });
 //# sourceMappingURL=index.js.map

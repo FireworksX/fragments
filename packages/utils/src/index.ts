@@ -27,3 +27,5 @@ export { injectLink } from "./injectLink";
 export { debounce } from "./debounce";
 export { generateId } from "./generateId";
 export { colorToObject } from "./colors/colorToObject";
+export { isFiniteNumber, finiteNumber } from "./finiiteNumber";
+export { valueToDimensionType } from "./valueToDimensionType";

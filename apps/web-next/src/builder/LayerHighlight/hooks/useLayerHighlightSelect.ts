@@ -31,10 +31,11 @@ export const useLayerHighlightSelect = () => {
   const [parentStyles, parentStylesApi] = useSpring(() => initialStyle)
 
   useEffect(() => {
-    if (focus) {
-      const target = findRefNode(focus)
+    if (focusNode) {
       const parentTarget = findRefNode(documentManager.keyOfEntity(documentManager.resolve(focus)?.getParent()))
       const parentRect = getNodePosition(parentTarget)
+      const horizontalSizing = focusNode.resolveField('layoutSizingHorizontal')
+      const verticalSizing = focusNode.resolveField('layoutSizingVertical')
 
       selectStylesApi.set({
         x: to(focusNode.resolveField('x'), v => parentRect.left + v),
@@ -73,8 +74,6 @@ export const useLayerHighlightSelect = () => {
     }
 
     const scale = animatableValue(canvas?.scale)
-    const left = mx / scale + (memo?.from?.left ?? 0)
-    const top = mx / scale + (memo?.from?.top ?? 0)
     const width = mx / scale + (memo?.from?.width ?? 0)
     const height = my / scale + (memo?.from?.height ?? 0)
     // console.log(direction)
