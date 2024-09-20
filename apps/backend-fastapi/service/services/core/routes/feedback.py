@@ -2,7 +2,7 @@ from typing import List
 from services.dependencies import supabase
 from fastapi import HTTPException, status
 import strawberry
-from .schemas import Fragment, AuthPayload, Project, FeedbackIn, Feedback
+from .schemas import Fragment, AuthPayload, Campaign, FeedbackIn, Feedback
 from .middleware import Context
 from .media import asset
 from services.core.telegram.bot import send_feedback

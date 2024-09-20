@@ -1,14 +1,16 @@
-from .schemas import AuthPayload, User, Fragment, Media, FragmentIn, Project, ProjectIn, FeedbackIn, Feedback
+from .schemas import AuthPayload, User, Fragment, Media, FragmentIn, Campaign, CampaignIn, FeedbackIn, Feedback, GeoLocation, SubCampaign, SubCampaignIn
 
 import strawberry
 from typing import Optional, List
 from .middleware import Context
 from .user import login, logout, refresh, profile, signup
 from .fragments import fragments, fragment_by_id, create_fragment, update_fragment
-from .project import projects, project_by_id, create_project, update_project
+from .campaign import campaigns, campaign_by_id, create_campaign, update_campaign, delete_campaign_from_db
 from .media import upload_asset
 from .feedback import create_feedback
+from .subcampaign import create_subcampaign, update_subcampaign, subcampaign_by_id, subcampaigns_in_campaign, delete_subcampaign_from_db
 from fastapi import FastAPI, File, UploadFile
+from crud.ipgetter import get_location_by_ip
 @strawberry.type
 class Query:
     @strawberry.field
@@ -27,11 +29,22 @@ class Query:
             return await fragments(info)
 
     @strawberry.field
-    async def project(self, info: strawberry.Info[Context], project_id: Optional[str] = None) -> List[Project]:
-        if project_id is not None:
-            return [await project_by_id(info, project_id)]
+    async def campaign(self, info: strawberry.Info[Context], campgain_id: Optional[str] = None) -> List[Campaign]:
+        if campgain_id is not None:
+            return [await campaign_by_id(info, campgain_id)]
         else:
-            return await projects(info)
+            return await campaigns(info)
+
+    @strawberry.field
+    async def location(self, ip: str) -> GeoLocation:
+        return get_location_by_ip(ip)
+
+    @strawberry.field
+    async def subcampaign(self, info: strawberry.Info[Context], campaign_id: Optional[str] = None, subcampaign_id: Optional[str] = None) -> List[SubCampaign]:
+        if subcampaign_id is not None:
+            return [await subcampaign_by_id(info, subcampaign_id)]
+        if campaign_id is not None:
+            return await subcampaigns_in_campaign(info, campaign_id)
 
 @strawberry.type
 class Mutation:
@@ -54,11 +67,15 @@ class Mutation:
             return await create_fragment(info, fg)
 
     @strawberry.mutation
-    async def project(self, info: strawberry.Info[Context], pr: ProjectIn) -> Project:
+    async def campaign(self, info: strawberry.Info[Context], pr: CampaignIn) -> Campaign:
         if pr.id is not None:
-            return await update_project(info, pr)
+            return await update_campaign(info, pr)
         else:
-            return await create_project(info, pr)
+            return await create_campaign(info, pr)
+
+    @strawberry.mutation
+    async def delete_campaign(self, info: strawberry.Info[Context], campaign_id: int) -> None:
+        await delete_campaign_from_db(info, campaign_id)
 
     @strawberry.mutation
     async def asset(self, info: strawberry.Info[Context], file: UploadFile) -> Media:
@@ -68,3 +85,13 @@ class Mutation:
     async def feedback(self, info: strawberry.Info[Context], fd: FeedbackIn) -> Feedback:
         return await create_feedback(info, fd)
 
+    @strawberry.mutation
+    async def subcampaign(self, info: strawberry.Info[Context], sub: SubCampaignIn) -> SubCampaign:
+        if sub.id is not None:
+            return await update_subcampaign(info, sub)
+        else:
+            return await create_subcampaign(info, sub)
+
+    @strawberry.mutation
+    async def delete_subcampaign(self, info: strawberry.Info[Context], subcampaign_id: int) -> None:
+        await delete_subcampaign_from_db(info, subcampaign_id)
