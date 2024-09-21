@@ -5,6 +5,7 @@ var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getOwnPropSymbols = Object.getOwnPropertySymbols;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __propIsEnum = Object.prototype.propertyIsEnumerable;
+var __pow = Math.pow;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __spreadValues = (a, b) => {
   for (var prop in b || (b = {}))
@@ -62,11 +63,13 @@ __export(src_exports, {
   rgbStringToHex: () => rgbStringToHex,
   rgbToHex: () => rgbToHex,
   rgbToRgba: () => rgbToRgba,
+  roundWithOffset: () => roundWithOffset,
+  roundedNumber: () => roundedNumber,
+  roundedNumberString: () => roundedNumberString,
   set: () => set,
   times: () => times,
   toKebabCase: () => toKebabCase,
-  toLongHex: () => toLongHex,
-  valueToDimensionType: () => valueToDimensionType
+  toLongHex: () => toLongHex
 });
 module.exports = __toCommonJS(src_exports);
 
@@ -385,20 +388,25 @@ function finiteNumber(value) {
   return isFiniteNumber(value) ? value : void 0;
 }
 
-// src/valueToDimensionType.ts
-function valueToDimensionType(value) {
-  if (typeof value === "string") {
-    const trimmedValue = value.trim();
-    if (trimmedValue === "auto")
-      return 2;
-    if (trimmedValue.endsWith("fr"))
-      return 3;
-    if (trimmedValue.endsWith("%"))
-      return 1;
-    if (trimmedValue.endsWith("vw") || trimmedValue.endsWith("vh"))
-      return 4;
+// src/roundedNumber.ts
+function roundedNumber(value, decimals = 0) {
+  const d = Math.round(Math.abs(decimals));
+  const multiplier = __pow(10, d);
+  return Math.round(value * multiplier) / multiplier;
+}
+function roundedNumberString(value, decimals = 0) {
+  const result = value.toFixed(decimals);
+  return decimals === 0 ? result : `${+result}`;
+}
+function roundWithOffset(value, offset) {
+  if (offset === 0) {
+    return Math.round(value);
   }
-  return 0;
+  offset -= offset | 0;
+  if (offset < 0) {
+    offset = 1 - offset;
+  }
+  return Math.round(value - offset) + offset;
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
@@ -430,10 +438,12 @@ function valueToDimensionType(value) {
   rgbStringToHex,
   rgbToHex,
   rgbToRgba,
+  roundWithOffset,
+  roundedNumber,
+  roundedNumberString,
   set,
   times,
   toKebabCase,
-  toLongHex,
-  valueToDimensionType
+  toLongHex
 });
 //# sourceMappingURL=index.js.map

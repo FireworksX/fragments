@@ -6,6 +6,7 @@ import { findRefNode } from '@/builder/utils/findRefNode'
 import { getNodePosition } from '@/app/utils/getNodePosition'
 import { SPRING_INDEXES } from '@/builder/LayerHighlight/hooks/useHighlights'
 import { useBuilderManager } from '@/builder/hooks/useBuilderManager'
+import { animatableValue } from '@/builder/utils/animatableValue'
 
 const BORDER_SIZE = 1
 const PARENT_BORDER_SIZE = 3
@@ -23,31 +24,25 @@ export const useHighlightDragging = () => {
   const [canvas] = useGraph(canvasManager, canvasManager.key)
   const [dragingLayer] = useGraph(documentManager, canvas.draggingLayer)
   const draggingLayerParent = dragingLayer?.getParent()
-  const parentTarget = findRefNode(documentManager.keyOfEntity(draggingLayerParent))
-  const parentRect = getNodePosition(parentTarget)
+  const parentRect = animatableValue(draggingLayerParent?.absoluteRect?.() ?? {})
 
   const [draggingTargetStyles, focusStylesApi] = useSpring(() => initialStyle)
   const [draggingParentStyles, parentStylesApi] = useSpring(() => initialStyle)
 
   useEffect(() => {
-    const target = findRefNode(canvas.draggingLayer)
-    const { width, height } = getNodePosition(target)
-    const targetLayer = documentManager.resolve(canvas.draggingLayer)
+    const targetRect = documentManager.resolve(canvas.draggingLayer)?.absoluteRect?.() ?? {}
 
     focusStylesApi.set({
-      x: to([targetLayer?.x ?? 0], v => v + parentRect.left),
-      y: to([targetLayer?.y ?? 0], v => v + parentRect.top),
-      width: width,
-      height: height,
+      x: to(targetRect, ({ x }) => x),
+      y: to(targetRect, ({ y }) => y),
+      width: to(targetRect, ({ width }) => width),
+      height: to(targetRect, ({ height }) => height),
       opacity: canvas.isDragging ? 1 : 0,
       borderWidth: BORDER_SIZE / canvas.scale.get()
     })
 
     parentStylesApi.set({
-      x: parentRect.left,
-      y: parentRect.top,
-      width: parentRect.width,
-      height: parentRect.height,
+      ...parentRect,
       opacity: canvas.isDragging && parentRect.width > 0 && parentRect.height ? 1 : 0,
       borderWidth: PARENT_BORDER_SIZE / canvas.scale.get()
     })

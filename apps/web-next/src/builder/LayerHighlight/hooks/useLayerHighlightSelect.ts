@@ -32,27 +32,24 @@ export const useLayerHighlightSelect = () => {
 
   useEffect(() => {
     if (focusNode) {
-      const parentTarget = findRefNode(documentManager.keyOfEntity(documentManager.resolve(focus)?.getParent()))
-      const parentRect = getNodePosition(parentTarget)
-      const horizontalSizing = focusNode.resolveField('layoutSizingHorizontal')
-      const verticalSizing = focusNode.resolveField('layoutSizingVertical')
+      const focusNode = documentManager.resolve(focus)
+      const focusRect = focusNode?.absoluteRect?.() ?? {}
+      const parentNode = focusNode?.getParent()
+      const parentRect = animatableValue(parentNode?.absoluteRect?.()) ?? {}
 
       selectStylesApi.set({
-        x: to(focusNode.resolveField('x'), v => parentRect.left + v),
-        y: to(focusNode.resolveField('y'), v => parentRect.top + v),
-        width: focusNode.resolveField('width'),
-        height: focusNode.resolveField('height'),
+        x: to(focusRect, ({ x }) => x),
+        y: to(focusRect, ({ y }) => y),
+        width: to(focusRect, ({ width }) => width),
+        height: to(focusRect, ({ height }) => height),
         opacity: canvas.isDragging ? 0 : 1,
-        borderWidth: BORDER_SIZE / canvas.scale.get()
+        borderWidth: to(canvas.scale, v => BORDER_SIZE / v)
       })
 
       parentStylesApi.set({
-        x: parentRect.left,
-        y: parentRect.top,
-        width: parentRect.width,
-        height: parentRect.height,
+        ...parentRect,
         opacity: canvas.isDragging || !parentRect.width || !parentRect.height ? 0 : 1,
-        borderWidth: BORDER_SIZE / canvas.scale.get()
+        borderWidth: to(canvas.scale, v => BORDER_SIZE / v)
       })
     }
   }, [focusNode, canvas.isDragging])
@@ -61,22 +58,20 @@ export const useLayerHighlightSelect = () => {
     canvasManager.setResizing(dragging)
 
     if (first) {
+      const targetRect = animatableValue(focusNode?.rect?.() ?? {})
       memo.from = {
         getWidth: move => move / scale + (memo?.from?.width ?? 0),
         getHeight: move => move / scale + (memo?.from?.height ?? 0),
-        getLeft: move => move / scale + (memo?.from?.left ?? 0),
-        getTop: move => move / scale + (memo?.from?.top ?? 0),
-        left: animatableValue(focusNode.resolveField('x')),
-        top: animatableValue(focusNode.resolveField('y')),
-        width: animatableValue(focusNode.resolveField('width')),
-        height: animatableValue(focusNode.resolveField('height'))
+        getLeft: move => move / scale + (targetRect.x ?? 0),
+        getTop: move => move / scale + (targetRect.y ?? 0),
+        width: targetRect.width,
+        height: targetRect.height
       }
     }
 
     const scale = animatableValue(canvas?.scale)
     const width = mx / scale + (memo?.from?.width ?? 0)
     const height = my / scale + (memo?.from?.height ?? 0)
-    // console.log(direction)
 
     if (directions.includes(SELECTION_SIDES.right)) {
       focusNode.setWidth(width)
@@ -89,6 +84,8 @@ export const useLayerHighlightSelect = () => {
       if (mx > 0) {
         focusNode.setWidth(memo.from.getWidth(mx * -1))
         focusNode.move(memo.from.getLeft(mx))
+
+        memo.from.getLeft(mx, memo.from.getWidth(mx * -1))
       } else {
         focusNode.setWidth(memo.from.getWidth(mx * -1))
         focusNode.move(memo.from.getLeft(mx))

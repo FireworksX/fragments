@@ -1,6 +1,6 @@
 import { Extender } from "@/types";
 import { valueSetter } from "@/shared/valueSetter.ts";
-import { animatableValue } from "@/shared/animatableValue.ts";
+import { isValue } from "@fragments/utils";
 
 export const positionExtend: Extender = ({
   graph,
@@ -10,24 +10,16 @@ export const positionExtend: Extender = ({
 }) => {
   return {
     ...graph,
-    x: getValue("x", 0),
-    y: getValue("y", 0),
+    left: getValue("left", 0),
+    top: getValue("top", 0),
 
-    move(
-      x: number | ((prev: number) => number),
-      y: number | ((prev: number) => number)
-    ) {
-      const { x: currentX, y: currentY } = state.resolve(graphKey);
-      if (x) {
-        const resValue =
-          typeof x === "function" ? x(animatableValue(currentX)) : x;
-
-        valueSetter(state, graphKey, "x")(resValue);
+    move(left: number, top: number) {
+      if (isValue(left)) {
+        valueSetter(state, graphKey, "left")(left);
       }
-      if (y) {
-        const resValue =
-          typeof y === "function" ? y(animatableValue(currentY)) : y;
-        valueSetter(state, graphKey, "y")(resValue);
+
+      if (isValue(top)) {
+        valueSetter(state, graphKey, "top")(top);
       }
     },
   };

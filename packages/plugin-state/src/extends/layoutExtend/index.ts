@@ -12,8 +12,6 @@ export const layoutExtend: Extender = (payload) => {
 
   return {
     ...payload.graph,
-    x: payload.getValue("x", 0),
-    y: payload.getValue("y", 0),
     ...aspectRatioProps,
     ...sizeProps,
     ...zIndexProps,

@@ -23,9 +23,9 @@ export const sizeExtend = ({
     const isSynced = state.resolve(graphKey)?.isSynced();
 
     widthSetter(value);
-    if (isSynced) {
-      heightSetter(+(value * aspectRatio).toFixed(1));
-    }
+    // if (isSynced) {
+    //   heightSetter(+(value * aspectRatio).toFixed(1));
+    // }
   };
 
   const setHeight = (value: number | ((prev: number) => number)) => {
@@ -39,9 +39,9 @@ export const sizeExtend = ({
     const isSynced = state.resolve(graphKey)?.isSynced();
 
     heightSetter(value);
-    if (isSynced) {
-      widthSetter(+(value / aspectRatio).toFixed(1));
-    }
+    // if (isSynced) {
+    //   widthSetter(+(value / aspectRatio).toFixed(1));
+    // }
   };
 
   return {

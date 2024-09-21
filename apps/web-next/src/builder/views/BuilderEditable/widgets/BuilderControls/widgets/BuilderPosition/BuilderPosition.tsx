@@ -31,8 +31,8 @@ const BuilderPosition: FC<BuilderPositionProps> = ({ className }) => {
         //   <BuilderPositionToggle top={top} right={right} bottom={bottom} left={left} />
         // </div>
         <ControlRow title='Position'>
-          <InputNumber suffix='x' {...x} />
-          <InputNumber suffix='y' {...y} />
+          <InputNumber suffix='x' {...x} min={Infinity} max={Infinity} />
+          <InputNumber suffix='y' {...y} min={Infinity} max={Infinity} />
         </ControlRow>
       )}
       <ControlRow title='Type'>

@@ -1,23 +1,24 @@
-import { animatableValue } from "@/shared/animatableValue.ts";
+import { animatableValue } from "../../../../plugin-state-builder/src/shared/animatableValue.ts";
 import { toSize } from "@/shared/constraints/toSize.ts";
+import { Rect, RectProperties } from "@/types/rect.ts";
 
 export const toRect = (
-  values,
-  parentSizeInfo = null,
+  values: RectProperties,
+  parentRect: Rect,
   autoSize = null,
   pixelAlign
 ) => {
   let x = values.left || 0;
   let y = values.top || 0;
-  const { width, height } = toSize(values, parentSizeInfo, autoSize);
-  const parentSizeForPositioning =
-    (parentSizeInfo == null ? void 0 : parentSizeInfo.positioning) ?? null;
-  const positioningParentWidth = parentSizeForPositioning
-    ? animatableValue(parentSizeForPositioning.width)
+  const { width, height } = toSize(values, parentRect, autoSize);
+
+  const positioningParentWidth = parentRect?.width
+    ? animatableValue(parentRect.width)
     : null;
-  const positioningParentHeight = parentSizeForPositioning
-    ? animatableValue(parentSizeForPositioning.height)
+  const positioningParentHeight = parentRect.height
+    ? animatableValue(parentRect.height)
     : null;
+
   if (values.left !== null) {
     x = values.left;
   } else if (positioningParentWidth && values.right !== null) {
@@ -32,9 +33,11 @@ export const toRect = (
   } else if (positioningParentHeight) {
     y = values.centerAnchorY * positioningParentHeight - height / 2;
   }
+
   const f = { x, y, width, height };
-  if (pixelAlign) {
-    return Rect.pixelAligned(f);
-  }
+
+  // if (pixelAlign) {
+  //   return Rect.pixelAligned(f);
+  // }
   return f;
 };

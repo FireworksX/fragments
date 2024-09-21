@@ -15,12 +15,20 @@
     position: absolute;
 }
 
-.cornerRight {
+.cornerHalfRight {
     cursor: nesw-resize;
 }
 
-.cornerLeft {
+.cornerHalfLeft {
     cursor: nwse-resize;
+}
+
+.cornerHorizontal {
+    cursor: ew-resize;
+}
+
+.cornerVertical {
+    cursor: ns-resize;
 }
 
 .sideVertical {

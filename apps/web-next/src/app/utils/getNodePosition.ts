@@ -1,4 +1,3 @@
-import { iterateParentOfNode } from '../utils/iterateParentOfNode'
 import isBrowser from '@/app/utils/isBrowser'
 
 interface Options {

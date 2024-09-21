@@ -5,8 +5,10 @@ import { collectExtends } from "@/extend";
 import { positionExtend } from "@/extend/positionExtend";
 import { layoutExtend } from "@/extend/layoutExtend";
 import { addStatic } from "@/static";
+import { rectExtend } from "@/extend/rectExtend";
+import { frameExtend } from "@/extend/nodes/frameExtend";
 
-export const pluginStateBuilder: Plugin = (state) => {
+export const pluginStateBuilder: Plugin = (state, overrides) => {
   addStatic(state);
 
   extendPlugin<typeof state>(
@@ -36,24 +38,19 @@ export const pluginStateBuilder: Plugin = (state) => {
         // cloneExtend,
         positionExtend,
         layoutExtend,
+        rectExtend,
+        frameExtend,
       ]),
       // [nodes.SolidPaintStyledPaintStyle]: collectExtends([solidPaintStyleExtend]),
       // [nodes.Variable]: collectExtends([variableExtend]),
       // [nodes.TransformValue]: collectExtends([transformValueExtend]),
       // [nodes.ComputedValue]: collectExtends([computedValueExtend]),
-      // [nodes.Text]: collectExtends([
-      //   textExtend,
-      //   sceneExtend,
-      //   baseExtend,
-      //   cloneExtend,
-      //   layoutExtend,
-      //   positionExtend,
-      // ]),
+      [nodes.Text]: collectExtends([positionExtend, layoutExtend, rectExtend]),
     },
     {
       excludePartialGraph: true,
     }
-  )(state);
+  )(state, overrides);
 
   return state;
 };

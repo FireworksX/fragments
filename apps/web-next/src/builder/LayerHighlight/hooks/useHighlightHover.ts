@@ -6,6 +6,7 @@ import { findRefNode } from '@/builder/utils/findRefNode'
 import { getNodePosition } from '@/app/utils/getNodePosition'
 import { SPRING_INDEXES } from '@/builder/LayerHighlight/hooks/useHighlights'
 import { useBuilderManager } from '@/builder/hooks/useBuilderManager'
+import { animatableValue } from '@/builder/utils/animatableValue'
 
 const BORDER_SIZE = 1.5
 
@@ -23,15 +24,15 @@ export const useHighlightHover = () => {
   }))
 
   useEffect(() => {
-    const target = findRefNode(canvas.hoverLayer)
-    const { top, left, width, height } = getNodePosition(target)
+    const layerNode = documentManager.resolve(canvas.hoverLayer)
+    const layerRect = layerNode?.absoluteRect?.() ?? {}
 
     stylesApi.set({
-      x: left,
-      y: top,
-      width: width,
-      height: height,
-      opacity: canvas.isDragging || canvas.isResizing ? 0 : 1,
+      x: to(layerRect, ({ x }) => x),
+      y: to(layerRect, ({ y }) => y),
+      width: to(layerRect, ({ width }) => width),
+      height: to(layerRect, ({ height }) => height),
+      opacity: canvas.isDragging || canvas.isResizing ? 0 : 1 || Object.keys(layerRect).length === 0,
       borderWidth: BORDER_SIZE / canvas.scale.get()
     })
   }, [canvas.hoverLayer, canvas.isDragging, canvas.isResizing])

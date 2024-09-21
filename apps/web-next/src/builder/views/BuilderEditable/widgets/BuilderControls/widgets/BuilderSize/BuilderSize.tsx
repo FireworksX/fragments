@@ -19,15 +19,29 @@ interface BuilderSizeProps {
 const DISABLE_UTILS: (keyof typeof builderSizing)[] = [builderSizing.Fill, builderSizing.Hug]
 
 const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
-  const { selectionGraph, sync, isSynced, layoutSizingHorizontal, layoutSizingVertical, hasSync, width, height } =
-    useBuilderSize()
+  const {
+    selectionGraph,
+    hugContentEnabled,
+    fillContentEnabled,
+    sync,
+    isSynced,
+    layoutSizingHorizontal,
+    layoutSizingVertical,
+    hasSync,
+    width,
+    height
+  } = useBuilderSize()
 
   const Options = (
     <>
       <option value={builderSizing.Relative}>Rel</option>
       <option value={builderSizing.Fixed}>Fixed</option>
-      <option value={builderSizing.Hug}>Hug</option>
-      <option value={builderSizing.Fill}>Fill</option>
+      <option value={builderSizing.Hug} disabled={!hugContentEnabled}>
+        Hug
+      </option>
+      <option value={builderSizing.Fill} disabled={!fillContentEnabled}>
+        Fill
+      </option>
     </>
   )
 

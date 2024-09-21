@@ -37,6 +37,8 @@ export const childrenExtend: Extender = <TChild extends SceneNode = SceneNode>({
     },
 
     removeChild(child: string | TChild): void {
+      state.mutate(state.keyOfEntity(child), { parentKey: null });
+
       state.mutate(
         graphKey,
         (prev) => {

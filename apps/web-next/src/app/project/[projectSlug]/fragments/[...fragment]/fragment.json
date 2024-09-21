@@ -7,6 +7,7 @@
       "_id": "laptop",
       "isPrimary": true,
       "width": 1200,
+      "height": 500,
       "parentKey": "$$Fragment:g34gherhg3g",
       "children": [
         {
@@ -79,81 +80,6 @@
             }
           ],
           "aspectRatio": 1
-        },
-        {
-          "_type": "Frame",
-          "_id": "d845aeb00e17e",
-          "opacity": 1,
-          "visible": true,
-          "width": 300,
-          "height": 300,
-          "layoutSizingHorizontal": "Fixed",
-          "layoutSizingVertical": "Fixed",
-          "layerMode": "none",
-          "layerAlign": "start",
-          "layerDirection": "horizontal",
-          "layerDistribute": "start",
-          "borderType": "Solid",
-          "borderWidth": 4,
-          "borderColor": {
-            "r": 13,
-            "g": 196,
-            "b": 45,
-            "a": 1,
-            "_type": "Frame",
-            "_id": "d845aeb00e17e.borderColor"
-          },
-          "solidFill": {
-            "r": 86,
-            "g": 196,
-            "b": 187,
-            "a": 1,
-            "_type": "Frame",
-            "_id": "d845aeb00e17e.solidFill"
-          },
-          "parentKey": "$$Breakpoint:laptop",
-          "children": [
-            {
-              "_type": "Frame",
-              "_id": "86efa3eb9a7f9",
-              "opacity": 1,
-              "visible": true,
-              "width": 100,
-              "height": 100,
-              "layoutSizingHorizontal": "Fixed",
-              "layoutSizingVertical": "Fixed",
-              "layerMode": "none",
-              "layerAlign": "start",
-              "layerDirection": "horizontal",
-              "layerDistribute": "start",
-              "borderType": "None",
-              "borderWidth": 1,
-              "borderColor": {
-                "r": 13,
-                "g": 196,
-                "b": 45,
-                "a": 1,
-                "_type": "Frame",
-                "_id": "86efa3eb9a7f9.borderColor"
-              },
-              "solidFill": {
-                "r": 29,
-                "g": 55,
-                "b": 53,
-                "a": 1,
-                "_type": "Frame",
-                "_id": "86efa3eb9a7f9.solidFill"
-              },
-              "fillType": "Solid",
-              "parentKey": "$$Frame:d845aeb00e17e",
-              "x": 160.828125,
-              "y": 122.79296875,
-              "positionType": "absolute"
-            }
-          ],
-          "x": 225.89453125,
-          "y": 94.83984375,
-          "positionType": "absolute"
         }
       ]
     }

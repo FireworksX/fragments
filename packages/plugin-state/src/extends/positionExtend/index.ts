@@ -9,22 +9,17 @@ export const positionExtend: Extender = ({
 }) => {
   return {
     ...graph,
-    x: getValue("x"),
-    y: getValue("y"),
-    positionType: getValue("positionType"),
+    left: getValue("left"),
+    top: getValue("top"),
+    positionType: getValue("positionType", "absolute"),
     setPositionType: valueSetter(state, graphKey, "positionType"),
 
-    move(
-      x: number | ((prev: number) => number),
-      y: number | ((prev: number) => number)
-    ) {
-      if (x) {
-        const resValue = typeof x === "function" ? x(getValue("x")) : x;
-        valueSetter(state, graphKey, "x")(resValue);
+    move(left: number, top: number) {
+      if (left) {
+        valueSetter(state, graphKey, "left")(left);
       }
-      if (y) {
-        const resValue = typeof y === "function" ? y(getValue("y")) : y;
-        valueSetter(state, graphKey, "y")(resValue);
+      if (top) {
+        valueSetter(state, graphKey, "top")(top);
       }
     },
   };

@@ -22,8 +22,9 @@ import { computedValueExtend } from "@/extends/nodes/computedValueExtend";
 import { textExtend } from "@/extends/nodes/textExtend";
 import { StateEntity } from "@/types";
 import { positionExtend } from "@/extends/positionExtend";
+import { rectExtend } from "@/extends/rectExtend";
 
-const plugin: Plugin = (state: GraphState<StateEntity>) => {
+const plugin: Plugin = (state: GraphState<StateEntity>, overrides) => {
   addStatic(state);
 
   extendPlugin<typeof state>(
@@ -39,6 +40,8 @@ const plugin: Plugin = (state: GraphState<StateEntity>) => {
         baseExtend,
         childrenExtend,
         cloneExtend,
+        layoutExtend,
+        rectExtend,
       ]),
       [nodes.Frame]: collectExtends([
         baseExtend,
@@ -52,6 +55,7 @@ const plugin: Plugin = (state: GraphState<StateEntity>) => {
         fillExtend,
         cloneExtend,
         positionExtend,
+        rectExtend,
       ]),
       [nodes.SolidPaintStyle]: collectExtends([solidPaintStyleExtend]),
       [nodes.Variable]: collectExtends([variableExtend]),
@@ -64,12 +68,13 @@ const plugin: Plugin = (state: GraphState<StateEntity>) => {
         cloneExtend,
         layoutExtend,
         positionExtend,
+        rectExtend,
       ]),
     },
     {
       excludePartialGraph: true,
     }
-  )(state);
+  )(state, overrides);
 
   return state;
 };
