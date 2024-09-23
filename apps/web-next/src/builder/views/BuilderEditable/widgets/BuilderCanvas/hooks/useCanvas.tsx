@@ -22,7 +22,7 @@ export type DragEvent = Parameters<Parameters<typeof useDrag>[0]>[0]
 
 export const useCanvas = () => {
   const { documentManager, builderManager, canvasManager } = useContext(BuilderContext)
-  const { updateParams } = useBuilderManager()
+  const { updateParams, isTextEditing } = useBuilderManager()
   const [canvas] = useGraph(canvasManager)
   const pointerRef = useRef<ElementRef<'div'>>(null)
   const dragMoveHandler = useDragMove()
@@ -60,25 +60,27 @@ export const useCanvas = () => {
       onClick: ({ event }) => {
         const elementFromPoint = document.elementFromPoint(event.clientX, event.clientY)
         if (elementFromPoint && elementFromPoint instanceof HTMLElement && elementFromPoint.getAttribute('data-key')) {
-          const layerKey = elementFromPoint.getAttribute('data-key')
+          if (!isTextEditing) {
+            const layerKey = elementFromPoint.getAttribute('data-key')
+            const clickedLayerValue = documentManager.resolve(layerKey)
 
-          const clickedLayerValue = documentManager.resolve(layerKey)
-          if (clickedLayerValue?._type === definitions.nodes.Text && event.detail === 2) {
+            if (clickedLayerValue?._type === definitions.nodes.Text && event.detail === 2) {
+              updateParams({
+                focus: layerKey
+              })
+              builderManager.toggleTextEditor(true)
+            }
+
+            builderManager.toggleTextEditor(false)
             updateParams({
               focus: layerKey
             })
-            builderManager.toggleTextEditor(true)
+          } else {
+            builderManager.toggleTextEditor(false)
+            updateParams({
+              focus: null
+            })
           }
-
-          builderManager.toggleTextEditor(false)
-          updateParams({
-            focus: layerKey
-          })
-        } else {
-          builderManager.toggleTextEditor(false)
-          updateParams({
-            focus: null
-          })
         }
       },
       onDrag: dragEvent => {
@@ -105,6 +107,8 @@ export const useCanvas = () => {
             targetLayer: layerNode
           }
         }
+
+        if (!dragEvent?.memo?.targetLayer) return dragEvent.memo
 
         canvasManager.setDragging(dragging, dragEvent.memo?.targetLayerLink)
 

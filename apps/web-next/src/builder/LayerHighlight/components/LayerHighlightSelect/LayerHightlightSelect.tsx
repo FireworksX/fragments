@@ -27,8 +27,8 @@ export const LayerHighlightSelect: FC<LayerHighlightSelectProps> = ({ className,
   const toW = to(style.width, v => v - 4)
   const toH = to(style.height, v => v - 4)
 
-  const allowResizeHorizontal = selectionGraph?.getAllowResizeHorizontal()
-  const allowResizeVertical = selectionGraph?.getAllowResizeVertical()
+  const allowResizeHorizontal = selectionGraph?.getAllowResizeHorizontal?.()
+  const allowResizeVertical = selectionGraph?.getAllowResizeVertical?.()
 
   return (
     <animated.div className={cn(styles.root, className)} style={style} data-testid='LayerHightlightSelect'>

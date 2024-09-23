@@ -23,6 +23,13 @@ export const Text: FC<TextProps> = withStyle(
     const textContent = layerInvoker('content').value
     const key = documentManager.keyOfEntity(props)
 
-    return <animated.div className={styles.root} data-key={key} dangerouslySetInnerHTML={{ __html: textContent }} />
+    return (
+      <animated.div
+        className={styles.root}
+        data-key={key}
+        style={props.style}
+        dangerouslySetInnerHTML={{ __html: textContent }}
+      />
+    )
   })
 )

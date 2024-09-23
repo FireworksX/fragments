@@ -27,7 +27,7 @@ export const Frame: FC<LayerProps> = withStyle(
     return (
       <>
         <animated.div style={props.style} {...listeners} data-key={key}>
-          {props.children?.map(child => (
+          {props.children?.filter(Boolean).map(child => (
             <Frame key={child._id} {...child} />
           ))}
         </animated.div>

@@ -70,6 +70,7 @@ export const childrenExtend: Extender = <TChild extends SceneNode = SceneNode>({
           });
 
           return {
+            ...prev,
             children,
           };
         },

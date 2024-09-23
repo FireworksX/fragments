@@ -12,22 +12,26 @@ export const fromProperties = (state: GraphState, graph: Graph) => {
   graph = state.resolve(graph);
 
   const width = animatableValue(graph.resolveField("width"));
-  const widthType = graph.resolveField("layoutSizingHorizontal");
+  const widthType = animatableValue(
+    graph.resolveField("layoutSizingHorizontal")
+  );
   const height = animatableValue(graph.resolveField("height"));
-  const heightType = graph.resolveField("layoutSizingVertical");
-  const top = graph.resolveField("top");
-  const bottom = graph.resolveField("bottom");
-  const left = graph.resolveField("left");
-  const right = graph.resolveField("right");
+  const heightType = animatableValue(
+    graph.resolveField("layoutSizingVertical")
+  );
+  const top = animatableValue(graph.resolveField("top"));
+  const bottom = animatableValue(graph.resolveField("bottom"));
+  const left = animatableValue(graph.resolveField("left"));
+  const right = animatableValue(graph.resolveField("right"));
   const aspectRatio = graph.resolveField("aspectRatio");
   const centerX = graph.resolveField("centerX");
   const centerY = graph.resolveField("centerY");
 
   const constraints = {
-    left: isFiniteNumber(left) || animatableValue(left),
-    right: isFiniteNumber(right) || animatableValue(right),
-    top: isFiniteNumber(top) || animatableValue(top),
-    bottom: isFiniteNumber(bottom) || animatableValue(bottom),
+    left: isFiniteNumber(left) ? left : null,
+    right: isFiniteNumber(right) ? right : null,
+    top: isFiniteNumber(top) ? top : null,
+    bottom: isFiniteNumber(bottom) ? bottom : null,
     aspectRatio: aspectRatio || null,
     // fixedSize: autoSize === true,
   };
@@ -42,10 +46,10 @@ export const fromProperties = (state: GraphState, graph: Graph) => {
   }
 
   return {
-    left: constraints.left ? animatableValue(left) : null,
-    right: constraints.right ? animatableValue(right) : null,
-    top: constraints.top ? animatableValue(top) : null,
-    bottom: constraints.bottom ? animatableValue(bottom) : null,
+    left: constraints.left,
+    right: constraints.right,
+    top: constraints.top,
+    bottom: constraints.bottom,
     widthType,
     heightType,
     width,

@@ -22,6 +22,8 @@ export const toSize = (values: RectProperties, parentRect: Rect, autoSize) => {
         width = values.width;
         break;
       case sizing.Relative /* Percentage */:
+        width = parentRect.width * (values.width / 100);
+        break;
       case sizing.Fill /* Auto */:
         break;
       default:
@@ -40,6 +42,8 @@ export const toSize = (values: RectProperties, parentRect: Rect, autoSize) => {
         height = values.height;
         break;
       case sizing.Relative /* Percentage */:
+        height = parentRect.height * (values.height / 100);
+        break;
       case sizing.Fill /* Auto */:
         break;
     }

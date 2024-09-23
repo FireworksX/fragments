@@ -11,19 +11,32 @@ export const rectExtend: Extender = ({ graph, graphKey, state }) => {
   const rect = () => {
     if (rectInterpolate) return rectInterpolate;
 
-    const { left, top, width, height } = state.resolve(graphKey) ?? {};
+    const {
+      left,
+      top,
+      width,
+      height,
+      layoutSizingHorizontal,
+      layoutSizingVertical,
+    } = state.resolve(graphKey) ?? {};
 
-    rectInterpolate = to([left, top, width, height], () => {
-      const parentRect = state.resolve(graphKey)?.getParent()?.rect?.() ?? [];
-      const constraintValues = state.constraints.fromProperties(graph);
+    rectInterpolate = to(
+      [left, top, width, height, layoutSizingHorizontal, layoutSizingVertical],
+      () => {
+        const parentRect =
+          animatableValue(state.resolve(graphKey)?.getParent()?.rect?.()) ?? {};
+        const constraintValues = state.constraints.fromProperties(graph);
 
-      return state.constraints.toRect(
-        constraintValues,
-        parentRect,
-        null,
-        graphKey
-      );
-    });
+        const rect = state.constraints.toRect(
+          constraintValues,
+          parentRect,
+          null,
+          graphKey
+        );
+
+        return rect;
+      }
+    );
 
     return rectInterpolate;
   };
@@ -40,6 +53,7 @@ export const rectExtend: Extender = ({ graph, graphKey, state }) => {
       .filter(Boolean);
     const targetRect = rect();
 
+    parentsKey = parentsCacheKey;
     absoluteRectInterpolate = to([targetRect, ...allParentRects], () => {
       return allParents.reduce((acc, parent) => {
         const parentRect = animatableValue(parent?.rect?.());

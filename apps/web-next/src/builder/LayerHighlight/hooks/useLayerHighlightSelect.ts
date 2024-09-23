@@ -8,6 +8,7 @@ import { useBuilderManager } from '@/builder/hooks/useBuilderManager'
 import { useDrag } from '@use-gesture/react'
 import { animatableValue } from '@/builder/utils/animatableValue'
 import { createConstants } from '@fragments/utils'
+import { extractAnimatableValues } from '@/builder/utils/extractAnimatableValues'
 
 const BORDER_SIZE = 1.5
 const initialStyle = {
@@ -38,10 +39,7 @@ export const useLayerHighlightSelect = () => {
       const parentRect = animatableValue(parentNode?.absoluteRect?.()) ?? {}
 
       selectStylesApi.set({
-        x: to(focusRect, ({ x }) => x),
-        y: to(focusRect, ({ y }) => y),
-        width: to(focusRect, ({ width }) => width),
-        height: to(focusRect, ({ height }) => height),
+        ...extractAnimatableValues(focusRect),
         opacity: canvas.isDragging ? 0 : 1,
         borderWidth: to(canvas.scale, v => BORDER_SIZE / v)
       })

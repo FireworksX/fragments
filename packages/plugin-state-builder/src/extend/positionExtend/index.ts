@@ -17,7 +17,6 @@ export const positionExtend: Extender = ({
       if (isValue(left)) {
         valueSetter(state, graphKey, "left")(left);
       }
-
       if (isValue(top)) {
         valueSetter(state, graphKey, "top")(top);
       }

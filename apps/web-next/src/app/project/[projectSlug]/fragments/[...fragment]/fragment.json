@@ -11,6 +11,21 @@
       "parentKey": "$$Fragment:g34gherhg3g",
       "children": [
         {
+          "_type": "Text",
+          "_id": "a55cd018ae764",
+          "opacity": 1,
+          "visible": true,
+          "width": 100,
+          "height": 100,
+          "layoutSizingHorizontal": "Fixed",
+          "layoutSizingVertical": "Fixed",
+          "rotation": 0,
+          "left": 415.2937562590697,
+          "top": 89.12462081662301,
+          "positionType": "absolute",
+          "parentKey": "$$Breakpoint:laptop"
+        },
+        {
           "_type": "Frame",
           "_id": "09f0c7ed1ef8a",
           "opacity": 1,
@@ -76,12 +91,22 @@
                 "_id": "db947711832c3.solidFill"
               },
               "fillType": "Solid",
-              "parentKey": "$$Frame:09f0c7ed1ef8a"
+              "parentKey": "$$Frame:09f0c7ed1ef8a",
+              "rotation": 0,
+              "left": 0,
+              "top": 0,
+              "positionType": "absolute"
             }
           ],
-          "aspectRatio": 1
+          "aspectRatio": 1,
+          "rotation": 0,
+          "left": 0,
+          "top": 0,
+          "positionType": "absolute"
         }
-      ]
+      ],
+      "layoutSizingHorizontal": "Fixed",
+      "layoutSizingVertical": "Fixed"
     }
   ],
   "props": [
