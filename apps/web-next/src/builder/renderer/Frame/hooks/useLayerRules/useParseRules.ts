@@ -10,10 +10,10 @@ import { useParseCssRules } from './useParseCssRules'
 import { Entity } from '@graph-state/core'
 
 export const useParseRules = (layerEntity: Entity) => {
-  const layoutRules = useParseLayoutRules(layerEntity)
-  const styleRules = useParseStyleRules(layerEntity)
-  const sizeRules = useParseSizeRules(layerEntity)
-  // const positionRules = useParsePositionRules(layerEntity)
+  // const layoutRules = useParseLayoutRules(layerEntity)
+  // const styleRules = useParseStyleRules(layerEntity)
+  // const sizeRules = useParseSizeRules(layerEntity)
+  const positionRules = useParsePositionRules(layerEntity)
   // const effects = useEffectsRules(layerEntity)
   // const children = useParseChildren(layerEntity)
   const cssRules = useParseCssRules(layerEntity)
@@ -21,9 +21,10 @@ export const useParseRules = (layerEntity: Entity) => {
 
   return {
     cssRules: {
-      ...sizeRules,
-      ...layoutRules,
-      ...styleRules
+      // ...sizeRules,
+      // ...layoutRules,
+      // ...styleRules,
+      ...positionRules
 
       // ...layoutRules,
       // ...styleRules,

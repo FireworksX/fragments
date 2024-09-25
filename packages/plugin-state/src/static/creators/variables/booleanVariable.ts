@@ -1,5 +1,5 @@
 import { generateId } from "@fragments/utils";
-import { nodes, variableType } from "@/defenitions.ts";
+import { nodes, variableType } from "@/definitions.ts";
 
 export type CreateBooleanOptions = Partial<{
   required: boolean;

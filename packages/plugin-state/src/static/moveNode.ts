@@ -15,14 +15,16 @@ export const moveNode: Plugin = (state) => {
   ) => {
     const node = state.resolve(nodeLink);
     const nodeParent = node?.getParent();
-    const toNode = state.resolve(toLink) || state.resolve(state.root);
+    const toNode = state.resolve(toLink) || state.resolve(state.key);
     const parentKey = state.keyOfEntity(nodeParent);
 
-    if (toLink !== parentKey) {
-      nodeParent?.removeChild(node);
-      toNode?.insertChild(order || 0, node);
-    } else if (typeof order === "number") {
-      nodeParent?.changeOrder(nodeLink, order);
+    if (nodeParent?._id !== toNode?._id) {
+      if (toLink !== parentKey) {
+        nodeParent?.removeChild(node);
+        toNode?.insertChild(order || 0, node);
+      } else if (typeof order === "number") {
+        nodeParent?.changeOrder(nodeLink, order);
+      }
     }
   };
 };

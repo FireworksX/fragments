@@ -1,5 +1,5 @@
-import { hexToRgb } from "src";
 import { getRgbFromColor } from "./getRgbFromColor";
+import { hexToRgb } from "../hexToRgb";
 
 interface OutputColor {
   r: number;

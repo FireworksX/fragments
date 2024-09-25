@@ -19,7 +19,7 @@ import {
   Vector,
 } from "./props";
 import { SceneNode } from "./index";
-import { nodes } from "src/defenitions";
+import { nodes } from "@/definitions.ts";
 import { Graph } from "@graph-state/core";
 
 export interface FragmentNode

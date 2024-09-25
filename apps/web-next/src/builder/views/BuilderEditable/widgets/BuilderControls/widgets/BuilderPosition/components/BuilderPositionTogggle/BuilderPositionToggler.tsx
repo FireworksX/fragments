@@ -16,16 +16,16 @@ interface BuilderPositionToggleProps {
 const BuilderPositionToggle: FC<BuilderPositionToggleProps> = ({ className, top, right, bottom, left }) => {
   return (
     <div className={cn(styles.root, className)}>
-      <div style={{ gridArea: 'Top' }}>
+      <div style={{ gridArea: 'top' }}>
         <InputNumber suffix='T' {...top} min={Infinity} max={Infinity} />
       </div>
-      <div style={{ gridArea: 'Right' }}>
+      <div style={{ gridArea: 'right' }}>
         <InputNumber suffix='R' {...right} min={Infinity} max={Infinity} />
       </div>
-      <div style={{ gridArea: 'Bottom' }}>
+      <div style={{ gridArea: 'bottom' }}>
         <InputNumber suffix='B' {...bottom} min={Infinity} max={Infinity} />
       </div>
-      <div style={{ gridArea: 'Left' }}>
+      <div style={{ gridArea: 'left' }}>
         <InputNumber suffix='L' {...left} min={Infinity} max={Infinity} />
       </div>
       <div className={styles.toggle}>

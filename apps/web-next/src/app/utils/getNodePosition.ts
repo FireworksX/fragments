@@ -1,48 +1,36 @@
-import { iterateParentOfNode } from '../utils/iterateParentOfNode'
+import isBrowser from '@/app/utils/isBrowser'
 
 interface Options {
   node: Element
   stopNode?: Element | null
 }
 
-export const getNodePosition = ({ node, stopNode }: Options) => {
-  if (!node) {
-    return {
-      width: 0,
-      height: 0,
-      top: 0,
-      left: 0
-    }
+const fallback = { left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0 }
+
+export const getNodePosition = (inputElement, rootElement) => {
+  const root = rootElement ?? (isBrowser ? document.querySelector('#viewport') : null)
+  let element = inputElement
+
+  if (!element || !root) return fallback
+
+  let left = 0
+  let top = 0
+
+  const { width, height } = {
+    width: element?.offsetWidth ?? 0,
+    height: element?.offsetHeight ?? 0
   }
 
-  const width = node.offsetWidth
-  const height = node.offsetHeight
-  let top = node.offsetTop
-  let left = node.offsetLeft
+  while (element && element !== root) {
+    left += element.offsetLeft // Смещение относительно родителя по X
+    top += element.offsetTop // Смещение относительно родителя по Y
 
-  if (stopNode) {
-    top += stopNode.offsetTop
-    left += stopNode.offsetLeft
+    element = element.offsetParent // Переходим к следующему родителю
+
+    const computedStyles = getComputedStyle(element)
+    left += parseFloat(computedStyles.borderLeftWidth)
+    top += parseFloat(computedStyles.borderTopWidth)
   }
 
-  // iterateParentOfNode(node, parent => {
-  //   console.log(left, parent)
-  //
-  //   if (stopNode) {
-  //     if (stopNode.contains(parent)) {
-  //       top += parent.offsetTop
-  //       left += parent.offsetLeft
-  //     }
-  //   } else {
-  //     top += parent.offsetTop
-  //     left += parent.offsetLeft
-  //   }
-  // })
-
-  return {
-    width,
-    height,
-    top,
-    left
-  }
+  return { left, top, right: left + width, bottom: top + height, width, height }
 }

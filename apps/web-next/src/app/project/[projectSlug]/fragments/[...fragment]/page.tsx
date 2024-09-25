@@ -14,7 +14,7 @@ import Dropdown from '@/app/components/Dropdown/Dropdown'
 import Button from '@/app/components/Button'
 import DisplayBreakpoints from '@/builder/views/BuilderEditable/widgets/DisplayBreakpoints/DisplayBreakpoints'
 import { FragmentsRender } from '@fragments/render-react'
-import { createState } from '@graph-state/core'
+import { createState, isPartialKey } from '@graph-state/core'
 import { managerPlugin, skips } from '@fragments/fragments-plugin/performance'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
@@ -50,6 +50,7 @@ import { useBuilderHotKeys } from '@/app/hooks/hotkeys/useBuilderHotKeys'
 import { createBuilderManager } from '@/builder/managers/builderManager'
 import fragmentData from '@/app/project/[projectSlug]/fragments/[...fragment]/fragment.json'
 import pluginState, { skips as stateSkips } from '@fragments/plugin-state'
+import pluginStateBuilder, { skips as stateBuilderSkips } from '@fragments/plugin-state-builder'
 
 const canvasManager = createCanvasManager()
 const previewManager = createPreviewManager()
@@ -404,8 +405,8 @@ const fragmentState = createState({
   type: 'Fragment',
   id: fragmentData._id,
   initialState: fragmentData,
-  plugins: [pluginState, loggerPlugin()],
-  skip: [...stateSkips]
+  plugins: [pluginState, pluginStateBuilder, loggerPlugin({ onlyBrowser: true })],
+  skip: [...stateSkips, ...stateBuilderSkips]
 })
 
 if (isBrowser) {

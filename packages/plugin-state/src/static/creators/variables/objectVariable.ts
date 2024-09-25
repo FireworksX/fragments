@@ -1,6 +1,6 @@
 import { generateId } from "@fragments/utils";
 import { LinkKey } from "@graph-state/core";
-import { nodes, variableType } from "@/defenitions.ts";
+import { nodes, variableType } from "@/definitions.ts";
 
 export type CreateObjectOptions = Partial<{
   name: string;

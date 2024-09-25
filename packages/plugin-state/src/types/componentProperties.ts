@@ -1,4 +1,4 @@
-import { variableType } from "src/defenitions";
+import { variableType } from "@/definitions.ts";
 export type ComponentProperty =
   | StringType
   | BooleanType

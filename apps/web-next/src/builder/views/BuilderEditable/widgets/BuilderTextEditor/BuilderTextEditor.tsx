@@ -26,18 +26,20 @@ const ClearOnUnmount = () => {
 }
 
 export const BuilderTextEditor: FC<BuilderTextEditorProps> = ({ className }) => {
-  const { editorStyles } = useBuilderTextEditor()
+  const { editorStyles, isTextEditing } = useBuilderTextEditor()
 
   return (
-    <animated.div className={cn(styles.root, className)} data-testid='BuilderTextEditor' style={editorStyles}>
-      <AnimatedVisible visible={to(editorStyles.opacity, o => o === 1)}>
-        <RichTextPlugin
-          contentEditable={<ContentEditable className={styles.contentEditable} />}
-          ErrorBoundary={LexicalErrorBoundary}
-        />
-        <HistoryPlugin />
-        <AutoFocusPlugin />
+    <>
+      <AnimatedVisible visible={isTextEditing}>
+        <animated.div className={cn(styles.root, className)} data-testid='BuilderTextEditor' style={editorStyles}>
+          <RichTextPlugin
+            contentEditable={<ContentEditable className={styles.contentEditable} />}
+            ErrorBoundary={LexicalErrorBoundary}
+          />
+          <HistoryPlugin />
+          <AutoFocusPlugin />
+        </animated.div>
       </AnimatedVisible>
-    </animated.div>
+    </>
   )
 }

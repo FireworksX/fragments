@@ -12,7 +12,7 @@ import {
   sizing,
   textDecorations,
   textTransform,
-} from "src/defenitions";
+} from "@/definitions.ts";
 import { Constrains } from "./index";
 import { ComponentProperty, TypeValue } from "./componentProperties";
 

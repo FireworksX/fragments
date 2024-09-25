@@ -1,21 +1,19 @@
-import * as CSS from "csstype";
-import { toPx } from "../../helpers/toPx.ts";
-import { useLayerInvokerNew } from "../useLayerInvokerNew.ts";
+import * as CSS from 'csstype'
+import { useLayerInvoker } from '@/builder/hooks/useLayerInvoker'
+import { toPx } from '@/app/utils/toPx'
 
 export const useParsePositionRules = (layerField: Field) => {
-  const layerInvoker = useLayerInvokerNew(layerField);
-  const rules: CSS.Properties = {};
+  const layerInvoker = useLayerInvoker(layerField)
+  const rules: CSS.Properties = {}
 
-  const positionType = layerInvoker("position.type").value;
+  const positionType = layerInvoker('positionType').value
 
-  rules.position = "relative"; //positionType ?? "relative";
+  rules.position = positionType ?? 'relative'
 
-  if (positionType === "absolute") {
-    rules.top = toPx(layerInvoker("position.top").value);
-    rules.right = toPx(layerInvoker("position.right").value);
-    rules.bottom = toPx(layerInvoker("position.bottom").value);
-    rules.left = toPx(layerInvoker("position.left").value);
+  if (positionType === 'absolute') {
+    rules.top = toPx(layerInvoker('y').value)
+    rules.left = toPx(layerInvoker('x').value)
   }
 
-  return rules;
-};
+  return rules
+}

@@ -3,19 +3,44 @@ import { FC } from 'react'
 import cn from 'classnames'
 import { animated } from '@react-spring/web'
 import styles from './styles.module.css'
-import { useHighlights } from './hooks/useHighlights'
+import { SPRING_INDEXES, useHighlights } from './hooks/useHighlights'
+import { LayerHighlightSelect } from '@/builder/LayerHighlight/components/LayerHighlightSelect/LayerHightlightSelect'
+import { LayerHighlightParent } from '@/builder/LayerHighlight/components/LayerHighlightParent/LayerHighlightParent'
+import { LayerHighlightDragging } from '@/builder/LayerHighlight/components/LayerHighlightDragging/LayerHighlightDragging'
+import { LayerHighlightHeaders } from '@/builder/LayerHighlight/widgets/LayerHighlightHeaders/LayerHighlightHeaders'
 
 interface BuilderLayerHighlightProps {
   className?: string
 }
 
 const LayerHighlight: FC<BuilderLayerHighlightProps> = ({ className }) => {
-  const { focusHighlight } = useHighlights()
+  const {
+    dragHandler,
+    draggingParentStyles,
+    draggingTargetStyles,
+    hoverStyles,
+    selectParentStyles,
+    selectStyles,
+    opacity
+  } = useHighlights()
 
   return (
-    <div className={cn(className, styles.root)}>
-      <animated.div className={styles.highlight} style={{ ...focusHighlight, position: 'absolute', inset: 0 }} />
-    </div>
+    <animated.div className={cn(className, styles.root)} style={{ opacity }}>
+      <LayerHighlightHeaders />
+      <animated.div
+        key='hover'
+        className={styles.highlight}
+        style={{ ...hoverStyles, position: 'absolute', inset: 0 }}
+      />
+      <animated.div
+        key='focus'
+        className={styles.highlight}
+        style={{ ...selectStyles, position: 'absolute', inset: 0 }}
+      />
+      <LayerHighlightParent {...selectParentStyles} />
+      <LayerHighlightSelect style={selectStyles} dragHandler={dragHandler} />
+      <LayerHighlightDragging targetStyle={draggingTargetStyles} parentStyle={draggingParentStyles} />
+    </animated.div>
   )
 }
 

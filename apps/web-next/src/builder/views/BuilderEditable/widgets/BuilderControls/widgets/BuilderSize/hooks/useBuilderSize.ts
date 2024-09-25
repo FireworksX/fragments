@@ -1,8 +1,14 @@
 import { builderSizing } from '@fragments/fragments-plugin'
 import { useBuilderSelection } from '@/builder/hooks/useBuilderSelection'
 import { useLayerInvoker } from '@/builder/hooks/useLayerInvoker'
+import { layerMode, nodes } from '@fragments/plugin-state'
+import { animatableValue } from '@/builder/utils/animatableValue'
+import { useGraph } from '@graph-state/react'
+import { useContext } from 'react'
+import { BuilderContext } from '@/builder/BuilderContext'
 
 export const useBuilderSize = () => {
+  const { documentManager } = useContext(BuilderContext)
   const { selection, selectionGraph } = useBuilderSelection()
   const layerInvoker = useLayerInvoker(selection, ({ node, key, value }) => {
     switch (key) {
@@ -23,9 +29,18 @@ export const useBuilderSize = () => {
         break
     }
   })
+  const [parent] = useGraph(documentManager, selectionGraph?.getParent())
+
+  const hugContentEnabled =
+    (!!selectionGraph?.children?.length &&
+      animatableValue(selectionGraph.resolveField('layerMode')) === layerMode.flex) ||
+    selectionGraph?._type === nodes.Text
+  const fillContentEnabled = animatableValue(parent.resolveField('layerMode')) === layerMode.flex
 
   return {
     selectionGraph,
+    hugContentEnabled,
+    fillContentEnabled,
     hasSync:
       layerInvoker('layoutSizingHorizontal').value !== builderSizing.Hug &&
       layerInvoker('layoutSizingVertical').value !== builderSizing.Hug,
