@@ -41,6 +41,7 @@ const plugin: Plugin = (state: GraphState<StateEntity>, overrides) => {
         childrenExtend,
         cloneExtend,
         layoutExtend,
+        positionExtend,
         rectExtend,
       ]),
       [nodes.Frame]: collectExtends([

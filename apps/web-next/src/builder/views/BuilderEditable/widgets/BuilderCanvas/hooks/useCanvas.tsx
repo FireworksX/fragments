@@ -6,7 +6,7 @@ import { CanvasManager } from '@/builder/managers/canvasManager'
 import { BuilderContext } from '@/builder/BuilderContext'
 import { useMeasure } from 'react-use'
 import { useBuilderManager } from '@/builder/hooks/useBuilderManager'
-import { definitions } from '@fragments/plugin-state'
+import { definitions, nodes } from '@fragments/plugin-state'
 import { animatableValue } from '@/builder/utils/animatableValue'
 import { getNodePosition } from '@/app/utils/getNodePosition'
 import { findRefNode } from '@/builder/utils/findRefNode'
@@ -102,9 +102,11 @@ export const useCanvas = () => {
           const layerKey = elementFromPoint.getAttribute('data-key')
           const layerNode = documentManager.resolve(layerKey)
 
-          dragEvent.memo = {
-            targetLayerLink: layerKey,
-            targetLayer: layerNode
+          if (layerNode?._type !== nodes.Breakpoint) {
+            dragEvent.memo = {
+              targetLayerLink: layerKey,
+              targetLayer: layerNode
+            }
           }
         }
 

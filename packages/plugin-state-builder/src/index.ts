@@ -19,12 +19,15 @@ export const pluginStateBuilder: Plugin = (state, overrides) => {
       //   childrenExtend,
       //   sceneExtend,
       // ]),
-      // [nodes.Breakpoint]: collectExtends([
-      //   breakpointExtend,
-      //   baseExtend,
-      //   childrenExtend,
-      //   cloneExtend,
-      // ]),
+      [nodes.Breakpoint]: collectExtends([
+        // breakpointExtend,
+        // baseExtend,
+        // childrenExtend,
+        // cloneExtend,
+        rectExtend,
+
+        positionExtend,
+      ]),
       [nodes.Frame]: collectExtends([
         // baseExtend,
         // sceneExtend,

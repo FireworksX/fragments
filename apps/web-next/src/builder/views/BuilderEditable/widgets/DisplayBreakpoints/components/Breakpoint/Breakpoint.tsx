@@ -3,7 +3,7 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import { useGraph, useGraphFields, useGraphStack } from '@graph-state/react'
 import { Graph, GraphState, LinkKey } from '@graph-state/core'
-import BreakpointTitle from '@/builder/views/BuilderEditable/widgets/DisplayBreakpoints/components/BreakpointTitle/BreakpointTitle'
+import BreakpointTitle from '@/builder/LayerHighlight/widgets/LayerHighlightHeaders/components/BreakpointTitle/BreakpointTitle'
 import { useBreakpoints } from '@/builder/views/BuilderEditable/widgets/DisplayBreakpoints/hooks/useBreakpoints'
 import { BuilderContext } from '@/builder/BuilderContext'
 import { animated, to } from '@react-spring/web'
@@ -30,13 +30,6 @@ const Breakpoint: FC<BuilderBreakpointProps> = ({
 
   return (
     <animated.div className={cn(styles.root, className)} data-root-node style={{ minWidth: width }}>
-      <BreakpointTitle
-        className={styles.title}
-        name={breakpoint.name ?? breakpoint._id}
-        activeWidths={activeBreakpointWidths}
-        onClickBreakpoint={onClickBreakpoint}
-        onClickCustom={onClickCustom}
-      />
       {children}
     </animated.div>
   )

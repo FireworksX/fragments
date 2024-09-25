@@ -1,5 +1,6 @@
 import { ExtenderPayload } from "@/types";
 import { valueSetter } from "@/shared/valueSetter.ts";
+import { isFiniteNumber } from "@fragments/utils";
 
 const DEFAULT_WIDTH = 100;
 const DEFAULT_HEIGHT = 100;
@@ -14,6 +15,7 @@ export const sizeExtend = ({
 
   const setWidth = (value: number | ((prev: number) => number)) => {
     value = typeof value === "function" ? value(getValue("width")) : value;
+    if (!isFiniteNumber(value) || value < 0) return;
 
     if (typeof value !== "number") {
       return;
@@ -30,6 +32,7 @@ export const sizeExtend = ({
 
   const setHeight = (value: number | ((prev: number) => number)) => {
     value = typeof value === "function" ? value(getValue("height")) : value;
+    if (!isFiniteNumber(value) || value < 0) return;
 
     if (typeof value !== "number") {
       return;

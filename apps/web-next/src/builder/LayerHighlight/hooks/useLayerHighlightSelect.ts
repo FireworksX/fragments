@@ -9,6 +9,7 @@ import { useDrag } from '@use-gesture/react'
 import { animatableValue } from '@/builder/utils/animatableValue'
 import { createConstants } from '@fragments/utils'
 import { extractAnimatableValues } from '@/builder/utils/extractAnimatableValues'
+import { sizing } from '@fragments/plugin-state'
 
 const BORDER_SIZE = 1.5
 const initialStyle = {
@@ -33,7 +34,6 @@ export const useLayerHighlightSelect = () => {
 
   useEffect(() => {
     if (focusNode) {
-      const focusNode = documentManager.resolve(focus)
       const focusRect = focusNode?.absoluteRect?.() ?? {}
       const parentNode = focusNode?.getParent()
       const parentRect = animatableValue(parentNode?.absoluteRect?.()) ?? {}
@@ -56,20 +56,36 @@ export const useLayerHighlightSelect = () => {
     canvasManager.setResizing(dragging)
 
     if (first) {
+      const parentRectProps = documentManager.constraints.fromProperties(focusNode.getParent())
+      const targetRectProps = documentManager.constraints.fromProperties(focusNode)
       const targetRect = animatableValue(focusNode?.rect?.() ?? {})
+      const width = animatableValue(focusNode.resolveField('width'))
+      const height = animatableValue(focusNode.resolveField('height'))
+
       memo.from = {
-        getWidth: move => move / scale + (memo?.from?.width ?? 0),
-        getHeight: move => move / scale + (memo?.from?.height ?? 0),
+        getWidth: move => {
+          if (targetRectProps.widthType === sizing.Relative) {
+            move = (move / parentRectProps.width) * 100
+          }
+
+          return move / scale + (memo?.from?.width ?? 0)
+        },
+        getHeight: move => {
+          if (targetRectProps.heightType === sizing.Relative) {
+            move = (move / parentRectProps.height) * 100
+          }
+          return move / scale + (memo?.from?.height ?? 0)
+        },
         getLeft: move => move / scale + (targetRect.x ?? 0),
         getTop: move => move / scale + (targetRect.y ?? 0),
-        width: targetRect.width,
-        height: targetRect.height
+        width,
+        height
       }
     }
 
     const scale = animatableValue(canvas?.scale)
-    const width = mx / scale + (memo?.from?.width ?? 0)
-    const height = my / scale + (memo?.from?.height ?? 0)
+    const width = memo.from?.getWidth(mx)
+    const height = memo.from?.getHeight(my)
 
     if (directions.includes(SELECTION_SIDES.right)) {
       focusNode.setWidth(width)

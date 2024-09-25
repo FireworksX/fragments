@@ -22,6 +22,8 @@ const visible: TabsSelectorItem[] = [
   }
 ]
 
+const overflowOptions = ['hidden', 'visible', 'auto']
+
 export const useBuilderStyles = () => {
   const { documentManager } = useContext(BuilderContext)
   const { selection, selectionGraph } = useBuilderSelection()
@@ -35,6 +37,9 @@ export const useBuilderStyles = () => {
           break
         case 'opacity':
           node.setOpacity(value)
+          break
+        case 'overflow':
+          node.setOverflow(value)
           break
         case 'zIndex':
           node.setZIndex(value)
@@ -77,6 +82,7 @@ export const useBuilderStyles = () => {
   const zIndexInvoker = layerInvoker('zIndex')
   const cornerRadiusSideInvoker = layerInvoker('cornerRadiusSide')
   const cornerRadiusInvoker = layerInvoker('cornerRadius')
+  const overflowInvoker = layerInvoker('overflow')
 
   const [cornerSide, setCornerSide] = useState<CornerSide | undefined>()
 
@@ -107,6 +113,10 @@ export const useBuilderStyles = () => {
       ...layerInvoker('visible')
     },
     opacity: layerInvoker('opacity'),
+    overflow: {
+      options: overflowOptions,
+      ...overflowInvoker
+    },
     radius: {
       disabled: isTextLayer,
       mode: to(animatableValue(selectionGraph?.isMixedRadius?.()), v => (!v ? 'plain' : 'sides')),

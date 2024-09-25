@@ -1,6 +1,7 @@
-import { toPx } from '@/app/utils/toPx'
 import { Graph } from '@graph-state/core'
 import { to } from '@react-spring/web'
+import { animatableValue } from '@/builder/utils/animatableValue'
+import { extractAnimatableValues } from '@/builder/utils/extractAnimatableValues'
 
 export const usePositionStyles = (graph: Graph) => {
   if (!graph) return {}
@@ -12,8 +13,8 @@ export const usePositionStyles = (graph: Graph) => {
 
     return {
       position: positionType,
-      x: to(rect, rectValue => rectValue?.x ?? 0),
-      y: to(rect, rectValue => rectValue?.y ?? 0)
+      left: to(rect, rectValue => rectValue?.x ?? 0),
+      top: to(rect, rectValue => rectValue?.y ?? 0)
     }
   }
 

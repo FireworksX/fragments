@@ -22,38 +22,9 @@ interface BuilderDisplayBreakpointsProps {
 }
 
 const DisplayBreakpoints: FC<BuilderDisplayBreakpointsProps> = ({ className, renderer }) => {
-  const { documentManager } = useContext(BuilderContext)
-  const { breakpointKeys, breakpointValues, addBreakpoint } = useBreakpoints()
-  const { isEdit } = useBuilderManager()
-  // const { handleClick, mouseLeave, mouseOver } = useRendererHandlers(documentManager)
+  const { breakpointValues } = useBreakpoints()
 
-  const handleNewBreakpoint = (name, width) => {
-    addBreakpoint(name, width)
-  }
-
-  const handleCustomBreakpoint = () => {
-    modalStore.open('createCustomBreakpoint', {
-      onAdd: (name, width) => {
-        addBreakpoint(name, width)
-        close()
-      }
-    })
-  }
-
-  return (
-    <div className={cn(styles.root, className)}>
-      {breakpointValues.map(breakpoint => (
-        <Breakpoint
-          key={breakpoint._id}
-          breakpoint={breakpoint}
-          onClickBreakpoint={isEdit ? handleNewBreakpoint : undefined}
-          onClickCustom={handleCustomBreakpoint}
-        >
-          {renderer(breakpoint)}
-        </Breakpoint>
-      ))}
-    </div>
-  )
+  return <div className={cn(styles.root, className)}>{breakpointValues.map(breakpoint => renderer(breakpoint))}</div>
 }
 
 export default DisplayBreakpoints

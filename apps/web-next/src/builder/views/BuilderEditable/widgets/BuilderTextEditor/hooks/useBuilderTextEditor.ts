@@ -57,14 +57,12 @@ export const useBuilderTextEditor = () => {
   useEffect(() => {
     const disconnectObserver: any = () => undefined
 
-    // const [prevBreakpoint, prevLayer] = (savedFullKey.current ?? '').split('/')
-
     if (selection && isTextEditing && selectionGraph?._type === builderNodes.Text) {
       selectionGraph?.setOpacity(0)
     } else {
       const prevSelectionNode = documentManager.resolve(prevSelection)
       if (prevSelectionNode) {
-        prevSelectionNode?.setOpacity(1)
+        prevSelectionNode?.setOpacity?.(1)
       }
     }
 

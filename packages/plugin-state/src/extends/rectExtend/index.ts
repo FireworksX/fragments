@@ -1,5 +1,6 @@
 import { Extender } from "@/types";
 import { fromProperties } from "@/shared/constraints/fromProperties.ts";
+import { nodes } from "@/definitions.ts";
 
 export const rectExtend: Extender = ({
   graph,
@@ -26,7 +27,9 @@ export const rectExtend: Extender = ({
     rect,
     // Позиция относительно Breakpoint
     absoluteRect: () => {
-      const allParents = state.resolve(graphKey)?.getAllParents?.() ?? [];
+      const allParents = (
+        state.resolve(graphKey)?.getAllParents?.() ?? []
+      ).filter((parent) => parent._type !== nodes.Breakpoint);
 
       return allParents.reduce((acc, parent) => {
         const parentRect = parent?.rect?.();

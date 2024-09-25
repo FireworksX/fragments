@@ -9,6 +9,7 @@ export const useSceneStyles = (graph: Graph) => {
 
   return {
     opacity: graph.resolveField('opacity', 1),
+    overflow: graph.resolveField('overflow', 'hidden'),
     display: to([graph.resolveField('visible', true), isFlex], (value, isFlex) =>
       value ? (isFlex ? 'flex' : 'block') : 'none'
     )

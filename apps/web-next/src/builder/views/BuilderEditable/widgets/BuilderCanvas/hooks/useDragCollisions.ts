@@ -72,7 +72,6 @@ export const useDragCollisions = () => {
 
     const moveNode = nextParentLink => {
       const nextParentRect = animatableValue(documentManager.resolve(nextParentLink)?.absoluteRect?.())
-
       const offsetLeft = (targetLayerRect.x ?? 0) - (nextParentRect.x ?? 0)
       const offsetTop = (targetLayerRect.y ?? 0) - (nextParentRect.y ?? 0)
 
@@ -88,7 +87,8 @@ export const useDragCollisions = () => {
     } else {
       if (!isInsideOfParent) {
         const resultLayerKey = onNextParent?.layerKey ?? memo?.collisions?.currentBreakpointKey
-        if (memo?.collisions?.parentLayerKey !== resultLayerKey) {
+
+        if (resultLayerKey && memo?.collisions?.parentLayerKey !== resultLayerKey) {
           moveNode(resultLayerKey)
         }
       }

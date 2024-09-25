@@ -24,6 +24,8 @@ import { BuilderContext } from '@/builder/BuilderContext'
 import { SpringValue, to } from '@react-spring/web'
 import BuilderStylesCorners from './components/BuilderStylesCorners/BuilderStylesCorners'
 import { AnimatedVisible } from '@/app/components/AnimatedVisible/AnimatedVisible'
+import Select from '@/app/components/Select/Select'
+import { capitalize } from '@/app/utils/capitalize'
 
 interface BuilderStylesProps {
   className?: string
@@ -33,7 +35,7 @@ const ALLOW_FILL_TYPES = [builderPaintMode.Solid]
 
 const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
   const { documentManager } = useContext(BuilderContext)
-  const { selectionGraph, opacity, visible, zIndex, radius, fill, border } = useBuilderStyles()
+  const { selectionGraph, opacity, overflow, visible, zIndex, radius, fill, border } = useBuilderStyles()
   const { getColor, getNameColor } = useDisplayColor(documentManager)
 
   return (
@@ -93,6 +95,18 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
           </ControlRowWide>
         </ControlRow>
       )}
+
+      <ControlRow title='Overflow' {...overflow}>
+        <ControlRowWide>
+          <Select {...overflow}>
+            {overflow.options.map(value => (
+              <option key={value} value={value}>
+                {capitalize(value)}
+              </option>
+            ))}
+          </Select>
+        </ControlRowWide>
+      </ControlRow>
 
       {!radius.disabled && (
         <>

@@ -4,40 +4,25 @@
   "children": [
     {
       "_type": "Breakpoint",
-      "_id": "laptop",
+      "_id": "tablet",
       "isPrimary": true,
-      "width": 1200,
+      "width": 768,
       "height": 500,
       "parentKey": "$$Fragment:g34gherhg3g",
       "children": [
-        {
-          "_type": "Text",
-          "_id": "a55cd018ae764",
-          "opacity": 1,
-          "visible": true,
-          "width": 100,
-          "height": 100,
-          "layoutSizingHorizontal": "Fixed",
-          "layoutSizingVertical": "Fixed",
-          "rotation": 0,
-          "left": 415.2937562590697,
-          "top": 89.12462081662301,
-          "positionType": "absolute",
-          "parentKey": "$$Breakpoint:laptop"
-        },
         {
           "_type": "Frame",
           "_id": "09f0c7ed1ef8a",
           "opacity": 1,
           "visible": true,
-          "width": 200,
-          "height": 200,
-          "layoutSizingHorizontal": "Fixed",
+          "width": 100,
+          "height": 167.94913416481495,
+          "layoutSizingHorizontal": "Relative",
           "layoutSizingVertical": "Fixed",
-          "layerMode": "none",
-          "layerAlign": "start",
+          "layerMode": "flex",
+          "layerAlign": "center",
           "layerDirection": "horizontal",
-          "layerDistribute": "start",
+          "layerDistribute": "center",
           "borderType": "None",
           "borderWidth": 1,
           "borderColor": {
@@ -56,7 +41,7 @@
             "_type": "Frame",
             "_id": "09f0c7ed1ef8a.solidFill"
           },
-          "parentKey": "$$Breakpoint:laptop",
+          "parentKey": "$$Breakpoint:tablet",
           "fillType": "Solid",
           "children": [
             {
@@ -93,20 +78,93 @@
               "fillType": "Solid",
               "parentKey": "$$Frame:09f0c7ed1ef8a",
               "rotation": 0,
+              "left": 333.64457114535065,
+              "top": 55.72562631556332,
+              "positionType": "relative",
+              "overrides": [
+                {
+                  "_type": "$$Frame",
+                  "_id": "637b573c0a142"
+                },
+                {
+                  "_type": "$$Frame",
+                  "_id": "288aee7bdb8f3"
+                },
+                {
+                  "_type": "$$Frame",
+                  "_id": "79f8eac6d5ec3"
+                },
+                {
+                  "_type": "$$Frame",
+                  "_id": "23e710a21a52c"
+                }
+              ]
+            },
+            {
+              "_type": "Text",
+              "_id": "29d5b8d269786",
+              "content": "<p dir=\"ltr\"><span style=\"white-space: pre-wrap;\">dfsdaga</span></p><p dir=\"ltr\"><span style=\"white-space: pre-wrap;\">gsdgas</span></p>",
+              "opacity": 1,
+              "visible": true,
+              "width": 100,
+              "height": 100,
+              "layoutSizingHorizontal": "Fixed",
+              "layoutSizingVertical": "Fixed",
+              "rotation": 0,
               "left": 0,
               "top": 0,
-              "positionType": "absolute"
+              "positionType": "relative",
+              "parentKey": "$$Frame:09f0c7ed1ef8a"
             }
           ],
-          "aspectRatio": 1,
           "rotation": 0,
-          "left": 0,
+          "left": -0.12778966822458443,
           "top": 0,
-          "positionType": "absolute"
+          "positionType": "absolute",
+          "overrides": [
+            {
+              "_type": "$$Frame",
+              "_id": "401e91df99a0b"
+            },
+            {
+              "_type": "$$Frame",
+              "_id": "911193eadd8ef"
+            },
+            {
+              "_type": "$$Frame",
+              "_id": "531dba08f1515"
+            },
+            {
+              "_type": "$$Frame",
+              "_id": "07acc04ce8e34"
+            }
+          ],
+          "layerGap": 59
         }
       ],
       "layoutSizingHorizontal": "Fixed",
-      "layoutSizingVertical": "Fixed"
+      "layoutSizingVertical": "Fixed",
+      "overrides": [
+        {
+          "_type": "$$Breakpoint",
+          "_id": "965f4f6a75305"
+        },
+        {
+          "_type": "$$Breakpoint",
+          "_id": "5040cdd3b7d95"
+        },
+        {
+          "_type": "$$Breakpoint",
+          "_id": "0cd2464c6e07c"
+        },
+        {
+          "_type": "$$Breakpoint",
+          "_id": "7a48f0bc0664e"
+        }
+      ],
+      "left": 0,
+      "top": 0,
+      "positionType": "absolute"
     }
   ],
   "props": [

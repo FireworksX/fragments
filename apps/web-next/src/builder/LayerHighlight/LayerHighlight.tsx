@@ -7,6 +7,7 @@ import { SPRING_INDEXES, useHighlights } from './hooks/useHighlights'
 import { LayerHighlightSelect } from '@/builder/LayerHighlight/components/LayerHighlightSelect/LayerHightlightSelect'
 import { LayerHighlightParent } from '@/builder/LayerHighlight/components/LayerHighlightParent/LayerHighlightParent'
 import { LayerHighlightDragging } from '@/builder/LayerHighlight/components/LayerHighlightDragging/LayerHighlightDragging'
+import { LayerHighlightHeaders } from '@/builder/LayerHighlight/widgets/LayerHighlightHeaders/LayerHighlightHeaders'
 
 interface BuilderLayerHighlightProps {
   className?: string
@@ -25,6 +26,7 @@ const LayerHighlight: FC<BuilderLayerHighlightProps> = ({ className }) => {
 
   return (
     <animated.div className={cn(className, styles.root)} style={{ opacity }}>
+      <LayerHighlightHeaders />
       <animated.div
         key='hover'
         className={styles.highlight}

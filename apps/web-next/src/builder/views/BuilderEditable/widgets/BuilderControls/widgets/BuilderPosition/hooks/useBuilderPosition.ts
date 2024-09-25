@@ -26,7 +26,7 @@ export const useBuilderPosition = () => {
       }
     },
     ({ key, node }) => {
-      const rect = node?.rect?.()
+      const rect = node?.rect?.() ?? {}
       switch (key) {
         case 'x':
           return to(rect, ({ x }) => x ?? 0)

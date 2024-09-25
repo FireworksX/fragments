@@ -10,6 +10,7 @@ import Plus from '@/app/svg/plus.svg'
 interface BuilderBreakpointTitleProps {
   className?: string
   name?: string
+  width?: number
   activeWidths?: number[]
   onClickBreakpoint?: (name: string, width: number) => void | boolean
   onClickCustom?: () => void
@@ -34,6 +35,7 @@ const BreakpointTitle: FC<BuilderBreakpointTitleProps> = ({
   className,
   activeWidths,
   name,
+  width,
   onClickBreakpoint,
   onClickCustom
 }) => {
@@ -41,7 +43,9 @@ const BreakpointTitle: FC<BuilderBreakpointTitleProps> = ({
 
   return (
     <div className={cn(styles.root, className)}>
-      <div className={styles.title}>{name}</div>
+      <div className={styles.title}>
+        {name} <span className={styles.width}>{width}</span>
+      </div>
       {onClickBreakpoint && (
         <Dropdown
           trigger='click'

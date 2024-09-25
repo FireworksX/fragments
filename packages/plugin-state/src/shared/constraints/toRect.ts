@@ -4,7 +4,7 @@ import { Rect, RectProperties } from "@/types/rect.ts";
 
 export const toRect = (
   values: RectProperties,
-  parentRect: Rect,
+  parentRect: Rect = { x: 0, y: 0, width: 0, height: 0 },
   autoSize = null,
   pixelAlign
 ) => {

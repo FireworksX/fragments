@@ -15,6 +15,11 @@
     text-transform: capitalize;
 }
 
+.width {
+    font-weight: 500;
+    margin-left: 10px;
+}
+
 .iconWrapper {
     background: var(--border);
     display: flex;
