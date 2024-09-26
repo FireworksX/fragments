@@ -2,7 +2,7 @@ from typing import List
 from services.dependencies import supabase
 from fastapi import HTTPException, status
 import strawberry
-from .schemas import Fragment, AuthPayload, FragmentIn
+from .schemas import Fragment, AuthPayload, FragmentPost
 from .middleware import Context
 
 
@@ -20,8 +20,20 @@ async def fragments(info: strawberry.Info[Context]) -> List[Fragment]:
         fragments.append(fragment)
     return fragments
 
+async def fragments_in_project(info: strawberry.Info[Context], project_id: int) -> List[Fragment]:
+    user: AuthPayload = info.context.user()
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
-async def fragment_by_id(info: strawberry.Info[Context], id_: str) -> Fragment:
+    result = supabase.postgrest.from_table("pivot_project_fragment").select("fragment").eq("project_id", project_id)
+
+    fragments: List[Fragment] = []
+    for fg in result.data:
+        fragments.append(await fragment_by_id(info, fg))
+    return fragments
+
+
+async def fragment_by_id(info: strawberry.Info[Context], id_: int) -> Fragment:
     user: AuthPayload = info.context.user()
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
@@ -32,17 +44,19 @@ async def fragment_by_id(info: strawberry.Info[Context], id_: str) -> Fragment:
     return fragment
 
 
-async def create_fragment(info: strawberry.Info[Context], fg: FragmentIn) -> Fragment:
+async def create_fragment(info: strawberry.Info[Context], fg: FragmentPost) -> Fragment:
     user: AuthPayload = info.context.user()
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     fragment = supabase.postgrest.table("fragments").insert({'author': user.user.id, 'name': fg.name,
                                                              'document': fg.document}).execute()
 
+    supabase.postgrest.table("pivot_project_fragments").insert({'fragment':fragment.data[0]['id'], 'project': fg.project_id})
+
     return Fragment(user=user.user, id=fragment.data[0]['id'], name=fg.name, document=fg.document)
 
 
-async def update_fragment(info: strawberry.Info[Context], fg: FragmentIn) -> Fragment:
+async def update_fragment(info: strawberry.Info[Context], fg: FragmentPost) -> Fragment:
     user: AuthPayload = info.context.user()
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)

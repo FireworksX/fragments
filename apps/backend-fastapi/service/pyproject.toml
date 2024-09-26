@@ -13,7 +13,7 @@ strawberry-graphql = "^0.237.3"
 pydantic-extra-types = "^2.9.0"
 
 pycountry = "^24.6.1"
-
+jsonschema ="^4.23.0"
 # Low level
 ujson = "^5.10.0"
 #starlette = "^0.37.2"

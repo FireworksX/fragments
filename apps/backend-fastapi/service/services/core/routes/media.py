@@ -35,7 +35,7 @@ async def upload_asset(info: strawberry.Info[Context], file: UploadFile) -> Medi
     return Media(id=entry.data[0]['id'], path=public_url)
 
 
-async def asset(info: strawberry.Info[Context], id_: str) -> Media:
+async def asset(info: strawberry.Info[Context], id_: int) -> Media:
     user: AuthPayload = info.context.user()
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)

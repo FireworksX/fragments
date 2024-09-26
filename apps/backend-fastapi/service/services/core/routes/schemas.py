@@ -7,7 +7,7 @@ from pydantic import BaseModel, field_validator
 
 @strawberry.type
 class User:
-    id: str
+    id: int
     email: str
     first_name: str
     last_name: Optional[str]
@@ -22,28 +22,47 @@ class AuthPayload:
 
 @strawberry.type
 class Fragment:
-    id: str
+    id: int
+    project_id: int
+    project: str
     name: str
     user: User
     document: strawberry.scalars.JSON
+    props: strawberry.scalars.JSON
 
 
 @strawberry.input
-class FragmentIn:
-    id: Optional[str] = None
+class FragmentPost:
+    id: Optional[int] = None
+    project_id: Optional[int] = None
     name: Optional[str] = None
     document: Optional[strawberry.scalars.JSON] = None
+    props: Optional[strawberry.scalars.JSON] = None
+
+@strawberry.type
+class Project:
+    id: int
+    name: str
+    logo_id: str
+    owner: User
+
+@strawberry.input
+class ProjectPost:
+    id: Optional[int] = None
+    name: Optional[str] = None
+    logo_id: Optional[str] = None
 
 
 @strawberry.type
 class Media:
-    id: str
+    id: int
     path: str
 
 
 @strawberry.type
 class Campaign:
-    id: str
+    id: int
+    project_id: int
     name: str
     logo: Media
     user: User
@@ -53,8 +72,9 @@ class Campaign:
 
 
 @strawberry.input
-class CampaignIn:
-    id: Optional[str] = None
+class CampaignPost:
+    id: Optional[int] = None
+    project_id: Optional[int] = None
     name: Optional[str] = None
     logo: Optional[str] = None
     description: Optional[str] = None
@@ -96,7 +116,7 @@ class TimeFramePost:
 
 @strawberry.type
 class SubCampaign:
-    id: str
+    id: int
     campaign_id: int
     active: bool
     name: str
@@ -150,3 +170,19 @@ class Feedback:
     content: str
     page: str
     user: User
+
+@strawberry.type
+class SubcampaignFragment:
+    id: int
+    subcampaign_id: int
+    fragment_id: int
+    props: Optional[strawberry.scalars.JSON] = None
+    weight: float
+
+@strawberry.input
+class SubcampaignFragmentPost:
+    id: Optional[int] = None
+    subcampaign_id: Optional[int] = None
+    fragment_id: Optional[int] = None
+    props: Optional[strawberry.scalars.JSON] = None
+    weight: Optional[float] = None

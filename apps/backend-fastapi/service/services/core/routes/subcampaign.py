@@ -118,15 +118,7 @@ def subcampaign_from_db_ext(subcampaign: Dict[str, Any]):
                                                                                      subcampaign_id).execute()
     time_frames = supabase.postgrest.table("subcampaign_time_frames").select("*").eq("subcampaign_id",
                                                                                      subcampaign_id).execute()
-    return SubCampaign(id=subcampaign['id'], campaign_id=subcampaign['campaign_id'], name=subcampaign['name'],
-                       active=subcampaign['active'],
-                       deleted=subcampaign['deleted'],
-                       os_type=list(map(lambda os_type: os_type_from_db(os_type), os_types)),
-                       device_type=list(map(lambda device_type: device_type_from_db(device_type), device_types)),
-                       pages=list(map(lambda page: page_from_db(page), pages)),
-                       geoLocation=list(map(lambda location: location_from_db(location), locations)),
-                       times=list(map(lambda time: time_from_db(time), time_frames)),
-                       weight=subcampaign['weight'])
+    return subcampaign_from_db(subcampaign, os_types, device_types, pages, locations, time_frames)
 
 
 async def create_subcampaign(info: strawberry.Info[Context], sub: SubCampaignIn) -> SubCampaign:

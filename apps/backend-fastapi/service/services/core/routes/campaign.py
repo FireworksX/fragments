@@ -2,9 +2,10 @@ from typing import List
 from services.dependencies import supabase
 from fastapi import HTTPException, status
 import strawberry
-from .schemas import Fragment, AuthPayload, Campaign, CampaignIn
+from .schemas import Fragment, AuthPayload, Campaign, CampaignPost
 from .middleware import Context
 from .media import asset
+from .project import project_by_id
 
 
 async def campaigns(info: strawberry.Info[Context]) -> List[Campaign]:
@@ -23,8 +24,24 @@ async def campaigns(info: strawberry.Info[Context]) -> List[Campaign]:
             campaigns.append(campaign)
     return campaigns
 
+async def campaigns_in_project(info: strawberry.Info[Context], project_id: int) -> List[Campaign]:
+    user: AuthPayload = info.context.user()
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
-async def campaign_by_id(info: strawberry.Info[Context], id_: str) -> Campaign:
+    result = supabase.postgrest.from_table("campaigns").select("*").eq("project_id", project_id).execute()
+
+    campaigns: List[Campaign] = []
+    for pr in result.data:
+        if pr["deleted"] is not True:
+            campaign: Campaign = Campaign(id=pr['id'], user=user.user, name=pr["name"], description=pr["description"],
+                                          active=pr["active"], deleted=pr["deleted"],
+                                          logo=asset(info, pr['logo']))
+            campaigns.append(campaign)
+    return campaigns
+
+
+async def campaign_by_id(info: strawberry.Info[Context], id_: int) -> Campaign:
     user: AuthPayload = info.context.user()
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
@@ -36,22 +53,24 @@ async def campaign_by_id(info: strawberry.Info[Context], id_: str) -> Campaign:
     return campaign
 
 
-async def create_campaign(info: strawberry.Info[Context], pr: CampaignIn) -> Campaign:
+async def create_campaign(info: strawberry.Info[Context], cmp: CampaignPost) -> Campaign:
     user: AuthPayload = info.context.user()
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    campaign = supabase.postgrest.table("campaigns").insert({'owner': user.user.id, 'name': pr.name,
-                                                             'logo': pr.logo, 'description': pr.description, 'deleted': False,
-                                                             'active': pr.active}).execute().data[0]
+    project = project_by_id(info, cmp.project_id)
+    if project is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
-    supabase.postgrest.table('pivot_campaign_member').insert({'member': user.user.id, 'campaign': campaign['id']})
+    campaign = supabase.postgrest.table("campaigns").insert({'project_id':cmp.project_id, 'owner': user.user.id, 'name': cmp.name,
+                                                             'logo': cmp.logo, 'description': cmp.description, 'deleted': False,
+                                                             'active': cmp.active}).execute().data[0]
 
     return Campaign(id=campaign['id'], user=user.user, name=campaign["name"], description=campaign["description"], deleted=campaign["deleted"],
                     active=campaign["active"],
                     logo=asset(info, campaign['logo']))
 
 
-async def update_campaign(info: strawberry.Info[Context], pr: CampaignIn) -> Campaign:
+async def update_campaign(info: strawberry.Info[Context], pr: CampaignPost) -> Campaign:
     user: AuthPayload = info.context.user()
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
@@ -84,5 +103,5 @@ async def delete_campaign_from_db(info: strawberry.Info[Context], campaign_id: i
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
-    campaign: CampaignIn = CampaignIn(id=campaign_id, deleted=True, active=False)
+    campaign: CampaignPost = CampaignPost(id=campaign_id, deleted=True, active=False)
     await update_campaign(info, campaign)
