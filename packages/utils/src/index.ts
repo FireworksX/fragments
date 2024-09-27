@@ -25,5 +25,12 @@ export { omit } from "./omit";
 export { times } from "./times";
 export { injectLink } from "./injectLink";
 export { debounce } from "./debounce";
+export { default as isBrowser } from "./isBrowser";
 export { generateId } from "./generateId";
 export { colorToObject } from "./colors/colorToObject";
+export { isFiniteNumber, finiteNumber } from "./finiiteNumber";
+export {
+  roundedNumber,
+  roundedNumberString,
+  roundWithOffset,
+} from "./roundedNumber";

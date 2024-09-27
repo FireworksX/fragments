@@ -10,6 +10,7 @@ import Panel from '@/builder/components/Panel/Panel'
 import ControlRow from '@/builder/components/ControlRow/ControlRow'
 import ControlRowWide from '@/builder/components/ControlRow/components/ControlRowWide/ControlRowWide'
 import { BuilderContext } from '@/builder/BuilderContext'
+import InputNumber from '@/app/components/InputNumber/InputNumber'
 
 interface BuilderPositionProps {
   className?: string
@@ -17,18 +18,22 @@ interface BuilderPositionProps {
 
 const BuilderPosition: FC<BuilderPositionProps> = ({ className }) => {
   const { documentManager } = useContext(BuilderContext)
-  const { selectionGraph, type, top, right, bottom, left } = useBuilderPosition(documentManager)
-
-  if (!selectionGraph?.position && selectionGraph?._type !== builderNodes.Screen) {
-    return null
-  }
+  const { selectionGraph, type, x, y } = useBuilderPosition()
+  //
+  // if (!selectionGraph?.position && selectionGraph?._type !== builderNodes.Screen) {
+  //   return null
+  // }
 
   return (
     <Panel className={cn(styles.root, className)} title='Position'>
       {type.value === 'absolute' && (
-        <div>
-          <BuilderPositionToggle top={top} right={right} bottom={bottom} left={left} />
-        </div>
+        // <div className={styles.body}>
+        //   <BuilderPositionToggle top={top} right={right} bottom={bottom} left={left} />
+        // </div>
+        <ControlRow title='Position'>
+          <InputNumber suffix='x' {...x} min={Infinity} max={Infinity} />
+          <InputNumber suffix='y' {...y} min={Infinity} max={Infinity} />
+        </ControlRow>
       )}
       <ControlRow title='Type'>
         <ControlRowWide>

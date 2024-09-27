@@ -1,5 +1,5 @@
 import { Entity, isGraph, isLinkKey, LinkKey } from "@graph-state/core";
-import { nodes } from "@/defenitions.ts";
+import { nodes } from "@/definitions.ts";
 import { isGraphOfType } from "@graph-state/checkers";
 
 export const isComputedValueLink = (link: Entity) =>

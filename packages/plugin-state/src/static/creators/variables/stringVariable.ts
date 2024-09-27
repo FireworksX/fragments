@@ -1,6 +1,6 @@
 import { generateId } from "@fragments/utils";
 import { GraphState } from "@graph-state/core";
-import { nodes, variableType } from "@/defenitions.ts";
+import { nodes, variableType } from "@/definitions.ts";
 
 export type CreateStringOptions = Partial<{
   required: boolean;

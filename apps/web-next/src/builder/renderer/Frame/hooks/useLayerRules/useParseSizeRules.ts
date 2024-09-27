@@ -35,6 +35,7 @@ export const useParseSizeRules = (layerField: Field) => {
 
   return {
     width: to([layoutSizingHorizontal, widthValue], (sizing, value) => getValue(sizing, value)),
-    height: to([layoutSizingVertical, heightValue], (sizing, value) => getValue(sizing, value))
+    height: to([layoutSizingVertical, heightValue], (sizing, value) => getValue(sizing, value)),
+    minHeight: layerField?.minHeight
   }
 }

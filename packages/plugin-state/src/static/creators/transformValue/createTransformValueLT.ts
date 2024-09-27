@@ -1,5 +1,5 @@
 import { generateId } from "@fragments/utils";
-import { nodes, variableTransforms } from "@/defenitions.ts";
+import { nodes, variableTransforms } from "@/definitions.ts";
 
 export interface CreateTransformValueLTOptions {
   value: string | number;

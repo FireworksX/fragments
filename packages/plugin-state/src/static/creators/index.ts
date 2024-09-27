@@ -1,5 +1,5 @@
 import { LinkKey, Plugin } from "@graph-state/core";
-import { nodes, variableTransforms, variableType } from "@/defenitions.ts";
+import { nodes, variableTransforms, variableType } from "@/definitions.ts";
 import { generateId } from "@fragments/utils";
 import { Color } from "@/types/props.ts";
 import { createTransformValueEquals } from "@/static/creators/transformValue/createTransformValueEquals.ts";
@@ -41,24 +41,36 @@ export interface ComputedValueOptions {
   transforms: unknown[];
 }
 
-export const index: Plugin = (state) => {
+const BREAKPOINT_GAP = 50;
+
+export const creators: Plugin = (state) => {
   state.findPrimaryBreakpoint = () =>
     state
       .inspectFields(nodes.Breakpoint)
       .map(state.resolve)
       .filter((s) => s.isPrimary)[0];
 
+  state.atBreakpoint = (at?: number) =>
+    state.inspectFields(nodes.Breakpoint).map(state.resolve).at(at);
+
   state.createBreakpoint = (options: { name: string; width: number }) => {
     const primaryBreakpoint = state.findPrimaryBreakpoint();
 
     if (primaryBreakpoint) {
+      const lastBreakpoint = state.atBreakpoint(-1);
       const nextScreenLink = primaryBreakpoint.clone();
+      const lastScreenRectProps =
+        state.constraints.fromProperties(lastBreakpoint);
+      const lastScreenRect = state.constraints.toRect(lastScreenRectProps);
+
       const nextBreakpoint = state.mutate(nextScreenLink, {
         ...options,
         isPrimary: false,
+        top: lastScreenRectProps.top,
+        left: state.rect.maxX(lastScreenRect) + BREAKPOINT_GAP,
       });
 
-      state.mutate(state.root, {
+      state.mutate(state.key, {
         children: [nextBreakpoint],
       });
     }

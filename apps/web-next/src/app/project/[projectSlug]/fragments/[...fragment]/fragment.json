@@ -4,170 +4,25 @@
   "children": [
     {
       "_type": "Breakpoint",
-      "_id": "mobile",
+      "_id": "tablet",
       "isPrimary": true,
-      "width": 320,
+      "width": 768,
+      "height": 500,
+      "parentKey": "$$Fragment:g34gherhg3g",
       "children": [
         {
           "_type": "Frame",
-          "_id": "1",
-          "parentKey": {
-            "_type": "$$Breakpoint",
-            "_id": "mobile"
-          },
-          "children": [
-            {
-              "_type": "Frame",
-              "_id": "2",
-              "parentKey": {
-                "_type": "$$Frame",
-                "_id": "1"
-              },
-              "children": [
-              ],
-              "padding": -1,
-              "paddingLeft": 20,
-              "paddingRight": 20,
-              "paddingTop": 10,
-              "paddingBottom": 10,
-              "layerMode": "flex",
-              "layerAlign": "start",
-              "layerDirection": "horizontal",
-              "layerDistribute": "start",
-              "layerWrap": false,
-              "layerGap": 0,
-              "x": 0,
-              "y": 0,
-              "width": 100,
-              "height": 100,
-              "layoutSizingHorizontal": "Hug",
-              "layoutSizingVertical": "Hug",
-              "rotation": 0,
-              "solidFill": {
-                "r": 93,
-                "g": 238,
-                "b": 226,
-                "a": 1,
-                "_type": "Frame",
-                "_id": "2.solidFill"
-              },
-              "borderType": "None",
-              "borderWidth": 1,
-              "borderColor": {
-                "r": 13,
-                "g": 196,
-                "b": 45,
-                "a": 1,
-                "_type": "Frame",
-                "_id": "2.borderColor"
-              },
-              "cornerRadius": 24,
-              "topLeftRadius": 0,
-              "topRightRadius": 0,
-              "bottomLeftRadius": 0,
-              "bottomRightRadius": 0,
-              "opacity": {
-                "_type": "Variable",
-                "_id": "b19eb7bfeae4e",
-                "name": "opacity",
-                "type": "Number",
-                "defaultValue": 0.708,
-                "min": 0,
-                "max": 1,
-                "step": 0.01,
-                "value": null
-              },
-              "visible": true,
-              "name": "Button",
-              "fillType": "Solid",
-              "overrides": [
-                {
-                  "_type": "$$Frame",
-                  "_id": "519b6b47e002"
-                }
-              ],
-              "_opacity": 1
-            },
-            {
-              "_type": "Frame",
-              "_id": "0814c336cce56",
-              "padding": 0,
-              "paddingLeft": 0,
-              "paddingRight": 0,
-              "paddingTop": 0,
-              "paddingBottom": 0,
-              "layerMode": "none",
-              "layerAlign": "start",
-              "layerDirection": "horizontal",
-              "layerDistribute": "start",
-              "layerWrap": false,
-              "layerGap": 0,
-              "x": 0,
-              "y": 0,
-              "width": 50,
-              "height": 50,
-              "layoutSizingHorizontal": "Fixed",
-              "layoutSizingVertical": "Fixed",
-              "rotation": 0,
-              "solidFill": {
-                "r": 86,
-                "g": 196,
-                "b": 187,
-                "a": 1,
-                "_type": "Frame",
-                "_id": "0814c336cce56.solidFill"
-              },
-              "fillType": "Solid",
-              "borderType": "None",
-              "borderWidth": 1,
-              "borderColor": {
-                "r": 13,
-                "g": 196,
-                "b": 45,
-                "a": 1,
-                "_type": "Frame",
-                "_id": "0814c336cce56.borderColor"
-              },
-              "cornerRadius": 0,
-              "topLeftRadius": 0,
-              "topRightRadius": 0,
-              "bottomLeftRadius": 0,
-              "bottomRightRadius": 0,
-              "opacity": 1,
-              "visible": true,
-              "parentKey": {
-                "_type": "$$Frame",
-                "_id": "1"
-              },
-              "_opacity": 1
-            }
-          ],
-          "padding": -1,
-          "paddingLeft": 20,
-          "paddingRight": 20,
-          "paddingTop": 0,
-          "paddingBottom": 0,
+          "_id": "09f0c7ed1ef8a",
+          "opacity": 1,
+          "visible": true,
+          "width": 100,
+          "height": 167.94913416481495,
+          "layoutSizingHorizontal": "Relative",
+          "layoutSizingVertical": "Fixed",
           "layerMode": "flex",
           "layerAlign": "center",
           "layerDirection": "horizontal",
-          "layerDistribute": "space-between",
-          "layerWrap": false,
-          "layerGap": 10,
-          "x": 0,
-          "y": 0,
-          "width": 100,
-          "height": 80,
-          "layoutSizingHorizontal": "Relative",
-          "layoutSizingVertical": "Fixed",
-          "rotation": 0,
-          "solidFill": {
-            "r": 86,
-            "g": 196,
-            "b": 187,
-            "a": 1,
-            "_type": "Frame",
-            "_id": "1.solidFill"
-          },
+          "layerDistribute": "center",
           "borderType": "None",
           "borderWidth": 1,
           "borderColor": {
@@ -176,77 +31,140 @@
             "b": 45,
             "a": 1,
             "_type": "Frame",
-            "_id": "1.borderColor"
+            "_id": "09f0c7ed1ef8a.borderColor"
           },
-          "cornerRadius": 0,
-          "topLeftRadius": 0,
-          "topRightRadius": 0,
-          "bottomLeftRadius": 0,
-          "bottomRightRadius": 0,
-          "opacity": 1,
-          "visible": true,
-          "name": "Content",
+          "solidFill": {
+            "r": 59,
+            "g": 198,
+            "b": 189,
+            "a": 1,
+            "_type": "Frame",
+            "_id": "09f0c7ed1ef8a.solidFill"
+          },
+          "parentKey": "$$Breakpoint:tablet",
+          "fillType": "Solid",
+          "children": [
+            {
+              "_type": "Frame",
+              "_id": "db947711832c3",
+              "opacity": 1,
+              "visible": true,
+              "width": 100,
+              "height": 100,
+              "layoutSizingHorizontal": "Fixed",
+              "layoutSizingVertical": "Fixed",
+              "layerMode": "none",
+              "layerAlign": "start",
+              "layerDirection": "horizontal",
+              "layerDistribute": "start",
+              "borderType": "None",
+              "borderWidth": 1,
+              "borderColor": {
+                "r": 13,
+                "g": 196,
+                "b": 45,
+                "a": 1,
+                "_type": "Frame",
+                "_id": "db947711832c3.borderColor"
+              },
+              "solidFill": {
+                "r": 122,
+                "g": 86,
+                "b": 196,
+                "a": 1,
+                "_type": "Frame",
+                "_id": "db947711832c3.solidFill"
+              },
+              "fillType": "Solid",
+              "parentKey": "$$Frame:09f0c7ed1ef8a",
+              "rotation": 0,
+              "left": 333.64457114535065,
+              "top": 55.72562631556332,
+              "positionType": "relative",
+              "overrides": [
+                {
+                  "_type": "$$Frame",
+                  "_id": "637b573c0a142"
+                },
+                {
+                  "_type": "$$Frame",
+                  "_id": "288aee7bdb8f3"
+                },
+                {
+                  "_type": "$$Frame",
+                  "_id": "79f8eac6d5ec3"
+                },
+                {
+                  "_type": "$$Frame",
+                  "_id": "23e710a21a52c"
+                }
+              ]
+            },
+            {
+              "_type": "Text",
+              "_id": "29d5b8d269786",
+              "content": "<p dir=\"ltr\"><span style=\"white-space: pre-wrap;\">dfsdaga</span></p><p dir=\"ltr\"><span style=\"white-space: pre-wrap;\">gsdgas</span></p>",
+              "opacity": 1,
+              "visible": true,
+              "width": 100,
+              "height": 100,
+              "layoutSizingHorizontal": "Fixed",
+              "layoutSizingVertical": "Fixed",
+              "rotation": 0,
+              "left": 0,
+              "top": 0,
+              "positionType": "relative",
+              "parentKey": "$$Frame:09f0c7ed1ef8a"
+            }
+          ],
+          "rotation": 0,
+          "left": -0.12778966822458443,
+          "top": 0,
+          "positionType": "absolute",
           "overrides": [
             {
               "_type": "$$Frame",
-              "_id": "d2d0cc5be2c8c"
+              "_id": "401e91df99a0b"
+            },
+            {
+              "_type": "$$Frame",
+              "_id": "911193eadd8ef"
+            },
+            {
+              "_type": "$$Frame",
+              "_id": "531dba08f1515"
+            },
+            {
+              "_type": "$$Frame",
+              "_id": "07acc04ce8e34"
             }
-          ]
+          ],
+          "layerGap": 59
         }
       ],
-      "layoutSizingVertical": "Hug",
-      "layoutSizingHorizontal": "Fill",
-      "padding": 0,
-      "paddingLeft": 0,
-      "paddingRight": 0,
-      "paddingTop": 0,
-      "paddingBottom": 0,
-      "layerMode": "none",
-      "layerAlign": "center",
-      "layerDirection": "horizontal",
-      "layerDistribute": "start",
-      "layerWrap": false,
-      "layerGap": 0,
-      "x": 0,
-      "y": 0,
-      "height": 100,
-      "rotation": 0,
-      "solidFill": {
-        "r": 232,
-        "g": 232,
-        "b": 232,
-        "a": 1,
-        "_type": "Breakpoint",
-        "_id": "mobile.solidFill"
-      },
-      "fillType": "Solid",
-      "borderType": "None",
-      "borderWidth": 1,
-      "borderColor": {
-        "r": 13,
-        "g": 196,
-        "b": 45,
-        "a": 1,
-        "_type": "Breakpoint",
-        "_id": "mobile.borderColor"
-      },
-      "cornerRadius": 10,
-      "topLeftRadius": 0,
-      "topRightRadius": 0,
-      "bottomLeftRadius": 0,
-      "bottomRightRadius": 0,
-      "opacity": 1,
-      "visible": true,
-      "parentKey": {
-        "_type": "$$Document",
-        "_id": "gdfhfdghsf"
-      },
+      "layoutSizingHorizontal": "Fixed",
+      "layoutSizingVertical": "Fixed",
       "overrides": [
         {
           "_type": "$$Breakpoint",
-          "_id": "tbalee"
+          "_id": "965f4f6a75305"
+        },
+        {
+          "_type": "$$Breakpoint",
+          "_id": "5040cdd3b7d95"
+        },
+        {
+          "_type": "$$Breakpoint",
+          "_id": "0cd2464c6e07c"
+        },
+        {
+          "_type": "$$Breakpoint",
+          "_id": "7a48f0bc0664e"
         }
-      ]
+      ],
+      "left": 0,
+      "top": 0,
+      "positionType": "absolute"
     }
   ],
   "props": [
@@ -256,10 +174,10 @@
       "name": "opacity",
       "type": "Number",
       "defaultValue": 0.708,
-      "min": 0,
       "max": 1,
       "step": 0.01,
-      "value": null
+      "displayStepper": true,
+      "min": 1
     },
     {
       "_type": "Variable",
@@ -267,10 +185,10 @@
       "name": "size",
       "type": "Number",
       "defaultValue": 10,
-      "min": 0,
       "max": 100,
       "step": 1,
-      "value": null
+      "displayStepper": true,
+      "min": 1
     },
     {
       "_type": "Variable",
@@ -285,5 +203,7 @@
       "type": "String",
       "defaultValue": "Забрать"
     }
-  ]
+  ],
+  "opacity": 1,
+  "visible": true
 }

@@ -15,7 +15,7 @@ export const moveNode: Plugin = (state) => {
   ) => {
     const node = state.resolve(nodeLink);
     const nodeParent = node?.getParent();
-    const toNode = state.resolve(toLink) || state.resolve(state.root);
+    const toNode = state.resolve(toLink) || state.resolve(state.key);
     const parentKey = state.keyOfEntity(nodeParent);
 
     if (toLink !== parentKey) {

@@ -6,7 +6,7 @@ import {
   ScreenNode,
   TextNode,
 } from "./nodes";
-import { constrain, nodes } from "src/defenitions";
+import { constrain, nodes } from "@/definitions.ts";
 import { Graph, GraphState, LinkKey } from "@graph-state/core";
 
 // export interface ComponentSetNode extends BaseProps, ChildrenRelatedProps<ComponentNode> {
@@ -31,6 +31,7 @@ export interface ExtenderPayload<TGrpah> {
   state: GraphState;
   graph: TGrpah;
   graphKey: LinkKey;
+  resolveField: (field: string) => unknown;
   getValue: (fieldKey: string, fallbackValue?: unknown) => unknown;
 }
 
