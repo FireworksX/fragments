@@ -273,6 +273,9 @@ function debounce(func, timeout = 300) {
   };
 }
 
+// src/isBrowser.ts
+var isBrowser_default = typeof window !== "undefined";
+
 // src/generateId.ts
 var generateId = () => Math.random().toString(16).slice(2);
 
@@ -364,6 +367,7 @@ export {
   hexToRgb,
   injectLink,
   isAbsoluteUrl,
+  isBrowser_default as isBrowser,
   isEmptyValue,
   isFiniteNumber,
   isHTMLNode,

@@ -95,23 +95,17 @@ export const useLayerHighlightSelect = () => {
     }
 
     if (directions.includes(SELECTION_SIDES.left)) {
-      if (mx > 0) {
-        focusNode.setWidth(memo.from.getWidth(mx * -1))
-        focusNode.move(memo.from.getLeft(mx))
-
-        memo.from.getLeft(mx, memo.from.getWidth(mx * -1))
-      } else {
-        focusNode.setWidth(memo.from.getWidth(mx * -1))
+      const width = memo.from.getWidth(mx * -1)
+      if (width > 0) {
+        focusNode.setWidth(width)
         focusNode.move(memo.from.getLeft(mx))
       }
     }
 
     if (directions.includes(SELECTION_SIDES.top)) {
-      if (my > 0) {
-        focusNode.setHeight(memo.from.getHeight(my * -1))
-        focusNode.move(null, memo.from.getTop(my))
-      } else {
-        focusNode.setHeight(memo.from.getHeight(my * -1))
+      const height = memo.from.getHeight(my * -1)
+      if (height > 0) {
+        focusNode.setHeight(height)
         focusNode.move(null, memo.from.getTop(my))
       }
     }

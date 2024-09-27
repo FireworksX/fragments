@@ -58,6 +58,8 @@ export const useBuilderLayers = () => {
       const toKey = to?.id
       const itemOrder = findIndexOfNode(nextItemsTree, itemKey)
 
+      console.log(itemKey, toKey, itemOrder)
+
       documentManager.moveNode(itemKey, toKey, itemOrder)
     }
   }

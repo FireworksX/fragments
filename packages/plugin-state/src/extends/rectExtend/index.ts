@@ -1,16 +1,11 @@
 import { Extender } from "@/types";
-import { fromProperties } from "@/shared/constraints/fromProperties.ts";
 import { nodes } from "@/definitions.ts";
+import { animatableValue } from "@/shared/animatableValue.ts";
 
-export const rectExtend: Extender = ({
-  graph,
-  graphKey,
-  state,
-  resolveField,
-  getValue,
-}) => {
+export const rectExtend: Extender = ({ graph, graphKey, state }) => {
   const rect = () => {
-    const parentRect = state.resolve(graphKey)?.getParent()?.rect?.() ?? [];
+    const parentRect =
+      animatableValue(state.resolve(graphKey)?.getParent()?.rect?.()) ?? {};
     const constraintValues = state.constraints.fromProperties(graph);
 
     return state.constraints.toRect(
@@ -32,7 +27,7 @@ export const rectExtend: Extender = ({
       ).filter((parent) => parent._type !== nodes.Breakpoint);
 
       return allParents.reduce((acc, parent) => {
-        const parentRect = parent?.rect?.();
+        const parentRect = animatableValue(parent?.rect?.());
         return parentRect
           ? {
               ...acc,

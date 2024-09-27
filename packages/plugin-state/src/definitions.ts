@@ -30,6 +30,7 @@ export const constrain = createConstants(
   "Stretch",
   "Scale"
 );
+export const positionType = createConstants("absolute", "relative");
 export const sizing = createConstants("Fixed", "Hug", "Fill", "Relative");
 export const layerMode = createConstants("none", "flex");
 export const layerDirection = createConstants("vertical", "horizontal");

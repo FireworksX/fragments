@@ -138,7 +138,13 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
         )}
         onClick={handleSelect}
       >
-        <Touchable className={cn(styles.collapse, { [styles.open]: !collapsed })} onClick={onCollapse}>
+        <Touchable
+          className={cn(styles.collapse, { [styles.open]: !collapsed })}
+          onClick={e => {
+            e.stopPropagation()
+            onCollapse()
+          }}
+        >
           {hasChildren && <CaretRight className={styles.titleCaret} width={10} collapsed={collapsed} />}
         </Touchable>
         <div className={styles.headIcon}>

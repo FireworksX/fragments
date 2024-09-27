@@ -95,6 +95,8 @@ declare const injectLink: (options: InjectLinkOptions) => void;
 
 declare function debounce(this: any, func: (this: any, ...args: any) => any, timeout?: number): (...args: any) => void;
 
+declare const _default: boolean;
+
 declare const generateId: () => string;
 
 interface OutputColor {
@@ -112,4 +114,4 @@ declare function roundedNumber(value: number, decimals?: number): number;
 declare function roundedNumberString(value: number, decimals?: number): string;
 declare function roundWithOffset(value: number, offset: number): number;
 
-export { colorToObject, createConstants, debounce, eventEmitter, filterDeep, findDeep, finiteNumber, generateId, get, hexToRgb, injectLink, isAbsoluteUrl, isEmptyValue, isFiniteNumber, isHTMLNode, isObject, isPrimitive, isValue, iterator, mergeIterator, noop, omit, pick, promiseWaiter, replace, rgbStringToHex, rgbToHex, rgbToRgba, roundWithOffset, roundedNumber, roundedNumberString, set, times, toKebabCase, toLongHex };
+export { colorToObject, createConstants, debounce, eventEmitter, filterDeep, findDeep, finiteNumber, generateId, get, hexToRgb, injectLink, isAbsoluteUrl, _default as isBrowser, isEmptyValue, isFiniteNumber, isHTMLNode, isObject, isPrimitive, isValue, iterator, mergeIterator, noop, omit, pick, promiseWaiter, replace, rgbStringToHex, rgbToHex, rgbToRgba, roundWithOffset, roundedNumber, roundedNumberString, set, times, toKebabCase, toLongHex };

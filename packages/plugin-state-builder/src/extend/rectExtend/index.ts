@@ -3,6 +3,17 @@ import { fromProperties } from "@/shared/constraints/fromProperties.ts";
 import { to } from "@react-spring/core";
 import { animatableValue } from "@/shared/animatableValue.ts";
 import { nodes } from "@fragments/plugin-state";
+import { createCachedInterpolate } from "@/shared/cachedInterpolate.ts";
+
+const RECT_FIELD_KEYS = [
+  "left",
+  "top",
+  "width",
+  "height",
+  "positionType",
+  "layoutSizingHorizontal",
+  "layoutSizingVertical",
+];
 
 export const rectExtend: Extender = ({
   graph,
@@ -10,86 +21,31 @@ export const rectExtend: Extender = ({
   state,
   resolveField,
 }) => {
-  let rectInterpolate = null;
-  let absoluteRectInterpolate = null;
-  let parentsKey = "";
-  let rectCacheKey = "";
-  const rectFieldKeys = [
-    "left",
-    "top",
-    "width",
-    "height",
-    "layoutSizingHorizontal",
-    "layoutSizingVertical",
-  ];
+  const originalRectMethod = graph?.rect ?? (() => null);
+  const originalAbsoluteRectMethod = graph?.absoluteRect ?? (() => null);
+  const cachedRect = createCachedInterpolate();
+  const cachedAbsoluteRect = createCachedInterpolate();
 
   const rect = () => {
-    const rectValues = rectFieldKeys.map(resolveField);
-    const nextCacheKey = rectValues
-      .filter(Boolean)
-      .map((v) => v.id)
-      .join("_");
-
-    if (rectInterpolate && nextCacheKey === rectCacheKey)
-      return rectInterpolate;
-
-    rectCacheKey = nextCacheKey;
-
-    rectInterpolate = to(rectValues, (l, t) => {
-      const parentRect =
-        animatableValue(state.resolve(graphKey)?.getParent()?.rect?.()) ?? {};
-      const constraintValues = state.constraints.fromProperties(graph);
-
-      const rect = state.constraints.toRect(
-        constraintValues,
-        parentRect,
-        null,
-        graphKey
-      );
-
-      return rect;
-    });
-
-    return rectInterpolate;
+    return cachedRect(RECT_FIELD_KEYS.map(resolveField), originalRectMethod);
   };
 
   const absoluteRect = () => {
     const targetRect = rect();
     const allParents = state.resolve(graphKey)?.getAllParents?.() ?? [];
-    const parentsCacheKey = allParents
-      .map((p) => p._id)
-      .concat(targetRect?.id)
-      .join("_");
-
-    if (absoluteRectInterpolate && parentsKey === parentsCacheKey)
-      return absoluteRectInterpolate;
-
     const allParentRects = allParents
       .map((parent) => parent?.rect?.())
       .filter(Boolean);
 
-    parentsKey = parentsCacheKey;
-    absoluteRectInterpolate = to([targetRect, ...allParentRects], () => {
-      return allParents.reduce((acc, parent) => {
-        const parentRect = animatableValue(parent?.rect?.());
-        return parentRect
-          ? {
-              ...acc,
-              x: acc.x + parentRect.x,
-              y: acc.y + parentRect.y,
-            }
-          : acc;
-      }, state.rect.fromAny(animatableValue(targetRect)));
-    });
-
-    return absoluteRectInterpolate;
+    return cachedAbsoluteRect(
+      [targetRect, ...allParentRects],
+      originalAbsoluteRectMethod
+    );
   };
 
   return {
     ...graph,
-    // Позиция относительно родителя
     rect,
-    // Позиция относительно Breakpoint
     absoluteRect,
   };
 };

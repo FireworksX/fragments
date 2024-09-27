@@ -18,13 +18,11 @@ export const moveNode: Plugin = (state) => {
     const toNode = state.resolve(toLink) || state.resolve(state.key);
     const parentKey = state.keyOfEntity(nodeParent);
 
-    if (nodeParent?._id !== toNode?._id) {
-      if (toLink !== parentKey) {
-        nodeParent?.removeChild(node);
-        toNode?.insertChild(order || 0, node);
-      } else if (typeof order === "number") {
-        nodeParent?.changeOrder(nodeLink, order);
-      }
+    if (toLink !== parentKey) {
+      nodeParent?.removeChild(node);
+      toNode?.insertChild(order || 0, node);
+    } else if (typeof order === "number") {
+      nodeParent?.changeOrder(nodeLink, order);
     }
   };
 };

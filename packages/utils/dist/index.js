@@ -47,6 +47,7 @@ __export(src_exports, {
   hexToRgb: () => hexToRgb,
   injectLink: () => injectLink,
   isAbsoluteUrl: () => isAbsoluteUrl,
+  isBrowser: () => isBrowser_default,
   isEmptyValue: () => isEmptyValue,
   isFiniteNumber: () => isFiniteNumber,
   isHTMLNode: () => isHTMLNode,
@@ -330,6 +331,9 @@ function debounce(func, timeout = 300) {
   };
 }
 
+// src/isBrowser.ts
+var isBrowser_default = typeof window !== "undefined";
+
 // src/generateId.ts
 var generateId = () => Math.random().toString(16).slice(2);
 
@@ -422,6 +426,7 @@ function roundWithOffset(value, offset) {
   hexToRgb,
   injectLink,
   isAbsoluteUrl,
+  isBrowser,
   isEmptyValue,
   isFiniteNumber,
   isHTMLNode,
