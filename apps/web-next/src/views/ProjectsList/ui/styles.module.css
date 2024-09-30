@@ -1,0 +1,35 @@
+.body {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: var(--gutter-default);
+}
+
+@container body (inline-size > 1024px) {
+    .body {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@container body (768px <= inline-size <= 1024px) {
+    .body {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.createProject {
+    padding: var(--gutter-default);
+    border-radius: var(--radius-small);
+    border: 2px dashed var(--border);
+    cursor: pointer;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--secondary);
+
+    &:hover {
+        background: var(--secondary-bg);
+    }
+}

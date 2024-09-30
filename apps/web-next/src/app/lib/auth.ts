@@ -1,9 +1,9 @@
 import { jwtDecode } from 'jwt-decode'
 import NextAuth, { NextAuthOptions } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
-import { axios } from '@/app/lib/axios'
 import { JWT } from 'next-auth/jwt'
 import axiosLib from 'axios'
+import { axios } from '@/shared/api/axios'
 // Your own logic for dealing with plaintext password strings; be careful!
 // import { saltAndHashPassword } from "@/utils/password"
 
