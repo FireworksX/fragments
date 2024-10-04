@@ -1,5 +1,0 @@
-.root {}
-
-.withPaddingTop {
-    padding-top: var(--gutter-default);
-}
