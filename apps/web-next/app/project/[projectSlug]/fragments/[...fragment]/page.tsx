@@ -1,56 +1,23 @@
 'use client'
 import React, { useEffect, useMemo } from 'react'
-import styles from './styles.module.css'
-import { PageHeading } from '@/app/components/PageHeading/PageHeading'
-import BuilderCanvas from '@/builder/BuilderCanvas/BuilderCanvas'
 import { createCanvasManager } from '@/builder/managers/canvasManager'
-import { useGraph } from '@graph-state/react'
-import { animated, SpringValue, useSpring, useSpringValue } from '@react-spring/web'
-import FloatingBar from '@/builder/components/FloatingBar'
-import DropdownGroup from '@/app/components/Dropdown/components/DropdownGroup/DropdownGroup'
-import DropdownOption from '@/app/components/Dropdown/components/DropdownOption/DropdownOption'
-import SelectMimicry from '@/app/components/SelectMimicry/SelectMimicry'
-import Dropdown from '@/app/components/Dropdown/Dropdown'
-import Button from '@/app/components/Button'
-import DisplayBreakpoints from '@/builder/views/BuilderEditable/widgets/DisplayBreakpoints/DisplayBreakpoints'
-import { FragmentsRender } from '@fragments/render-react'
 import { createState, isPartialKey } from '@graph-state/core'
 import { managerPlugin, skips } from '@fragments/fragments-plugin/performance'
-import { useSearchParams } from 'next/navigation'
-import Link from 'next/link'
-import Sidebar from '@/builder/views/BuilderEditable/widgets/BuilderSidebar/BuilderSidebar'
-import BuilderControls from '@/builder/BuilderControls/BuilderControls'
-import GrabCursor from '@/app/svg/grab-cursor.svg'
-import DefaultCursor from '@/app/svg/default-cursor.svg'
-import Lightning from '@/app/svg/lightning.svg'
 import { builderModes, useBuilderManager } from '@/builder/hooks/useBuilderManager'
-import dynamic from 'next/dynamic'
-import { useRendererHandlers } from '@/builder/hooks/useRendererHandlers'
-import Tools from '@/builder/Tools/Tools'
-import LayerHighlight from '@/builder/LayerHighlight/LayerHighlight'
 import { BuilderContext } from '@/builder/BuilderContext'
-import { isInstanceOf } from '@graph-state/checkers'
 import loggerPlugin from '@graph-state/plugin-logger'
-import { Frame } from '@/builder/renderer/Frame/Frame'
-import isBrowser from '@/app/utils/isBrowser'
-import { useBuilderActions } from '@/builder/hooks/useBuilderActions'
-import { BuilderFloatBar } from '@/builder/BuilderFloatBar/BuilderFloatBar'
-import { richTextPlugin } from '@/app/store/builder/builderRichTextPlugin'
-import BuilderRichText from '@/builder/BuilderRichText/BuilderRichText'
-import { builderNodes } from '@fragments/fragments-plugin'
-import { BuilderTextEditorComposer } from '@/builder/BuilderTextEditor/BuilderTextEditorComposer'
-import { BuilderTextEditor } from '@/builder/BuilderTextEditor/BuilderTextEditor'
-import { useBuilderSelection } from '@/builder/hooks/useBuilderSelection'
-import { BuilderEditable } from '@/builder/views/BuilderEditable/BuilderEditable'
-import { BuilderPreview } from '@/builder/views/BuilderPreview/BuilderPreview'
+// import { BuilderPreview } from '@/builder/views/BuilderPreview/BuilderPreview'
 import { createPreviewManager } from '@/builder/managers/previewManager'
 import { useHotkeysContext } from 'react-hotkeys-hook'
 import { hotKeysScope } from '@/app/hooks/hotkeys/HotKeysProvider'
-import { useBuilderHotKeys } from '@/app/hooks/hotkeys/useBuilderHotKeys'
 import { createBuilderManager } from '@/builder/managers/builderManager'
-import fragmentData from '@/app/project/[projectSlug]/fragments/[...fragment]/fragment.json'
+import fragmentData from './fragment.json'
 import pluginState, { skips as stateSkips } from '@fragments/plugin-state'
 import pluginStateBuilder, { skips as stateBuilderSkips } from '@fragments/plugin-state-builder'
+import { isBrowser } from '@fragments/utils'
+import { richTextPlugin } from '../../../../store/builder/builderRichTextPlugin'
+import { FragmentBuilder } from '@/views/FragmentBuilder'
+import { FragmentPreview } from '@/views/FragmentPreview'
 
 const canvasManager = createCanvasManager()
 const previewManager = createPreviewManager()
@@ -416,13 +383,13 @@ if (isBrowser) {
 
 const Page = () => {
   const { isEdit } = useBuilderManager()
-  const { toggleScope } = useHotkeysContext()
+  // const { toggleScope } = useHotkeysContext()
 
-  useEffect(() => {
-    toggleScope(hotKeysScope.builder)
-  }, [])
+  // useEffect(() => {
+  //   toggleScope(hotKeysScope.builder)
+  // }, [])
 
-  return isEdit ? <BuilderEditable /> : <BuilderPreview />
+  return isEdit ? <FragmentBuilder /> : <FragmentPreview /> //<BuilderPreview />
 }
 
 export default function () {

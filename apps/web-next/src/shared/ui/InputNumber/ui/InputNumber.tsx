@@ -2,12 +2,12 @@
 import { ElementRef, FC, InputHTMLAttributes, useRef, useState } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import Touchable from '@/app/components/Touchable'
-import CaretUp from '@/app/svg/caret-up.svg'
-import CaretDown from '@/app/svg/caret-down.svg'
+import CaretUp from '@/shared/icons/caret-up.svg'
+import CaretDown from '@/shared/icons/caret-down.svg'
 import { SpringValue, animated } from '@react-spring/web'
-import { getFixedRationByStep } from '@/app/utils/getFixedRationByStep'
 import { mergeRefs } from 'react-merge-refs'
+import { getFixedRationByStep } from '@/shared/utils/getFixedRationByStep'
+import { Touchable } from '@/shared/ui/Touchable'
 
 interface InputNumberProps extends InputHTMLAttributes<HTMLInputElement> {
   value: number | string

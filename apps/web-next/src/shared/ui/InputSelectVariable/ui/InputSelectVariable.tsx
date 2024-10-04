@@ -3,11 +3,10 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import Checkerboard from '@/app/svg/checkerboard.svg'
 import { animated } from '@react-spring/web'
-import Touchable from '@/app/components/Touchable'
-import Close from '@/app/svg/close.svg'
-import FilterFillIcon from '@/app/svg/fills/filter-fill.svg'
+import Close from '@/shared/icons/close.svg'
+import FilterFillIcon from '@/shared/icons/fills/filter-fill.svg'
 import { builderVariableType } from '@fragments/fragments-plugin/performance'
-import { VariableIconsMap } from '@/builder/views/BuilderEditable/widgets/BuilderVariables/components/BuilderVariableCell/BuilderVariableCell'
+import { Touchable } from '@/shared/ui/Touchable'
 
 interface InputSelectVariableProps extends PropsWithChildren {
   type: keyof typeof builderVariableType
@@ -28,9 +27,9 @@ export const InputSelectVariable: FC<InputSelectVariableProps> = ({
   onReset
 }) => {
   const Icon =
-    kind === 'variable' ? (
-      VariableIconsMap[type]
-    ) : (
+    kind === 'variable' ? null : (
+      // todo: fsd
+      // VariableIconsMap[type]
       <FilterFillIcon style={{ color: 'var(--primary)' }} width={22} height={22} />
     )
 

@@ -1,6 +1,7 @@
 import { FC, PropsWithChildren, useContext } from 'react'
 import ModalComp from 'react-modal'
-import { modalStore } from '@/shared/store/modal.store'
+// todo: fsd
+import { modalStore } from '@/app/store/modal.store'
 
 interface ModalProps extends PropsWithChildren {
   isOpen?: boolean

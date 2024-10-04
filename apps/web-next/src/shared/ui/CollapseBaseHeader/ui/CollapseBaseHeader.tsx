@@ -2,7 +2,7 @@
 import { FC, PropsWithChildren } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import CaretRight from '@/app/svg/caret-right.svg'
+import CaretRight from '@/shared/icons/caret-right.svg'
 
 interface CollapseBaseHeaderProps extends PropsWithChildren {
   isOpen?: boolean

@@ -2,8 +2,8 @@
 import { ElementRef, FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import Touchable from '@/app/components/Touchable'
 import { animated, useSpring } from '@react-spring/web'
+import { Touchable } from '@/shared/ui/Touchable'
 
 export interface TabsSelectorItem {
   name: string | number | boolean

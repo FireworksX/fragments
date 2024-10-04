@@ -1,0 +1,14 @@
+.root {
+    background: var(--background);
+    border-inline: 1px solid var(--border);
+    height: calc(100vh - var(--app-size-header) - var(--app-size-navigation));
+    overflow: auto;
+    position: absolute;
+    left: 0;
+    z-index: var(--z-index-builder-sidebar);
+
+    &.right {
+        left: initial;
+        right: 0;
+    }
+}

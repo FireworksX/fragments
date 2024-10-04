@@ -1,11 +1,11 @@
 import { FC, PropsWithChildren, ReactNode } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import Touchable from '@/app/components/Touchable'
-import Checkerboard from '@/app/svg/checkerboard.svg'
-import Close from '@/app/svg/close.svg'
+import Checkerboard from '@/shared/icons/checkerboard.svg'
+import Close from '@/shared/icons/close.svg'
 import { animated } from '@react-spring/web'
 import { rgbToHex } from '@fragments/utils'
+import { Touchable } from '@/shared/ui/Touchable'
 
 export interface InputSelectProps extends PropsWithChildren {
   icon?: ReactNode

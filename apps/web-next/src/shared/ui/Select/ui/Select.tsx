@@ -1,9 +1,9 @@
 'use client'
 import { FC, PropsWithChildren } from 'react'
 import cn from 'classnames'
-import styles from './styles.module.css'
-import CaretDown from '@/app/svg/caret-down.svg'
 import { animated } from '@react-spring/web'
+import styles from './styles.module.css'
+import CaretDown from '@/shared/icons/caret-down.svg'
 
 interface SelectProps extends PropsWithChildren {
   className?: string

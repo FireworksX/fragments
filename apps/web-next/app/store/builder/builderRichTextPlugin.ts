@@ -1,10 +1,8 @@
 import { ReactEditor } from 'slate-react'
 import { createState, Entity, LinkKey, Plugin } from '@graph-state/core'
-import isBrowser from '@/app/utils/isBrowser'
 import { noop } from 'swr/_internal'
-import { generateId } from '@fragments/utils'
-import { getNodePosition } from '@/app/utils/getNodePosition'
-import { findRefNode } from '@/builder/utils/findRefNode'
+import { generateId, isBrowser } from '@fragments/utils'
+import { findRefNode } from '@/shared/utils/findRefNode'
 
 const aa = [
   {

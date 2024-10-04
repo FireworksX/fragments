@@ -1,11 +1,11 @@
 import { FC } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import Touchable from '@/app/components/Touchable'
-import Dropdown from '@/app/components/Dropdown/Dropdown'
-import DropdownGroup from '@/app/components/Dropdown/components/DropdownGroup/DropdownGroup'
-import DropdownOption from '@/app/components/Dropdown/components/DropdownOption/DropdownOption'
-import Plus from '@/app/svg/plus.svg'
+import Plus from '@/shared/icons/plus.svg'
+import { Dropdown } from '@/shared/ui/Dropdown'
+import { DropdownGroup } from '@/shared/ui/DropdownGroup'
+import { DropdownOption } from '@/shared/ui/DropdownOption'
+import { Touchable } from '@/shared/ui/Touchable'
 
 interface BuilderBreakpointTitleProps {
   className?: string

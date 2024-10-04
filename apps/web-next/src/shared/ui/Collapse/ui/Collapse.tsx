@@ -4,7 +4,7 @@ import cn from 'classnames'
 import { useToggle } from 'react-use'
 import { Collapse as CollpseLib } from 'react-collapse'
 import styles from './styles.module.css'
-import CollapseBaseHeader from '@/shared/ui/CollapseBaseHeader/ui/CollapseBaseHeader'
+import { CollapseBaseHeader } from '@/shared/ui/CollapseBaseHeader'
 
 interface CollapseProps extends PropsWithChildren {
   title?: string

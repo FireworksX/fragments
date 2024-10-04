@@ -1,10 +1,10 @@
 import { FC } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import Touchable from '@/app/components/Touchable'
-import Plus from '@/app/svg/plus.svg'
-import Minus from '@/app/svg/minus.svg'
+import Plus from '@/shared/icons/plus.svg'
+import Minus from '@/shared/icons/minus.svg'
 import { animated } from '@react-spring/web'
+import { Touchable } from '@/shared/ui/Touchable'
 
 interface StepperProps {
   className?: string

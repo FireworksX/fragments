@@ -1,8 +1,8 @@
 import { createState, GraphState, LinkKey } from '@graph-state/core'
 import { SpringValue } from '@react-spring/web'
 import { isInstanceOf } from '@graph-state/checkers'
-import { findRefNode } from '@/builder/utils/findRefNode'
 import loggerPlugin from '@graph-state/plugin-logger'
+import { findRefNode } from '@/shared/utils/findRefNode'
 
 export type CanvasManager = GraphState
 
