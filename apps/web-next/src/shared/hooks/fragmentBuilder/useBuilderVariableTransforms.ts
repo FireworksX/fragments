@@ -1,9 +1,9 @@
 import { builderVariableTransforms, builderVariableType } from '@fragments/fragments-plugin'
 import { useContext, useMemo } from 'react'
-import { BuilderContext } from '@/builder/BuilderContext'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { LinkKey } from '@graph-state/core'
-import { popoutsStore } from '@/app/store/popouts.store'
-import { stackVariableTransformName } from '@/builder/StackCollector/components/variables/StackVariableTransform/StackVariableTransform'
+import { popoutsStore } from '@/shared/store/popouts.store'
+// import { stackVariableTransformName } from '@/builder/StackCollector/components/variables/StackVariableTransform/StackVariableTransform'
 
 const variableTransforms = {
   convertFromBoolean: {

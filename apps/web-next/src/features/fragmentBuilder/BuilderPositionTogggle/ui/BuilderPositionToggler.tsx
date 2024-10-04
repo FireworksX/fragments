@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { LayerInvokerValue } from '@/builder/hooks/useLayerInvoker'
+import { LayerInvokerValue } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { InputNumber } from '@/shared/ui/InputNumber'
 import { Touchable } from '@/shared/ui/Touchable'
 

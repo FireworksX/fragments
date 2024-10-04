@@ -1,7 +1,7 @@
 import { useCallback, useContext, useMemo } from 'react'
-import { BuilderContext } from '@/builder/BuilderContext'
-import { useBuilderSelection } from '@/builder/hooks/useBuilderSelection'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { builderNodes } from '@fragments/fragments-plugin/performance'
+import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 
 export const useBuilderActions = () => {
   const { documentManager } = useContext(BuilderContext)

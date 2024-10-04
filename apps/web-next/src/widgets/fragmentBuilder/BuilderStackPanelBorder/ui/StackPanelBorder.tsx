@@ -1,5 +1,5 @@
 import { FC, useContext, useEffect } from 'react'
-import { popoutsStore } from '@/app/store/popouts.store'
+import { popoutsStore } from '@/shared/store/popouts.store'
 import { isObject, omit } from '@fragments/utils'
 import { isLinkKey } from '@graph-state/core'
 import { borderType } from '@fragments/plugin-state'

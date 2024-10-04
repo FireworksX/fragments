@@ -1,9 +1,9 @@
 import { useContext } from 'react'
-import { BuilderContext } from '@/builder/BuilderContext'
-import { DragEvent } from '@/builder/views/BuilderEditable/widgets/BuilderCanvas/hooks/useCanvas'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
+import { DragEvent } from './useCanvas'
 import { definitions } from '@fragments/plugin-state'
 import { isPartialKey } from '@graph-state/core'
-import { animatableValue } from '@/builder/utils/animatableValue'
+import { animatableValue } from '@/shared/utils/animatableValue'
 
 export const useDragCollisions = () => {
   const { documentManager, canvasManager } = useContext(BuilderContext)

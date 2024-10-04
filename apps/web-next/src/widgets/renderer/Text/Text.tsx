@@ -1,6 +1,6 @@
 import { FC, useCallback, useContext } from 'react'
 import styles from './styles.module.css'
-import { BuilderContext } from '@/builder/BuilderContext'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
 import { animated } from '@react-spring/web'
 import { withStyle } from '../providers/withStyle'

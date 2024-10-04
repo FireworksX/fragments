@@ -1,15 +1,10 @@
-import { Field } from 'react-hook-form'
-import { capitalize } from '@/app/utils/capitalize'
 import { useContext } from 'react'
-import { BuilderContext } from '@/builder/BuilderContext'
-import { useBuilderVariableCreator } from '@/builder/views/BuilderEditable/widgets/BuilderVariables/hooks/useBuilderVariableCreator'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { builderVariableType } from '@fragments/fragments-plugin/performance'
-import { useBuilderVariables } from '@/builder/views/BuilderEditable/widgets/BuilderVariables/hooks/useBuilderVariables'
-import { LinkKey } from '@graph-state/core'
-import { ResultSetter } from '@/builder/hooks/useLayerInvoker'
-import { animatableValue } from '@/builder/utils/animatableValue'
-import { popoutsStore } from '@/app/store/popouts.store'
-import { isComputedValueLink } from '@/builder/utils/isComputedValueLink'
+import { ResultSetter } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
+import { animatableValue } from '@/shared/utils/animatableValue'
+import { isComputedValueLink } from '@/shared/utils/isComputedValueLink'
+import { useBuilderVariables } from '@/shared/hooks/fragmentBuilder/useBuilderVariables'
 // import {
 //   stackVariableTransformName
 // } from '@/widgets/StackCollector/components/variables/StackVariableTransform/StackVariableTransform'
@@ -95,8 +90,10 @@ export const useBuilderFieldVariable = (layer: Field) => {
 
   return (key: string, setter: ResultSetter, currentValue: unknown) => {
     const hasConnector = key in variableFields
-    const allowedVariables = getAllowedVariablesByType(variableFields[key]?.type, selection =>
-      handleConnectVariable({ selection, setter, key })
+    const allowedVariables = (
+      getAllowedVariablesByType(variableFields[key]?.type, selection =>
+        handleConnectVariable({ selection, setter, key })
+      ) ?? []
     ).map(variable => ({
       ...variable,
       options: [variable.transforms]

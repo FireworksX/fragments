@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { useGraphFields, useGraphStack } from '@graph-state/react'
-import { popoutsStore } from '@/app/store/popouts.store'
-import { BuilderContext } from '@/builder/BuilderContext'
+import { popoutsStore } from '@/shared/store/popouts.store'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { builderNodes } from '@fragments/fragments-plugin'
 
 type ExtendOptions = Partial<OpenPopoutOptions<'cssOverride'>>

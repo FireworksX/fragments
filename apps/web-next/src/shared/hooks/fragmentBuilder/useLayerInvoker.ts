@@ -5,7 +5,7 @@ import { omit } from '@fragments/utils'
 import { useGraph } from '@graph-state/react'
 import { GraphState, SetOptions } from '@graph-state/core'
 import { useContext } from 'react'
-import { BuilderContext } from '@/builder/BuilderContext'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 // import { builderNodes } from '../data/promos/creators'
 // import { ComponentProperty } from '../types/componentProperties'
 

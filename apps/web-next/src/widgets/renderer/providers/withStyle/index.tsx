@@ -1,7 +1,7 @@
 import { useGraph } from '@graph-state/react'
 import { FC, useContext } from 'react'
 import { Graph } from '@graph-state/core'
-import { BuilderContext } from '@/builder/BuilderContext'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useStyles } from './styles'
 
 export const withStyle = (Component: FC) => {

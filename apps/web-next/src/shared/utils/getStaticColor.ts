@@ -1,5 +1,5 @@
 import { SpringValue } from '@react-spring/web'
-import { animatableValue } from '@/builder/utils/animatableValue'
+import { animatableValue } from '@/shared/utils/animatableValue'
 import { colorToObject } from '@fragments/utils'
 
 interface ReturnColor {

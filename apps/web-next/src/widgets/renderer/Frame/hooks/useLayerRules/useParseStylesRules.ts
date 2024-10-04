@@ -1,14 +1,12 @@
 import * as CSS from 'csstype'
 import { builderImagePaintScaleModes, builderPaintMode, builderNodes } from '@fragments/fragments-plugin/performance'
-import { useLayerInvoker } from '@/builder/hooks/useLayerInvoker'
-import { useDisplayColor } from '@/builder/hooks/useDisplayColor'
+import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { to } from '@react-spring/web'
-import { toPx } from '@/app/utils/toPx'
 import { builderBorderType, builderLayerMode } from '@fragments/fragments-plugin'
-import { isVariableLink } from '@/builder/utils/isVariableLink'
 import { useContext } from 'react'
-import { BuilderContext } from '@/builder/BuilderContext'
-import { getVariableValue$ } from '@/builder/utils/getVariableValue$'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
+import { useDisplayColor } from '@/shared/hooks/fragmentBuilder/useDisplayColor'
+import { toPx } from '@/shared/utils/toPx'
 
 const scaleModeMap: Record<keyof typeof builderImagePaintScaleModes, CSS.Properties['backgroundSize']> = {
   Fill: 'cover',

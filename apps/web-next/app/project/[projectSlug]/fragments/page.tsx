@@ -1,4 +1,3 @@
-'use client'
-import { FragmentDetail } from '@/views/FragmentDetail/ui/FragmentDetail'
+import { FragmentsList } from '@/views/FragmentsList'
 
-export default FragmentDetail
+export default FragmentsList

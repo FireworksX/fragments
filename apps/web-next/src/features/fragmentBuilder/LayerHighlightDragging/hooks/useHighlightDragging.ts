@@ -1,8 +1,8 @@
 import { to, useSpring } from '@react-spring/web'
 import { useContext, useEffect } from 'react'
-import { BuilderContext } from '@/builder/BuilderContext'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
-import { animatableValue } from '@/builder/utils/animatableValue'
+import { animatableValue } from '@/shared/utils/animatableValue'
 
 const BORDER_SIZE = 1
 const PARENT_BORDER_SIZE = 3

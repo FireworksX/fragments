@@ -1,14 +1,14 @@
 import { useContext, useState } from 'react'
 import { builderBorderType, builderNodes } from '@fragments/fragments-plugin/performance'
-import { BuilderContext } from '@/builder/BuilderContext'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 import Rectangle from '@/shared/icons/rectangle.svg'
 import { to } from '@react-spring/web'
-import { popoutsStore } from '@/app/store/popouts.store'
 import { CornerSide, CornerSides } from '@/shared/ui/CornerSides'
 import { TabsSelectorItem } from '@/shared/ui/TabsSelector'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
+import { popoutsStore } from '@/shared/store/popouts.store'
 
 const visible: TabsSelectorItem[] = [
   {

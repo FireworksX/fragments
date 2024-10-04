@@ -1,12 +1,9 @@
 import { createContext, FC, useContext } from 'react'
 import { useSpring } from '@react-spring/web'
 import { useDrag } from '@use-gesture/react'
-import { BuilderContext } from '@/builder/BuilderContext'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { nodes } from '@fragments/plugin-state'
-import isBrowser from '@/app/utils/isBrowser'
-import { findRefNode } from '@/builder/utils/findRefNode'
-import { useGraph } from '@graph-state/react'
-import { animatableValue } from '@/builder/utils/animatableValue'
+import { animatableValue } from '@/shared/utils/animatableValue'
 
 export const withDraggable = (Component: FC) => {
   const DraggableComponent: FC = props => {

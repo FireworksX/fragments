@@ -1,6 +1,6 @@
 import { TabsSelectorItem } from '@/app/components/TabsSelector'
-import { useLayerInvoker } from '@/builder/hooks/useLayerInvoker'
-import { useBuilderSelection } from '@/builder/hooks/useBuilderSelection'
+import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
+import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 
 const newTabItems: TabsSelectorItem[] = [
   {

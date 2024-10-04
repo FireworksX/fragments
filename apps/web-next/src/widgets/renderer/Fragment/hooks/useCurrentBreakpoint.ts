@@ -3,7 +3,7 @@ import { GraphState } from '@graph-state/core'
 import { useGraphFields, useGraphStack } from '@graph-state/react'
 import { nodes } from '@fragments/plugin-state'
 import { useMemo } from 'react'
-import { animatableValue } from '@/builder/utils/animatableValue'
+import { animatableValue } from '@/shared/utils/animatableValue'
 
 export const useCurrentBreakpoint = (documentManager: GraphState) => {
   const breakpoints = useGraphFields(documentManager, nodes.Breakpoint)

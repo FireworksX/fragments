@@ -8,7 +8,7 @@ import InputText from '@/app/components/InputText/InputText'
 import InputNumber from '@/app/components/InputNumber/InputNumber'
 import { ModalContext } from '@/app/builder/widgets/Builder/ModalContext'
 import { useGraph, useGraphFields } from '@graph-state/react'
-import { MODAL_TYPE, modalStore } from '@/app/store/modal.store'
+import { MODAL_TYPE, modalStore } from '@/shared/store/modal.store'
 
 interface CreateCustomBreakpointProps {
   className?: string

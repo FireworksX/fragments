@@ -1,9 +1,9 @@
 import { useHotkeys } from 'react-hotkeys-hook'
-import { hotKeysScope } from '@/app/hooks/hotkeys/HotKeysProvider'
 import { useContext } from 'react'
-import { BuilderContext } from '@/builder/BuilderContext'
-import { useBuilderSelection } from '@/builder/hooks/useBuilderSelection'
-import { useBuilderLayerFlags } from '@/builder/views/BuilderEditable/widgets/BuilderLayers/components/BuilderLayerCell/hooks/useBuilderLayerFlags'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
+import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
+import { useBuilderLayerFlags } from '@/shared/hooks/fragmentBuilder/useBuilderLayerFlags'
+import { hotKeysScope } from '@/shared/hooks/hotkeys/HotKeysProvider'
 
 export const useBuilderHotKeys = () => {
   const { documentManager } = useContext(BuilderContext)

@@ -1,6 +1,6 @@
 import { iterateParentOfNode } from '../utils/iterateParentOfNode'
 import { Entity, Graph, GraphState } from '@graph-state/core'
-import { animatableValue } from '@/builder/utils/animatableValue'
+import { animatableValue } from '@/shared/utils/animatableValue'
 
 interface Options {
   node: Element

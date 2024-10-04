@@ -1,6 +1,6 @@
 import { builderEffectType } from '@fragments/fragments-plugin'
-import { useLayerInvoker } from '@/builder/hooks/useLayerInvoker'
-import { useBuilderSelection } from '@/builder/hooks/useBuilderSelection'
+import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
+import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 
 export const useBuilderEffects = () => {
   const { selection, selectionGraph } = useBuilderSelection()

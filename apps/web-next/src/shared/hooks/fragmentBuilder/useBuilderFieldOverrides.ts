@@ -1,6 +1,6 @@
 import { LinkKey } from '@graph-state/core'
 import { useContext } from 'react'
-import { BuilderContext } from '@/builder/BuilderContext'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
 
 export type BuilderFieldOverrides = ReturnType<ReturnType<typeof useBuilderFieldOverrides>>

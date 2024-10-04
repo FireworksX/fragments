@@ -4,7 +4,7 @@ import ControlRow from '@/builder/components/ControlRow/ControlRow'
 import ControlRowWide from '@/builder/components/ControlRow/components/ControlRowWide/ControlRowWide'
 import TabsSelector from '@/app/components/TabsSelector'
 import { tabsSelectorItemsBoolean } from '@/builder/data'
-import { animatableValue } from '@/builder/utils/animatableValue'
+import { animatableValue } from '@/shared/utils/animatableValue'
 
 interface TransformNumberValueProps {
   className?: string

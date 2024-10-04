@@ -1,8 +1,8 @@
 import * as CSS from 'csstype'
 import { builderLayerDirection, builderLayerMode } from '@fragments/fragments-plugin'
 import { useContext } from 'react'
-import { BuilderContext } from '@/builder/BuilderContext'
-import { useLayerInvoker } from '@/builder/hooks/useLayerInvoker'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
+import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { to } from '@react-spring/web'
 import { toPx } from '@/app/utils/toPx'
 

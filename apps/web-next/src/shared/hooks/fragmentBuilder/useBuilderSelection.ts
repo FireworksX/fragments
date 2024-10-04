@@ -1,7 +1,7 @@
 import { useGraph } from '@graph-state/react'
-import { useBuilderManager } from '@/builder/hooks/useBuilderManager'
 import { useContext } from 'react'
-import { BuilderContext } from '@/builder/BuilderContext'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
+import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderManager'
 
 export const useBuilderSelection = () => {
   const { documentManager } = useContext(BuilderContext)

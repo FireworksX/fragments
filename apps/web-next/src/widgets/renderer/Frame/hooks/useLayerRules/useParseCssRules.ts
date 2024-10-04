@@ -1,8 +1,8 @@
 import * as CSS from 'csstype'
 import { useLayerInvokerNew } from '../useLayerInvokerNew.ts'
-import { BuilderContext } from '@/builder/BuilderContext'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useContext } from 'react'
-import { useLayerInvoker } from '@/builder/hooks/useLayerInvoker'
+import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 
 const getCssRules = (cssText?: string) => {
   const rules: CSS.Properties = {}

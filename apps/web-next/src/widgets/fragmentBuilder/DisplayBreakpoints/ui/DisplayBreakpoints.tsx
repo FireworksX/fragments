@@ -1,8 +1,8 @@
 import React, { FC, ReactNode, useContext } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { useBreakpoints } from '../hooks/useBreakpoints'
 import { Frame } from '@/widgets/renderer/Frame/Frame'
+import { useBreakpoints } from '@/shared/hooks/fragmentBuilder/useBreakpoints'
 
 interface BuilderDisplayBreakpointsProps {
   className?: string

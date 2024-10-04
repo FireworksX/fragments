@@ -6,12 +6,12 @@ import { to } from '@react-spring/web'
 import styles from './styles.module.css'
 import CaretRight from '@/shared/icons/caret-right.svg'
 import { useBuilderLayerCell } from '../hooks/useBuilderLayerCell'
-import { useBuilderLayerFlags } from '../hooks/useBuilderLayerFlags'
 import { BuilderLayerTypeIcon } from './BuilderLayerTypeIcon'
 import { Dropdown } from '@/shared/ui/Dropdown'
 import { DropdownGroup } from '@/shared/ui/DropdownGroup'
 import { DropdownOption } from '@/shared/ui/DropdownOption'
 import { Touchable } from '@/shared/ui/Touchable'
+import { useBuilderLayerFlags } from '@/shared/hooks/fragmentBuilder/useBuilderLayerFlags'
 
 interface BuilderLayerCellProps {
   layerKey: LinkKey

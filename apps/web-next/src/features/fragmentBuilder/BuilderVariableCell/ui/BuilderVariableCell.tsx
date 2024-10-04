@@ -1,29 +1,19 @@
 import { FC, useContext } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { BuilderContext } from '@/builder/BuilderContext'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
 import { LinkKey } from '@graph-state/core'
-import HashTagFillIcon from '@/shared/icons/fills/hashtag-fill.svg'
-import ToggleFillIcon from '@/shared/icons/fills/toggle-fill.svg'
-import BarHorizontalIcon from '@/shared/icons/bar-horizontal.svg'
-import TextFrameFillIcon from '@/shared/icons/fills/text-frame-fill.svg'
 import { builderVariableType } from '@fragments/fragments-plugin/performance'
 import { Cell } from '@/shared/ui/Cell'
 import { Button } from '@/shared/ui/Button'
+import { VariableIcon } from '@/shared/ui/VariableIcon'
 
 interface BuilderVariableCellProps {
   variableKey?: LinkKey
   className?: string
   actionsClassName?: string
   onClick?: () => unknown
-}
-
-export const VariableIconsMap = {
-  [builderVariableType.Number]: <HashTagFillIcon style={{ color: 'var(--primary)' }} width={22} height={22} />,
-  [builderVariableType.Boolean]: <ToggleFillIcon style={{ color: 'var(--primary)' }} width={22} height={22} />,
-  [builderVariableType.Object]: <BarHorizontalIcon width={18} height={18} />,
-  [builderVariableType.String]: <TextFrameFillIcon style={{ color: 'var(--primary)' }} width={22} height={22} />
 }
 
 export const BuilderVariableCell: FC<BuilderVariableCellProps> = ({
@@ -35,7 +25,7 @@ export const BuilderVariableCell: FC<BuilderVariableCellProps> = ({
   const { documentManager } = useContext(BuilderContext)
   const [variable] = useGraph(documentManager, variableKey)
   const [documentGraph] = useGraph(documentManager, documentManager.root)
-  const Icon = VariableIconsMap[variable.type]
+  const Icon = <VariableIcon type={variable.type} />
 
   const description = {
     [builderVariableType.Object]: !!variable?.fields?.length && `Fields: ${variable?.fields?.length}`

@@ -8,7 +8,7 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 import { $getSelection, $isElementNode, $isRangeSelection, FORMAT_ELEMENT_COMMAND } from 'lexical'
 import { mergeRegister } from '@lexical/utils'
 import { $getSelectionStyleValueForProperty, $patchStyleText } from '@lexical/selection'
-import { popoutsStore } from '@/app/store/popouts.store'
+import { popoutsStore } from '@/shared/store/popouts.store'
 import { $generateHtmlFromNodes, $generateNodesFromDOM } from '@lexical/html'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderManager'

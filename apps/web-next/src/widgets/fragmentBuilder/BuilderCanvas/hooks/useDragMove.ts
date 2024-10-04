@@ -1,7 +1,7 @@
-import { DragEvent } from '@/builder/views/BuilderEditable/widgets/BuilderCanvas/hooks/useCanvas'
-import { animatableValue } from '@/builder/utils/animatableValue'
+import { DragEvent } from './useCanvas'
+import { animatableValue } from '@/shared/utils/animatableValue'
 import { useContext } from 'react'
-import { BuilderContext } from '@/builder/BuilderContext'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 
 export const useDragMove = () => {
   const { canvasManager } = useContext(BuilderContext)

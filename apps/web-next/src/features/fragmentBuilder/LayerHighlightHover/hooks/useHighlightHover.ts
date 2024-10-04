@@ -1,6 +1,6 @@
 import { to, useSpring } from '@react-spring/web'
 import { useContext, useEffect } from 'react'
-import { BuilderContext } from '@/builder/BuilderContext'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
 
 const BORDER_SIZE = 1.5

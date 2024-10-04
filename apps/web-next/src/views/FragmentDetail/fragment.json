@@ -1,0 +1,209 @@
+{
+  "_type": "Fragment",
+  "_id": "g34gherhg3g",
+  "children": [
+    {
+      "_type": "Breakpoint",
+      "_id": "tablet",
+      "isPrimary": true,
+      "width": 768,
+      "height": 500,
+      "parentKey": "$$Fragment:g34gherhg3g",
+      "children": [
+        {
+          "_type": "Frame",
+          "_id": "09f0c7ed1ef8a",
+          "opacity": 1,
+          "visible": true,
+          "width": 100,
+          "height": 167.94913416481495,
+          "layoutSizingHorizontal": "Relative",
+          "layoutSizingVertical": "Fixed",
+          "layerMode": "flex",
+          "layerAlign": "center",
+          "layerDirection": "horizontal",
+          "layerDistribute": "center",
+          "borderType": "None",
+          "borderWidth": 1,
+          "borderColor": {
+            "r": 13,
+            "g": 196,
+            "b": 45,
+            "a": 1,
+            "_type": "Frame",
+            "_id": "09f0c7ed1ef8a.borderColor"
+          },
+          "solidFill": {
+            "r": 59,
+            "g": 198,
+            "b": 189,
+            "a": 1,
+            "_type": "Frame",
+            "_id": "09f0c7ed1ef8a.solidFill"
+          },
+          "parentKey": "$$Breakpoint:tablet",
+          "fillType": "Solid",
+          "children": [
+            {
+              "_type": "Frame",
+              "_id": "db947711832c3",
+              "opacity": 1,
+              "visible": true,
+              "width": 100,
+              "height": 100,
+              "layoutSizingHorizontal": "Fixed",
+              "layoutSizingVertical": "Fixed",
+              "layerMode": "none",
+              "layerAlign": "start",
+              "layerDirection": "horizontal",
+              "layerDistribute": "start",
+              "borderType": "None",
+              "borderWidth": 1,
+              "borderColor": {
+                "r": 13,
+                "g": 196,
+                "b": 45,
+                "a": 1,
+                "_type": "Frame",
+                "_id": "db947711832c3.borderColor"
+              },
+              "solidFill": {
+                "r": 122,
+                "g": 86,
+                "b": 196,
+                "a": 1,
+                "_type": "Frame",
+                "_id": "db947711832c3.solidFill"
+              },
+              "fillType": "Solid",
+              "parentKey": "$$Frame:09f0c7ed1ef8a",
+              "rotation": 0,
+              "left": 333.64457114535065,
+              "top": 55.72562631556332,
+              "positionType": "relative",
+              "overrides": [
+                {
+                  "_type": "$$Frame",
+                  "_id": "637b573c0a142"
+                },
+                {
+                  "_type": "$$Frame",
+                  "_id": "288aee7bdb8f3"
+                },
+                {
+                  "_type": "$$Frame",
+                  "_id": "79f8eac6d5ec3"
+                },
+                {
+                  "_type": "$$Frame",
+                  "_id": "23e710a21a52c"
+                }
+              ]
+            },
+            {
+              "_type": "Text",
+              "_id": "29d5b8d269786",
+              "content": "<p dir=\"ltr\"><span style=\"white-space: pre-wrap;\">dfsdaga</span></p><p dir=\"ltr\"><span style=\"white-space: pre-wrap;\">gsdgas</span></p>",
+              "opacity": 1,
+              "visible": true,
+              "width": 100,
+              "height": 100,
+              "layoutSizingHorizontal": "Fixed",
+              "layoutSizingVertical": "Fixed",
+              "rotation": 0,
+              "left": 0,
+              "top": 0,
+              "positionType": "relative",
+              "parentKey": "$$Frame:09f0c7ed1ef8a"
+            }
+          ],
+          "rotation": 0,
+          "left": -0.12778966822458443,
+          "top": 0,
+          "positionType": "absolute",
+          "overrides": [
+            {
+              "_type": "$$Frame",
+              "_id": "401e91df99a0b"
+            },
+            {
+              "_type": "$$Frame",
+              "_id": "911193eadd8ef"
+            },
+            {
+              "_type": "$$Frame",
+              "_id": "531dba08f1515"
+            },
+            {
+              "_type": "$$Frame",
+              "_id": "07acc04ce8e34"
+            }
+          ],
+          "layerGap": 59
+        }
+      ],
+      "layoutSizingHorizontal": "Fixed",
+      "layoutSizingVertical": "Fixed",
+      "overrides": [
+        {
+          "_type": "$$Breakpoint",
+          "_id": "965f4f6a75305"
+        },
+        {
+          "_type": "$$Breakpoint",
+          "_id": "5040cdd3b7d95"
+        },
+        {
+          "_type": "$$Breakpoint",
+          "_id": "0cd2464c6e07c"
+        },
+        {
+          "_type": "$$Breakpoint",
+          "_id": "7a48f0bc0664e"
+        }
+      ],
+      "left": 0,
+      "top": 0,
+      "positionType": "absolute"
+    }
+  ],
+  "props": [
+    {
+      "_type": "Variable",
+      "_id": "b19eb7bfeae4e",
+      "name": "opacity",
+      "type": "Number",
+      "defaultValue": 0.708,
+      "max": 1,
+      "step": 0.01,
+      "displayStepper": true,
+      "min": 1
+    },
+    {
+      "_type": "Variable",
+      "_id": "bgdseb7bfeae4e",
+      "name": "size",
+      "type": "Number",
+      "defaultValue": 10,
+      "max": 100,
+      "step": 1,
+      "displayStepper": true,
+      "min": 1
+    },
+    {
+      "_type": "Variable",
+      "_id": "1778b033cd6bd",
+      "name": "hasTrend",
+      "type": "Boolean"
+    },
+    {
+      "_type": "Variable",
+      "_id": "826b755e2612b",
+      "name": "buttonText",
+      "type": "String",
+      "defaultValue": "Забрать"
+    }
+  ],
+  "opacity": 1,
+  "visible": true
+}

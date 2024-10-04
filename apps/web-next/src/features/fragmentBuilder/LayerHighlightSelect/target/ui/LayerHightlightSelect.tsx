@@ -2,9 +2,9 @@ import { ElementRef, FC } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { SpringValue, animated, to } from '@react-spring/web'
-import { SELECTION_SIDES } from '@/builder/LayerHighlight/hooks/useLayerHighlightSelect'
-import { useBuilderSelection } from '@/builder/hooks/useBuilderSelection'
 import { sizing } from '@fragments/plugin-state'
+import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
+import { SELECTION_SIDES } from '@/features/fragmentBuilder/LayerHighlightSelect/target/hooks/useLayerHighlightSelect'
 
 interface LayerHighlightSelectProps {
   dragHandler: (target: string) => unknown

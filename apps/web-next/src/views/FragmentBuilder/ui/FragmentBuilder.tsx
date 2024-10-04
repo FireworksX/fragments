@@ -1,8 +1,7 @@
+'use client'
 import React, { FC, useContext, useEffect, useState } from 'react'
 import styles from './styles.module.css'
-import { useBuilderManager } from '@/builder/hooks/useBuilderManager'
-import { BuilderContext } from '@/builder/BuilderContext'
-import { BuilderTextEditorComposer } from '@/builder/views/BuilderEditable/widgets/BuilderTextEditor/BuilderTextEditorComposer'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { BuilderHighlight } from '@/widgets/fragmentBuilder/BuilderHighlight'
 import { BuilderHighlightHeaders } from '@/widgets/fragmentBuilder/BuilderHighlightHeaders'
 import { BuilderCanvas } from '@/widgets/fragmentBuilder/BuilderCanvas'
@@ -28,6 +27,8 @@ import { StackPanelColorPicker } from '@/features/popouts/StackPanelColorPicker'
 import { StackPanelCreateColor } from '@/features/popouts/StackPanelCreateColor'
 import { StackPanelCssOverride } from '@/features/popouts/StackPanelCssOverride'
 import { DisplayBreakpoints } from '@/widgets/fragmentBuilder/DisplayBreakpoints'
+import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderManager'
+import { BuilderTextEditorComposer } from '@/features/fragmentBuilder/BuilderTextEditor'
 
 interface FragmentBuilderProps {
   className?: string

@@ -3,7 +3,7 @@ import { createConstants } from '@fragments/utils'
 import { LinkKey } from '@graph-state/core'
 import { useGraph } from '@graph-state/react'
 import { useContext } from 'react'
-import { BuilderContext } from '@/builder/BuilderContext'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 
 export const builderViews = createConstants('preview', 'edit')
 export const builderOptions = createConstants('focus')

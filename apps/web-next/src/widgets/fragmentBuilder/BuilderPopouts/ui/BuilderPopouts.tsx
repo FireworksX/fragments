@@ -2,7 +2,7 @@ import React, { createContext, FC, PropsWithChildren } from 'react'
 import cn from 'classnames'
 import { useGraph } from '@graph-state/react'
 import styles from './styles.module.css'
-import { popoutsStore } from '@/app/store/popouts.store'
+import { popoutsStore } from '@/shared/store/popouts.store'
 
 interface BuilderPopoutsProps extends PropsWithChildren {
   className?: string

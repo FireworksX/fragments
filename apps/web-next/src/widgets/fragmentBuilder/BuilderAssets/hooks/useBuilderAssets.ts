@@ -1,7 +1,7 @@
-import { popoutsStore } from '@/app/store/popouts.store'
-import { useBuilderSelection } from '@/builder/hooks/useBuilderSelection'
+import { popoutsStore } from '@/shared/store/popouts.store'
 import { useBuilderAssetsColors } from '@/shared/hooks/fragmentBuilder/useBuilderAssetsColors'
 import { useBuilderAssetsCss } from '@/shared/hooks/fragmentBuilder/useBuilderAssetsCss'
+import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 
 export const useBuilderAssets = () => {
   const { selection, selectionGraph } = useBuilderSelection()

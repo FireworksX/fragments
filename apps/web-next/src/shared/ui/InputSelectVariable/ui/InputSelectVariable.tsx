@@ -1,12 +1,12 @@
 import { FC, PropsWithChildren, ReactNode } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import Checkerboard from '@/app/svg/checkerboard.svg'
 import { animated } from '@react-spring/web'
 import Close from '@/shared/icons/close.svg'
 import FilterFillIcon from '@/shared/icons/fills/filter-fill.svg'
 import { builderVariableType } from '@fragments/fragments-plugin/performance'
 import { Touchable } from '@/shared/ui/Touchable'
+import { VariableIcon } from '@/shared/ui/VariableIcon'
 
 interface InputSelectVariableProps extends PropsWithChildren {
   type: keyof typeof builderVariableType
@@ -27,9 +27,9 @@ export const InputSelectVariable: FC<InputSelectVariableProps> = ({
   onReset
 }) => {
   const Icon =
-    kind === 'variable' ? null : (
-      // todo: fsd
-      // VariableIconsMap[type]
+    kind === 'variable' ? (
+      <VariableIcon type={type} />
+    ) : (
       <FilterFillIcon style={{ color: 'var(--primary)' }} width={22} height={22} />
     )
 

@@ -1,6 +1,6 @@
 import { useContext, useMemo } from 'react'
 import { useGraph } from '@graph-state/react'
-import { BuilderContext } from '@/builder/BuilderContext'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { layerMode } from '@fragments/plugin-state'
 import { to } from '@react-spring/web'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'

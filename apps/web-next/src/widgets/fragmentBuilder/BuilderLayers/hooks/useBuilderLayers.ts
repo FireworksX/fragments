@@ -1,5 +1,5 @@
 import { useCallback, useContext, useState } from 'react'
-import { BuilderContext } from '@/builder/BuilderContext'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph, useGraphFields, useGraphStack } from '@graph-state/react'
 import { LinkKey } from '@graph-state/core'
 import { nodes } from '@fragments/plugin-state'

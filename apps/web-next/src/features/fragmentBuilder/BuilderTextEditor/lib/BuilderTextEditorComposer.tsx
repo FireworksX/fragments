@@ -1,7 +1,7 @@
 import { InitialConfigType, LexicalComposer } from '@lexical/react/LexicalComposer'
 import { FC, PropsWithChildren } from 'react'
-import { ExtendedTextNode } from '@/builder/views/BuilderEditable/widgets/BuilderTextEditor/nodes/ExtendedTextNode'
 import { ParagraphNode, TextNode } from 'lexical'
+import { ExtendedTextNode } from './nodes/ExtendedTextNode'
 
 interface BuilderTextEditorComposerProps extends PropsWithChildren {}
 

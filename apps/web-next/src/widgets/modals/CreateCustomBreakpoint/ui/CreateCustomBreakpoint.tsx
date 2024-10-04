@@ -7,8 +7,7 @@ import { ModalContainer } from '@/shared/ui/ModalContainer'
 import { Button } from '@/shared/ui/Button'
 import { InputText } from '@/shared/ui/InputText'
 import { InputNumber } from '@/shared/ui/InputNumber'
-// todo: fsd
-import { modalStore } from '@/app/store/modal.store'
+import { modalStore } from '@/shared/store/modal.store'
 
 interface CreateCustomBreakpointProps {
   className?: string

@@ -1,5 +1,4 @@
 import { Field } from 'react-hook-form'
-import { capitalize } from '@/app/utils/capitalize'
 import { useContext } from 'react'
 import { BuilderContext } from '@/builder/BuilderContext'
 import { useBuilderVariableCreator } from '@/builder/views/BuilderEditable/widgets/BuilderVariables/hooks/useBuilderVariableCreator'
@@ -8,8 +7,7 @@ import { useBuilderVariables } from '@/builder/views/BuilderEditable/widgets/Bui
 import { LinkKey } from '@graph-state/core'
 import { ResultSetter } from '@/builder/hooks/useLayerInvoker'
 import { animatableValue } from '@/builder/utils/animatableValue'
-import { popoutsStore } from '@/app/store/popouts.store'
-import { stackVariableTransformName } from '@/builder/StackCollector/components/variables/StackVariableTransform/StackVariableTransform'
+// import { stackVariableTransformName } from '@/builder/StackCollector/components/variables/StackVariableTransform/StackVariableTransform'
 import { isComputedValueLink } from '@/builder/utils/isComputedValueLink'
 
 export type BuilderFieldVariable = ReturnType<ReturnType<typeof useBuilderFieldVariable>>
@@ -64,20 +62,20 @@ export const useBuilderFieldVariable = (layer: Field) => {
   const openTransform = ({ key, value }) => {
     const valueOptions = variableFields[key]?.valueOptions ?? {}
 
-    popoutsStore.open(stackVariableTransformName, {
-      description: key,
-      position: 'right',
-      initial: true,
-      context: {
-        fieldKey: key,
-        value,
-        valueReferenceOptions: valueOptions,
-        onReset: () => {
-          handleReset(key)
-          popoutsStore.close()
-        }
-      }
-    })
+    // popoutsStore.open(stackVariableTransformName, {
+    //   description: key,
+    //   position: 'right',
+    //   initial: true,
+    //   context: {
+    //     fieldKey: key,
+    //     value,
+    //     valueReferenceOptions: valueOptions,
+    //     onReset: () => {
+    //       handleReset(key)
+    //       popoutsStore.close()
+    //     }
+    //   }
+    // })
   }
 
   const handleConnectVariable = ({ key, selection, setter }) => {

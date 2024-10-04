@@ -2,8 +2,8 @@ import { useContext } from 'react'
 import { BuilderContext } from '@/builder/BuilderContext'
 import { useGraph } from '@graph-state/react'
 import { variableType } from '@fragments/plugin-state'
-import { useBuilderVariableCreator } from '@/builder/views/BuilderEditable/widgets/BuilderVariables/hooks/useBuilderVariableCreator'
-import { useBuilderVariableTransforms } from '@/builder/hooks/useBuilderVariableTransforms'
+import { useBuilderVariableCreator } from '@/shared/hooks/fragmentBuilder/useBuilderVariableCreator'
+import { useBuilderVariableTransforms } from '@/shared/hooks/fragmentBuilder/useBuilderVariableTransforms'
 
 export const useBuilderVariables = () => {
   const { documentManager } = useContext(BuilderContext)

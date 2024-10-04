@@ -1,8 +1,7 @@
 import { FC, useContext } from 'react'
 import { useBuilderText } from '../hooks/useBuilderText'
 import { useGraph } from '@graph-state/react'
-import { BuilderContext } from '@/builder/BuilderContext'
-import { useBuilderSelection } from '@/builder/hooks/useBuilderSelection'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useDisplayColor } from '@/shared/hooks/fragmentBuilder/useDisplayColor'
 import { Panel } from '@/shared/ui/Panel'
 import { Button } from '@/shared/ui/Button'
@@ -12,6 +11,7 @@ import { InputSelect } from '@/shared/ui/InputSelect'
 import { InputNumber } from '@/shared/ui/InputNumber'
 import { Stepper } from '@/shared/ui/Stepper'
 import { TabsSelector } from '@/shared/ui/TabsSelector'
+import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 
 interface BuilderTextProps {
   className?: string

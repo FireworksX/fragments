@@ -12,7 +12,7 @@ import { builderNodes } from '@fragments/fragments-plugin'
 import Panel from '@/builder/components/Panel/Panel'
 import ControlRow from '@/builder/components/ControlRow/ControlRow'
 import ControlRowWide from '@/builder/components/ControlRow/components/ControlRowWide/ControlRowWide'
-import { BuilderContext } from '@/builder/BuilderContext'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 
 interface BuilderLinkProps {
   className?: string

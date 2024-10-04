@@ -2,12 +2,12 @@ import { ElementRef, MutableRefObject, useCallback, useContext, useEffect, useRe
 import { useDrag, useGesture } from '@use-gesture/react'
 import { animated, SpringValue, useSpring } from '@react-spring/web'
 import { useGraph } from '@graph-state/react'
-import { BuilderContext } from '@/builder/BuilderContext'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useMeasure } from 'react-use'
-import { useBuilderManager } from '@/builder/hooks/useBuilderManager'
 import { definitions, nodes } from '@fragments/plugin-state'
 import { useDragMove } from './useDragMove'
 import { useDragCollisions } from './useDragCollisions'
+import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderManager'
 
 const SCALE = {
   min: 0.25,
@@ -18,6 +18,8 @@ export type DragEvent = Parameters<Parameters<typeof useDrag>[0]>[0]
 
 export const useCanvas = () => {
   const { documentManager, builderManager, canvasManager } = useContext(BuilderContext)
+
+  console.log(documentManager)
   const { updateParams, isTextEditing } = useBuilderManager()
   const [canvas] = useGraph(canvasManager)
   const pointerRef = useRef<ElementRef<'div'>>(null)

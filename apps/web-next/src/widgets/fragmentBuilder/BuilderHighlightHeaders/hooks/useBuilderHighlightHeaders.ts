@@ -1,9 +1,8 @@
 import { useContext } from 'react'
-import { BuilderContext } from '@/builder/BuilderContext'
-import { useBreakpoints } from '@/builder/views/BuilderEditable/widgets/DisplayBreakpoints/hooks/useBreakpoints'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { to, useSprings } from '@react-spring/web'
-// todo: fsd
-import { modalStore } from '@/app/store/modal.store'
+import { modalStore } from '@/shared/store/modal.store'
+import { useBreakpoints } from '@/shared/hooks/fragmentBuilder/useBreakpoints'
 
 export const useBuilderHighlightHeaders = () => {
   const { documentManager } = useContext(BuilderContext)

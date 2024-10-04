@@ -1,7 +1,7 @@
 import { FC, ReactNode, useState } from 'react'
 import styles from './styles.module.css'
-import AsideBar, { AsideBarProps } from '@/builder/components/AsideBar'
 import { TabsSelector, TabsSelectorItem } from '@/shared/ui/TabsSelector'
+import { AsideBar, AsideBarProps } from '@/shared/ui/AsideBar'
 
 const modes: TabsSelectorItem[] = [
   {

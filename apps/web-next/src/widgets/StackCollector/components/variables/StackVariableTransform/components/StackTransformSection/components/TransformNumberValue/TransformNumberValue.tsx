@@ -6,7 +6,7 @@ import ControlRow from '@/builder/components/ControlRow/ControlRow'
 import InputNumber from '@/app/components/InputNumber/InputNumber'
 import Stepper from '@/app/components/Stepper/Stepper'
 import Slider from '@/app/components/Slider/Slider'
-import { animatableValue } from '@/builder/utils/animatableValue'
+import { animatableValue } from '@/shared/utils/animatableValue'
 
 interface TransformNumberValueProps {
   value: SpringValue<number> | number

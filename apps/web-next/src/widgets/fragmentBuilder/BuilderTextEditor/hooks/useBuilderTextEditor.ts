@@ -1,15 +1,11 @@
 import { ElementRef, useCallback, useContext, useEffect, useRef } from 'react'
-import { BuilderContext } from '@/builder/BuilderContext'
-import { useBuilderManager } from '@/builder/hooks/useBuilderManager'
-import { useBuilderSelection } from '@/builder/hooks/useBuilderSelection'
-import { useGraph } from '@graph-state/react'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { to, useSpring } from '@react-spring/web'
-import { ReactEditor } from 'slate-react'
-import { getNodePosition } from '@/app/utils/getNodePosition'
-import { findRefNode } from '@/builder/utils/findRefNode'
 import { builderNodes } from '@fragments/fragments-plugin/performance'
-import { extractAnimatableValues } from '@/builder/utils/extractAnimatableValues'
 import { usePrevious } from 'react-use'
+import { extractAnimatableValues } from '@/shared/utils/extractAnimatableValues'
+import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderManager'
+import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 
 export const useBuilderTextEditor = () => {
   const { documentManager } = useContext(BuilderContext)

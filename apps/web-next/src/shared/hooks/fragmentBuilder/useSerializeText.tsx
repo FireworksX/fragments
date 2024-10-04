@@ -1,6 +1,6 @@
 import escapeHtml from 'escape-html'
 import { isObject } from '@fragments/utils'
-import { useDisplayColor } from '@/builder/hooks/useDisplayColor'
+import { useDisplayColor } from '@/shared/hooks/fragmentBuilder/useDisplayColor'
 
 export const useSerializeText = () => {
   const { getColor } = useDisplayColor()

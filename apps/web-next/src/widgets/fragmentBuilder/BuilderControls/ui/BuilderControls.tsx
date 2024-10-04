@@ -1,9 +1,9 @@
 import { createContext, FC, PropsWithChildren, ReactNode, useContext } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { useBuilderSelection } from '@/builder/hooks/useBuilderSelection'
 import { builderNodes } from '@fragments/fragments-plugin/performance'
 import { AsideBar, AsideBarProps } from '@/shared/ui/AsideBar'
+import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 
 interface ControlsProps extends AsideBarProps {
   className?: string

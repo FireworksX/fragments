@@ -1,6 +1,6 @@
 import { useDrag } from '@use-gesture/react'
 import { useContext, useRef } from 'react'
-import { BuilderContext } from '@/builder/BuilderContext'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
 
 export const useBuilderPreviewContainer = () => {

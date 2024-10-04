@@ -2,10 +2,10 @@ import { useGraph } from '@graph-state/react'
 import { useContext } from 'react'
 import { builderSizing } from '@fragments/fragments-plugin'
 import { layerMode, nodes } from '@fragments/plugin-state'
-import { animatableValue } from '@/builder/utils/animatableValue'
-import { BuilderContext } from '@/builder/BuilderContext'
-import { useBuilderSelection } from '@/builder/hooks/useBuilderSelection'
+import { animatableValue } from '@/shared/utils/animatableValue'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
+import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 
 export const useBuilderSize = () => {
   const { documentManager } = useContext(BuilderContext)

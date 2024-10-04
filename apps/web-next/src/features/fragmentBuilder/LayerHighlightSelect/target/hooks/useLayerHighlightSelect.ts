@@ -1,13 +1,13 @@
 import { to, useSpring } from '@react-spring/web'
 import { useContext, useEffect } from 'react'
-import { BuilderContext } from '@/builder/BuilderContext'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
-import { useBuilderManager } from '@/builder/hooks/useBuilderManager'
 import { useDrag } from '@use-gesture/react'
-import { animatableValue } from '@/builder/utils/animatableValue'
+import { animatableValue } from '@/shared/utils/animatableValue'
 import { createConstants } from '@fragments/utils'
 import { sizing } from '@fragments/plugin-state'
 import { extractAnimatableValues } from '@/shared/utils/extractAnimatableValues'
+import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderManager'
 
 const BORDER_SIZE = 1.5
 const initialStyle = {

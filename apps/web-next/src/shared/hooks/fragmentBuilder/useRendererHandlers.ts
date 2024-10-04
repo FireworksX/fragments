@@ -1,11 +1,9 @@
 import { OnClickSelectorOptions } from '@/app/builder/[fragmentId]/widgets/Builder/hooks/useBuilderLayerRefs'
-import { builderModes, useBuilderManager } from '@/builder/hooks/useBuilderManager'
 import { useCallback, useContext } from 'react'
-import { BuilderContext } from '@/builder/BuilderContext'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { builderNodes } from '@fragments/fragments-plugin/performance'
-import { findRefNode } from '@/builder/utils/findRefNode'
-import { useGraph } from '@graph-state/react'
 import { debounce } from '@fragments/utils'
+import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderManager'
 
 export const useRendererHandlers = () => {
   const { documentManager, builderManager } = useContext(BuilderContext)

@@ -5,7 +5,7 @@ import Modal from '@/app/components/Modal/Modal'
 import Button from '@/app/components/Button'
 import InputText from '@/app/components/InputText/InputText'
 import ModalContainer from '@/app/components/ModalContainer/ModalContainer'
-import { modalStore } from '@/app/store/modal.store'
+import { modalStore } from '@/shared/store/modal.store'
 import { useGraph } from '@graph-state/react'
 
 interface CreateComponentModalProps {

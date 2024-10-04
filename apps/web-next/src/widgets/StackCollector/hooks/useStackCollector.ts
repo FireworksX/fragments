@@ -1,7 +1,7 @@
 import { ComponentType, useCallback, useEffect, useMemo } from 'react'
 import { useSpringRef, useTransition } from '@react-spring/web'
 import { useGraph } from '@graph-state/react'
-import { popoutsStore } from '@/app/store/popouts.store'
+import { popoutsStore } from '@/shared/store/popouts.store'
 
 export type StackPanel<TProps = any> = ComponentType<TProps & { name: string; title: string }>
 

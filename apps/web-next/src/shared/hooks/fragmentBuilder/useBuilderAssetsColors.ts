@@ -1,9 +1,9 @@
 import { Color } from 'react-color'
-import { popoutsStore } from '@/app/store/popouts.store'
+import { popoutsStore } from '@/shared/store/popouts.store'
 import { useContext } from 'react'
 import { builderNodes, createSolidPaintStyle } from '@fragments/fragments-plugin/performance'
 import { useGraphFields, useGraphStack } from '@graph-state/react'
-import { BuilderContext } from '@/builder/BuilderContext'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 
 export interface BuilderAssetsColorsOptions extends Partial<OpenPopoutOptions<'colorPicker'>> {
   initialColor?: Color

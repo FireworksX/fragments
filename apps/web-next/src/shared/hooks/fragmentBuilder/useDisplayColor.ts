@@ -1,7 +1,7 @@
 import { Color } from 'react-color'
 import { useCallback, useContext } from 'react'
 import { builderNodes } from '@fragments/fragments-plugin/performance'
-import { BuilderContext } from '@/builder/BuilderContext'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { isGraphOrKey, LinkKey } from '@graph-state/core'
 import { displayColorInterpolate } from '@/shared/utils/displayColor'
 

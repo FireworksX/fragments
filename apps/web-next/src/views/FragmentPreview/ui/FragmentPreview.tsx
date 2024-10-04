@@ -1,7 +1,8 @@
+'use client'
 import { FC, useContext } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { BuilderContext } from '@/builder/BuilderContext'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { BuilderPreviewContainer } from '@/widgets/fragmentBuilder/BuilderPreviewContainer'
 import { Fragment } from '@/widgets/renderer/Fragment/Fragment'
 
