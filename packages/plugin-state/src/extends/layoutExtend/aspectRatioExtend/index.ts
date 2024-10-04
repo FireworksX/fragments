@@ -1,6 +1,7 @@
 import { ExtenderPayload } from "@/types";
 import { valueSetter } from "@/shared/valueSetter.ts";
 import { isValue } from "@fragments/utils";
+import { animatableValue } from "@/shared/animatableValue.ts";
 
 export const aspectRatioExtend = ({
   state,
@@ -12,8 +13,8 @@ export const aspectRatioExtend = ({
   const aspectRatioSetter = valueSetter(state, graphKey, "aspectRatio");
 
   const syncSize = () => {
-    const width = state.resolveValue(graph, "width");
-    const height = state.resolveValue(graph, "height");
+    const width = animatableValue(state.resolveValue(graph, "width"));
+    const height = animatableValue(state.resolveValue(graph, "height"));
     const nextValue = !isSynced() ? height / width : null;
 
     aspectRatioSetter(nextValue);

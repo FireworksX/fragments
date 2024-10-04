@@ -22,9 +22,7 @@ export const rectExtend: Extender = ({ graph, graphKey, state }) => {
     rect,
     // Позиция относительно Breakpoint
     absoluteRect: () => {
-      const allParents = (
-        state.resolve(graphKey)?.getAllParents?.() ?? []
-      ).filter((parent) => parent._type !== nodes.Breakpoint);
+      const allParents = state.resolve(graphKey)?.getAllParents?.() ?? [];
 
       return allParents.reduce((acc, parent) => {
         const parentRect = animatableValue(parent?.rect?.());

@@ -13,6 +13,7 @@ interface LayerHighlightSelectProps {
     y: SpringValue<number>
     width: SpringValue<number>
     height: SpringValue<number>
+    borderWidth: SpringValue<number>
   }
   className?: string
 }
@@ -31,6 +32,12 @@ export const LayerHighlightSelect: FC<LayerHighlightSelectProps> = ({ className,
 
   return (
     <animated.div className={cn(styles.root, className)} style={selectStyles} data-testid='LayerHightlightSelect'>
+      <animated.div
+        key='focus'
+        className={styles.highlight}
+        style={{ borderWidth: selectStyles.borderWidth, position: 'absolute', inset: 0 }}
+      />
+
       {allowResizeVertical && (
         <animated.div
           {...dragHandler([SELECTION_SIDES.top])}

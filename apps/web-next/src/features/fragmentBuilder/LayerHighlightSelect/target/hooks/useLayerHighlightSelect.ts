@@ -54,8 +54,8 @@ export const useLayerHighlightSelect = () => {
     canvasManager.setResizing(dragging)
 
     if (first) {
-      const parentRectProps = documentManager.constraints.fromProperties(focusNode.getParent())
       const targetRectProps = documentManager.constraints.fromProperties(focusNode)
+      const parentRect = animatableValue(focusNode.getParent()?.rect?.() ?? {})
       const targetRect = animatableValue(focusNode?.rect?.() ?? {})
       const width = animatableValue(focusNode.resolveField('width'))
       const height = animatableValue(focusNode.resolveField('height'))
@@ -63,14 +63,13 @@ export const useLayerHighlightSelect = () => {
       memo.from = {
         getWidth: move => {
           if (targetRectProps.widthType === sizing.Relative) {
-            move = (move / parentRectProps.width) * 100
+            move = (move / parentRect.width) * 100
           }
-
           return move / scale + (memo?.from?.width ?? 0)
         },
         getHeight: move => {
           if (targetRectProps.heightType === sizing.Relative) {
-            move = (move / parentRectProps.height) * 100
+            move = (move / parentRect.height) * 100
           }
           return move / scale + (memo?.from?.height ?? 0)
         },

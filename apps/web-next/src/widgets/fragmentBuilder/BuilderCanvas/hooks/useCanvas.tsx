@@ -18,8 +18,6 @@ export type DragEvent = Parameters<Parameters<typeof useDrag>[0]>[0]
 
 export const useCanvas = () => {
   const { documentManager, builderManager, canvasManager } = useContext(BuilderContext)
-
-  console.log(documentManager)
   const { updateParams, isTextEditing } = useBuilderManager()
   const [canvas] = useGraph(canvasManager)
   const pointerRef = useRef<ElementRef<'div'>>(null)
