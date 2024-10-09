@@ -1,13 +1,10 @@
-import { to } from '@react-spring/web'
 import { Graph } from '@graph-state/core'
+import { extractAnimatableValues } from '@/shared/utils/extractAnimatableValues'
+import { animatableValue } from '@/shared/utils/animatableValue'
 
 export const useSizeStyles = (graph: Graph) => {
   if (!graph) return {}
 
   const graphRect = graph?.rect?.() ?? {}
-
-  return {
-    width: to([graphRect], rect => rect.width),
-    height: to([graphRect], rect => rect.height)
-  }
+  return extractAnimatableValues(graphRect, ['width', 'height'])
 }

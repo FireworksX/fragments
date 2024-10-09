@@ -6,11 +6,12 @@ import { Dropdown } from '@/shared/ui/Dropdown'
 import { DropdownGroup } from '@/shared/ui/DropdownGroup'
 import { DropdownOption } from '@/shared/ui/DropdownOption'
 import { Touchable } from '@/shared/ui/Touchable'
+import { SpringValue, animated } from '@react-spring/web'
 
 interface HeaderBreakpointProps {
   className?: string
   name?: string
-  width?: number
+  width?: number | SpringValue<number>
   activeWidths?: number[]
   onClickBreakpoint?: (name: string, width: number) => void | boolean
   onClickCustom?: () => void
@@ -44,7 +45,7 @@ const HeaderBreakpoint: FC<HeaderBreakpointProps> = ({
   return (
     <div className={cn(styles.root, className)}>
       <div className={styles.title}>
-        {name} <span className={styles.width}>{width}</span>
+        {name} <animated.span className={styles.width}>{width}</animated.span>
       </div>
       {onClickBreakpoint && (
         <Dropdown

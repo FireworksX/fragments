@@ -1,12 +1,13 @@
 {
   "_type": "Fragment",
   "_id": "g34gherhg3g",
+  "currentBreakpoint": "Breakpoint:3dafc451d981e",
   "children": [
     {
       "_type": "Breakpoint",
       "_id": "tablet",
       "isPrimary": true,
-      "width": 768,
+      "minWidth": 768,
       "height": 500,
       "parentKey": "$$Fragment:g34gherhg3g",
       "children": [
@@ -41,7 +42,7 @@
             "_type": "Frame",
             "_id": "09f0c7ed1ef8a.solidFill"
           },
-          "parentKey": "$$Breakpoint:tablet",
+          "parentKey": "$$Breakpoint:tablet2",
           "fillType": "Solid",
           "children": [
             {
@@ -159,8 +160,8 @@
           "overflow": "hidden"
         }
       ],
-      "layoutSizingHorizontal": "Fixed",
-      "layoutSizingVertical": "Fixed",
+      "layoutSizingHorizontal": "Relative",
+      "layoutSizingVertical": "Relative",
       "overrides": [
         {
           "_type": "$$Breakpoint",
@@ -192,7 +193,7 @@
         "_type": "Breakpoint",
         "_id": "tablet",
         "isPrimary": true,
-        "width": 768,
+        "minWidth": 768,
         "height": 500,
         "parentKey": "$$Fragment:g34gherhg3g",
         "children": [
@@ -345,8 +346,8 @@
             "overflow": "hidden"
           }
         ],
-        "layoutSizingHorizontal": "Fixed",
-        "layoutSizingVertical": "Fixed",
+        "layoutSizingHorizontal": "Relative",
+        "layoutSizingVertical": "Relative",
         "overrides": [
           {
             "_type": "$$Breakpoint",
@@ -627,7 +628,7 @@
           "parentKey": "$$Breakpoint:3dafc451d981e"
         }
       ],
-      "width": 320,
+      "minWidth": 320,
       "name": "Mobile",
       "left": 818
     }

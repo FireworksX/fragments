@@ -8,6 +8,7 @@ export const sizeExtend = ({
   state,
   graphKey,
   getValue,
+  graph,
 }: ExtenderPayload<unknown>) => {
   const widthSetter = valueSetter(state, graphKey, "width");
   const heightSetter = valueSetter(state, graphKey, "height");

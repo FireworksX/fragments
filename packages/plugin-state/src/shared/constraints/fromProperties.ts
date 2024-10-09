@@ -29,6 +29,10 @@ export const fromProperties = (state: GraphState, graph: Graph) => {
   const aspectRatio = graph.resolveField("aspectRatio");
   const centerX = graph.resolveField("centerX");
   const centerY = graph.resolveField("centerY");
+  const minHeight = graph.resolveField("minHeight");
+  const maxHeight = graph.resolveField("maxHeight");
+  const minWidth = graph.resolveField("minWidth");
+  const maxWidth = graph.resolveField("maxWidth");
   const relativeOffset = isRelative
     ? getDOMOffset(state.keyOfEntity(graph))
     : {};
@@ -63,5 +67,9 @@ export const fromProperties = (state: GraphState, graph: Graph) => {
     aspectRatio: constraints.aspectRatio || null,
     centerAnchorX,
     centerAnchorY,
+    minHeight,
+    maxHeight,
+    minWidth,
+    maxWidth,
   };
 };

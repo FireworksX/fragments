@@ -5,6 +5,8 @@ export const extractAnimatableValues = (
   target: SpringValue | Interpolation | Record<string, unknown>,
   fields?: string[]
 ) => {
+  if (!target) return null
+
   if (!fields) {
     fields = Object.keys(animatableValue(target))
   }

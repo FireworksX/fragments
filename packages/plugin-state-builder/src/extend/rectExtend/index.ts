@@ -1,8 +1,4 @@
 import { Extender } from "@/types";
-import { fromProperties } from "@/shared/constraints/fromProperties.ts";
-import { to } from "@react-spring/core";
-import { animatableValue } from "@/shared/animatableValue.ts";
-import { nodes } from "@fragments/plugin-state";
 import { createCachedInterpolate } from "@/shared/cachedInterpolate.ts";
 
 const RECT_FIELD_KEYS = [
@@ -27,7 +23,11 @@ export const rectExtend: Extender = ({
   const cachedAbsoluteRect = createCachedInterpolate();
 
   const rect = () => {
-    return cachedRect(RECT_FIELD_KEYS.map(resolveField), originalRectMethod);
+    const parentRect = state.resolve(graphKey)?.getParent?.()?.rect();
+    return cachedRect(
+      RECT_FIELD_KEYS.map(resolveField).concat(parentRect),
+      originalRectMethod
+    );
   };
 
   const absoluteRect = () => {

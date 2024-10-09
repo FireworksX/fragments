@@ -40,6 +40,10 @@ export const FragmentDetail: FC<FragmentDetailProps> = ({ builder, preview }) =>
   const { fragment } = useParams()
   const [, view] = fragment || []
 
+  useEffect(() => {
+    fragmentState.resolve(fragmentState).setRenderTarget(view === 'edit' ? 'canvas' : 'document')
+  }, [view])
+
   return (
     <BuilderContext.Provider value={{ documentManager: fragmentState, canvasManager, previewManager, builderManager }}>
       {view === 'edit' ? builder : preview}

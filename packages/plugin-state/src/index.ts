@@ -33,6 +33,7 @@ const plugin: Plugin = (state: GraphState<StateEntity>, overrides) => {
         fragmentExtend,
         baseExtend,
         childrenExtend,
+        rectExtend,
         sceneExtend,
       ]),
       [nodes.Breakpoint]: collectExtends([

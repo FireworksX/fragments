@@ -1,8 +1,7 @@
 import { Extender } from "@/types";
-import { nodes } from "@/definitions.ts";
 import { animatableValue } from "@/shared/animatableValue.ts";
 
-export const rectExtend: Extender = ({ graph, graphKey, state }) => {
+export const rectExtend: Extender = ({ graph, graphKey, state, getValue }) => {
   const rect = () => {
     const parentRect =
       animatableValue(state.resolve(graphKey)?.getParent()?.rect?.()) ?? {};
@@ -18,7 +17,6 @@ export const rectExtend: Extender = ({ graph, graphKey, state }) => {
 
   return {
     ...graph,
-    // Позиция относительно родителя
     rect,
     // Позиция относительно Breakpoint
     absoluteRect: () => {

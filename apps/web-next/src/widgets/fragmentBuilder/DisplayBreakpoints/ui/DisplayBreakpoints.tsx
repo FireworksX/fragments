@@ -9,7 +9,7 @@ interface BuilderDisplayBreakpointsProps {
 }
 
 const DisplayBreakpoints: FC<BuilderDisplayBreakpointsProps> = ({ className }) => {
-  const { breakpointValues } = useBreakpoints()
+  const { breakpointValues, breakpointKeys } = useBreakpoints()
 
   return (
     <div className={cn(styles.root, className)}>

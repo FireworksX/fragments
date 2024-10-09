@@ -7,25 +7,26 @@ import { layoutExtend } from "@/extend/layoutExtend";
 import { addStatic } from "@/static";
 import { rectExtend } from "@/extend/rectExtend";
 import { frameExtend } from "@/extend/nodes/frameExtend";
+import { fragmentExtend } from "@/extend/nodes/fragmentExtend";
 
 export const pluginStateBuilder: Plugin = (state, overrides) => {
   addStatic(state);
 
   extendPlugin<typeof state>(
     {
-      // [nodes.Fragment]: collectExtends([
-      //   fragmentExtend,
-      //   baseExtend,
-      //   childrenExtend,
-      //   sceneExtend,
-      // ]),
+      [nodes.Fragment]: collectExtends([
+        fragmentExtend,
+        // baseExtend,
+        // childrenExtend,
+        // sceneExtend,
+        rectExtend,
+      ]),
       [nodes.Breakpoint]: collectExtends([
         // breakpointExtend,
         // baseExtend,
         // childrenExtend,
         // cloneExtend,
         rectExtend,
-
         positionExtend,
       ]),
       [nodes.Frame]: collectExtends([

@@ -6,8 +6,10 @@ import {
   ScreenNode,
   TextNode,
 } from "./nodes";
-import { constrain, nodes } from "@/definitions.ts";
+import { constrain, nodes, renderTarget } from "@/definitions.ts";
 import { Graph, GraphState, LinkKey } from "@graph-state/core";
+
+export type RenderTarget = keyof typeof renderTarget;
 
 // export interface ComponentSetNode extends BaseProps, ChildrenRelatedProps<ComponentNode> {
 //   _type: typeof nodes.ComponentSet

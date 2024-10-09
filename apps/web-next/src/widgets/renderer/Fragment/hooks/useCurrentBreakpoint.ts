@@ -1,29 +1,17 @@
-import { useMeasure } from 'react-use'
-import { GraphState } from '@graph-state/core'
-import { useGraphFields, useGraphStack } from '@graph-state/react'
-import { nodes } from '@fragments/plugin-state'
-import { useMemo } from 'react'
-import { animatableValue } from '@/shared/utils/animatableValue'
+import { useGraph } from '@graph-state/react'
+import { renderTarget } from '@fragments/plugin-state'
+import { useContext } from 'react'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 
-export const useCurrentBreakpoint = (documentManager: GraphState) => {
-  const breakpoints = useGraphFields(documentManager, nodes.Breakpoint)
-  const [containerRef, containerRect] = useMeasure()
-  const breakpointValues = useGraphStack(documentManager, breakpoints)
-
-  const currentBreakpoint = useMemo(() => {
-    const sortedBreakpoints = breakpointValues.toSorted((a, b) => {
-      return animatableValue(b.width) - animatableValue(a.width)
-    })
-
-    return (
-      sortedBreakpoints.find(breakpoint => animatableValue(breakpoint.width) <= containerRect.width) ??
-      sortedBreakpoints.at(-1)
-    )
-  }, [containerRect.width, breakpointValues])
+export const useCurrentBreakpoint = () => {
+  const { documentManager } = useContext(BuilderContext)
+  const [fragment] = useGraph(documentManager, documentManager.key)
+  const [currentBreakpoint] = useGraph(documentManager, fragment.currentBreakpoint)
 
   return {
-    containerRef,
     currentBreakpoint,
-    currentBreakpointLink: documentManager.keyOfEntity(currentBreakpoint)
+    isCanvas: fragment?.renderTarget === renderTarget.canvas,
+    fragmentKey: documentManager.key,
+    fragmentRect: fragment
   }
 }

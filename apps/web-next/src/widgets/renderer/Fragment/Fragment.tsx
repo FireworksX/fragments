@@ -1,18 +1,28 @@
 import { FC } from 'react'
 import { GraphState } from '@graph-state/core'
+import { animated } from '@react-spring/web'
 import { useCurrentBreakpoint } from './hooks/useCurrentBreakpoint'
 import { Frame } from '@/widgets/renderer/Frame/Frame'
+import { extractAnimatableValues } from '@/shared/utils/extractAnimatableValues'
 
 export interface DocumentRenderer {
   documentManager: GraphState
 }
 
-export const Fragment: FC<DocumentRenderer> = ({ documentManager }) => {
-  const { containerRef, currentBreakpointLink } = useCurrentBreakpoint(documentManager)
+export const Fragment: FC<DocumentRenderer> = () => {
+  const { currentBreakpoint, isCanvas, fragmentKey, fragmentRect } = useCurrentBreakpoint()
 
   return (
-    <div ref={containerRef}>
-      <Frame layerKey={currentBreakpointLink} />
-    </div>
+    <animated.div data-key={fragmentKey} style={{ ...extractAnimatableValues(fragmentRect, ['width', 'height']) }}>
+      <Frame
+        {...(isCanvas
+          ? currentBreakpoint
+          : {
+              ...currentBreakpoint,
+              top: 0,
+              left: 0
+            })}
+      />
+    </animated.div>
   )
 }

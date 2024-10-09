@@ -7,17 +7,13 @@ import { useStyles } from './styles'
 export const withStyle = (Component: FC) => {
   return (props: Graph) => {
     const { documentManager } = useContext(BuilderContext)
-    const [node] = useGraph(documentManager, props)
-    const children = node?.children?.map?.(documentManager.resolve) ?? []
-    const style = useStyles(node)
-
-    if (node?._id === 'laptop') {
-      // console.log(node, children)
-    }
+    useGraph(documentManager, props)
+    const children = props?.children?.map?.(documentManager.resolve) ?? []
+    const style = useStyles(props)
 
     const resultNode = {
       ...props,
-      ...node,
+      // ...node,
       style,
       children
     }

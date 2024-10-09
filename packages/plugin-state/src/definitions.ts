@@ -92,3 +92,7 @@ export const variableTransforms = createConstants(
   "convertFromBoolean",
   "negative"
 );
+
+export const renderTarget = createConstants("canvas", "document");
+
+export const renderMode = createConstants("viewport", "parent", "fixed");

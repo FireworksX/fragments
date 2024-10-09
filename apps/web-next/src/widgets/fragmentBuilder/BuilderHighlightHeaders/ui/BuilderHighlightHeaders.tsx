@@ -18,7 +18,7 @@ export const BuilderHighlightHeaders: FC<BuilderHighlightHeadersProps> = ({ clas
         <animated.div key={index} className={cn(styles.header, styles.breakpointHeader)} style={style}>
           <HeaderBreakpoint
             name={breakpoint?.name || breakpoint?._id}
-            width={breakpoint?.width}
+            width={style?.width}
             activeWidths={activeWidths}
             onClickBreakpoint={handleNewBreakpoint}
             onClickCustom={handleCustomBreakpoint}

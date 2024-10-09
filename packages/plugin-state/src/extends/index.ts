@@ -10,21 +10,31 @@ export const collectExtends =
     if (graph.__extendted === $EXTENDED) return graph;
 
     const graphKey = state.keyOfEntity(graph);
-    const getValue = getRefValue(state, graph);
-    const resolveField = (field: string, fallback: unknown) => {
-      const node = state.resolve(graph);
-      if (!(field in node)) return fallback;
+    const createResolveField =
+      (graph) => (field: string, fallback: unknown) => {
+        const node = state.resolve(graph);
+        if (!(field in node)) return fallback;
 
-      const overrideValue = state.resolveValue(graph, field);
-      return getResolvedValue(state, overrideValue);
-    };
-    const extendedData = extendCollection.reduce(
-      (acc, extender) =>
-        extender({ graph: acc, graphKey, getValue, state, resolveField }),
-      graph
-    );
+        const overrideValue = state.resolveValue(graph, field);
+        return getResolvedValue(state, overrideValue);
+      };
 
-    extendedData.resolveField = resolveField;
+    const extendedData = extendCollection.reduce((acc, extender) => {
+      const getValue = getRefValue(state, acc);
+      const resolveField = createResolveField(acc);
+
+      acc = extender({
+        graph: acc,
+        graphKey,
+        getValue,
+        state,
+        resolveField,
+      });
+
+      return acc;
+    }, graph);
+
+    extendedData.resolveField = createResolveField(extendedData);
     extendedData.__extendted = $EXTENDED;
 
     return extendedData;

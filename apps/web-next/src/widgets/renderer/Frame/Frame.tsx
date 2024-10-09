@@ -5,12 +5,10 @@ import { Text } from '@/widgets/renderer/Text/Text'
 import { nodes } from '@fragments/plugin-state'
 import { withStyle } from '@/widgets/renderer/providers/withStyle'
 import { withDraggable } from '@/widgets/renderer/providers/withDraggable'
+import { LinkKey } from '@graph-state/core'
 
 interface LayerProps {
-  layerKey: string
-  onClick?: (e, options) => void
-  onMouseOver?: (e, options) => void
-  onMouseLeave?: (e, options) => void
+  renderKey: LinkKey
 }
 
 export const Frame: FC<LayerProps> = withStyle(

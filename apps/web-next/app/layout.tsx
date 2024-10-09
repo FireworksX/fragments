@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import '@/shared/styles/globals.css'
+import { ApolloWrapper } from '@/app/providers/ApolloProvider/ApolloProvider'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -13,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body>{children}</body>
+      <body>
+        <ApolloWrapper>{children}</ApolloWrapper>
+      </body>
     </html>
   )
 }
