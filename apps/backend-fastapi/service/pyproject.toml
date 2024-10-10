@@ -28,7 +28,14 @@ python-dotenv = "^1.0.1"
 cachetools = "^4.1.0"
 tenacity = "^6.2.0"
 
-supabase = "^2.7.2"
+PyJWT= "2.9.0"
+passlib = "1.7.4"
+
+# Postgres
+SQLAlchemy = "1.4.46"
+SQLAlchemy-serializer = "1.4.1"
+psycopg2-binary = "2.9.9"
+alembic = "1.9.4"
 
 [tool.poetry.dev-dependencies]
 # Lint

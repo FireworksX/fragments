@@ -1,2 +1,1 @@
-#from .models import *
-from .schemas import *
+from .models import *

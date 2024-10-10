@@ -1,107 +1,103 @@
 from typing import List
-from services.dependencies import supabase
 from fastapi import HTTPException, status
 import strawberry
-from .schemas import Fragment, AuthPayload, Campaign, CampaignPost
+
+from crud.campaign import create_campaign_db, get_campaign_by_id_db, get_campaign_by_project_id_db, update_campaign_by_id_db
+from crud.project import get_project_by_id_db
+from database import Session, Project, Campaign
+from .schemas import AuthPayload, CampaignGet, CampaignPost, RoleGet
 from .middleware import Context
-from .media import asset
-from .project import project_by_id
+from .utils import get_user_role_in_project
 
 
-async def campaigns(info: strawberry.Info[Context]) -> List[Campaign]:
-    user: AuthPayload = info.context.user()
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-
-    result = supabase.postgrest.from_table("campaigns").select("*").eq("owner", user.user.id).execute()
-
-    campaigns: List[Campaign] = []
-    for pr in result.data:
-        if pr["deleted"] is not True:
-            campaign: Campaign = Campaign(id=pr['id'], user=user.user, name=pr["name"], description=pr["description"],
-                                          active=pr["active"], deleted=pr["deleted"],
-                                          logo=asset(info, pr['logo']))
-            campaigns.append(campaign)
-    return campaigns
-
-async def campaigns_in_project(info: strawberry.Info[Context], project_id: int) -> List[Campaign]:
-    user: AuthPayload = info.context.user()
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-
-    result = supabase.postgrest.from_table("campaigns").select("*").eq("project_id", project_id).execute()
-
-    campaigns: List[Campaign] = []
-    for pr in result.data:
-        if pr["deleted"] is not True:
-            campaign: Campaign = Campaign(id=pr['id'], user=user.user, name=pr["name"], description=pr["description"],
-                                          active=pr["active"], deleted=pr["deleted"],
-                                          logo=asset(info, pr['logo']))
-            campaigns.append(campaign)
-    return campaigns
+async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
+    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
+    return role is not None
 
 
-async def campaign_by_id(info: strawberry.Info[Context], id_: int) -> Campaign:
-    user: AuthPayload = info.context.user()
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
+    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
+    return role is not None and role is not RoleGet.DESIGNER
 
-    result = supabase.postgrest.from_table("campaigns").select("*").eq("id", id_).execute().data[0]
-    campaign: Campaign = Campaign(id=result['id'], user=user.user, name=result["name"], deleted=result["deleted"],
-                                  description=result["description"], active=result["active"],
-                                  logo=asset(info, result['logo']))
+
+async def campaigns_in_project(info: strawberry.Info[Context], project_id: int) -> List[CampaignGet]:
+    user: AuthPayload = await info.context.user()
+    db: Session = info.context.session()
+
+    project: Project = await get_project_by_id_db(db, project_id)
+    if project is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
+
+    permission: bool = await read_permission(db, user.user.id, project_id)
+    if not permission:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=f'User is not allowed to view campaigns')
+
+    campaigns: List[Campaign] = await get_campaign_by_project_id_db(db, project_id)
+    out: List[CampaignGet] = []
+    for cp in campaigns:
+        out.append(CampaignGet(id=cp.id, name=cp.name, description=cp.description, deleted=cp.deleted,
+                               active=cp.active,
+                               logo_id=cp.logo_id, author=cp.author, project_id=cp.project_id))
+    return out
+
+
+async def campaign_by_id(info: strawberry.Info[Context], campaign_id: int) -> CampaignGet:
+    user: AuthPayload = await info.context.user()
+    db: Session = info.context.session()
+
+    campaign: Campaign = await get_campaign_by_id_db(db, campaign_id)
+    if not campaign:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Campaign does not exist")
+
+    permission: bool = await read_permission(db, user.user.id, campaign.project_id)
+    if not permission:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=f'User is not allowed to view campaigns')
+
     return campaign
 
 
-async def create_campaign(info: strawberry.Info[Context], cmp: CampaignPost) -> Campaign:
-    user: AuthPayload = info.context.user()
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    project = project_by_id(info, cmp.project_id)
+async def create_campaign(info: strawberry.Info[Context], cmp: CampaignPost) -> CampaignGet:
+    user: AuthPayload = await info.context.user()
+    db: Session = info.context.session()
+
+    project: Project = await get_project_by_id_db(db, cmp.project_id)
     if project is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
 
-    campaign = supabase.postgrest.table("campaigns").insert({'project_id':cmp.project_id, 'owner': user.user.id, 'name': cmp.name,
-                                                             'logo': cmp.logo, 'description': cmp.description, 'deleted': False,
-                                                             'active': cmp.active}).execute().data[0]
+    permission: bool = await write_permission(db, user.user.id, cmp.project_id)
+    if not permission:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=f'User is not allowed to create campaigns')
 
-    return Campaign(id=campaign['id'], user=user.user, name=campaign["name"], description=campaign["description"], deleted=campaign["deleted"],
-                    active=campaign["active"],
-                    logo=asset(info, campaign['logo']))
+    campaign: Campaign = await create_campaign_db(db, cmp.name, cmp.project_id, cmp.description, cmp.logo_id,
+                                                  cmp.active, cmp.deleted, user.user.id)
 
-
-async def update_campaign(info: strawberry.Info[Context], pr: CampaignPost) -> Campaign:
-    user: AuthPayload = info.context.user()
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-
-    try:
-        result = supabase.postgrest.from_table("campaigns").select("*").eq("id", pr.id).execute().data[0]
-    except:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-
-    update = {'owner': user.user.id, 'id': pr.id}
-    if pr.name is not None:
-        update['name'] = pr.name
-    if pr.logo is not None:
-        update['logo'] = pr.logo
-    if pr.description is not None:
-        update['description'] = pr.description
-    if pr.active is not None:
-        update['active'] = pr.active
-    if pr.deleted is not None:
-        update['deleted'] = pr.deleted
-    campaign = supabase.postgrest.table("campaigns").update(update).eq("id", pr.id).execute().data[0]
-
-    return Campaign(id=campaign['id'], user=user.user, name=campaign["name"], description=campaign["description"],
-                    active=campaign["active"], deleted=campaign["deleted"],
-                    logo=asset(info, campaign['logo']))
+    return CampaignGet(id=campaign.id, name=campaign.name, description=campaign.description, deleted=campaign.deleted,
+                       active=campaign.active,
+                       logo_id=campaign.logo_id, author=campaign.author, project_id=campaign.project_id)
 
 
-async def delete_campaign_from_db(info: strawberry.Info[Context], campaign_id: int) -> None:
-    user: AuthPayload = info.context.user()
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+async def update_campaign(info: strawberry.Info[Context], cmp: CampaignPost) -> CampaignGet:
+    user: AuthPayload = await info.context.user()
+    db: Session = info.context.session()
 
-    campaign: CampaignPost = CampaignPost(id=campaign_id, deleted=True, active=False)
-    await update_campaign(info, campaign)
+    campaign: Campaign = await get_campaign_by_id_db(db, cmp.id)
+    if not campaign:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Campaign does not exist")
+
+    project: Project = await get_project_by_id_db(db, campaign.project_id)
+    if project is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
+
+    permission: bool = await write_permission(db, user.user.id, cmp.id)
+    if not permission:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=f'User is not allowed to change campaign')
+
+    campaign: Campaign = await update_campaign_by_id_db(db, values=cmp.__dict__)
+
+    return CampaignGet(id=campaign.id, name=campaign.name, description=campaign.description, deleted=campaign.deleted,
+                       active=campaign.active,
+                       logo_id=campaign.logo_id, author=campaign.author, project_id=campaign.project_id)

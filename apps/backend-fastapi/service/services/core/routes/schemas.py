@@ -3,33 +3,32 @@ import strawberry
 from typing import Optional, List
 from enum import Enum
 from pydantic import BaseModel, field_validator
+import datetime
 
+@strawberry.enum
+class RoleGet(Enum):
+    OWNER = 1
+    ADMIN = 2
+    MANAGER = 3
+    DESIGNER = 4
 
 @strawberry.type
-class User:
+class UserGet:
     id: int
     email: str
     first_name: str
     last_name: Optional[str]
 
+@strawberry.type
+class UserRoleGet(UserGet):
+    role: str
+
 
 @strawberry.type
 class AuthPayload:
-    user: User
+    user: UserGet
     access_token: str
     refresh_token: str
-
-
-@strawberry.type
-class Fragment:
-    id: int
-    project_id: int
-    project: str
-    name: str
-    user: User
-    document: strawberry.scalars.JSON
-    props: strawberry.scalars.JSON
-
 
 @strawberry.input
 class FragmentPost:
@@ -40,11 +39,34 @@ class FragmentPost:
     props: Optional[strawberry.scalars.JSON] = None
 
 @strawberry.type
-class Project:
+class CampaignGet:
+    id: int
+    project_id: int
+    name: str
+    logo_id: Optional[int] = None
+    author: UserGet
+    description: str
+    active: bool
+    deleted: bool
+
+@strawberry.type
+class ProjectGet:
     id: int
     name: str
-    logo_id: str
-    owner: User
+    logo_id: Optional[int] = None
+    owner: UserGet
+    members: List[UserRoleGet]
+    campaigns: List[CampaignGet]
+
+@strawberry.type
+class FragmentGet:
+    id: int
+    project: ProjectGet
+    name: str
+    author: UserGet
+    document: strawberry.scalars.JSON
+    props: strawberry.scalars.JSON
+
 
 @strawberry.input
 class ProjectPost:
@@ -54,21 +76,9 @@ class ProjectPost:
 
 
 @strawberry.type
-class Media:
+class MediaGet:
     id: int
     path: str
-
-
-@strawberry.type
-class Campaign:
-    id: int
-    project_id: int
-    name: str
-    logo: Media
-    user: User
-    description: str
-    active: bool
-    deleted: bool
 
 
 @strawberry.input
@@ -76,14 +86,14 @@ class CampaignPost:
     id: Optional[int] = None
     project_id: Optional[int] = None
     name: Optional[str] = None
-    logo: Optional[str] = None
+    logo_id: Optional[int] = None
     description: Optional[str] = None
     active: Optional[bool] = None
     deleted: Optional[bool] = None
 
 
 @strawberry.enum
-class OSType(Enum):
+class OSTypeGet(Enum):
     ANDROID = 1
     IOS = 2
     WINDOWS = 3
@@ -92,39 +102,40 @@ class OSType(Enum):
 
 
 @strawberry.enum
-class DeviceType(Enum):
+class DeviceTypeGet(Enum):
     TABLET = 1
     DESKTOP = 2
     MOBILE = 3
 
 
 @strawberry.type
-class GeoLocation:
+class GeoLocationGet:
     country: str
     region: str
     city: str
 
 @strawberry.type
-class TimeFrame:
-    from_time: int
-    to_time: int
+class TimeFrameGet:
+    from_time: datetime.datetime
+    to_time: datetime.datetime
 
 @strawberry.input
 class TimeFramePost:
-    from_time: int
-    to_time: int
+    from_time: datetime.datetime
+    to_time: datetime.datetime
 
 @strawberry.type
-class SubCampaign:
+class StreamGet:
     id: int
     campaign_id: int
     active: bool
+    deleted: bool
     name: str
-    os_types: List[OSType]
-    device_types: List[DeviceType]
+    os_types: List[OSTypeGet]
+    device_types: List[DeviceTypeGet]
     pages: List[str]
-    geo_locations: List[GeoLocation]
-    time_frames: List[TimeFrame]
+    geo_locations: List[GeoLocationGet]
+    time_frames: List[TimeFrameGet]
     weight: float
 
 
@@ -134,22 +145,22 @@ class GeoLocationPost:
     region: Optional[str] = None
     city: Optional[str] = None
 @strawberry.input
-class SubCampaignIn:
+class StreamPost:
     id: Optional[int] = None
     campaign_id: Optional[int] = None
     active: Optional[bool] = None
     deleted: Optional[bool] = None
     name: Optional[str] = None
-    os_type: Optional[List[OSType]] = None
-    device_type: Optional[List[DeviceType]] = None
+    os_types: Optional[List[OSTypeGet]] = None
+    device_types: Optional[List[DeviceTypeGet]] = None
     pages: Optional[List[str]] = None
-    geoLocation: Optional[List[GeoLocationPost]] = None
-    times: Optional[List[TimeFramePost]] = None
+    geo_locations: Optional[List[GeoLocationPost]] = None
+    time_frames: Optional[List[TimeFramePost]] = None
     weight: Optional[float] = None
 
 
 @strawberry.enum
-class FeelLevel(Enum):
+class FeelLevelGet(Enum):
     ONE = 1
     TWO = 2
     THREE = 3
@@ -158,21 +169,21 @@ class FeelLevel(Enum):
 
 
 @strawberry.input
-class FeedbackIn:
-    feel: Optional[FeelLevel] = None
-    content: str
+class FeedbackPost:
+    feel: FeelLevelGet
+    content: Optional[str] = None
     page: str
 
 
 @strawberry.type
-class Feedback:
-    feel: Optional[FeelLevel] = None
-    content: str
+class FeedbackGet:
+    feel: FeelLevelGet
+    content: Optional[str] = None
     page: str
-    user: User
+  #  user: User
 
 @strawberry.type
-class SubcampaignFragment:
+class SubcampaignFragmentGet:
     id: int
     subcampaign_id: int
     fragment_id: int

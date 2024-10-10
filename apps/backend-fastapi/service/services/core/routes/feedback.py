@@ -1,25 +1,21 @@
 from typing import List
-from services.dependencies import supabase
 from fastapi import HTTPException, status
 import strawberry
-from .schemas import Fragment, AuthPayload, Campaign, FeedbackIn, Feedback
+from .schemas import FragmentGet, AuthPayload, CampaignGet, FeedbackPost, FeedbackGet, FeelLevelGet
 from .middleware import Context
-from .media import asset
 from services.core.telegram.bot import send_feedback
+from crud.feedback import create_feedback_db
+from database import Session
 
-
-async def create_feedback(info: strawberry.Info[Context], feedback: FeedbackIn) -> Feedback:
-    user: AuthPayload = info.context.user()
+async def create_feedback(info: strawberry.Info[Context], feedback: FeedbackPost) -> FeedbackGet:
+    user: AuthPayload = await info.context.user()
     if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    data = {'user_id': user.user.id, 'page': feedback.page,
-                                                        'content': feedback.content}
-    if feedback.feel is not None:
-        data['feel'] = int(feedback.feel.value)
-    supabase.postgrest.table("feedback").insert(data).execute()
+       raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
+    db: Session = info.context.session()
+    feedback_db = await create_feedback_db(db, int(feedback.feel.value), feedback.page, feedback.content)
 
-    fb: Feedback = Feedback(user=user.user, content=feedback.content, page=feedback.page, feel=feedback.feel)
+    fb: FeedbackGet = FeedbackGet(content=feedback_db.content, page=feedback_db.page, feel=FeelLevelGet(feedback_db.feel))
 
     send_feedback(fb)
     return fb
