@@ -2,7 +2,7 @@ import { createState } from '@graph-state/core'
 import extendPlugin from '@graph-state/plugin-extend'
 import loggerPlugin from '@graph-state/plugin-logger'
 import { isInstanceOf } from '@graph-state/checkers'
-import { SpringValue } from '@react-spring/web'
+import { Interpolation, SpringValue } from '@react-spring/web'
 
 export const POPOUT_TYPE = 'Popout'
 
@@ -76,5 +76,5 @@ export const popoutsStore = createState({
         }))
     }
   ],
-  skip: [isInstanceOf(SpringValue)]
+  skip: [isInstanceOf(SpringValue), isInstanceOf(Interpolation)]
 })

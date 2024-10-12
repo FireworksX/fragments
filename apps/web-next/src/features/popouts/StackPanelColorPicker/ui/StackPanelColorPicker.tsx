@@ -8,6 +8,11 @@ import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useDisplayColor } from '@/shared/hooks/fragmentBuilder/useDisplayColor'
 import { Panel } from '@/shared/ui/Panel'
 import { ColorPicker } from '@/shared/ui/ColorPicker'
+import SolidPaintStyles from '../../../../entities/fragment/SolidPaintStyles/ui/SolidPaintStyles'
+import { popoutNames } from '@/shared/data'
+import { animatableValue } from '@/shared/utils/animatableValue'
+import { getRandomColor } from '@/shared/utils/random'
+import { isLinkKey, LinkKey } from '@graph-state/core'
 
 export interface StackPanelColorPickerOptions {
   value?: Color
@@ -16,20 +21,20 @@ export interface StackPanelColorPickerOptions {
 
 interface StackPanelColorPickerProps extends StackPanel {
   className?: string
-  stackColors?: ReactNode
 }
 
-const StackPanelColorPicker: FC<StackPanelColorPickerProps> = ({ className, stackColors }) => {
+const StackPanelColorPicker: FC<StackPanelColorPickerProps> = ({ className }) => {
   const { documentManager } = useContext(BuilderContext)
-  const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:colorPicker`)
+  const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.colorPicker}`)
   const context = popout.context ?? {}
   const { getColor } = useDisplayColor(documentManager)
   const [color] = useGraph(documentManager, context?.value)
   const resColor = color ?? context?.value
 
-  const updateColor = (color?: Color) => {
+  const updateColor = (color?: Color | LinkKey) => {
     if (color && context?.onChange) {
       // $updateContextPopout('colorPicker', { value: color })
+      popoutsStore.updateCurrentContext({ value: color })
       context.onChange(color)
     }
   }
@@ -47,7 +52,15 @@ const StackPanelColorPicker: FC<StackPanelColorPickerProps> = ({ className, stac
         />
       </Panel>
 
-      {stackColors}
+      <SolidPaintStyles
+        getInitialColor={() => animatableValue(resColor)}
+        activeColorKey={isLinkKey(context?.value) ? context?.value : undefined}
+        onSelect={link => {
+          updateColor(link)
+          popoutsStore.goPrev()
+        }}
+        onCreate={popoutsStore.goPrev}
+      />
       {/*{!context?.withoutStack && (*/}
       {/*  <StackColors*/}
       {/*    getInitialColor={() => cloneColor(resColor)}*/}

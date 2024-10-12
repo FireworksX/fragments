@@ -5,7 +5,7 @@ import { useGraph } from '@graph-state/react'
 
 export const useBuilderPreviewContainer = () => {
   const { previewManager } = useContext(BuilderContext)
-  const [{ width, height }] = useGraph(previewManager)
+  const [{ width, height }] = useGraph(previewManager, previewManager.key)
   const saveSize = useRef([width.get(), height.get()])
 
   const bindWidth = useDrag(

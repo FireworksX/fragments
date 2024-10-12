@@ -2,6 +2,7 @@ import { to, useSpring } from '@react-spring/web'
 import { useContext, useEffect } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
+import { extractAnimatableValues } from '@/shared/utils/extractAnimatableValues'
 
 const BORDER_SIZE = 1.5
 
@@ -23,10 +24,7 @@ export const useHighlightHover = () => {
     const layerRect = layerNode?.absoluteRect?.() ?? {}
 
     stylesApi.set({
-      x: to(layerRect, ({ x }) => x),
-      y: to(layerRect, ({ y }) => y),
-      width: to(layerRect, ({ width }) => width),
-      height: to(layerRect, ({ height }) => height),
+      ...extractAnimatableValues(layerRect),
       opacity: canvas.isDragging || canvas.isResizing ? 0 : 1 || Object.keys(layerRect).length === 0,
       borderWidth: BORDER_SIZE / canvas.scale.get()
     })

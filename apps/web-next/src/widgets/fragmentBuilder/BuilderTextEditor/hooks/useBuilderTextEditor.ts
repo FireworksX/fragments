@@ -57,7 +57,7 @@ export const useBuilderTextEditor = () => {
       selectionGraph?.setOpacity(0)
     } else {
       const prevSelectionNode = documentManager.resolve(prevSelection)
-      if (prevSelectionNode) {
+      if (prevSelectionNode && prevSelectionNode?._type === builderNodes.Text) {
         prevSelectionNode?.setOpacity?.(1)
       }
     }
