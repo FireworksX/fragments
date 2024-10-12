@@ -19,7 +19,7 @@ export const useBuilderManager = () => {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const { fragment } = useParams()
-  const [builderState] = useGraph(builderManager)
+  const [builderState] = useGraph(builderManager, builderManager.key)
   const [fragmentSlug, view] = fragment || []
   const resolvedMode = Object.keys(builderViews).some(mode => mode === view) ? view : builderViews.preview
 

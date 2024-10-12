@@ -1,4 +1,4 @@
 import { isInstanceOf } from "@graph-state/checkers";
-import { SpringValue } from "@react-spring/web";
+import { SpringValue, Interpolation } from "@react-spring/web";
 
-export const skips = [isInstanceOf(SpringValue)];
+export const skips = [isInstanceOf(SpringValue), isInstanceOf(Interpolation)];

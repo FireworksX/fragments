@@ -29,6 +29,8 @@ import { StackPanelCssOverride } from '@/features/popouts/StackPanelCssOverride'
 import { DisplayBreakpoints } from '@/widgets/fragmentBuilder/DisplayBreakpoints'
 import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderManager'
 import { BuilderTextEditorComposer } from '@/features/fragmentBuilder/BuilderTextEditor'
+import { StackSolidPaintStyle } from '@/features/popouts/StackSolidPaintStyle'
+import { popoutNames } from '@/shared/data'
 
 interface FragmentBuilderProps {
   className?: string
@@ -90,8 +92,8 @@ export const FragmentBuilder: FC<FragmentBuilderProps> = ({ className }) => {
                   <StackPanelFill name='fill' title='Fill' />
                   <StackPanelColorPicker name='colorPicker' title='Color' />
                   {/*/!*<StackPanelFonts name='fonts' title='Fonts' />*!/*/}
-                  <StackPanelCreateColor name='createColor' title='New color style' />
                   <StackPanelCssOverride name='cssOverride' title='CSS override' />
+                  <StackSolidPaintStyle name={popoutNames.stackSolidPaintStyle} title='Color Variable' />
                   {/*<StackPanelCssOverrideList name='cssOverrideList' title='CSS overrides' />*/}
                   {/*<StackLoopEffect name='loopEffect' title='Loop Effect' />*/}
 

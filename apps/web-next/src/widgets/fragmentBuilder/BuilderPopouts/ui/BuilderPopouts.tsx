@@ -9,7 +9,8 @@ interface BuilderPopoutsProps extends PropsWithChildren {
 }
 
 export const BuilderPopouts: FC<BuilderPopoutsProps> = ({ className, children }) => {
-  const [currentPopout] = useGraph(popoutsStore, popoutsStore.getCurrent())
+  const [{ history, cursor }] = useGraph(popoutsStore, popoutsStore.key)
+  const [currentPopout] = useGraph(popoutsStore, history.at(cursor) ?? 'nil')
 
   return (
     <div

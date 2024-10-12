@@ -26,7 +26,7 @@ export const popoutsStore = createState({
       state.open = (name, { context, description, position, initial }) => {
         const { history, cursor } = state.resolve(state) || {}
         const currentPopout = state.resolve(state.getCurrent())
-        const resultPosition = initial ? position || 'right' : position || currentPopout?.position || 'right'
+        const resultPosition = initial ? position || 'right' : currentPopout?.position || position || 'right'
         const nextCell = { _type: POPOUT_TYPE, _id: name, name, description, context, position: resultPosition }
         const nextCellKey = state.keyOfEntity(nextCell)
         const currentHistory = history[cursor]

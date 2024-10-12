@@ -1,7 +1,8 @@
 import { Graph } from '@graph-state/core'
 import { to } from '@react-spring/web'
-import { definitions } from '@fragments/plugin-state'
+import { definitions, imagePaintScaleModes, paintMode } from '@fragments/plugin-state'
 import { useDisplayColor } from '@/shared/hooks/fragmentBuilder/useDisplayColor'
+import { objectToColorString } from '@fragments/utils'
 
 export const useFillStyles = (graph: Graph) => {
   const { getColor } = useDisplayColor()
@@ -15,17 +16,17 @@ export const useFillStyles = (graph: Graph) => {
 
   return {
     background: to([fillType, getColor(solidFill), imageFill], (fillType, solidFill, imageFill) => {
-      if (fillType === definitions.paintMode.Solid) {
-        return solidFill
-      } else if (fillType === definitions.paintMode.Image) {
+      if (fillType === paintMode.Solid) {
+        return objectToColorString(solidFill)
+      } else if (fillType === paintMode.Image) {
         return `url(${imageFill}) no-repeat`
       }
 
       return ''
     }),
     backgroundSize: to([fillType, imageFillScaleMode], (type, scaleMode) => {
-      if (type === definitions.paintMode.Image) {
-        return definitions.scaleModeMap[scaleMode]
+      if (type === paintMode.Image) {
+        return imagePaintScaleModes[scaleMode]
       }
       return undefined
     })

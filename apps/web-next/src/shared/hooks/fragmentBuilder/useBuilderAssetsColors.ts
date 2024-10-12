@@ -2,8 +2,12 @@ import { Color } from 'react-color'
 import { popoutsStore } from '@/shared/store/popouts.store'
 import { useContext } from 'react'
 import { builderNodes, createSolidPaintStyle } from '@fragments/fragments-plugin/performance'
-import { useGraphFields, useGraphStack } from '@graph-state/react'
+import { useGraph, useGraphFields, useGraphStack } from '@graph-state/react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
+import { popoutNames } from '@/shared/data'
+import { getRandomColor } from '@/shared/utils/random'
+import { getEntityName } from '@/shared/utils/getEntityName'
+import { nodes } from '@fragments/plugin-state'
 
 export interface BuilderAssetsColorsOptions extends Partial<OpenPopoutOptions<'colorPicker'>> {
   initialColor?: Color
@@ -12,43 +16,32 @@ export interface BuilderAssetsColorsOptions extends Partial<OpenPopoutOptions<'c
 
 export const useBuilderAssetsColors = () => {
   const { documentManager } = useContext(BuilderContext)
-  const solidStyles = useGraphFields(documentManager, builderNodes.SolidPaintStyle)
-  const solidStyleValues = useGraphStack(documentManager, solidStyles)
+  const [fragmentGraph] = useGraph(documentManager, documentManager.key)
+  const solidStyleValues = useGraphStack(documentManager, fragmentGraph?.solidPainStyles ?? [])
 
   const editColor = (styleKey: string, options?: OpenPopoutOptions<'colorPicker'>) => {
     if (styleKey && documentManager) {
-      const variableValue = documentManager.resolve?.(styleKey)
-
-      popoutsStore.open('colorPicker', {
+      popoutsStore.open(popoutNames.stackSolidPaintStyle, {
         position: 'left',
         context: {
-          value: variableValue?.color,
-          withoutStack: true,
-          onChange: newColor => {
-            const style = documentManager.resolve(styleKey)
-            style.update(newColor)
-          }
+          link: styleKey
         },
         ...options
       })
     }
   }
 
-  const createColor = ({
-    initialColor,
-    onSubmit: optionsOnSubmit,
-    initial,
-    ...popoutOptions
-  }: BuilderAssetsColorsOptions) => {
-    popoutsStore.open('createColor', {
-      initial,
+  const createColor = ({ initialColor, onSubmit: optionsOnSubmit, ...popoutOptions }: BuilderAssetsColorsOptions) => {
+    const color = initialColor ?? getRandomColor()
+    const link = documentManager.createSolidPaintStyle({
+      name: getEntityName('Color variable', documentManager, nodes.SolidPaintStyle),
+      color
+    })
+
+    popoutsStore.open(popoutNames.stackSolidPaintStyle, {
       position: 'left',
       context: {
-        initialColor,
-        onSubmit: newColor => {
-          const styleKey = documentManager.createSolidPaintStyle(newColor)
-          optionsOnSubmit && optionsOnSubmit(styleKey)
-        },
+        link,
         ...popoutOptions
       }
     })

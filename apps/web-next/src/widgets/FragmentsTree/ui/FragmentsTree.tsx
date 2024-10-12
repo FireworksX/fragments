@@ -3,8 +3,8 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import { FragmentTreeHeader } from '@/features/FragmentTreeHeader'
 import { FragmentsTreeItem } from '@/features/FragmentTreeItem'
-import { useFragmentsTree } from '@/widgets/FragmentsTree/hooks/useFragmentsTree'
-import { Link } from '@/shared/ui/Link/ui/Link'
+import { useFragmentsTree } from '../hooks/useFragmentsTree'
+import { Link } from '@/shared/ui/Link'
 import { useParams } from 'next/navigation'
 
 interface FragmentsTreeProps {

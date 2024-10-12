@@ -1,17 +1,21 @@
 import { Color } from 'react-color'
 import { useCallback, useContext } from 'react'
-import { builderNodes } from '@fragments/fragments-plugin/performance'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { isGraphOrKey, LinkKey } from '@graph-state/core'
 import { displayColorInterpolate } from '@/shared/utils/displayColor'
+import { Interpolation, to } from '@react-spring/web'
+import { objectToColorString } from '@fragments/utils'
+import { nodes } from '@fragments/plugin-state'
 
 export const useDisplayColor = (inputColor?: Color) => {
   const { documentManager } = useContext(BuilderContext)
   const getColor = useCallback(
     (color?: Color) => {
       const resolveValue = documentManager?.resolve?.(color)
-      const variableValue = resolveValue && resolveValue?._type === builderNodes.SolidPaintStyle && resolveValue?.color
-      return displayColorInterpolate(variableValue || color)
+      const variableValue = resolveValue && resolveValue?._type === nodes.SolidPaintStyle && resolveValue?.color
+      const resultColor = variableValue ?? color
+
+      return resultColor instanceof Interpolation ? resultColor : displayColorInterpolate(resultColor)
     },
     [documentManager]
   )
@@ -20,7 +24,7 @@ export const useDisplayColor = (inputColor?: Color) => {
     (color?: Color) => {
       const resolveValue = documentManager?.resolve?.(color)
       const variableValue =
-        (resolveValue && resolveValue?._type === builderNodes.SolidPaintStyle && resolveValue?.color) || resolveValue
+        (resolveValue && resolveValue?._type === nodes.SolidPaintStyle && resolveValue?.color) || resolveValue
 
       return variableValue || color
     },
@@ -28,13 +32,17 @@ export const useDisplayColor = (inputColor?: Color) => {
   )
 
   const getNameColor = useCallback(
-    (color?: Color | LinkKey) => {
+    (color?: Color | LinkKey | Interpolation<Color>) => {
+      if (color instanceof Interpolation) {
+        return to(color, objectToColorString)
+      }
+
       if (color && isGraphOrKey(color)) {
         const resolvedGraph = documentManager?.resolve(color)
-        if (resolvedGraph?._type === builderNodes.SolidPaintStyle) {
+        if (resolvedGraph?._type === nodes.SolidPaintStyle) {
           return resolvedGraph?.name
         }
-        if (resolvedGraph?._type === builderNodes.Fill) {
+        if (resolvedGraph?._type === nodes.SolidPaintStyle) {
           return displayColorInterpolate(resolvedGraph.color)
         }
       }

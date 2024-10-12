@@ -23,7 +23,7 @@ interface BuilderFloatBarProps {
 export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
   const { canvasManager } = useContext(BuilderContext)
   const { isEdit, focus, updateParams } = useBuilderManager()
-  const [canvas] = useGraph(canvasManager)
+  const [canvas] = useGraph(canvasManager, canvasManager.key)
   const { addFrame, addText } = useBuilderActions()
 
   if (!isEdit) {

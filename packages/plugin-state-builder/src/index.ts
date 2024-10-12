@@ -8,6 +8,8 @@ import { addStatic } from "@/static";
 import { rectExtend } from "@/extend/rectExtend";
 import { frameExtend } from "@/extend/nodes/frameExtend";
 import { fragmentExtend } from "@/extend/nodes/fragmentExtend";
+import { solidPaintStyleExtend } from "@/extend/nodes/solidPaintStyleExtend";
+import { fillExtend } from "@/extend/fillExtend";
 
 export const pluginStateBuilder: Plugin = (state, overrides) => {
   addStatic(state);
@@ -38,14 +40,14 @@ export const pluginStateBuilder: Plugin = (state, overrides) => {
         // paddingExtend,
         // layerExtend,
         // borderExtend,
-        // fillExtend,
+        fillExtend,
         // cloneExtend,
         positionExtend,
         layoutExtend,
         rectExtend,
         frameExtend,
       ]),
-      // [nodes.SolidPaintStyledPaintStyle]: collectExtends([solidPaintStyleExtend]),
+      [nodes.SolidPaintStyle]: collectExtends([solidPaintStyleExtend]),
       // [nodes.Variable]: collectExtends([variableExtend]),
       // [nodes.TransformValue]: collectExtends([transformValueExtend]),
       // [nodes.ComputedValue]: collectExtends([computedValueExtend]),

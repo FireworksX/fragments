@@ -17,6 +17,8 @@ import { ImagePicker } from '@/features/fragmentBuilder/ImagePicker'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useDisplayColor } from '@/shared/hooks/fragmentBuilder/useDisplayColor'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
+import { cloneColor } from '@/shared/utils/cloneColor'
+import { getRandomColor } from '@/shared/utils/random'
 
 export interface StackPanelFillOptions {}
 
@@ -37,17 +39,11 @@ const tabs: TabsSelectorItem[] = [
 ]
 
 const StackPanelFill: FC<StackPanelFillProps> = ({ className, stackColors }) => {
-  const { documentManager } = useContext(BuilderContext)
   const { selection, selectionGraph } = useBuilderSelection()
-  const { getColor, getColorStatic } = useDisplayColor()
   const layerInvoker = useLayerInvoker(selection, ({ key, prevValue, documentManager, value, node }) => {
     switch (key) {
       case 'solidFill':
         node.setSolidFill(value)
-
-        if (isLinkKey(prevValue) && isObject(value)) {
-          popoutsStore.updateCurrentContext({ value: documentManager.resolveValue(node, 'borderColor') })
-        }
         break
       case 'imageFill':
         node.setImageFill(value)
@@ -71,6 +67,9 @@ const StackPanelFill: FC<StackPanelFillProps> = ({ className, stackColors }) => 
     if (!animatableValue(fillType.value)) {
       fillType.onChange(builderPaintMode.Solid)
     }
+    if (!animatableValue(solidFill.value)) {
+      solidFill.onChange(getRandomColor())
+    }
   }, [])
 
   return (
@@ -79,7 +78,7 @@ const StackPanelFill: FC<StackPanelFillProps> = ({ className, stackColors }) => 
       <AnimatedVisible visible={to(type, t => t === builderPaintMode.Solid)}>
         <Panel>
           <ColorPicker
-            color={getColor(solidFill.value)}
+            color={solidFill.value}
             onChange={color => {
               if (color) {
                 solidFill.onChange(color.rgb)
@@ -88,8 +87,8 @@ const StackPanelFill: FC<StackPanelFillProps> = ({ className, stackColors }) => 
           />
         </Panel>
         <StackColors
-          getInitialColor={() => cloneColor(solidFill.value)}
-          // activeColorKey={currentFill.value?.color}
+          getInitialColor={() => solidFill.value?.get?.() ?? getRandomColor()}
+          activeColorKey={solidFill.value}
           onSelect={solidFill.onChange}
           onCreate={popoutsStore.goPrev}
         />

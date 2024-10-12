@@ -1,3 +1,5 @@
+import { toSpringFields } from "./animated/toSpringFields";
+
 export { isObject } from "./isObject";
 export { isValue } from "./isValue";
 export { isEmptyValue } from "./isEmptyValue";
@@ -28,9 +30,14 @@ export { debounce } from "./debounce";
 export { default as isBrowser } from "./isBrowser";
 export { generateId } from "./generateId";
 export { colorToObject } from "./colors/colorToObject";
+export { objectToColorString } from "./colors/objectToColorString";
 export { isFiniteNumber, finiteNumber } from "./finiiteNumber";
 export {
   roundedNumber,
   roundedNumberString,
   roundWithOffset,
 } from "./roundedNumber";
+
+export * from "./animated/applyObjectValues";
+export * from "./animated/toSpringFields";
+export * from "./animated/interpolationObject";

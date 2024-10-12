@@ -326,6 +326,23 @@ var colorToObject = (color) => {
   return null;
 };
 
+// src/colors/objectToColorString.ts
+var objectToColorString = (color) => {
+  if (!color || !isObject(color))
+    return color;
+  const resR = Number(color.r);
+  const resG = Number(color.g);
+  const resB = Number(color.b);
+  const resA = Number(color.a);
+  if ([resR, resG, resB].every(isFinite)) {
+    if (resA < 1) {
+      return `rgba(${resR}, ${resG}, ${resB}, ${resA})`;
+    }
+    return `rgb(${resR}, ${resG}, ${resB})`;
+  }
+  return color;
+};
+
 // src/finiiteNumber.ts
 function isFiniteNumber(value) {
   return typeof value === "number" && isFinite(value);
@@ -354,7 +371,46 @@ function roundWithOffset(value, offset) {
   }
   return Math.round(value - offset) + offset;
 }
+
+// src/animated/applyObjectValues.ts
+import { SpringValue } from "@react-spring/core";
+var applyObjectValues = (target, value) => {
+  const resultValue = __spreadValues({}, target);
+  Object.keys(resultValue).forEach((key) => {
+    if (key in value) {
+      if (resultValue[key] instanceof SpringValue) {
+        resultValue[key].set(value[key]);
+      } else {
+        resultValue[key] = value[key];
+      }
+    }
+  });
+  return resultValue;
+};
+
+// src/animated/toSpringFields.ts
+import { SpringValue as SpringValue2 } from "@react-spring/core";
+var toSpringFields = (input) => {
+  if (!input)
+    return input;
+  return Object.entries(input).reduce((acc, [key, value]) => {
+    acc[key] = isPrimitive(value) ? new SpringValue2(value) : value;
+    return acc;
+  }, {});
+};
+
+// src/animated/interpolationObject.ts
+import { to } from "@react-spring/core";
+var interpolationObject = (input) => {
+  if (!input)
+    return input;
+  return to(Object.values(input), (...values) => {
+    const keys = Object.keys(input);
+    return Object.fromEntries(keys.map((key, index) => [key, values[index]]));
+  });
+};
 export {
+  applyObjectValues,
   colorToObject,
   createConstants,
   debounce,
@@ -366,6 +422,7 @@ export {
   get,
   hexToRgb,
   injectLink,
+  interpolationObject,
   isAbsoluteUrl,
   isBrowser_default as isBrowser,
   isEmptyValue,
@@ -377,6 +434,7 @@ export {
   iterator,
   mergeIterator,
   noop,
+  objectToColorString,
   omit,
   pick,
   promiseWaiter,
@@ -390,6 +448,7 @@ export {
   set,
   times,
   toKebabCase,
-  toLongHex
+  toLongHex,
+  toSpringFields
 };
 //# sourceMappingURL=index.mjs.map

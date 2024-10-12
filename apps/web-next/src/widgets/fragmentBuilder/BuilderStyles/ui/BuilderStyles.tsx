@@ -65,12 +65,12 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
       {!fill.disabled && (
         <ControlRow title='Fill' {...fill}>
           <ControlRowWide>
-            <GraphValue graphState={documentManager} field={fill.value}>
+            <GraphValue graphState={documentManager} field={fill.value} options={{ safe: true }}>
               {value => {
                 return (
                   <>
                     <InputSelect
-                      hasIcon={value && to(fill.type, v => ALLOW_FILL_TYPES.includes(v))}
+                      hasIcon={to(fill.type, v => !!value && ALLOW_FILL_TYPES.includes(v))}
                       color={getColor(value)}
                       onReset={fill.onReset}
                       onClick={fill.onClick}

@@ -1,7 +1,7 @@
 import { GraphState, LinkKey } from "@graph-state/core";
 import { isVariableLink } from "@/shared/isVariableLink.ts";
 import { isComputedValueLink } from "@/shared/isComputedValueLink.ts";
-import { SpringValue } from "@react-spring/web";
+import { Interpolation, SpringValue } from "@react-spring/web";
 
 export const valueSetter =
   (state: GraphState, entityLinkKey: LinkKey, fieldKey: string) =>
@@ -26,7 +26,12 @@ export const valueSetter =
     }
 
     const resolveValue = state.resolve(entityLinkKey)[fieldKey];
-    if (resolveValue && resolveValue instanceof SpringValue) {
+
+    if (value instanceof Interpolation) {
+      state.mutate(entityLinkKey, {
+        [fieldKey]: value,
+      });
+    } else if (resolveValue && resolveValue instanceof SpringValue) {
       resolveValue.set(value);
     } else {
       state.mutate(entityLinkKey, {

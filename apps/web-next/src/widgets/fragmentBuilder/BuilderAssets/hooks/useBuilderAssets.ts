@@ -15,7 +15,7 @@ export const useBuilderAssets = () => {
   return {
     editColor,
     createColor: () => {
-      createColor({ onSubmit: popoutsStore.close, initial: true })
+      createColor({ initial: true })
     },
     colorVariables,
     removeColor,

@@ -466,6 +466,9 @@ importers:
 
   packages/utils:
     dependencies:
+      '@react-spring/core':
+        specifier: 9.7.4
+        version: 9.7.4(react@18.3.1)
       tsup:
         specifier: ^6.2.3
         version: 6.7.0(postcss@8.4.41)(ts-node@10.9.2(typescript@4.9.5))(typescript@4.9.5)

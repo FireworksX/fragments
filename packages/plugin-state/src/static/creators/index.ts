@@ -78,12 +78,16 @@ export const creators: Plugin = (state) => {
 
   state.createSolidPaintStyle = (options: CreateSolidPaintStyleOptions) => {
     if (options) {
-      return state.mutate({
+      const id = generateId();
+      const colorGraph = {
         _type: nodes.SolidPaintStyle,
-        _id: generateId(),
+        _id: id,
         color: options.color,
         name: options.name ?? "Solid style",
-      });
+      };
+
+      state.resolve(state.key)?.addSolidPaintStyle(colorGraph);
+      return state.keyOfEntity(colorGraph);
     }
 
     return null;

@@ -3,7 +3,6 @@ import { createConstants } from "@fragments/utils";
 export const $EXTENDED: unique symbol = Symbol("extended");
 
 export const nodes = createConstants(
-  "Document",
   "Fragment",
   "Breakpoint",
   "Frame",

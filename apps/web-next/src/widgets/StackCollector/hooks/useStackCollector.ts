@@ -12,7 +12,7 @@ interface Options {
 }
 
 export const useStackCollector = ({ panels, onPrev, onClose }: Options) => {
-  const [{ history, cursor }] = useGraph(popoutsStore)
+  const [{ history, cursor }] = useGraph(popoutsStore, popoutsStore.key)
   const [currentPopout] = useGraph(popoutsStore, history.at(cursor) ?? 'nil')
   const activePanel = currentPopout?.name || ''
   const prevPopout = popoutsStore.prevPopout()

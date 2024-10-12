@@ -1,1 +1,1 @@
-export {} from './ui/Link'
+export { Link } from './ui/Link'
