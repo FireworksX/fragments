@@ -13,6 +13,8 @@ import { Stepper } from '@/shared/ui/Stepper'
 import { Select } from '@/shared/ui/Select'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
+import { getRandomColor } from '@/shared/utils/random'
+import { popoutNames } from '@/shared/data'
 
 export interface StackPanelBorderOptions {
   value?: BorderData
@@ -36,10 +38,6 @@ const StackPanelBorder: FC<StackPanelBorderProps> = ({ className }) => {
         break
       case 'borderColor':
         node.setBorderColor(value)
-
-        if (isLinkKey(prevValue) && isObject(value)) {
-          popoutsStore.updateCurrentContext({ value: documentManager.resolveValue(node, 'borderColor') })
-        }
         break
     }
   })
@@ -52,6 +50,9 @@ const StackPanelBorder: FC<StackPanelBorderProps> = ({ className }) => {
     if (animatableValue(borderTypeInvoker.value) === borderType.None) {
       borderTypeInvoker.onChange(borderType.Solid)
     }
+    if (!animatableValue(borderColorInvoker.value)) {
+      borderColorInvoker.onChange(getRandomColor())
+    }
   }, [])
 
   return (
@@ -61,10 +62,12 @@ const StackPanelBorder: FC<StackPanelBorderProps> = ({ className }) => {
           <InputSelect
             color={getColor(borderColorInvoker.value)}
             onClick={() =>
-              popoutsStore.open('colorPicker', {
+              popoutsStore.open(popoutNames.colorPicker, {
                 context: {
                   value: borderColorInvoker.value,
-                  onChange: nextColor => borderColorInvoker.onChange(nextColor)
+                  onChange: nextColor => {
+                    borderColorInvoker.onChange(nextColor)
+                  }
                 }
               })
             }

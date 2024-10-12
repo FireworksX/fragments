@@ -19,6 +19,7 @@ import { useDisplayColor } from '@/shared/hooks/fragmentBuilder/useDisplayColor'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { cloneColor } from '@/shared/utils/cloneColor'
 import { getRandomColor } from '@/shared/utils/random'
+import { SolidPaintStyles } from '@/entities/fragment/SolidPaintStyles'
 
 export interface StackPanelFillOptions {}
 
@@ -86,7 +87,7 @@ const StackPanelFill: FC<StackPanelFillProps> = ({ className, stackColors }) => 
             }}
           />
         </Panel>
-        <StackColors
+        <SolidPaintStyles
           getInitialColor={() => solidFill.value?.get?.() ?? getRandomColor()}
           activeColorKey={solidFill.value}
           onSelect={solidFill.onChange}

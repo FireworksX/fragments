@@ -119,7 +119,7 @@ export const useBuilderStyles = () => {
     radius: {
       disabled: isTextLayer,
       mode: to(animatableValue(selectionGraph?.isMixedRadius?.()), v => (!v ? 'plain' : 'sides')),
-      isMixed: animatableValue(selectionGraph?.isMixedRadius?.()),
+      isMixed: selectionGraph?.isMixedRadius?.(),
       setCornerSide,
       onChangeRadiusMode,
       items: [

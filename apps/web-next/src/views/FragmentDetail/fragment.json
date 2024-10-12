@@ -25,14 +25,6 @@
           "layerDistribute": "center",
           "borderType": "None",
           "borderWidth": 1,
-          "borderColor": {
-            "r": 13,
-            "g": 196,
-            "b": 45,
-            "a": 1,
-            "_type": "Frame",
-            "_id": "09f0c7ed1ef8a.borderColor"
-          },
           "solidFill": null,
           "parentKey": "$$Breakpoint:tablet",
           "fillType": "Solid",
@@ -52,14 +44,6 @@
               "layerDistribute": "start",
               "borderType": "None",
               "borderWidth": 1,
-              "borderColor": {
-                "r": 13,
-                "g": 196,
-                "b": 45,
-                "a": 1,
-                "_type": "Frame",
-                "_id": "db947711832c3.borderColor"
-              },
               "solidFill": null,
               "fillType": "Solid",
               "parentKey": "$$Frame:09f0c7ed1ef8a",
@@ -131,14 +115,6 @@
               "layerDistribute": "start",
               "borderType": "None",
               "borderWidth": 1,
-              "borderColor": {
-                "r": 13,
-                "g": 196,
-                "b": 45,
-                "a": 1,
-                "_type": "Frame",
-                "_id": "ca6203a61e57a.borderColor"
-              },
               "left": 0,
               "top": 0,
               "positionType": "absolute",
@@ -223,14 +199,6 @@
           "layerDistribute": "center",
           "borderType": "None",
           "borderWidth": 1,
-          "borderColor": {
-            "r": 13,
-            "g": 196,
-            "b": 45,
-            "a": 1,
-            "_type": "Frame",
-            "_id": "09f0c7ed1ef8a.borderColor"
-          },
           "solidFill": null,
           "parentKey": "$$Breakpoint:tablet",
           "fillType": "Solid",
@@ -250,14 +218,6 @@
               "layerDistribute": "start",
               "borderType": "None",
               "borderWidth": 1,
-              "borderColor": {
-                "r": 13,
-                "g": 196,
-                "b": 45,
-                "a": 1,
-                "_type": "Frame",
-                "_id": "db947711832c3.borderColor"
-              },
               "solidFill": null,
               "fillType": "Solid",
               "parentKey": "$$Frame:09f0c7ed1ef8a",
@@ -329,14 +289,6 @@
               "layerDistribute": "start",
               "borderType": "None",
               "borderWidth": 1,
-              "borderColor": {
-                "r": 13,
-                "g": 196,
-                "b": 45,
-                "a": 1,
-                "_type": "Frame",
-                "_id": "ca6203a61e57a.borderColor"
-              },
               "left": 0,
               "top": 0,
               "positionType": "absolute",
@@ -391,14 +343,6 @@
               "layerDistribute": "start",
               "borderType": "None",
               "borderWidth": 1,
-              "borderColor": {
-                "r": 13,
-                "g": 196,
-                "b": 45,
-                "a": 1,
-                "_type": "Frame",
-                "_id": "db947711832c3.borderColor"
-              },
               "solidFill": null,
               "fillType": "Solid",
               "parentKey": "$$Frame:09f0c7ed1ef8a",
@@ -498,14 +442,6 @@
           "layerDistribute": "center",
           "borderType": "None",
           "borderWidth": 1,
-          "borderColor": {
-            "r": 13,
-            "g": 196,
-            "b": 45,
-            "a": 1,
-            "_type": "Frame",
-            "_id": "09f0c7ed1ef8a.borderColor"
-          },
           "solidFill": null,
           "parentKey": "$$Breakpoint:tablet",
           "fillType": "Solid",
@@ -525,14 +461,6 @@
               "layerDistribute": "start",
               "borderType": "None",
               "borderWidth": 1,
-              "borderColor": {
-                "r": 13,
-                "g": 196,
-                "b": 45,
-                "a": 1,
-                "_type": "Frame",
-                "_id": "db947711832c3.borderColor"
-              },
               "solidFill": null,
               "fillType": "Solid",
               "parentKey": "$$Frame:09f0c7ed1ef8a",
@@ -604,14 +532,6 @@
               "layerDistribute": "start",
               "borderType": "None",
               "borderWidth": 1,
-              "borderColor": {
-                "r": 13,
-                "g": 196,
-                "b": 45,
-                "a": 1,
-                "_type": "Frame",
-                "_id": "ca6203a61e57a.borderColor"
-              },
               "left": 0,
               "top": 0,
               "positionType": "absolute",
@@ -701,14 +621,6 @@
             "layerDistribute": "center",
             "borderType": "None",
             "borderWidth": 1,
-            "borderColor": {
-              "r": 13,
-              "g": 196,
-              "b": 45,
-              "a": 1,
-              "_type": "Frame",
-              "_id": "09f0c7ed1ef8a.borderColor"
-            },
             "solidFill": null,
             "parentKey": "$$Breakpoint:tablet",
             "fillType": "Solid",
@@ -728,14 +640,6 @@
                 "layerDistribute": "start",
                 "borderType": "None",
                 "borderWidth": 1,
-                "borderColor": {
-                  "r": 13,
-                  "g": 196,
-                  "b": 45,
-                  "a": 1,
-                  "_type": "Frame",
-                  "_id": "db947711832c3.borderColor"
-                },
                 "solidFill": null,
                 "fillType": "Solid",
                 "parentKey": "$$Frame:09f0c7ed1ef8a",
@@ -807,14 +711,6 @@
                 "layerDistribute": "start",
                 "borderType": "None",
                 "borderWidth": 1,
-                "borderColor": {
-                  "r": 13,
-                  "g": 196,
-                  "b": 45,
-                  "a": 1,
-                  "_type": "Frame",
-                  "_id": "ca6203a61e57a.borderColor"
-                },
                 "left": 0,
                 "top": 0,
                 "positionType": "absolute",
@@ -899,14 +795,6 @@
             "layerDistribute": "center",
             "borderType": "None",
             "borderWidth": 1,
-            "borderColor": {
-              "r": 13,
-              "g": 196,
-              "b": 45,
-              "a": 1,
-              "_type": "Frame",
-              "_id": "09f0c7ed1ef8a.borderColor"
-            },
             "solidFill": null,
             "parentKey": "$$Breakpoint:tablet",
             "fillType": "Solid",
@@ -926,14 +814,6 @@
                 "layerDistribute": "start",
                 "borderType": "None",
                 "borderWidth": 1,
-                "borderColor": {
-                  "r": 13,
-                  "g": 196,
-                  "b": 45,
-                  "a": 1,
-                  "_type": "Frame",
-                  "_id": "db947711832c3.borderColor"
-                },
                 "solidFill": null,
                 "fillType": "Solid",
                 "parentKey": "$$Frame:09f0c7ed1ef8a",
@@ -1005,14 +885,6 @@
                 "layerDistribute": "start",
                 "borderType": "None",
                 "borderWidth": 1,
-                "borderColor": {
-                  "r": 13,
-                  "g": 196,
-                  "b": 45,
-                  "a": 1,
-                  "_type": "Frame",
-                  "_id": "ca6203a61e57a.borderColor"
-                },
                 "left": 0,
                 "top": 0,
                 "positionType": "absolute",
@@ -1067,14 +939,6 @@
                 "layerDistribute": "start",
                 "borderType": "None",
                 "borderWidth": 1,
-                "borderColor": {
-                  "r": 13,
-                  "g": 196,
-                  "b": 45,
-                  "a": 1,
-                  "_type": "Frame",
-                  "_id": "db947711832c3.borderColor"
-                },
                 "solidFill": null,
                 "fillType": "Solid",
                 "parentKey": "$$Frame:09f0c7ed1ef8a",

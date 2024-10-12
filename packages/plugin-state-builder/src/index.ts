@@ -10,6 +10,10 @@ import { frameExtend } from "@/extend/nodes/frameExtend";
 import { fragmentExtend } from "@/extend/nodes/fragmentExtend";
 import { solidPaintStyleExtend } from "@/extend/nodes/solidPaintStyleExtend";
 import { fillExtend } from "@/extend/fillExtend";
+import { sceneExtend } from "@/extend/sceneExtend";
+import { cornerExtend } from "@/extend/cornerExtend";
+import { borderExtend } from "@/extend/borderExtend";
+import { layerExtend } from "@/extend/layerExtend";
 
 export const pluginStateBuilder: Plugin = (state, overrides) => {
   addStatic(state);
@@ -33,13 +37,13 @@ export const pluginStateBuilder: Plugin = (state, overrides) => {
       ]),
       [nodes.Frame]: collectExtends([
         // baseExtend,
-        // sceneExtend,
+        sceneExtend,
         // childrenExtend,
         // layoutExtend,
-        // cornerExtend,
+        cornerExtend,
         // paddingExtend,
-        // layerExtend,
-        // borderExtend,
+        layerExtend,
+        borderExtend,
         fillExtend,
         // cloneExtend,
         positionExtend,
@@ -51,7 +55,13 @@ export const pluginStateBuilder: Plugin = (state, overrides) => {
       // [nodes.Variable]: collectExtends([variableExtend]),
       // [nodes.TransformValue]: collectExtends([transformValueExtend]),
       // [nodes.ComputedValue]: collectExtends([computedValueExtend]),
-      [nodes.Text]: collectExtends([positionExtend, layoutExtend, rectExtend]),
+      [nodes.Text]: collectExtends([
+        positionExtend,
+        layoutExtend,
+        rectExtend,
+        sceneExtend,
+        borderExtend,
+      ]),
     },
     {
       excludePartialGraph: true,

@@ -22,7 +22,7 @@ export const solidFillExtend: Extender = ({
   const solidFillSetter = valueSetter(state, graphKey, "solidFill");
 
   /*
-  Функция возвращяет
+  Функция возвращает
   - null или ссылку на переменную
   - Объект с SpringValue полями { r: Spring<num>, g: Spring<num>, b: Spring<num>, a: Spring<num> }
    */

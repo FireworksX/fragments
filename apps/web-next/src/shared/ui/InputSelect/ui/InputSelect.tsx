@@ -45,7 +45,13 @@ const InputSelect: FC<InputSelectProps> = animated(
         </animated.div>
 
         {children && onReset && (
-          <Touchable className={styles.reset} onClick={onReset}>
+          <Touchable
+            className={styles.reset}
+            onClick={e => {
+              e.stopPropagation()
+              onReset()
+            }}
+          >
             <Close width={11} height={11} />
           </Touchable>
         )}

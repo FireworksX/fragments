@@ -53,7 +53,10 @@ export const useParseStyleRules = (layerField: Field) => {
   //   return undefined
   // })
 
+  console.log(borderType, borderWidth, getColor(borderColor))
+
   rules.border = to([borderType, borderWidth, getColor(borderColor)], (type, width, color) => {
+    console.log(type, width, color)
     if (typeof type === 'string' && type !== builderBorderType.None) {
       return `${toPx(width)} ${type.toLowerCase()} ${color}`
     }

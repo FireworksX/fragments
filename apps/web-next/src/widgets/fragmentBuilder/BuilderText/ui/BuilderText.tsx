@@ -22,7 +22,7 @@ const BuilderText: FC<BuilderTextProps> = ({ className }) => {
   const { selectionGraph } = useBuilderSelection()
   const { weight, color, align, fontSize, lineHeight, letterSpacing, transform, decoration } = useBuilderText()
   const { getColor, getNameColor } = useDisplayColor()
-  const [{ showTextEditor }] = useGraph(builderManager)
+  const [{ showTextEditor }] = useGraph(builderManager, builderManager.key)
 
   return (
     <Panel className={className} title='Text'>

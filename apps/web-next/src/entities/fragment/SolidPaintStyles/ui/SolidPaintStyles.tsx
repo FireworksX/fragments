@@ -19,7 +19,7 @@ interface StackColorsProps {
   onCreate?: (colorKey: StackColorsValue) => void
 }
 
-const StackColors: FC<StackColorsProps> = ({ className, activeColorKey, getInitialColor, onSelect, onCreate }) => {
+const SolidPaintStyles: FC<StackColorsProps> = ({ className, activeColorKey, getInitialColor, onSelect, onCreate }) => {
   const { documentManager } = useContext(BuilderContext)
   const [search, setSearch] = useState('')
   const { colorVariables, editColor, createColor } = useBuilderAssetsColors()
@@ -66,4 +66,4 @@ const StackColors: FC<StackColorsProps> = ({ className, activeColorKey, getIniti
   )
 }
 
-export default StackColors
+export default SolidPaintStyles

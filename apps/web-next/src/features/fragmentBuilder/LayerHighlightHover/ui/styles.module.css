@@ -5,42 +5,6 @@
     pointer-events: none;
 }
 
-.corner {
-    width: 8px;
-    height: 8px;
-    background: var(--background-secondary);
-    border-radius: var(--radius-main);
+.highlight {
     border: 1px solid var(--primary);
-    pointer-events: auto;
-    position: absolute;
-}
-
-.cornerHalfRight {
-    cursor: nesw-resize;
-}
-
-.cornerHalfLeft {
-    cursor: nwse-resize;
-}
-
-.cornerHorizontal {
-    cursor: ew-resize;
-}
-
-.cornerVertical {
-    cursor: ns-resize;
-}
-
-.sideVertical {
-    height: 8px;
-    pointer-events: auto;
-    cursor: ns-resize;
-    position: absolute;
-}
-
-.sideHorizontal {
-    width: 8px;
-    pointer-events: auto;
-    cursor: ew-resize;
-    position: absolute;
 }

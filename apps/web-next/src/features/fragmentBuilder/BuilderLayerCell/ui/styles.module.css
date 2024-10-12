@@ -127,11 +127,11 @@
 }
 
 .collapse {
-    min-width: 12px;
+    min-width: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-left: 10px;
+    align-self: stretch;
 }
 
 .actions {

@@ -22,6 +22,7 @@ import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
 import { BuilderStylesCorners } from '@/features/fragmentBuilder/BuilderStylesCorners'
 import { Stepper } from '@/shared/ui/Stepper'
 import { useDisplayColor } from '@/shared/hooks/fragmentBuilder/useDisplayColor'
+import { borderType } from '@fragments/plugin-state'
 
 interface BuilderStylesProps {
   className?: string
@@ -127,17 +128,19 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
       {!border.disabled && (
         <ControlRow title='Border' actions={border.actions} isHighlight={border.isOverride}>
           <ControlRowWide>
-            <GraphValue graphState={documentManager} field={border.borderColorInvoker.value}>
+            <GraphValue graphState={documentManager} field={border.borderColorInvoker.value} options={{ safe: true }}>
               {value => (
-                <InputSelect
-                  placeholder='Add...'
-                  hasIcon={value && to(border.borderTypeInvoker.value, v => v !== builderBorderType.None)}
-                  color={getColor(value)}
-                  onReset={border.onReset}
-                  onClick={border.onClick}
-                >
-                  {value && to(border.borderTypeInvoker.value, v => (v !== builderBorderType.None ? v : ''))}
-                </InputSelect>
+                <>
+                  <InputSelect
+                    placeholder='Add...'
+                    hasIcon={to(value, v => !!v && v !== borderType.None)}
+                    color={getColor(value)}
+                    onReset={border.onReset}
+                    onClick={border.onClick}
+                  >
+                    {value && to(border.borderTypeInvoker.value, v => (v !== builderBorderType.None ? v : ''))}
+                  </InputSelect>
+                </>
               )}
             </GraphValue>
           </ControlRowWide>

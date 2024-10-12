@@ -90,7 +90,7 @@ export const FragmentBuilder: FC<FragmentBuilderProps> = ({ className }) => {
                 <StackCollector>
                   <StackPanelBorder name='border' title='Border' />
                   <StackPanelFill name='fill' title='Fill' />
-                  <StackPanelColorPicker name='colorPicker' title='Color' />
+                  <StackPanelColorPicker name={popoutNames.colorPicker} title='Color' />
                   {/*/!*<StackPanelFonts name='fonts' title='Fonts' />*!/*/}
                   <StackPanelCssOverride name='cssOverride' title='CSS override' />
                   <StackSolidPaintStyle name={popoutNames.stackSolidPaintStyle} title='Color Variable' />
