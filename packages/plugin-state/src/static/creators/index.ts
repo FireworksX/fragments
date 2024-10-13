@@ -1,5 +1,5 @@
 import { LinkKey, Plugin } from "@graph-state/core";
-import { nodes, variableTransforms, variableType } from "@/definitions.ts";
+import { nodes, variableTransforms, propertyType } from "@/definitions.ts";
 import { generateId } from "@fragments/utils";
 import { Color } from "@/types/props.ts";
 import { createTransformValueEquals } from "@/static/creators/transformValue/createTransformValueEquals.ts";
@@ -14,20 +14,20 @@ import { createTransformValueLT } from "@/static/creators/transformValue/createT
 import { createTransformValueLTE } from "@/static/creators/transformValue/createTransformValueLTE.ts";
 import {
   CreateNumberOptions,
-  createNumberVariable,
-} from "@/static/creators/variables/numberVariable.ts";
+  createNumberProperty,
+} from "@/static/creators/properties/createNumberProperty.ts";
 import {
   CreateObjectOptions,
-  createObjectVariable,
-} from "@/static/creators/variables/objectVariable.ts";
+  createObjectProperty,
+} from "@/static/creators/properties/createObjectProperty.ts";
 import {
   CreateStringOptions,
-  createStringVariable,
-} from "@/static/creators/variables/stringVariable.ts";
+  createStringProperty,
+} from "@/static/creators/properties/createStringProperty.ts";
 import {
   CreateBooleanOptions,
-  createBooleanVariable,
-} from "@/static/creators/variables/booleanVariable.ts";
+  createBooleanProperty,
+} from "@/static/creators/properties/createBooleanProperty.ts";
 
 interface CreateSolidPaintStyleOptions {
   color: Color;
@@ -36,8 +36,8 @@ interface CreateSolidPaintStyleOptions {
 
 export interface ComputedValueOptions {
   inputValue: string | number | boolean | LinkKey;
-  outputType: keyof typeof variableType;
-  inputType: keyof typeof variableType;
+  outputType: keyof typeof propertyType;
+  inputType: keyof typeof propertyType;
   transforms: unknown[];
 }
 
@@ -97,17 +97,17 @@ export const creators: Plugin = (state) => {
     return state.mutate({ _type: nodes.Frame, _id: generateId() });
   };
 
-  state.createNumberVariable = (options: CreateNumberOptions) =>
-    state.mutate(createNumberVariable(options));
+  state.createNumberProperty = (options: CreateNumberOptions) =>
+    state.mutate(createNumberProperty(options));
 
-  state.createBooleanVariable = (options: CreateBooleanOptions) =>
-    state.mutate(createBooleanVariable(options));
+  state.createBooleanProperty = (options: CreateBooleanOptions) =>
+    state.mutate(createBooleanProperty(options));
 
-  state.createObjectVariable = (options: CreateObjectOptions) =>
-    state.mutate(createObjectVariable(options));
+  state.createObjectProperty = (options: CreateObjectOptions) =>
+    state.mutate(createObjectProperty(options));
 
-  state.createStringVariable = (options: CreateStringOptions) =>
-    state.mutate(createStringVariable(options));
+  state.createStringProperty = (options: CreateStringOptions) =>
+    state.mutate(createStringProperty(options));
 
   state.createText = () => {
     return state.mutate({

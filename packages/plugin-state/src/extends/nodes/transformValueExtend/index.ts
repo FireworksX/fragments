@@ -11,7 +11,7 @@ import { transformValueExistsExtend } from "@/extends/nodes/transformValueExtend
 import { transformValueValueSizeExtend } from "@/extends/nodes/transformValueExtend/transformValueSizeExtend";
 
 export const transformValueExtend: Extender = (payload): unknown => {
-  const variableType = payload.graph?.name;
+  const propertyType = payload.graph?.name;
 
   const extender =
     {
@@ -27,7 +27,7 @@ export const transformValueExtend: Extender = (payload): unknown => {
       [variableTransforms.gte]: transformValueValueSizeExtend("gte"),
       [variableTransforms.lt]: transformValueValueSizeExtend("lt"),
       [variableTransforms.lte]: transformValueValueSizeExtend("lte"),
-    }[variableType] || noop;
+    }[propertyType] || noop;
 
   console.log(payload, extender);
   return extender(payload);

@@ -1,4 +1,4 @@
-import { variableType } from "@/definitions.ts";
+import { propertyType } from "@/definitions.ts";
 export type ComponentProperty =
   | StringType
   | BooleanType
@@ -21,14 +21,14 @@ export type TypeValue<TProperty> = TProperty extends {
   : unknown;
 
 export type StringType = {
-  type: typeof variableType.String;
+  type: typeof propertyType.String;
   defaultValue: string;
   placeholder: string;
   displayTextArea: boolean;
 } & TypeWithValue<string>;
 
 export type BooleanType = {
-  type: typeof variableType.Boolean;
+  type: typeof propertyType.Boolean;
   title?: string;
   defaultValue?: boolean;
   enabledTitle: string;
@@ -36,7 +36,7 @@ export type BooleanType = {
 } & TypeWithValue<boolean>;
 
 export type NumberType = {
-  type: typeof variableType.Number;
+  type: typeof propertyType.Number;
   defaultValue: number;
   min: number;
   max: number;
@@ -44,6 +44,6 @@ export type NumberType = {
   displayStepper: boolean;
 } & TypeWithValue<number>;
 
-export type ArrayType = { type: typeof variableType.Array } & TypeWithValue<
+export type ArrayType = { type: typeof propertyType.Array } & TypeWithValue<
   unknown[]
 >;

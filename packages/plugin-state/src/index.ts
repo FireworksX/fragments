@@ -16,7 +16,7 @@ import { borderExtend } from "@/extends/borderExtend";
 import { fillExtend } from "@/extends/fillExtend";
 import { cloneExtend } from "@/extends/cloneExtend";
 import { solidPaintStyleExtend } from "@/extends/nodes/solidPaintStyleExtend";
-import { variableExtend } from "@/extends/nodes/variableExtend";
+import { variableExtend } from "src/extends/nodes/propertyExtend";
 import { transformValueExtend } from "@/extends/nodes/transformValueExtend";
 import { computedValueExtend } from "@/extends/nodes/computedValueExtend";
 import { textExtend } from "@/extends/nodes/textExtend";
@@ -60,7 +60,7 @@ const plugin: Plugin = (state: GraphState<StateEntity>, overrides) => {
         rectExtend,
       ]),
       [nodes.SolidPaintStyle]: collectExtends([solidPaintStyleExtend]),
-      [nodes.Variable]: collectExtends([variableExtend]),
+      [nodes.Property]: collectExtends([variableExtend]),
       [nodes.TransformValue]: collectExtends([transformValueExtend]),
       [nodes.ComputedValue]: collectExtends([computedValueExtend]),
       [nodes.Text]: collectExtends([

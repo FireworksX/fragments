@@ -4,7 +4,7 @@ import { builderVariableType } from '@fragments/fragments-plugin/performance'
 import { ResultSetter } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { isComputedValueLink } from '@/shared/utils/isComputedValueLink'
-import { useBuilderVariables } from '@/shared/hooks/fragmentBuilder/useBuilderVariables'
+import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
 // import {
 //   stackVariableTransformName
 // } from '@/widgets/StackCollector/components/variables/StackVariableTransform/StackVariableTransform'
@@ -28,7 +28,7 @@ const variableFields = {
 
 export const useBuilderFieldVariable = (layer: Field) => {
   const { documentManager } = useContext(BuilderContext)
-  const { variables, propsLinks, getAllowedVariablesByType } = useBuilderVariables()
+  const { variables, propsLinks, getAllowedVariablesByType } = useFragmentProperties()
 
   const getVariableName = (preferredNAme: string) => {
     const currentLinks = propsLinks.map(documentManager.resolve)

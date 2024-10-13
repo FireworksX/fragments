@@ -1,0 +1,13 @@
+.root {}
+
+.icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px;
+    color: var(--secondary);
+}
+
+.body   {
+    color: var(--text-color-accent-secondary);
+}

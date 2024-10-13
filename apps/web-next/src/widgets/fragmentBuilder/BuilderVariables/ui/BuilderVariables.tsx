@@ -8,7 +8,7 @@ import { DropdownGroup } from '@/shared/ui/DropdownGroup'
 import { DropdownOption } from '@/shared/ui/DropdownOption'
 import { PanelHeadAside } from '@/shared/ui/PanelHeadAside'
 import { BuilderVariableCell } from '@/features/fragmentBuilder/BuilderVariableCell'
-import { useBuilderVariables } from '@/shared/hooks/fragmentBuilder/useBuilderVariables'
+import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
 
 interface BuilderVariablesProps {
   className?: string
@@ -17,7 +17,7 @@ interface BuilderVariablesProps {
 const types = Object.keys(builderVariableType)
 
 export const BuilderVariables: FC<BuilderVariablesProps> = ({ className }) => {
-  const { propsLinks, variables, openVariable } = useBuilderVariables()
+  const { propsLinks, variables, openVariable } = useFragmentProperties()
 
   return (
     <div className={cn(styles.root, className)} data-testid='BuilderVariables'>

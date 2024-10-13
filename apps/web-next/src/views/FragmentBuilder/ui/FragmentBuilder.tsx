@@ -31,6 +31,9 @@ import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderMana
 import { BuilderTextEditorComposer } from '@/features/fragmentBuilder/BuilderTextEditor'
 import { StackSolidPaintStyle } from '@/features/popouts/StackSolidPaintStyle'
 import { popoutNames } from '@/shared/data'
+import StackStringProperty from '@/features/popouts/StackStringProperty/ui/StackStringProperty'
+import StackNumberProperty from '@/features/popouts/StackNumberProperty/ui/StackNumberProperty'
+import StackBooleanProperty from '../../../features/popouts/StackBooleanProperty/ui/StackBooleanProperty'
 
 interface FragmentBuilderProps {
   className?: string
@@ -94,6 +97,9 @@ export const FragmentBuilder: FC<FragmentBuilderProps> = ({ className }) => {
                   {/*/!*<StackPanelFonts name='fonts' title='Fonts' />*!/*/}
                   <StackPanelCssOverride name='cssOverride' title='CSS override' />
                   <StackSolidPaintStyle name={popoutNames.stackSolidPaintStyle} title='Color Variable' />
+                  <StackStringProperty name={popoutNames.stackStringProperty} title='String Propery' />
+                  <StackNumberProperty name={popoutNames.stackNumberProperty} title='Number Propery' />
+                  <StackBooleanProperty name={popoutNames.stackBooleanProperty} title='Boolean Propery' />
                   {/*<StackPanelCssOverrideList name='cssOverrideList' title='CSS overrides' />*/}
                   {/*<StackLoopEffect name='loopEffect' title='Loop Effect' />*/}
 
