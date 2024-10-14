@@ -1,5 +1,5 @@
 import { generateId } from "@fragments/utils";
-import { nodes, propertyType } from "@/definitions.ts";
+import { nodes, variableType } from "@/definitions.ts";
 
 export type CreateBooleanOptions = Partial<{
   required: boolean;
@@ -7,15 +7,15 @@ export type CreateBooleanOptions = Partial<{
   defaultValue: boolean;
 }>;
 
-export const createBooleanProperty = (options: CreateBooleanOptions) => {
+export const createBooleanVariable = (options: CreateBooleanOptions) => {
   const id = generateId();
 
   return {
-    _type: nodes.Property,
-    _id: id,
+    _type: nodes.Variable,
+    _id: options?._id ?? id,
     name: options?.name || id,
     required: options?.required || false,
-    type: propertyType.Boolean,
+    type: variableType.Boolean,
     defaultValue: false,
     value: null,
   };

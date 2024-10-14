@@ -4,10 +4,10 @@ import styles from './styles.module.css'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
 import { LinkKey } from '@graph-state/core'
-import { builderVariableType } from '@fragments/fragments-plugin/performance'
 import { Cell } from '@/shared/ui/Cell'
 import { Button } from '@/shared/ui/Button'
 import { VariableIcon } from '@/shared/ui/VariableIcon'
+import { variableType } from '@fragments/plugin-state'
 
 interface BuilderVariableCellProps {
   variableKey?: LinkKey
@@ -28,7 +28,7 @@ export const BuilderVariableCell: FC<BuilderVariableCellProps> = ({
   const Icon = <VariableIcon type={variable.type} />
 
   const description = {
-    [builderVariableType.Object]: !!variable?.fields?.length && `Fields: ${variable?.fields?.length}`
+    [variableType.Object]: !!variable?.fields?.length && `Fields: ${variable?.fields?.length}`
   }[variable?.type]
 
   return (

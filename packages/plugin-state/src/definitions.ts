@@ -9,7 +9,7 @@ export const nodes = createConstants(
   "Text",
   "SolidPaintStyle",
   "CssLink",
-  "Property",
+  "Variable",
   "ComputedValue",
   "TransformValue"
 );
@@ -60,7 +60,7 @@ export const effectName = createConstants(
   "wiggle",
   "increase"
 );
-export const propertyType = createConstants(
+export const variableType = createConstants(
   "String",
   "Boolean",
   "Array",

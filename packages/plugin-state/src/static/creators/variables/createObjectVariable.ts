@@ -1,6 +1,6 @@
 import { generateId } from "@fragments/utils";
 import { LinkKey } from "@graph-state/core";
-import { nodes, propertyType } from "@/definitions.ts";
+import { nodes, variableType } from "@/definitions.ts";
 
 export type CreateObjectOptions = Partial<{
   name: string;
@@ -8,15 +8,15 @@ export type CreateObjectOptions = Partial<{
   fields: LinkKey[];
 }>;
 
-export const createObjectProperty = (options: CreateObjectOptions) => {
+export const createObjectVariable = (options: CreateObjectOptions) => {
   const id = generateId();
 
   return {
-    _type: nodes.Property,
-    _id: id,
+    _type: nodes.Variable,
+    _id: options?._id ?? id,
     name: options?.name || id,
     required: options?.required || false,
-    type: propertyType.Object,
+    type: variableType.Object,
     fields: [],
     value: null,
   };

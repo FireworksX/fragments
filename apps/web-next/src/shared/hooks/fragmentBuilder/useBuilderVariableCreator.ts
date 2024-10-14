@@ -4,11 +4,9 @@ import { LinkKey } from '@graph-state/core'
 // import { stackObjectVariableName } from '@/builder/StackCollector/components/variables/StackObjectVariable/StackObjectVariable'
 // import { stackStringVariableName } from '@/builder/StackCollector/components/variables/StackStringVariable/StackStringVariable'
 import { popoutsStore } from '@/shared/store/popouts.store'
-import { builderVariableTransforms, builderVariableType } from '@fragments/fragments-plugin/performance'
 import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
-
-const numberVariableConditions = [builderVariableTransforms]
+import { variableType } from '@fragments/plugin-state'
 
 export const useBuilderVariableCreator = () => {
   const { documentManager } = useContext(BuilderContext)
@@ -33,27 +31,24 @@ export const useBuilderVariableCreator = () => {
     })
   }
 
-  const allowVariables = [
-    builderVariableType.Number,
-    builderVariableType.Boolean,
-    builderVariableType.String,
-    builderVariableType.Object
-  ].map(type => ({
-    type,
-    createVariable: (variableOptions = {}) => {
-      const methodByType = {
-        [builderVariableType.Number]: documentManager.createNumberVariable,
-        [builderVariableType.Boolean]: documentManager.createBooleanVariable,
-        [builderVariableType.String]: documentManager.createStringVariable,
-        [builderVariableType.Object]: documentManager.createObjectVariable
-      }[type]
+  const allowVariables = [variableType.Number, variableType.Boolean, variableType.String, variableType.Object].map(
+    type => ({
+      type,
+      createVariable: (variableOptions = {}) => {
+        const methodByType = {
+          [variableType.Number]: documentManager.createNumberVariable,
+          [variableType.Boolean]: documentManager.createBooleanVariable,
+          [variableType.String]: documentManager.createStringVariable,
+          [variableType.Object]: documentManager.createObjectVariable
+        }[type]
 
-      return methodByType(variableOptions)
-    },
-    openVariable: (vairableLink: LinkKey, openOptions = {}) => {
-      openVariable(vairableLink, openOptions)
-    }
-  }))
+        return methodByType(variableOptions)
+      },
+      openVariable: (vairableLink: LinkKey, openOptions = {}) => {
+        openVariable(vairableLink, openOptions)
+      }
+    })
+  )
 
   const allowVariablesMap = allowVariables.reduce((acc, el) => {
     acc[el.type] = el

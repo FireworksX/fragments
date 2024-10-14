@@ -1,10 +1,11 @@
 import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { builderVariableType } from '@fragments/fragments-plugin/performance'
 import { ResultSetter } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { isComputedValueLink } from '@/shared/utils/isComputedValueLink'
 import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
+import { variableType } from '@fragments/plugin-state'
+import { DropdownRenderOption } from '@/shared/ui/RenderDropdown'
 // import {
 //   stackVariableTransformName
 // } from '@/widgets/StackCollector/components/variables/StackVariableTransform/StackVariableTransform'
@@ -13,7 +14,7 @@ export type BuilderFieldVariable = ReturnType<ReturnType<typeof useBuilderFieldV
 
 const variableFields = {
   opacity: {
-    type: builderVariableType.Number,
+    type: variableType.Number,
     valueOptions: {
       step: 0.1,
       max: 1,
@@ -22,13 +23,13 @@ const variableFields = {
     }
   },
   visible: {
-    type: builderVariableType.Boolean
+    type: variableType.Boolean
   }
 }
 
 export const useBuilderFieldVariable = (layer: Field) => {
   const { documentManager } = useContext(BuilderContext)
-  const { variables, propsLinks, getAllowedVariablesByType } = useFragmentProperties()
+  const { variables, propsLinks, getAllowedVariablesByType, properties } = useFragmentProperties()
 
   const getVariableName = (preferredNAme: string) => {
     const currentLinks = propsLinks.map(documentManager.resolve)
@@ -42,7 +43,7 @@ export const useBuilderFieldVariable = (layer: Field) => {
 
   const handleCreateVariable = (key: string, setter: ResultSetter, currentValue: unknown) => {
     if (key === 'opacity') {
-      const variableCreator = variables.find(v => v.type === builderVariableType.Number)
+      const variableCreator = variables.find(v => v.type === variableType.Number)
       const variableLink = variableCreator.createAndAppend(
         {
           name: getVariableName('opacity'),
@@ -90,14 +91,33 @@ export const useBuilderFieldVariable = (layer: Field) => {
 
   return (key: string, setter: ResultSetter, currentValue: unknown) => {
     const hasConnector = key in variableFields
-    const allowedVariables = (
-      getAllowedVariablesByType(variableFields[key]?.type, selection =>
-        handleConnectVariable({ selection, setter, key })
-      ) ?? []
-    ).map(variable => ({
-      ...variable,
-      options: [variable.transforms]
-    }))
+    // const allowedVariables = (
+    //   getAllowedVariablesByType(variableFields[key]?.type, selection =>
+    //     handleConnectVariable({ selection, setter, key })
+    //   ) ?? []
+    // ).map(variable => ({
+    //   ...variable,
+    //   options: [variable.transforms]
+    // }))
+
+    const getPropertiesForField = (field: string): DropdownRenderOption[] => {
+      if (field in variableFields) {
+        const fieldValue = variableFields[field]
+        const typeProperties = properties.filter(prop => prop.type === fieldValue.type)
+
+        return typeProperties.map(prop => ({
+          label: prop.name,
+          onClick: () => {
+            setter(prop)
+          }
+        }))
+      }
+
+      return []
+    }
+
+    const fieldVariables = getPropertiesForField(key)
+
     const isComputedValue = isComputedValueLink(currentValue)
 
     return {
@@ -114,8 +134,8 @@ export const useBuilderFieldVariable = (layer: Field) => {
             {
               key: 'setVariable',
               label: 'Set variable',
-              options: [allowedVariables],
-              disabled: allowedVariables.length === 0
+              options: [fieldVariables],
+              disabled: fieldVariables.length === 0
             },
             isComputedValue && {
               key: 'editTransform',

@@ -1,23 +1,21 @@
 import { isValue } from "@fragments/utils";
 import { Extender } from "@/types";
 import { valueSetter } from "@/shared/valueSetter.ts";
-import { propertyType } from "@/definitions.ts";
+import { variableType } from "@fragments/plugin-state";
 
-export const stringVariableExtend: Extender = ({
-  graphKey,
+export const booleanVariableExtend: Extender = ({
   graph,
   getValue,
   state,
+  graphKey,
 }) => {
   return {
     ...graph,
-    type: propertyType.String,
+    value: getValue("value", null),
     name: getValue("name", graph._id),
-    value: getValue("value"),
     required: getValue("required", false),
-    defaultValue: getValue("defaultValue", ""),
-    placeholder: getValue("placeholder", null),
-    displayTextArea: getValue("displayTextArea", false),
+    type: variableType.Boolean,
+    defaultValue: getValue("defaultValue", false),
 
     getValue: () => {
       const graph = state.resolve(graphKey);
@@ -31,7 +29,5 @@ export const stringVariableExtend: Extender = ({
     },
     setRequired: valueSetter(state, graphKey, "required"),
     setDefaultValue: valueSetter(state, graphKey, "defaultValue"),
-    setPlaceholder: valueSetter(state, graphKey, "placeholder"),
-    setDisplayTextArea: valueSetter(state, graphKey, "displayTextArea"),
   };
 };

@@ -14,6 +14,7 @@ import { sceneExtend } from "@/extend/sceneExtend";
 import { cornerExtend } from "@/extend/cornerExtend";
 import { borderExtend } from "@/extend/borderExtend";
 import { layerExtend } from "@/extend/layerExtend";
+import { variableExtend } from "@/extend/variableExtend";
 
 export const pluginStateBuilder: Plugin = (state, overrides) => {
   addStatic(state);
@@ -52,7 +53,7 @@ export const pluginStateBuilder: Plugin = (state, overrides) => {
         frameExtend,
       ]),
       [nodes.SolidPaintStyle]: collectExtends([solidPaintStyleExtend]),
-      // [nodes.Variable]: collectExtends([variableExtend]),
+      [nodes.Variable]: collectExtends([variableExtend]),
       // [nodes.TransformValue]: collectExtends([transformValueExtend]),
       // [nodes.ComputedValue]: collectExtends([computedValueExtend]),
       [nodes.Text]: collectExtends([

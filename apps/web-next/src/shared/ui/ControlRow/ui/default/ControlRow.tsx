@@ -2,7 +2,6 @@ import { FC, PropsWithChildren, useContext } from 'react'
 import cn from 'classnames'
 import { LinkKey } from '@graph-state/core'
 import { GraphValue } from '@graph-state/react'
-import { builderNodes } from '@fragments/fragments-plugin'
 import styles from './styles.module.css'
 import PlusIcon from '@/shared/icons/fills/plus-fill.svg'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
@@ -12,6 +11,7 @@ import { isVariableLink } from '@/shared/utils/isVariableLink'
 import { isComputedValueLink } from '@/shared/utils/isComputedValueLink'
 import { Touchable } from '@/shared/ui/Touchable'
 import { InputSelectVariable } from '@/shared/ui/InputSelectVariable'
+import { nodes } from '@fragments/plugin-state'
 
 interface BuilderControlRowProps extends PropsWithChildren {
   value?: unknown | LinkKey
@@ -62,7 +62,7 @@ const ControlRow: FC<BuilderControlRowProps> = ({
           {variableValue => (
             <ControlRowWide>
               <InputSelectVariable
-                kind={variableValue._type === builderNodes.Variable ? 'variable' : 'computed'}
+                kind={variableValue._type === nodes.Variable ? 'variable' : 'computed'}
                 type={variableValue.type}
                 onClick={onClickVariable}
                 onReset={onResetVariable}

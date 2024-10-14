@@ -1,5 +1,5 @@
 import { generateId } from "@fragments/utils";
-import { nodes, propertyType } from "@/definitions.ts";
+import { nodes, variableType } from "@/definitions.ts";
 
 export type CreateNumberOptions = Partial<{
   name: string;
@@ -11,15 +11,15 @@ export type CreateNumberOptions = Partial<{
   displayStepper: boolean;
 }>;
 
-export const createNumberProperty = (options: CreateNumberOptions) => {
+export const createNumberVariable = (options: CreateNumberOptions) => {
   const id = generateId();
 
   return {
-    _type: nodes.Property,
-    _id: id,
+    _type: nodes.Variable,
+    _id: options?._id ?? id,
     name: options?.name ?? id,
     required: options?.required ?? false,
-    type: propertyType.Number,
+    type: variableType.Number,
     defaultValue: options?.defaultValue ?? 1,
     min: options?.min ?? 1,
     max: options?.max ?? 100,

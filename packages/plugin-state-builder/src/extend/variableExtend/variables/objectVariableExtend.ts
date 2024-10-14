@@ -1,6 +1,6 @@
 import { Extender } from "@/types";
 import { valueSetter } from "@/shared/valueSetter.ts";
-import { propertyType } from "@/definitions.ts";
+import { variableType } from "@fragments/plugin-state";
 
 export const objectVariableExtend: Extender = ({
   graph,
@@ -10,7 +10,7 @@ export const objectVariableExtend: Extender = ({
 }) => {
   return {
     ...graph,
-    type: propertyType.Object,
+    type: variableType.Object,
     name: getValue("name", graph._id),
     required: getValue("required", false),
     fields: getValue("fields", []),

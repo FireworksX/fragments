@@ -1,9 +1,9 @@
 import { createContext, FC, PropsWithChildren, ReactNode, useContext } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { builderNodes } from '@fragments/fragments-plugin/performance'
 import { AsideBar, AsideBarProps } from '@/shared/ui/AsideBar'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
+import { nodes } from '@fragments/plugin-state'
 
 interface ControlsProps extends AsideBarProps {
   className?: string
@@ -27,11 +27,11 @@ const BuilderControls: FC<ControlsProps> = ({
 }) => {
   const { selectionGraph } = useBuilderSelection()
 
-  const hasSize = [builderNodes.Frame, builderNodes.Text].some(type => type === selectionGraph?._type)
-  const hasLayout = [builderNodes.Frame].some(type => type === selectionGraph?._type)
-  const hasStyles = [builderNodes.Frame].some(type => type === selectionGraph?._type)
-  const hasText = [builderNodes.Text].some(type => type === selectionGraph?._type)
-  const hasCssOverride = [builderNodes.Frame].some(type => type === selectionGraph?._type)
+  const hasSize = [nodes.Frame, nodes.Text].some(type => type === selectionGraph?._type)
+  const hasLayout = [nodes.Frame].some(type => type === selectionGraph?._type)
+  const hasStyles = [nodes.Frame].some(type => type === selectionGraph?._type)
+  const hasText = [nodes.Text].some(type => type === selectionGraph?._type)
+  const hasCssOverride = [nodes.Frame].some(type => type === selectionGraph?._type)
 
   return (
     <AsideBar className={cn(className, styles.root)} {...asideProps}>

@@ -6,10 +6,10 @@ import TextFrameIcon from '@/shared/icons/text-frame.svg'
 import ToggleIcon from '@/shared/icons/toggle.svg'
 import { Cell } from '@/shared/ui/Cell'
 import { TouchableProps } from '@/shared/ui/Touchable'
-import { propertyType } from '@fragments/plugin-state'
+import { variableType } from '@fragments/plugin-state'
 
 interface PropertyBooleanCellProps extends PropsWithChildren, TouchableProps {
-  type: keyof typeof propertyType
+  type: keyof typeof variableType
   className?: string
 }
 
@@ -19,7 +19,7 @@ export const PropertyGenericCell: FC<PropertyBooleanCellProps> = ({ children, cl
       Number: HashtagIcon,
       String: TextFrameIcon,
       Boolean: ToggleIcon
-    } as Record<keyof typeof propertyType, ElementType>
+    } as Record<keyof typeof variableType, ElementType>
   )[type]
 
   return (

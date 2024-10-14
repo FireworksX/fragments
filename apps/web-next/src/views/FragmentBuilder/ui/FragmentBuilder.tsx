@@ -60,7 +60,7 @@ export const FragmentBuilder: FC<FragmentBuilderProps> = ({ className }) => {
             isOpen={isEdit}
             assetsNode={<BuilderAssets />}
             layersNode={<BuilderLayers />}
-            variablesNode={<BuilderVariables />}
+            // variablesNode={<BuilderVariables />}
           />
 
           <BuilderCanvas>

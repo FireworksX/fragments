@@ -57,7 +57,7 @@ const ComponentVariablesModal: FC<ComponentVariablesModalProps> = ({ className }
                 {value => (
                   <Styled.Item
                     isActive={active === field}
-                    propertyType={value.type}
+                    variableType={value.type}
                     color={colors.component}
                     onClick={() => select(field)}
                     onReset={noop}

@@ -7,7 +7,7 @@ import { Panel } from '@/shared/ui/Panel'
 import { Container } from '@/shared/ui/Container'
 import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
 import { DropdownOption } from '@/shared/ui/DropdownOption'
-import { propertyType } from '@fragments/plugin-state'
+import { variableType } from '@fragments/plugin-state'
 
 interface AssetsPropertiesProps {
   propertiesTree: ReactNode

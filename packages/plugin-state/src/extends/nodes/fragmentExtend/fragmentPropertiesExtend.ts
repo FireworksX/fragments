@@ -1,6 +1,6 @@
 import { Extender } from "@/types";
 import { Entity } from "@graph-state/core";
-import { propertyType } from "@/definitions.ts";
+import { variableType } from "@/definitions.ts";
 
 export const fragmentPropertiesExtend: Extender = ({
   getValue,
@@ -9,22 +9,22 @@ export const fragmentPropertiesExtend: Extender = ({
   graphKey,
 }) => {
   const creatorsMethodsMap = {
-    [propertyType.Number]: state.createNumberProperty,
-    [propertyType.Boolean]: state.createBooleanProperty,
-    [propertyType.String]: state.createStringProperty,
+    [variableType.Number]: state.createNumberVariable,
+    [variableType.Boolean]: state.createBooleanVariable,
+    [variableType.String]: state.createStringVariable,
   };
 
   return {
     properties: getValue("properties", []),
-    createProperty: (type: keyof typeof propertyType) => {
-      const createdPropertyLink = creatorsMethodsMap[type]?.();
+    createProperty: (type: keyof typeof variableType) => {
+      const createdProperty = creatorsMethodsMap[type]?.();
 
-      if (createdPropertyLink) {
+      if (createdProperty) {
         state.mutate(graphKey, {
-          properties: [createdPropertyLink],
+          properties: [createdProperty],
         });
 
-        return createdPropertyLink;
+        return createdProperty;
       }
 
       return null;

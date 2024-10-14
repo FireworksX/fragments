@@ -4,12 +4,12 @@ import styles from './styles.module.css'
 import { animated } from '@react-spring/web'
 import Close from '@/shared/icons/close.svg'
 import FilterFillIcon from '@/shared/icons/fills/filter-fill.svg'
-import { builderVariableType } from '@fragments/fragments-plugin/performance'
 import { Touchable } from '@/shared/ui/Touchable'
 import { VariableIcon } from '@/shared/ui/VariableIcon'
+import { variableType } from '@fragments/plugin-state'
 
 interface InputSelectVariableProps extends PropsWithChildren {
-  type: keyof typeof builderVariableType
+  type: keyof typeof variableType
   kind: 'variable' | 'computed'
   className?: string
   bodyClassName?: string

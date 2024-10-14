@@ -1015,43 +1015,7 @@
       "parentKey": "$$Fragment:g34gherhg3g"
     }
   ],
-  "props": [
-    {
-      "_type": "Variable",
-      "_id": "b19eb7bfeae4e",
-      "name": "opacity",
-      "type": "Number",
-      "defaultValue": 0.708,
-      "max": 1,
-      "step": 0.01,
-      "displayStepper": true,
-      "min": 1
-    },
-    {
-      "_type": "Variable",
-      "_id": "bgdseb7bfeae4e",
-      "name": "size",
-      "type": "Number",
-      "defaultValue": 10,
-      "max": 100,
-      "step": 1,
-      "displayStepper": true,
-      "min": 1
-    },
-    {
-      "_type": "Variable",
-      "_id": "1778b033cd6bd",
-      "name": "hasTrend",
-      "type": "Boolean"
-    },
-    {
-      "_type": "Variable",
-      "_id": "826b755e2612b",
-      "name": "buttonText",
-      "type": "String",
-      "defaultValue": "Забрать"
-    }
-  ],
+
   "opacity": 1,
   "visible": true,
   "overflow": "hidden",

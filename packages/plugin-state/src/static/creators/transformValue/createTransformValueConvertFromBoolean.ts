@@ -1,8 +1,8 @@
 import { generateId } from "@fragments/utils";
-import { nodes, variableTransforms, propertyType } from "@/definitions.ts";
+import { nodes, variableTransforms, variableType } from "@/definitions.ts";
 
 export interface CreateTransformValueConvertFromBooleanOptions {
-  outputType: keyof typeof propertyType;
+  outputType: keyof typeof variableType;
   truthy: unknown;
   falsy: unknown;
 }

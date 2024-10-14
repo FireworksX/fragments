@@ -1,11 +1,11 @@
 import { ElementRef, useCallback, useContext, useEffect, useRef } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { to, useSpring } from '@react-spring/web'
-import { builderNodes } from '@fragments/fragments-plugin/performance'
 import { usePrevious } from 'react-use'
 import { extractAnimatableValues } from '@/shared/utils/extractAnimatableValues'
 import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderManager'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
+import { nodes } from '@fragments/plugin-state'
 
 export const useBuilderTextEditor = () => {
   const { documentManager } = useContext(BuilderContext)
@@ -53,11 +53,11 @@ export const useBuilderTextEditor = () => {
   useEffect(() => {
     const disconnectObserver: any = () => undefined
 
-    if (selection && isTextEditing && selectionGraph?._type === builderNodes.Text) {
+    if (selection && isTextEditing && selectionGraph?._type === nodes.Text) {
       selectionGraph?.setOpacity(0)
     } else {
       const prevSelectionNode = documentManager.resolve(prevSelection)
-      if (prevSelectionNode && prevSelectionNode?._type === builderNodes.Text) {
+      if (prevSelectionNode && prevSelectionNode?._type === nodes.Text) {
         prevSelectionNode?.setOpacity?.(1)
       }
     }

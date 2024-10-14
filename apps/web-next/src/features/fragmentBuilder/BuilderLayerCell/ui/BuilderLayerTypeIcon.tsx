@@ -6,7 +6,7 @@ import TextFrame from '@/shared/icons/text-frame.svg'
 import ColumnsFrame from '@/shared/icons/columns-frame.svg'
 import RowsFrame from '@/shared/icons/rows-frame.svg'
 import Frame from '@/shared/icons/frame.svg'
-import { builderNodes, builderLayerDirection } from '@fragments/fragments-plugin/performance'
+import { layerDirection, nodes } from '@fragments/plugin-state'
 
 interface BuilderLayerTypeIconProps {
   type: string
@@ -18,10 +18,10 @@ interface BuilderLayerTypeIconProps {
 
 export const BuilderLayerTypeIcon: FC<BuilderLayerTypeIconProps> = animated(
   ({ className, type, hasLayout, layoutDirection, primaryIconClassName, textIconClassName }) => {
-    if (type === builderNodes.Text) return <TextFrame className={textIconClassName} />
+    if (type === nodes.Text) return <TextFrame className={textIconClassName} />
 
     if (hasLayout) {
-      return layoutDirection === builderLayerDirection.horizontal ? (
+      return layoutDirection === layerDirection.horizontal ? (
         <ColumnsFrame className={primaryIconClassName} />
       ) : (
         <RowsFrame className={primaryIconClassName} />

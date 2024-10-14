@@ -2,18 +2,18 @@ import { FC, useContext } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { useBuilderSize } from '../hooks/useBuilderSize'
-import { builderNodes, builderSizing } from '@fragments/fragments-plugin'
 import { Panel } from '@/shared/ui/Panel'
 import { BuilderSizeLocker } from '@/features/fragmentBuilder/BuilderSizeLocker'
 import { ControlRow } from '@/shared/ui/ControlRow'
 import { InputNumber } from '@/shared/ui/InputNumber'
 import { Select } from '@/shared/ui/Select'
+import { sizing } from '@fragments/plugin-state'
 
 interface BuilderSizeProps {
   className?: string
 }
 
-const DISABLE_UTILS: (keyof typeof builderSizing)[] = [builderSizing.Fill, builderSizing.Hug]
+const DISABLE_UTILS: (keyof typeof sizing)[] = [sizing.Fill, sizing.Hug]
 
 const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
   const {
@@ -31,12 +31,12 @@ const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
 
   const Options = (
     <>
-      <option value={builderSizing.Relative}>Rel</option>
-      <option value={builderSizing.Fixed}>Fixed</option>
-      <option value={builderSizing.Hug} disabled={!hugContentEnabled}>
+      <option value={sizing.Relative}>Rel</option>
+      <option value={sizing.Fixed}>Fixed</option>
+      <option value={sizing.Hug} disabled={!hugContentEnabled}>
         Hug
       </option>
-      <option value={builderSizing.Fill} disabled={!fillContentEnabled}>
+      <option value={sizing.Fill} disabled={!fillContentEnabled}>
         Fill
       </option>
     </>
