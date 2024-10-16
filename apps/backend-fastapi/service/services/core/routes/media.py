@@ -2,7 +2,7 @@ from typing import List
 from services.dependencies import supabase
 from fastapi import HTTPException, status
 import strawberry
-from .schemas import Fragment, AuthPayload, Media
+from .schemas import FragmentGet, AuthPayload, MediaGet
 from .middleware import Context
 import uuid
 from storage3.utils import StorageException
@@ -12,7 +12,7 @@ FOLDER = 'assets'
 PROJECT_BUCKET = 'project'
 
 
-async def upload_asset(info: strawberry.Info[Context], file: UploadFile) -> Media:
+async def upload_asset(info: strawberry.Info[Context], file: UploadFile) -> MediaGet:
     user: AuthPayload = info.context.user()
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
@@ -32,13 +32,13 @@ async def upload_asset(info: strawberry.Info[Context], file: UploadFile) -> Medi
     ext: str = file.filename.split('.')[-1]
 
     entry = supabase.table('media').insert({'path': filePath, 'name': file.filename, 'ext': ext, 'public_path': public_url, 'user': user.user.id}).execute()
-    return Media(id=entry.data[0]['id'], path=public_url)
+    return MediaGet(id=entry.data[0]['id'], path=public_url)
 
 
-async def asset(info: strawberry.Info[Context], id_: str) -> Media:
+async def asset(info: strawberry.Info[Context], id_: int) -> MediaGet:
     user: AuthPayload = info.context.user()
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
     entry = supabase.table('media').select('*').eq('id', id_).execute()
-    return Media(id=entry.data[0]['id'], path=entry.data[0]['public_path'])
+    return MediaGet(id=entry.data[0]['id'], path=entry.data[0]['public_path'])

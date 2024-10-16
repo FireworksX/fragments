@@ -1,56 +1,67 @@
-from services.dependencies import supabase
-from .schemas import User, AuthPayload
+from .schemas import UserGet, AuthPayload
 from strawberry.fastapi import BaseContext
+from database import Session
+from database.models import User
+from services.dependencies import get_db
+from crud.user import get_user_by_email_db
+from conf.settings import service_settings
+from services.core.utils import create_access_token
+import jwt
+from jwt.exceptions import InvalidTokenError
+from fastapi import HTTPException, status
+
+credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"Authorization": "token"},
+    )
 class Context(BaseContext):
-    def user(self) -> AuthPayload | None:
+    async def user(self) -> AuthPayload | None:
         if not self.request:
             return None
 
         authorization = self.request.headers.get("Authorization", None)
-        refresh = self.request.headers.get("refresh", None)
-        rsp = supabase.auth.get_user(authorization)
-        if rsp is None:
-            return None
-
-        email: str = rsp.dict()['user']['user_metadata']['email']
-
-        data = supabase.postgrest.from_table("users").select("*").eq("email", email).execute()
-        if not data:
-            return None
-        user: User = User(last_name=data.dict()['data'][0]['last_name'],
-                          first_name=data.dict()['data'][0]['first_name'],
-                          id=data.dict()['data'][0]['id'],
-                          email=data.dict()['data'][0]['email'])
+        refresh = self.request.headers.get("Refresh", None)
+        try:
+            payload = jwt.decode(authorization, service_settings.ACCESS_TOKEN_SECRET_KEY, algorithms=[service_settings.ALGORITHM])
+            email: str = payload.get("sub")
+            if email is None:
+                raise credentials_exception
+        except InvalidTokenError:
+            raise credentials_exception
+        user: User = await get_user_by_email_db(self.session(), email)
+        if user is None:
+            raise credentials_exception
         return AuthPayload(
             user=user,
             access_token=authorization,
             refresh_token=refresh
         )
 
-    def refresh_user(self) -> AuthPayload | None:
+    async def refresh_user(self) -> AuthPayload | None:
         if not self.request:
             return None
 
-        refresh = self.request.headers.get("refresh", None)
-        rsp = supabase.auth.refresh_session(refresh)
-        if rsp is None:
-            return None
-
-        email: str = rsp.dict()['user']['user_metadata']['email']
-        print(rsp.dict())
-
-        data = supabase.postgrest.from_table("users").select("*").eq("email", email).execute()
-        if not data:
-            return None
-        user: User = User(last_name=data.dict()['data'][0]['last_name'],
-                          first_name=data.dict()['data'][0]['first_name'],
-                          id=data.dict()['data'][0]['id'],
-                          email=data.dict()['data'][0]['email'])
+        refresh = self.request.headers.get("Refresh", None)
+        try:
+            payload = jwt.decode(refresh, service_settings.REFRESH_TOKEN_SECRET_KEY,
+                                 algorithms=[service_settings.ALGORITHM])
+            email: str = payload.get("sub")
+            if email is None:
+                raise credentials_exception
+        except InvalidTokenError:
+            raise credentials_exception
+        user: User = await get_user_by_email_db(self.session(), email)
+        if user is None:
+            raise credentials_exception
         return AuthPayload(
             user=user,
-            access_token=rsp.session.access_token,
-            refresh_token=rsp.session.refresh_token
+            access_token=create_access_token(data={"sub": user.email}),
+            refresh_token=refresh
         )
+
+    def session(self) -> Session:
+        return next(get_db())
 
 async def get_context() -> Context:
     return Context()

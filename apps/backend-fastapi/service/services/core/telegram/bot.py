@@ -1,6 +1,6 @@
 import requests
 from conf.settings import service_settings
-from services.core.routes.schemas import Feedback, FeelLevel
+from services.core.routes.schemas import FeedbackGet, FeelLevelGet
 
 BOT_TOKEN = service_settings.TELEGRAM_BOT_TOKEN
 CHAT_ID = service_settings.TELEGRAM_CHAT_ID
@@ -10,21 +10,20 @@ MESSAGE = 'Hello from your bot!'
 url = f'https://api.telegram.org/bot{BOT_TOKEN}/sendMessage'
 
 
-def send_feedback(fb: Feedback) -> None:
+def send_feedback(fb: FeedbackGet) -> None:
     # Parameters for the API request
-    message: str = f'Получили новый фидбек!\nПользователь: {fb.user.first_name} {fb.user.last_name}, {fb.user.email}\nСайт: {fb.page}\nСообщенние: {fb.content}'
+    message: str = f'Получили новый фидбек!{'\nПользователь:' if False else ''}\nСайт: {fb.page}{'\nСообщенние:' + fb.content if fb.content is not None else ''}'
 
-    if fb.feel is not None:
-        if fb.feel == FeelLevel.ONE:
-            message += '\nНастроение: 😠'
-        if fb.feel == FeelLevel.TWO:
-            message += '\nНастроение: 😕'
-        if fb.feel == FeelLevel.THREE:
-            message += '\nНастроение: 😐'
-        if fb.feel == FeelLevel.FOUR:
-            message += '\nНастроение: 🙂'
-        if fb.feel == FeelLevel.FIVE:
-            message += '\nНастроение: 😃'
+    if fb.feel == FeelLevelGet.ONE:
+        message += '\nНастроение: 😠'
+    if fb.feel == FeelLevelGet.TWO:
+        message += '\nНастроение: 😕'
+    if fb.feel == FeelLevelGet.THREE:
+        message += '\nНастроение: 😐'
+    if fb.feel == FeelLevelGet.FOUR:
+        message += '\nНастроение: 🙂'
+    if fb.feel == FeelLevelGet.FIVE:
+        message += '\nНастроение: 😃'
     params = {
         'chat_id': CHAT_ID,
         'text': message
