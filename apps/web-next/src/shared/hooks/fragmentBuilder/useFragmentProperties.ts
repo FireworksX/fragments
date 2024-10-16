@@ -56,19 +56,6 @@ export const useFragmentProperties = () => {
     }
   }
 
-  const variables = FRAGMENT_PROPERTY_TYPES.map(variable => ({
-    ...variable,
-    createAndAppend: (variableOptions, openOptions) => {
-      const link = variable.createVariable(variableOptions)
-      fragment.addProp(link)
-      if (openOptions) {
-        variable.openVariable(link, openOptions)
-      }
-
-      return link
-    }
-  }))
-
   const getTransformsVariableByType = (
     targetType: keyof typeof variableType,
     variableGraph: keyof typeof variableType,
@@ -119,7 +106,6 @@ export const useFragmentProperties = () => {
     editProperty,
     propertyLinks,
     properties,
-    variables,
     // openVariable,
     getAllowedVariablesByType,
     FRAGMENT_PROPERTY_TYPES

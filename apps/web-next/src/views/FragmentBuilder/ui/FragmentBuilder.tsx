@@ -97,9 +97,9 @@ export const FragmentBuilder: FC<FragmentBuilderProps> = ({ className }) => {
                   {/*/!*<StackPanelFonts name='fonts' title='Fonts' />*!/*/}
                   <StackPanelCssOverride name='cssOverride' title='CSS override' />
                   <StackSolidPaintStyle name={popoutNames.stackSolidPaintStyle} title='Color Variable' />
-                  <StackStringProperty name={popoutNames.stackStringProperty} title='String Propery' />
-                  <StackNumberProperty name={popoutNames.stackNumberProperty} title='Number Propery' />
-                  <StackBooleanProperty name={popoutNames.stackBooleanProperty} title='Boolean Propery' />
+                  <StackStringProperty name={popoutNames.stackStringProperty} title='String Property' />
+                  <StackNumberProperty name={popoutNames.stackNumberProperty} title='Number Property' />
+                  <StackBooleanProperty name={popoutNames.stackBooleanProperty} title='Boolean Property' />
                   {/*<StackPanelCssOverrideList name='cssOverrideList' title='CSS overrides' />*/}
                   {/*<StackLoopEffect name='loopEffect' title='Loop Effect' />*/}
 

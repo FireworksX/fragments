@@ -11,8 +11,6 @@ export const numberVariableExtend: Extender = ({
 }) => {
   const cachedValue = createCachedInterpolate();
 
-  console.log(graphKey);
-
   return {
     ...graph,
     value: getValue("value", null),

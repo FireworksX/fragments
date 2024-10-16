@@ -24,7 +24,7 @@ export const fragmentPropertiesExtend: Extender = ({
           properties: [createdProperty],
         });
 
-        return createdProperty;
+        return state.resolve(createdProperty);
       }
 
       return null;
