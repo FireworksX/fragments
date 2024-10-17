@@ -146,7 +146,7 @@ class Mutation:
 
     @strawberry.mutation
     async def change_user_role(self, info: strawberry.Info[Context], user_id: int, project_id: int,
-                               role: int) -> None:
+                               role: RoleGet) -> None:
         await change_user_role_route(info, user_id, project_id, role)
     #
     # @strawberry.mutation

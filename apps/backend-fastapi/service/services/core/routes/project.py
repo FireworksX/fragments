@@ -83,7 +83,7 @@ async def add_user_to_project(info: strawberry.Info[Context], user_id: int, proj
     await add_user_to_project_db(db, user_id, project_id, role_to_add)
 
 
-async def change_user_role(info: strawberry.Info[Context], user_id: int, project_id: int, role_to_add: int):
+async def change_user_role(info: strawberry.Info[Context], user_id: int, project_id: int, role_to_add: RoleGet):
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
     permission: bool = await write_permission(db, user.user.id, project_id)
@@ -99,7 +99,7 @@ async def change_user_role(info: strawberry.Info[Context], user_id: int, project
     if project is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
 
-    await change_user_role_db(db, user_id, project_id, role_to_add)
+    await change_user_role_db(db, user_id, project_id, int(role_to_add.value))
 
 
 async def update_project(info: strawberry.Info[Context], pr: ProjectPost) -> ProjectGet:

@@ -21,7 +21,7 @@ class UserGet:
 
 @strawberry.type
 class UserRoleGet(UserGet):
-    role: str
+    role: RoleGet
 
 
 @strawberry.type
