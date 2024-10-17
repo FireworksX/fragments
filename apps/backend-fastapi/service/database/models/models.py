@@ -192,13 +192,15 @@ class Fragment(Base):
     author = relationship("User")
 
 
-class SubcampaignFragment(Base):
+class StreamFragment(Base):
     __tablename__ = 'stream_fragment'
     id = Column('id', Integer, primary_key=True, index=True)
+    project_id = Column('project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False)
     stream_id = Column('stream_id', Integer, ForeignKey('stream.id', ondelete='CASCADE'), nullable=False)
     fragment_id = Column('fragment_id', Integer, ForeignKey('fragment.id', ondelete='CASCADE'), nullable=False)
     props = Column('props', JSON, nullable=False)
     weight = Column('weight', Float, nullable=False)
+    name = Column('name', String)
 
 
 class Media(Base):

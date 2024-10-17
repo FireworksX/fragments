@@ -1,9 +1,8 @@
-from strawberry.fastapi import GraphQLRouter, BaseContext
 import strawberry
 from typing import Optional, List
 from enum import Enum
-from pydantic import BaseModel, field_validator
 import datetime
+
 
 @strawberry.enum
 class RoleGet(Enum):
@@ -12,12 +11,14 @@ class RoleGet(Enum):
     MANAGER = 3
     DESIGNER = 4
 
+
 @strawberry.type
 class UserGet:
     id: int
     email: str
     first_name: str
     last_name: Optional[str]
+
 
 @strawberry.type
 class UserRoleGet(UserGet):
@@ -30,6 +31,7 @@ class AuthPayload:
     access_token: str
     refresh_token: str
 
+
 @strawberry.input
 class FragmentPost:
     id: Optional[int] = None
@@ -37,6 +39,7 @@ class FragmentPost:
     name: Optional[str] = None
     document: Optional[strawberry.scalars.JSON] = None
     props: Optional[strawberry.scalars.JSON] = None
+
 
 @strawberry.type
 class CampaignGet:
@@ -49,6 +52,7 @@ class CampaignGet:
     active: bool
     deleted: bool
 
+
 @strawberry.type
 class ProjectGet:
     id: int
@@ -57,6 +61,7 @@ class ProjectGet:
     owner: UserGet
     members: List[UserRoleGet]
     campaigns: List[CampaignGet]
+
 
 @strawberry.type
 class FragmentGet:
@@ -114,15 +119,18 @@ class GeoLocationGet:
     region: str
     city: str
 
+
 @strawberry.type
 class TimeFrameGet:
     from_time: datetime.datetime
     to_time: datetime.datetime
 
+
 @strawberry.input
 class TimeFramePost:
     from_time: datetime.datetime
     to_time: datetime.datetime
+
 
 @strawberry.type
 class StreamGet:
@@ -144,6 +152,8 @@ class GeoLocationPost:
     country: Optional[str] = None
     region: Optional[str] = None
     city: Optional[str] = None
+
+
 @strawberry.input
 class StreamPost:
     id: Optional[int] = None
@@ -180,20 +190,25 @@ class FeedbackGet:
     feel: FeelLevelGet
     content: Optional[str] = None
     page: str
-  #  user: User
+
+
+#  user: User
 
 @strawberry.type
-class SubcampaignFragmentGet:
+class StreamFragmentGet:
     id: int
-    subcampaign_id: int
+    stream_id: int
     fragment_id: int
     props: Optional[strawberry.scalars.JSON] = None
     weight: float
+    name: str
+
 
 @strawberry.input
-class SubcampaignFragmentPost:
+class StreamFragmentPost:
     id: Optional[int] = None
-    subcampaign_id: Optional[int] = None
+    stream_id: Optional[int] = None
     fragment_id: Optional[int] = None
     props: Optional[strawberry.scalars.JSON] = None
     weight: Optional[float] = None
+    name: Optional[str] = None
