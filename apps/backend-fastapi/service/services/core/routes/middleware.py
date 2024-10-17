@@ -5,7 +5,7 @@ from database.models import User
 from services.dependencies import get_db
 from crud.user import get_user_by_email_db
 from conf.settings import service_settings
-from services.core.utils import create_access_token
+from services.core.utils import create_access_token, create_refresh_token
 import jwt
 from jwt.exceptions import InvalidTokenError
 from fastapi import HTTPException, status
@@ -22,6 +22,7 @@ class Context(BaseContext):
 
         authorization = self.request.headers.get("Authorization", None)
         refresh = self.request.headers.get("Refresh", None)
+
         try:
             payload = jwt.decode(authorization, service_settings.ACCESS_TOKEN_SECRET_KEY, algorithms=[service_settings.ALGORITHM])
             email: str = payload.get("sub")
@@ -32,6 +33,8 @@ class Context(BaseContext):
         user: User = await get_user_by_email_db(self.session(), email)
         if user is None:
             raise credentials_exception
+        if refresh is None:
+            refresh = create_refresh_token(data={"sub": user.email})
         return AuthPayload(
             user=user,
             access_token=authorization,

@@ -33,10 +33,6 @@ class Query:
         return await profile(info)
 
     @strawberry.field
-    async def refresh(self, info: strawberry.Info[Context]) -> AuthPayload:
-        return await refresh(info)
-
-    @strawberry.field
     async def fragment(self, info: strawberry.Info[Context], fragment_id: Optional[int] = None,
                        project_id: Optional[int] = None) -> List[FragmentGet]:
         if fragment_id is not None:
@@ -95,6 +91,10 @@ class Mutation:
         return await login(info, email, password)
 
     @strawberry.mutation
+    async def refresh(self, info: strawberry.Info[Context]) -> AuthPayload:
+        return await refresh(info)
+
+    @strawberry.mutation
     async def fragment(self, info: strawberry.Info[Context], fg: FragmentPost) -> FragmentGet:
         if fg.id is not None:
             return await update_fragment(info, fg)
@@ -108,10 +108,6 @@ class Mutation:
         else:
             return await create_campaign(info, cmp)
 
-    #
-    # @strawberry.mutation
-    # async def delete_campaign(self, info: strawberry.Info[Context], campaign_id: int) -> None:
-    #     await delete_campaign_from_db(info, campaign_id)
     #
     # @strawberry.mutation
     # async def asset(self, info: strawberry.Info[Context], file: UploadFile) -> MediaGet:
@@ -128,10 +124,6 @@ class Mutation:
        else:
             return await create_stream(info, strm)
 
-    # @strawberry.mutation
-    # async def delete_subcampaign(self, info: strawberry.Info[Context], subcampaign_id: int) -> None:
-    #     await delete_subcampaign_from_db(info, subcampaign_id)
-    #
     @strawberry.mutation
     async def project(self, info: strawberry.Info[Context], pr: ProjectPost) -> ProjectGet:
         if pr.id is not None:
