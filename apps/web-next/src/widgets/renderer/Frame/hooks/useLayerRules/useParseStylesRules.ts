@@ -1,14 +1,13 @@
 import * as CSS from 'csstype'
-import { builderImagePaintScaleModes, builderPaintMode, builderNodes } from '@fragments/fragments-plugin/performance'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { to } from '@react-spring/web'
-import { builderBorderType, builderLayerMode } from '@fragments/fragments-plugin'
 import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useDisplayColor } from '@/shared/hooks/fragmentBuilder/useDisplayColor'
 import { toPx } from '@/shared/utils/toPx'
+import { imagePaintScaleModes, layerMode, borderType } from '@fragments/plugin-state'
 
-const scaleModeMap: Record<keyof typeof builderImagePaintScaleModes, CSS.Properties['backgroundSize']> = {
+const scaleModeMap: Record<keyof typeof imagePaintScaleModes, CSS.Properties['backgroundSize']> = {
   Fill: 'cover',
   Fit: 'contain',
   Crop: 'auto'
@@ -19,7 +18,7 @@ export const useParseStyleRules = (layerField: Field) => {
   const layerInvoker = useLayerInvoker(layerField)
   const { getColor } = useDisplayColor()
   const rules: CSS.Properties = {}
-  const isFlex = to(layerInvoker('layerMode').value, mode => mode === builderLayerMode.flex)
+  const isFlex = to(layerInvoker('layerMode').value, mode => mode === layerMode.flex)
 
   const borderType = layerInvoker('borderType').value
   const borderWidth = layerInvoker('borderWidth').value
@@ -53,11 +52,9 @@ export const useParseStyleRules = (layerField: Field) => {
   //   return undefined
   // })
 
-  console.log(borderType, borderWidth, getColor(borderColor))
-
   rules.border = to([borderType, borderWidth, getColor(borderColor)], (type, width, color) => {
     console.log(type, width, color)
-    if (typeof type === 'string' && type !== builderBorderType.None) {
+    if (typeof type === 'string' && type !== borderType.None) {
       return `${toPx(width)} ${type.toLowerCase()} ${color}`
     }
     return ''

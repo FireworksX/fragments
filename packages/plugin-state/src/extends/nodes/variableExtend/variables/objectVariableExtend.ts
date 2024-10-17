@@ -15,7 +15,9 @@ export const objectVariableExtend: Extender = ({
     required: getValue("required", false),
     fields: getValue("fields", []),
 
-    rename: valueSetter(state, graphKey, "name"),
+    rename: (name) => {
+      valueSetter(state, graphKey, "name")(name || graph._id);
+    },
     setRequired: valueSetter(state, graphKey, "required"),
     addField: valueSetter(state, graphKey, "fields"),
   };

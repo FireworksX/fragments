@@ -1,25 +1,19 @@
 import { FC, ReactNode, useContext, useEffect } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { builderPaintMode } from '@fragments/fragments-plugin/performance'
 import { popoutsStore } from '@/shared/store/popouts.store'
-import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { animated, to } from '@react-spring/web'
-import { isLinkKey } from '@graph-state/core'
-import { isObject } from '@fragments/utils'
 import { TabsSelector, TabsSelectorItem } from '@/shared/ui/TabsSelector'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
 import { Panel } from '@/shared/ui/Panel'
 import { ColorPicker } from '@/shared/ui/ColorPicker'
-import { StackColors } from '@/features/popouts/StackColors'
 import { ImagePicker } from '@/features/fragmentBuilder/ImagePicker'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
-import { useDisplayColor } from '@/shared/hooks/fragmentBuilder/useDisplayColor'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
-import { cloneColor } from '@/shared/utils/cloneColor'
 import { getRandomColor } from '@/shared/utils/random'
 import { SolidPaintStyles } from '@/entities/fragment/SolidPaintStyles'
+import { paintMode } from '@fragments/plugin-state'
 
 export interface StackPanelFillOptions {}
 
@@ -30,11 +24,11 @@ interface StackPanelFillProps {
 
 const tabs: TabsSelectorItem[] = [
   {
-    name: builderPaintMode.Solid,
+    name: paintMode.Solid,
     label: 'Solid'
   },
   {
-    name: builderPaintMode.Image,
+    name: paintMode.Image,
     label: 'Image'
   }
 ]
@@ -66,7 +60,7 @@ const StackPanelFill: FC<StackPanelFillProps> = ({ className, stackColors }) => 
 
   useEffect(() => {
     if (!animatableValue(fillType.value)) {
-      fillType.onChange(builderPaintMode.Solid)
+      fillType.onChange(paintMode.Solid)
     }
     if (!animatableValue(solidFill.value)) {
       solidFill.onChange(getRandomColor())
@@ -76,7 +70,7 @@ const StackPanelFill: FC<StackPanelFillProps> = ({ className, stackColors }) => 
   return (
     <div className={cn(styles.root, className)}>
       <TabsSelector items={tabs} value={type} onChange={({ name }) => fillType.onChange(name)} />
-      <AnimatedVisible visible={to(type, t => t === builderPaintMode.Solid)}>
+      <AnimatedVisible visible={to(type, t => t === paintMode.Solid)}>
         <Panel>
           <ColorPicker
             color={solidFill.value}
@@ -95,7 +89,7 @@ const StackPanelFill: FC<StackPanelFillProps> = ({ className, stackColors }) => 
         />
       </AnimatedVisible>
 
-      <AnimatedVisible visible={to(type, t => t === builderPaintMode.Image)}>
+      <AnimatedVisible visible={to(type, t => t === paintMode.Image)}>
         <ImagePicker urlInvoker={layerInvoker('imageFill')} scaleModeInvoker={layerInvoker('imageFillScaleMode')} />
       </AnimatedVisible>
     </div>

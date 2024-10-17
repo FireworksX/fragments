@@ -10,9 +10,8 @@ export const overrides: Plugin = (state) => {
   state.isOverrideFromField = (entity: Entity, fieldKey: string) => {
     const resolvedEntity: any =
       typeof entity === "string" ? state.resolve(entity) : entity;
-    const resolvedOverride: any = state.resolve(
-      resolvedEntity?.overrideFrom ?? ""
-    );
+
+    const resolvedOverride: any = state.resolve(resolvedEntity?.overrideFrom);
     const fieldValue = resolvedEntity?.[fieldKey];
     return !!resolvedOverride && !fieldValue;
   };

@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import { useGraphFields, useGraphStack } from '@graph-state/react'
 import { popoutsStore } from '@/shared/store/popouts.store'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { builderNodes } from '@fragments/fragments-plugin'
+import { nodes } from '@fragments/plugin-state'
 
 type ExtendOptions = Partial<OpenPopoutOptions<'cssOverride'>>
 
@@ -12,7 +12,7 @@ export interface BuilderAssetsCssOverrideOptions extends ExtendOptions {
 
 export const useBuilderAssetsCss = () => {
   const { documentManager } = useContext(BuilderContext)
-  const fields = useGraphFields(documentManager, builderNodes.CssLink)
+  const fields = useGraphFields(documentManager, nodes.CssLink)
   const values = useGraphStack(documentManager, fields)
 
   const editCssOverride = (variableKey: EntityKey, options?: ExtendOptions) => {

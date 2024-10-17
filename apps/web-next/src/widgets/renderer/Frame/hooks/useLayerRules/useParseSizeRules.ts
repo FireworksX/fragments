@@ -5,9 +5,9 @@ import * as CSS from 'csstype'
 // import { builderSizing } from '@fragments/fragments-plugin'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { to } from '@react-spring/web'
-import { builderSizing } from '@fragments/fragments-plugin/performance'
 import { toPx } from '@/app/utils/toPx'
 import { toPercent } from '@/app/utils/toPercent'
+import { sizing } from '@fragments/plugin-state'
 
 export const useParseSizeRules = (layerField: Field) => {
   const layerInvoker = useLayerInvoker(layerField)
@@ -18,15 +18,15 @@ export const useParseSizeRules = (layerField: Field) => {
   const widthValue = layerInvoker('width').value
   const heightValue = layerInvoker('height').value
 
-  const getValue = (sizing: keyof typeof builderSizing, value: number) => {
-    switch (sizing) {
-      case builderSizing.Hug:
+  const getValue = (inputSizing: keyof typeof sizing, value: number) => {
+    switch (inputSizing) {
+      case sizing.Hug:
         return 'fit-content'
-      case builderSizing.Fill:
+      case sizing.Fill:
         return 'auto'
-      case builderSizing.Fixed:
+      case sizing.Fixed:
         return value
-      case builderSizing.Relative:
+      case sizing.Relative:
         return toPercent(value)
       default:
         return 'auto'
