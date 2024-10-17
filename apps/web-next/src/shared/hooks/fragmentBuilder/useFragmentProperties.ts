@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph, useGraphStack } from '@graph-state/react'
 import { variableType } from '@fragments/plugin-state'
-import { useBuilderVariableTransforms } from '@/shared/hooks/fragmentBuilder/useBuilderVariableTransforms'
+import { useFragmentComputedValues } from '@/shared/hooks/fragmentBuilder/useFragmentComputedValues'
 import { useBuilderVariableCreator } from '@/shared/hooks/fragmentBuilder/useBuilderVariableCreator'
 import { LinkKey } from '@graph-state/core'
 import { popoutsStore } from '@/shared/store/popouts.store'
@@ -43,8 +43,6 @@ export const useFragmentProperties = () => {
         // [builderVariableType.Object]: stackObjectVariableName,
         [variableType.String]: popoutNames.stackStringProperty
       }[type]
-
-      console.log(popoutName)
 
       popoutsStore.open(popoutName, {
         initial: popoutOptions?.initial ?? true,

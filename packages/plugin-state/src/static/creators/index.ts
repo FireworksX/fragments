@@ -135,10 +135,7 @@ export const creators: Plugin = (state) => {
     return state.mutate({
       _type: nodes.ComputedValue,
       _id: generateId(),
-      inputValue: options?.inputValue ?? null,
-      inputType: options?.inputType ?? null,
-      outputType: options?.outputType ?? null,
-      transforms: options?.transforms ?? [],
+      ...options,
     });
   };
 

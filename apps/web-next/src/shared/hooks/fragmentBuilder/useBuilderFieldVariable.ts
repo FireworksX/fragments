@@ -6,6 +6,7 @@ import { isComputedValueLink } from '@/shared/utils/isComputedValueLink'
 import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
 import { variableType } from '@fragments/plugin-state'
 import { DropdownRenderOption } from '@/shared/ui/RenderDropdown'
+import { useFragmentComputedValues } from '@/shared/hooks/fragmentBuilder/useFragmentComputedValues'
 // import {
 //   stackVariableTransformName
 // } from '@/widgets/StackCollector/components/variables/StackVariableTransform/StackVariableTransform'
@@ -34,6 +35,7 @@ const variableFields = {
 export const useBuilderFieldVariable = (layer: Field) => {
   const { documentManager } = useContext(BuilderContext)
   const { properties, createProperty, editProperty } = useFragmentProperties()
+  const { createComputedValue, getTransformsByType } = useFragmentComputedValues()
 
   const getVariableName = (preferredName: string) => {
     const countOfSameNames = properties.filter(prop => prop.name.startsWith(preferredName)).length
@@ -89,9 +91,22 @@ export const useBuilderFieldVariable = (layer: Field) => {
       if (field in variableFields) {
         const fieldValue = variableFields[field]
         const typeProperties = properties.filter(prop => prop.type === fieldValue.type)
+        const transforms = getTransformsByType(fieldValue.type)
 
         return typeProperties.map(prop => ({
           label: prop.name,
+          options: [
+            transforms.map(transform => ({
+              label: transform.label,
+              onClick: () =>
+                createComputedValue({
+                  inputValue: documentManager.keyOfEntity(prop),
+                  outputType: field.type,
+                  transform,
+                  inputType: prop.type
+                })
+            }))
+          ],
           onClick: () => {
             setter(prop)
           }
