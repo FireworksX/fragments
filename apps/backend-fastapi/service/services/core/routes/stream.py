@@ -37,7 +37,7 @@ def stream_db_to_stream(stream: Stream) -> StreamGet:
                          relation in stream.time_frames])
 
 
-async def streams_in_campaign(info: strawberry.Info[Context], campaign_id: int) -> List[StreamGet]:
+async def streams_in_campaign(info: strawberry.Info[Context], campaign_id: int, active: Optional[bool] = None, deleted: Optional[bool] = None) -> List[StreamGet]:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
@@ -49,7 +49,7 @@ async def streams_in_campaign(info: strawberry.Info[Context], campaign_id: int) 
     if not permission:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to view streams')
-    streams: List[Stream] = await get_streams_by_campaign_id_db(db, campaign_id)
+    streams: List[Stream] = await get_streams_by_campaign_id_db(db, campaign_id, active, deleted)
     out: List[StreamGet] = []
     for stream in streams:
         out.append(stream_db_to_stream(stream))

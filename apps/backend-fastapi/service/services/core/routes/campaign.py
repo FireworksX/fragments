@@ -1,8 +1,8 @@
-from typing import List
+from typing import List, Optional
 from fastapi import HTTPException, status
 import strawberry
 
-from crud.campaign import create_campaign_db, get_campaign_by_id_db, get_campaign_by_project_id_db, update_campaign_by_id_db
+from crud.campaign import create_campaign_db, get_campaign_by_id_db, get_campaigns_by_project_id_db, update_campaign_by_id_db
 from crud.project import get_project_by_id_db
 from database import Session, Project, Campaign
 from .schemas import AuthPayload, CampaignGet, CampaignPost, RoleGet
@@ -20,7 +20,7 @@ async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
     return role is not None and role is not RoleGet.DESIGNER
 
 
-async def campaigns_in_project(info: strawberry.Info[Context], project_id: int) -> List[CampaignGet]:
+async def campaigns_in_project(info: strawberry.Info[Context], project_id: int, active: Optional[bool] = None, deleted: Optional[bool] = None) -> List[CampaignGet]:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
@@ -33,7 +33,7 @@ async def campaigns_in_project(info: strawberry.Info[Context], project_id: int) 
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to view campaigns')
 
-    campaigns: List[Campaign] = await get_campaign_by_project_id_db(db, project_id)
+    campaigns: List[Campaign] = await get_campaigns_by_project_id_db(db, project_id, active, deleted)
     out: List[CampaignGet] = []
     for cp in campaigns:
         out.append(CampaignGet(id=cp.id, name=cp.name, description=cp.description, deleted=cp.deleted,

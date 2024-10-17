@@ -45,11 +45,11 @@ class Query:
     #
     @strawberry.field
     async def campaign(self, info: strawberry.Info[Context], campgain_id: Optional[int] = None,
-                       project_id: Optional[int] = None) -> List[CampaignGet]:
+                       project_id: Optional[int] = None, active: Optional[bool] = None, deleted: Optional[bool] = None) -> List[CampaignGet]:
         if campgain_id is not None:
             return [await campaign_by_id(info, campgain_id)]
         if project_id is not None:
-            return await campaigns_in_project(info, project_id)
+            return await campaigns_in_project(info, project_id, active, deleted)
 
     @strawberry.field
     async def location(self, ip: str) -> GeoLocationGet:
@@ -57,11 +57,11 @@ class Query:
 
     @strawberry.field
     async def stream(self, info: strawberry.Info[Context], stream_id: Optional[int] = None,
-                          campaign_id: Optional[int] = None) -> List[StreamGet]:
+                          campaign_id: Optional[int] = None, active: Optional[bool] = None, deleted: Optional[bool] = None) -> List[StreamGet]:
         if stream_id is not None:
             return [await stream_by_id(info, stream_id)]
         if campaign_id is not None:
-            return await streams_in_campaign(info, campaign_id)
+            return await streams_in_campaign(info, campaign_id, active, deleted)
 
     @strawberry.field
     async def project(self, info: strawberry.Info[Context], project_id: Optional[int] = None) -> List[ProjectGet]:
