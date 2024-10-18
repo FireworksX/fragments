@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "cc": "pnpm dlx generate-react-cli component"
+    "cc": "pnpm dlx generate-react-cli component",
+    "generate:watch": "graphql-codegen -w -c ./gql-codegen.json"
   },
   "dependencies": {
     "@apollo/client": "^3.11.8",
@@ -16,7 +17,6 @@
     "@dnd-kit/sortable": "^8.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@feature-sliced/cli": "^1.0.0",
-    "@fragments/nodes": "workspace:*",
     "@fragments/plugin-state": "workspace:*",
     "@fragments/plugin-state-builder": "workspace:*",
     "@fragments/renderer": "workspace:*",
@@ -45,6 +45,7 @@
     "react-collapse": "^5.1.1",
     "react-color": "^2.19.3",
     "react-dom": "^18",
+    "react-hook-form": "^7.53.0",
     "react-hotkeys-hook": "^4.5.0",
     "react-merge-refs": "^2.1.1",
     "react-modal": "^3.16.1",
@@ -54,6 +55,10 @@
     "use-sync-external-store": "^1.2.2"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.3",
+    "@graphql-codegen/client-preset": "^4.4.0",
+    "@graphql-typed-document-node/core": "^3.2.0",
+    "@parcel/watcher": "^2.4.1",
     "@svgr/webpack": "^8.1.0",
     "@types/node": "^20",
     "@types/react": "^18",
@@ -64,7 +69,8 @@
     "eslint-config-prettier": "^7",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-unused-imports": "^2.0.0",
+    "graphql": "^16.9.0",
     "prettier": "^2.5.1",
-    "typescript": "^5"
+    "typescript": "^5.4.5"
   }
 }

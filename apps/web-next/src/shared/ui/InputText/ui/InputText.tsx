@@ -1,5 +1,5 @@
 'use client'
-import { ElementRef, FC, InputHTMLAttributes, MutableRefObject } from 'react'
+import { ElementRef, FC, forwardRef, InputHTMLAttributes, MutableRefObject } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { animated } from '@react-spring/web'
@@ -13,31 +13,40 @@ interface InputTextProps extends InputHTMLAttributes<HTMLInputElement> {
   placeholder?: string
   inputRef?: MutableRefObject<ElementRef<'input'>>
   onChange: (value: string | number) => void
+  onChangeValue: (value: string | number) => void
 }
 
-const InputText: FC<InputTextProps> = ({
-  className,
-  classNameInput,
-  size = 'medium',
-  mode = 'primary',
-  placeholder,
-  value,
-  inputRef,
-  onChange,
-  ...inputProps
-}) => {
-  return (
-    <div className={cn(styles.root, className, styles[size], styles[mode])}>
-      <input
-        ref={inputRef}
-        className={cn(styles.input, classNameInput)}
-        value={value}
-        placeholder={placeholder}
-        onChange={({ target }) => onChange?.(target.value)}
-        {...inputProps}
-      />
-    </div>
-  )
-}
+const InputText: FC<InputTextProps> = forwardRef<ElementRef<'input'>, InputTextProps>(
+  (
+    {
+      className,
+      classNameInput,
+      size = 'medium',
+      mode = 'primary',
+      placeholder,
+      value,
+      onChange,
+      onChangeValue,
+      ...inputProps
+    },
+    ref
+  ) => {
+    return (
+      <div className={cn(styles.root, className, styles[size], styles[mode])}>
+        <input
+          ref={ref}
+          className={cn(styles.input, classNameInput)}
+          value={value}
+          placeholder={placeholder}
+          onChange={e => {
+            onChange?.(e)
+            onChangeValue?.(e?.target.value)
+          }}
+          {...inputProps}
+        />
+      </div>
+    )
+  }
+)
 
 export default animated(InputText)

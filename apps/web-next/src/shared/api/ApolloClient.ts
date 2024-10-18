@@ -1,11 +1,26 @@
-import { HttpLink } from '@apollo/client'
+import { from, HttpLink } from '@apollo/client'
 import { ApolloClient, InMemoryCache } from '@apollo/experimental-nextjs-app-support'
+import { setContext } from '@apollo/client/link/context'
+import { getSession } from 'next-auth/react'
 
 // have a function to create a client for you
 export function makeApolloClient() {
+  const authMiddleware = setContext(async (operation, { headers }) => {
+    const session = await getSession()
+    console.log('session', session)
+
+    return {
+      headers: {
+        ...headers,
+        Authorization: `${session?.accessToken}`,
+        Refresh: `Bearer ${session?.refresh}`
+      }
+    }
+  })
+
   const httpLink = new HttpLink({
     // this needs to be an absolute url, as relative urls cannot be used in SSR
-    uri: process.env.NEXT_BACKEND_GRAPHQL,
+    uri: process.env.NEXT_PUBLIC_BACKEND_GRAPHQL,
     // you can disable result caching here if you want to
     // (this does not work if you are rendering your page with `export const dynamic = "force-static"`)
     fetchOptions: { cache: 'no-store' }
@@ -19,6 +34,6 @@ export function makeApolloClient() {
   return new ApolloClient({
     // use the `InMemoryCache` from "@apollo/experimental-nextjs-app-support"
     cache: new InMemoryCache(),
-    link: httpLink
+    link: from([authMiddleware, httpLink])
   })
 }

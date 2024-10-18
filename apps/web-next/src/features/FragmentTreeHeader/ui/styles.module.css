@@ -2,6 +2,13 @@
     padding-top: var(--gutter-default);
     display: flex;
     gap: var(--gutter-default);
+    justify-content: space-between;
+}
+
+.group {
+    display: flex;
+    gap: var(--gutter-default);
+
 }
 
 .search {

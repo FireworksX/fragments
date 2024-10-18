@@ -1,0 +1,195 @@
+# This file was generated. Do not edit manually.
+
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type AuthPayload {
+    accessToken: String!
+    refreshToken: String!
+    user: UserGet!
+}
+
+type CampaignGet {
+    active: Boolean!
+    author: UserGet!
+    deleted: Boolean!
+    description: String!
+    id: Int!
+    logoId: Int
+    name: String!
+    projectId: Int!
+}
+
+type FeedbackGet {
+    content: String
+    feel: FeelLevelGet!
+    page: String!
+}
+
+type FragmentGet {
+    author: UserGet!
+    document: JSON!
+    id: Int!
+    name: String!
+    project: ProjectGet!
+    props: JSON!
+}
+
+type GeoLocationGet {
+    city: String!
+    country: String!
+    region: String!
+}
+
+type Mutation {
+    addUserToProject(projectId: Int!, role: Int!, userId: Int!): Void
+    campaign(cmp: CampaignPost!): CampaignGet!
+    changeUserRole(projectId: Int!, role: Int!, userId: Int!): Void
+    feedback(fd: FeedbackPost!): FeedbackGet!
+    fragment(fg: FragmentPost!): FragmentGet!
+    login(email: String!, password: String!): AuthPayload!
+    project(pr: ProjectPost!): ProjectGet!
+    signup(email: String!, firstName: String!, lastName: String, password: String!): AuthPayload!
+    stream(strm: StreamPost!): StreamGet!
+}
+
+type ProjectGet {
+    campaigns: [CampaignGet!]!
+    id: Int!
+    logoId: Int
+    members: [UserRoleGet!]!
+    name: String!
+    owner: UserGet!
+}
+
+type Query {
+    campaign(campgainId: Int, projectId: Int): [CampaignGet!]!
+    fragment(fragmentId: Int, projectId: Int): [FragmentGet!]!
+    location(ip: String!): GeoLocationGet!
+    profile: AuthPayload!
+    project(projectId: Int): [ProjectGet!]!
+    refresh: AuthPayload!
+    stream(campaignId: Int, streamId: Int): [StreamGet!]!
+}
+
+type StreamGet {
+    active: Boolean!
+    campaignId: Int!
+    deleted: Boolean!
+    deviceTypes: [DeviceTypeGet!]!
+    geoLocations: [GeoLocationGet!]!
+    id: Int!
+    name: String!
+    osTypes: [OSTypeGet!]!
+    pages: [String!]!
+    timeFrames: [TimeFrameGet!]!
+    weight: Float!
+}
+
+type TimeFrameGet {
+    fromTime: DateTime!
+    toTime: DateTime!
+}
+
+type UserGet {
+    email: String!
+    firstName: String!
+    id: Int!
+    lastName: String
+}
+
+type UserRoleGet {
+    email: String!
+    firstName: String!
+    id: Int!
+    lastName: String
+    role: String!
+}
+
+enum DeviceTypeGet {
+    DESKTOP
+    MOBILE
+    TABLET
+}
+
+enum FeelLevelGet {
+    FIVE
+    FOUR
+    ONE
+    THREE
+    TWO
+}
+
+enum OSTypeGet {
+    ANDROID
+    IOS
+    LINUX
+    MACOS
+    WINDOWS
+}
+
+"Date with time (isoformat)"
+scalar DateTime
+
+"The `JSON` scalar type represents JSON values as specified by [ECMA-404](https://ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf)."
+scalar JSON
+
+"Represents NULL values"
+scalar Void
+
+input CampaignPost {
+    active: Boolean
+    deleted: Boolean
+    description: String
+    id: Int
+    logoId: Int
+    name: String
+    projectId: Int
+}
+
+input FeedbackPost {
+    content: String
+    feel: FeelLevelGet!
+    page: String!
+}
+
+input FragmentPost {
+    document: JSON
+    id: Int
+    name: String
+    projectId: Int
+    props: JSON
+}
+
+input GeoLocationPost {
+    city: String
+    country: String
+    region: String
+}
+
+input ProjectPost {
+    id: Int
+    logoId: String
+    name: String
+}
+
+input StreamPost {
+    active: Boolean
+    campaignId: Int
+    deleted: Boolean
+    deviceTypes: [DeviceTypeGet!]
+    geoLocations: [GeoLocationPost!]
+    id: Int
+    name: String
+    osTypes: [OSTypeGet!]
+    pages: [String!]
+    timeFrames: [TimeFramePost!]
+    weight: Float
+}
+
+input TimeFramePost {
+    fromTime: DateTime!
+    toTime: DateTime!
+}

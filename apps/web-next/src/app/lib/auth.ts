@@ -4,6 +4,9 @@ import Credentials from 'next-auth/providers/credentials'
 import { JWT } from 'next-auth/jwt'
 import axiosLib from 'axios'
 import { axios } from '@/shared/api/axios'
+import { getClient, query } from '@/shared/api/ApolloRSCClient'
+import { AUTH_LOGIN } from '@/app/queries/authLogin'
+import { AUTH_SIGN_IN } from '@/shared/queries/authSignIn'
 // Your own logic for dealing with plaintext password strings; be careful!
 // import { saltAndHashPassword } from "@/utils/password"
 
@@ -21,36 +24,33 @@ export const authOptions: NextAuthOptions = {
         password: {}
       },
       authorize: async credentials => {
-        const response = await axios
-          .post('/auth/login', {
-            email: credentials.email,
-            password: credentials.password
-          })
-          .catch(e => {
-            console.log(e)
+        try {
+          const { data, errors } = await getClient().mutate({
+            mutation: AUTH_SIGN_IN,
+            variables: { email: credentials.email, password: credentials.password }
           })
 
-        if (!response?.data?.user) {
-          throw new Error('User not found.')
-        }
+          if (errors) return null
 
-        return {
-          ...response.data.user,
-          accessToken: response.data.access_token
+          return data?.login
+        } catch (e) {
+          console.log(e)
+          return null
         }
       }
     })
   ],
   callbacks: {
     async jwt({ token, user, trigger, session }) {
-      if (trigger === 'update') {
-        if (session.type === 'MANUAL') {
-          const { data } = await axios.get('/auth/profile')
-          return { ...token, ...data }
-        }
-
-        return { ...token, ...session }
-      }
+      console.log(token, user)
+      // if (trigger === 'update') {
+      //   if (session.type === 'MANUAL') {
+      //     const { data } = await axios.get('/auth/profile')
+      //     return { ...token, ...data }
+      //   }
+      //
+      //   return { ...token, ...session }
+      // }
 
       if (user) {
         return { ...token, ...user }
@@ -71,14 +71,14 @@ export const authOptions: NextAuthOptions = {
       return token
     },
     async session({ session, token }) {
+      console.log(session, token)
       if (token.error) {
         throw new Error('Refresh token has expired')
       }
 
+      session.user = token.user
       session.accessToken = token.accessToken
-      session.user.name = token.name || ''
-      session.user.email = token.email || ''
-      session.user.email_verified_at = token.email_verified_at
+      session.refreshToken = token.refreshToken
 
       return session
     }

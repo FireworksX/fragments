@@ -1,5 +1,6 @@
 .root {
-    background: var(--background);
+    background: var(--background-secondary);
+    border-bottom: 1px solid var(--border);
 }
 
 .container {

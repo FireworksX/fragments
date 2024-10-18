@@ -1,3 +1,4 @@
+'use client'
 import { FC } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
@@ -6,6 +7,7 @@ import { FragmentsTreeItem } from '@/features/FragmentTreeItem'
 import { useFragmentsTree } from '../hooks/useFragmentsTree'
 import { Link } from '@/shared/ui/Link'
 import { useParams } from 'next/navigation'
+import { Container } from '@/shared/ui/Container'
 
 interface FragmentsTreeProps {
   className?: string
@@ -16,7 +18,7 @@ export const FragmentsTree: FC<FragmentsTreeProps> = ({ className }) => {
   const { handleCreateFragment, list } = useFragmentsTree()
 
   return (
-    <div className={cn(styles.root, className)} data-testid='FragmentsNav'>
+    <Container className={cn(styles.root, className)} mode='hug' data-testid='FragmentsNav'>
       <FragmentTreeHeader onCreate={handleCreateFragment} />
 
       <div className={styles.body}>
@@ -26,6 +28,6 @@ export const FragmentsTree: FC<FragmentsTreeProps> = ({ className }) => {
           </Link>
         ))}
       </div>
-    </div>
+    </Container>
   )
 }

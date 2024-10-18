@@ -8,6 +8,7 @@ import { Modal } from '@/shared/ui/Modal'
 import { ModalContainer } from '@/shared/ui/ModalContainer'
 import { Button } from '@/shared/ui/Button'
 import { InputText } from '@/shared/ui/InputText'
+import { modalNames } from '@/shared/data'
 
 interface CreateFragmentModalProps {
   className?: string
@@ -21,10 +22,8 @@ export interface CreateFragmentModalContext {
   onCreate: (project: CreateFragmentInfo) => void
 }
 
-const NAME = 'createFragment'
-
 const CreateFragmentModal: FC<CreateFragmentModalProps> = ({ className }) => {
-  const [modal] = useGraph(modalStore)
+  const [modal] = useGraph(modalStore, modalStore.key)
   const [name, setName] = useState('')
   const context = modal.context
   const creating = context?.creating ?? false
@@ -40,7 +39,7 @@ const CreateFragmentModal: FC<CreateFragmentModalProps> = ({ className }) => {
   }, [modal?.name])
 
   return (
-    <Modal className={cn(styles.root, className)} isOpen={modal?.name === NAME}>
+    <Modal className={cn(styles.root, className)} isOpen={modal?.name === modalNames.createFragment}>
       <ModalContainer
         title='Create Fragment'
         footer={
