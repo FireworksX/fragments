@@ -18,8 +18,10 @@ def transform_project_members(project: Project) -> List[UserRoleGet]:
     for member in project.members:
         data = member.user.__dict__
         data['role'] = RoleGet(member.role)
+        data['logo'] = None
         del data['_sa_instance_state']
         del data['hashed_password']  # TODO clean
+        del data['avatar_id']
         res.append(UserRoleGet(**data))
     return res
 

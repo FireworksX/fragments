@@ -18,6 +18,7 @@ class UserGet:
     email: str
     first_name: str
     last_name: Optional[str]
+    logo: Optional[str]
 
 
 @strawberry.type
