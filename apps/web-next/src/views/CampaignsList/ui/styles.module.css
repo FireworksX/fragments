@@ -1,35 +1,35 @@
-.body {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    gap: var(--gutter-default);
-}
-
-@container body (inline-size > 1024px) {
-    .body {
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-
-@container body (768px <= inline-size <= 1024px) {
-    .body {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-.createProject {
-    padding: var(--gutter-default);
-    border-radius: var(--radius-small);
-    border: 2px dashed var(--border);
-    cursor: pointer;
-    height: 100%;
+.root {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--secondary);
+    flex-direction: column;
+    height: calc(100vh - var(--app-size-header) - var(--app-size-navigation));
+}
 
-    &:hover {
-        background: var(--secondary-bg);
+.body {
+    flex: 1;
+    display: flex;
+}
+
+.aside {
+    flex-basis: 300px;
+    background: var(--background-secondary);
+}
+
+.card {
+    position: relative;
+
+    &:after {
+        content: '';
+        position: absolute;
+        width: 90%;
+        left: 5%;
+        bottom: 0;
+        height: 1px;
+        background: rgba(var(--border--rgb), .6);
+    }
+
+    &:last-child {
+        &:after {
+            display: none;
+        }
     }
 }
