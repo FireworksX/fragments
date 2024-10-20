@@ -1,5 +1,4 @@
 from typing import List
-from services.dependencies import supabase
 from fastapi import HTTPException, status
 import strawberry
 from .schemas import FragmentGet, AuthPayload, MediaGet

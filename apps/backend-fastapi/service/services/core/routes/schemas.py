@@ -34,8 +34,15 @@ class AuthPayload:
 
 @strawberry.input
 class FragmentPost:
-    id: Optional[int] = None
-    project_id: Optional[int] = None
+    project_id: int
+    name: str
+    document: strawberry.scalars.JSON
+    props: Optional[strawberry.scalars.JSON] = None
+
+@strawberry.input
+class FragmentPatch:
+    id: int
+    project_id: int
     name: Optional[str] = None
     document: Optional[strawberry.scalars.JSON] = None
     props: Optional[strawberry.scalars.JSON] = None
@@ -75,7 +82,13 @@ class FragmentGet:
 
 @strawberry.input
 class ProjectPost:
-    id: Optional[int] = None
+    name: str
+    logo_id: Optional[str] = None
+
+
+@strawberry.input
+class ProjectPatch:
+    id: int
     name: Optional[str] = None
     logo_id: Optional[str] = None
 
@@ -88,8 +101,17 @@ class MediaGet:
 
 @strawberry.input
 class CampaignPost:
-    id: Optional[int] = None
-    project_id: Optional[int] = None
+    project_id: int
+    name: str
+    logo_id: Optional[int] = None
+    description: Optional[str] = None
+    active: bool
+    deleted: bool
+
+
+@strawberry.input
+class CampaignPatch:
+    id: int
     name: Optional[str] = None
     logo_id: Optional[int] = None
     description: Optional[str] = None
@@ -156,8 +178,22 @@ class GeoLocationPost:
 
 @strawberry.input
 class StreamPost:
-    id: Optional[int] = None
-    campaign_id: Optional[int] = None
+    campaign_id: int
+    active: bool
+    deleted: bool
+    name: str
+    os_types: Optional[List[OSTypeGet]] = None
+    device_types: Optional[List[DeviceTypeGet]] = None
+    pages: Optional[List[str]] = None
+    geo_locations: Optional[List[GeoLocationPost]] = None
+    time_frames: Optional[List[TimeFramePost]] = None
+    weight: float
+
+
+@strawberry.input
+class StreamPatch:
+    id: int
+    campaign_id: int
     active: Optional[bool] = None
     deleted: Optional[bool] = None
     name: Optional[str] = None
@@ -192,8 +228,6 @@ class FeedbackGet:
     page: str
 
 
-#  user: User
-
 @strawberry.type
 class StreamFragmentGet:
     id: int
@@ -206,9 +240,17 @@ class StreamFragmentGet:
 
 @strawberry.input
 class StreamFragmentPost:
-    id: Optional[int] = None
-    stream_id: Optional[int] = None
-    fragment_id: Optional[int] = None
+    stream_id: int
+    fragment_id: int
+    props: Optional[strawberry.scalars.JSON] = None
+    weight: float
+    name: str
+
+
+@strawberry.input
+class StreamFragmentPatch:
+    id: int
+    fragment_id: int
     props: Optional[strawberry.scalars.JSON] = None
     weight: Optional[float] = None
     name: Optional[str] = None

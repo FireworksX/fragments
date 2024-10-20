@@ -3,7 +3,7 @@ from fastapi import HTTPException, status
 import strawberry
 
 from crud.campaign import get_campaign_by_id_db
-from .schemas import FragmentGet, AuthPayload, ProjectGet, ProjectPost, RoleGet, CampaignGet
+from .schemas import FragmentGet, AuthPayload, ProjectGet, ProjectPost, RoleGet, CampaignGet, ProjectPatch
 from .middleware import Context
 from crud.project import create_project_db, get_project_by_id_db, get_user_project_role, get_projects_by_user_id_db, \
     update_project_by_id_db, add_user_to_project_db, change_user_role_db
@@ -56,7 +56,7 @@ async def project_by_id(info: strawberry.Info[Context], project_id: int) -> Proj
                       members=transform_project_members(project), campaigns=transform_project_campaigns(db, project))
 
 
-async def create_project(info: strawberry.Info[Context], pr: ProjectPost) -> ProjectGet:
+async def create_project_route(info: strawberry.Info[Context], pr: ProjectPost) -> ProjectGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
     project: Project = await create_project_db(db, pr.name, user.user.id)
@@ -102,7 +102,7 @@ async def change_user_role(info: strawberry.Info[Context], user_id: int, project
     await change_user_role_db(db, user_id, project_id, int(role_to_add.value))
 
 
-async def update_project(info: strawberry.Info[Context], pr: ProjectPost) -> ProjectGet:
+async def update_project_route(info: strawberry.Info[Context], pr: ProjectPatch) -> ProjectGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
     permission: bool = await write_permission(db, user.user.id, pr.id)

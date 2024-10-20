@@ -6,7 +6,7 @@ from crud.stream import create_stream_db, update_stream_by_id_db, get_streams_by
 from crud.campaign import get_campaign_by_id_db
 from database import Session, Stream, Campaign
 from .schemas import AuthPayload, CampaignGet, CampaignPost, RoleGet, StreamPost, StreamGet, DeviceTypeGet, OSTypeGet, \
-    GeoLocationGet, TimeFrameGet
+    GeoLocationGet, TimeFrameGet, StreamPatch
 from .middleware import Context
 from .utils import get_user_role_in_project
 
@@ -76,7 +76,7 @@ async def stream_by_id(info: strawberry.Info[Context], stream_id: int) -> Stream
     return stream_db_to_stream(stream)
 
 
-async def create_stream(info: strawberry.Info[Context], strm: StreamPost) -> StreamGet:
+async def create_stream_route(info: strawberry.Info[Context], strm: StreamPost) -> StreamGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
@@ -96,7 +96,7 @@ async def create_stream(info: strawberry.Info[Context], strm: StreamPost) -> Str
     return stream_db_to_stream(stream)
 
 
-async def update_stream(info: strawberry.Info[Context], strm: StreamPost) -> StreamGet:
+async def update_stream_route(info: strawberry.Info[Context], strm: StreamPatch) -> StreamGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 

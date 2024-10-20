@@ -12,11 +12,12 @@ services:
       - "80:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./media:/opt/app/media
+      - ./.media:${MEDIA_STORAGE_PATH}
     depends_on:
       - core
     networks:
       - default
+    env_file: .env
   core: &service
     container_name: backend-fastapi-core
     environment:
@@ -34,7 +35,7 @@ services:
         RUN_LEVEL: dev
     volumes:
       - ./service:/opt/app
-      - ./media:/opt/app/media
+      - ./.media:${MEDIA_STORAGE_PATH}
     networks:
       - default
     restart: unless-stopped

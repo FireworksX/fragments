@@ -11,10 +11,12 @@ from jwt.exceptions import InvalidTokenError
 from fastapi import HTTPException, status
 
 credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"Authorization": "token"},
-    )
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="Could not validate credentials",
+    headers={"Authorization": "token"},
+)
+
+
 class Context(BaseContext):
     async def user(self) -> AuthPayload | None:
         if not self.request:
@@ -23,12 +25,19 @@ class Context(BaseContext):
         authorization = self.request.headers.get("Authorization", None)
         refresh = self.request.headers.get("Refresh", None)
 
+        if authorization is None:
+            raise credentials_exception
+
         try:
-            payload = jwt.decode(authorization, service_settings.ACCESS_TOKEN_SECRET_KEY, algorithms=[service_settings.ALGORITHM])
+            authorization = authorization.split(' ')[1]  # format is 'Bearer token'
+            payload = jwt.decode(authorization, service_settings.ACCESS_TOKEN_SECRET_KEY,
+                                 algorithms=[service_settings.ALGORITHM])
             email: str = payload.get("sub")
             if email is None:
                 raise credentials_exception
         except InvalidTokenError:
+            raise credentials_exception
+        except IndexError:
             raise credentials_exception
         user: User = await get_user_by_email_db(self.session(), email)
         if user is None:
@@ -65,6 +74,7 @@ class Context(BaseContext):
 
     def session(self) -> Session:
         return next(get_db())
+
 
 async def get_context() -> Context:
     return Context()

@@ -1,22 +1,22 @@
-from .campaign import campaign_by_id, create_campaign, update_campaign, campaigns_in_project
+from .campaign import campaign_by_id, create_campaign_route, update_campaign_route, campaigns_in_project
 from .schemas import AuthPayload, UserGet, FragmentGet, MediaGet, FragmentPost, CampaignGet, CampaignPost, FeedbackPost, \
     FeedbackGet, \
     GeoLocationGet, StreamGet, StreamPost, ProjectPost, ProjectGet, StreamFragmentGet, \
-    StreamFragmentPost
+    StreamFragmentPost, StreamFragmentPatch, ProjectPatch, StreamPatch, CampaignPatch, FragmentPatch
 
 import strawberry
 from typing import Optional, List
 from .middleware import Context
 from .user import login, refresh, profile, signup
-from .fragment import create_fragment, fragments_in_project, fragment_by_id, update_fragment
+from .fragment import create_fragment_route, fragments_in_project, fragment_by_id, update_fragment_route
 # from .media import upload_asset
-from .stream import create_stream, stream_by_id, streams_in_campaign, update_stream
+from .stream import create_stream_route, stream_by_id, streams_in_campaign, update_stream_route
 from .feedback import create_feedback
-from .project import create_project, project_by_id, projects, update_project, \
+from .project import create_project_route, project_by_id, projects, update_project_route, \
     add_user_to_project as add_user_to_project_route, RoleGet, change_user_role as change_user_role_route
 from fastapi import UploadFile
 from crud.ipgetter import get_location_by_ip
-from .stream_fragment import stream_fragment_by_id, stream_fragments_in_stream, update_stream_fragment, create_stream_fragment
+from .stream_fragment import stream_fragment_by_id, stream_fragments_in_stream, update_stream_fragment_route, create_stream_fragment_route
 
 
 @strawberry.type
@@ -88,18 +88,20 @@ class Mutation:
         return await refresh(info)
 
     @strawberry.mutation
-    async def fragment(self, info: strawberry.Info[Context], fg: FragmentPost) -> FragmentGet:
-        if fg.id is not None:
-            return await update_fragment(info, fg)
-        else:
-            return await create_fragment(info, fg)
+    async def create_fragment(self, info: strawberry.Info[Context], fg: FragmentPost) -> FragmentGet:
+        return await create_fragment_route(info, fg)
 
     @strawberry.mutation
-    async def campaign(self, info: strawberry.Info[Context], cmp: CampaignPost) -> CampaignGet:
-        if cmp.id is not None:
-            return await update_campaign(info, cmp)
-        else:
-            return await create_campaign(info, cmp)
+    async def update_fragment(self, info: strawberry.Info[Context], fg: FragmentPatch) -> FragmentGet:
+        return await update_fragment_route(info, fg)
+
+    @strawberry.mutation
+    async def create_campaign(self, info: strawberry.Info[Context], cmp: CampaignPost) -> CampaignGet:
+        return await create_campaign_route(info, cmp)
+
+    @strawberry.mutation
+    async def update_campaign(self, info: strawberry.Info[Context], cmp: CampaignPatch) -> CampaignGet:
+        return await update_campaign_route(info, cmp)
 
     #
     # @strawberry.mutation
@@ -111,18 +113,19 @@ class Mutation:
         return await create_feedback(info, fd)
 
     @strawberry.mutation
-    async def stream(self, info: strawberry.Info[Context], strm: StreamPost) -> StreamGet:
-       if strm.id is not None:
-           return await update_stream(info, strm)
-       else:
-            return await create_stream(info, strm)
+    async def create_stream(self, info: strawberry.Info[Context], strm: StreamPost) -> StreamGet:
+       return await create_stream_route(info, strm)
 
     @strawberry.mutation
-    async def project(self, info: strawberry.Info[Context], pr: ProjectPost) -> ProjectGet:
-        if pr.id is not None:
-            return await update_project(info, pr)
-        else:
-            return await create_project(info, pr)
+    async def update_stream(self, info: strawberry.Info[Context], strm: StreamPatch) -> StreamGet:
+       return await update_stream_route(info, strm)
+
+    @strawberry.mutation
+    async def create_project(self, info: strawberry.Info[Context], pr: ProjectPost) -> ProjectGet:
+        return await create_project_route(info, pr)
+
+    async def update_project(self, info: strawberry.Info[Context], pr: ProjectPatch) -> ProjectGet:
+        return await update_project_route(info, pr)
 
     @strawberry.mutation
     async def add_user_to_project(self, info: strawberry.Info[Context], user_id: int, project_id: int,
@@ -135,8 +138,9 @@ class Mutation:
         await change_user_role_route(info, user_id, project_id, role)
 
     @strawberry.mutation
-    async def stream_fragment(self, info: strawberry.Info[Context], stream_fragment: StreamFragmentPost) -> StreamFragmentGet:
-        if stream_fragment.id is not None:
-            return await update_stream_fragment(info, stream_fragment)
-        else:
-            return await create_stream_fragment(info, stream_fragment)
+    async def create_stream_fragment(self, info: strawberry.Info[Context], stream_fragment: StreamFragmentPost) -> StreamFragmentGet:
+        return await create_stream_fragment_route(info, stream_fragment)
+
+    @strawberry.mutation
+    async def update_stream_fragment(self, info: strawberry.Info[Context], stream_fragment: StreamFragmentPatch) -> StreamFragmentGet:
+        return await update_stream_fragment_route(info, stream_fragment)
