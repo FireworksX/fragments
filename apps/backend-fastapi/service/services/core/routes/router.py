@@ -1,29 +1,22 @@
-from .campaign import campaign_by_id, create_campaign, update_campaign, campaigns_in_project
+from .campaign import campaign_by_id, create_campaign_route, update_campaign_route, campaigns_in_project
 from .schemas import AuthPayload, UserGet, FragmentGet, MediaGet, FragmentPost, CampaignGet, CampaignPost, FeedbackPost, \
     FeedbackGet, \
-    GeoLocationGet, StreamGet, StreamPost, ProjectPost, ProjectGet, SubcampaignFragmentGet, \
-    SubcampaignFragmentPost
+    GeoLocationGet, StreamGet, StreamPost, ProjectPost, ProjectGet, StreamFragmentGet, \
+    StreamFragmentPost, StreamFragmentPatch, ProjectPatch, StreamPatch, CampaignPatch, FragmentPatch
 
 import strawberry
 from typing import Optional, List
 from .middleware import Context
 from .user import login, refresh, profile, signup
-from .fragment import create_fragment, fragments_in_project, fragment_by_id, update_fragment
-# from .campaign import campaigns, campaign_by_id, create_campaign, update_campaign, delete_campaign_from_db, campaigns_in_project
+from .fragment import create_fragment_route, fragments_in_project, fragment_by_id, update_fragment_route
 # from .media import upload_asset
-from .stream import create_stream, stream_by_id, streams_in_campaign, update_stream
+from .stream import create_stream_route, stream_by_id, streams_in_campaign, update_stream_route
 from .feedback import create_feedback
-# from .subcampaign import create_subcampaign, update_subcampaign, subcampaign_by_id, subcampaigns_in_campaign, \
-#   delete_subcampaign_from_db
-from .project import create_project, project_by_id, projects, update_project, \
+from .project import create_project_route, project_by_id, projects, update_project_route, \
     add_user_to_project as add_user_to_project_route, RoleGet, change_user_role as change_user_role_route
-# from .subcampaign_fragment import create_subcampaign_fragment, update_subcampaign_fragment, subcampaign_fragments_in_subcampaign, subcampaign_fragment_by_id
 from fastapi import UploadFile
 from crud.ipgetter import get_location_by_ip
-
-from fastapi import Depends
-from database import Session
-from services.dependencies import get_db
+from .stream_fragment import stream_fragment_by_id, stream_fragments_in_stream, update_stream_fragment_route, create_stream_fragment_route
 
 
 @strawberry.type
@@ -31,10 +24,6 @@ class Query:
     @strawberry.field
     async def profile(self, info: strawberry.Info[Context]) -> AuthPayload:
         return await profile(info)
-
-    @strawberry.field
-    async def refresh(self, info: strawberry.Info[Context]) -> AuthPayload:
-        return await refresh(info)
 
     @strawberry.field
     async def fragment(self, info: strawberry.Info[Context], fragment_id: Optional[int] = None,
@@ -49,11 +38,11 @@ class Query:
     #
     @strawberry.field
     async def campaign(self, info: strawberry.Info[Context], campgain_id: Optional[int] = None,
-                       project_id: Optional[int] = None) -> List[CampaignGet]:
+                       project_id: Optional[int] = None, active: Optional[bool] = None, deleted: Optional[bool] = None) -> List[CampaignGet]:
         if campgain_id is not None:
             return [await campaign_by_id(info, campgain_id)]
         if project_id is not None:
-            return await campaigns_in_project(info, project_id)
+            return await campaigns_in_project(info, project_id, active, deleted)
 
     @strawberry.field
     async def location(self, ip: str) -> GeoLocationGet:
@@ -61,11 +50,11 @@ class Query:
 
     @strawberry.field
     async def stream(self, info: strawberry.Info[Context], stream_id: Optional[int] = None,
-                          campaign_id: Optional[int] = None) -> List[StreamGet]:
+                          campaign_id: Optional[int] = None, active: Optional[bool] = None, deleted: Optional[bool] = None) -> List[StreamGet]:
         if stream_id is not None:
             return [await stream_by_id(info, stream_id)]
         if campaign_id is not None:
-            return await streams_in_campaign(info, campaign_id)
+            return await streams_in_campaign(info, campaign_id, active, deleted)
 
     @strawberry.field
     async def project(self, info: strawberry.Info[Context], project_id: Optional[int] = None) -> List[ProjectGet]:
@@ -73,13 +62,13 @@ class Query:
             return [await project_by_id(info, project_id)]
         else:
             return await projects(info)
-    #
-    # @strawberry.field
-    # async def subcampaign_fragment(self, info: strawberry.Info[Context], subcampaign_id: Optional[int] = None, subcampaign_fragment_id: Optional[int] = None) -> List[SubcampaignFragmentGet]:
-    #     if subcampaign_id is not None:
-    #         return [await subcampaign_fragment_by_id(info, subcampaign_id)]
-    #     else:
-    #         return await subcampaign_fragments_in_subcampaign(subcampaign_fragment_id)
+
+    @strawberry.field
+    async def stream_fragment(self, info: strawberry.Info[Context], stream_id: Optional[int] = None, stream_fragment_id: Optional[int] = None) -> List[StreamFragmentGet]:
+        if stream_fragment_id is not None:
+            return [await stream_fragment_by_id(info, stream_fragment_id)]
+        else:
+            return await stream_fragments_in_stream(stream_id)
 
 
 @strawberry.type
@@ -95,23 +84,25 @@ class Mutation:
         return await login(info, email, password)
 
     @strawberry.mutation
-    async def fragment(self, info: strawberry.Info[Context], fg: FragmentPost) -> FragmentGet:
-        if fg.id is not None:
-            return await update_fragment(info, fg)
-        else:
-            return await create_fragment(info, fg)
+    async def refresh(self, info: strawberry.Info[Context]) -> AuthPayload:
+        return await refresh(info)
 
     @strawberry.mutation
-    async def campaign(self, info: strawberry.Info[Context], cmp: CampaignPost) -> CampaignGet:
-        if cmp.id is not None:
-            return await update_campaign(info, cmp)
-        else:
-            return await create_campaign(info, cmp)
+    async def create_fragment(self, info: strawberry.Info[Context], fg: FragmentPost) -> FragmentGet:
+        return await create_fragment_route(info, fg)
 
-    #
-    # @strawberry.mutation
-    # async def delete_campaign(self, info: strawberry.Info[Context], campaign_id: int) -> None:
-    #     await delete_campaign_from_db(info, campaign_id)
+    @strawberry.mutation
+    async def update_fragment(self, info: strawberry.Info[Context], fg: FragmentPatch) -> FragmentGet:
+        return await update_fragment_route(info, fg)
+
+    @strawberry.mutation
+    async def create_campaign(self, info: strawberry.Info[Context], cmp: CampaignPost) -> CampaignGet:
+        return await create_campaign_route(info, cmp)
+
+    @strawberry.mutation
+    async def update_campaign(self, info: strawberry.Info[Context], cmp: CampaignPatch) -> CampaignGet:
+        return await update_campaign_route(info, cmp)
+
     #
     # @strawberry.mutation
     # async def asset(self, info: strawberry.Info[Context], file: UploadFile) -> MediaGet:
@@ -122,22 +113,19 @@ class Mutation:
         return await create_feedback(info, fd)
 
     @strawberry.mutation
-    async def stream(self, info: strawberry.Info[Context], strm: StreamPost) -> StreamGet:
-       if strm.id is not None:
-           return await update_stream(info, strm)
-       else:
-            return await create_stream(info, strm)
+    async def create_stream(self, info: strawberry.Info[Context], strm: StreamPost) -> StreamGet:
+       return await create_stream_route(info, strm)
 
-    # @strawberry.mutation
-    # async def delete_subcampaign(self, info: strawberry.Info[Context], subcampaign_id: int) -> None:
-    #     await delete_subcampaign_from_db(info, subcampaign_id)
-    #
     @strawberry.mutation
-    async def project(self, info: strawberry.Info[Context], pr: ProjectPost) -> ProjectGet:
-        if pr.id is not None:
-            return await update_project(info, pr)
-        else:
-            return await create_project(info, pr)
+    async def update_stream(self, info: strawberry.Info[Context], strm: StreamPatch) -> StreamGet:
+       return await update_stream_route(info, strm)
+
+    @strawberry.mutation
+    async def create_project(self, info: strawberry.Info[Context], pr: ProjectPost) -> ProjectGet:
+        return await create_project_route(info, pr)
+
+    async def update_project(self, info: strawberry.Info[Context], pr: ProjectPatch) -> ProjectGet:
+        return await update_project_route(info, pr)
 
     @strawberry.mutation
     async def add_user_to_project(self, info: strawberry.Info[Context], user_id: int, project_id: int,
@@ -146,12 +134,13 @@ class Mutation:
 
     @strawberry.mutation
     async def change_user_role(self, info: strawberry.Info[Context], user_id: int, project_id: int,
-                               role: int) -> None:
+                               role: RoleGet) -> None:
         await change_user_role_route(info, user_id, project_id, role)
-    #
-    # @strawberry.mutation
-    # async def subcampaign_fragment(self, info: strawberry.Info[Context], subcampaign_fragment: SubcampaignFragmentPost) -> SubcampaignFragmentGet:
-    #     if subcampaign_fragment.id is not None:
-    #         return await update_subcampaign_fragment(info, subcampaign_fragment)
-    #     else:
-    #         return await create_subcampaign_fragment(info, subcampaign_fragment)
+
+    @strawberry.mutation
+    async def create_stream_fragment(self, info: strawberry.Info[Context], stream_fragment: StreamFragmentPost) -> StreamFragmentGet:
+        return await create_stream_fragment_route(info, stream_fragment)
+
+    @strawberry.mutation
+    async def update_stream_fragment(self, info: strawberry.Info[Context], stream_fragment: StreamFragmentPatch) -> StreamFragmentGet:
+        return await update_stream_fragment_route(info, stream_fragment)

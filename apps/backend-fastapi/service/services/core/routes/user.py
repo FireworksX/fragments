@@ -1,5 +1,8 @@
-from fastapi import HTTPException, status
-from .schemas import UserGet, AuthPayload
+import strawberry
+from fastapi import HTTPException, status, UploadFile
+
+from .middleware import Context
+from .schemas import UserGet, AuthPayload, MediaGet
 from typing import Optional, Dict, Any
 from crud.user import get_user_by_email_db, create_user_db
 from services.core.utils import create_access_token, create_refresh_token, get_password_hash, verify_password
@@ -7,7 +10,7 @@ from database import Session
 from database.models import User
 
 
-async def login(info, email: str, password: str) -> AuthPayload:
+async def login(info: strawberry.Info[Context], email: str, password: str) -> AuthPayload:
     db: Session = info.context.session()
     user: User = await get_user_by_email_db(db, email)
     if user is None:
@@ -28,7 +31,7 @@ async def login(info, email: str, password: str) -> AuthPayload:
     )
 
 
-async def signup(info, email: str, first_name: str, last_name: Optional[str],
+async def signup(info: strawberry.Info[Context], email: str, first_name: str, last_name: Optional[str],
                  password: str) -> AuthPayload:
     db: Session = info.context.session()
     user: User = await get_user_by_email_db(db, email)
@@ -50,15 +53,38 @@ async def signup(info, email: str, first_name: str, last_name: Optional[str],
         refresh_token=refresh_token
     )
 
+# async def add_avatar(info: strawberry.Info[Context], file: UploadFile) -> MediaGet:
+#     user: AuthPayload = await info.context.user()
+#     db: Session = info.context.session()
+#
+#
+#         filePath = f'{FOLDER}/{uuid.uuid4()}-{file.filename}'
+#
+#         try:
+#             print("buckets", supabase.storage.list_buckets())
+#             bucket = supabase.storage.get_bucket(PROJECT_BUCKET)
+#
+#         except StorageException as e:
+#             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e)
+#
+#         result = bucket.upload(path=filePath, file=file.file.read())
+#         public_url = supabase.storage.from_(PROJECT_BUCKET).get_public_url(filePath)
+#
+#         ext: str = file.filename.split('.')[-1]
+#
+#         entry = supabase.table('media').insert(
+#             {'path': filePath, 'name': file.filename, 'ext': ext, 'public_path': public_url,
+#              'user': user.user.id}).execute()
+#         return MediaGet(id=entry.data[0]['id'], path=public_url)
 
-async def profile(info):
+async def profile(info: strawberry.Info[Context]):
     user = await info.context.user()
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return user
 
 
-async def refresh(info):
+async def refresh(info: strawberry.Info[Context]):
     user = await info.context.refresh_user()
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)

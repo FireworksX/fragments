@@ -89,8 +89,13 @@ async def get_stream_by_id_db(db: Session, stream_id: int) -> Optional[Stream]:
     return db.query(Stream).filter(Stream.id == stream_id).first()
 
 
-async def get_streams_by_campaign_id_db(db: Session, campaign_id: int) -> List[Stream]:
-    return db.query(Stream).filter(Stream.campaign_id == campaign_id).all()
+async def get_streams_by_campaign_id_db(db: Session, campaign_id: int, active: Optional[bool] = None, deleted: Optional[bool] = None) -> List[Stream]:
+    query = db.query(Stream).filter(Stream.campaign_id == campaign_id)
+    if active is not None:
+        query = query.filter(Stream.active == active)
+    if deleted is not None:
+        query = query.filter(Stream.deleted == deleted)
+    return query.all()
 
 
 async def update_stream_by_id_db(db: Session, values: dict, os_types: Optional[List[OSTypeGet]],

@@ -39,12 +39,16 @@ class User(Base):
 
     projects = relationship("ProjectMemberRole", back_populates="user")
 
+    avatar_id = Column('avatar_id', Integer, ForeignKey('media.id'))
+    avatar = relationship("Media")
+
 
 class Project(Base):
     __tablename__ = 'project'
     id = Column('id', Integer, primary_key=True, index=True)
     name = Column('name', String)
-    logo_id = Column('logo_id', Integer)
+    logo_id = Column('logo_id', Integer, ForeignKey('media.id'))
+    logo = relationship("Media")
 
     owner_id = Column('owner_id', Integer, ForeignKey('user.id'))
     owner = relationship("User")
@@ -57,7 +61,6 @@ class Campaign(Base):
     id = Column('id', Integer, primary_key=True, index=True)
     project_id = Column('project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False)
     name = Column('name', String)
-    logo_id = Column('logo_id', Integer)
     description = Column('description', String)
     active = Column('active', Boolean, default=True)
     deleted = Column('deleted', Boolean, default=False)
@@ -66,6 +69,9 @@ class Campaign(Base):
     author = relationship("User")
 
     streams = relationship("CampaignStream", back_populates="campaign")
+
+    logo_id = Column('logo_id', Integer, ForeignKey('media.id'))
+    logo = relationship("Media")
 
 
 class GeoLocation(Base):
@@ -192,13 +198,18 @@ class Fragment(Base):
     author = relationship("User")
 
 
-class SubcampaignFragment(Base):
+    ## list of media
+
+
+class StreamFragment(Base):
     __tablename__ = 'stream_fragment'
     id = Column('id', Integer, primary_key=True, index=True)
+    project_id = Column('project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False)
     stream_id = Column('stream_id', Integer, ForeignKey('stream.id', ondelete='CASCADE'), nullable=False)
     fragment_id = Column('fragment_id', Integer, ForeignKey('fragment.id', ondelete='CASCADE'), nullable=False)
     props = Column('props', JSON, nullable=False)
     weight = Column('weight', Float, nullable=False)
+    name = Column('name', String)
 
 
 class Media(Base):

@@ -1,9 +1,8 @@
-from strawberry.fastapi import GraphQLRouter, BaseContext
 import strawberry
 from typing import Optional, List
 from enum import Enum
-from pydantic import BaseModel, field_validator
 import datetime
+
 
 @strawberry.enum
 class RoleGet(Enum):
@@ -12,6 +11,7 @@ class RoleGet(Enum):
     MANAGER = 3
     DESIGNER = 4
 
+
 @strawberry.type
 class UserGet:
     id: int
@@ -19,9 +19,10 @@ class UserGet:
     first_name: str
     last_name: Optional[str]
 
+
 @strawberry.type
 class UserRoleGet(UserGet):
-    role: str
+    role: RoleGet
 
 
 @strawberry.type
@@ -30,13 +31,22 @@ class AuthPayload:
     access_token: str
     refresh_token: str
 
+
 @strawberry.input
 class FragmentPost:
-    id: Optional[int] = None
-    project_id: Optional[int] = None
+    project_id: int
+    name: str
+    document: strawberry.scalars.JSON
+    props: Optional[strawberry.scalars.JSON] = None
+
+@strawberry.input
+class FragmentPatch:
+    id: int
+    project_id: int
     name: Optional[str] = None
     document: Optional[strawberry.scalars.JSON] = None
     props: Optional[strawberry.scalars.JSON] = None
+
 
 @strawberry.type
 class CampaignGet:
@@ -49,6 +59,7 @@ class CampaignGet:
     active: bool
     deleted: bool
 
+
 @strawberry.type
 class ProjectGet:
     id: int
@@ -57,6 +68,7 @@ class ProjectGet:
     owner: UserGet
     members: List[UserRoleGet]
     campaigns: List[CampaignGet]
+
 
 @strawberry.type
 class FragmentGet:
@@ -70,7 +82,13 @@ class FragmentGet:
 
 @strawberry.input
 class ProjectPost:
-    id: Optional[int] = None
+    name: str
+    logo_id: Optional[str] = None
+
+
+@strawberry.input
+class ProjectPatch:
+    id: int
     name: Optional[str] = None
     logo_id: Optional[str] = None
 
@@ -83,8 +101,17 @@ class MediaGet:
 
 @strawberry.input
 class CampaignPost:
-    id: Optional[int] = None
-    project_id: Optional[int] = None
+    project_id: int
+    name: str
+    logo_id: Optional[int] = None
+    description: Optional[str] = None
+    active: bool
+    deleted: bool
+
+
+@strawberry.input
+class CampaignPatch:
+    id: int
     name: Optional[str] = None
     logo_id: Optional[int] = None
     description: Optional[str] = None
@@ -114,15 +141,18 @@ class GeoLocationGet:
     region: str
     city: str
 
+
 @strawberry.type
 class TimeFrameGet:
     from_time: datetime.datetime
     to_time: datetime.datetime
 
+
 @strawberry.input
 class TimeFramePost:
     from_time: datetime.datetime
     to_time: datetime.datetime
+
 
 @strawberry.type
 class StreamGet:
@@ -144,10 +174,26 @@ class GeoLocationPost:
     country: Optional[str] = None
     region: Optional[str] = None
     city: Optional[str] = None
+
+
 @strawberry.input
 class StreamPost:
-    id: Optional[int] = None
-    campaign_id: Optional[int] = None
+    campaign_id: int
+    active: bool
+    deleted: bool
+    name: str
+    os_types: Optional[List[OSTypeGet]] = None
+    device_types: Optional[List[DeviceTypeGet]] = None
+    pages: Optional[List[str]] = None
+    geo_locations: Optional[List[GeoLocationPost]] = None
+    time_frames: Optional[List[TimeFramePost]] = None
+    weight: float
+
+
+@strawberry.input
+class StreamPatch:
+    id: int
+    campaign_id: int
     active: Optional[bool] = None
     deleted: Optional[bool] = None
     name: Optional[str] = None
@@ -180,20 +226,31 @@ class FeedbackGet:
     feel: FeelLevelGet
     content: Optional[str] = None
     page: str
-  #  user: User
+
 
 @strawberry.type
-class SubcampaignFragmentGet:
+class StreamFragmentGet:
     id: int
-    subcampaign_id: int
+    stream_id: int
     fragment_id: int
     props: Optional[strawberry.scalars.JSON] = None
     weight: float
+    name: str
+
 
 @strawberry.input
-class SubcampaignFragmentPost:
-    id: Optional[int] = None
-    subcampaign_id: Optional[int] = None
-    fragment_id: Optional[int] = None
+class StreamFragmentPost:
+    stream_id: int
+    fragment_id: int
+    props: Optional[strawberry.scalars.JSON] = None
+    weight: float
+    name: str
+
+
+@strawberry.input
+class StreamFragmentPatch:
+    id: int
+    fragment_id: int
     props: Optional[strawberry.scalars.JSON] = None
     weight: Optional[float] = None
+    name: Optional[str] = None

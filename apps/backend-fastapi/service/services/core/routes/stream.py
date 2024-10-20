@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from fastapi import HTTPException, status
 import strawberry
 
@@ -6,7 +6,7 @@ from crud.stream import create_stream_db, update_stream_by_id_db, get_streams_by
 from crud.campaign import get_campaign_by_id_db
 from database import Session, Stream, Campaign
 from .schemas import AuthPayload, CampaignGet, CampaignPost, RoleGet, StreamPost, StreamGet, DeviceTypeGet, OSTypeGet, \
-    GeoLocationGet, TimeFrameGet
+    GeoLocationGet, TimeFrameGet, StreamPatch
 from .middleware import Context
 from .utils import get_user_role_in_project
 
@@ -37,7 +37,7 @@ def stream_db_to_stream(stream: Stream) -> StreamGet:
                          relation in stream.time_frames])
 
 
-async def streams_in_campaign(info: strawberry.Info[Context], campaign_id: int) -> List[StreamGet]:
+async def streams_in_campaign(info: strawberry.Info[Context], campaign_id: int, active: Optional[bool] = None, deleted: Optional[bool] = None) -> List[StreamGet]:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
@@ -49,7 +49,7 @@ async def streams_in_campaign(info: strawberry.Info[Context], campaign_id: int) 
     if not permission:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to view streams')
-    streams: List[Stream] = await get_streams_by_campaign_id_db(db, campaign_id)
+    streams: List[Stream] = await get_streams_by_campaign_id_db(db, campaign_id, active, deleted)
     out: List[StreamGet] = []
     for stream in streams:
         out.append(stream_db_to_stream(stream))
@@ -76,7 +76,7 @@ async def stream_by_id(info: strawberry.Info[Context], stream_id: int) -> Stream
     return stream_db_to_stream(stream)
 
 
-async def create_stream(info: strawberry.Info[Context], strm: StreamPost) -> StreamGet:
+async def create_stream_route(info: strawberry.Info[Context], strm: StreamPost) -> StreamGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
@@ -96,7 +96,7 @@ async def create_stream(info: strawberry.Info[Context], strm: StreamPost) -> Str
     return stream_db_to_stream(stream)
 
 
-async def update_stream(info: strawberry.Info[Context], strm: StreamPost) -> StreamGet:
+async def update_stream_route(info: strawberry.Info[Context], strm: StreamPatch) -> StreamGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 

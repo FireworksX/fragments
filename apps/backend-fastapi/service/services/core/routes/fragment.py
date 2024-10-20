@@ -4,7 +4,7 @@ from fastapi import HTTPException
 from starlette import status
 
 from crud.project import get_project_by_id_db
-from .schemas import FragmentGet, AuthPayload, FragmentPost, ProjectGet, RoleGet
+from .schemas import FragmentGet, AuthPayload, FragmentPost, ProjectGet, RoleGet, FragmentPatch
 from .middleware import Context
 from crud.fragment import create_fragment_db, Fragment, get_fragments_by_project_id_db, get_fragment_by_id_db, \
     update_fragment_by_id_db
@@ -23,7 +23,7 @@ async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
     return role is not None and role is not RoleGet.ADMIN
 
 
-async def create_fragment(info: strawberry.Info[Context], fg: FragmentPost) -> FragmentGet:
+async def create_fragment_route(info: strawberry.Info[Context], fg: FragmentPost) -> FragmentGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
@@ -83,7 +83,7 @@ async def fragment_by_id(info: strawberry.Info[Context], fragment_id: int) -> Fr
                        props=fragment.props, project=project)
 
 
-async def update_fragment(info: strawberry.Info[Context], fg: FragmentPost) -> FragmentGet:
+async def update_fragment_route(info: strawberry.Info[Context], fg: FragmentPatch) -> FragmentGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
     fragment: Fragment = await get_fragment_by_id_db(db, fg.id)

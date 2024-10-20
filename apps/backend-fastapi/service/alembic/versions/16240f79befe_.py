@@ -1,8 +1,8 @@
 """
 
-Revision ID: 19a96c45a0f2
+Revision ID: 16240f79befe
 Revises: 
-Create Date: 2024-10-13 16:10:31.758416
+Create Date: 2024-10-17 20:19:14.821426
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '19a96c45a0f2'
+revision = '16240f79befe'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -106,6 +106,21 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_stream_id'), 'stream', ['id'], unique=False)
+    op.create_table('campaign_stream',
+    sa.Column('campaign_id', sa.Integer(), nullable=False),
+    sa.Column('stream_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['campaign_id'], ['campaign.id'], ),
+    sa.ForeignKeyConstraint(['stream_id'], ['stream.id'], ),
+    sa.PrimaryKeyConstraint('campaign_id', 'stream_id')
+    )
+    op.create_table('device_type',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('stream_id', sa.Integer(), nullable=False),
+    sa.Column('device_type', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['stream_id'], ['stream.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_device_type_id'), 'device_type', ['id'], unique=False)
     op.create_table('geo_location',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('country', sa.String(), nullable=False),
@@ -116,6 +131,14 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_geo_location_id'), 'geo_location', ['id'], unique=False)
+    op.create_table('os_type',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('stream_id', sa.Integer(), nullable=False),
+    sa.Column('os_type', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['stream_id'], ['stream.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_os_type_id'), 'os_type', ['id'], unique=False)
     op.create_table('page',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('stream_id', sa.Integer(), nullable=False),
@@ -126,31 +149,18 @@ def upgrade():
     op.create_index(op.f('ix_page_id'), 'page', ['id'], unique=False)
     op.create_table('stream_fragment',
     sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('project_id', sa.Integer(), nullable=False),
     sa.Column('stream_id', sa.Integer(), nullable=False),
     sa.Column('fragment_id', sa.Integer(), nullable=False),
     sa.Column('props', sa.JSON(), nullable=False),
     sa.Column('weight', sa.Float(), nullable=False),
+    sa.Column('name', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['fragment_id'], ['fragment.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['project_id'], ['project.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['stream_id'], ['stream.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_stream_fragment_id'), 'stream_fragment', ['id'], unique=False)
-    op.create_table('stream_os_type',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('stream_id', sa.Integer(), nullable=False),
-    sa.Column('os_type', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['stream_id'], ['stream.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_index(op.f('ix_stream_os_type_id'), 'stream_os_type', ['id'], unique=False)
-    op.create_table('subcampaign_device_type',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('stream_id', sa.Integer(), nullable=False),
-    sa.Column('device_type', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['stream_id'], ['stream.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_index(op.f('ix_subcampaign_device_type_id'), 'subcampaign_device_type', ['id'], unique=False)
     op.create_table('time_frame',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('stream_id', sa.Integer(), nullable=False),
@@ -160,23 +170,64 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_time_frame_id'), 'time_frame', ['id'], unique=False)
+    op.create_table('stream_device_type',
+    sa.Column('device_type_id', sa.Integer(), nullable=False),
+    sa.Column('stream_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['device_type_id'], ['device_type.id'], ),
+    sa.ForeignKeyConstraint(['stream_id'], ['stream.id'], ),
+    sa.PrimaryKeyConstraint('device_type_id', 'stream_id')
+    )
+    op.create_table('stream_geo_location',
+    sa.Column('geo_location_id', sa.Integer(), nullable=False),
+    sa.Column('stream_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['geo_location_id'], ['geo_location.id'], ),
+    sa.ForeignKeyConstraint(['stream_id'], ['stream.id'], ),
+    sa.PrimaryKeyConstraint('geo_location_id', 'stream_id')
+    )
+    op.create_table('stream_os_type',
+    sa.Column('os_type_id', sa.Integer(), nullable=False),
+    sa.Column('stream_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['os_type_id'], ['os_type.id'], ),
+    sa.ForeignKeyConstraint(['stream_id'], ['stream.id'], ),
+    sa.PrimaryKeyConstraint('os_type_id', 'stream_id')
+    )
+    op.create_table('stream_page',
+    sa.Column('page_id', sa.Integer(), nullable=False),
+    sa.Column('stream_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['page_id'], ['page.id'], ),
+    sa.ForeignKeyConstraint(['stream_id'], ['stream.id'], ),
+    sa.PrimaryKeyConstraint('page_id', 'stream_id')
+    )
+    op.create_table('stream_time_frame',
+    sa.Column('time_frame_id', sa.Integer(), nullable=False),
+    sa.Column('stream_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['stream_id'], ['stream.id'], ),
+    sa.ForeignKeyConstraint(['time_frame_id'], ['time_frame.id'], ),
+    sa.PrimaryKeyConstraint('time_frame_id', 'stream_id')
+    )
     # ### end Alembic commands ###
 
 
 def downgrade():
     # ### commands auto generated by Alembic - please adjust! ###
+    op.drop_table('stream_time_frame')
+    op.drop_table('stream_page')
+    op.drop_table('stream_os_type')
+    op.drop_table('stream_geo_location')
+    op.drop_table('stream_device_type')
     op.drop_index(op.f('ix_time_frame_id'), table_name='time_frame')
     op.drop_table('time_frame')
-    op.drop_index(op.f('ix_subcampaign_device_type_id'), table_name='subcampaign_device_type')
-    op.drop_table('subcampaign_device_type')
-    op.drop_index(op.f('ix_stream_os_type_id'), table_name='stream_os_type')
-    op.drop_table('stream_os_type')
     op.drop_index(op.f('ix_stream_fragment_id'), table_name='stream_fragment')
     op.drop_table('stream_fragment')
     op.drop_index(op.f('ix_page_id'), table_name='page')
     op.drop_table('page')
+    op.drop_index(op.f('ix_os_type_id'), table_name='os_type')
+    op.drop_table('os_type')
     op.drop_index(op.f('ix_geo_location_id'), table_name='geo_location')
     op.drop_table('geo_location')
+    op.drop_index(op.f('ix_device_type_id'), table_name='device_type')
+    op.drop_table('device_type')
+    op.drop_table('campaign_stream')
     op.drop_index(op.f('ix_stream_id'), table_name='stream')
     op.drop_table('stream')
     op.drop_table('project_camnpaign')

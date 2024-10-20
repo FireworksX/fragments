@@ -22,8 +22,13 @@ async def get_campaign_by_id_db(db: Session, campaign_id: int) -> Optional[Campa
     return db.query(Campaign).filter(Campaign.id == campaign_id).first()
 
 
-async def get_campaign_by_project_id_db(db: Session, project_id: int) -> List[Campaign]:
-    return db.query(Campaign).filter(Campaign.project_id == project_id).all()
+async def get_campaigns_by_project_id_db(db: Session, project_id: int, active: Optional[bool] = None, deleted: Optional[bool] = None) -> List[Campaign]:
+    query = db.query(Campaign).filter(Campaign.project_id == project_id)
+    if active is not None:
+        query = query.filter(Campaign.active == active)
+    if deleted is not None:
+        query = query.filter(Campaign.deleted == deleted)
+    return query.all()
 
 
 async def update_campaign_by_id_db(db: Session, values: dict) -> Campaign:
