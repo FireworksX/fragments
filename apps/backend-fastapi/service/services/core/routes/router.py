@@ -7,7 +7,7 @@ from .schemas import AuthPayload, UserGet, FragmentGet, MediaGet, FragmentPost, 
 import strawberry
 from typing import Optional, List
 from .middleware import Context
-from .user import login, refresh, profile, signup
+from .user import login, refresh, profile, signup, add_avatar_route
 from .fragment import create_fragment_route, fragments_in_project, fragment_by_id, update_fragment_route
 # from .media import upload_asset
 from .stream import create_stream_route, stream_by_id, streams_in_campaign, update_stream_route
@@ -107,6 +107,11 @@ class Mutation:
     # @strawberry.mutation
     # async def asset(self, info: strawberry.Info[Context], file: UploadFile) -> MediaGet:
     #     return await upload_asset(info, file)
+
+
+    @strawberry.mutation
+    async def add_avatar(self, info: strawberry.Info[Context], file: UploadFile) -> UserGet:
+        return await add_avatar_route(info, file)
 
     @strawberry.mutation
     async def feedback(self, info: strawberry.Info[Context], fd: FeedbackPost) -> FeedbackGet:

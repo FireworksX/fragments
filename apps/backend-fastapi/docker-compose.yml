@@ -22,6 +22,7 @@ services:
     container_name: backend-fastapi-core
     environment:
       - RUN_LEVEL=dev
+      - MEDIA_STORAGE_PATH=${MEDIA_STORAGE_PATH}
     entrypoint:
       - uvicorn
       - services.core:app

@@ -4,6 +4,7 @@ FROM python:3.12-slim as base
 ARG RUN_LEVEL
 
 ENV RUN_LEVEL=${RUN_LEVEL}
+ENV MEDIA_STORAGE_PATH=${MEDIA_STORAGE_PATH}
 ENV PIP_DISABLE_PIP_VERSION_CHECK=on
 ENV PIP_NO_CACHE_DIR=off
 ENV PYTHONDONTWRITEBYTECODE=on
@@ -20,6 +21,8 @@ RUN pip install "poetry==$POETRY_VERSION" \
     && poetry config virtualenvs.create false
 
 RUN mkdir /opt/app
+RUN mkdir /opt/app/media
+RUN mkdir /opt/app/media/avatars
 WORKDIR /opt/app
 
 COPY pyproject.toml poetry.loc[k] /opt/app/

@@ -25,6 +25,7 @@ RUN pip install "poetry==$POETRY_VERSION" \
 
 RUN mkdir /opt/app
 RUN mkdir MEDIA_STORAGE_PATH
+RUN mkdir MEDIA_STORAGE_PATH/avatars
 WORKDIR /opt/app
 
 COPY deployment/pre_start.py /opt/app/
