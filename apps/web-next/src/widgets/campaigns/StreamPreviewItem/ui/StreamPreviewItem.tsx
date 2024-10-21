@@ -5,7 +5,7 @@ import { Container } from '@/shared/ui/Container'
 import { Touchable } from '@/shared/ui/Touchable'
 import { isValue } from '@fragments/utils'
 
-interface CampaignPreviewItemProps {
+interface StreamPreviewItemProps {
   name: string
   logo?: string
   isActive?: boolean
@@ -13,7 +13,7 @@ interface CampaignPreviewItemProps {
   className?: string
 }
 
-export const CampaignPreviewItem: FC<CampaignPreviewItemProps> = ({ className, name, isActive, stats, logo }) => {
+export const StreamPreviewItem: FC<StreamPreviewItemProps> = ({ className, name, isActive, stats, logo }) => {
   return (
     <Touchable className={cn(className)}>
       <Container className={styles.root}>

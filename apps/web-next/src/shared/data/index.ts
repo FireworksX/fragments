@@ -8,4 +8,4 @@ export const popoutNames = createConstants(
   'stackBooleanProperty'
 )
 
-export const modalNames = createConstants('createProject', 'createFragment')
+export const modalNames = createConstants('createProject', 'createFragment', 'createCampaign')

@@ -45,14 +45,20 @@ type GeoLocationGet {
 
 type Mutation {
     addUserToProject(projectId: Int!, role: Int!, userId: Int!): Void
-    campaign(cmp: CampaignPost!): CampaignGet!
-    changeUserRole(projectId: Int!, role: Int!, userId: Int!): Void
+    changeUserRole(projectId: Int!, role: RoleGet!, userId: Int!): Void
+    createCampaign(cmp: CampaignPost!): CampaignGet!
+    createFragment(fg: FragmentPost!): FragmentGet!
+    createProject(pr: ProjectPost!): ProjectGet!
+    createStream(strm: StreamPost!): StreamGet!
+    createStreamFragment(streamFragment: StreamFragmentPost!): StreamFragmentGet!
     feedback(fd: FeedbackPost!): FeedbackGet!
-    fragment(fg: FragmentPost!): FragmentGet!
     login(email: String!, password: String!): AuthPayload!
-    project(pr: ProjectPost!): ProjectGet!
+    refresh: AuthPayload!
     signup(email: String!, firstName: String!, lastName: String, password: String!): AuthPayload!
-    stream(strm: StreamPost!): StreamGet!
+    updateCampaign(cmp: CampaignPatch!): CampaignGet!
+    updateFragment(fg: FragmentPatch!): FragmentGet!
+    updateStream(strm: StreamPatch!): StreamGet!
+    updateStreamFragment(streamFragment: StreamFragmentPatch!): StreamFragmentGet!
 }
 
 type ProjectGet {
@@ -65,13 +71,22 @@ type ProjectGet {
 }
 
 type Query {
-    campaign(campgainId: Int, projectId: Int): [CampaignGet!]!
+    campaign(active: Boolean, campgainId: Int, deleted: Boolean, projectId: Int): [CampaignGet!]!
     fragment(fragmentId: Int, projectId: Int): [FragmentGet!]!
     location(ip: String!): GeoLocationGet!
     profile: AuthPayload!
     project(projectId: Int): [ProjectGet!]!
-    refresh: AuthPayload!
-    stream(campaignId: Int, streamId: Int): [StreamGet!]!
+    stream(active: Boolean, campaignId: Int, deleted: Boolean, streamId: Int): [StreamGet!]!
+    streamFragment(streamFragmentId: Int, streamId: Int): [StreamFragmentGet!]!
+}
+
+type StreamFragmentGet {
+    fragmentId: Int!
+    id: Int!
+    name: String!
+    props: JSON
+    streamId: Int!
+    weight: Float!
 }
 
 type StreamGet {
@@ -105,7 +120,7 @@ type UserRoleGet {
     firstName: String!
     id: Int!
     lastName: String
-    role: String!
+    role: RoleGet!
 }
 
 enum DeviceTypeGet {
@@ -130,6 +145,13 @@ enum OSTypeGet {
     WINDOWS
 }
 
+enum RoleGet {
+    ADMIN
+    DESIGNER
+    MANAGER
+    OWNER
+}
+
 "Date with time (isoformat)"
 scalar DateTime
 
@@ -139,14 +161,22 @@ scalar JSON
 "Represents NULL values"
 scalar Void
 
-input CampaignPost {
+input CampaignPatch {
     active: Boolean
     deleted: Boolean
     description: String
-    id: Int
+    id: Int!
     logoId: Int
     name: String
-    projectId: Int
+}
+
+input CampaignPost {
+    active: Boolean!
+    deleted: Boolean!
+    description: String
+    logoId: Int
+    name: String!
+    projectId: Int!
 }
 
 input FeedbackPost {
@@ -155,11 +185,18 @@ input FeedbackPost {
     page: String!
 }
 
-input FragmentPost {
+input FragmentPatch {
     document: JSON
-    id: Int
+    id: Int!
     name: String
-    projectId: Int
+    projectId: Int!
+    props: JSON
+}
+
+input FragmentPost {
+    document: JSON!
+    name: String!
+    projectId: Int!
     props: JSON
 }
 
@@ -170,23 +207,51 @@ input GeoLocationPost {
 }
 
 input ProjectPost {
-    id: Int
     logoId: String
-    name: String
+    name: String!
 }
 
-input StreamPost {
+input StreamFragmentPatch {
+    fragmentId: Int!
+    id: Int!
+    name: String
+    props: JSON
+    weight: Float
+}
+
+input StreamFragmentPost {
+    fragmentId: Int!
+    name: String!
+    props: JSON
+    streamId: Int!
+    weight: Float!
+}
+
+input StreamPatch {
     active: Boolean
-    campaignId: Int
+    campaignId: Int!
     deleted: Boolean
     deviceTypes: [DeviceTypeGet!]
     geoLocations: [GeoLocationPost!]
-    id: Int
+    id: Int!
     name: String
     osTypes: [OSTypeGet!]
     pages: [String!]
     timeFrames: [TimeFramePost!]
     weight: Float
+}
+
+input StreamPost {
+    active: Boolean!
+    campaignId: Int!
+    deleted: Boolean!
+    deviceTypes: [DeviceTypeGet!]
+    geoLocations: [GeoLocationPost!]
+    name: String!
+    osTypes: [OSTypeGet!]
+    pages: [String!]
+    timeFrames: [TimeFramePost!]
+    weight: Float!
 }
 
 input TimeFramePost {

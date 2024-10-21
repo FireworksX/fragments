@@ -22,14 +22,22 @@ export type Scalars = {
   Void: { input: any; output: any; }
 };
 
-export type CampaignPost = {
+export type CampaignPatch = {
   active?: InputMaybe<Scalars['Boolean']['input']>;
   deleted?: InputMaybe<Scalars['Boolean']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
-  id?: InputMaybe<Scalars['Int']['input']>;
+  id: Scalars['Int']['input'];
   logoId?: InputMaybe<Scalars['Int']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  projectId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type CampaignPost = {
+  active: Scalars['Boolean']['input'];
+  deleted: Scalars['Boolean']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  logoId?: InputMaybe<Scalars['Int']['input']>;
+  name: Scalars['String']['input'];
+  projectId: Scalars['Int']['input'];
 };
 
 export enum DeviceTypeGet {
@@ -52,11 +60,18 @@ export enum FeelLevelGet {
   Two = 'TWO'
 }
 
-export type FragmentPost = {
+export type FragmentPatch = {
   document?: InputMaybe<Scalars['JSON']['input']>;
-  id?: InputMaybe<Scalars['Int']['input']>;
+  id: Scalars['Int']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
-  projectId?: InputMaybe<Scalars['Int']['input']>;
+  projectId: Scalars['Int']['input'];
+  props?: InputMaybe<Scalars['JSON']['input']>;
+};
+
+export type FragmentPost = {
+  document: Scalars['JSON']['input'];
+  name: Scalars['String']['input'];
+  projectId: Scalars['Int']['input'];
   props?: InputMaybe<Scalars['JSON']['input']>;
 };
 
@@ -75,23 +90,58 @@ export enum OsTypeGet {
 }
 
 export type ProjectPost = {
-  id?: InputMaybe<Scalars['Int']['input']>;
   logoId?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
 };
 
-export type StreamPost = {
+export enum RoleGet {
+  Admin = 'ADMIN',
+  Designer = 'DESIGNER',
+  Manager = 'MANAGER',
+  Owner = 'OWNER'
+}
+
+export type StreamFragmentPatch = {
+  fragmentId: Scalars['Int']['input'];
+  id: Scalars['Int']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  props?: InputMaybe<Scalars['JSON']['input']>;
+  weight?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type StreamFragmentPost = {
+  fragmentId: Scalars['Int']['input'];
+  name: Scalars['String']['input'];
+  props?: InputMaybe<Scalars['JSON']['input']>;
+  streamId: Scalars['Int']['input'];
+  weight: Scalars['Float']['input'];
+};
+
+export type StreamPatch = {
   active?: InputMaybe<Scalars['Boolean']['input']>;
-  campaignId?: InputMaybe<Scalars['Int']['input']>;
+  campaignId: Scalars['Int']['input'];
   deleted?: InputMaybe<Scalars['Boolean']['input']>;
   deviceTypes?: InputMaybe<Array<DeviceTypeGet>>;
   geoLocations?: InputMaybe<Array<GeoLocationPost>>;
-  id?: InputMaybe<Scalars['Int']['input']>;
+  id: Scalars['Int']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
   osTypes?: InputMaybe<Array<OsTypeGet>>;
   pages?: InputMaybe<Array<Scalars['String']['input']>>;
   timeFrames?: InputMaybe<Array<TimeFramePost>>;
   weight?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type StreamPost = {
+  active: Scalars['Boolean']['input'];
+  campaignId: Scalars['Int']['input'];
+  deleted: Scalars['Boolean']['input'];
+  deviceTypes?: InputMaybe<Array<DeviceTypeGet>>;
+  geoLocations?: InputMaybe<Array<GeoLocationPost>>;
+  name: Scalars['String']['input'];
+  osTypes?: InputMaybe<Array<OsTypeGet>>;
+  pages?: InputMaybe<Array<Scalars['String']['input']>>;
+  timeFrames?: InputMaybe<Array<TimeFramePost>>;
+  weight: Scalars['Float']['input'];
 };
 
 export type TimeFramePost = {
@@ -137,12 +187,28 @@ export type AuthSignUpMutationVariables = Exact<{
 
 export type AuthSignUpMutation = { __typename?: 'Mutation', signup: { __typename?: 'AuthPayload', accessToken: string, refreshToken: string } };
 
+export type CampaignsListQueryVariables = Exact<{
+  projectId: Scalars['Int']['input'];
+}>;
+
+
+export type CampaignsListQuery = { __typename?: 'Query', campaign: Array<{ __typename?: 'CampaignGet', id: number, name: string, active: boolean, description: string }> };
+
+export type CreateCampaignMutationVariables = Exact<{
+  name: Scalars['String']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  projectId: Scalars['Int']['input'];
+}>;
+
+
+export type CreateCampaignMutation = { __typename?: 'Mutation', createCampaign: { __typename?: 'CampaignGet', active: boolean, name: string, description: string } };
+
 export type CreateProjectMutationVariables = Exact<{
   name: Scalars['String']['input'];
 }>;
 
 
-export type CreateProjectMutation = { __typename?: 'Mutation', project: { __typename?: 'ProjectGet', name: string, owner: { __typename?: 'UserGet', firstName: string, lastName?: string | null } } };
+export type CreateProjectMutation = { __typename?: 'Mutation', createProject: { __typename?: 'ProjectGet', name: string, owner: { __typename?: 'UserGet', firstName: string, lastName?: string | null } } };
 
 export type ProjectsListQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -155,5 +221,7 @@ export const ProjectBreadcrumbDocument = {"kind":"Document","definitions":[{"kin
 export const AuthSignInDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AuthSignIn"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"accessToken"}},{"kind":"Field","name":{"kind":"Name","value":"refreshToken"}}]}}]}}]} as unknown as DocumentNode<AuthSignInMutation, AuthSignInMutationVariables>;
 export const CurrentProfileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CurrentProfile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"accessToken"}},{"kind":"Field","name":{"kind":"Name","value":"refreshToken"}}]}}]}}]} as unknown as DocumentNode<CurrentProfileQuery, CurrentProfileQueryVariables>;
 export const AuthSignUpDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AuthSignUp"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"firstName"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"lastName"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signup"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}},{"kind":"Argument","name":{"kind":"Name","value":"firstName"},"value":{"kind":"Variable","name":{"kind":"Name","value":"firstName"}}},{"kind":"Argument","name":{"kind":"Name","value":"lastName"},"value":{"kind":"Variable","name":{"kind":"Name","value":"lastName"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"accessToken"}},{"kind":"Field","name":{"kind":"Name","value":"refreshToken"}}]}}]}}]} as unknown as DocumentNode<AuthSignUpMutation, AuthSignUpMutationVariables>;
-export const CreateProjectDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateProject"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"project"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pr"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"owner"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}}]}}]}}]} as unknown as DocumentNode<CreateProjectMutation, CreateProjectMutationVariables>;
+export const CampaignsListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CampaignsList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"campaign"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"projectId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"active"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}}]}}]} as unknown as DocumentNode<CampaignsListQuery, CampaignsListQueryVariables>;
+export const CreateCampaignDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateCampaign"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"description"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createCampaign"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"cmp"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"description"},"value":{"kind":"Variable","name":{"kind":"Name","value":"description"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"active"},"value":{"kind":"BooleanValue","value":false}},{"kind":"ObjectField","name":{"kind":"Name","value":"deleted"},"value":{"kind":"BooleanValue","value":false}},{"kind":"ObjectField","name":{"kind":"Name","value":"projectId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"active"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}}]}}]} as unknown as DocumentNode<CreateCampaignMutation, CreateCampaignMutationVariables>;
+export const CreateProjectDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateProject"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createProject"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pr"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"owner"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}}]}}]}}]} as unknown as DocumentNode<CreateProjectMutation, CreateProjectMutationVariables>;
 export const ProjectsListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ProjectsList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"project"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<ProjectsListQuery, ProjectsListQueryVariables>;

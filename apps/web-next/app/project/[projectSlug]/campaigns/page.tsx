@@ -1,3 +1,3 @@
-import { CampaignsListPage } from '@/views/CampaignsList'
+import { CampaignsListPage } from '@/views/CampaignsListPage'
 
 export default CampaignsListPage

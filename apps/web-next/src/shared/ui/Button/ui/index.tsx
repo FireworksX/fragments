@@ -25,6 +25,7 @@ const Button: FC<ButtonProps> = ({
   loading,
   children,
   suffix,
+  icon,
   ...touchProps
 }) => {
   return (
@@ -43,6 +44,7 @@ const Button: FC<ButtonProps> = ({
         </div>
       )}
       <div className={styles.body}>
+        {icon}
         {children}
         {suffix && <div className={styles.suffix}>{suffix}</div>}
       </div>

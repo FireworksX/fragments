@@ -115,6 +115,8 @@
         align-items: center;
         opacity: 1;
         transition: opacity 150ms;
+        gap: var(--gutter-medium);
+        white-space: nowrap;
     }
 
     .loadingState {

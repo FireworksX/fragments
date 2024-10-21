@@ -7,12 +7,11 @@ import { getSession } from 'next-auth/react'
 export function makeApolloClient() {
   const authMiddleware = setContext(async (operation, { headers }) => {
     const session = await getSession()
-    console.log('session', session)
 
     return {
       headers: {
         ...headers,
-        Authorization: `${session?.accessToken}`,
+        Authorization: `Bearer ${session?.accessToken}`,
         Refresh: `Bearer ${session?.refresh}`
       }
     }

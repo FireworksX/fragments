@@ -10,6 +10,16 @@
     --primary-bg: #F0F5FF;
     --primary-disabled: #a4d8fa;
 
+    --success-bg: #bee6cb;
+    --success-bg--rgb: 190, 230, 203;
+    --success: #58df9a;
+    --success--rgb: 88, 223, 154;
+
+    --danger-bg: #feedec;
+    --danger-bg--rgb: 254, 237, 236;
+    --danger: #f14c45;
+    --danger--rgb: 241, 76, 69;
+
     --text-color: #F6F6F6;
     --text-color-accent: #223654;
     --text-color-accent-secondary: #666;
