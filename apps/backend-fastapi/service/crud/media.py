@@ -16,6 +16,10 @@ async def get_media_by_id_db(db: Session, media_id: int) -> Optional[Media]:
     return db.query(Media).filter(Media.id == media_id).first()
 
 
+async def delete_media_by_id_db(db: Session, media_id: int) -> None:
+    db.query(Media).filter(Media.id == media_id).delete()
+
+
 async def update_media_by_id_db(db: Session, values: dict) -> Campaign:
     media: Media = await get_media_by_id_db(db, values['id'])
     if values.get('name') is not None:
