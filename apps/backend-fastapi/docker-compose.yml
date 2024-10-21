@@ -12,7 +12,9 @@ services:
       - "80:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./.media:${MEDIA_STORAGE_PATH}
+      - ./.docker_data/media:${MEDIA_STORAGE_PATH}
+      - ./.docker_data/media/avatars:${MEDIA_STORAGE_PATH}/avatars
+      - ./.docker_data/media/projects:${MEDIA_STORAGE_PATH}/projects
     depends_on:
       - core
     networks:
@@ -36,7 +38,9 @@ services:
         RUN_LEVEL: dev
     volumes:
       - ./service:/opt/app
-      - ./.media:${MEDIA_STORAGE_PATH}
+      - ./.docker_data/media:${MEDIA_STORAGE_PATH}
+      - ./.docker_data/media/avatars:${MEDIA_STORAGE_PATH}/avatars
+      - ./.docker_data/media/projects:${MEDIA_STORAGE_PATH}/projects
     networks:
       - default
     restart: unless-stopped

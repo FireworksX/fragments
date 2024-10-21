@@ -21,8 +21,6 @@ RUN pip install "poetry==$POETRY_VERSION" \
     && poetry config virtualenvs.create false
 
 RUN mkdir /opt/app
-RUN mkdir /opt/app/media
-RUN mkdir /opt/app/media/avatars
 WORKDIR /opt/app
 
 COPY pyproject.toml poetry.loc[k] /opt/app/
