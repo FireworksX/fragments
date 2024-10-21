@@ -1,4 +1,5 @@
-from .campaign import campaign_by_id, create_campaign_route, update_campaign_route, campaigns_in_project
+from .campaign import campaign_by_id, create_campaign_route, update_campaign_route, campaigns_in_project, \
+    add_campaign_logo_route
 from .schemas import AuthPayload, UserGet, FragmentGet, MediaGet, FragmentPost, CampaignGet, CampaignPost, FeedbackPost, \
     FeedbackGet, \
     GeoLocationGet, StreamGet, StreamPost, ProjectPost, ProjectGet, StreamFragmentGet, \
@@ -104,11 +105,9 @@ class Mutation:
     async def update_campaign(self, info: strawberry.Info[Context], cmp: CampaignPatch) -> CampaignGet:
         return await update_campaign_route(info, cmp)
 
-    #
-    # @strawberry.mutation
-    # async def asset(self, info: strawberry.Info[Context], file: UploadFile) -> MediaGet:
-    #     return await upload_asset(info, file)
-
+    @strawberry.mutation
+    async def add_campaign_logo(self, info: strawberry.Info[Context], file: UploadFile, campaign_id: int) -> CampaignGet:
+        return await add_campaign_logo_route(info, file, campaign_id)
 
     @strawberry.mutation
     async def add_avatar(self, info: strawberry.Info[Context], file: UploadFile) -> UserGet:

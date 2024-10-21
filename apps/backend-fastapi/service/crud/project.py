@@ -52,8 +52,6 @@ async def update_project_by_id_db(db: Session, values: dict) -> Project:
     project: Project = await get_project_by_id_db(db, values['id'])
     if values.get('name') is not None:
         project.name = values['name']
-    if values.get('logo_id') is not None:
-        project.logo_id = values['logo_id']  # TODO check for existence
     db.merge(project)
     db.commit()
     db.refresh(project)
