@@ -65,7 +65,7 @@ class CampaignGet:
 class ProjectGet:
     id: int
     name: str
-    logo_id: Optional[int] = None
+    logo: Optional[str] = None
     owner: UserGet
     members: List[UserRoleGet]
     campaigns: List[CampaignGet]
@@ -84,14 +84,13 @@ class FragmentGet:
 @strawberry.input
 class ProjectPost:
     name: str
-    logo_id: Optional[str] = None
+    logo: Optional[str] = None
 
 
 @strawberry.input
 class ProjectPatch:
     id: int
     name: Optional[str] = None
-    logo_id: Optional[str] = None
 
 
 @strawberry.type

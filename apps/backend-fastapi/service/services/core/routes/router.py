@@ -13,7 +13,8 @@ from .fragment import create_fragment_route, fragments_in_project, fragment_by_i
 from .stream import create_stream_route, stream_by_id, streams_in_campaign, update_stream_route
 from .feedback import create_feedback
 from .project import create_project_route, project_by_id, projects, update_project_route, \
-    add_user_to_project as add_user_to_project_route, RoleGet, change_user_role as change_user_role_route
+    add_user_to_project as add_user_to_project_route, RoleGet, change_user_role as change_user_role_route, \
+    add_project_logo_route
 from fastapi import UploadFile
 from crud.ipgetter import get_location_by_ip
 from .stream_fragment import stream_fragment_by_id, stream_fragments_in_stream, update_stream_fragment_route, create_stream_fragment_route
@@ -129,8 +130,13 @@ class Mutation:
     async def create_project(self, info: strawberry.Info[Context], pr: ProjectPost) -> ProjectGet:
         return await create_project_route(info, pr)
 
+    @strawberry.mutation
     async def update_project(self, info: strawberry.Info[Context], pr: ProjectPatch) -> ProjectGet:
         return await update_project_route(info, pr)
+
+    @strawberry.mutation
+    async def add_project_logo(self, info: strawberry.Info[Context], file: UploadFile, project_id: int) -> ProjectGet:
+        return await add_project_logo_route(info, file, project_id)
 
     @strawberry.mutation
     async def add_user_to_project(self, info: strawberry.Info[Context], user_id: int, project_id: int,
