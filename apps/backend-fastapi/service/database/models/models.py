@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, Boolean, DateTime, JSON, Table
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, Boolean, DateTime, JSON, Table, orm
 from sqlalchemy.orm import relationship
 
 from database import Base
@@ -41,6 +41,10 @@ class User(Base):
 
     avatar_id = Column('avatar_id', Integer, ForeignKey('media.id'))
     avatar = relationship("Media")
+
+    @orm.reconstructor
+    def init(self) -> None:
+        self.logo = None if self.avatar is None else self.avatar.public_path
 
 
 class Project(Base):
@@ -167,15 +171,15 @@ class Stream(Base):
     weight = Column('weight', Float, nullable=False)
 
     pages = relationship("StreamPage", back_populates="stream", cascade="save-update, merge, "
-                                                                            "delete, delete-orphan")
+                                                                        "delete, delete-orphan")
     device_types = relationship("StreamDeviceType", back_populates="stream", cascade="save-update, merge, "
-                                                                            "delete, delete-orphan")
+                                                                                     "delete, delete-orphan")
     os_types = relationship("StreamOSType", back_populates="stream", cascade="save-update, merge, "
-                                                                            "delete, delete-orphan")
+                                                                             "delete, delete-orphan")
     time_frames = relationship("StreamTimeFrame", back_populates="stream", cascade="save-update, merge, "
-                                                                            "delete, delete-orphan")
+                                                                                   "delete, delete-orphan")
     geo_locations = relationship("StreamGeoLocation", back_populates="stream", cascade="save-update, merge, "
-                                                                            "delete, delete-orphan")
+                                                                                       "delete, delete-orphan")
 
 
 class Feedback(Base):
@@ -184,6 +188,15 @@ class Feedback(Base):
     feel = Column('feel', Integer, nullable=False)
     content = Column('content', String)
     page = Column('page', String, nullable=False)
+
+
+class FragmentMedia(Base):
+    __tablename__ = "fragment_media"
+    id = Column('id', Integer, primary_key=True, index=True)
+    media_id = Column(ForeignKey("media.id", ondelete='CASCADE'))
+    fragment_id = Column(ForeignKey("fragment.id", ondelete='CASCADE'))
+    media = relationship("Media")
+    fragment = relationship("Fragment", back_populates="assets")
 
 
 class Fragment(Base):
@@ -196,9 +209,8 @@ class Fragment(Base):
 
     author_id = Column('author_id', Integer, ForeignKey('user.id'))
     author = relationship("User")
-
-
-    ## list of media
+    assets = relationship("FragmentMedia", back_populates="fragment", cascade="save-update, merge, "
+                                                                              "delete, delete-orphan")
 
 
 class StreamFragment(Base):

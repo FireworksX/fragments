@@ -58,7 +58,7 @@ async def project_by_id(info: strawberry.Info[Context], project_id: int) -> Proj
 
     return ProjectGet(id=project.id, name=project.name, logo=None if project.logo is None else project.logo.public_path,
                       owner=project.owner,
-                      members=transform_project_members(project), campaigns=transform_project_campaigns(db, project))
+                      members=transform_project_members(project), campaigns=await transform_project_campaigns(db, project))
 
 
 async def create_project_route(info: strawberry.Info[Context], pr: ProjectPost) -> ProjectGet:
@@ -68,7 +68,7 @@ async def create_project_route(info: strawberry.Info[Context], pr: ProjectPost) 
 
     return ProjectGet(id=project.id, name=project.name, logo=None if project.logo is None else project.logo.public_path,
                       owner=project.owner,
-                      members=transform_project_members(project), campaigns=transform_project_campaigns(db, project))
+                      members=transform_project_members(project), campaigns= await transform_project_campaigns(db, project))
 
 
 async def add_user_to_project(info: strawberry.Info[Context], user_id: int, project_id: int, role_to_add: int) -> None:
@@ -124,7 +124,7 @@ async def update_project_route(info: strawberry.Info[Context], pr: ProjectPatch)
 
     return ProjectGet(id=project.id, name=project.name, logo=None if project.logo is None else project.logo.public_path,
                       owner=project.owner,
-                      members=transform_project_members(project), campaigns=transform_project_campaigns(db, project))
+                      members=transform_project_members(project), campaigns=await transform_project_campaigns(db, project))
 
 
 async def add_project_logo_route(info: strawberry.Info[Context], file: UploadFile, project_id: int) -> ProjectGet:
@@ -164,4 +164,4 @@ async def add_project_logo_route(info: strawberry.Info[Context], file: UploadFil
 
     return ProjectGet(id=project.id, name=project.name, logo=None if project.logo is None else project.logo.public_path,
                       owner=project.owner,
-                      members=transform_project_members(project), campaigns=transform_project_campaigns(db, project))
+                      members=transform_project_members(project), campaigns=await transform_project_campaigns(db, project))

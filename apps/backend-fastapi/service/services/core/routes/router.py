@@ -1,4 +1,5 @@
-from .campaign import campaign_by_id, create_campaign_route, update_campaign_route, campaigns_in_project
+from .campaign import campaign_by_id, create_campaign_route, update_campaign_route, campaigns_in_project, \
+    add_campaign_logo_route
 from .schemas import AuthPayload, UserGet, FragmentGet, MediaGet, FragmentPost, CampaignGet, CampaignPost, FeedbackPost, \
     FeedbackGet, \
     GeoLocationGet, StreamGet, StreamPost, ProjectPost, ProjectGet, StreamFragmentGet, \
@@ -8,8 +9,7 @@ import strawberry
 from typing import Optional, List
 from .middleware import Context
 from .user import login, refresh, profile, signup, add_avatar_route
-from .fragment import create_fragment_route, fragments_in_project, fragment_by_id, update_fragment_route
-# from .media import upload_asset
+from .fragment import create_fragment_route, fragments_in_project, fragment_by_id, update_fragment_route, add_fragment_asset_route, remove_fragment_asset_route
 from .stream import create_stream_route, stream_by_id, streams_in_campaign, update_stream_route
 from .feedback import create_feedback
 from .project import create_project_route, project_by_id, projects, update_project_route, \
@@ -104,11 +104,13 @@ class Mutation:
     async def update_campaign(self, info: strawberry.Info[Context], cmp: CampaignPatch) -> CampaignGet:
         return await update_campaign_route(info, cmp)
 
-    #
-    # @strawberry.mutation
-    # async def asset(self, info: strawberry.Info[Context], file: UploadFile) -> MediaGet:
-    #     return await upload_asset(info, file)
+    @strawberry.mutation
+    async def add_campaign_logo(self, info: strawberry.Info[Context], file: UploadFile, campaign_id: int) -> CampaignGet:
+        return await add_campaign_logo_route(info, file, campaign_id)
 
+    @strawberry.mutation
+    async def add_fragment_asset(self, info: strawberry.Info[Context], file: UploadFile, fragment_id: int) -> FragmentGet:
+        return await add_fragment_asset_route(info, file, fragment_id)
 
     @strawberry.mutation
     async def add_avatar(self, info: strawberry.Info[Context], file: UploadFile) -> UserGet:
@@ -139,6 +141,14 @@ class Mutation:
         return await add_project_logo_route(info, file, project_id)
 
     @strawberry.mutation
+    async def add_fragment_asset(self, info: strawberry.Info[Context], file: UploadFile, fragment_id: int) -> FragmentGet:
+        return await add_fragment_asset_route(info, file, fragment_id)
+
+    @strawberry.mutation
+    async def remove_fragment_asset(self, info: strawberry.Info[Context], fragment_id: int, public_path: str) -> FragmentGet:
+        return await remove_fragment_asset_route(info, fragment_id, public_path)
+
+    @strawberry.mutation
     async def add_user_to_project(self, info: strawberry.Info[Context], user_id: int, project_id: int,
                                   role: int) -> None:
         await add_user_to_project_route(info, user_id, project_id, role)
@@ -155,3 +165,4 @@ class Mutation:
     @strawberry.mutation
     async def update_stream_fragment(self, info: strawberry.Info[Context], stream_fragment: StreamFragmentPatch) -> StreamFragmentGet:
         return await update_stream_fragment_route(info, stream_fragment)
+

@@ -86,7 +86,6 @@ async def add_avatar_route(info: strawberry.Info[Context], file: UploadFile) -> 
         delete_file(old_avatar.path)
         await delete_media_by_id_db(db, old_avatar.id)
 
-
     return UserGet(id=user.id, email=user.email, first_name=user.first_name, last_name=user.last_name,
                    logo=user.avatar.public_path)
 

@@ -54,7 +54,7 @@ class CampaignGet:
     id: int
     project_id: int
     name: str
-    logo_id: Optional[int] = None
+    logo: Optional[str] = None
     author: UserGet
     description: str
     active: bool
@@ -79,6 +79,7 @@ class FragmentGet:
     author: UserGet
     document: strawberry.scalars.JSON
     props: strawberry.scalars.JSON
+    assets: List[str]
 
 
 @strawberry.input
@@ -103,7 +104,6 @@ class MediaGet:
 class CampaignPost:
     project_id: int
     name: str
-    logo_id: Optional[int] = None
     description: Optional[str] = None
     active: bool
     deleted: bool
@@ -113,7 +113,6 @@ class CampaignPost:
 class CampaignPatch:
     id: int
     name: Optional[str] = None
-    logo_id: Optional[int] = None
     description: Optional[str] = None
     active: Optional[bool] = None
     deleted: Optional[bool] = None

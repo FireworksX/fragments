@@ -1,3 +1,5 @@
+from crud.media import get_media_by_id_db
+from database import FragmentMedia
 from database.models import Project, Fragment
 from sqlalchemy.orm import Session
 from typing import Optional, List
@@ -29,6 +31,17 @@ async def update_fragment_by_id_db(db: Session, values: dict) -> Fragment:
     if values.get('props') is not None:
         fragment.props = values['props']
     db.merge(fragment)
+    db.commit()
+    db.refresh(fragment)
+    return fragment
+
+
+async def add_fragment_media(db, media_id: int, fragment_id: int) -> Fragment:
+    fragment_media: FragmentMedia = FragmentMedia(media_id=media_id, fragment_id=fragment_id)
+    fragment: Fragment = await get_fragment_by_id_db(db, fragment_id)
+    fragment_media.media = await get_media_by_id_db(db, media_id)
+    fragment_media.fragment = fragment
+    fragment.assets.append(fragment_media)
     db.commit()
     db.refresh(fragment)
     return fragment

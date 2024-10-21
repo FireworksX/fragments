@@ -1,4 +1,4 @@
-from database import Media
+from database import Media, FragmentMedia
 from database.models import Campaign, Project, ProjectCampaign
 from sqlalchemy.orm import Session
 from typing import Optional, List
@@ -18,6 +18,18 @@ async def get_media_by_id_db(db: Session, media_id: int) -> Optional[Media]:
 
 async def delete_media_by_id_db(db: Session, media_id: int) -> None:
     db.query(Media).filter(Media.id == media_id).delete()
+
+
+async def delete_media_by_public_path_db(db: Session, fragment_id: int, public_path: str) -> None:
+    media: Media = db.query(Media).filter(Media.public_path == public_path).first()
+    if media is None:
+        raise IndexError
+    media_fragment: FragmentMedia = db.query(FragmentMedia).filter((FragmentMedia.fragment_id == fragment_id), (FragmentMedia.media_id == media.id)).first()
+    if media_fragment is not None:
+        await delete_media_by_id_db(db, media.id)
+        db.query(FragmentMedia).filter(FragmentMedia.id == media_fragment.id).delete()
+    else:
+        raise IndexError
 
 
 async def update_media_by_id_db(db: Session, values: dict) -> Campaign:
