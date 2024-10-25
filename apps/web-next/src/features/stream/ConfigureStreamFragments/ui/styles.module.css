@@ -1,0 +1,40 @@
+.root {
+    flex: 1;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    flex-direction: column;
+    gap: var(--gutter-default);
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gutter-medium);
+}
+
+.content {
+    display: flex;
+    flex: 1;
+}
+
+.groups {
+    flex-basis: 300px;
+    border-right: 1px solid var(--border-light);
+    overflow-y: auto;
+}
+
+.fragmentStatus {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--secondary);
+
+    &.active {
+        background: var(--success);
+    }
+
+    &.pause {
+        background: var(--danger);
+    }
+}
+

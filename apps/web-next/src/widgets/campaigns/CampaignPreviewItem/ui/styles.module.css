@@ -1,0 +1,50 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gutter-default);
+    padding-block: 10px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: var(--gutter-medium);
+}
+
+.logo {
+    width: 24px;
+    height: 24px;
+    background: var(--secondary-bg);
+    border-radius: var(--radius-small);
+}
+
+.name {
+    font-weight: 500;
+    color: var(--text-color-accent);
+}
+
+.status {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+
+    &.status_active {
+        background: var(--success);
+        color: var(--success);
+    }
+
+    &.status_stop {
+        background: var(--danger);
+    }
+}
+
+.stats {
+    display: flex;
+    gap: var(--gutter-default);
+    color: var(--text-color-accent);
+}
+
+.statsTitle {
+    font-size: 12px;
+    color: var(--text-color-accent-secondary)
+}

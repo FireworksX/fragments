@@ -26,6 +26,7 @@
     align-items: center;
     height: 28px;
     cursor: pointer;
+    padding-inline: 15px;
 
     &.active {
         color: var(--primary);

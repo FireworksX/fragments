@@ -12,7 +12,7 @@ export const ProjectsListPage = () => {
   const { list, handleCreateProject } = useProjectsListView()
 
   return (
-    <div className={styles.page}>
+    <div>
       <Container className={styles.body} withVertical mode='hug'>
         {list.map(project => (
           <Link key={project.name} type='project' projectSlug={project.id}>
@@ -21,7 +21,12 @@ export const ProjectsListPage = () => {
             </Touchable>
           </Link>
         ))}
-        <Touchable TagName='button' className={styles.createProject} data-testid='ProjectCardCreatePlaceholder'>
+        <Touchable
+          TagName='button'
+          className={styles.createProject}
+          data-testid='ProjectCardCreatePlaceholder'
+          onClick={handleCreateProject}
+        >
           Create New Project
         </Touchable>
       </Container>

@@ -25,15 +25,32 @@ if RUN_LEVEL == Level.DEV:
 
 class ServiceSettings(BaseSettings):
     MAX_LIMIT: int = 20
-    SUPABASE_URL: str = Field(default_factory=lambda: os.getenv("SUPABASE_URL"))
-    SUPABASE_KEY: str = Field(default_factory=lambda: os.getenv("SUPABASE_KEY"))
-    SUPERUSER_EMAIL: str = Field(default_factory=lambda: os.getenv("SUPERUSER_EMAIL"))
-    SUPERUSER_PASSWORD: str = Field(default=lambda: os.getenv("SUPERUSER_PASSWORD"))
     TELEGRAM_BOT_TOKEN: str = Field(default_factory=lambda: os.getenv("TELEGRAM_BOT_TOKEN"))
     TELEGRAM_CHAT_ID: str = Field(default_factory=lambda: os.getenv("TELEGRAM_CHAT_ID"))
+    ACCESS_TOKEN_EXPIRE_TIME_MINUTES: float = Field(default_factory=lambda: os.getenv("ACCESS_TOKEN_EXPIRE_TIME_MINUTES"))
+    ACCESS_TOKEN_SECRET_KEY: str = Field(default_factory=lambda: os.getenv("ACCESS_TOKEN_SECRET_KEY"))
+    ALGORITHM: str = Field(default_factory=lambda: os.getenv("ALGORITHM"))
+    REFRESH_TOKEN_EXPIRE_TIME_MINUTES: float = Field(
+        default_factory=lambda: os.getenv("REFRESH_TOKEN_EXPIRE_TIME_MINUTES"))
+    REFRESH_TOKEN_SECRET_KEY: str = Field(default_factory=lambda: os.getenv("REFRESH_TOKEN_SECRET_KEY"))
+    MEDIA_STORAGE_PATH: str = Field(default_factory=lambda: os.getenv("MEDIA_STORAGE_PATH"))
 
 
 service_settings = ServiceSettings()
+
+
+class PostgresSettings(BaseSettings):
+    NAME: str = os.getenv('POSTGRES_NAME', 'postgres')
+    USER: str = os.getenv('POSTGRES_USER', 'postgres')
+    PASSWORD: str = os.getenv('POSTGRES_PASSWORD', 'password')
+    HOST: str = os.getenv('POSTGRES_HOST', '  postgres')
+    PORT: str = os.getenv('POSTGRES_PORT', '5432')
+
+    class Config:
+        env_prefix = ''
+
+
+pg_settings = PostgresSettings()
 
 
 def uri_maker(conf_object, driver):
@@ -59,3 +76,8 @@ def uri_maker(conf_object, driver):
         return connection_string
 
     return make_uri
+
+
+make_pg_uri = uri_maker(pg_settings, 'postgresql+psycopg2')
+
+PG_URI = make_pg_uri()

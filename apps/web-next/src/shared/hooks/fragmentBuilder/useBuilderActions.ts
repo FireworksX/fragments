@@ -1,25 +1,25 @@
 import { useCallback, useContext, useMemo } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { builderNodes } from '@fragments/fragments-plugin/performance'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
+import { nodes } from '@fragments/plugin-state'
 
 export const useBuilderActions = () => {
   const { documentManager } = useContext(BuilderContext)
   const { selection, selectionGraph } = useBuilderSelection()
   const type = selectionGraph?._type
-  const isComponentType = type === builderNodes.Component || type === builderNodes.ComponentSet
-  const isPrimary = (type === builderNodes.Screen || type === builderNodes.ComponentSet) && selectionGraph?.isPrimary
+  const isComponentType = type === nodes.Component || type === nodes.ComponentSet
+  const isPrimary = (type === nodes.Screen || type === nodes.ComponentSet) && selectionGraph?.isPrimary
 
   const features = useMemo(() => {
     return {
-      canInsert: type !== builderNodes.Text && type !== builderNodes.Component,
-      canConvertToComponent: type !== builderNodes.Screen && !isComponentType,
-      canDuplicate: type !== builderNodes.Screen,
+      canInsert: type !== nodes.Text && type !== nodes.Component,
+      canConvertToComponent: type !== nodes.Screen && !isComponentType,
+      canDuplicate: type !== nodes.Screen,
       canRemove: !isPrimary,
       canHide: !isPrimary,
-      canSetPrimary: type === builderNodes.Screen && !isPrimary,
-      canAddFrame: type !== builderNodes.Screen && type !== builderNodes.ComponentSet,
-      canRemoveWrapper: type === builderNodes.Frame
+      canSetPrimary: type === nodes.Screen && !isPrimary,
+      canAddFrame: type !== nodes.Screen && type !== nodes.ComponentSet,
+      canRemoveWrapper: type === nodes.Frame
     }
   }, [isComponentType, isPrimary, type])
 

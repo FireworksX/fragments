@@ -15,19 +15,19 @@ import { createTransformValueLTE } from "@/static/creators/transformValue/create
 import {
   CreateNumberOptions,
   createNumberVariable,
-} from "@/static/creators/variables/numberVariable.ts";
+} from "@/static/creators/variables/createNumberVariable.ts";
 import {
   CreateObjectOptions,
   createObjectVariable,
-} from "@/static/creators/variables/objectVariable.ts";
+} from "@/static/creators/variables/createObjectVariable.ts";
 import {
   CreateStringOptions,
   createStringVariable,
-} from "@/static/creators/variables/stringVariable.ts";
+} from "@/static/creators/variables/createStringVariable.ts";
 import {
   CreateBooleanOptions,
   createBooleanVariable,
-} from "@/static/creators/variables/booleanVariable.ts";
+} from "@/static/creators/variables/createBooleanVariable.ts";
 
 interface CreateSolidPaintStyleOptions {
   color: Color;
@@ -98,16 +98,16 @@ export const creators: Plugin = (state) => {
   };
 
   state.createNumberVariable = (options: CreateNumberOptions) =>
-    state.mutate(createNumberVariable(options));
+    createNumberVariable(options);
 
   state.createBooleanVariable = (options: CreateBooleanOptions) =>
-    state.mutate(createBooleanVariable(options));
+    createBooleanVariable(options);
 
   state.createObjectVariable = (options: CreateObjectOptions) =>
-    state.mutate(createObjectVariable(options));
+    createObjectVariable(options);
 
   state.createStringVariable = (options: CreateStringOptions) =>
-    state.mutate(createStringVariable(options));
+    createStringVariable(options);
 
   state.createText = () => {
     return state.mutate({
@@ -135,10 +135,7 @@ export const creators: Plugin = (state) => {
     return state.mutate({
       _type: nodes.ComputedValue,
       _id: generateId(),
-      inputValue: options?.inputValue ?? null,
-      inputType: options?.inputType ?? null,
-      outputType: options?.outputType ?? null,
-      transforms: options?.transforms ?? [],
+      ...options,
     });
   };
 

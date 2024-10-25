@@ -1,17 +1,17 @@
 import * as CSS from 'csstype'
-import { builderLayerDirection, builderLayerMode } from '@fragments/fragments-plugin'
 import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { to } from '@react-spring/web'
 import { toPx } from '@/app/utils/toPx'
+import { layerDirection, layerMode } from '@fragments/plugin-state'
 
 export const useParseLayoutRules = (layerField: Field) => {
   const { documentManager } = useContext(BuilderContext)
   const layerInvoker = useLayerInvoker(layerField)
   const rules: CSS.Properties = {}
 
-  const isFlex = to(layerInvoker('layerMode').value, mode => mode === builderLayerMode.flex)
+  const isFlex = to(layerInvoker('layerMode').value, mode => mode === layerMode.flex)
   // if (isFlex) {
   //   rules.display = 'flex'
   //   rules.flexDirection = layerInvoker('layerDirection').value === builderLayerDirection.horizontal ? 'row' : 'column'
@@ -52,7 +52,7 @@ export const useParseLayoutRules = (layerField: Field) => {
   return {
     display: to(isFlex, value => (value ? 'flex' : 'block')),
     flexDirection: to(layerInvoker('layerDirection').value, value =>
-      value === builderLayerDirection.horizontal ? 'row' : 'column'
+      value === layerDirection.horizontal ? 'row' : 'column'
     ),
     alignItems: layerInvoker('layerAlign').value,
     justifyContent: layerInvoker('layerDistribute').value,

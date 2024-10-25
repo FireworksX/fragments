@@ -1,7 +1,6 @@
 import { FC, useContext } from 'react'
 import { animated, to } from '@react-spring/web'
 import { useBuilderLayout } from '../hooks/useBuilderLayout'
-import { builderLayerMode, builderNodes } from '@fragments/fragments-plugin/performance'
 import { Panel } from '@/shared/ui/Panel'
 import { PanelHeadAside } from '@/shared/ui/PanelHeadAside'
 import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
@@ -11,6 +10,7 @@ import { InputNumber } from '@/shared/ui/InputNumber'
 import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
 import { Slider } from '@/shared/ui/Slider'
 import { BuilderLayoutPaddings } from '@/features/fragmentBuilder/BuilderLayoutPaddings'
+import { layerMode } from '@fragments/plugin-state'
 
 interface BuilderLayoutProps {
   className?: string
@@ -18,7 +18,7 @@ interface BuilderLayoutProps {
 
 const BuilderLayout: FC<BuilderLayoutProps> = ({ className }) => {
   const { selectionGraph, direction, mode, align, wrap, distribute, gap, padding } = useBuilderLayout()
-  const enabled = to(mode.value, mode => mode === builderLayerMode.flex)
+  const enabled = to(mode.value, mode => mode === layerMode.flex)
 
   return (
     <Panel

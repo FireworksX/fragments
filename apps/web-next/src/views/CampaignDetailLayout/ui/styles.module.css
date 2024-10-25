@@ -1,0 +1,71 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: var(--gutter-default);
+    padding-top: var(--gutter-default);
+}
+
+.header {
+    display: flex;
+    gap: var(--gutter-default);
+    align-items: center;
+}
+
+.headerAside {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: var(--gutter-default);
+}
+
+.logo {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-second);
+    background: var(--background-light);
+    border: 1px solid var(--border);
+}
+
+.name {
+    font-size: 24px;
+    color: var(--text-color-accent);
+    font-weight: 700;
+    display: flex;
+    gap: var(--gutter-medium);
+    align-items: center;
+}
+
+.meta {
+    display: flex;
+    align-items: center;
+    gap: var(--gutter-medium);
+    color: var(--secondary)
+}
+
+.liveBadge {
+    background: var(--success-bg);
+    color: var(--success);
+    border-radius: var(--radius-main);
+    padding: 3px 10px 3px 25px;
+    font-size: 10px;
+    font-weight: 400;
+    position: relative;
+    text-transform: uppercase;
+
+    &:before {
+        content: '';
+        position: absolute;
+        left: 9px;
+        top: 6px;
+        width: 7px;
+        height: 7px;
+        background: var(--success);
+        border-radius: 50%;
+    }
+}
+
+.description {
+    font-size: 14px;
+    color: var(--secondary);
+}

@@ -1,5 +1,4 @@
 import { useContext, useState } from 'react'
-import { builderBorderType, builderNodes } from '@fragments/fragments-plugin/performance'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import Rectangle from '@/shared/icons/rectangle.svg'
 import { to } from '@react-spring/web'
@@ -9,6 +8,7 @@ import { animatableValue } from '@/shared/utils/animatableValue'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { popoutsStore } from '@/shared/store/popouts.store'
+import { borderType, nodes } from '@fragments/plugin-state'
 
 const visible: TabsSelectorItem[] = [
   {
@@ -26,7 +26,7 @@ const overflowOptions = ['hidden', 'visible', 'auto']
 export const useBuilderStyles = () => {
   const { documentManager } = useContext(BuilderContext)
   const { selection, selectionGraph } = useBuilderSelection()
-  const isTextLayer = selectionGraph?._type === builderNodes.Text
+  const isTextLayer = selectionGraph?._type === nodes.Text
   const layerInvoker = useLayerInvoker(
     selection,
     ({ node, key, value }) => {
@@ -146,7 +146,7 @@ export const useBuilderStyles = () => {
       borderColorInvoker,
       disabled: isTextLayer,
       onClick: openBorder,
-      onReset: () => borderTypeInvoker.onChange(builderBorderType.None)
+      onReset: () => borderTypeInvoker.onChange(borderType.None)
     },
     fill: {
       ...solidFillInvoker,

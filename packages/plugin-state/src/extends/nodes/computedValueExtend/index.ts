@@ -9,7 +9,15 @@ export const computedValueExtend: Extender = ({
 }): unknown => {
   return {
     ...graph,
+    inputType: getValue("inputType"),
+    outputType: getValue("outputType"),
+    transforms: getValue("transforms", []),
     inputValue: getValue("inputValue"),
+    addTransform: (...transforms) => {
+      state.mutate(graphKey, {
+        transforms,
+      });
+    },
     getValue: () => {
       const node = state.resolve(graphKey);
       const transforms = node?.transforms?.map(state.resolve) ?? [];

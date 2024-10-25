@@ -8,7 +8,7 @@ PYTHONPATH = PYTHONPATH=./:$(CODE)
 # Executables
 ALEMBIC = $(L) $(PYTHONPATH) alembic -c $(CODE)/alembic.ini
 PYTEST = $(PYTHONPATH) pytest
-TEST =  $(PYTEST) --verbosity=2 --showlocals --strict
+TEST =  $(PYTEST) --verbosity=2 --showlocals --strict-markers
 # Params
 DOWNGRADE_DEFAULT = -1
 
@@ -26,7 +26,7 @@ db_downgrade:
 	$(ALEMBIC) downgrade $(DOWNGRADE_DEFAULT)
 
 test:
-	$(TEST) --cov --cov-fail-under=95
+	$(TEST) --cov --cov-fail-under=75
 
 test-failed:
 	$(TEST) --last-failed

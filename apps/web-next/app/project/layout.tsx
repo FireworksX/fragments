@@ -1,3 +1,3 @@
-import { ProjectLayout } from '../../src/app/layouts/projectsList'
+import { ProjectLayout } from '@/app/layouts/projectsList'
 
 export default ProjectLayout

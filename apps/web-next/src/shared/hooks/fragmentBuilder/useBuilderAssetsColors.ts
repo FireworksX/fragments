@@ -1,7 +1,6 @@
 import { Color } from 'react-color'
 import { popoutsStore } from '@/shared/store/popouts.store'
 import { useContext } from 'react'
-import { builderNodes, createSolidPaintStyle } from '@fragments/fragments-plugin/performance'
 import { useGraph, useGraphFields, useGraphStack } from '@graph-state/react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { popoutNames } from '@/shared/data'

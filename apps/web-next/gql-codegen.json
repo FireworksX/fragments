@@ -1,0 +1,15 @@
+{
+  "schema": "http://localhost/graphql",
+  "documents": [
+    "src/**/*.{ts,tsx}"
+  ],
+  "generates": {
+    "./src/__generated__/": {
+      "preset": "client",
+      "presetConfig": {
+        "gqlTagName": "gql"
+      }
+    }
+  },
+  "ignoreNoDocuments": true
+}

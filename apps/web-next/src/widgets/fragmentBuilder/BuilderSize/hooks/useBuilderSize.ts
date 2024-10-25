@@ -1,7 +1,6 @@
 import { useGraph } from '@graph-state/react'
 import { useContext } from 'react'
-import { builderSizing } from '@fragments/fragments-plugin'
-import { layerMode, nodes } from '@fragments/plugin-state'
+import { layerMode, nodes, sizing } from '@fragments/plugin-state'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
@@ -42,8 +41,8 @@ export const useBuilderSize = () => {
     hugContentEnabled,
     fillContentEnabled,
     hasSync:
-      layerInvoker('layoutSizingHorizontal').value !== builderSizing.Hug &&
-      layerInvoker('layoutSizingVertical').value !== builderSizing.Hug,
+      layerInvoker('layoutSizingHorizontal').value !== sizing.Hug &&
+      layerInvoker('layoutSizingVertical').value !== sizing.Hug,
     sync: layerInvoker('aspectRatio'),
     isSynced: selectionGraph?.isSynced?.(),
     width: layerInvoker('width'),

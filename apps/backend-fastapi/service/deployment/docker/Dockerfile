@@ -6,6 +6,7 @@ FROM python:3.12-slim as base
 ARG RUN_LEVEL
 
 ENV RUN_LEVEL=${RUN_LEVEL}
+ENV MEDIA_STORAGE_PATH=${MEDIA_STORAGE_PATH}
 ENV POETRY_VERSION=1.8.3
 
 ENV PIP_DISABLE_PIP_VERSION_CHECK=on
@@ -23,6 +24,7 @@ RUN pip install "poetry==$POETRY_VERSION" \
     && poetry config virtualenvs.create false
 
 RUN mkdir /opt/app
+RUN mkdir MEDIA_STORAGE_PATH
 WORKDIR /opt/app
 
 COPY deployment/pre_start.py /opt/app/

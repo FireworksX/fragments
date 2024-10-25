@@ -1,0 +1,38 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - var(--app-size-header) - var(--app-size-navigation));
+}
+
+.body {
+    flex: 1;
+    display: flex;
+}
+
+.aside {
+    flex-basis: 300px;
+    background: var(--background-light);
+    border-right: 1px solid var(--border);
+}
+
+.content {
+    flex-basis: calc(100% - 300px);
+}
+
+.asideHeader {
+    display: flex;
+    gap: var(--gutter-default);
+    padding-block: var(--gutter-default);
+}
+
+.searchInput {
+}
+
+.card {
+    position: relative;
+    transition: var(--animation-transition-default);
+    &:hover {
+        background: var(--secondary-bg);
+    }
+
+}

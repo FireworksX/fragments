@@ -1,7 +1,6 @@
 @layer reset {
-
     .modalOverlay {
-        background: rgba(var(--background--rgb),.4);
+        background: rgba(var(--background-secondary--rgb),.4);
     position: fixed;
     inset: 0;
     display: flex;

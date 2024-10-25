@@ -5,16 +5,18 @@ import { Touchable, TouchableProps } from '@/shared/ui/Touchable'
 
 interface CellProps extends TouchableProps, PropsWithChildren {
   before?: ReactNode
+  after?: ReactNode
   description?: ReactNode
   className?: string
 }
 
-const Cell: FC<CellProps> = ({ className, children, before, description, ...touchableProps }) => {
+const Cell: FC<CellProps> = ({ className, children, before, after, description, ...touchableProps }) => {
   return (
     <Touchable className={cn(styles.root, className)} TagName='button' {...touchableProps}>
       {before}
       <div className={styles.text}>{children}</div>
       {description && <div className={styles.description}>{description}</div>}
+      {after}
     </Touchable>
   )
 }

@@ -2,7 +2,7 @@
     height: var(--app-size-navigation);
     position: sticky;
     top: 0;
-    background: var(--background);
+    background: var(--background-light);
     border-bottom: 1px solid var(--border);
 }
 

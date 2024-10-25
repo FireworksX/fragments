@@ -3,7 +3,6 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import { useBuilderStyles } from '../hooks/useBuilderStyles'
 import { GraphValue } from '@graph-state/react'
-import { builderBorderType, builderNodes, builderPaintMode } from '@fragments/fragments-plugin/performance'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { to } from '@react-spring/web'
 import { Panel } from '@/shared/ui/Panel'
@@ -22,13 +21,13 @@ import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
 import { BuilderStylesCorners } from '@/features/fragmentBuilder/BuilderStylesCorners'
 import { Stepper } from '@/shared/ui/Stepper'
 import { useDisplayColor } from '@/shared/hooks/fragmentBuilder/useDisplayColor'
-import { borderType } from '@fragments/plugin-state'
+import { borderType, paintMode } from '@fragments/plugin-state'
 
 interface BuilderStylesProps {
   className?: string
 }
 
-const ALLOW_FILL_TYPES = [builderPaintMode.Solid]
+const ALLOW_FILL_TYPES = [paintMode.Solid]
 
 const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
   const { documentManager } = useContext(BuilderContext)
@@ -78,11 +77,7 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
                     >
                       {value &&
                         to(fill.type, v =>
-                          ALLOW_FILL_TYPES.includes(v)
-                            ? getNameColor(value)
-                            : v === builderPaintMode.Image
-                            ? 'Image'
-                            : ''
+                          ALLOW_FILL_TYPES.includes(v) ? getNameColor(value) : v === paintMode.Image ? 'Image' : ''
                         )}
                     </InputSelect>
                   </>
@@ -138,7 +133,7 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
                     onReset={border.onReset}
                     onClick={border.onClick}
                   >
-                    {value && to(border.borderTypeInvoker.value, v => (v !== builderBorderType.None ? v : ''))}
+                    {value && to(border.borderTypeInvoker.value, v => (v !== borderType.None ? v : ''))}
                   </InputSelect>
                 </>
               )}

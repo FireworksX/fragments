@@ -28,9 +28,9 @@ export interface CreateProjectModalContext {
 const NAME = 'createProject'
 
 const CreateProjectModal: FC<CreateProjectModalProps> = ({ className }) => {
-  const [modal] = useGraph(modalStore)
+  const [modal] = useGraph(modalStore, modalStore.key)
   const [name, setName] = useState('')
-  const context = modal.context
+  const context = modal?.context
   const creating = context?.creating ?? false
   const { fetching: uploadingLogo, progress, data, onUpload } = useUploadFile('projectLogo')
 
@@ -62,7 +62,7 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({ className }) => {
       >
         <div className={styles.body}>
           <FormField label='Project Name'>
-            <InputText placeholder='Name' value={name} autoFocus onChange={setName} />
+            <InputText placeholder='Name' value={name} autoFocus onChangeValue={setName} />
           </FormField>
 
           <FormField label='Project Logo'>

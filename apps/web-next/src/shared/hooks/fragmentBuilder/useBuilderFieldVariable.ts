@@ -1,10 +1,12 @@
 import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { builderVariableType } from '@fragments/fragments-plugin/performance'
 import { ResultSetter } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { isComputedValueLink } from '@/shared/utils/isComputedValueLink'
-import { useBuilderVariables } from '@/shared/hooks/fragmentBuilder/useBuilderVariables'
+import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
+import { variableType } from '@fragments/plugin-state'
+import { DropdownRenderOption } from '@/shared/ui/RenderDropdown'
+import { useFragmentComputedValues } from '@/shared/hooks/fragmentBuilder/useFragmentComputedValues'
 // import {
 //   stackVariableTransformName
 // } from '@/widgets/StackCollector/components/variables/StackVariableTransform/StackVariableTransform'
@@ -13,8 +15,9 @@ export type BuilderFieldVariable = ReturnType<ReturnType<typeof useBuilderFieldV
 
 const variableFields = {
   opacity: {
-    type: builderVariableType.Number,
+    type: variableType.Number,
     valueOptions: {
+      name: 'Opacity',
       step: 0.1,
       max: 1,
       min: 0,
@@ -22,40 +25,25 @@ const variableFields = {
     }
   },
   visible: {
-    type: builderVariableType.Boolean
+    type: variableType.Boolean,
+    valueOptions: {
+      name: 'Visible'
+    }
   }
 }
 
 export const useBuilderFieldVariable = (layer: Field) => {
   const { documentManager } = useContext(BuilderContext)
-  const { variables, propsLinks, getAllowedVariablesByType } = useBuilderVariables()
+  const { properties, createProperty, editProperty } = useFragmentProperties()
+  const { createComputedValue, getTransformsByType } = useFragmentComputedValues()
 
-  const getVariableName = (preferredNAme: string) => {
-    const currentLinks = propsLinks.map(documentManager.resolve)
-    const countOfSameNames = currentLinks.filter(prop => prop.name.startsWith(preferredNAme)).length
-    return countOfSameNames > 0 ? `${preferredNAme}_${countOfSameNames + 1}` : preferredNAme
+  const getVariableName = (preferredName: string) => {
+    const countOfSameNames = properties.filter(prop => prop.name.startsWith(preferredName)).length
+    return countOfSameNames > 0 ? `${preferredName}_${countOfSameNames + 1}` : preferredName
   }
 
   const handleReset = (key: string) => {
     documentManager.restoreField(layer, key)
-  }
-
-  const handleCreateVariable = (key: string, setter: ResultSetter, currentValue: unknown) => {
-    if (key === 'opacity') {
-      const variableCreator = variables.find(v => v.type === builderVariableType.Number)
-      const variableLink = variableCreator.createAndAppend(
-        {
-          name: getVariableName('opacity'),
-          step: 0.1,
-          min: 0,
-          max: 1,
-          displayStepper: false,
-          defaultValue: animatableValue(currentValue)
-        },
-        { initial: true, position: 'right' }
-      )
-      setter(variableLink)
-    }
   }
 
   const openTransform = ({ key, value }) => {
@@ -90,14 +78,72 @@ export const useBuilderFieldVariable = (layer: Field) => {
 
   return (key: string, setter: ResultSetter, currentValue: unknown) => {
     const hasConnector = key in variableFields
-    const allowedVariables = (
-      getAllowedVariablesByType(variableFields[key]?.type, selection =>
-        handleConnectVariable({ selection, setter, key })
-      ) ?? []
-    ).map(variable => ({
-      ...variable,
-      options: [variable.transforms]
-    }))
+    // const allowedVariables = (
+    //   getAllowedVariablesByType(variableFields[key]?.type, selection =>
+    //     handleConnectVariable({ selection, setter, key })
+    //   ) ?? []
+    // ).map(variable => ({
+    //   ...variable,
+    //   options: [variable.transforms]
+    // }))
+
+    const getPropertiesForField = (field: string): DropdownRenderOption[] => {
+      if (field in variableFields) {
+        const fieldValue = variableFields[field]
+        const typeProperties = properties.filter(prop => prop.type === fieldValue.type)
+        const transforms = getTransformsByType(fieldValue.type)
+
+        return typeProperties.map(prop => ({
+          label: prop.name,
+          options: [
+            transforms.map(transform => ({
+              label: transform.label,
+              onClick: () =>
+                createComputedValue({
+                  inputValue: documentManager.keyOfEntity(prop),
+                  outputType: field.type,
+                  transform,
+                  inputType: prop.type
+                })
+            }))
+          ],
+          onClick: () => {
+            setter(prop)
+          }
+        }))
+      }
+
+      return []
+    }
+
+    const handleCreateVariable = () => {
+      const variableField = variableFields[key]
+
+      if (variableField) {
+        const variableValueOptions = variableField.valueOptions
+        const createdProperty = createProperty(variableField.type)
+
+        if (variableValueOptions && 'name' in variableValueOptions) {
+          createdProperty.rename(getVariableName(variableValueOptions.name))
+        }
+
+        createdProperty.setDefaultValue(animatableValue(currentValue))
+
+        if (variableField.type === variableType.Number) {
+          if ('step' in variableValueOptions) createdProperty.setStep(variableValueOptions.step)
+          if ('min' in variableValueOptions) createdProperty.setMin(variableValueOptions.min)
+          if ('max' in variableValueOptions) createdProperty.setMax(variableValueOptions.max)
+          if ('max' in variableValueOptions) createdProperty.setMax(variableValueOptions.max)
+          if ('withSlider' in variableValueOptions) createdProperty.setDisplayStepper(!variableValueOptions.withSlider)
+        }
+
+        editProperty(createdProperty)
+        setter(documentManager.keyOfEntity(createdProperty))
+      }
+    }
+
+    const fieldVariables = getPropertiesForField(key)
+
     const isComputedValue = isComputedValueLink(currentValue)
 
     return {
@@ -109,13 +155,13 @@ export const useBuilderFieldVariable = (layer: Field) => {
             {
               key: 'createVariable',
               label: 'Create variable',
-              onClick: () => handleCreateVariable(key, setter, currentValue)
+              onClick: () => handleCreateVariable()
             },
             {
               key: 'setVariable',
               label: 'Set variable',
-              options: [allowedVariables],
-              disabled: allowedVariables.length === 0
+              options: [fieldVariables],
+              disabled: fieldVariables.length === 0
             },
             isComputedValue && {
               key: 'editTransform',

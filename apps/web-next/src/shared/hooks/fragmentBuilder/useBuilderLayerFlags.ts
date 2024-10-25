@@ -3,8 +3,8 @@ import { useContext } from 'react'
 import { useGraph } from '@graph-state/react'
 import { LinkKey } from '@graph-state/core'
 import { to } from '@react-spring/web'
-import { builderLayerMode, builderNodes } from '@fragments/fragments-plugin/performance'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
+import { layerMode, nodes } from '@fragments/plugin-state'
 
 export const useBuilderLayerFlags = (layerKey: LinkKey) => {
   const { documentManager } = useContext(BuilderContext)
@@ -21,10 +21,10 @@ export const useBuilderLayerFlags = (layerKey: LinkKey) => {
   const isVisible$ = visibleInvoker.value
   const layerMode$ = layerInvoker('layerMode').value
   const layerDirection$ = layerInvoker('layerDirection').value
-  const hasLayout$ = to(layerMode$, mode => mode === builderLayerMode.flex)
-  const canRemove = layerNode?._type === builderNodes.Breakpoint ? !layerNode?.isPrimary : true
-  const canWrap = layerNode?._type !== builderNodes.Breakpoint
-  const canRemoveWrapper = layerNode?._type === builderNodes.Frame && layerNode?.children.length > 0
+  const hasLayout$ = to(layerMode$, mode => mode === layerMode.flex)
+  const canRemove = layerNode?._type === nodes.Breakpoint ? !layerNode?.isPrimary : true
+  const canWrap = layerNode?._type !== nodes.Breakpoint
+  const canRemoveWrapper = layerNode?._type === nodes.Frame && layerNode?.children.length > 0
 
   const remove = () => layerNode?.remove()
 

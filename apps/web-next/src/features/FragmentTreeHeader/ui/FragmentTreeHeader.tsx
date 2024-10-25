@@ -13,11 +13,12 @@ interface FragmentTreeHeaderProps {
 export const FragmentTreeHeader: FC<FragmentTreeHeaderProps> = ({ className, onCreate }) => {
   return (
     <div className={cn(styles.root, className)} data-testid='FragmentsNav'>
-      <SearchInput className={styles.search} size='large' placeholder='Serach fragments' />
-      <SelectMimicry classNameInner={styles.sort}>Sort by activity</SelectMimicry>
-      <Button size='large' onClick={onCreate}>
-        Create fragment
-      </Button>
+      <div className={styles.group}>
+        <SearchInput className={styles.search} placeholder='Serach fragments' />
+        <SelectMimicry classNameInner={styles.sort}>Sort by activity</SelectMimicry>
+      </div>
+
+      <Button onClick={onCreate}>Create fragment</Button>
     </div>
   )
 }

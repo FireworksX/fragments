@@ -24,7 +24,9 @@ export const booleanVariableExtend: Extender = ({
       return isValue(value) ? value : defaultValue;
     },
 
-    rename: valueSetter(state, graphKey, "name"),
+    rename: (name) => {
+      valueSetter(state, graphKey, "name")(name || graph._id);
+    },
     setRequired: valueSetter(state, graphKey, "required"),
     setDefaultValue: valueSetter(state, graphKey, "defaultValue"),
   };

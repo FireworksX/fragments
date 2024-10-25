@@ -10,8 +10,10 @@ python = ">=3.9,<3.13"
 fastapi = {extras = ["full"], version = "^0.111.1"}
 #supabase-py-async = "*"
 strawberry-graphql = "^0.237.3"
+pydantic-extra-types = "^2.9.0"
 
-
+pycountry = "^24.6.1"
+jsonschema ="^4.23.0"
 # Low level
 ujson = "^5.10.0"
 #starlette = "^0.37.2"
@@ -26,7 +28,14 @@ python-dotenv = "^1.0.1"
 cachetools = "^4.1.0"
 tenacity = "^6.2.0"
 
-supabase = "^2.7.2"
+PyJWT= "2.9.0"
+passlib = "1.7.4"
+
+# Postgres
+SQLAlchemy = "1.4.46"
+SQLAlchemy-serializer = "1.4.1"
+psycopg2-binary = "2.9.9"
+alembic = "1.9.4"
 
 [tool.poetry.dev-dependencies]
 # Lint

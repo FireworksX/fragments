@@ -7,9 +7,13 @@ import { Link } from '@/shared/ui/Link/ui/Link'
 import { Touchable } from '@/shared/ui/Touchable'
 import { BreadcrumbProject } from '@/features/ProjectBreadcrumbs/ui/BreadcrumbProject/BreadcrumbProject'
 import { BreadcrumbFragment } from '@/features/ProjectBreadcrumbs/ui/BreadcrumbFragment/BreadcrumbFragment'
+import { useQuery } from '@apollo/client'
+import { CURRENT_USER } from '@/shared/queries/currentUser'
+import { useProjectBreadcrumbs } from '@/features/ProjectBreadcrumbs/hooks/useProjectBreadcrumbs'
 
 export const ProjectBreadcrumbs: FC = () => {
-  const { fragmentSlug, projectSlug } = useParams()
+  const { project } = useProjectBreadcrumbs()
+
   // const { project: projectDetail } = useProjectDetail()
 
   return (
@@ -20,19 +24,19 @@ export const ProjectBreadcrumbs: FC = () => {
         </Touchable>
       </Link>
 
-      {/*{projectDetail && (*/}
-      {/*  <>*/}
-      {/*    <div className={styles.delimiter} />*/}
-      {/*    <BreadcrumbProject name={projectDetail.name} logo={projectDetail.logo.public_path} />*/}
-      {/*  </>*/}
-      {/*)}*/}
-
-      {fragmentSlug && (
+      {project && (
         <>
           <div className={styles.delimiter} />
-          <BreadcrumbFragment />
+          <BreadcrumbProject name={project.name} logo={project?.logo?.public_path} />
         </>
       )}
+
+      {/*{fragmentSlug && (*/}
+      {/*  <>*/}
+      {/*    <div className={styles.delimiter} />*/}
+      {/*    <BreadcrumbFragment />*/}
+      {/*  </>*/}
+      {/*)}*/}
     </div>
   )
 }

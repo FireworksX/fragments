@@ -1,10 +1,5 @@
 import { useContext, useState } from 'react'
-import {
-  builderLayerAlign,
-  builderLayerDirection,
-  builderLayerDistribute,
-  builderLayerMode
-} from '@fragments/fragments-plugin'
+
 import DirectionVertical from '@/shared/icons/direction-vertical.svg'
 import DirectionHorizontal from '@/shared/icons/direction-horizontal.svg'
 import AlignTop from '@/shared/icons/align-top.svg'
@@ -18,29 +13,30 @@ import { TabsSelectorItem } from '@/shared/ui/TabsSelector'
 import { BoxSide, BoxSizingSides } from '@/shared/ui/BoxSizingSides'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
+import { layerAlign, layerDirection, layerDistribute, layerMode } from '@fragments/plugin-state'
 
 const directions: TabsSelectorItem[] = [
   {
-    name: builderLayerDirection.vertical,
+    name: layerDirection.vertical,
     label: <DirectionVertical width={16} height={16} />
   },
   {
-    name: builderLayerDirection.horizontal,
+    name: layerDirection.horizontal,
     label: <DirectionHorizontal width={16} height={16} />
   }
 ]
 
 const aligns: TabsSelectorItem[] = [
   {
-    name: builderLayerAlign.start,
+    name: layerAlign.start,
     label: <AlignTop width={16} height={16} />
   },
   {
-    name: builderLayerAlign.center,
+    name: layerAlign.center,
     label: <AlignHorizontal width={16} height={16} />
   },
   {
-    name: builderLayerAlign.end,
+    name: layerAlign.end,
     label: <AlignBottom width={16} height={16} />
   }
 ]
@@ -65,11 +61,9 @@ export const useBuilderLayout = () => {
       switch (key) {
         case 'layerMode':
           if (!node.layerMode) {
-            node.setLayerMode(builderLayerMode.flex)
+            node.setLayerMode(layerMode.flex)
           } else {
-            node.setLayerMode(
-              animatableValue(node.layerMode) === builderLayerMode.none ? builderLayerMode.flex : builderLayerMode.none
-            )
+            node.setLayerMode(animatableValue(node.layerMode) === layerMode.none ? layerMode.flex : layerMode.none)
           }
 
           break
@@ -132,7 +126,7 @@ export const useBuilderLayout = () => {
       ...layerInvoker('layerWrap')
     },
     distribute: {
-      items: Object.keys(builderLayerDistribute),
+      items: Object.keys(layerDistribute),
       ...layerInvoker('layerDistribute')
     },
     gap: layerInvoker('layerGap'),

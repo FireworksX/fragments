@@ -4,14 +4,16 @@ import styles from './styles.module.css'
 
 interface SpinnerProps {
   size?: number
+  color?: string
   className?: string
 }
 
-export const Spinner: FC<SpinnerProps> = ({ className, size = 24 }) => (
+export const Spinner: FC<SpinnerProps> = ({ className, color = 'var(--background-secondary)', size = 24 }) => (
   <div
     className={cn(styles.root, className)}
     style={{
-      '--size': `${size}px`
+      '--size': `${size}px`,
+      '--color': color
     }}
   >
     <div className={styles.container}>
