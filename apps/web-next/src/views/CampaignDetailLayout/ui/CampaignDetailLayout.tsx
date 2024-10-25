@@ -12,6 +12,7 @@ import Tabs from '../../../shared/ui/Tabs/ui'
 import { TabItem } from '@/shared/ui/TabItem'
 import { Link } from '@/shared/ui/Link'
 import { ToggleActiveButton } from '@/features/ToggleActiveButton/ui/ToggleActiveButton'
+import isBrowser from '@/shared/utils/isBrowser'
 
 interface CampaignDetailPageProps {}
 

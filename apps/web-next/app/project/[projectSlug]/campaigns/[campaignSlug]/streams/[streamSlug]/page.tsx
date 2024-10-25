@@ -1,1 +1,3 @@
-export default () => <h2>page</h2>
+import { StreamDetailPage } from '@/views/StreamDetailPage'
+
+export default StreamDetailPage

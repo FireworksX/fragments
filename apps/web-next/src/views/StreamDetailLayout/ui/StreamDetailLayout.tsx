@@ -14,7 +14,7 @@ import { Chip } from '@/shared/ui/Chip'
 import { Link } from '@/shared/ui/Link'
 import { InputText } from '@/shared/ui/InputText'
 
-export const StreamDetailLayout = () => {
+export const StreamDetailLayout = ({ children }) => {
   const { stream, loadingChangeStreamActive, toggleActive, isEditMode, streamSlug, projectSlug, campaignSlug } =
     useStreamDetailLayout()
 
@@ -106,6 +106,8 @@ export const StreamDetailLayout = () => {
           )}
         </div>
       </div>
+
+      {children}
     </div>
   )
 }
