@@ -14,13 +14,16 @@
 
 .headerAside {
     margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: var(--gutter-default);
 }
 
 .logo {
     width: 64px;
     height: 64px;
     border-radius: var(--radius-second);
-    background: var(--background-secondary);
+    background: var(--background-light);
     border: 1px solid var(--border);
 }
 
@@ -41,18 +44,20 @@
 }
 
 .liveBadge {
+    background: var(--success-bg);
     color: var(--success);
-    font-size: 12px;
+    border-radius: var(--radius-main);
+    padding: 3px 10px 3px 25px;
+    font-size: 10px;
     font-weight: 400;
     position: relative;
-    padding-left: 15px;
     text-transform: uppercase;
 
     &:before {
         content: '';
         position: absolute;
-        left: 0;
-        top: 4px;
+        left: 9px;
+        top: 6px;
         width: 7px;
         height: 7px;
         background: var(--success);

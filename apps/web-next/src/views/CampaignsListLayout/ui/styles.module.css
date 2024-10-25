@@ -11,7 +11,7 @@
 
 .aside {
     flex-basis: 300px;
-    background: var(--background-secondary);
+    background: var(--background-light);
     border-right: 1px solid var(--border);
 }
 
@@ -35,19 +35,4 @@
         background: var(--secondary-bg);
     }
 
-    &:after {
-        content: '';
-        position: absolute;
-        width: 90%;
-        left: 5%;
-        bottom: 0;
-        height: 1px;
-        background: rgba(var(--border--rgb), .6);
-    }
-
-    &:last-child {
-        &:after {
-            display: none;
-        }
-    }
 }

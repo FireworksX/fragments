@@ -7,7 +7,18 @@ import { Spinner } from '@/shared/ui/Spinner'
 
 export interface ButtonProps extends TouchableProps, PropsWithChildren {
   size?: 'small' | 'regular' | 'medium' | 'large' | 'xlarge'
-  mode?: 'primary' | 'secondary' | 'tertiary' | 'tertiary-secondary' | 'outline' | 'danger' | 'success'
+  mode?:
+    | 'primary'
+    | 'secondary'
+    | 'tertiary'
+    | 'tertiary-secondary'
+    | 'outline'
+    | 'danger'
+    | 'success'
+    | 'warning'
+    | 'danger-outline'
+    | 'success-outline'
+    | 'warning-outline'
   stretched?: boolean
   disabled?: boolean
   loading?: boolean
@@ -28,6 +39,11 @@ const Button: FC<ButtonProps> = ({
   icon,
   ...touchProps
 }) => {
+  const spinnerColorByMode = {
+    'warning-outline': 'var(--warning)',
+    'success-outline': 'var(--success)'
+  }[mode]
+
   return (
     <Touchable
       disabled={disabled}
@@ -40,7 +56,7 @@ const Button: FC<ButtonProps> = ({
     >
       {loading && (
         <div className={styles.loadingState}>
-          <Spinner size={16} />
+          <Spinner size={16} color={spinnerColorByMode} />
         </div>
       )}
       <div className={styles.body}>

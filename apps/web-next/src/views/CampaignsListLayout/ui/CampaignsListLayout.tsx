@@ -4,7 +4,7 @@ import { Container } from '@/shared/ui/Container'
 import { CampaignPreviewItem } from '@/widgets/campaigns/CampaignPreviewItem'
 import { InputText } from '@/shared/ui/InputText'
 import { Button } from '@/shared/ui/Button'
-import PlusIcon from '@/shared/icons/plus.svg'
+import PlusIcon from '@/shared/icons/next/plus.svg'
 import { useCampaignsList } from '../hooks/useCampaignsList'
 import { CreateCampaignModal } from '@/widgets/modals/CreateCampaignModal'
 

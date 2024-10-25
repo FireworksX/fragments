@@ -14,28 +14,27 @@
 .logo {
     width: 24px;
     height: 24px;
+    background: var(--secondary-bg);
+    border-radius: var(--radius-small);
 }
 
 .name {
-    font-size: 14px;
-    font-weight: 700;
+    font-weight: 500;
     color: var(--text-color-accent);
 }
 
 .status {
-    margin-left: auto;
-    padding: 3px 10px;
-    border-radius: var(--radius-small);
-    font-size: 12px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
 
     &.status_active {
-        background: var(--success-bg);
+        background: var(--success);
         color: var(--success);
     }
 
     &.status_stop {
-        background: var(--danger-bg);
-        color: var(--danger);
+        background: var(--danger);
     }
 }
 

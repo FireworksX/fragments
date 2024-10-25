@@ -16,7 +16,7 @@
 }
 
 .cell {
-    background-color: var(--background-secondary);
+    background-color: var(--color);
     position: absolute;
     top: -3.9%;
     width: 24%;

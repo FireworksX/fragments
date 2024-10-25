@@ -1,0 +1,11 @@
+.root {
+    display: flex;
+    font-size: 14px;
+    color: var(--text-color-accent);
+    padding: 10px 15px;
+    border-bottom: 2px solid transparent;
+
+    &.active {
+        border-color: var(--secondary);
+    }
+}

@@ -1,5 +1,5 @@
 .page {
-    background: var(--background-secondary);
+    background: var(--background-light);
     min-height: 100vh;
 }
 
@@ -7,7 +7,7 @@
     display: flex;
     flex-direction: column;
     flex: 1;
-    background: var(--background-secondary);
+    background: var(--background-light);
     height: calc(100vh - var(--app-size-header) - var(--app-size-navigation));
     overflow: hidden;
     position: relative;

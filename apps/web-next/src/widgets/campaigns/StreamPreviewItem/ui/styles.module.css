@@ -1,51 +1,55 @@
 .root {
+    background: var(--background-light);
+    border-radius: var(--radius-small);
+}
+
+.container {
     display: flex;
     flex-direction: column;
     gap: var(--gutter-default);
     padding-block: 10px;
 }
 
-.header {
+.body {
     display: flex;
-    align-items: center;
     gap: var(--gutter-medium);
+    align-items: center;
 }
 
 .logo {
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-small);
+    background: var(--background-light);
+    border: 1px solid var(--border);
+}
+
+.id {
+    font-size: 10px;
+    color: var(--secondary);
 }
 
 .name {
     font-size: 14px;
-    font-weight: 700;
+    font-weight: 500;
     color: var(--text-color-accent);
 }
 
-.status {
+.aside {
     margin-left: auto;
-    padding: 3px 10px;
-    border-radius: var(--radius-small);
-    font-size: 12px;
-
-    &.status_active {
-        background: var(--success-bg);
-        color: var(--success);
-    }
-
-    &.status_stop {
-        background: var(--danger-bg);
-        color: var(--danger);
-    }
-}
-
-.stats {
     display: flex;
+    align-items: center;
     gap: var(--gutter-default);
-    color: var(--text-color-accent);
 }
 
-.statsTitle {
-    font-size: 12px;
-    color: var(--text-color-accent-secondary)
+
+.tags {
+    display: flex;
+    gap: var(--gutter-medium);
+    flex-wrap: wrap;
+}
+
+.tag {
+    background: var(--secondary-bg);
+    border: 1px solid var(--border);
 }

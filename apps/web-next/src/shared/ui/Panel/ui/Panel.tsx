@@ -5,6 +5,7 @@ import { animated, SpringValue } from '@react-spring/web'
 
 interface BuilderPanelProps extends PropsWithChildren {
   title?: string
+  titleIcon?: ReactNode
   aside?: ReactNode
   className?: string
   bodyClassName?: string
@@ -14,7 +15,17 @@ interface BuilderPanelProps extends PropsWithChildren {
 }
 
 const Panel: FC<BuilderPanelProps> = animated(
-  ({ className, hasBody = true, bodyClassName, children, title, aside, withPaddingBottom, withBorderBottom }) => {
+  ({
+    className,
+    hasBody = true,
+    bodyClassName,
+    titleIcon,
+    children,
+    title,
+    aside,
+    withPaddingBottom,
+    withBorderBottom
+  }) => {
     return (
       <div
         className={cn(styles.root, className, {
@@ -23,6 +34,7 @@ const Panel: FC<BuilderPanelProps> = animated(
       >
         {title && (
           <div className={styles.head}>
+            {titleIcon}
             <div className={styles.title}>{title}</div>
             {aside}
           </div>

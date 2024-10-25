@@ -1,0 +1,23 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    transition: var(--animation-transition-default);
+    width: 260px;
+    min-height: 200px;
+
+    &.filters {
+        width: 500px;
+        min-height: 560px;
+    }
+
+    &.fragments {
+        width: calc(100vw - 30%);
+        min-height: calc(100vh - 30%);
+    }
+}
+
+.body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gutter-default);
+}

@@ -18,11 +18,11 @@ export const CampaignPreviewItem: FC<CampaignPreviewItemProps> = ({ className, n
     <Touchable className={cn(className)}>
       <Container className={styles.root}>
         <div className={styles.header}>
-          {/*<div className={styles.logo}></div>*/}
-          <div className={styles.name}>{name}</div>
           {isValue(isActive) && (
-            <div className={cn(styles.status, isActive ? styles.status_active : styles.status_stop)}>Active</div>
+            <div className={cn(styles.status, isActive ? styles.status_active : styles.status_stop)} />
           )}
+          <div className={styles.logo}></div>
+          <div className={styles.name}>{name}</div>
         </div>
 
         {stats && (

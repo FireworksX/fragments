@@ -10,15 +10,20 @@
     --primary-bg: #F0F5FF;
     --primary-disabled: #a4d8fa;
 
-    --success-bg: #bee6cb;
+    --success-bg: rgba(100, 199, 123, 0.2);
     --success-bg--rgb: 190, 230, 203;
-    --success: #58df9a;
+    --success: #64c77b;
     --success--rgb: 88, 223, 154;
 
-    --danger-bg: #feedec;
+    --danger-bg: rgba(241, 76, 69, 0.2);
     --danger-bg--rgb: 254, 237, 236;
     --danger: #f14c45;
     --danger--rgb: 241, 76, 69;
+
+    --warning-bg: rgba(247, 181, 0, 0.2);
+    --warning-bg--rgb: 255, 250, 235;
+    --warning: #f7b500;
+    --warning--rgb: 247, 181, 0;
 
     --text-color: #F6F6F6;
     --text-color-accent: #223654;
@@ -43,11 +48,14 @@
 
     --background: #FEFEFE;
     --background--rgb: 254, 254, 254;
-    --background-secondary: #faf9f9;
-    --background-secondary--rgb: 250, 249, 249;
+    --background-secondary: #F3F3F3;
+    --background-secondary--rgb: 243, 243, 243;
+    --background-light: #faf9f9;
+    --background-light--rgb: 250, 249, 249;
 
     --border: #DAE0E4;
     --border--rgb: 218, 224, 228;
+    --border-light: rgba(218, 224, 228, .6);
     --border-hover: #b7bcc0;
     --border-secondary: #FEFEFE;
     --border-accent: #DAE0E4;
@@ -115,13 +123,31 @@
         --secondary-light-bg: #FEFEFE;
         --secondary-light-disabled: #FDFDFD;
 
+        --success-bg: rgba(100, 199, 123, 0.2);
+        --success-bg--rgb: 190, 230, 203;
+        --success: #64c77b;
+        --success--rgb: 88, 223, 154;
+
+        --danger-bg: rgba(241, 76, 69, 0.2);
+        --danger-bg--rgb: 254, 237, 236;
+        --danger: #f14c45;
+        --danger--rgb: 241, 76, 69;
+
+        --warning-bg: rgba(247, 181, 0, 0.2);
+        --warning-bg--rgb: 255, 250, 235;
+        --warning: #f7b500;
+        --warning--rgb: 247, 181, 0;
+
         --background: #111111;
         --background--rgb: 17, 17, 17;
         --background-secondary: #1c1c1c;
         --background-secondary--rgb: 28, 28, 28;
+        --background-light: #171717;
+        --background-light--rgb: 23, 23, 23;
 
         --border: #252525;
         --border--rgb: 37, 37, 37;
+        --border-light: rgba(218, 224, 228, .6);
         --border-secondary: #FEFEFE;
         --border-accent: #DAE0E4;
     }
