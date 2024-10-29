@@ -3,6 +3,7 @@
         padding: 5px 10px;
         background: var(--background-secondary);
         border-radius: var(--radius-small);
+        color: var(--text-color-accent);
         font-size: 12px;
         font-weight: 500;
         display: flex;

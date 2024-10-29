@@ -15,21 +15,37 @@ import { Link } from '@/shared/ui/Link'
 import { InputText } from '@/shared/ui/InputText'
 
 export const StreamDetailLayout = ({ children }) => {
-  const { stream, loadingChangeStreamActive, toggleActive, isEditMode, streamSlug, projectSlug, campaignSlug } =
-    useStreamDetailLayout()
+  const {
+    stream,
+    localStream,
+    loadingChangeStreamActive,
+    loadingUpdateStream,
+    toggleActive,
+    isEditMode,
+    streamSlug,
+    updateLocalStream,
+    handleUpdateStream
+  } = useStreamDetailLayout()
 
   return (
     <div className={cn(styles.root)}>
-      <Touchable className={styles.backAction} effect='none'>
-        <ArrowLeftIcon />
-        Back to campaign
-      </Touchable>
+      <Link type='campaignStreams'>
+        <Touchable className={styles.backAction} effect='none'>
+          <ArrowLeftIcon />
+          Back to campaign
+        </Touchable>
+      </Link>
+
       <div className={styles.header}>
         <div className={styles.logo}></div>
         <div className={styles.headerData}>
           <div className={styles.name}>
             {isEditMode ? (
-              <InputText placeholder='Stream Name' value={stream?.name} />
+              <InputText
+                placeholder='Stream Name'
+                value={localStream?.name}
+                onChangeValue={name => updateLocalStream({ name })}
+              />
             ) : (
               <>
                 {stream?.name}
@@ -69,7 +85,7 @@ export const StreamDetailLayout = ({ children }) => {
                 onClick={toggleActive}
               />
 
-              <Link type='editStream' projectSlug={projectSlug} campaignSlug={campaignSlug} streamSlug={streamSlug}>
+              <Link type='editStream'>
                 <Button
                   mode='outline'
                   preventDefault
@@ -92,21 +108,18 @@ export const StreamDetailLayout = ({ children }) => {
               </Button>
             </>
           ) : (
-            <Link type='stream' projectSlug={projectSlug} campaignSlug={campaignSlug} streamSlug={streamSlug}>
-              <Button
-                mode='primary'
-                preventDefault
-                // loading={loadingUpdateStream}
-                icon={<DoneIcon />}
-                // onClick={toggleActive}
-              >
-                Done
-              </Button>
-            </Link>
+            <Button
+              mode='primary'
+              preventDefault
+              loading={loadingUpdateStream}
+              icon={<DoneIcon />}
+              onClick={handleUpdateStream}
+            >
+              Done
+            </Button>
           )}
         </div>
       </div>
-
       {children}
     </div>
   )

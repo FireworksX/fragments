@@ -18,7 +18,11 @@ const documents = {
     "\n  query ProjectBreadcrumb($projectId: Int!) {\n    project(projectId: $projectId) {\n      name\n    }\n  }\n": types.ProjectBreadcrumbDocument,
     "\n  mutation ChangeCampaignActive($campaignSlug: Int!, $active: Boolean!) {\n    updateCampaign(cmp: { id: $campaignSlug, active: $active }) {\n      id\n      active\n    }\n  }\n": types.ChangeCampaignActiveDocument,
     "\n  query CampaignDetail($campaignSlug: Int!) {\n    campaign(campgainId: $campaignSlug) {\n      id\n      name\n      description\n      active\n      author {\n        firstName\n        lastName\n      }\n    }\n  }\n": types.CampaignDetailDocument,
+    "\n  mutation CreateLanding($streamSlug: Int!, $name: String!, $weight: Float!) {\n    createStreamFragment(streamFragment: { streamId: $streamSlug, fragmentId: 1, name: $name, weight: $weight }) {\n      id\n      name\n      props\n      weight\n      props\n    }\n  }\n": types.CreateLandingDocument,
+    "\n  query LandingsDetail($landingSlug: Int!) {\n    streamFragment(streamFragmentId: $landingSlug) {\n      id\n      name\n      props\n      weight\n    }\n  }\n": types.LandingsDetailDocument,
+    "\n  query LandingsList($streamSlug: Int!) {\n    streamFragment(streamId: $streamSlug) {\n      id\n      name\n      props\n      weight\n    }\n  }\n": types.LandingsListDocument,
     "\n  mutation ChangeStreamActive($streamSlug: Int!, $campaignSlug: Int!, $active: Boolean!) {\n    updateStream(strm: { id: $streamSlug, campaignId: $campaignSlug, active: $active }) {\n      id\n      active\n    }\n  }\n": types.ChangeStreamActiveDocument,
+    "\n  mutation UpdateStream($streamSlug: Int!, $campaignSlug: Int!, $name: String, $active: Boolean) {\n    updateStream(strm: { id: $streamSlug, campaignId: $campaignSlug, active: $active, name: $name }) {\n      id\n      active\n      name\n    }\n  }\n": types.UpdateStreamDocument,
     "\n  query StreamDetail($streamSlug: Int!) {\n    stream(streamId: $streamSlug) {\n      id\n      name\n      active\n      weight\n    }\n  }\n": types.StreamDetailDocument,
     "\n  mutation AuthSignIn($email: String!, $password: String!) {\n    login(email: $email, password: $password) {\n      user {\n        id\n        email\n        firstName\n        lastName\n      }\n      accessToken\n      refreshToken\n    }\n  }\n": types.AuthSignInDocument,
     "\n  query CurrentProfile {\n    profile {\n      user {\n        id\n        email\n        firstName\n        lastName\n      }\n      accessToken\n      refreshToken\n    }\n  }\n": types.CurrentProfileDocument,
@@ -64,7 +68,23 @@ export function gql(source: "\n  query CampaignDetail($campaignSlug: Int!) {\n  
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function gql(source: "\n  mutation CreateLanding($streamSlug: Int!, $name: String!, $weight: Float!) {\n    createStreamFragment(streamFragment: { streamId: $streamSlug, fragmentId: 1, name: $name, weight: $weight }) {\n      id\n      name\n      props\n      weight\n      props\n    }\n  }\n"): (typeof documents)["\n  mutation CreateLanding($streamSlug: Int!, $name: String!, $weight: Float!) {\n    createStreamFragment(streamFragment: { streamId: $streamSlug, fragmentId: 1, name: $name, weight: $weight }) {\n      id\n      name\n      props\n      weight\n      props\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query LandingsDetail($landingSlug: Int!) {\n    streamFragment(streamFragmentId: $landingSlug) {\n      id\n      name\n      props\n      weight\n    }\n  }\n"): (typeof documents)["\n  query LandingsDetail($landingSlug: Int!) {\n    streamFragment(streamFragmentId: $landingSlug) {\n      id\n      name\n      props\n      weight\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query LandingsList($streamSlug: Int!) {\n    streamFragment(streamId: $streamSlug) {\n      id\n      name\n      props\n      weight\n    }\n  }\n"): (typeof documents)["\n  query LandingsList($streamSlug: Int!) {\n    streamFragment(streamId: $streamSlug) {\n      id\n      name\n      props\n      weight\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(source: "\n  mutation ChangeStreamActive($streamSlug: Int!, $campaignSlug: Int!, $active: Boolean!) {\n    updateStream(strm: { id: $streamSlug, campaignId: $campaignSlug, active: $active }) {\n      id\n      active\n    }\n  }\n"): (typeof documents)["\n  mutation ChangeStreamActive($streamSlug: Int!, $campaignSlug: Int!, $active: Boolean!) {\n    updateStream(strm: { id: $streamSlug, campaignId: $campaignSlug, active: $active }) {\n      id\n      active\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation UpdateStream($streamSlug: Int!, $campaignSlug: Int!, $name: String, $active: Boolean) {\n    updateStream(strm: { id: $streamSlug, campaignId: $campaignSlug, active: $active, name: $name }) {\n      id\n      active\n      name\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateStream($streamSlug: Int!, $campaignSlug: Int!, $name: String, $active: Boolean) {\n    updateStream(strm: { id: $streamSlug, campaignId: $campaignSlug, active: $active, name: $name }) {\n      id\n      active\n      name\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

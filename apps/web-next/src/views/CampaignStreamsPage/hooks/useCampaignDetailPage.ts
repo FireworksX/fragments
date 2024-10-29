@@ -8,7 +8,7 @@ import { LIST_STREAMS } from '../lib/listStreams'
 import { DEFAULT_LOCAL_STREAM } from '@/widgets/modals/ConfigureStreamModal'
 
 export const useCampaignDetailPage = () => {
-  const { campaignSlug } = useParams()
+  const { campaignSlug, projectSlug } = useParams()
   // const [executeCreateStream, { loading: loadingCreateStream }] = useMutation(CREATE_STREAM)
   // const [executeUpdateStream, { loading: loadingUpdateStream }] = useMutation(UPDATE_STREAM)
   // const [, updateModal] = useGraph(modalStore, modalStore.key)
@@ -68,6 +68,8 @@ export const useCampaignDetailPage = () => {
   // }, [loadingCreateStream, loadingUpdateStream, updateModal])
 
   return {
-    streams: listStreams?.stream ?? []
+    streams: listStreams?.stream ?? [],
+    campaignSlug,
+    projectSlug
   }
 }

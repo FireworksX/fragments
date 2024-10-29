@@ -2,6 +2,7 @@
     .root {
         position: relative;
         width: 100%;
+        display: inline-flex;
         &.large {
             .input {
                 font-size: 1rem;

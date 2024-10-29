@@ -63,6 +63,11 @@
             &:hover {
                 background-color: var(--success);
             }
+
+            &:disabled {
+                background-color: var(--success-bg);
+                color: var(--success);
+            }
         }
 
         &.success-outline {

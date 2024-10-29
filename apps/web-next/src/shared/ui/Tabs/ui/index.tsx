@@ -37,9 +37,7 @@ const Tabs: FC<TabsProps> = ({ className, children: inputChildren }) => {
 
   const hideSwitcher = useCallback(() => {
     switcherApi.start({
-      opacity: 0,
-      width: 0,
-      x: 0
+      opacity: 0
     })
   }, [switcherApi])
 

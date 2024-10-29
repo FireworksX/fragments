@@ -10,7 +10,7 @@
     transition: var(--animation-transition-default);
     cursor: pointer;
     color: var(--text-color-accent);
-    gap: 5px;
+    gap: 7px;
     white-space: nowrap;
 
     &:hover:not(.disabled) {
@@ -27,6 +27,21 @@
         padding: 11px 12px 11px 17px;
         font-size: 14px;
     }
+
+    &.danger {
+        color: var(--danger);
+    }
+
+    &.success {
+        color: var(--success);
+    }
+    &.warning {
+        color: var(--warning);
+    }
+}
+
+.icon {
+    display: inline-flex;
 }
 
 .body {

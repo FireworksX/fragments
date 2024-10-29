@@ -17,6 +17,7 @@
 
 .content {
     flex-basis: calc(100% - 300px);
+    display: flex;
 }
 
 .asideHeader {

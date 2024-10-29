@@ -24,6 +24,7 @@ export const authOptions: NextAuthOptions = {
         password: {}
       },
       authorize: async credentials => {
+        console.log(credentials)
         try {
           const { data, errors } = await getClient().mutate({
             mutation: AUTH_SIGN_IN,

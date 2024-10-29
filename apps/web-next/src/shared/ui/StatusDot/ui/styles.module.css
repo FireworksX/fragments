@@ -1,0 +1,20 @@
+.root {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--background-light);
+
+    &.success {
+        background: var(--success);
+    }
+    &.error {
+        background: var(--danger);
+    }
+    &.warning {
+        background: var(--warning);
+    }
+    /*&.info {*/
+    /*    background: var(--info);*/
+    /*}*/
+}
