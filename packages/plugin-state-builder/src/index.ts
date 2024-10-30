@@ -1,20 +1,20 @@
 import { Plugin } from "@graph-state/core";
 import { nodes } from "@fragments/plugin-state";
 import extendPlugin from "@graph-state/plugin-extend";
-import { collectExtends } from "@/extend";
-import { positionExtend } from "@/extend/positionExtend";
-import { layoutExtend } from "@/extend/layoutExtend";
+import { collectExtends } from "src/extends";
+import { positionExtend } from "@/extends/positionExtend";
+import { layoutExtend } from "@/extends/layoutExtend";
 import { addStatic } from "@/static";
-import { rectExtend } from "@/extend/rectExtend";
-import { frameExtend } from "@/extend/nodes/frameExtend";
-import { fragmentExtend } from "@/extend/nodes/fragmentExtend";
-import { solidPaintStyleExtend } from "@/extend/nodes/solidPaintStyleExtend";
-import { fillExtend } from "@/extend/fillExtend";
-import { sceneExtend } from "@/extend/sceneExtend";
-import { cornerExtend } from "@/extend/cornerExtend";
-import { borderExtend } from "@/extend/borderExtend";
-import { layerExtend } from "@/extend/layerExtend";
-import { variableExtend } from "@/extend/variableExtend";
+import { rectExtend } from "@/extends/rectExtend";
+import { frameExtend } from "@/extends/nodes/frameExtend";
+import { fragmentExtend } from "@/extends/nodes/fragmentExtend";
+import { solidPaintStyleExtend } from "@/extends/nodes/solidPaintStyleExtend";
+import { fillExtend } from "@/extends/fillExtend";
+import { sceneExtend } from "@/extends/sceneExtend";
+import { cornerExtend } from "@/extends/cornerExtend";
+import { borderExtend } from "@/extends/borderExtend";
+import { layerExtend } from "@/extends/layerExtend";
+import { variableExtend } from "@/extends/variableExtend";
 
 export const pluginStateBuilder: Plugin = (state, overrides) => {
   addStatic(state);

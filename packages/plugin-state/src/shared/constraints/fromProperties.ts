@@ -7,7 +7,7 @@ import {
 import { Graph, GraphState } from "@graph-state/core";
 import { positionType } from "@/definitions.ts";
 import { animatableValue } from "@/shared/animatableValue.ts";
-import { getDOMOffset } from "@/shared/getDOMOffset.ts";
+import { getDomRect } from "@/shared/getDomRect.ts";
 
 export const fromProperties = (state: GraphState, graph: Graph) => {
   graph = state.resolve(graph);
@@ -33,9 +33,7 @@ export const fromProperties = (state: GraphState, graph: Graph) => {
   const maxHeight = graph.resolveField("maxHeight");
   const minWidth = graph.resolveField("minWidth");
   const maxWidth = graph.resolveField("maxWidth");
-  const relativeOffset = isRelative
-    ? getDOMOffset(state.keyOfEntity(graph))
-    : {};
+  const relativeOffset = isRelative ? getDomRect(state.keyOfEntity(graph)) : {};
 
   const constraints = {
     left: isRelative ? relativeOffset.left : isFiniteNumber(left) ? left : null,

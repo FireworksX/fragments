@@ -5,6 +5,7 @@ import { SpringValue, animated, to } from '@react-spring/web'
 import { sizing } from '@fragments/plugin-state'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { SELECTION_SIDES } from '@/features/fragmentBuilder/LayerHighlightSelect/target/hooks/useLayerHighlightSelect'
+import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
 
 interface LayerHighlightSelectProps {
   dragHandler: (target: string) => unknown
@@ -38,105 +39,103 @@ export const LayerHighlightSelect: FC<LayerHighlightSelectProps> = ({ className,
         style={{ borderWidth: selectStyles.borderWidth, position: 'absolute', inset: 0 }}
       />
 
-      {allowResizeVertical && (
-        <animated.div
-          {...dragHandler([SELECTION_SIDES.top])}
-          style={{ y: -4, width: selectStyles.width }}
-          className={styles.sideVertical}
-        />
-      )}
-      {allowResizeHorizontal && (
+      <AnimatedVisible visible={allowResizeVertical}>
+        {allowResizeVertical && (
+          <animated.div
+            {...dragHandler([SELECTION_SIDES.top])}
+            style={{ y: -4, width: selectStyles.width }}
+            className={styles.sideVertical}
+          />
+        )}
+      </AnimatedVisible>
+      <AnimatedVisible visible={allowResizeHorizontal}>
         <animated.div
           {...dragHandler([SELECTION_SIDES.right])}
           style={{ x: toW, height: selectStyles.height }}
           className={styles.sideHorizontal}
         />
-      )}
-      {allowResizeVertical && (
-        <animated.div
-          {...dragHandler([SELECTION_SIDES.bottom])}
-          style={{ y: toH, width: selectStyles.width }}
-          className={styles.sideVertical}
-        />
-      )}
-      {allowResizeHorizontal && (
+      </AnimatedVisible>
+      <AnimatedVisible visible={allowResizeVertical}>
+        {allowResizeVertical && (
+          <animated.div
+            {...dragHandler([SELECTION_SIDES.bottom])}
+            style={{ y: toH, width: selectStyles.width }}
+            className={styles.sideVertical}
+          />
+        )}
+      </AnimatedVisible>
+      <AnimatedVisible visible={allowResizeHorizontal}>
         <animated.div
           {...dragHandler([SELECTION_SIDES.left])}
           style={{ x: -4, height: selectStyles.height }}
           className={styles.sideHorizontal}
         />
-      )}
+      </AnimatedVisible>
 
-      {allowResizeHorizontal && allowResizeVertical && (
-        <>
-          <animated.div
-            {...dragHandler([SELECTION_SIDES.top, SELECTION_SIDES.right])}
-            style={{ x: to(selectStyles.width, v => v - CORNER_SIZE), y: -CORNER_SIZE }}
-            className={cn(styles.corner, styles.cornerHalfRight)}
-          />
+      <AnimatedVisible visible={to([allowResizeHorizontal, allowResizeVertical], (a, b) => a && b)}>
+        <animated.div
+          {...dragHandler([SELECTION_SIDES.top, SELECTION_SIDES.right])}
+          style={{ x: to(selectStyles.width, v => v - CORNER_SIZE), y: -CORNER_SIZE }}
+          className={cn(styles.corner, styles.cornerHalfRight)}
+        />
 
-          <animated.div
-            {...dragHandler([SELECTION_SIDES.bottom, SELECTION_SIDES.right])}
-            style={{
-              x: to(selectStyles.width, v => v - CORNER_SIZE),
-              y: to(selectStyles.height, v => v - CORNER_SIZE)
-            }}
-            className={cn(styles.corner, styles.cornerHalfLeft)}
-          />
+        <animated.div
+          {...dragHandler([SELECTION_SIDES.bottom, SELECTION_SIDES.right])}
+          style={{
+            x: to(selectStyles.width, v => v - CORNER_SIZE),
+            y: to(selectStyles.height, v => v - CORNER_SIZE)
+          }}
+          className={cn(styles.corner, styles.cornerHalfLeft)}
+        />
 
-          <animated.div
-            {...dragHandler([SELECTION_SIDES.bottom, SELECTION_SIDES.left])}
-            style={{ x: -CORNER_SIZE, y: to(selectStyles.height, v => v - CORNER_SIZE) }}
-            className={cn(styles.corner, styles.cornerHalfRight)}
-          />
+        <animated.div
+          {...dragHandler([SELECTION_SIDES.bottom, SELECTION_SIDES.left])}
+          style={{ x: -CORNER_SIZE, y: to(selectStyles.height, v => v - CORNER_SIZE) }}
+          className={cn(styles.corner, styles.cornerHalfRight)}
+        />
 
-          <animated.div
-            {...dragHandler([SELECTION_SIDES.top, SELECTION_SIDES.left])}
-            style={{ x: -CORNER_SIZE, y: -CORNER_SIZE }}
-            className={cn(styles.corner, styles.cornerHalfLeft)}
-          />
-        </>
-      )}
+        <animated.div
+          {...dragHandler([SELECTION_SIDES.top, SELECTION_SIDES.left])}
+          style={{ x: -CORNER_SIZE, y: -CORNER_SIZE }}
+          className={cn(styles.corner, styles.cornerHalfLeft)}
+        />
+      </AnimatedVisible>
 
-      {allowResizeHorizontal && !allowResizeVertical && (
-        <>
-          <animated.div
-            {...dragHandler([SELECTION_SIDES.left])}
-            style={{ x: -CORNER_SIZE, y: to(selectStyles.height, v => v / 2 + CORNER_SIZE / 2) }}
-            className={cn(styles.corner, styles.cornerHorizontal)}
-          />
-          <animated.div
-            {...dragHandler([SELECTION_SIDES.right])}
-            style={{
-              x: to(selectStyles.width, v => v - CORNER_SIZE),
-              y: to(selectStyles.height, v => v / 2 + CORNER_SIZE / 2)
-            }}
-            className={cn(styles.corner, styles.cornerHorizontal)}
-          />
-        </>
-      )}
+      <AnimatedVisible visible={to([allowResizeHorizontal, allowResizeVertical], (a, b) => a && !b)}>
+        <animated.div
+          {...dragHandler([SELECTION_SIDES.left])}
+          style={{ x: -CORNER_SIZE, y: to(selectStyles.height, v => v / 2 - CORNER_SIZE) }}
+          className={cn(styles.corner, styles.cornerHorizontal)}
+        />
+        <animated.div
+          {...dragHandler([SELECTION_SIDES.right])}
+          style={{
+            x: to(selectStyles.width, v => v - CORNER_SIZE),
+            y: to(selectStyles.height, v => v / 2 - CORNER_SIZE)
+          }}
+          className={cn(styles.corner, styles.cornerHorizontal)}
+        />
+      </AnimatedVisible>
 
-      {!allowResizeHorizontal && allowResizeVertical && (
-        <>
-          <animated.div
-            {...dragHandler([SELECTION_SIDES.top])}
-            style={{
-              x: to(selectStyles.width, v => v / 2 + CORNER_SIZE / 2),
-              y: -CORNER_SIZE
-            }}
-            className={cn(styles.corner, styles.cornerVertical)}
-          />
+      <AnimatedVisible visible={to([allowResizeHorizontal, allowResizeVertical], (a, b) => !a && b)}>
+        <animated.div
+          {...dragHandler([SELECTION_SIDES.top])}
+          style={{
+            x: to(selectStyles.width, v => v / 2 - CORNER_SIZE),
+            y: -CORNER_SIZE
+          }}
+          className={cn(styles.corner, styles.cornerVertical)}
+        />
 
-          <animated.div
-            {...dragHandler([SELECTION_SIDES.bottom])}
-            style={{
-              x: to(selectStyles.width, v => v / 2 + CORNER_SIZE / 2),
-              y: to(selectStyles.height, v => v - CORNER_SIZE)
-            }}
-            className={cn(styles.corner, styles.cornerVertical)}
-          />
-        </>
-      )}
+        <animated.div
+          {...dragHandler([SELECTION_SIDES.bottom])}
+          style={{
+            x: to(selectStyles.width, v => v / 2 - CORNER_SIZE),
+            y: to(selectStyles.height, v => v - CORNER_SIZE)
+          }}
+          className={cn(styles.corner, styles.cornerVertical)}
+        />
+      </AnimatedVisible>
     </animated.div>
   )
 }

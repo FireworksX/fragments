@@ -105,6 +105,7 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
           <ControlRow title='Radius' actions={radius.actions} isHighlight={radius.isOverride}>
             <InputNumber value={radius.value} empty={radius.isMixed} onChange={radius.onChange} />
             <TabsSelector
+              cellClassName={styles.borderCell}
               items={radius.items}
               value={radius.mode}
               onChange={({ name }) => radius.onChangeRadiusMode(name)}

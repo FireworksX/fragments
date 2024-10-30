@@ -3,6 +3,7 @@ import { useContext, useEffect } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
 import { extractAnimatableValues } from '@/shared/utils/extractAnimatableValues'
+import { getDomRect } from '@/shared/utils/getDomRect'
 
 const BORDER_SIZE = 1.5
 

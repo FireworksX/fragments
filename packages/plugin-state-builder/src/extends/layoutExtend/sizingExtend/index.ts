@@ -2,6 +2,7 @@ import { ExtenderPayload } from "@/types";
 import { valueSetter } from "@/shared/valueSetter.ts";
 import { sizing } from "@fragments/plugin-state";
 import { animatableValue } from "@/shared/animatableValue.ts";
+import { createCachedInterpolate } from "@/shared/cachedInterpolate.ts";
 
 const DEFAULT_SIZING = sizing.Fixed;
 const ALLOW_SIZES = [sizing.Fixed, sizing.Relative];
@@ -37,15 +38,22 @@ export const sizingExtend = ({
     }
   };
 
+  const horizontalInterpolate = createCachedInterpolate();
+  const verticalInterpolate = createCachedInterpolate();
+
   return {
-    getAllowResizeHorizontal: () =>
-      ALLOW_SIZES.includes(
-        animatableValue(resolveField("layoutSizingHorizontal"))
-      ),
-    getAllowResizeVertical: () =>
-      ALLOW_SIZES.includes(
-        animatableValue(resolveField("layoutSizingVertical"))
-      ),
+    getAllowResizeHorizontal: () => {
+      const sizing$ = resolveField("layoutSizingHorizontal");
+      return horizontalInterpolate([sizing$], (sizing) =>
+        ALLOW_SIZES.includes(sizing)
+      );
+    },
+    getAllowResizeVertical: () => {
+      const sizing$ = resolveField("layoutSizingVertical");
+      return verticalInterpolate([sizing$], (sizing) =>
+        ALLOW_SIZES.includes(sizing)
+      );
+    },
     layoutSizingHorizontal: getValue("layoutSizingHorizontal", DEFAULT_SIZING),
     layoutSizingVertical: getValue("layoutSizingVertical", DEFAULT_SIZING),
     setSizeMode,

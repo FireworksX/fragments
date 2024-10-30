@@ -1,16 +1,28 @@
 import { animatableValue } from "../../../../plugin-state-builder/src/shared/animatableValue.ts";
 import { toSize } from "@/shared/constraints/toSize.ts";
 import { Rect, RectProperties } from "@/types/rect.ts";
+import { GraphState, LinkKey } from "@graph-state/core";
 
-export const toRect = (
-  values: RectProperties,
-  parentRect: Rect = { x: 0, y: 0, width: 0, height: 0 },
-  autoSize = null,
-  pixelAlign
-) => {
+interface ToRectOptions {
+  layerKey?: LinkKey;
+  values: RectProperties;
+  parentRect: Rect;
+  autoSize: unknown;
+  pixelAlign: boolean;
+  state: GraphState;
+}
+
+export const toRect = ({
+  layerKey,
+  values,
+  parentRect = { x: 0, y: 0, width: 0, height: 0 },
+  autoSize,
+  pixelAlign = true,
+  state,
+}: ToRectOptions) => {
   let x = values.left || 0;
   let y = values.top || 0;
-  const { width, height } = toSize(values, parentRect, autoSize);
+  const { width, height } = toSize({ values, parentRect, autoSize, layerKey });
 
   const positioningParentWidth = parentRect?.width
     ? animatableValue(parentRect.width)
@@ -36,8 +48,8 @@ export const toRect = (
 
   const f = { x, y, width, height };
 
-  // if (pixelAlign) {
-  //   return Rect.pixelAligned(f);
-  // }
+  if (pixelAlign && state?.rect?.pixelAligned) {
+    return state.rect.pixelAligned(f);
+  }
   return f;
 };

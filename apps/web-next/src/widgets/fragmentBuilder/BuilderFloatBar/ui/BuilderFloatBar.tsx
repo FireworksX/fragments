@@ -4,7 +4,7 @@ import { useGraph } from '@graph-state/react'
 import styles from './styles.module.css'
 import DefaultCursor from '@/shared/icons/default-cursor.svg'
 import GrabCursor from '@/shared/icons/grab-cursor.svg'
-import Lightning from '@/shared/icons/lightning.svg'
+import InsertIcon from '@/shared/icons/next/circle-plus.svg'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { Touchable } from '@/shared/ui/Touchable'
 import { Dropdown } from '@/shared/ui/Dropdown'
@@ -62,7 +62,7 @@ export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
               }
             >
               <Touchable className={styles.actionButton} TagName='button' onClick={() => undefined}>
-                <Lightning width={20} height={20} />
+                <InsertIcon width={20} height={20} />
               </Touchable>
             </Dropdown>
           )

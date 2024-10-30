@@ -56,12 +56,7 @@ export const FragmentBuilder: FC<FragmentBuilderProps> = ({ className }) => {
     <BuilderTextEditorComposer>
       <div className={styles.root}>
         <div className={styles.previewContainer}>
-          <BuilderSidebar
-            isOpen={isEdit}
-            assetsNode={<BuilderAssets />}
-            layersNode={<BuilderLayers />}
-            // variablesNode={<BuilderVariables />}
-          />
+          <BuilderSidebar isOpen={isEdit} assetsNode={<BuilderAssets />} layersNode={<BuilderLayers />} />
 
           <BuilderCanvas>
             <BuilderTextEditor />

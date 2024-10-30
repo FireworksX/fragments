@@ -5,7 +5,7 @@ import { toSize } from "@/shared/constraints/toSize.ts";
 
 export const constraintsStatic: Plugin = (state) => {
   state.constraints = {
-    toRect,
+    toRect: (ctx) => toRect({ ...ctx, state }),
     fromProperties: (graph) => fromProperties(state, graph),
     toSize,
   };

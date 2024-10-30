@@ -1,5 +1,6 @@
 import { FC, useContext } from 'react'
 import { animated, to } from '@react-spring/web'
+import styles from './styles.module.css'
 import { useBuilderLayout } from '../hooks/useBuilderLayout'
 import { Panel } from '@/shared/ui/Panel'
 import { PanelHeadAside } from '@/shared/ui/PanelHeadAside'
@@ -68,7 +69,12 @@ const BuilderLayout: FC<BuilderLayoutProps> = ({ className }) => {
 
       <ControlRow title='Padding' actions={padding.actions} isHighlight={padding.isOverride}>
         <InputNumber value={padding.value} empty={padding.isMixed} onChange={padding.onChange} />
-        <TabsSelector items={padding.items} value={padding.mode} onChange={({ name }) => padding.onChangeMode(name)} />
+        <TabsSelector
+          cellClassName={styles.paddingCell}
+          items={padding.items}
+          value={padding.mode}
+          onChange={({ name }) => padding.onChangeMode(name)}
+        />
       </ControlRow>
       <AnimatedVisible visible={padding.isMixed}>
         <BuilderLayoutPaddings

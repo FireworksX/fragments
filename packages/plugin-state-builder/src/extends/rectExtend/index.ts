@@ -1,14 +1,16 @@
 import { Extender } from "@/types";
 import { createCachedInterpolate } from "@/shared/cachedInterpolate.ts";
+import { sizing } from "@fragments/plugin-state";
+import { getDomRect } from "@/shared/getDomRect.ts";
 
 const RECT_FIELD_KEYS = [
-  "left",
-  "top",
-  "width",
-  "height",
-  "positionType",
   "layoutSizingHorizontal",
   "layoutSizingVertical",
+  "width",
+  "height",
+  "left",
+  "top",
+  "positionType",
 ];
 
 export const rectExtend: Extender = ({

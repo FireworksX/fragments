@@ -8,6 +8,7 @@ import { ControlRow } from '@/shared/ui/ControlRow'
 import { InputNumber } from '@/shared/ui/InputNumber'
 import { Select } from '@/shared/ui/Select'
 import { sizing } from '@fragments/plugin-state'
+import { to } from '@react-spring/web'
 
 interface BuilderSizeProps {
   className?: string
@@ -26,7 +27,9 @@ const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
     layoutSizingVertical,
     hasSync,
     width,
-    height
+    height,
+    allowResizeHorizontal,
+    allowResizeVertical
   } = useBuilderSize()
 
   const Options = (
@@ -51,11 +54,11 @@ const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
       )}
 
       <ControlRow title='Width' actions={width.actions} isHighlight={width.isOverride}>
-        <InputNumber {...width} disabled={DISABLE_UTILS.includes(layoutSizingHorizontal.value)} />
+        <InputNumber {...width} disabled={to(allowResizeHorizontal, v => !v)} />
         <Select {...layoutSizingHorizontal}>{Options}</Select>
       </ControlRow>
       <ControlRow title='Height' actions={height.actions} isHighlight={height.isOverride}>
-        <InputNumber {...height} disabled={DISABLE_UTILS.includes(layoutSizingVertical.value)} />
+        <InputNumber {...height} disabled={to(allowResizeVertical, v => !v)} />
         <Select {...layoutSizingVertical}>{Options}</Select>
       </ControlRow>
     </Panel>

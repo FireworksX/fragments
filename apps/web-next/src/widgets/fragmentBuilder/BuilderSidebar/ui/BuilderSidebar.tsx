@@ -11,10 +11,6 @@ const modes: TabsSelectorItem[] = [
   {
     name: 'assets',
     label: 'Assets'
-  },
-  {
-    name: 'variables',
-    label: 'Variables'
   }
 ]
 
@@ -38,7 +34,6 @@ const BuilderSidebar: FC<BuilderSidebarProps> = ({ layersNode, assetsNode, varia
       <div className={styles.delimiter} />
       {mode === 'layers' && layersNode}
       {mode === 'assets' && assetsNode}
-      {mode === 'variables' && variablesNode}
     </AsideBar>
   )
 }

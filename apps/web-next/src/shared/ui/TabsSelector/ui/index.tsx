@@ -16,9 +16,10 @@ interface TabsSelectorProps {
   value: string // находит из массива items по имени
   onChange?: (item: TabsSelectorItem) => void
   className?: string
+  cellClassName?: string
 }
 
-const TabsSelector: FC<TabsSelectorProps> = animated(({ className, items, value, onChange }) => {
+const TabsSelector: FC<TabsSelectorProps> = animated(({ className, cellClassName, items, value, onChange }) => {
   const rootRef = useRef<ElementRef<'div'>>(null)
   const [switcherStyles, switcherApi] = useSpring(() => ({
     width: 0,
@@ -62,7 +63,7 @@ const TabsSelector: FC<TabsSelectorProps> = animated(({ className, items, value,
         <>
           <div className={styles.divider} />
           <Touchable
-            className={cn(styles.cell, {
+            className={cn(styles.cell, cellClassName, {
               [styles.active]: el.name === value,
               [styles.disabled]: el.disabled
             })}

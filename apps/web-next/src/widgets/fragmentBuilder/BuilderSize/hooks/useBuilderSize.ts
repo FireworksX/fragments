@@ -30,10 +30,7 @@ export const useBuilderSize = () => {
   })
   const [parent] = useGraph(documentManager, selectionGraph?.getParent())
 
-  const hugContentEnabled =
-    (!!selectionGraph?.children?.length &&
-      animatableValue(selectionGraph.resolveField('layerMode')) === layerMode.flex) ||
-    selectionGraph?._type === nodes.Text
+  const hugContentEnabled = !!selectionGraph?.children?.length || selectionGraph?._type === nodes.Text
   const fillContentEnabled = animatableValue(parent.resolveField('layerMode')) === layerMode.flex
 
   return {
@@ -48,6 +45,8 @@ export const useBuilderSize = () => {
     width: layerInvoker('width'),
     height: layerInvoker('height'),
     layoutSizingHorizontal: layerInvoker('layoutSizingHorizontal'),
-    layoutSizingVertical: layerInvoker('layoutSizingVertical')
+    layoutSizingVertical: layerInvoker('layoutSizingVertical'),
+    allowResizeHorizontal: selectionGraph?.getAllowResizeHorizontal?.(),
+    allowResizeVertical: selectionGraph?.getAllowResizeVertical?.()
   }
 }

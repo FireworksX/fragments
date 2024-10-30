@@ -1,8 +1,9 @@
-import { useCallback, useContext, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph, useGraphFields, useGraphStack } from '@graph-state/react'
 import { LinkKey } from '@graph-state/core'
 import { nodes } from '@fragments/plugin-state'
+import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 
 const findIndexOfNode = (items: unknown[], linkNode: LinkKey) => {
   const index = items.findIndex(item => item.id === linkNode)
@@ -19,6 +20,7 @@ const findIndexOfNode = (items: unknown[], linkNode: LinkKey) => {
 
 export const useBuilderLayers = () => {
   const { documentManager } = useContext(BuilderContext)
+  const { selection, selectionGraph } = useBuilderSelection()
   const [expandedLinkKeys, setExpandedLinkKeys] = useState<string[]>([])
   const allBreakpoints = useGraphFields(documentManager, nodes.Breakpoint)
   const allFrames = useGraphFields(documentManager, nodes.Frame)
@@ -58,11 +60,19 @@ export const useBuilderLayers = () => {
       const toKey = to?.id
       const itemOrder = findIndexOfNode(nextItemsTree, itemKey)
 
-      console.log(itemKey, toKey, itemOrder)
-
       documentManager.moveNode(itemKey, toKey, itemOrder)
     }
   }
+
+  useEffect(() => {
+    if (selection) {
+      const allParents = selectionGraph?.getAllParents?.() ?? []
+      allParents.forEach(parent => {
+        const linkKey = documentManager.keyOfEntity(parent)
+        setExpandedLinkKeys(prev => [...prev, linkKey])
+      })
+    }
+  }, [selection])
 
   return {
     items,

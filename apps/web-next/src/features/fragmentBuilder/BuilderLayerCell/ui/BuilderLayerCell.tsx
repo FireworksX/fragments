@@ -4,7 +4,7 @@ import { LinkKey } from '@graph-state/core'
 import { isValue } from '@fragments/utils'
 import { to } from '@react-spring/web'
 import styles from './styles.module.css'
-import CaretRight from '@/shared/icons/caret-right.svg'
+import CaretRight from '@/shared/icons/next/chevrone-right.svg'
 import { useBuilderLayerCell } from '../hooks/useBuilderLayerCell'
 import { BuilderLayerTypeIcon } from './BuilderLayerTypeIcon'
 import { Dropdown } from '@/shared/ui/Dropdown'
@@ -56,9 +56,10 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
   const onEdit = () => {
     if (editLabel) {
       rename(editLabel)
-      setEditLabel(undefined)
-      inputRef?.current?.blur()
     }
+
+    setEditLabel(undefined)
+    inputRef?.current?.blur()
   }
 
   const asideProps = {

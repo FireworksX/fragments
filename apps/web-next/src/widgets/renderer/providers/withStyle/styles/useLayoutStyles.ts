@@ -37,7 +37,7 @@ export const useLayoutStyles = (graph: Graph) => {
   rules.padding = to(
     [padding, paddingTop, paddingRight, paddingBottom, paddingLeft],
     (padding, paddingTop, paddingRight, paddingBottom, paddingLeft) => {
-      if (padding === -1) {
+      if (!padding) {
         return `${toPx(paddingTop)} ${toPx(paddingRight)} ${toPx(paddingBottom)} ${toPx(paddingLeft)}`
       }
 

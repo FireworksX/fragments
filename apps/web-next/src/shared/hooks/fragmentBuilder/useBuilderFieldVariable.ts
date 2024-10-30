@@ -91,7 +91,7 @@ export const useBuilderFieldVariable = (layer: Field) => {
       if (field in variableFields) {
         const fieldValue = variableFields[field]
         const typeProperties = properties.filter(prop => prop.type === fieldValue.type)
-        const transforms = getTransformsByType(fieldValue.type)
+        const transforms = [] //getTransformsByType(fieldValue.type)
 
         return typeProperties.map(prop => ({
           label: prop.name,

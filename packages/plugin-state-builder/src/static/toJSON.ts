@@ -1,6 +1,6 @@
 import { isObject, isPrimitive } from "@fragments/utils";
 import { Plugin } from "@graph-state/core";
-import { SpringValue } from "@react-spring/web";
+import { Interpolation, SpringValue } from "@react-spring/web";
 
 export const toJSON: Plugin = (state) => {
   const nodeToJSON = (node: unknown) => {
@@ -17,7 +17,9 @@ export const toJSON: Plugin = (state) => {
         return {
           ...acc,
           [key]:
-            value instanceof SpringValue ? value.toJSON() : nodeToJSON(value),
+            value instanceof SpringValue || value instanceof Interpolation
+              ? value.toJSON()
+              : nodeToJSON(value),
         };
       }
 
