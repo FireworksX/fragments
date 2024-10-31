@@ -2,32 +2,25 @@ import { FC, PropsWithChildren } from 'react'
 import cn from 'classnames'
 import { animated } from '@react-spring/web'
 import styles from './styles.module.css'
-import { LayerHighlightDragging } from '@/features/fragmentBuilder/LayerHighlightDragging'
-import { LayerHighlightHover } from '@/features/fragmentBuilder/LayerHighlightHover'
-import { LayerHighlightSelect } from '@/features/fragmentBuilder/LayerHighlightSelect/target'
-import { LayerHighlightSelectParent } from '@/features/fragmentBuilder/LayerHighlightSelect/parent'
 import { useBuilderHighlight } from '../hooks/useBuilderHighlight'
 import { useBreakpoints } from '@/shared/hooks/fragmentBuilder/useBreakpoints'
 import { LayerHighlightNode } from '@/features/fragmentBuilder/LayerHighlightNode'
+import { LayerSelectedResize } from '@/features/fragmentBuilder/LayerSelectedResize'
 
 interface BuilderLayerHighlightProps extends PropsWithChildren {
   className?: string
 }
 
 const BuilderHighlight: FC<BuilderLayerHighlightProps> = ({ className, children }) => {
-  const { breakpointValues, breakpointKeys } = useBreakpoints()
-  const { opacity, selectStyles, parentStyles, dragHandler } = useBuilderHighlight()
+  const { breakpointKeys } = useBreakpoints()
+  const { opacity } = useBuilderHighlight()
 
   return (
     <animated.div className={cn(className, styles.root)} style={{ opacity }}>
       {children}
       {breakpointKeys.map(breakpointKey => (
-        <LayerHighlightNode key={breakpointKey} layerKey={breakpointKey} />
+        <LayerHighlightNode key={breakpointKey} layerKey={breakpointKey} resizeNode={<LayerSelectedResize />} />
       ))}
-      {/*<LayerHighlightDragging />*/}
-      {/*<LayerHighlightHover />*/}
-      {/*<LayerHighlightSelect selectStyles={selectStyles} dragHandler={dragHandler} />*/}
-      {/*<LayerHighlightSelectParent style={parentStyles} />*/}
     </animated.div>
   )
 }

@@ -1,13 +1,62 @@
 .root {
     position: absolute;
     inset: 0;
-    z-index: var(--z-index-builder-tools);
-    pointer-events: none;
 }
 
-.highlight {
-    border: 1px solid var(--primary);
+.top {
+    top: -4px;
+    left: 0;
+    right: 0;
 }
+
+.bottom {
+    bottom: -4px;
+    left: 0;
+    right: 0;
+}
+
+.left {
+    top: 0;
+    bottom: 0;
+    left: -4px;
+}
+
+.right {
+    top: 0;
+    bottom: 0;
+    right: -4px;
+}
+
+.topLeft {
+    top: -4px;
+    left: -4px;
+}
+
+.topRight {
+    top: -4px;
+    right: -4px;
+}
+
+.bottomLeft {
+    bottom: -4px;
+    left: -4px;
+}
+
+.bottomRight {
+    bottom: -4px;
+    right: -4px;
+}
+
+.horizontalMiddle {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.verticalMiddle {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
 
 .corner {
     width: 8px;

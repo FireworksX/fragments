@@ -1,0 +1,89 @@
+import { useDrag } from '@use-gesture/react'
+import { animatableValue } from '@/shared/utils/animatableValue'
+import { sizing } from '@fragments/plugin-state'
+import { useGraph } from '@graph-state/react'
+import { useContext } from 'react'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
+import { createConstants } from '@fragments/utils'
+import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
+import { to } from '@react-spring/web'
+import { getDomRect } from '@/shared/utils/getDomRect'
+
+export const SELECTION_SIDES = createConstants('topLeft', 'top', 'right', 'bottom', 'left')
+
+export const useLayerSelectedResize = () => {
+  const { documentManager, canvasManager } = useContext(BuilderContext)
+  const [canvas] = useGraph(canvasManager, canvasManager.key)
+  const { selectionGraph, selection } = useBuilderSelection()
+  const allowResizeHorizontal = selectionGraph?.getAllowResizeHorizontal?.()
+  const allowResizeVertical = selectionGraph?.getAllowResizeVertical?.()
+
+  const handler = useDrag(({ movement: [mx, my], args: [directions], first, memo = {}, dragging }) => {
+    canvasManager.setResizing(dragging)
+
+    if (first) {
+      const targetWidthType = animatableValue(selectionGraph.resolveField('layoutSizingHorizontal'))
+      const targetHeightType = animatableValue(selectionGraph.resolveField('layoutSizingVertical'))
+      const targetLeft = animatableValue(selectionGraph.resolveField('left'))
+      const targetTop = animatableValue(selectionGraph.resolveField('top'))
+      const targetRect = getDomRect(selection)
+      const parentRect = getDomRect(documentManager.keyOfEntity(selectionGraph.getParent()))
+      const width = animatableValue(selectionGraph.resolveField('width'))
+      const height = animatableValue(selectionGraph.resolveField('height'))
+
+      memo.from = {
+        getWidth: move => {
+          if (targetWidthType === sizing.Relative) {
+            move = (move / parentRect.width) * 100
+          }
+          return move / scale + (memo?.from?.width ?? 0)
+        },
+        getHeight: move => {
+          if (targetHeightType === sizing.Relative) {
+            move = (move / parentRect.height) * 100
+          }
+          return move / scale + (memo?.from?.height ?? 0)
+        },
+        getLeft: move => move / scale + (targetLeft ?? 0),
+        getTop: move => move / scale + (targetTop ?? 0),
+        width,
+        height
+      }
+    }
+
+    const scale = animatableValue(canvas?.scale)
+    const width = memo.from?.getWidth(mx)
+    const height = memo.from?.getHeight(my)
+
+    if (directions.includes(SELECTION_SIDES.right)) {
+      selectionGraph.setWidth(width)
+    }
+    if (directions.includes(SELECTION_SIDES.bottom)) {
+      selectionGraph.setHeight(height)
+    }
+
+    if (directions.includes(SELECTION_SIDES.left)) {
+      const width = memo.from.getWidth(mx * -1)
+      if (width > 0) {
+        selectionGraph.setWidth(width)
+        selectionGraph.move(memo.from.getLeft(mx))
+      }
+    }
+
+    if (directions.includes(SELECTION_SIDES.top)) {
+      const height = memo.from.getHeight(my * -1)
+      if (height > 0) {
+        selectionGraph.setHeight(height)
+        selectionGraph.move(null, memo.from.getTop(my))
+      }
+    }
+
+    return memo
+  })
+
+  return {
+    handler,
+    allowResizeHorizontal,
+    allowResizeVertical
+  }
+}

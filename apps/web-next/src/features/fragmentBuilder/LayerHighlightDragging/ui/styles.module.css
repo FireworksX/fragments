@@ -1,7 +1,0 @@
-.root {
-    position: absolute;
-    z-index: var(--z-index-builder-tools);
-    pointer-events: none;
-    border: 1px solid var(--primary);
-}
-

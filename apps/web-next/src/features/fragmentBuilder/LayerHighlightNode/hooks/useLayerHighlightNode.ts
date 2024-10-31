@@ -8,28 +8,30 @@ import { omit } from '@fragments/utils'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 
 const BORDER_SIZE = 1.5
-const PARENT_BORDER_SIZE = 3
-const initialStyle = {
-  x: 0,
-  y: 0,
-  width: 0,
-  height: 0,
-  opacity: 0,
-  borderWidth: 0
-}
+const DRAG_PARENT_BORDER_SIZE = 3
 
 export const useLayerHighlightNode = (layerKey: LinkKey) => {
   const { canvasManager, documentManager } = useContext(BuilderContext)
   const [canvas] = useGraph(canvasManager, canvasManager.key)
   const [layerNode] = useGraph(documentManager, layerKey)
-  const { selection } = useBuilderSelection()
+  const { selection, selectionGraph } = useBuilderSelection()
   const layerStyles = layerNode?.toCss?.() ?? {}
-
-  console.log(layerNode, layerStyles)
+  const selectionParentKey = documentManager.keyOfEntity(selectionGraph?.getParent())
+  const isParentSelected = selectionParentKey === layerKey
 
   return {
+    isDragging: canvas.isDragging,
     isHovered: canvas.hoverLayer === layerKey,
-    borderWidth: to(canvas.scale, scale => BORDER_SIZE / scale),
+    isSelected: selection === layerKey,
+    isParentSelected,
+    borderWidth: to(canvas.scale, scale => {
+      let width = BORDER_SIZE
+      if (canvas.isDragging && isParentSelected) {
+        width = DRAG_PARENT_BORDER_SIZE
+      }
+
+      return width / scale
+    }),
     layerStyles: {
       ...omit(layerStyles, 'backgroundColor', 'borderColor', 'background', 'border')
     },
