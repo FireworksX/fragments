@@ -13,8 +13,8 @@ const DisplayBreakpoints: FC<BuilderDisplayBreakpointsProps> = ({ className }) =
 
   return (
     <div className={cn(styles.root, className)}>
-      {breakpointValues.map(breakpoint => (
-        <Frame {...breakpoint} />
+      {breakpointKeys.map(breakpointKey => (
+        <Frame layerKey={breakpointKey} />
       ))}
     </div>
   )

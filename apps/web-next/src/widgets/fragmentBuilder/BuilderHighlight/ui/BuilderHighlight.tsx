@@ -7,21 +7,27 @@ import { LayerHighlightHover } from '@/features/fragmentBuilder/LayerHighlightHo
 import { LayerHighlightSelect } from '@/features/fragmentBuilder/LayerHighlightSelect/target'
 import { LayerHighlightSelectParent } from '@/features/fragmentBuilder/LayerHighlightSelect/parent'
 import { useBuilderHighlight } from '../hooks/useBuilderHighlight'
+import { useBreakpoints } from '@/shared/hooks/fragmentBuilder/useBreakpoints'
+import { LayerHighlightNode } from '@/features/fragmentBuilder/LayerHighlightNode'
 
 interface BuilderLayerHighlightProps extends PropsWithChildren {
   className?: string
 }
 
 const BuilderHighlight: FC<BuilderLayerHighlightProps> = ({ className, children }) => {
+  const { breakpointValues, breakpointKeys } = useBreakpoints()
   const { opacity, selectStyles, parentStyles, dragHandler } = useBuilderHighlight()
 
   return (
     <animated.div className={cn(className, styles.root)} style={{ opacity }}>
       {children}
-      <LayerHighlightDragging />
-      <LayerHighlightHover />
-      <LayerHighlightSelect selectStyles={selectStyles} dragHandler={dragHandler} />
-      <LayerHighlightSelectParent style={parentStyles} />
+      {breakpointKeys.map(breakpointKey => (
+        <LayerHighlightNode key={breakpointKey} layerKey={breakpointKey} />
+      ))}
+      {/*<LayerHighlightDragging />*/}
+      {/*<LayerHighlightHover />*/}
+      {/*<LayerHighlightSelect selectStyles={selectStyles} dragHandler={dragHandler} />*/}
+      {/*<LayerHighlightSelectParent style={parentStyles} />*/}
     </animated.div>
   )
 }

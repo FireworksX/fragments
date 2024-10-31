@@ -1,0 +1,11 @@
+.root {
+    z-index: var(--z-index-builder-tools);
+    pointer-events: none;
+    overflow: visible !important;
+}
+
+.mask {
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--primary);
+}

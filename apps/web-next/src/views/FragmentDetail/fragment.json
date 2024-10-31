@@ -7,7 +7,6 @@
       "_id": "tablet",
       "isPrimary": true,
       "minWidth": 768,
-      "height": 500,
       "parentKey": "$$Fragment:g34gherhg3g",
       "children": [
         {
@@ -56,6 +55,10 @@
                 {
                   "_type": "$$Text",
                   "_id": "b08ec6d430c93"
+                },
+                {
+                  "_type": "$$Text",
+                  "_id": "02a52677100d2"
                 }
               ]
             },
@@ -64,20 +67,20 @@
               "_id": "db947711832c3",
               "opacity": 1,
               "visible": true,
-              "width": 133.39082763496538,
+              "width": 139,
               "height": 64.40079468252671,
-              "layoutSizingHorizontal": "Hug",
+              "layoutSizingHorizontal": "Fixed",
               "layoutSizingVertical": "Hug",
               "layerMode": "flex",
               "layerAlign": "start",
               "layerDirection": "horizontal",
-              "layerDistribute": "start",
+              "layerDistribute": "center",
               "borderType": "None",
               "borderWidth": 1,
               "solidFill": {
-                "r": 218,
-                "g": 218,
-                "b": 218,
+                "r": 224,
+                "g": 73,
+                "b": 73,
                 "a": 1,
                 "_type": "Frame",
                 "_id": "db947711832c3solidFill",
@@ -114,9 +117,9 @@
               "fillType": "Solid",
               "parentKey": "$$Frame:09f0c7ed1ef8a",
               "rotation": 0,
-              "left": 489.7571187730826,
-              "top": 69.59920531747329,
-              "positionType": "relative",
+              "left": 596.98046875,
+              "top": 22.66015625,
+              "positionType": "absolute",
               "overrides": [
                 {
                   "_type": "$$Frame",
@@ -137,6 +140,10 @@
                 {
                   "_type": "$$Frame",
                   "_id": "690696a790dd8"
+                },
+                {
+                  "_type": "$$Frame",
+                  "_id": "84ee09ada3fe3"
                 }
               ],
               "overflow": "hidden",
@@ -156,7 +163,13 @@
                   "top": 0,
                   "positionType": "relative",
                   "parentKey": "$$Frame:db947711832c3",
-                  "content": "<p dir=\"ltr\"><span style=\"white-space: pre-wrap;\">Перейти</span></p>"
+                  "content": "<p dir=\"ltr\"><span style=\"white-space: pre-wrap;\">Перейти</span></p>",
+                  "overrides": [
+                    {
+                      "_type": "$$Text",
+                      "_id": "509af9c924179"
+                    }
+                  ]
                 }
               ],
               "cornerRadius": 14,
@@ -172,9 +185,9 @@
             }
           ],
           "rotation": 0,
-          "left": 0,
-          "top": 0,
-          "positionType": "absolute",
+          "left": -67.234375,
+          "top": -39.62890625,
+          "positionType": "relative",
           "overrides": [
             {
               "_type": "$$Frame",
@@ -195,6 +208,10 @@
             {
               "_type": "$$Frame",
               "_id": "a5cdc8f88be8c"
+            },
+            {
+              "_type": "$$Frame",
+              "_id": "e556b06244543"
             }
           ],
           "layerGap": 59,
@@ -209,7 +226,7 @@
         }
       ],
       "layoutSizingHorizontal": "Relative",
-      "layoutSizingVertical": "Relative",
+      "layoutSizingVertical": "Hug",
       "overrides": [
         {
           "_type": "$$Breakpoint",
@@ -230,12 +247,17 @@
         {
           "_type": "$$Breakpoint",
           "_id": "3dafc451d981e"
+        },
+        {
+          "_type": "$$Breakpoint",
+          "_id": "2eca409ee5936"
         }
       ],
       "left": 0,
       "top": 0,
       "positionType": "absolute",
-      "width": 100
+      "width": 100,
+      "height": 100
     }
   ],
   "opacity": 1,
@@ -250,7 +272,6 @@
     "_id": "tablet",
     "isPrimary": true,
     "minWidth": 768,
-    "height": 500,
     "parentKey": "$$Fragment:g34gherhg3g",
     "children": [
       {
@@ -299,6 +320,10 @@
               {
                 "_type": "$$Text",
                 "_id": "b08ec6d430c93"
+              },
+              {
+                "_type": "$$Text",
+                "_id": "02a52677100d2"
               }
             ]
           },
@@ -307,20 +332,20 @@
             "_id": "db947711832c3",
             "opacity": 1,
             "visible": true,
-            "width": 133.39082763496538,
+            "width": 139,
             "height": 64.40079468252671,
-            "layoutSizingHorizontal": "Hug",
+            "layoutSizingHorizontal": "Fixed",
             "layoutSizingVertical": "Hug",
             "layerMode": "flex",
             "layerAlign": "start",
             "layerDirection": "horizontal",
-            "layerDistribute": "start",
+            "layerDistribute": "center",
             "borderType": "None",
             "borderWidth": 1,
             "solidFill": {
-              "r": 218,
-              "g": 218,
-              "b": 218,
+              "r": 224,
+              "g": 73,
+              "b": 73,
               "a": 1,
               "_type": "Frame",
               "_id": "db947711832c3solidFill",
@@ -357,9 +382,9 @@
             "fillType": "Solid",
             "parentKey": "$$Frame:09f0c7ed1ef8a",
             "rotation": 0,
-            "left": 489.7571187730826,
-            "top": 69.59920531747329,
-            "positionType": "relative",
+            "left": 596.98046875,
+            "top": 22.66015625,
+            "positionType": "absolute",
             "overrides": [
               {
                 "_type": "$$Frame",
@@ -380,6 +405,10 @@
               {
                 "_type": "$$Frame",
                 "_id": "690696a790dd8"
+              },
+              {
+                "_type": "$$Frame",
+                "_id": "84ee09ada3fe3"
               }
             ],
             "overflow": "hidden",
@@ -399,7 +428,13 @@
                 "top": 0,
                 "positionType": "relative",
                 "parentKey": "$$Frame:db947711832c3",
-                "content": "<p dir=\"ltr\"><span style=\"white-space: pre-wrap;\">Перейти</span></p>"
+                "content": "<p dir=\"ltr\"><span style=\"white-space: pre-wrap;\">Перейти</span></p>",
+                "overrides": [
+                  {
+                    "_type": "$$Text",
+                    "_id": "509af9c924179"
+                  }
+                ]
               }
             ],
             "cornerRadius": 14,
@@ -415,9 +450,9 @@
           }
         ],
         "rotation": 0,
-        "left": 0,
-        "top": 0,
-        "positionType": "absolute",
+        "left": -67.234375,
+        "top": -39.62890625,
+        "positionType": "relative",
         "overrides": [
           {
             "_type": "$$Frame",
@@ -438,6 +473,10 @@
           {
             "_type": "$$Frame",
             "_id": "a5cdc8f88be8c"
+          },
+          {
+            "_type": "$$Frame",
+            "_id": "e556b06244543"
           }
         ],
         "layerGap": 59,
@@ -452,7 +491,7 @@
       }
     ],
     "layoutSizingHorizontal": "Relative",
-    "layoutSizingVertical": "Relative",
+    "layoutSizingVertical": "Hug",
     "overrides": [
       {
         "_type": "$$Breakpoint",
@@ -473,11 +512,16 @@
       {
         "_type": "$$Breakpoint",
         "_id": "3dafc451d981e"
+      },
+      {
+        "_type": "$$Breakpoint",
+        "_id": "2eca409ee5936"
       }
     ],
     "left": 0,
     "top": 0,
     "positionType": "absolute",
-    "width": 100
+    "width": 100,
+    "height": 100
   }
 }

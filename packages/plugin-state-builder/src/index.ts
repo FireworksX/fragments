@@ -15,6 +15,7 @@ import { cornerExtend } from "@/extends/cornerExtend";
 import { borderExtend } from "@/extends/borderExtend";
 import { layerExtend } from "@/extends/layerExtend";
 import { variableExtend } from "@/extends/variableExtend";
+import { toCssExtend } from "@/extends/toCssExtend";
 
 export const pluginStateBuilder: Plugin = (state, overrides) => {
   addStatic(state);
@@ -35,6 +36,7 @@ export const pluginStateBuilder: Plugin = (state, overrides) => {
         // cloneExtend,
         rectExtend,
         positionExtend,
+        toCssExtend,
       ]),
       [nodes.Frame]: collectExtends([
         // baseExtend,
@@ -51,6 +53,7 @@ export const pluginStateBuilder: Plugin = (state, overrides) => {
         layoutExtend,
         rectExtend,
         frameExtend,
+        toCssExtend,
       ]),
       [nodes.SolidPaintStyle]: collectExtends([solidPaintStyleExtend]),
       [nodes.Variable]: collectExtends([variableExtend]),

@@ -61,7 +61,9 @@ export const creators: Plugin = (state) => {
       const nextScreenLink = primaryBreakpoint.clone();
       const lastScreenRectProps =
         state.constraints.fromProperties(lastBreakpoint);
-      const lastScreenRect = state.constraints.toRect(lastScreenRectProps);
+      const lastScreenRect = state.constraints.toRect({
+        values: lastScreenRectProps,
+      });
 
       const nextBreakpoint = state.mutate(nextScreenLink, {
         ...options,

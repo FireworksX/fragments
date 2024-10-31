@@ -13,6 +13,7 @@ export const breakpointExtend: Extender = ({
     minWidth: graph?.minWidth ?? 320,
     width: 100,
     layoutSizingHorizontal: sizing.Relative,
+    layoutSizingVertical: sizing.Hug,
     setPrimary: () => {
       const primaryScreen = state
         .inspectFields(nodes.Screen)

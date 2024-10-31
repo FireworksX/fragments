@@ -13,7 +13,7 @@ interface TextProps {
   onMouseLeave?: (e, options) => void
 }
 
-export const Text: FC<TextProps> = withStyle(props => {
+export const Text: FC<TextProps> = props => {
   const { documentManager } = useContext(BuilderContext)
   const [layerValue] = useGraph(documentManager, props)
   const layerInvoker = useLayerInvoker(props)
@@ -24,8 +24,8 @@ export const Text: FC<TextProps> = withStyle(props => {
     <animated.div
       className={styles.root}
       data-key={key}
-      style={props.style}
+      // style={props.style}
       dangerouslySetInnerHTML={{ __html: textContent }}
     />
   )
-})
+}

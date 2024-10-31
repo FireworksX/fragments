@@ -8,28 +8,27 @@ import { withDraggable } from '@/widgets/renderer/providers/withDraggable'
 import { LinkKey } from '@graph-state/core'
 
 interface LayerProps {
-  renderKey: LinkKey
+  layerKey: LinkKey
 }
 
-export const Frame: FC<LayerProps> = withStyle(
-  withDraggable(props => {
-    const { documentManager } = useContext(BuilderContext)
-    const key = documentManager.keyOfEntity(props)
+export const Frame: FC<LayerProps> = ({ layerKey }) => {
+  const { documentManager } = useContext(BuilderContext)
+  const layerGraph = documentManager.resolve(layerKey)
+  const cssStyles = layerGraph?.toCss?.() ?? {}
 
-    if (props?._type === nodes.Text) {
-      return <Text {...props} onClick={props.onClick} />
-    }
+  if (!layerGraph) {
+    return null
+  }
 
-    const listeners = Object.fromEntries(Object.entries(props).filter(([propKey]) => propKey.startsWith('on')))
+  if (layerGraph?._type === nodes.Text) {
+    return <Text layerKey={layerKey} />
+  }
 
-    return (
-      <>
-        <animated.div style={props.style} {...listeners} data-key={key}>
-          {props.children?.filter(Boolean).map(child => (
-            <Frame key={child._id} {...child} />
-          ))}
-        </animated.div>
-      </>
-    )
-  })
-)
+  return (
+    <animated.div style={cssStyles} data-key={layerKey}>
+      {layerGraph?.children?.filter(Boolean).map(child => (
+        <Frame key={child._id} layerKey={child} />
+      ))}
+    </animated.div>
+  )
+}

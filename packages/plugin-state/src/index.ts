@@ -23,6 +23,7 @@ import { textExtend } from "@/extends/nodes/textExtend";
 import { StateEntity } from "@/types";
 import { positionExtend } from "@/extends/positionExtend";
 import { rectExtend } from "@/extends/rectExtend";
+import { toCssExtend } from "@/extends/toCssExtend";
 
 const plugin: Plugin = (state: GraphState<StateEntity>, overrides) => {
   addStatic(state);
@@ -58,6 +59,7 @@ const plugin: Plugin = (state: GraphState<StateEntity>, overrides) => {
         cloneExtend,
         positionExtend,
         rectExtend,
+        toCssExtend,
       ]),
       [nodes.SolidPaintStyle]: collectExtends([solidPaintStyleExtend]),
       [nodes.Variable]: collectExtends([variableExtend]),

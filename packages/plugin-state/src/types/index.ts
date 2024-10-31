@@ -33,7 +33,7 @@ export interface ExtenderPayload<TGrpah> {
   state: GraphState;
   graph: TGrpah;
   graphKey: LinkKey;
-  resolveField: (field: string) => unknown;
+  resolveField: (field: string, fallback?: unknown) => unknown;
   getValue: (fieldKey: string, fallbackValue?: unknown) => unknown;
 }
 
