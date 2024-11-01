@@ -13,19 +13,17 @@ interface TextProps {
   onMouseLeave?: (e, options) => void
 }
 
-export const Text: FC<TextProps> = props => {
+export const Text: FC<TextProps> = ({ layerKey }) => {
   const { documentManager } = useContext(BuilderContext)
-  const [layerValue] = useGraph(documentManager, props)
-  const layerInvoker = useLayerInvoker(props)
-  const textContent = layerInvoker('content').value
-  const key = documentManager.keyOfEntity(props)
+  const [layerGraph] = useGraph(documentManager, layerKey)
+  const cssStyles = layerGraph?.toCss?.() ?? {}
 
   return (
     <animated.div
       className={styles.root}
-      data-key={key}
-      // style={props.style}
-      dangerouslySetInnerHTML={{ __html: textContent }}
+      data-key={layerKey}
+      style={cssStyles}
+      dangerouslySetInnerHTML={{ __html: layerGraph.content }}
     />
   )
 }

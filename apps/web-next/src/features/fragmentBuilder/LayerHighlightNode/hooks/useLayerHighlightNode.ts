@@ -6,12 +6,15 @@ import { animatableValue } from '@/shared/utils/animatableValue'
 import { LinkKey } from '@graph-state/core'
 import { omit } from '@fragments/utils'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
+import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderManager'
+import { nodes } from '@fragments/plugin-state'
 
 const BORDER_SIZE = 1.5
 const DRAG_PARENT_BORDER_SIZE = 3
 
 export const useLayerHighlightNode = (layerKey: LinkKey) => {
   const { canvasManager, documentManager } = useContext(BuilderContext)
+  const { isTextEditing } = useBuilderManager()
   const [canvas] = useGraph(canvasManager, canvasManager.key)
   const [layerNode] = useGraph(documentManager, layerKey)
   const { selection, selectionGraph } = useBuilderSelection()
@@ -23,6 +26,7 @@ export const useLayerHighlightNode = (layerKey: LinkKey) => {
     isDragging: canvas.isDragging,
     isHovered: canvas.hoverLayer === layerKey,
     isSelected: selection === layerKey,
+    isRichTextSelected: isTextEditing && selection === layerKey,
     isParentSelected,
     borderWidth: to(canvas.scale, scale => {
       let width = BORDER_SIZE
@@ -35,6 +39,8 @@ export const useLayerHighlightNode = (layerKey: LinkKey) => {
     layerStyles: {
       ...omit(layerStyles, 'backgroundColor', 'borderColor', 'background', 'border')
     },
-    children: layerNode?.children ?? []
+    children: layerNode?.children ?? [],
+    layerNode,
+    textContent: layerNode?._type === nodes.Text && layerNode?.content
   }
 }

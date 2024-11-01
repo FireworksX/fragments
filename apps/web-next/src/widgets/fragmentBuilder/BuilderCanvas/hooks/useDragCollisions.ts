@@ -2,15 +2,26 @@ import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { DragEvent } from './useCanvas'
 import { definitions } from '@fragments/plugin-state'
+import { Rect } from '@fragments/plugin-helpers'
 import { isPartialKey } from '@graph-state/core'
 import { animatableValue } from '@/shared/utils/animatableValue'
+import { getDomRect } from '@/shared/utils/getDomRect'
+
+const domRectToRect = (domRect: DOMRect) => {
+  return {
+    x: domRect.left,
+    y: domRect.top,
+    width: domRect.width,
+    height: domRect.height
+  }
+}
 
 export const useDragCollisions = () => {
   const { documentManager, canvasManager } = useContext(BuilderContext)
 
   const calculateMemoData = (memo, parentLayerKey) => {
     const parentLayerNode = documentManager.resolve(parentLayerKey)
-    const parentLayerRect = animatableValue(parentLayerNode?.absoluteRect?.())
+    const parentLayerRect = domRectToRect(getDomRect(parentLayerKey)) //animatableValue(parentLayerNode?.absoluteRect?.())
 
     const currentBreakpoint = documentManager
       .resolve(memo.targetLayerLink)
@@ -34,7 +45,7 @@ export const useDragCollisions = () => {
 
     const alternativeParents = allCanvasLayersForParent.map(layer => ({
       layerKey: documentManager.keyOfEntity(layer),
-      rect: animatableValue(documentManager.resolve(layer)?.absoluteRect?.())
+      rect: domRectToRect(getDomRect(layer)) //animatableValue(documentManager.resolve(layer)?.absoluteRect?.())
     }))
 
     return {
@@ -60,18 +71,18 @@ export const useDragCollisions = () => {
 
     if (!memo?.collisions) return inputPoint
 
-    const targetLayerRect = animatableValue(memo?.targetLayer?.absoluteRect?.())
+    const targetLayerRect = domRectToRect(getDomRect(memo?.targetLayerLink))
 
     const isInsideOfParent =
       targetLayerRect && memo?.collisions?.parentLayerRect
-        ? documentManager.rect.intersects(memo?.collisions?.parentLayerRect, targetLayerRect)
+        ? Rect.intersects(memo?.collisions?.parentLayerRect, targetLayerRect)
         : false
     const onNextParent = memo?.collisions?.alternativeParents?.findLast(layer => {
-      return documentManager.rect.containsRect(layer.rect, targetLayerRect)
+      return Rect.containsRect(layer.rect, targetLayerRect)
     })
 
     const moveNode = nextParentLink => {
-      const nextParentRect = animatableValue(documentManager.resolve(nextParentLink)?.absoluteRect?.())
+      const nextParentRect = domRectToRect(getDomRect(nextParentLink))
       const offsetLeft = (targetLayerRect.x ?? 0) - (nextParentRect.x ?? 0)
       const offsetTop = (targetLayerRect.y ?? 0) - (nextParentRect.y ?? 0)
 

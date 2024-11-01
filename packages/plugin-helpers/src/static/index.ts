@@ -6,12 +6,16 @@ import { moveNode } from "@/static/moveNode.ts";
 import { creators } from "@/static/creators";
 import { restoreVariableField } from "@/shared/restoreVariableField.ts";
 import { toJSON } from "@/static/toJSON.ts";
+import { constraintsStatic } from "@/static/constraints";
+import { rectStatic } from "@/static/rect";
 
 export const addStatic: Plugin = (state) => {
   overrides(state);
   moveNode(state);
   creators(state);
   toJSON(state);
+  constraintsStatic(state);
+  rectStatic(state);
 
   state.getKey = getKey;
   state.setKey = setKey;

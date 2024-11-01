@@ -28,7 +28,6 @@ import {
   CreateBooleanOptions,
   createBooleanVariable,
 } from "@/static/creators/variables/createBooleanVariable.ts";
-import { Rect } from "@fragments/plugin-helpers";
 
 interface CreateSolidPaintStyleOptions {
   color: Color;
@@ -60,15 +59,17 @@ export const creators: Plugin = (state) => {
     if (primaryBreakpoint) {
       const lastBreakpoint = state.atBreakpoint(-1);
       const nextScreenLink = primaryBreakpoint.clone();
+      const lastScreenRectProps =
+        state.constraints.fromProperties(lastBreakpoint);
+      const lastScreenRect = state.constraints.toRect({
+        values: lastScreenRectProps,
+      });
 
       const nextBreakpoint = state.mutate(nextScreenLink, {
         ...options,
         isPrimary: false,
-        top: lastBreakpoint.resolveField("top"),
-        left:
-          lastBreakpoint.resolveField("left") +
-          lastBreakpoint.resolveField("minWidth") +
-          BREAKPOINT_GAP,
+        top: lastScreenRectProps.top,
+        left: state.rect.maxX(lastScreenRect) + BREAKPOINT_GAP,
       });
 
       state.mutate(state.key, {

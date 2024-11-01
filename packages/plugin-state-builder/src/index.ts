@@ -5,7 +5,6 @@ import { collectExtends } from "src/extends";
 import { positionExtend } from "@/extends/positionExtend";
 import { layoutExtend } from "@/extends/layoutExtend";
 import { addStatic } from "@/static";
-import { rectExtend } from "@/extends/rectExtend";
 import { frameExtend } from "@/extends/nodes/frameExtend";
 import { fragmentExtend } from "@/extends/nodes/fragmentExtend";
 import { solidPaintStyleExtend } from "@/extends/nodes/solidPaintStyleExtend";
@@ -27,14 +26,12 @@ export const pluginStateBuilder: Plugin = (state, overrides) => {
         // baseExtend,
         // childrenExtend,
         // sceneExtend,
-        rectExtend,
       ]),
       [nodes.Breakpoint]: collectExtends([
         // breakpointExtend,
         // baseExtend,
         // childrenExtend,
         // cloneExtend,
-        rectExtend,
         positionExtend,
         toCssExtend,
       ]),
@@ -51,7 +48,6 @@ export const pluginStateBuilder: Plugin = (state, overrides) => {
         // cloneExtend,
         positionExtend,
         layoutExtend,
-        rectExtend,
         frameExtend,
         toCssExtend,
       ]),
@@ -62,9 +58,9 @@ export const pluginStateBuilder: Plugin = (state, overrides) => {
       [nodes.Text]: collectExtends([
         positionExtend,
         layoutExtend,
-        rectExtend,
         sceneExtend,
         borderExtend,
+        toCssExtend,
       ]),
     },
     {

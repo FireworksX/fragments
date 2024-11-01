@@ -6,3 +6,12 @@
   z-index: var(--z-index-builder-tools);
 }
 
+
+.breakpointWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  transform: translateY(calc(-100% - var(--gutter-medium)));
+  pointer-events: auto;
+}

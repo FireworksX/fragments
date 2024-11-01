@@ -1,15 +1,18 @@
 import { FC } from 'react'
 import cn from 'classnames'
+import { SpringValue, animated } from '@react-spring/web'
+import { LinkKey } from '@graph-state/core'
 import styles from './styles.module.css'
 import Plus from '@/shared/icons/plus.svg'
 import { Dropdown } from '@/shared/ui/Dropdown'
 import { DropdownGroup } from '@/shared/ui/DropdownGroup'
 import { DropdownOption } from '@/shared/ui/DropdownOption'
 import { Touchable } from '@/shared/ui/Touchable'
-import { SpringValue, animated } from '@react-spring/web'
+import { useHeaderBreakpoint } from '../hooks/useHeaderBreakpoint'
 
 interface HeaderBreakpointProps {
   className?: string
+  layerKey: LinkKey
   name?: string
   width?: number | SpringValue<number>
   activeWidths?: number[]
@@ -32,14 +35,8 @@ const baseBreakpoints = [
   }
 ]
 
-const HeaderBreakpoint: FC<HeaderBreakpointProps> = ({
-  className,
-  activeWidths,
-  name,
-  width,
-  onClickBreakpoint,
-  onClickCustom
-}) => {
+const HeaderBreakpoint: FC<HeaderBreakpointProps> = ({ className, layerKey }) => {
+  const { name, activeWidths, width, handleNewBreakpoint, handleCustomBreakpoint } = useHeaderBreakpoint(layerKey)
   const availableBreakpoints = baseBreakpoints.filter(({ width }) => !activeWidths?.includes(width))
 
   return (
@@ -47,7 +44,7 @@ const HeaderBreakpoint: FC<HeaderBreakpointProps> = ({
       <div className={styles.title}>
         {name} <animated.span className={styles.width}>{width}</animated.span>
       </div>
-      {onClickBreakpoint && (
+      {handleNewBreakpoint && (
         <Dropdown
           trigger='click'
           options={
@@ -56,12 +53,12 @@ const HeaderBreakpoint: FC<HeaderBreakpointProps> = ({
                 <DropdownOption
                   key={point.label}
                   indicator={point.width}
-                  onClick={() => onClickBreakpoint && onClickBreakpoint(point.label, point.width)}
+                  onClick={() => handleNewBreakpoint && handleNewBreakpoint(point.label, point.width)}
                 >
                   {point.label}
                 </DropdownOption>
               ))}
-              <DropdownOption onClick={onClickCustom}>Custom</DropdownOption>
+              <DropdownOption onClick={handleCustomBreakpoint}>Custom</DropdownOption>
             </DropdownGroup>
           }
         >

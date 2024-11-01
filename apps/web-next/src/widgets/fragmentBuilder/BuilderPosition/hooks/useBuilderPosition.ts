@@ -10,30 +10,17 @@ export const useBuilderPosition = () => {
   const { documentManager } = useContext(BuilderContext)
   const { selection, selectionGraph } = useBuilderSelection()
   const [selectionNode] = useGraph(documentManager, selection)
-  const selectionRect = selectionNode?.rect()
 
-  const layerInvoker = useLayerInvoker(
-    selection,
-    ({ key, node, value, prevValue }) => {
-      switch (key) {
-        case 'positionType':
-          return node.setPositionType(value)
-        case 'x':
-          return node.move(value)
-        case 'y':
-          return node.move(null, value)
-      }
-    },
-    ({ key, node }) => {
-      const rect = node?.rect?.() ?? {}
-      switch (key) {
-        case 'x':
-          return to(rect, ({ x }) => x ?? 0)
-        case 'y':
-          return to(rect, ({ y }) => y ?? 0)
-      }
+  const layerInvoker = useLayerInvoker(selection, ({ key, node, value, prevValue }) => {
+    switch (key) {
+      case 'positionType':
+        return node.setPositionType(value)
+      case 'x':
+        return node.move(value)
+      case 'y':
+        return node.move(null, value)
     }
-  )
+  })
 
   const disabledFlags = useMemo(() => {
     const parentNode = selectionNode?.getParent?.()
@@ -62,8 +49,8 @@ export const useBuilderPosition = () => {
       ],
       ...layerInvoker('positionType')
     },
-    x: layerInvoker('x'),
-    y: layerInvoker('y')
+    x: layerInvoker('left'),
+    y: layerInvoker('top')
     // top: to(selectionRect, ({ y }) => y),
     // left: to(selectionRect, ({ x }) => x),
     // right: to(selectionRect, rect => documentManager.rect.maxX(rect)),

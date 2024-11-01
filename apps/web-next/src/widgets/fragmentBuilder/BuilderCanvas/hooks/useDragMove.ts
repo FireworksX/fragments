@@ -8,11 +8,12 @@ export const useDragMove = () => {
 
   return ({ memo, movement: [mx, my], first }: DragEvent) => {
     if (first) {
-      const rect = animatableValue(memo.targetLayer?.rect?.())
+      const left = animatableValue(memo.targetLayer?.resolveField('left'))
+      const top = animatableValue(memo.targetLayer?.resolveField('top'))
 
       memo.from = {
-        x: animatableValue(rect.x),
-        y: animatableValue(rect.y)
+        x: left,
+        y: top
       }
     }
 

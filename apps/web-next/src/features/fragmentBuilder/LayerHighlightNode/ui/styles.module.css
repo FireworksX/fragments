@@ -2,6 +2,13 @@
     z-index: var(--z-index-builder-tools);
     pointer-events: none;
     overflow: visible !important;
+
+    & p {
+        margin: 0;
+        padding: 0;
+        white-space: pre-wrap;
+        pointer-events: none;
+    }
 }
 
 .mask {

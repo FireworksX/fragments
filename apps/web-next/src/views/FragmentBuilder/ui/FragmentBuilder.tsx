@@ -59,10 +59,7 @@ export const FragmentBuilder: FC<FragmentBuilderProps> = ({ className }) => {
           <BuilderSidebar isOpen={isEdit} assetsNode={<BuilderAssets />} layersNode={<BuilderLayers />} />
 
           <BuilderCanvas>
-            <BuilderTextEditor />
-            <BuilderHighlight>
-              <BuilderHighlightHeaders />
-            </BuilderHighlight>
+            <BuilderHighlight />
 
             <DisplayBreakpoints />
           </BuilderCanvas>

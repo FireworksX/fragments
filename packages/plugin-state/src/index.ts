@@ -22,7 +22,6 @@ import { computedValueExtend } from "@/extends/nodes/computedValueExtend";
 import { textExtend } from "@/extends/nodes/textExtend";
 import { StateEntity } from "@/types";
 import { positionExtend } from "@/extends/positionExtend";
-import { rectExtend } from "@/extends/rectExtend";
 import { toCssExtend } from "@/extends/toCssExtend";
 
 const plugin: Plugin = (state: GraphState<StateEntity>, overrides) => {
@@ -34,7 +33,6 @@ const plugin: Plugin = (state: GraphState<StateEntity>, overrides) => {
         fragmentExtend,
         baseExtend,
         childrenExtend,
-        rectExtend,
         sceneExtend,
       ]),
       [nodes.Breakpoint]: collectExtends([
@@ -44,7 +42,6 @@ const plugin: Plugin = (state: GraphState<StateEntity>, overrides) => {
         cloneExtend,
         layoutExtend,
         positionExtend,
-        rectExtend,
       ]),
       [nodes.Frame]: collectExtends([
         baseExtend,
@@ -58,7 +55,6 @@ const plugin: Plugin = (state: GraphState<StateEntity>, overrides) => {
         fillExtend,
         cloneExtend,
         positionExtend,
-        rectExtend,
         toCssExtend,
       ]),
       [nodes.SolidPaintStyle]: collectExtends([solidPaintStyleExtend]),
@@ -72,7 +68,6 @@ const plugin: Plugin = (state: GraphState<StateEntity>, overrides) => {
         cloneExtend,
         layoutExtend,
         positionExtend,
-        rectExtend,
       ]),
     },
     {

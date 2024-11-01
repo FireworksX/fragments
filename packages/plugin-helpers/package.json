@@ -1,5 +1,5 @@
 {
-  "name": "@fragments/plugin-state",
+  "name": "@fragments/plugin-helpers",
   "private": false,
   "version": "0.0.1",
   "type": "module",
@@ -24,10 +24,8 @@
   },
   "dependencies": {
     "@graph-state/core": "^0.7.0",
-    "@graph-state/plugin-extend": "^0.4.0",
     "@graph-state/checkers": "^0.1.2",
-    "@fragments/utils": "workspace:*",
-    "@fragments/plugin-helpers": "workspace:*"
+    "@fragments/utils": "workspace:*"
   },
   "devDependencies": {
     "tsup": "^7.2.0",
