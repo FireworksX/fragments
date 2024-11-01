@@ -37,7 +37,8 @@ export const useLayerHighlightNode = (layerKey: LinkKey) => {
       return width / scale
     }),
     layerStyles: {
-      ...omit(layerStyles, 'backgroundColor', 'borderColor', 'background', 'border')
+      ...omit(layerStyles, 'backgroundColor', 'borderColor', 'background'),
+      borderColor: 'transparent'
     },
     children: layerNode?.children ?? [],
     layerNode,

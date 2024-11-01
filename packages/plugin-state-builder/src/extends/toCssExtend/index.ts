@@ -4,7 +4,8 @@ import { positionStylesExtend } from "./styles/positionStylesExtend.ts";
 import { sizeStylesExtend } from "./styles/sizeStylesExtend.ts";
 import { layoutStylesExtend } from "./styles/layoutStylesExtend.ts";
 import { cornerStylesExtend } from "./styles/cornerStylesExtend.ts";
-import { fillStylesExtend } from "@/extends/toCssExtend/styles/fillStylesExtend.ts";
+import { fillStylesExtend } from "./styles/fillStylesExtend.ts";
+import { borderStylesExtend } from "./styles/borderStylesExtend.ts";
 
 export const toCssExtend: Extender = (payload) => {
   return {
@@ -16,6 +17,7 @@ export const toCssExtend: Extender = (payload) => {
       const layoutStyles = layoutStylesExtend(payload);
       const cornerStyles = cornerStylesExtend(payload);
       const fillStyles = fillStylesExtend(payload);
+      const borderStyles = borderStylesExtend(payload);
 
       return {
         ...sceneStyles,
@@ -24,6 +26,7 @@ export const toCssExtend: Extender = (payload) => {
         ...layoutStyles,
         ...cornerStyles,
         ...fillStyles,
+        ...borderStyles,
       };
     },
   };

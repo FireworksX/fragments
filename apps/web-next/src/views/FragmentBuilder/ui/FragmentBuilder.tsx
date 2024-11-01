@@ -60,9 +60,9 @@ export const FragmentBuilder: FC<FragmentBuilderProps> = ({ className }) => {
 
           <BuilderCanvas>
             <BuilderHighlight />
-
             <DisplayBreakpoints />
           </BuilderCanvas>
+
           <BuilderControls
             isOpen={isEdit}
             position='right'

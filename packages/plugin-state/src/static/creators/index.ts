@@ -29,6 +29,7 @@ import {
   createBooleanVariable,
 } from "@/static/creators/variables/createBooleanVariable.ts";
 import { Rect } from "@fragments/plugin-helpers";
+import { animatableValue } from "@/shared/animatableValue.ts";
 
 interface CreateSolidPaintStyleOptions {
   color: Color;
@@ -66,8 +67,8 @@ export const creators: Plugin = (state) => {
         isPrimary: false,
         top: lastBreakpoint.resolveField("top"),
         left:
-          lastBreakpoint.resolveField("left") +
-          lastBreakpoint.resolveField("minWidth") +
+          animatableValue(lastBreakpoint.resolveField("left")) +
+          animatableValue(lastBreakpoint.resolveField("minWidth")) +
           BREAKPOINT_GAP,
       });
 
