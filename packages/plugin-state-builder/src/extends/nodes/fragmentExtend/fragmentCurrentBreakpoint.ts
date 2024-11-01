@@ -35,8 +35,12 @@ export const fragmentCurrentBreakpoint: Extender = (
     setWidth: (value: number) => {
       setWidth(value);
 
+      const aa = computeCurrentBreakpoint(value);
+
+      console.log(aa);
+
       state.mutate(graphKey, {
-        currentBreakpoint: computeCurrentBreakpoint(value),
+        currentBreakpoint: aa,
       });
     },
   };

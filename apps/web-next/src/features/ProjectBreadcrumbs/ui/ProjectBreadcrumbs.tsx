@@ -1,7 +1,7 @@
 'use client'
 import { FC } from 'react'
 import styles from './styles.module.css'
-import FragmentsLogo from '@/shared/icons/fragments-logo.svg'
+import FragmentsLogo from '@/shared/icons/next/logo.svg'
 import { useParams } from 'next/navigation'
 import { Link } from '@/shared/ui/Link/ui/Link'
 import { Touchable } from '@/shared/ui/Touchable'
@@ -20,7 +20,7 @@ export const ProjectBreadcrumbs: FC = () => {
     <div className={styles.root}>
       <Link type='projectsList'>
         <Touchable>
-          <FragmentsLogo width={24} height={24} />
+          <FragmentsLogo className={styles.logo} width={24} height={24} />
         </Touchable>
       </Link>
 

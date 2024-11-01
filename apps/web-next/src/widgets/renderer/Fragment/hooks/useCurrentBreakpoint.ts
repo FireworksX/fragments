@@ -10,6 +10,7 @@ export const useCurrentBreakpoint = () => {
 
   return {
     currentBreakpoint,
+    currentBreakpointKey: fragment.currentBreakpoint,
     isCanvas: fragment?.renderTarget === renderTarget.canvas,
     fragmentKey: documentManager.key,
     fragmentRect: fragment

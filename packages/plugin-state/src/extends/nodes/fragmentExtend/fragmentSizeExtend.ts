@@ -28,8 +28,6 @@ export const fragmentSizeExtend: Extender = ({
         node.setHeight(entity.contentRect.height);
       });
 
-      console.log(domTarget, targetParent);
-
       if (targetParent) {
         parentObserver.observe(targetParent);
         detachParentObserver = () => parentObserver.unobserve(targetParent);
@@ -39,12 +37,16 @@ export const fragmentSizeExtend: Extender = ({
 
   if (isBrowser) {
     state.subscribe(graphKey, (nextValue, prevValue) => {
-      if (nextValue.renderMode !== prevValue.renderMode) {
+      if (
+        nextValue.renderMode !== prevValue.renderMode ||
+        nextValue.renderTarget !== prevValue.renderTarget
+      ) {
         detachParentObserver?.();
-
         initRenderModes();
       }
     });
+
+    initRenderModes();
   }
 
   return {

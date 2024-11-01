@@ -4,6 +4,10 @@
     gap: var(--gutter-default);
 }
 
+.logo {
+    color: var(--text-color-accent);
+}
+
 .delimiter {
     width: 2px;
     height: 20px;

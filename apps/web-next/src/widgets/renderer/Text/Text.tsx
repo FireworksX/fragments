@@ -18,7 +18,7 @@ export const Text: FC<TextProps> = ({ layerKey }) => {
       className={styles.root}
       data-key={layerKey}
       style={cssStyles}
-      dangerouslySetInnerHTML={{ __html: layerGraph.content }}
+      dangerouslySetInnerHTML={{ __html: layerGraph?.content }}
     />
   )
 }

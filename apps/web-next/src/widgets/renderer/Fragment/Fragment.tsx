@@ -10,11 +10,12 @@ export interface DocumentRenderer {
 }
 
 export const Fragment: FC<DocumentRenderer> = () => {
-  const { currentBreakpoint, isCanvas, fragmentKey, fragmentRect } = useCurrentBreakpoint()
+  const { currentBreakpoint, currentBreakpointKey, isCanvas, fragmentKey, fragmentRect } = useCurrentBreakpoint()
 
   return (
     <animated.div data-key={fragmentKey} style={{ ...extractAnimatableValues(fragmentRect, ['width', 'height']) }}>
       <Frame
+        layerKey={currentBreakpointKey}
         {...(isCanvas
           ? currentBreakpoint
           : {

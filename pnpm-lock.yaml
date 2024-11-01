@@ -73,17 +73,17 @@ importers:
         specifier: ^0.1.2
         version: 0.1.2
       '@graph-state/core':
-        specifier: ^0.7.0
-        version: 0.7.0
+        specifier: ^0.9.0
+        version: 0.9.0
       '@graph-state/plugin-extend':
-        specifier: ^0.4.0
-        version: 0.4.0
+        specifier: ^0.5.0
+        version: 0.5.0
       '@graph-state/plugin-logger':
-        specifier: ^0.2.1
-        version: 0.2.1
+        specifier: ^0.2.2
+        version: 0.2.2
       '@graph-state/react':
-        specifier: ^0.4.0
-        version: 0.4.0(react@18.3.1)
+        specifier: ^0.5.0
+        version: 0.5.0(react@18.3.1)
       '@lexical/html':
         specifier: ^0.17.0
         version: 0.17.0
@@ -249,11 +249,11 @@ importers:
         specifier: ^0.1.2
         version: 0.1.2
       '@graph-state/core':
-        specifier: ^0.7.0
-        version: 0.7.0
+        specifier: ^0.9.0
+        version: 0.9.0
       '@graph-state/plugin-extend':
-        specifier: ^0.4.0
-        version: 0.4.0
+        specifier: ^0.5.0
+        version: 0.5.0
     devDependencies:
       tsup:
         specifier: ^7.2.0
@@ -296,11 +296,11 @@ importers:
   packages/renderer:
     dependencies:
       '@graph-state/core':
-        specifier: ^0.6.7
-        version: 0.6.7
+        specifier: ^0.9.0
+        version: 0.9.0
       '@graph-state/react':
-        specifier: ^0.3.2
-        version: 0.3.2(react@18.3.1)
+        specifier: ^0.5.0
+        version: 0.5.0(react@18.3.1)
       preact:
         specifier: 10.23.2
         version: 10.23.2
@@ -1502,25 +1502,23 @@ packages:
   '@graph-state/checkers@0.1.2':
     resolution: {integrity: sha512-aKjOVVE5BfsNWZrBElNRx23ThP5NiqVqH3++iBXMrlD6cN/jawyTeaEOa+wqh7uN9bowD4tkfQK2OecepElL7w==}
 
-  '@graph-state/core@0.6.7':
-    resolution: {integrity: sha512-QSW7cNDtnxOeQcGe7ugFGxIyxYdrMG3cfXgiWmApHpq7wLFEYba/0pBD9vl7IEJ2Om4t6PuUvTxV2zqbvyQUgA==}
-
   '@graph-state/core@0.7.0':
     resolution: {integrity: sha512-qJhPF8CIPM+fjSSHe1KYZdBSyp+XZjYAvSe0U/4b+ro/1yCXhT5o5ZVvdy9Oie3lZqRfBB8adxeSX80ixlw3Pg==}
+
+  '@graph-state/core@0.9.0':
+    resolution: {integrity: sha512-rmOvblUhrNB5LNZ9aDxJvcI8VOkK2v3EdBOpOk0Mwe4mkbL3T5NNBRydr2z7EcS9djhE9kD8VyG1rs1bj5zmHw==}
 
   '@graph-state/plugin-extend@0.4.0':
     resolution: {integrity: sha512-H9FdyIPMgfL88lHcl8o2KFTL8qDm0Bg6nKozzeQhb8xcG8d2PN5oWtD5SZ2HoQltb/HVOStUIthhPkIk1Ct+1A==}
 
-  '@graph-state/plugin-logger@0.2.1':
-    resolution: {integrity: sha512-vyZGPx+x3cGFf5ahrsxx0ZJjhx1xdRUrLqDs7cha/mlb+F9UneH36cKo67mw/Tci70+EioEHs4EonZzlmwpyQw==}
+  '@graph-state/plugin-extend@0.5.0':
+    resolution: {integrity: sha512-IxiMqqeyjjMaDcEb82nc3LttmezUeUbZk1VMIgUPh1Is10fQA+OPO0G1Ye7ZtY80eqqAwquiHvNWs3ktg+pkxA==}
 
-  '@graph-state/react@0.3.2':
-    resolution: {integrity: sha512-r84zXC39zebtuzCu8QuIvqkB0IZOLPl8kwKNG5Lyn1jQx4LVW4bgnqJLFQfHv7Dy+IvzswWnP08KGAd6UBm+Dw==}
-    peerDependencies:
-      react: '>=16.8.0'
+  '@graph-state/plugin-logger@0.2.2':
+    resolution: {integrity: sha512-3iO9Zzam7DdrLzxgic66po/VZvM3RCaRrqayzqJN4jnWdDjTj0E1V5CZkWV8bQ8W0KHNPFpI3uNdzzTRrNHp6w==}
 
-  '@graph-state/react@0.4.0':
-    resolution: {integrity: sha512-38olwYTqFkY/pMtw/a34JYbBIWNEXB3Pn8hTfKaTzCgRElAlQA6dTrp1nuZPWZHAjqgJXujgUw3XHsg5MNYoOg==}
+  '@graph-state/react@0.5.0':
+    resolution: {integrity: sha512-QfUx+Kbtx27O+e+TBM9Rajz7YNBPbSYZbQVuqRAG3H/vrk6btJD0ejie8uEHbyeRGR1NI+pOGqBKUj3ATYPy8g==}
     peerDependencies:
       react: '>=16.8.0'
 
@@ -7181,31 +7179,29 @@ snapshots:
 
   '@graph-state/checkers@0.1.2': {}
 
-  '@graph-state/core@0.6.7':
+  '@graph-state/core@0.7.0':
     dependencies:
       '@graph-state/checkers': 0.1.2
 
-  '@graph-state/core@0.7.0':
+  '@graph-state/core@0.9.0':
     dependencies:
       '@graph-state/checkers': 0.1.2
 
   '@graph-state/plugin-extend@0.4.0':
     dependencies:
-      '@graph-state/core': 0.6.7
-
-  '@graph-state/plugin-logger@0.2.1':
-    dependencies:
-      '@graph-state/core': 0.6.7
-
-  '@graph-state/react@0.3.2(react@18.3.1)':
-    dependencies:
       '@graph-state/core': 0.7.0
-      react: 18.3.1
-      use-sync-external-store: 1.2.2(react@18.3.1)
 
-  '@graph-state/react@0.4.0(react@18.3.1)':
+  '@graph-state/plugin-extend@0.5.0':
     dependencies:
-      '@graph-state/core': 0.6.7
+      '@graph-state/core': 0.9.0
+
+  '@graph-state/plugin-logger@0.2.2':
+    dependencies:
+      '@graph-state/core': 0.9.0
+
+  '@graph-state/react@0.5.0(react@18.3.1)':
+    dependencies:
+      '@graph-state/core': 0.9.0
       react: 18.3.1
       use-sync-external-store: 1.2.2(react@18.3.1)
 
