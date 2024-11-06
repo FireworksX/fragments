@@ -38,8 +38,8 @@ export const fragmentSizeExtend: Extender = ({
   if (isBrowser) {
     state.subscribe(graphKey, (nextValue, prevValue) => {
       if (
-        nextValue.renderMode !== prevValue.renderMode ||
-        nextValue.renderTarget !== prevValue.renderTarget
+        nextValue.renderMode !== prevValue?.renderMode ||
+        nextValue.renderTarget !== prevValue?.renderTarget
       ) {
         detachParentObserver?.();
         initRenderModes();

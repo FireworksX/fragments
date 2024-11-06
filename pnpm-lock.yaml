@@ -73,8 +73,8 @@ importers:
         specifier: ^0.1.2
         version: 0.1.2
       '@graph-state/core':
-        specifier: ^0.9.0
-        version: 0.9.0
+        specifier: ^0.9.1
+        version: 0.9.1
       '@graph-state/plugin-extend':
         specifier: ^0.5.0
         version: 0.5.0
@@ -1507,6 +1507,9 @@ packages:
 
   '@graph-state/core@0.9.0':
     resolution: {integrity: sha512-rmOvblUhrNB5LNZ9aDxJvcI8VOkK2v3EdBOpOk0Mwe4mkbL3T5NNBRydr2z7EcS9djhE9kD8VyG1rs1bj5zmHw==}
+
+  '@graph-state/core@0.9.1':
+    resolution: {integrity: sha512-AT/h4GHqoylAtVEs7N1+lKtLNw5hadSkA7He5r8IFE9dTne6ow3sDFfyREEP0xV7w0r4EpGu5kCPbwxrsb9iRw==}
 
   '@graph-state/plugin-extend@0.4.0':
     resolution: {integrity: sha512-H9FdyIPMgfL88lHcl8o2KFTL8qDm0Bg6nKozzeQhb8xcG8d2PN5oWtD5SZ2HoQltb/HVOStUIthhPkIk1Ct+1A==}
@@ -7187,21 +7190,25 @@ snapshots:
     dependencies:
       '@graph-state/checkers': 0.1.2
 
+  '@graph-state/core@0.9.1':
+    dependencies:
+      '@graph-state/checkers': 0.1.2
+
   '@graph-state/plugin-extend@0.4.0':
     dependencies:
-      '@graph-state/core': 0.7.0
+      '@graph-state/core': 0.9.1
 
   '@graph-state/plugin-extend@0.5.0':
     dependencies:
-      '@graph-state/core': 0.9.0
+      '@graph-state/core': 0.9.1
 
   '@graph-state/plugin-logger@0.2.2':
     dependencies:
-      '@graph-state/core': 0.9.0
+      '@graph-state/core': 0.9.1
 
   '@graph-state/react@0.5.0(react@18.3.1)':
     dependencies:
-      '@graph-state/core': 0.9.0
+      '@graph-state/core': 0.9.1
       react: 18.3.1
       use-sync-external-store: 1.2.2(react@18.3.1)
 

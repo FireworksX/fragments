@@ -10,9 +10,10 @@ export const fragmentCurrentBreakpoint: Extender = (
   { setWidth }: SizingFragmentExtend
 ) => {
   const computeCurrentBreakpoint = (width: number) => {
-    const breakpoints = (state.resolve(state)?.children ?? []).map(
+    const breakpoints = (state.resolve(graphKey)?.children ?? []).map(
       state.resolve
     );
+
     const breakpointWithRects = breakpoints?.map((breakpoint) => ({
       breakpoint,
       threshold: animatableValue(breakpoint.minWidth),
@@ -36,8 +37,6 @@ export const fragmentCurrentBreakpoint: Extender = (
       setWidth(value);
 
       const aa = computeCurrentBreakpoint(value);
-
-      console.log(aa);
 
       state.mutate(graphKey, {
         currentBreakpoint: aa,

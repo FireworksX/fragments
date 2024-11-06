@@ -40,7 +40,12 @@ export const LayerHighlightNode: FC<LayerHighlightDraggingProps> = ({
   const resultChildren = renderChildren ? renderChildren(layerNode) : null
 
   return (
-    <animated.div className={cn(styles.root, className)} style={layerStyles}>
+    <animated.div
+      data-highlight-key={layerKey}
+      data-highlight-type={layerNode._type}
+      className={cn(styles.root, className)}
+      style={layerStyles}
+    >
       {(isHovered || isSelected || isParentSelected) && (
         <animated.div
           data-testid='highlight'

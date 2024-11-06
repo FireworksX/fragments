@@ -44,20 +44,28 @@ export const useCanvas = () => {
     canvasManager.updateBound(measure.left, measure.top, measure.width, measure.height)
   }, [canvasManager, measure])
 
+  const findLayerFromPointerEvent = event => {
+    const elementFromPoint = document.elementFromPoint?.(event.clientX, event.clientY)
+    const parentFragment = elementFromPoint?.closest(`[data-type="${nodes.FragmentInstance}"]`)
+    return (parentFragment ?? elementFromPoint).getAttribute('data-key')
+  }
+
   useGesture(
     {
       onMouseMove: ({ event, dragging, moving, wheeling }) => {
         if (dragging || moving || wheeling) return
-
-        const elementFromPoint = document.elementFromPoint(event.clientX, event.clientY)
-        const layerKey = elementFromPoint.getAttribute('data-key')
-        canvasManager.setHoverLayer(layerKey)
+        canvasManager.setHoverLayer(findLayerFromPointerEvent(event))
       },
       onClick: ({ event }) => {
-        const elementFromPoint = document.elementFromPoint(event.clientX, event.clientY)
-        if (elementFromPoint && elementFromPoint instanceof HTMLElement && elementFromPoint.getAttribute('data-key')) {
+        const layerKey = findLayerFromPointerEvent(event)
+
+        if (documentManager.entityOfKey(layerKey)?._type === nodes.FragmentInstance) {
+          builderManager.toggleTextEditor(false)
+          updateParams({
+            focus: layerKey
+          })
+        } else if (layerKey) {
           if (!isTextEditing) {
-            const layerKey = elementFromPoint.getAttribute('data-key')
             const clickedLayerValue = documentManager.resolve(layerKey)
 
             if (clickedLayerValue?._type === definitions.nodes.Text && event.detail === 2) {
@@ -94,8 +102,7 @@ export const useCanvas = () => {
         if (pinching) cancel()
 
         if (first) {
-          const elementFromPoint = document.elementFromPoint(event.clientX, event.clientY)
-          const layerKey = elementFromPoint.getAttribute('data-key')
+          const layerKey = findLayerFromPointerEvent(event)
           const layerNode = documentManager.resolve(layerKey)
 
           if (layerNode?._type !== nodes.Breakpoint) {

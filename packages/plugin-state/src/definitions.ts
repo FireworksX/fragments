@@ -4,6 +4,7 @@ export const $EXTENDED: unique symbol = Symbol("extended");
 
 export const nodes = createConstants(
   "Fragment",
+  "FragmentInstance",
   "Breakpoint",
   "Frame",
   "Text",

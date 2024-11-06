@@ -35,6 +35,14 @@ const plugin: Plugin = (state: GraphState<StateEntity>, overrides) => {
         childrenExtend,
         sceneExtend,
       ]),
+      [nodes.FragmentInstance]: collectExtends([
+        baseExtend,
+        childrenExtend,
+        sceneExtend,
+        positionExtend,
+        layoutExtend,
+        toCssExtend,
+      ]),
       [nodes.Breakpoint]: collectExtends([
         breakpointExtend,
         baseExtend,

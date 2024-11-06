@@ -5,22 +5,11 @@ import { Interpolation, SpringValue } from "@react-spring/web";
 export const toJSON: Plugin = (state) => {
   const nodeToJSON = (node: unknown) => {
     const resultNode = Object.entries(node).reduce((acc, [key, value]) => {
-      if (isPrimitive(value) && value) {
-        return { ...acc, [key]: value };
-      }
-
-      if (Array.isArray(value) && value.length) {
-        return { ...acc, [key]: value.map(nodeToJSON) };
-      }
-
-      if (isObject(value)) {
-        return {
-          ...acc,
-          [key]:
-            value instanceof SpringValue || value instanceof Interpolation
-              ? value.toJSON()
-              : nodeToJSON(value),
-        };
+      if (typeof value !== "function" && typeof value !== "symbol") {
+        acc[key] =
+          value instanceof SpringValue || value instanceof Interpolation
+            ? value.toJSON()
+            : value;
       }
 
       return acc;
@@ -30,6 +19,10 @@ export const toJSON: Plugin = (state) => {
   };
 
   state.toJSONState = () => {
-    return nodeToJSON(state.resolve(state, { deep: true }));
+    const graphs = state.cache.links.values();
+
+    return Array.from(graphs).map((value) => {
+      return nodeToJSON(value);
+    });
   };
 };

@@ -4,6 +4,7 @@ import { animated, Interpolation, SpringValue, to, useSpring } from '@react-spri
 import { Text } from '@/widgets/renderer/Text/Text'
 import { nodes } from '@fragments/plugin-state'
 import { LinkKey } from '@graph-state/core'
+import { FragmentInstance } from '@/widgets/renderer/FragmentInstance/FragmentInstance'
 
 interface LayerProps {
   layerKey: LinkKey
@@ -16,6 +17,10 @@ export const Frame: FC<LayerProps> = ({ layerKey }) => {
 
   if (!layerGraph) {
     return null
+  }
+
+  if (layerGraph?._type === nodes.FragmentInstance) {
+    return <FragmentInstance layerKey={layerKey} />
   }
 
   if (layerGraph?._type === nodes.Text) {

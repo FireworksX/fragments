@@ -26,7 +26,8 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
   const [editLabel, setEditLabel] = useState<string | undefined>()
   const isActiveEdit = isValue(editLabel)
 
-  const { type, name, hasChildren, partialSelected, handleSelect, selected, rename } = useBuilderLayerCell(layerKey)
+  const { type, name, isFragment, hasChildren, partialSelected, handleSelect, selected, rename } =
+    useBuilderLayerCell(layerKey)
   const flags = useBuilderLayerFlags(layerKey)
 
   // const {
@@ -90,8 +91,12 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
       states.push(partialSelected ? styles.emptyPartial : styles.empty)
     }
 
+    if (isFragment) {
+      states.push(selected ? styles.selectedFragment : styles.fragment)
+    }
+
     return [background, radius, states]
-  }, [collapsed, hasChildren, isLast, partialSelected, selected])
+  }, [collapsed, hasChildren, isFragment, isLast, partialSelected, selected])
 
   return (
     <Dropdown
@@ -155,6 +160,7 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
             hasLayout={flags.hasLayout$}
             primaryIconClassName={styles.primaryIcon}
             textIconClassName={styles.textIcon}
+            fragmentIconClassName={styles.fragmentIcon}
           />
         </div>
         <div

@@ -4,7 +4,7 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { BuilderPreviewContainer } from '@/widgets/fragmentBuilder/BuilderPreviewContainer'
-import { Fragment } from '@/widgets/renderer/Fragment/Fragment'
+import { FragmentInstance } from '@/widgets/renderer/FragmentInstance/FragmentInstance'
 
 interface FragmentPreviewProps {
   className?: string
@@ -16,7 +16,7 @@ export const FragmentPreview: FC<FragmentPreviewProps> = ({ className }) => {
   return (
     <div className={cn(styles.root, className)} data-testid='BuilderPreview'>
       <BuilderPreviewContainer>
-        <Fragment documentManager={documentManager} />
+        <FragmentInstance documentManager={documentManager} />
       </BuilderPreviewContainer>
     </div>
   )

@@ -22,7 +22,7 @@ interface EditPropertyOptions {
 
 export const useFragmentProperties = () => {
   const { documentManager } = useContext(BuilderContext)
-  const [fragment] = useGraph(documentManager, documentManager.key)
+  const [fragment] = useGraph(documentManager, documentManager.fragment)
   const propertyLinks = fragment?.properties ?? []
   const properties = useGraphStack(documentManager, propertyLinks)
   // const { allowVariables, openVariable } = useBuilderVariableCreator()

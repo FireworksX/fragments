@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: var(--gutter-default);
 }
 
 .form {
@@ -9,4 +10,9 @@
     flex-direction: column;
     gap: var(--gutter-default);
     width: 350px;
+}
+
+.logo {
+    width: 64px;
+    height: 64px;
 }

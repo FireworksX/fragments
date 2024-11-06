@@ -30,19 +30,20 @@ export const useBuilderLayers = () => {
    */
   useGraphStack(documentManager, [...allBreakpoints, ...allFrames])
 
-  const getNode = (layerKey: LinkKey) => {
+  const getNode = (layerKey: LinkKey, deepIndex = 0) => {
     const node = documentManager.resolve(layerKey)
     const collapsed = !expandedLinkKeys.includes(layerKey)
+    const isNestedFragment = node?._type === nodes.FragmentInstance && deepIndex > 0
 
     return {
       id: documentManager.keyOfEntity(node),
       collapsed,
-      children: (node?.children || []).map(key => getNode(key)),
+      children: isNestedFragment ? [] : (node?.children || []).map(key => getNode(key, deepIndex + 1)),
       canHaveChildren: [nodes.Frame, nodes.Breakpoint].includes(node?._type)
     }
   }
 
-  const items = getNode(documentManager.key).children
+  const items = getNode(documentManager.fragment).children
 
   const handleCollapse = (type: 'collapse' | 'expanded', key: LinkKey) => {
     setExpandedLinkKeys(prev => (type === 'expanded' ? [...prev, key] : prev.filter(k => k !== key)))

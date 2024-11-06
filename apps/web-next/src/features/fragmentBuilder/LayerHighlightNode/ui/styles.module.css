@@ -3,6 +3,10 @@
     pointer-events: none;
     overflow: visible !important;
 
+    & [data-highlight-type='Breakpoint'], & [data-highlight-type='Fragment'] {
+        display: contents !important;
+    }
+
     & p {
         margin: 0;
         padding: 0;

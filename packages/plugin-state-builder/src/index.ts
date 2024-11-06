@@ -27,6 +27,15 @@ export const pluginStateBuilder: Plugin = (state, overrides) => {
         // childrenExtend,
         // sceneExtend,
       ]),
+      [nodes.FragmentInstance]: collectExtends([
+        // fragmentExtend,
+        // baseExtend,
+        // childrenExtend,
+        // sceneExtend,
+        positionExtend,
+        layoutExtend,
+        toCssExtend,
+      ]),
       [nodes.Breakpoint]: collectExtends([
         // breakpointExtend,
         // baseExtend,

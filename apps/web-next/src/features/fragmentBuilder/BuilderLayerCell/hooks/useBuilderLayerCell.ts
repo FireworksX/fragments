@@ -4,6 +4,7 @@ import { useGraph } from '@graph-state/react'
 import { LinkKey } from '@graph-state/core'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
+import { nodes } from '@fragments/plugin-state'
 
 export const useBuilderLayerCell = (layerKey: LinkKey) => {
   const { documentManager } = useContext(BuilderContext)
@@ -13,13 +14,15 @@ export const useBuilderLayerCell = (layerKey: LinkKey) => {
   const parents = layerGraph?.getAllParents?.() ?? []
   const selected = selection === layerKey
   const partialSelected = selected || parents.some(parent => selection === documentManager.keyOfEntity(parent))
+  const isFragment = layerGraph?._type === nodes.FragmentInstance
 
   return {
     type: layerGraph?._type,
     name: layerInvoker('name').value ?? layerKey,
-    hasChildren: layerGraph?.children?.length > 0,
+    hasChildren: !isFragment && layerGraph?.children?.length > 0,
     selected,
     partialSelected,
+    isFragment,
     rename: (name: string) => {
       layerGraph.rename(name)
     },

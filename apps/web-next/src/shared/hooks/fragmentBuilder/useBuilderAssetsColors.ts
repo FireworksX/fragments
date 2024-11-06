@@ -15,7 +15,7 @@ export interface BuilderAssetsColorsOptions extends Partial<OpenPopoutOptions<'c
 
 export const useBuilderAssetsColors = () => {
   const { documentManager } = useContext(BuilderContext)
-  const [fragmentGraph] = useGraph(documentManager, documentManager.key)
+  const [fragmentGraph] = useGraph(documentManager, documentManager.fragment)
   const solidStyleValues = useGraphStack(documentManager, fragmentGraph?.solidPainStyles ?? [])
 
   const editColor = (styleKey: string, options?: OpenPopoutOptions<'colorPicker'>) => {

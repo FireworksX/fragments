@@ -2,11 +2,18 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: var(--gutter-default);
 }
 
 .form {
     display: flex;
     flex-direction: column;
     gap: var(--gutter-default);
-    width: 350px;
+    width: 100%;
+    min-width: 350px;
+}
+
+.logo {
+    width: 64px;
+    height: 64px;
 }

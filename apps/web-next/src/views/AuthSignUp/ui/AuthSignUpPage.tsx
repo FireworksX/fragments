@@ -6,6 +6,7 @@ import { AuthTitle } from '@/widgets/AuthTitle'
 import { InputText } from '@/shared/ui/InputText'
 import { Button } from '@/shared/ui/Button'
 import { useAuthSignUp } from '@/views/AuthSignUp/hooks/useAuthSignUp'
+import Logo from '@/shared/icons/next/logo.svg'
 
 interface SignUpProps {
   className?: string
@@ -16,6 +17,7 @@ export const Page: FC<SignUpProps> = ({ className }) => {
 
   return (
     <div className={cn(styles.page, className)} data-testid='Login'>
+      <Logo className={styles.logo} />
       <AuthTitle>
         Create Your <br /> Fragments Account
       </AuthTitle>
@@ -23,9 +25,7 @@ export const Page: FC<SignUpProps> = ({ className }) => {
         <InputText placeholder='Your Name' mode='secondary' size='large' type='text' {...firstNameField} />
         <InputText placeholder='Email Address' mode='secondary' size='large' type='email' {...emailField} />
         <InputText placeholder='Password' mode='secondary' size='large' type='password' {...passwordField} />
-        <Button size='large' loading={loading}>
-          Sign Up
-        </Button>
+        <Button loading={loading}>Sign Up</Button>
       </form>
     </div>
   )

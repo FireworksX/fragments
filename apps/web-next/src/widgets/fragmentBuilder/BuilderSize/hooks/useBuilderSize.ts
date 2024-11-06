@@ -31,7 +31,7 @@ export const useBuilderSize = () => {
   const [parent] = useGraph(documentManager, selectionGraph?.getParent())
 
   const hugContentEnabled = !!selectionGraph?.children?.length || selectionGraph?._type === nodes.Text
-  const fillContentEnabled = animatableValue(parent.resolveField('layerMode')) === layerMode.flex
+  const fillContentEnabled = animatableValue(parent?.resolveField('layerMode')) === layerMode.flex
 
   return {
     selectionGraph,

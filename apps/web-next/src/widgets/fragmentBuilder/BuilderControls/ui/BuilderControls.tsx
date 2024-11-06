@@ -27,7 +27,7 @@ const BuilderControls: FC<ControlsProps> = ({
 }) => {
   const { selectionGraph } = useBuilderSelection()
 
-  const hasSize = [nodes.Frame, nodes.Text].some(type => type === selectionGraph?._type)
+  const hasSize = [nodes.Frame, nodes.Text, nodes.FragmentInstance].some(type => type === selectionGraph?._type)
   const hasLayout = [nodes.Frame].some(type => type === selectionGraph?._type)
   const hasStyles = [nodes.Frame].some(type => type === selectionGraph?._type)
   const hasText = [nodes.Text].some(type => type === selectionGraph?._type)

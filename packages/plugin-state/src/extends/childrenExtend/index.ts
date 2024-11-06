@@ -8,6 +8,7 @@ export const childrenExtend: Extender = <TChild extends SceneNode = SceneNode>({
   state,
 }) => {
   const wrapChildren = (children) => {
+    return children;
     return (children ?? [])
       .filter((child) =>
         typeof child === "string" ? !isPartialKey(child) : true
@@ -16,10 +17,12 @@ export const childrenExtend: Extender = <TChild extends SceneNode = SceneNode>({
         const childEntity =
           typeof child === "string" ? state.resolve(child) : child;
 
-        return {
-          ...childEntity,
-          parentKey: state.setKey(graphKey),
-        };
+        return state.resolve(childEntity)
+          ? {
+              ...childEntity,
+              parentKey: state.setKey(graphKey),
+            }
+          : child;
       });
   };
 

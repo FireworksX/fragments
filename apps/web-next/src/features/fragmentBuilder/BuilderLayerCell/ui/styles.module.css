@@ -2,7 +2,7 @@
     color: var(--primary);
 }
 
-.componentIcon {
+.fragmentIcon {
     color: var(--component);
 }
 
@@ -25,7 +25,7 @@
         .labelInput {
             color: var(--light);
         }
-        .primaryIcon, .actions, .textIcon, .componentIcon {
+        .primaryIcon, .actions, .textIcon, .fragmentIcon {
             color: var(--light);
         }
         &:after {
@@ -33,12 +33,21 @@
         }
     }
 
-    &.selectedComponent {
-        &, .titleCaret ,.labelInput, .primaryIcon, .actions, .componentIcon {
+    &.selectedFragment {
+        &, .titleCaret ,.labelInput, .primaryIcon, .actions, .fragmentIcon {
             color: var(--text-color);
         }
         &:after {
             background: var(--component);
+        }
+    }
+
+    &.fragment {
+        &, .titleCaret ,.labelInput, .primaryIcon, .actions, .fragmentIcon {
+            color: var(--component);
+        }
+        .labelInput {
+            color: var(--component);
         }
     }
 

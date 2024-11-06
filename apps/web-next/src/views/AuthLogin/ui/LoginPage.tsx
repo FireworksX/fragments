@@ -6,6 +6,7 @@ import { AuthTitle } from '@/widgets/AuthTitle'
 import { InputText } from '@/shared/ui/InputText'
 import { Button } from '@/shared/ui/Button'
 import { useAuthLogin } from '@/views/AuthLogin/hooks/useAuthLogin'
+import Logo from '@/shared/icons/next/logo.svg'
 
 interface LoginProps {
   className?: string
@@ -16,6 +17,7 @@ export const Page: FC<LoginProps> = ({ className }) => {
 
   return (
     <div className={cn(styles.page, className)} data-testid='Login'>
+      <Logo className={styles.logo} />
       <AuthTitle>Log in to Fragments</AuthTitle>
       <form className={styles.form} onSubmit={handleSubmit}>
         <InputText
@@ -34,7 +36,7 @@ export const Page: FC<LoginProps> = ({ className }) => {
           type='password'
           {...passwordField}
         />
-        <Button type='submit' size='large' loading={loading}>
+        <Button type='submit' loading={loading}>
           Continue with Email
         </Button>
       </form>

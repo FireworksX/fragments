@@ -10,9 +10,10 @@ import loggerPlugin from '@graph-state/plugin-logger'
 // import { useHotkeysContext } from 'react-hotkeys-hook'
 // import { hotKeysScope } from '@/app/hooks/hotkeys/HotKeysProvider'
 import fragmentData from '../fragment.json'
+import fragmentButtonData from '../button.fragment.json'
 import pluginState, { skips as stateSkips } from '@fragments/plugin-state'
 import pluginStateBuilder, { skips as stateBuilderSkips } from '@fragments/plugin-state-builder'
-import { isBrowser } from '@fragments/utils'
+import { generateId, isBrowser } from '@fragments/utils'
 import { useParams } from 'next/navigation'
 
 const canvasManager = createCanvasManager()
@@ -20,15 +21,25 @@ const previewManager = createPreviewManager()
 const builderManager = createBuilderManager()
 
 const fragmentState = createState({
-  type: 'Fragment',
-  id: fragmentData._id,
-  initialState: fragmentData,
+  type: 'FragmentModule',
+  id: generateId(),
+  initialState: {
+    fragment: 'Fragment:g34gherhg3g',
+    dependencies: []
+  },
   plugins: [pluginState, pluginStateBuilder, loggerPlugin({ onlyBrowser: true })],
   skip: [...stateSkips, ...stateBuilderSkips]
 })
 
+fragmentState.applyFragmentModule(fragmentData)
+// fragmentState.applyState(fragmentButtonData)
+
 if (isBrowser) {
   window.frag = fragmentState
+
+  setTimeout(() => {
+    fragmentState.applyFragmentModule(fragmentButtonData)
+  }, 5000)
 }
 
 interface FragmentDetailProps {
@@ -41,7 +52,7 @@ export const FragmentDetail: FC<FragmentDetailProps> = ({ builder, preview }) =>
   const [, view] = fragment || []
 
   useEffect(() => {
-    fragmentState.resolve(fragmentState).setRenderTarget(view === 'edit' ? 'canvas' : 'document')
+    fragmentState.resolve(fragmentState.fragment).setRenderTarget(view === 'edit' ? 'canvas' : 'document')
   }, [view])
 
   return (
