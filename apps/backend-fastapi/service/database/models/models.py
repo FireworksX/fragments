@@ -213,15 +213,20 @@ class Fragment(Base):
                                                                               "delete, delete-orphan")
 
 
-class StreamFragment(Base):
-    __tablename__ = 'stream_fragment'
+class Landing(Base):
+    __tablename__ = 'landing'
     id = Column('id', Integer, primary_key=True, index=True)
     project_id = Column('project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False)
+    project = relationship("Project")
     stream_id = Column('stream_id', Integer, ForeignKey('stream.id', ondelete='CASCADE'), nullable=False)
+    stream = relationship("Stream")
     fragment_id = Column('fragment_id', Integer, ForeignKey('fragment.id', ondelete='CASCADE'), nullable=False)
+    fragment = relationship("Fragment")
     props = Column('props', JSON, nullable=False)
     weight = Column('weight', Float, nullable=False)
     name = Column('name', String)
+    active = Column('active', Boolean, default=True)
+    deleted = Column('deleted', Boolean, default=False)
 
 
 class Media(Base):

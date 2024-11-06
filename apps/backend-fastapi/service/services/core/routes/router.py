@@ -1,9 +1,9 @@
 from .campaign import campaign_by_id, create_campaign_route, update_campaign_route, campaigns_in_project, \
     add_campaign_logo_route
-from .schemas import AuthPayload, UserGet, FragmentGet, MediaGet, FragmentPost, CampaignGet, CampaignPost, FeedbackPost, \
+from .schemas import AuthPayload, UserGet, FragmentGet, FragmentPost, CampaignGet, CampaignPost, FeedbackPost, \
     FeedbackGet, \
-    GeoLocationGet, StreamGet, StreamPost, ProjectPost, ProjectGet, StreamFragmentGet, \
-    StreamFragmentPost, StreamFragmentPatch, ProjectPatch, StreamPatch, CampaignPatch, FragmentPatch
+    GeoLocationGet, StreamGet, StreamPost, ProjectPost, ProjectGet, LandingGet, \
+    LandingPost, LandingPatch, ProjectPatch, StreamPatch, CampaignPatch, FragmentPatch
 
 import strawberry
 from typing import Optional, List
@@ -17,7 +17,7 @@ from .project import create_project_route, project_by_id, projects, update_proje
     add_project_logo_route
 from fastapi import UploadFile
 from crud.ipgetter import get_location_by_ip
-from .stream_fragment import stream_fragment_by_id, stream_fragments_in_stream, update_stream_fragment_route, create_stream_fragment_route
+from .landing import landing_by_id, landings_in_stream, update_landing_route, create_landing_route
 
 
 @strawberry.type
@@ -65,11 +65,11 @@ class Query:
             return await projects(info)
 
     @strawberry.field
-    async def stream_fragment(self, info: strawberry.Info[Context], stream_id: Optional[int] = None, stream_fragment_id: Optional[int] = None) -> List[StreamFragmentGet]:
-        if stream_fragment_id is not None:
-            return [await stream_fragment_by_id(info, stream_fragment_id)]
+    async def landing(self, info: strawberry.Info[Context], stream_id: Optional[int] = None, landing_id: Optional[int] = None) -> List[LandingGet]:
+        if landing_id is not None:
+            return [await landing_by_id(info, landing_id)]
         else:
-            return await stream_fragments_in_stream(stream_id)
+            return await landings_in_stream(info, stream_id)
 
 
 @strawberry.type
@@ -159,10 +159,10 @@ class Mutation:
         await change_user_role_route(info, user_id, project_id, role)
 
     @strawberry.mutation
-    async def create_stream_fragment(self, info: strawberry.Info[Context], stream_fragment: StreamFragmentPost) -> StreamFragmentGet:
-        return await create_stream_fragment_route(info, stream_fragment)
+    async def create_landing(self, info: strawberry.Info[Context], landings: LandingPost) -> LandingGet:
+        return await create_landing_route(info, landings)
 
     @strawberry.mutation
-    async def update_stream_fragment(self, info: strawberry.Info[Context], stream_fragment: StreamFragmentPatch) -> StreamFragmentGet:
-        return await update_stream_fragment_route(info, stream_fragment)
+    async def update_landing(self, info: strawberry.Info[Context], landing: LandingPatch) -> LandingGet:
+        return await update_landing_route(info, landing)
 

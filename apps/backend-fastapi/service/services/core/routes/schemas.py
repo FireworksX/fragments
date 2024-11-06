@@ -228,28 +228,33 @@ class FeedbackGet:
 
 
 @strawberry.type
-class StreamFragmentGet:
+class LandingGet:
     id: int
+    stream: StreamGet
+    fragment: FragmentGet
+    props: Optional[strawberry.scalars.JSON] = None
+    weight: float
+    name: str
+    active: bool
+    deleted: bool
+
+
+@strawberry.input
+class LandingPost:
     stream_id: int
     fragment_id: int
     props: Optional[strawberry.scalars.JSON] = None
     weight: float
     name: str
+    active: bool
+    deleted: bool
 
 
 @strawberry.input
-class StreamFragmentPost:
-    stream_id: int
-    fragment_id: int
-    props: Optional[strawberry.scalars.JSON] = None
-    weight: float
-    name: str
-
-
-@strawberry.input
-class StreamFragmentPatch:
+class LandingPatch:
     id: int
-    fragment_id: int
     props: Optional[strawberry.scalars.JSON] = None
     weight: Optional[float] = None
     name: Optional[str] = None
+    active: bool
+    deleted: bool
