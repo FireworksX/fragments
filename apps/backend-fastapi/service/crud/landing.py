@@ -3,10 +3,12 @@ from sqlalchemy.orm import Session
 from typing import Optional, List
 
 
-async def create_landing_db(db: Session, name: str, project_id: int, stream_id: int, fragment_id: int,
-                            props: str, weight: float, active: bool, deleted: bool) -> Landing:
+async def create_landing_db(db: Session, name: str, project_id: int, stream_id: int, fragment_id: Optional[int] = None,
+                            props: Optional[str] = None, weight: Optional[float] = None, active: Optional[bool] = True,
+                            deleted: Optional[bool] = False) -> Landing:
     landing: Landing = Landing(name=name, project_id=project_id, stream_id=stream_id,
-                                       fragment_id=fragment_id, props=props, weight=weight, active=active, deleted=deleted)
+                               fragment_id=fragment_id, props=props, weight=weight, active=active, deleted=deleted)
+
     db.add(landing)
     db.commit()
     db.refresh(landing)
@@ -33,6 +35,8 @@ async def update_landing_by_id_db(db: Session, values: dict) -> Landing:
         landing.active = values['active']
     if values.get('deleted') is not None:
         landing.deleted = values['deleted']
+    if values.get('fragment_id') is not None:
+        landing.fragment_id = values['fragment_id']
     db.merge(landing)
     db.commit()
     db.refresh(landing)

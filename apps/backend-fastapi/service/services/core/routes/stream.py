@@ -89,7 +89,7 @@ async def create_stream_route(info: strawberry.Info[Context], strm: StreamPost) 
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to create streams')
 
-    stream: Stream = await create_stream_db(db, strm.name, strm.campaign_id, strm.weight,
+    stream: Stream = await create_stream_db(db, strm.name, campaign.project_id, strm.campaign_id, strm.weight,
                                             strm.active, strm.deleted, strm.os_types, strm.device_types, strm.pages,
                                             strm.geo_locations, strm.time_frames)
 

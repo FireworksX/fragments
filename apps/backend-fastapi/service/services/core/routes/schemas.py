@@ -20,6 +20,11 @@ class UserGet:
     last_name: Optional[str]
     logo: Optional[str]
 
+    _sa_instance_state: strawberry.Private[object]
+    hashed_password: strawberry.Private[object]
+    avatar_id: strawberry.Private[object]
+    avatar: strawberry.Private[object]
+
 
 @strawberry.type
 class UserRoleGet(UserGet):
@@ -78,7 +83,7 @@ class FragmentGet:
     name: str
     author: UserGet
     document: strawberry.scalars.JSON
-    props: strawberry.scalars.JSON
+    props: Optional[strawberry.scalars.JSON] = None
     assets: List[str]
 
 
@@ -231,9 +236,9 @@ class FeedbackGet:
 class LandingGet:
     id: int
     stream: StreamGet
-    fragment: FragmentGet
+    fragment: Optional[FragmentGet] = None
     props: Optional[strawberry.scalars.JSON] = None
-    weight: float
+    weight: Optional[float] = None
     name: str
     active: bool
     deleted: bool
@@ -242,19 +247,20 @@ class LandingGet:
 @strawberry.input
 class LandingPost:
     stream_id: int
-    fragment_id: int
+    fragment_id: Optional[int] = None
     props: Optional[strawberry.scalars.JSON] = None
-    weight: float
+    weight: Optional[float] = None
     name: str
-    active: bool
-    deleted: bool
+    active:  Optional[bool] = None
+    deleted:  Optional[bool] = None
 
 
 @strawberry.input
 class LandingPatch:
     id: int
     props: Optional[strawberry.scalars.JSON] = None
+    fragment_id: Optional[int] = None
     weight: Optional[float] = None
     name: Optional[str] = None
-    active: bool
-    deleted: bool
+    active: Optional[bool] = None
+    deleted: Optional[bool] = None

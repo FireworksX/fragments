@@ -63,12 +63,12 @@ def add_time_frames_to_stream(db: Session, stream: Stream, time_frames: List[Tim
         relation.time_frame = time_frame_db
 
 
-async def create_stream_db(db: Session, name: str, campaign_id: int, weight: float,
+async def create_stream_db(db: Session, name: str, project_id: int, campaign_id: int, weight: float,
                            active: bool, deleted: bool, os_types: Optional[List[OSTypeGet]],
                            device_types: Optional[List[DeviceTypeGet]], pages: Optional[List[str]],
                            geo_locations: Optional[List[GeoLocationPost]],
                            time_frames: Optional[List[TimeFramePost]]) -> Stream:
-    stream: Stream = Stream(name=name, campaign_id=campaign_id, weight=weight, active=active, deleted=deleted)
+    stream: Stream = Stream(name=name, project_id=project_id, campaign_id=campaign_id, weight=weight, active=active, deleted=deleted)
     db.add(stream)
     db.commit()
     db.refresh(stream)

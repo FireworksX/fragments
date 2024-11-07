@@ -165,6 +165,9 @@ class Stream(Base):
     __tablename__ = 'stream'
     id = Column('id', Integer, primary_key=True, index=True)
     campaign_id = Column('campaign_id', Integer, ForeignKey('campaign.id', ondelete='CASCADE'), nullable=False)
+    campaign = relationship("Campaign")
+    project_id = Column('project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False)
+    project = relationship("Project")
     active = Column('active', Boolean, default=True)
     deleted = Column('deleted', Boolean, default=False)
     name = Column('name', String, nullable=False)
@@ -194,8 +197,8 @@ class FragmentMedia(Base):
     __tablename__ = "fragment_media"
     id = Column('id', Integer, primary_key=True, index=True)
     media_id = Column(ForeignKey("media.id", ondelete='CASCADE'))
-    fragment_id = Column(ForeignKey("fragment.id", ondelete='CASCADE'))
     media = relationship("Media")
+    fragment_id = Column(ForeignKey("fragment.id", ondelete='CASCADE'))
     fragment = relationship("Fragment", back_populates="assets")
 
 
@@ -203,6 +206,7 @@ class Fragment(Base):
     __tablename__ = 'fragment'
     id = Column('id', Integer, primary_key=True, index=True)
     project_id = Column('project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False)
+    project = relationship("Project")
     name = Column('name', String)
     document = Column('document', JSON, nullable=False)
     props = Column('props', JSON, nullable=False)
@@ -220,11 +224,11 @@ class Landing(Base):
     project = relationship("Project")
     stream_id = Column('stream_id', Integer, ForeignKey('stream.id', ondelete='CASCADE'), nullable=False)
     stream = relationship("Stream")
-    fragment_id = Column('fragment_id', Integer, ForeignKey('fragment.id', ondelete='CASCADE'), nullable=False)
+    fragment_id = Column('fragment_id', Integer, ForeignKey('fragment.id', ondelete='CASCADE'))
     fragment = relationship("Fragment")
-    props = Column('props', JSON, nullable=False)
-    weight = Column('weight', Float, nullable=False)
-    name = Column('name', String)
+    props = Column('props', JSON)
+    weight = Column('weight', Float)
+    name = Column('name', String, nullable=False)
     active = Column('active', Boolean, default=True)
     deleted = Column('deleted', Boolean, default=False)
 
