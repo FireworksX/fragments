@@ -26,8 +26,18 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
   const [editLabel, setEditLabel] = useState<string | undefined>()
   const isActiveEdit = isValue(editLabel)
 
-  const { type, name, isFragment, hasChildren, partialSelected, handleSelect, selected, rename } =
-    useBuilderLayerCell(layerKey)
+  const {
+    type,
+    name,
+    breakpointThreshold,
+    isPrimaryLayer,
+    isFragment,
+    hasChildren,
+    partialSelected,
+    handleSelect,
+    selected,
+    rename
+  } = useBuilderLayerCell(layerKey)
   const flags = useBuilderLayerFlags(layerKey)
 
   // const {
@@ -155,6 +165,7 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
         </Touchable>
         <div className={styles.headIcon}>
           <BuilderLayerTypeIcon
+            layerKey={layerKey}
             type={type}
             layoutDirection={flags.layerDirection$}
             hasLayout={flags.hasLayout$}
@@ -190,6 +201,9 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
             }}
             onChange={e => setEditLabel(e.target.value)}
           />
+        </div>
+        <div className={styles.actions}>
+          {isPrimaryLayer && 'Primary'} {breakpointThreshold}
         </div>
       </div>
     </Dropdown>

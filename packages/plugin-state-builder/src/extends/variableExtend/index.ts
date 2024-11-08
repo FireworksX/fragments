@@ -12,10 +12,12 @@ export const variableExtend: Extender = ({ graph, state, ...rest }) => {
     [variableType.Boolean]: booleanVariableExtend,
     [variableType.Object]: objectVariableExtend,
     [variableType.String]: stringVariableExtend,
-    none: [noop, noop],
+    none: noop,
   }[graph?.type ?? "none"];
 
   const extendGraph = creator ?? noop;
 
-  return extendGraph({ ...rest, state, graph }) ?? graph;
+  return extendGraph?.({ ...rest, state, graph }) ?? graph;
 };
+
+variableExtend.symbol = Symbol("variableExtend");

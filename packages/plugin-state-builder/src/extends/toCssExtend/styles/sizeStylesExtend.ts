@@ -1,10 +1,14 @@
 import { to } from "@react-spring/web";
-import { sizing } from "@fragments/plugin-state";
+import { nodes, sizing } from "@fragments/plugin-state";
 import { Extender } from "@/types";
 
 const autoSizes = [sizing.Hug, sizing.Fill];
 
-export const sizeStylesExtend: Extender = ({ resolveField }) => {
+export const sizeStylesExtend: Extender = ({
+  resolveField,
+  graphKey,
+  state,
+}) => {
   const widthType$ = resolveField("layoutSizingHorizontal");
   const heightType$ = resolveField("layoutSizingVertical");
   const width$ = resolveField("width");
@@ -13,8 +17,9 @@ export const sizeStylesExtend: Extender = ({ resolveField }) => {
   const minHeight$ = resolveField("minHeight");
 
   const toValue = (type: keyof typeof sizing, value: number) => {
+    const node = state.resolve(graphKey);
     if (autoSizes.includes(type)) {
-      return "auto";
+      return node._type === nodes.FragmentInstance ? "auto" : "min-content";
     }
 
     if (type === sizing.Relative) {

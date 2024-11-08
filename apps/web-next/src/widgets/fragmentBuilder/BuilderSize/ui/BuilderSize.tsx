@@ -19,6 +19,7 @@ const DISABLE_UTILS: (keyof typeof sizing)[] = [sizing.Fill, sizing.Hug]
 const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
   const {
     selectionGraph,
+    relativeContentEnabled,
     hugContentEnabled,
     fillContentEnabled,
     sync,
@@ -29,12 +30,17 @@ const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
     width,
     height,
     allowResizeHorizontal,
-    allowResizeVertical
+    allowResizeVertical,
+    top,
+    left,
+    canRelativeSize
   } = useBuilderSize()
 
   const Options = (
     <>
-      <option value={sizing.Relative}>Rel</option>
+      <option value={sizing.Relative} disabled={!relativeContentEnabled}>
+        Rel
+      </option>
       <option value={sizing.Fixed}>Fixed</option>
       <option value={sizing.Hug} disabled={!hugContentEnabled}>
         Hug
@@ -53,6 +59,12 @@ const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
         </div>
       )}
 
+      {!canRelativeSize && (
+        <ControlRow title='Position'>
+          <InputNumber suffix='x' {...left} min={Infinity} max={Infinity} />
+          <InputNumber suffix='y' {...top} min={Infinity} max={Infinity} />
+        </ControlRow>
+      )}
       <ControlRow title='Width' actions={width.actions} isHighlight={width.isOverride}>
         <InputNumber {...width} disabled={to(allowResizeHorizontal, v => !v)} />
         <Select {...layoutSizingHorizontal}>{Options}</Select>

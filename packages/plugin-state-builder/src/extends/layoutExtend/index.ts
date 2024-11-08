@@ -23,3 +23,5 @@ export const layoutExtend: Extender = (payload) => {
     },
   };
 };
+
+layoutExtend.symbol = Symbol("layoutExtend");

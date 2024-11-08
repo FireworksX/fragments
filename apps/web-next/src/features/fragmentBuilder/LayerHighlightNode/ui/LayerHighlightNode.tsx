@@ -42,7 +42,7 @@ export const LayerHighlightNode: FC<LayerHighlightDraggingProps> = ({
   return (
     <animated.div
       data-highlight-key={layerKey}
-      data-highlight-type={layerNode._type}
+      data-highlight-type={layerNode?._type}
       className={cn(styles.root, className)}
       style={layerStyles}
     >

@@ -1,6 +1,6 @@
 import { Extender } from "@/types";
 import { Graph, GraphState } from "@graph-state/core";
-import { $EXTENDED } from "@/definitions.ts";
+import { $EXTENDED, nodes } from "@/definitions.ts";
 import { getRefValue } from "@/shared/getRefValue.ts";
 import { getResolvedValue } from "@/shared/getResolvedValue.ts";
 
@@ -10,6 +10,7 @@ export const collectExtends =
     if (graph.__extendted === $EXTENDED) return graph;
 
     const graphKey = state.keyOfEntity(graph);
+
     const createResolveField =
       (graph) => (field: string, fallback: unknown) => {
         const node = state.resolve(graph);
@@ -23,6 +24,10 @@ export const collectExtends =
       const getValue = getRefValue(state, acc);
       const resolveField = createResolveField(acc);
 
+      // if (acc.extenders?.includes(extender.symbol)) {
+      //   return acc;
+      // }
+
       acc = extender({
         graph: acc,
         graphKey,
@@ -30,6 +35,12 @@ export const collectExtends =
         state,
         resolveField,
       });
+
+      // if (!acc.extenders) {
+      //   acc.extenders = [];
+      // } else {
+      //   acc.extenders?.push(extender.symbol);
+      // }
 
       return acc;
     }, graph);

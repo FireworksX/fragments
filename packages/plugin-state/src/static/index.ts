@@ -31,9 +31,10 @@ export const addStatic: Plugin = (state) => {
   };
 
   state.applyFragmentModule = (fragmentModule: Graph) => {
-    (fragmentModule?.layers ?? []).forEach((graph) => {
-      state.mutate(graph);
-    });
+    state.mutate(fragmentModule);
+    // (fragmentModule?.layers ?? []).forEach((graph) => {
+    //   state.mutate(graph);
+    // });
   };
 
   state.applyTreeState = (stateGraphs: Graph[]) => {

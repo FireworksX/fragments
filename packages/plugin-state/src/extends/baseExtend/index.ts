@@ -2,6 +2,7 @@ import { Extender } from "@/types";
 import { LinkKey } from "@graph-state/core";
 import { BaseProps } from "@/types/props.ts";
 import { nodes } from "@/definitions.ts";
+import { layerExtend } from "@/extends/layerExtend";
 
 export const baseExtend: Extender = ({ graph, state, graphKey, getValue }) => {
   const getParents = (key: LinkKey): ReadonlyArray<BaseProps[]> | null =>
@@ -103,6 +104,11 @@ export const baseExtend: Extender = ({ graph, state, graphKey, getValue }) => {
   return {
     ...graph,
     name: getValue("name"),
+    isTopLevel: () => getParent(graphKey)?._type === nodes.Fragment,
+    isPrimaryLayer: () => {
+      const node = state.resolve(graphKey);
+      return node?.isTopLevel?.() && !node?.isBreakpoint;
+    },
     getParents: () => getParents(graphKey),
     getParent: () => getParent(graphKey),
     getAllParents(stack = []) {
@@ -123,3 +129,5 @@ export const baseExtend: Extender = ({ graph, state, graphKey, getValue }) => {
     // wrapFrameNode,
   };
 };
+
+baseExtend.symbol = Symbol("baseExtend");

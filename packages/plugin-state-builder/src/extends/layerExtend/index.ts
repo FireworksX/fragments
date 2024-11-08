@@ -18,3 +18,5 @@ export const layerExtend: Extender = ({
     },
   };
 };
+
+layerExtend.symbol = Symbol("layerExtend");

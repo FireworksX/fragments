@@ -9,3 +9,5 @@ export const sceneExtend: Extender = (payload) => {
     ...opacity,
   };
 };
+
+sceneExtend.symbol = Symbol("sceneExtend");

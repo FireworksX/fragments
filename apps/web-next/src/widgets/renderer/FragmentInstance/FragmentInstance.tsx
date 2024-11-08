@@ -1,12 +1,10 @@
 import { FC, useContext } from 'react'
 import { GraphState, LinkKey } from '@graph-state/core'
-import { animated } from '@react-spring/web'
-import { useCurrentBreakpoint } from './hooks/useCurrentBreakpoint'
-import { Frame } from '@/widgets/renderer/Frame/Frame'
-import { extractAnimatableValues } from '@/shared/utils/extractAnimatableValues'
-import { nodes } from '@fragments/plugin-state'
+import { animated, to } from '@react-spring/web'
+import { nodes, sizing } from '@fragments/plugin-state'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
+import { Fragment } from '@/widgets/renderer/Fragment/Fragment'
 
 export interface DocumentRenderer {
   layerKey?: LinkKey
@@ -16,18 +14,21 @@ export interface DocumentRenderer {
 export const FragmentInstance: FC<DocumentRenderer> = ({ layerKey }) => {
   const { documentManager } = useContext(BuilderContext)
   const [instanceGraph] = useGraph(documentManager, layerKey)
-  const { currentBreakpoint, currentBreakpointKey, isCanvas } = useCurrentBreakpoint(
-    documentManager?.resolve(layerKey)?.children?.at?.(0)
-  )
   const cssStyles = instanceGraph?.toCss?.() ?? {}
-
-  if (!currentBreakpoint) return null
+  const horizontal = instanceGraph?.resolveField('layoutSizingHorizontal')
+  const vertical = instanceGraph?.resolveField('layoutSizingVertical')
 
   return (
     <animated.div data-key={layerKey} data-type={nodes.FragmentInstance} style={cssStyles}>
-      {currentBreakpoint.children.map(childLink => (
-        <Frame key={childLink} layerKey={childLink} />
-      ))}
+      <Fragment
+        layerKey={instanceGraph?.fragment}
+        style={{
+          width: source =>
+            to([horizontal, source], (hSizing, sourceValue) => (hSizing === sizing.Hug ? sourceValue : '100%')),
+          height: source =>
+            to([vertical, source], (wSizing, sourceValue) => (wSizing === sizing.Hug ? sourceValue : '100%'))
+        }}
+      />
     </animated.div>
   )
 }

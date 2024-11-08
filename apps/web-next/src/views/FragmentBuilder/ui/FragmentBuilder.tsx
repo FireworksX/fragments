@@ -34,6 +34,8 @@ import { popoutNames } from '@/shared/data'
 import StackStringProperty from '@/features/popouts/StackStringProperty/ui/StackStringProperty'
 import StackNumberProperty from '@/features/popouts/StackNumberProperty/ui/StackNumberProperty'
 import StackBooleanProperty from '../../../features/popouts/StackBooleanProperty/ui/StackBooleanProperty'
+import BuilderFragmentInstance from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/BuilderFragmentInstance'
+import BuilderFragmentGrowing from '@/widgets/fragmentBuilder/BuilderFragmentGrowing/ui/BuilderFragmentGrowing'
 
 interface FragmentBuilderProps {
   className?: string
@@ -66,12 +68,14 @@ export const FragmentBuilder: FC<FragmentBuilderProps> = ({ className }) => {
           <BuilderControls
             isOpen={isEdit}
             position='right'
+            fragmentGrowingNode={<BuilderFragmentGrowing />}
             positionNode={<BuilderPosition />}
             sizeNode={<BuilderSize />}
             layoutNode={<BuilderLayout />}
             stylesNode={<BuilderStyles />}
             textNode={<BuilderText />}
             cssNode={<BuilderCssOverride />}
+            instancePropsNode={<BuilderFragmentInstance />}
           />
 
           <BuilderFloatBar />

@@ -13,3 +13,5 @@ export const toCssExtend: Extender = (payload) => {
     },
   };
 };
+
+toCssExtend.symbol = Symbol("toCssExtend");

@@ -26,3 +26,5 @@ export const fillExtend: Extender = (payload) => {
     setFillType: valueSetter(payload.state, payload.graphKey, "fillType"),
   };
 };
+
+fillExtend.symbol = Symbol("fillExtend");

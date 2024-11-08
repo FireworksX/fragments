@@ -1,7 +1,7 @@
 import { useContext, useMemo } from 'react'
 import { useGraph } from '@graph-state/react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { layerMode } from '@fragments/plugin-state'
+import { layerMode, nodes } from '@fragments/plugin-state'
 import { to } from '@react-spring/web'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
@@ -10,14 +10,17 @@ export const useBuilderPosition = () => {
   const { documentManager } = useContext(BuilderContext)
   const { selection, selectionGraph } = useBuilderSelection()
   const [selectionNode] = useGraph(documentManager, selection)
+  const [parent] = useGraph(documentManager, selectionGraph?.getParent())
+  const isTopLevel = selectionGraph?.isTopLevel() ?? false
+  const childOfBreakpoint = parent?._type === nodes.Breakpoint
 
   const layerInvoker = useLayerInvoker(selection, ({ key, node, value, prevValue }) => {
     switch (key) {
       case 'positionType':
         return node.setPositionType(value)
-      case 'x':
+      case 'left':
         return node.move(value)
-      case 'y':
+      case 'top':
         return node.move(null, value)
     }
   })
@@ -49,8 +52,9 @@ export const useBuilderPosition = () => {
       ],
       ...layerInvoker('positionType')
     },
-    x: layerInvoker('left'),
-    y: layerInvoker('top')
+    left: layerInvoker('left'),
+    top: layerInvoker('top'),
+    hasPosition: !childOfBreakpoint && !isTopLevel
     // top: to(selectionRect, ({ y }) => y),
     // left: to(selectionRect, ({ x }) => x),
     // right: to(selectionRect, rect => documentManager.rect.maxX(rect)),

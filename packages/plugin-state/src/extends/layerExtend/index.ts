@@ -7,6 +7,7 @@ import {
   layerMode,
 } from "@/definitions.ts";
 import { valueSetter } from "@/shared/valueSetter.ts";
+import { layoutExtend } from "@/extends/layoutExtend";
 
 export const layerExtend: Extender = ({
   graph,
@@ -55,3 +56,5 @@ export const layerExtend: Extender = ({
     },
   };
 };
+
+layerExtend.symbol = Symbol("layerExtend");

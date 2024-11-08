@@ -48,3 +48,5 @@ export const borderExtend: Extender = ({
     setBorderColor,
   };
 };
+
+borderExtend.symbol = Symbol("borderExtend");

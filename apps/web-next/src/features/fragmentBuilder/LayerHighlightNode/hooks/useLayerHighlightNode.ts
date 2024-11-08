@@ -19,6 +19,7 @@ export const useLayerHighlightNode = (layerKey: LinkKey) => {
   const [layerNode] = useGraph(documentManager, layerKey)
   const { selection, selectionGraph } = useBuilderSelection()
   const layerStyles = layerNode?.toCss?.() ?? {}
+  const children = layerNode?._type === nodes.FragmentInstance ? [layerNode.fragment] : layerNode?.children ?? []
   const selectionParentKey = documentManager.keyOfEntity(selectionGraph?.getParent())
   const isParentSelected = selectionParentKey === layerKey
 
@@ -40,7 +41,7 @@ export const useLayerHighlightNode = (layerKey: LinkKey) => {
       ...omit(layerStyles, 'backgroundColor', 'borderColor', 'background'),
       borderColor: 'transparent'
     },
-    children: layerNode?.children ?? [],
+    children,
     layerNode,
     textContent: layerNode?._type === nodes.Text && layerNode?.content
   }

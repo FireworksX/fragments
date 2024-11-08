@@ -1,19 +1,22 @@
 import { Extender, RenderTarget } from "@/types";
 import { renderMode, renderTarget } from "@/definitions.ts";
-import { fragmentSizeExtend } from "@/extends/nodes/fragmentExtend/fragmentSizeExtend.ts";
-import { fragmentAssetsExtend } from "@/extends/nodes/fragmentExtend/fragmentAssetsExtend.ts";
-import { fragmentPropertiesExtend } from "@/extends/nodes/fragmentExtend/fragmentPropertiesExtend.ts";
+import { fragmentSizeExtend } from "./fragmentSizeExtend.ts";
+import { fragmentAssetsExtend } from "./fragmentAssetsExtend.ts";
+import { fragmentPropertiesExtend } from "./fragmentPropertiesExtend.ts";
+import { fragmentGrowingExtend } from "./fragmentGrowingExtend.ts";
 
 export const fragmentExtend: Extender = (payload) => {
   const widthSize = fragmentSizeExtend(payload);
   const withAssets = fragmentAssetsExtend(payload);
   const withProps = fragmentPropertiesExtend(payload);
+  const withGrowing = fragmentGrowingExtend(payload);
 
   return {
     ...payload.graph,
     ...widthSize,
     ...withAssets,
     ...withProps,
+    ...withGrowing,
     renderTarget: renderTarget.document,
     setRenderTarget: (renderTarget: RenderTarget) => {
       payload.state.mutate(payload.graphKey, {

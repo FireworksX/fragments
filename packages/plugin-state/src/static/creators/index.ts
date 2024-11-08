@@ -46,33 +46,36 @@ export interface ComputedValueOptions {
 const BREAKPOINT_GAP = 50;
 
 export const creators: Plugin = (state) => {
-  state.findPrimaryBreakpoint = () =>
-    state
-      .inspectFields(nodes.Breakpoint)
-      .map(state.resolve)
-      .filter((s) => s.isPrimary)[0];
+  state.findPrimaryLayer = () =>
+    state.resolve(
+      (state.resolve(state.fragment)?.children ?? []).find((child) =>
+        state.resolve(child).isPrimaryLayer?.()
+      )
+    );
 
-  state.atBreakpoint = (at?: number) =>
-    state.inspectFields(nodes.Breakpoint).map(state.resolve).at(at);
+  state.atLayer = (at?: number) =>
+    (state.resolve(state.fragment)?.children ?? []).map(state.resolve).at(at);
 
   state.createBreakpoint = (options: { name: string; width: number }) => {
-    const primaryBreakpoint = state.findPrimaryBreakpoint();
+    const primaryLayer = state.findPrimaryLayer();
 
-    if (primaryBreakpoint) {
-      const lastBreakpoint = state.atBreakpoint(-1);
-      const nextScreenLink = primaryBreakpoint.clone();
+    if (primaryLayer) {
+      const lastLayer = state.atLayer(-1);
+      const nextScreenLink = primaryLayer.clone();
 
       const nextBreakpoint = state.mutate(nextScreenLink, {
-        ...options,
+        name: options.name,
         isPrimary: false,
-        top: lastBreakpoint.resolveField("top"),
+        isBreakpoint: true,
+        threshold: options.width,
+        top: animatableValue(lastLayer.resolveField("top")),
         left:
-          animatableValue(lastBreakpoint.resolveField("left")) +
-          animatableValue(lastBreakpoint.resolveField("minWidth")) +
+          animatableValue(lastLayer.resolveField("left")) +
+          animatableValue(lastLayer.resolveField("width")) +
           BREAKPOINT_GAP,
       });
 
-      state.mutate(state.key, {
+      state.mutate(state.fragment, {
         children: [nextBreakpoint],
       });
     }

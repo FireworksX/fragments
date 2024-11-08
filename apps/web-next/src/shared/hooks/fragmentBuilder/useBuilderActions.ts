@@ -84,6 +84,13 @@ export const useBuilderActions = () => {
     // }))
   }
 
+  const addBreakpoint = useCallback(() => {
+    // if (selectionGraph && documentManager && features.canInsert) {
+    //   const frame = documentManager.createFrame()
+    //   selectionGraph.appendChild(frame)
+    // }
+  }, [features.canInsert, selectionGraph, documentManager])
+
   const addFrame = useCallback(() => {
     if (selectionGraph && documentManager && features.canInsert) {
       const frame = documentManager.createFrame()
@@ -107,6 +114,7 @@ export const useBuilderActions = () => {
     convertToComponent,
     duplicate,
     addText,
-    addFrame
+    addFrame,
+    addBreakpoint
   }
 }

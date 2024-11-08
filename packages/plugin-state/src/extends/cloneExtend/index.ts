@@ -1,6 +1,7 @@
 import { generateId } from "@fragments/utils";
 import { BaseNode, Extender } from "@/types";
 import { CloneProps } from "@/types/props.ts";
+import { baseExtend } from "@/extends/baseExtend";
 
 export const cloneExtend: Extender = ({
   graph,
@@ -33,3 +34,5 @@ export const cloneExtend: Extender = ({
     },
   };
 };
+
+cloneExtend.symbol = Symbol("cloneExtend");

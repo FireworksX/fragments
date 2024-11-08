@@ -1,6 +1,7 @@
 import { BaseNode, Extender, SceneNode } from "@/types";
 import { filterDeep, findDeep } from "@fragments/utils";
 import { isPartialKey, LinkKey } from "@graph-state/core";
+import { baseExtend } from "@/extends/baseExtend";
 
 export const childrenExtend: Extender = <TChild extends SceneNode = SceneNode>({
   graph,
@@ -143,3 +144,5 @@ export const childrenExtend: Extender = <TChild extends SceneNode = SceneNode>({
     },
   };
 };
+
+childrenExtend.symbol = Symbol("childrenExtend");

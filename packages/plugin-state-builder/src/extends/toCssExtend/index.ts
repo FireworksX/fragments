@@ -27,7 +27,10 @@ export const toCssExtend: Extender = (payload) => {
         ...cornerStyles,
         ...fillStyles,
         ...borderStyles,
+        userSelect: "none",
       };
     },
   };
 };
+
+toCssExtend.symbol = Symbol("toCssExtend");

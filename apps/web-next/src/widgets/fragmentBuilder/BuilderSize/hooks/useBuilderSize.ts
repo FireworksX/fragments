@@ -26,17 +26,29 @@ export const useBuilderSize = () => {
       case 'aspectRatio':
         node.syncSize()
         break
+      case 'left':
+        return node.move(value)
+      case 'top':
+        return node.move(null, value)
     }
   })
   const [parent] = useGraph(documentManager, selectionGraph?.getParent())
+  const isTopLevel = selectionGraph?.isTopLevel() ?? false
+  const childOfBreakpoint = parent?._type === nodes.Breakpoint
+  const canRelativeSize = !childOfBreakpoint && !isTopLevel
 
-  const hugContentEnabled = !!selectionGraph?.children?.length || selectionGraph?._type === nodes.Text
-  const fillContentEnabled = animatableValue(parent?.resolveField('layerMode')) === layerMode.flex
+  const hugContentEnabled =
+    !!selectionGraph?.children?.length ||
+    selectionGraph?._type === nodes.Text ||
+    selectionGraph?._type === nodes.FragmentInstance
+  const fillContentEnabled = canRelativeSize && animatableValue(parent?.resolveField('layerMode')) === layerMode.flex
+  const relativeContentEnabled = canRelativeSize
 
   return {
     selectionGraph,
     hugContentEnabled,
     fillContentEnabled,
+    relativeContentEnabled,
     hasSync:
       layerInvoker('layoutSizingHorizontal').value !== sizing.Hug &&
       layerInvoker('layoutSizingVertical').value !== sizing.Hug,
@@ -47,6 +59,9 @@ export const useBuilderSize = () => {
     layoutSizingHorizontal: layerInvoker('layoutSizingHorizontal'),
     layoutSizingVertical: layerInvoker('layoutSizingVertical'),
     allowResizeHorizontal: selectionGraph?.getAllowResizeHorizontal?.(),
-    allowResizeVertical: selectionGraph?.getAllowResizeVertical?.()
+    allowResizeVertical: selectionGraph?.getAllowResizeVertical?.(),
+    left: layerInvoker('left'),
+    top: layerInvoker('top'),
+    canRelativeSize
   }
 }

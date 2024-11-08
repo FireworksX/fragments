@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useContext } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { animated } from '@react-spring/web'
@@ -6,10 +6,16 @@ import TextFrame from '@/shared/icons/text-frame.svg'
 import ColumnsFrame from '@/shared/icons/columns-frame.svg'
 import RowsFrame from '@/shared/icons/rows-frame.svg'
 import Frame from '@/shared/icons/frame.svg'
-import FragmentIcon from '@/shared/icons/next/component.svg'
+import FragmentInstanceIcon from '@/shared/icons/next/component.svg'
+import BreakpointIcon from '@/shared/icons/next/square-dashed.svg'
+import FragmentIcon from '@/shared/icons/next/box.svg'
 import { layerDirection, nodes } from '@fragments/plugin-state'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
+import { LinkKey } from '@graph-state/core'
+import { useGraph } from '@graph-state/react'
 
 interface BuilderLayerTypeIconProps {
+  layerKey: LinkKey
   type: string
   hasLayout: boolean
   layoutDirection: string
@@ -19,9 +25,25 @@ interface BuilderLayerTypeIconProps {
 }
 
 export const BuilderLayerTypeIcon: FC<BuilderLayerTypeIconProps> = animated(
-  ({ className, type, hasLayout, layoutDirection, primaryIconClassName, textIconClassName, fragmentIconClassName }) => {
+  ({
+    className,
+    type,
+    layerKey,
+    hasLayout,
+    layoutDirection,
+    primaryIconClassName,
+    textIconClassName,
+    fragmentIconClassName
+  }) => {
+    const { documentManager } = useContext(BuilderContext)
+    const [layerGraph] = useGraph(documentManager, layerKey)
+
     if (type === nodes.Text) return <TextFrame className={textIconClassName} />
-    if (type === nodes.FragmentInstance) return <FragmentIcon className={fragmentIconClassName} />
+    if (type === nodes.FragmentInstance) return <FragmentInstanceIcon className={fragmentIconClassName} />
+    if (type === nodes.Fragment) return <FragmentIcon className={primaryIconClassName} />
+
+    if (layerGraph?._type === nodes.Frame && layerGraph?.isBreakpoint)
+      return <BreakpointIcon className={primaryIconClassName} />
 
     if (hasLayout) {
       return layoutDirection === layerDirection.horizontal ? (

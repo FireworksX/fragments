@@ -44,3 +44,5 @@ export const paddingExtend: Extender = ({
     },
   };
 };
+
+paddingExtend.symbol = Symbol("paddingExtend");

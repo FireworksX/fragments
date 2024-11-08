@@ -15,3 +15,5 @@ export const sceneExtend: Extender = (payload) => {
     ...overflow,
   };
 };
+
+sceneExtend.symbol = Symbol("sceneExtend");

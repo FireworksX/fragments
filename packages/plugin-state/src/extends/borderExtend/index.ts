@@ -1,6 +1,7 @@
 import { Extender } from "@/types";
 import { valueSetter } from "@/shared/valueSetter.ts";
 import { borderType } from "@/definitions.ts";
+import { baseExtend } from "@/extends/baseExtend";
 
 export const borderExtend: Extender = ({
   graph,
@@ -23,3 +24,5 @@ export const borderExtend: Extender = ({
     setBorderColor: borderColorSetter,
   };
 };
+
+borderExtend.symbol = Symbol("borderExtend");

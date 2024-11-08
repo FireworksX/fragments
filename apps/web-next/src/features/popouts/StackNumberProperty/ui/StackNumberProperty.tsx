@@ -76,7 +76,7 @@ const StackNumberProperty: FC<StackNumberVariableProps> = ({ className }) => {
     <div className={cn(styles.root, className)}>
       <ControlRow title='Name'>
         <ControlRowWide>
-          <InputText {...nameInvoker} />
+          <InputText value={nameInvoker.value} onChangeValue={nameInvoker.onChange} />
         </ControlRowWide>
       </ControlRow>
       <ControlRow title='Required'>

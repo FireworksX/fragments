@@ -23,3 +23,5 @@ export const positionExtend: Extender = ({
     },
   };
 };
+
+positionExtend.symbol = Symbol("positionExtend");

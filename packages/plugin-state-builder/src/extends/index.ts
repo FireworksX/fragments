@@ -4,6 +4,7 @@ import { getRefValue } from "@/shared/getRefValue.ts";
 import { getResolvedValue } from "@/shared/getResolvedValue.ts";
 import { $EXTENDED_BUILDER } from "@/shared";
 import { nodes } from "@fragments/plugin-state";
+import { gray } from "next/dist/lib/picocolors";
 
 export const collectExtends =
   (extendCollection: Extender[]) =>
@@ -25,6 +26,10 @@ export const collectExtends =
       const getValue = getRefValue(state, acc);
       const resolveField = createResolveField(acc);
 
+      // if (acc.extenders?.includes(extender.symbol)) {
+      //   return acc;
+      // }
+
       acc = extender({
         graph: acc,
         graphKey,
@@ -32,6 +37,12 @@ export const collectExtends =
         state,
         resolveField,
       });
+
+      // if (!acc.extenders) {
+      //   acc.extenders = [];
+      // } else if (!acc.extenders?.includes(extender.symbol)) {
+      //   // acc.extenders?.push(extender.symbol);
+      // }
 
       return acc;
     }, graph);

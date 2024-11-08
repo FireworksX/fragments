@@ -14,11 +14,15 @@ interface BuilderPositionProps {
 
 const BuilderPosition: FC<BuilderPositionProps> = ({ className }) => {
   const { documentManager } = useContext(BuilderContext)
-  const { selectionGraph, type, x, y } = useBuilderPosition()
+  const { selectionGraph, type, left, top, hasPosition } = useBuilderPosition()
   //
   // if (!selectionGraph?.position && selectionGraph?._type !== builderNodes.Screen) {
   //   return null
   // }
+
+  if (!hasPosition) {
+    return null
+  }
 
   return (
     <Panel className={cn(styles.root, className)} title='Position'>
@@ -27,8 +31,8 @@ const BuilderPosition: FC<BuilderPositionProps> = ({ className }) => {
         //   <BuilderPositionToggle top={top} right={right} bottom={bottom} left={left} />
         // </div>
         <ControlRow title='Position'>
-          <InputNumber suffix='x' {...x} min={Infinity} max={Infinity} />
-          <InputNumber suffix='y' {...y} min={Infinity} max={Infinity} />
+          <InputNumber suffix='x' {...left} min={Infinity} max={Infinity} />
+          <InputNumber suffix='y' {...top} min={Infinity} max={Infinity} />
         </ControlRow>
       )}
       <ControlRow title='Type'>

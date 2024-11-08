@@ -5,6 +5,7 @@ import { LinkKey } from '@graph-state/core'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { nodes } from '@fragments/plugin-state'
+import { useBreakpoints } from '@/shared/hooks/fragmentBuilder/useBreakpoints'
 
 export const useBuilderLayerCell = (layerKey: LinkKey) => {
   const { documentManager } = useContext(BuilderContext)
@@ -15,6 +16,8 @@ export const useBuilderLayerCell = (layerKey: LinkKey) => {
   const selected = selection === layerKey
   const partialSelected = selected || parents.some(parent => selection === documentManager.keyOfEntity(parent))
   const isFragment = layerGraph?._type === nodes.FragmentInstance
+  const breakpointThreshold = useBreakpoints().getThresholdLabel((layerGraph?.threshold ?? 0) + 1)
+  const isPrimaryLayer = layerGraph?.isPrimaryLayer?.()
 
   return {
     type: layerGraph?._type,
@@ -23,6 +26,8 @@ export const useBuilderLayerCell = (layerKey: LinkKey) => {
     selected,
     partialSelected,
     isFragment,
+    isPrimaryLayer,
+    breakpointThreshold: !isPrimaryLayer && layerGraph?._type === nodes.Frame ? breakpointThreshold : null,
     rename: (name: string) => {
       layerGraph.rename(name)
     },

@@ -9,3 +9,5 @@ export const fillExtend: Extender = (payload) => {
     ...solidFill,
   };
 };
+
+fillExtend.symbol = Symbol("fillExtend");

@@ -15,6 +15,7 @@ import { Button } from '@/shared/ui/Button'
 import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderManager'
 import { FloatingBar } from '@/features/fragmentBuilder/FloatingBar'
 import { useBuilderActions } from '@/shared/hooks/fragmentBuilder/useBuilderActions'
+import { useBreakpoints } from '@/shared/hooks/fragmentBuilder/useBreakpoints'
 
 interface BuilderFloatBarProps {
   className?: string
@@ -25,6 +26,7 @@ export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
   const { isEdit, focus, updateParams } = useBuilderManager()
   const [canvas] = useGraph(canvasManager, canvasManager.key)
   const { addFrame, addText } = useBuilderActions()
+  const { allowedBreakpoints, addBreakpoint } = useBreakpoints()
 
   if (!isEdit) {
     return
@@ -56,6 +58,31 @@ export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
               trigger='click'
               options={
                 <DropdownGroup>
+                  <Dropdown
+                    placement='right'
+                    options={
+                      <>
+                        <DropdownGroup>
+                          {allowedBreakpoints.map(breakpoint => (
+                            <DropdownOption
+                              key={breakpoint.width}
+                              description={`${breakpoint.width}px`}
+                              onClick={() => addBreakpoint(breakpoint.name, breakpoint.width)}
+                            >
+                              {breakpoint.name}
+                            </DropdownOption>
+                          ))}
+                        </DropdownGroup>
+                        <DropdownGroup>
+                          <DropdownOption>Custom</DropdownOption>
+                        </DropdownGroup>
+                      </>
+                    }
+                  >
+                    <DropdownOption hasNested onClick={addFrame}>
+                      Add breakpoint
+                    </DropdownOption>
+                  </Dropdown>
                   <DropdownOption onClick={addFrame}>Add Frame</DropdownOption>
                   <DropdownOption onClick={addText}>Add Text</DropdownOption>
                 </DropdownGroup>

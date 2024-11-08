@@ -49,3 +49,5 @@ export const cornerExtend: Extender = ({
     },
   };
 };
+
+cornerExtend.symbol = Symbol("cornerExtend");

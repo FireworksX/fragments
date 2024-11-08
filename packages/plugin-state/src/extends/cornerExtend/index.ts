@@ -1,6 +1,7 @@
 import { Extender } from "@/types";
 import { valueSetter } from "@/shared/valueSetter.ts";
 import { isValue } from "@fragments/utils";
+import { baseExtend } from "@/extends/baseExtend";
 
 export const cornerExtend: Extender = ({
   graphKey,
@@ -45,3 +46,5 @@ export const cornerExtend: Extender = ({
     },
   };
 };
+
+cornerExtend.symbol = Symbol("cornerExtend");

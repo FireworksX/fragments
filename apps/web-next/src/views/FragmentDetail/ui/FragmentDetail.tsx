@@ -21,8 +21,6 @@ const previewManager = createPreviewManager()
 const builderManager = createBuilderManager()
 
 const fragmentState = createState({
-  type: 'FragmentModule',
-  id: generateId(),
   initialState: {
     fragment: 'Fragment:g34gherhg3g',
     dependencies: []

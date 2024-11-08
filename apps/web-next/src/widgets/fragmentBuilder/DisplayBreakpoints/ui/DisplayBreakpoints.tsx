@@ -3,18 +3,19 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import { Frame } from '@/widgets/renderer/Frame/Frame'
 import { useBreakpoints } from '@/shared/hooks/fragmentBuilder/useBreakpoints'
+import { useFragmentLayers } from '@/shared/hooks/fragmentBuilder/useFragmentLayers'
 
 interface BuilderDisplayBreakpointsProps {
   className?: string
 }
 
 const DisplayBreakpoints: FC<BuilderDisplayBreakpointsProps> = ({ className }) => {
-  const { breakpointValues, breakpointKeys } = useBreakpoints()
+  const { layers } = useFragmentLayers()
 
   return (
     <div className={cn(styles.root, className)}>
-      {breakpointKeys.map(breakpointKey => (
-        <Frame layerKey={breakpointKey} />
+      {layers.map(layerKey => (
+        <Frame key={layerKey} layerKey={layerKey} />
       ))}
     </div>
   )
