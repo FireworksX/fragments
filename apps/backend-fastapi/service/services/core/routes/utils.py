@@ -25,4 +25,5 @@ def transform_project_members(project: Project) -> List[UserRoleGet]:
 
 def transform_project_owner(project: Project) -> UserGet:
     data = project.owner.__dict__
+    print(data)
     return UserGet(**data)

@@ -169,5 +169,5 @@ async def update_fragment_route(info: strawberry.Info[Context], fg: FragmentPatc
                             detail=f'User is not allowed to update fragments')
 
     fragment: Fragment = await update_fragment_by_id_db(db, values=fg.__dict__)
-    return fragment_db_to_fragment(fragment, await project_by_id(info, project.id))
+    return fragment_db_to_fragment(fragment, project)
 
