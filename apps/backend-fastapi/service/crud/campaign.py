@@ -21,6 +21,8 @@ async def create_campaign_db(db: Session, name: str, project_id: int, descriptio
 async def get_campaign_by_id_db(db: Session, campaign_id: int) -> Optional[Campaign]:
     return db.query(Campaign).filter(Campaign.id == campaign_id).first()
 
+async def get_campaign_by_name_and_project_id_db(db: Session, project_id: int, name: str) -> Optional[Campaign]:
+    return db.query(Campaign).filter(Campaign.project_id == project_id).filter(Campaign.name == name).first()
 
 async def get_campaigns_by_project_id_db(db: Session, project_id: int, active: Optional[bool] = None, deleted: Optional[bool] = None) -> List[Campaign]:
     query = db.query(Campaign).filter(Campaign.project_id == project_id)

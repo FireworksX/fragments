@@ -1,5 +1,5 @@
 from .campaign import campaign_by_id, create_campaign_route, update_campaign_route, campaigns_in_project, \
-    add_campaign_logo_route
+    add_campaign_logo_route, campaign_by_name
 from .schemas import AuthPayload, UserGet, FragmentGet, FragmentPost, CampaignGet, CampaignPost, FeedbackPost, \
     FeedbackGet, \
     GeoLocationGet, StreamGet, StreamPost, ProjectPost, ProjectGet, LandingGet, \
@@ -44,6 +44,10 @@ class Query:
             return [await campaign_by_id(info, campgain_id)]
         if project_id is not None:
             return await campaigns_in_project(info, project_id, active, deleted)
+
+    @strawberry.field
+    async def campaign_by_name(self, info: strawberry.Info[Context], project_id: int, name: str, limit: Optional[int] = 5, active: Optional[bool] = None, deleted: Optional[bool] = None) -> List[CampaignGet]:
+        return await campaign_by_name(info, project_id, name, limit, active, deleted)
 
     @strawberry.field
     async def location(self, ip: str) -> GeoLocationGet:

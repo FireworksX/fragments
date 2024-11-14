@@ -61,7 +61,7 @@ class CampaignGet:
     name: str
     logo: Optional[str] = None
     author: UserGet
-    description: str
+    description: Optional[str] = None
     active: bool
     deleted: bool
 
