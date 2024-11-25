@@ -19,6 +19,9 @@ const BuilderFragmentGrowing: FC<BuilderFragmentGrowingProps> = ({ className }) 
   //   return null
   // }
 
+  /**
+   * Как рендерить фрагмент на странице.
+   */
   return (
     <Panel className={cn(styles.root, className)} title='Growing'>
       <ControlRow title='Verical'>

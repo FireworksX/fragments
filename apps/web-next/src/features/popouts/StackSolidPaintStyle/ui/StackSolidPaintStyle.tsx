@@ -24,7 +24,7 @@ const StackSolidPaintStyle: FC<StackPanelCreateColorProps> = ({ className }) => 
   return (
     <div className={cn(styles.root, className)}>
       <div className={styles.body}>
-        <InputText inputRef={nameRef} placeholder='Color name' value={name} onChange={setName} />
+        <InputText inputRef={nameRef} placeholder='Color name' value={name} onChangeValue={setName} />
         <Panel>
           <ColorPicker
             color={color$}

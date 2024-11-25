@@ -1,8 +1,21 @@
 import { Extender } from "@/types";
-import { to } from "@react-spring/core";
+import { nodes, renderTarget } from "@fragments/plugin-state";
 
-export const positionStylesExtend: Extender = ({ resolveField, graph }) => {
-  // const { isCanvas } = useRenderTarget()
+export const positionStylesExtend: Extender = ({
+  resolveField,
+  graph,
+  state,
+}) => {
+  const renderTargetValue = state.resolve(state.fragment)?.renderTarget;
+  const graphType = graph?._type;
+
+  if (
+    renderTargetValue === renderTarget.document &&
+    graphType === nodes.Frame
+  ) {
+    const parent = state.resolve(graph)?.getParent();
+    if (parent?._type === nodes.Fragment) return {};
+  }
 
   const positionType = resolveField("positionType") ?? "absolute";
 

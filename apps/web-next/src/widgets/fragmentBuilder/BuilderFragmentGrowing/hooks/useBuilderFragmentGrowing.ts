@@ -23,12 +23,12 @@ export const useBuilderFragmentGrowing = () => {
     selectionGraph,
     options: [
       {
-        label: 'Fixed',
-        value: fragmentGrowingMode.fixed
-      },
-      {
         label: 'Auto',
         value: fragmentGrowingMode.auto
+      },
+      {
+        label: 'Fill',
+        value: fragmentGrowingMode.fill
       }
     ],
     horizontal: layerInvoker('horizontalGrow'),

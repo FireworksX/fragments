@@ -15,7 +15,7 @@ export const nodes = createConstants(
   "TransformValue"
 );
 
-export const fragmentGrowingMode = createConstants("fixed", "auto");
+export const fragmentGrowingMode = createConstants("auto", "fill");
 
 export const borderType = createConstants("None", "Solid", "Dashed", "Dotted");
 export const paintMode = createConstants("Solid", "Image");

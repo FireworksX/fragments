@@ -88,7 +88,7 @@ export const creators: Plugin = (state) => {
         name: options.name ?? "Solid style",
       };
 
-      state.resolve(state.key)?.addSolidPaintStyle(colorGraph);
+      state.resolve(state.fragment)?.addSolidPaintStyle(colorGraph);
       return state.keyOfEntity(colorGraph);
     }
 

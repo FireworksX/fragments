@@ -1,5 +1,10 @@
 import { to } from "@react-spring/web";
-import { nodes, sizing } from "@fragments/plugin-state";
+import {
+  fragmentGrowingMode,
+  nodes,
+  renderTarget,
+  sizing,
+} from "@fragments/plugin-state";
 import { Extender } from "@/types";
 
 const autoSizes = [sizing.Hug, sizing.Fill];
@@ -7,6 +12,7 @@ const autoSizes = [sizing.Hug, sizing.Fill];
 export const sizeStylesExtend: Extender = ({
   resolveField,
   graphKey,
+  graph,
   state,
 }) => {
   const widthType$ = resolveField("layoutSizingHorizontal");
@@ -15,6 +21,8 @@ export const sizeStylesExtend: Extender = ({
   const height$ = resolveField("height");
   const minWidth$ = resolveField("minWidth");
   const minHeight$ = resolveField("minHeight");
+  const renderTargetValue = state.resolve(state.fragment)?.renderTarget;
+  const graphType = graph?._type;
 
   const toValue = (type: keyof typeof sizing, value: number) => {
     const node = state.resolve(graphKey);
@@ -28,6 +36,25 @@ export const sizeStylesExtend: Extender = ({
 
     return value;
   };
+
+  if (
+    renderTargetValue === renderTarget.document &&
+    graphType === nodes.Frame
+  ) {
+    const parent = state.resolve(graphKey)?.getParent();
+    if (parent?._type === nodes.Fragment) {
+      return {
+        width:
+          parent?.horizontalGrow === fragmentGrowingMode.fill
+            ? "100%"
+            : to([widthType$, width$], toValue),
+        height:
+          parent?.verticalGrow === fragmentGrowingMode.fill
+            ? "100%"
+            : to([heightType$, height$], toValue),
+      };
+    }
+  }
 
   return {
     width: to([widthType$, width$], toValue),

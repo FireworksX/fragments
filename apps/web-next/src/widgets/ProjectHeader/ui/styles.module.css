@@ -1,5 +1,5 @@
 .root {
-    background: var(--background-light);
+    background: var(--background);
     border-bottom: 1px solid var(--border);
 }
 

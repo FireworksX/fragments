@@ -29,7 +29,7 @@ export const AssetsStyles: FC<AssetsStylesProps> = ({ assetsColorsNode }) => {
               <>
                 <DropdownGroup>
                   {/*<DropdownOption>Text</DropdownOption>*/}
-                  <DropdownOption onClick={createColor}>Color</DropdownOption>
+                  <DropdownOption onClick={() => createColor({})}>Color</DropdownOption>
                   {/*<DropdownOption onClick={createCssOverride}>CSS</DropdownOption>*/}
                 </DropdownGroup>
               </>

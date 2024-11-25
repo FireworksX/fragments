@@ -13,8 +13,8 @@ export const fragmentGrowingExtend: Extender = ({
 
   return {
     ...graph,
-    horizontalGrow: getValue("horizontalGrow", fragmentGrowingMode.fixed),
-    verticalGrow: getValue("verticalGrow", fragmentGrowingMode.fixed),
+    horizontalGrow: getValue("horizontalGrow", fragmentGrowingMode.auto),
+    verticalGrow: getValue("verticalGrow", fragmentGrowingMode.auto),
     setHorizontalGrow: horizontalGrowSetter,
     setVerticalGrow: verticalGrowSetter,
   };
