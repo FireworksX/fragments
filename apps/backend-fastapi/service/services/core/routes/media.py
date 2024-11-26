@@ -1,7 +1,9 @@
 from typing import List
 from fastapi import HTTPException, status
 import strawberry
-from .schemas import FragmentGet, AuthPayload, MediaGet
+from .schemas.media import MediaGet
+from .schemas.fragment import FragmentGet
+from .schemas.user import AuthPayload
 from .middleware import Context
 import uuid
 from storage3.utils import StorageException

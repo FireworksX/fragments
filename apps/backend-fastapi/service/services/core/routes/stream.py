@@ -5,8 +5,10 @@ import strawberry
 from crud.stream import create_stream_db, update_stream_by_id_db, get_streams_by_campaign_id_db, get_stream_by_id_db
 from crud.campaign import get_campaign_by_id_db
 from database import Session, Stream, Campaign
-from .schemas import AuthPayload, CampaignGet, CampaignPost, RoleGet, StreamPost, StreamGet, DeviceTypeGet, OSTypeGet, \
-    GeoLocationGet, TimeFrameGet, StreamPatch
+from .schemas import OSTypFilterGet, DeviceTypeFilterGet, GeoLocationFilterGet, TimeFrameFilterGet
+from .schemas.stream import StreamGet, StreamPost, StreamPatch
+from .schemas.campaign import CampaignGet, CampaignPost
+from .schemas.user import RoleGet, AuthPayload
 from .middleware import Context
 from .utils import get_user_role_in_project
 
@@ -25,16 +27,16 @@ def stream_db_to_stream(stream: Stream) -> StreamGet:
     return StreamGet(id=stream.id, name=stream.name, deleted=stream.deleted,
                      active=stream.active,
                      campaign_id=stream.campaign_id, weight=stream.weight,
-                     os_types=[OSTypeGet(relation.os_type.os_type) for relation in stream.os_types],
-                     device_types=[DeviceTypeGet(relation.device_type.device_type) for relation in
-                                   stream.device_types],
-                     pages=[relation.page.page for relation in stream.pages], geo_locations=[
-            GeoLocationGet(country=relation.geo_location.country, city=relation.geo_location.city,
-                           region=relation.geo_location.region) for relation in stream.geo_locations],
+                     os_types=[OSTypFilterGet(relation.os_type.os_type) for relation in stream.os_types_filter],
+                     device_types=[DeviceTypeFilterGet(relation.device_type.device_type) for relation in
+                                   stream.device_types_filter],
+                     pages=[relation.page.page for relation in stream.pages_filter], geo_locations=[
+            GeoLocationFilterGet(country=relation.geo_location.country, city=relation.geo_location.city,
+                                 region=relation.geo_location.region) for relation in stream.geo_locations_filter],
                      time_frames=[
-                         TimeFrameGet(to_time=relation.time_frame.to_time,
-                                      from_time=relation.time_frame.from_time) for
-                         relation in stream.time_frames])
+                         TimeFrameFilterGet(to_time=relation.time_frame.to_time,
+                                            from_time=relation.time_frame.from_time) for
+                         relation in stream.time_frames_filter])
 
 
 async def streams_in_campaign(info: strawberry.Info[Context], campaign_id: int, active: Optional[bool] = None, deleted: Optional[bool] = None) -> List[StreamGet]:

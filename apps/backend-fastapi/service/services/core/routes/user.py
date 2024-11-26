@@ -6,7 +6,8 @@ from fastapi import HTTPException, status, UploadFile
 from crud.bucket import add_file, delete_file
 from crud.media import get_media_by_id_db, create_media_db, delete_media_by_id_db
 from .middleware import Context
-from .schemas import UserGet, AuthPayload, MediaGet
+from .schemas.media import MediaGet
+from .schemas.user import UserGet, AuthPayload
 from typing import Optional, Dict, Any
 from crud.user import get_user_by_email_db, create_user_db
 from services.core.utils import create_access_token, create_refresh_token, get_password_hash, verify_password

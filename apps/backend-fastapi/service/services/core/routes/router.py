@@ -1,23 +1,29 @@
 from .campaign import campaign_by_id, create_campaign_route, update_campaign_route, campaigns_in_project, \
     add_campaign_logo_route, campaign_by_name
-from .schemas import AuthPayload, UserGet, FragmentGet, FragmentPost, CampaignGet, CampaignPost, FeedbackPost, \
-    FeedbackGet, \
-    GeoLocationGet, StreamGet, StreamPost, ProjectPost, ProjectGet, LandingGet, \
-    LandingPost, LandingPatch, ProjectPatch, StreamPatch, CampaignPatch, FragmentPatch
+from .filter import get_all_filters
+from .schemas import GeoLocationFilterGet
+from .schemas.feedback import FeedbackPost, FeedbackGet
+from .schemas.stream import StreamGet, StreamPost, StreamPatch
+from .schemas.landing import LandingGet, LandingPost, LandingPatch
+from .schemas.campaign import CampaignGet, CampaignPost, CampaignPatch
+from .schemas.fragment import FragmentPost, FragmentPatch, FragmentGet
+from .schemas.project import ProjectGet, ProjectPost, ProjectPatch
 
 import strawberry
-from typing import Optional, List
+from typing import Optional, List, Union
 from .middleware import Context
 from .user import login, refresh, profile, signup, add_avatar_route
 from .fragment import create_fragment_route, fragments_in_project, fragment_by_id, update_fragment_route, add_fragment_asset_route, remove_fragment_asset_route
 from .stream import create_stream_route, stream_by_id, streams_in_campaign, update_stream_route
 from .feedback import create_feedback
 from .project import create_project_route, project_by_id, projects, update_project_route, \
-    add_user_to_project as add_user_to_project_route, RoleGet, change_user_role as change_user_role_route, \
+    add_user_to_project as add_user_to_project_route, change_user_role as change_user_role_route, \
     add_project_logo_route
+from .schemas.user import RoleGet, UserGet, AuthPayload
 from fastapi import UploadFile
 from crud.ipgetter import get_location_by_ip
 from .landing import landing_by_id, landings_in_stream, update_landing_route, create_landing_route
+from .schemas.filter import FilterOSType, FilterDeviceType, FilterGeoLocation
 
 
 @strawberry.type
@@ -50,7 +56,7 @@ class Query:
         return await campaign_by_name(info, project_id, name, limit, active, deleted)
 
     @strawberry.field
-    async def location(self, ip: str) -> GeoLocationGet:
+    async def location(self, ip: str) -> GeoLocationFilterGet:
         return get_location_by_ip(ip)
 
     @strawberry.field
@@ -74,6 +80,10 @@ class Query:
             return [await landing_by_id(info, landing_id)]
         else:
             return await landings_in_stream(info, stream_id)
+
+    @strawberry.field
+    async def filter(self, info: strawberry.Info[Context]) -> List[Union[FilterOSType, FilterDeviceType | FilterGeoLocation]]:
+        return await get_all_filters(info)
 
 
 @strawberry.type

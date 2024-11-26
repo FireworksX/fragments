@@ -12,8 +12,8 @@ from crud.stream import get_stream_by_id_db
 from crud.landing import create_landing_db, get_landings_by_stream_id_db, \
     get_landing_by_id_db, update_landing_by_id_db
 from .fragment import fragment_by_id
-from .schemas import AuthPayload, RoleGet, LandingPost, LandingGet, \
-    LandingPatch
+from .schemas.landing import LandingGet, LandingPost, LandingPatch
+from .schemas.user import RoleGet, AuthPayload
 from .middleware import Context
 from crud.fragment import Fragment, get_fragment_by_id_db
 from database import Session, Project, Landing, Stream, Campaign

@@ -8,7 +8,9 @@ from conf import service_settings
 from crud.bucket import add_file, delete_file
 from crud.media import create_media_db, delete_media_by_public_path_db
 from crud.project import get_project_by_id_db
-from .schemas import FragmentGet, AuthPayload, FragmentPost, ProjectGet, RoleGet, FragmentPatch, UserGet
+from .schemas.fragment import FragmentPost, FragmentPatch, FragmentGet
+from .schemas.project import ProjectGet
+from .schemas.user import RoleGet, UserGet, AuthPayload
 from .middleware import Context
 from crud.fragment import create_fragment_db, Fragment, get_fragments_by_project_id_db, get_fragment_by_id_db, \
     update_fragment_by_id_db, add_fragment_media

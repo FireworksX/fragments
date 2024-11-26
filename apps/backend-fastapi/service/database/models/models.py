@@ -82,83 +82,53 @@ class GeoLocation(Base):
     __tablename__ = 'geo_location'
     id = Column('id', Integer, primary_key=True, index=True)
     country = Column('country', String, nullable=False)
-    region = Column('region', String, nullable=False)
+    region = Column('region', String)
     city = Column('city', String, nullable=False)
-    stream_id = Column('stream_id', Integer, ForeignKey('stream.id', ondelete='CASCADE'), nullable=False)
 
 
-class StreamGeoLocation(Base):
-    __tablename__ = "stream_geo_location"
-    geo_location_id = Column(ForeignKey("geo_location.id"), primary_key=True)
+class StreamGeoLocationFilter(Base):
+    __tablename__ = "stream_geo_location_filter"
     stream_id = Column(ForeignKey("stream.id"), primary_key=True)
 
-    stream = relationship("Stream", back_populates="geo_locations")
-    geo_location = relationship("GeoLocation")
+    stream = relationship("Stream", back_populates="geo_locations_filter")
+    country = Column('country', String, nullable=False)
+    region = Column('region', String)
+    city = Column('city', String, nullable=False)
+    toggled = Column('toggled', Boolean, nullable=False)
 
+class StreamTimeFrameFilter(Base):
+    __tablename__ = "stream_time_frame_filter"
+    stream_id = Column(ForeignKey("stream.id"), primary_key=True)
 
-class TimeFrame(Base):
-    __tablename__ = 'time_frame'
-    id = Column('id', Integer, primary_key=True, index=True)
-    stream_id = Column('stream_id', Integer, ForeignKey('stream.id', ondelete='CASCADE'), nullable=False)
+    stream = relationship("Stream", back_populates="time_frames_filter")
     from_time = Column('from_time', DateTime, nullable=False)
     to_time = Column('to_time', DateTime, nullable=False)
+    toggled = Column('toggled', Boolean, nullable=False)
 
 
-class StreamTimeFrame(Base):
-    __tablename__ = "stream_time_frame"
-    time_frame_id = Column(ForeignKey("time_frame.id"), primary_key=True)
+class StreamOSTypeFilter(Base):
+    __tablename__ = "stream_os_type_filter"
     stream_id = Column(ForeignKey("stream.id"), primary_key=True)
 
-    stream = relationship("Stream", back_populates="time_frames")
-    time_frame = relationship("TimeFrame")
-
-
-class OSType(Base):
-    __tablename__ = 'os_type'
-    id = Column('id', Integer, primary_key=True, index=True)
-    stream_id = Column('stream_id', Integer, ForeignKey('stream.id', ondelete='CASCADE'), nullable=False)
+    stream = relationship("Stream", back_populates="os_types_filter")
     os_type = Column('os_type', Integer, nullable=False)
+    toggled = Column('toggled', Boolean, nullable=False)
 
-
-class StreamOSType(Base):
-    __tablename__ = "stream_os_type"
-    os_type_id = Column(ForeignKey("os_type.id"), primary_key=True)
+class StreamDeviceTypeFilter(Base):
+    __tablename__ = "stream_device_type_filter"
     stream_id = Column(ForeignKey("stream.id"), primary_key=True)
 
-    stream = relationship("Stream", back_populates="os_types")
-    os_type = relationship("OSType")
-
-
-class DeviceType(Base):
-    __tablename__ = 'device_type'
-    id = Column('id', Integer, primary_key=True, index=True)
-    stream_id = Column('stream_id', Integer, ForeignKey('stream.id', ondelete='CASCADE'), nullable=False)
+    stream = relationship("Stream", back_populates="device_types_filter")
     device_type = Column('device_type', Integer, nullable=False)
+    toggled = Column('toggled', Boolean, nullable=False)
 
-
-class StreamDeviceType(Base):
-    __tablename__ = "stream_device_type"
-    device_type_id = Column(ForeignKey("device_type.id"), primary_key=True)
+class StreamPageFilter(Base):
+    __tablename__ = "stream_page_filter"
     stream_id = Column(ForeignKey("stream.id"), primary_key=True)
 
-    stream = relationship("Stream", back_populates="device_types")
-    device_type = relationship("DeviceType")
-
-
-class Page(Base):
-    __tablename__ = 'page'
-    id = Column('id', Integer, primary_key=True, index=True)
-    stream_id = Column('stream_id', Integer, ForeignKey('stream.id', ondelete='CASCADE'), nullable=False)
+    stream = relationship("Stream", back_populates="pages_filter")
     page = Column('page', String, nullable=False)
-
-
-class StreamPage(Base):
-    __tablename__ = "stream_page"
-    page_id = Column(ForeignKey("page.id"), primary_key=True)
-    stream_id = Column(ForeignKey("stream.id"), primary_key=True)
-
-    stream = relationship("Stream", back_populates="pages")
-    page = relationship("Page")
+    toggled = Column('toggled', Boolean, nullable=False)
 
 
 class Stream(Base):
@@ -173,15 +143,15 @@ class Stream(Base):
     name = Column('name', String, nullable=False)
     weight = Column('weight', Float, nullable=False)
 
-    pages = relationship("StreamPage", back_populates="stream", cascade="save-update, merge, "
+    pages_filter = relationship("StreamPageFilter", back_populates="stream", cascade="save-update, merge, "
                                                                         "delete, delete-orphan")
-    device_types = relationship("StreamDeviceType", back_populates="stream", cascade="save-update, merge, "
+    device_types_filter = relationship("StreamDeviceTypeFilter", back_populates="stream", cascade="save-update, merge, "
                                                                                      "delete, delete-orphan")
-    os_types = relationship("StreamOSType", back_populates="stream", cascade="save-update, merge, "
+    os_types_filter = relationship("StreamOSTypeFilter", back_populates="stream", cascade="save-update, merge, "
                                                                              "delete, delete-orphan")
-    time_frames = relationship("StreamTimeFrame", back_populates="stream", cascade="save-update, merge, "
+    time_frames_filter = relationship("StreamTimeFrameFilter", back_populates="stream", cascade="save-update, merge, "
                                                                                    "delete, delete-orphan")
-    geo_locations = relationship("StreamGeoLocation", back_populates="stream", cascade="save-update, merge, "
+    geo_locations_filter = relationship("StreamGeoLocationFilter", back_populates="stream", cascade="save-update, merge, "
                                                                                        "delete, delete-orphan")
 
 

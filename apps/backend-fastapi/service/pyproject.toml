@@ -38,6 +38,8 @@ SQLAlchemy-serializer = "1.4.1"
 psycopg2-binary = "2.9.9"
 alembic = "1.9.4"
 
+kagglehub = "0.3.4"
+
 [tool.poetry.dev-dependencies]
 # Lint
 black = {version = "^19.10b0", allow-prereleases = true}

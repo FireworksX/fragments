@@ -10,7 +10,8 @@ from crud.campaign import create_campaign_db, get_campaign_by_id_db, get_campaig
 from crud.media import create_media_db, delete_media_by_id_db
 from crud.project import get_project_by_id_db
 from database import Session, Project, Campaign, Media
-from .schemas import AuthPayload, CampaignGet, CampaignPost, RoleGet, CampaignPatch
+from .schemas.campaign import CampaignGet, CampaignPost, CampaignPatch
+from .schemas.user import RoleGet, AuthPayload
 from .middleware import Context
 from .utils import get_user_role_in_project
 from thefuzz import fuzz

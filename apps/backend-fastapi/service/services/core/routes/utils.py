@@ -3,7 +3,8 @@ from typing import List
 from database import Session, Project
 from crud.project import get_user_project_role
 from crud.campaign import get_campaign_by_id_db
-from .schemas import RoleGet, UserRoleGet, UserGet, CampaignGet
+from .schemas.campaign import CampaignGet
+from .schemas.user import RoleGet, UserGet, UserRoleGet
 
 
 async def get_user_role_in_project(db: Session, user_id: int, project_id: int) -> RoleGet | None:

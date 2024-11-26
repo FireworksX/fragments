@@ -7,7 +7,10 @@ from conf import service_settings
 from crud.bucket import add_file, delete_file
 from crud.campaign import get_campaign_by_id_db
 from crud.media import create_media_db, delete_media_by_id_db
-from .schemas import FragmentGet, AuthPayload, ProjectGet, ProjectPost, RoleGet, CampaignGet, ProjectPatch
+from .schemas.campaign import CampaignGet
+from .schemas.fragment import FragmentGet
+from .schemas.project import ProjectGet, ProjectPost, ProjectPatch
+from .schemas.user import RoleGet, AuthPayload
 from .middleware import Context
 from crud.project import create_project_db, get_project_by_id_db, get_user_project_role, get_projects_by_user_id_db, \
     update_project_by_id_db, add_user_to_project_db, change_user_role_db
