@@ -1,7 +1,6 @@
 from .campaign import campaign_by_id, create_campaign_route, update_campaign_route, campaigns_in_project, \
     add_campaign_logo_route, campaign_by_name
 from .filter import get_all_filters
-from .schemas import GeoLocationFilterGet
 from .schemas.feedback import FeedbackPost, FeedbackGet
 from .schemas.stream import StreamGet, StreamPost, StreamPatch
 from .schemas.landing import LandingGet, LandingPost, LandingPatch
@@ -21,9 +20,8 @@ from .project import create_project_route, project_by_id, projects, update_proje
     add_project_logo_route
 from .schemas.user import RoleGet, UserGet, AuthPayload
 from fastapi import UploadFile
-from crud.ipgetter import get_location_by_ip
 from .landing import landing_by_id, landings_in_stream, update_landing_route, create_landing_route
-from .schemas.filter import FilterOSType, FilterDeviceType, FilterGeoLocation
+from .schemas.filter import FilterOSTypeGet, FilterDeviceTypeGet, FilterGeoLocationGet
 
 
 @strawberry.type
@@ -55,9 +53,6 @@ class Query:
     async def campaign_by_name(self, info: strawberry.Info[Context], project_id: int, name: str, limit: Optional[int] = 5, active: Optional[bool] = None, deleted: Optional[bool] = None) -> List[CampaignGet]:
         return await campaign_by_name(info, project_id, name, limit, active, deleted)
 
-    @strawberry.field
-    async def location(self, ip: str) -> GeoLocationFilterGet:
-        return get_location_by_ip(ip)
 
     @strawberry.field
     async def stream(self, info: strawberry.Info[Context], stream_id: Optional[int] = None,
@@ -82,7 +77,7 @@ class Query:
             return await landings_in_stream(info, stream_id)
 
     @strawberry.field
-    async def filter(self, info: strawberry.Info[Context]) -> List[Union[FilterOSType, FilterDeviceType | FilterGeoLocation]]:
+    async def filter(self, info: strawberry.Info[Context]) -> List[Union[FilterOSTypeGet, FilterDeviceTypeGet | FilterGeoLocationGet]]:
         return await get_all_filters(info)
 
 

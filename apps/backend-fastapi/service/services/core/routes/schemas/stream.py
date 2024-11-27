@@ -1,9 +1,10 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 
 import strawberry
 
-from services.core.routes.schemas import OSTypFilterGet, DeviceTypeFilterGet, GeoLocationFilterGet, \
-    TimeFrameFilterGet, TimeFrameFilterPost, GeoLocationFilterPost
+from services.core.routes.schemas.filter import FilterOSTypePost, FilterPagePost, FilterPageGet, FilterTimeFrameGet, \
+    FilterTimeFramePost, FilterDeviceTypePost, FilterOSTypeGet, FilterDeviceTypeGet, FilterGeoLocationGet, \
+    FilterGeoLocationPost
 
 
 @strawberry.type
@@ -13,11 +14,8 @@ class StreamGet:
     active: bool
     deleted: bool
     name: str
-    os_types: List[OSTypFilterGet]
-    device_types: List[DeviceTypeFilterGet]
-    pages: List[str]
-    geo_locations: List[GeoLocationFilterGet]
-    time_frames: List[TimeFrameFilterGet]
+    filters: List[
+        Union[FilterOSTypeGet | FilterDeviceTypeGet | FilterPageGet | FilterGeoLocationGet | FilterTimeFrameGet]]
     weight: float
 
 
@@ -27,11 +25,8 @@ class StreamPost:
     active: bool
     deleted: bool
     name: str
-    os_types: Optional[List[OSTypFilterGet]] = None
-    device_types: Optional[List[DeviceTypeFilterGet]] = None
-    pages: Optional[List[str]] = None
-    geo_locations: Optional[List[GeoLocationFilterPost]] = None
-    time_frames: Optional[List[TimeFrameFilterPost]] = None
+    filters: List[
+        Union[FilterOSTypePost | FilterDeviceTypePost | FilterPagePost | FilterGeoLocationPost | FilterTimeFramePost]]
     weight: float
 
 
@@ -42,9 +37,7 @@ class StreamPatch:
     active: Optional[bool] = None
     deleted: Optional[bool] = None
     name: Optional[str] = None
-    os_types: Optional[List[OSTypFilterGet]] = None
-    device_types: Optional[List[DeviceTypeFilterGet]] = None
-    pages: Optional[List[str]] = None
-    geo_locations: Optional[List[GeoLocationFilterPost]] = None
-    time_frames: Optional[List[TimeFrameFilterPost]] = None
+    filters: Optional[List[
+        Union[
+            FilterOSTypePost | FilterDeviceTypePost | FilterPagePost | FilterGeoLocationPost | FilterTimeFramePost]]] = None
     weight: Optional[float] = None

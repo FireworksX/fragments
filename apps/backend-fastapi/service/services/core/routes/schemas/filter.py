@@ -20,20 +20,6 @@ class DeviceType(Enum):
     DESKTOP = 2
     MOBILE = 3
 
-
-@strawberry.type
-class GeoLocation:
-    country: str
-    region: Optional[str] = None
-    city: Optional[str] = None
-
-
-@strawberry.type
-class TimeFrame:
-    from_time: datetime.datetime
-    to_time: datetime.datetime
-
-
 @strawberry.enum
 class FilterType(Enum):
     OSType = 1
@@ -44,73 +30,59 @@ class FilterType(Enum):
 
 
 @strawberry.type
-class FilterBase:
+class FilterBaseGet:
+    toggled: Optional[bool] = True
+    type: FilterType
+
+@strawberry.input
+class FilterBasePost:
     toggled: Optional[bool] = True
     type: FilterType
 
 
 @strawberry.type
-class FilterOSType(FilterBase):
+class FilterOSTypeGet(FilterBaseGet):
     os_type: OSType
 
+@strawberry.input
+class FilterOSTypePost(FilterBasePost):
+    os_type: OSType
 
 @strawberry.type
-class FilterDeviceType(FilterBase):
+class FilterDeviceTypeGet(FilterBaseGet):
     device_type: DeviceType
 
+@strawberry.input
+class FilterDeviceTypePost(FilterBasePost):
+    device_type: DeviceType
 
 @strawberry.type
-class FilterPage(FilterBase):
+class FilterPageGet(FilterBaseGet):
     page: str
 
+@strawberry.input
+class FilterPagePost(FilterBasePost):
+    page: str
 
 @strawberry.type
-class FilterGeoLocation(FilterBase):
-    geo_location: GeoLocation
-
-
-@strawberry.type
-class FilterTimeFrame(FilterBase):
-    time_frame: TimeFrame
-
-
-@strawberry.enum
-class OSTypFilterGet(Enum):
-    ANDROID = 1
-    IOS = 2
-    WINDOWS = 3
-    LINUX = 4
-    MACOS = 5
-
-
-@strawberry.enum
-class DeviceTypeFilterGet(Enum):
-    TABLET = 1
-    DESKTOP = 2
-    MOBILE = 3
-
-
-@strawberry.type
-class GeoLocationFilterGet:
+class FilterGeoLocationGet(FilterBaseGet):
     country: str
-    region: str
-    city: str
-
-
-@strawberry.type
-class TimeFrameFilterGet:
-    from_time: datetime.datetime
-    to_time: datetime.datetime
-
-
-@strawberry.input
-class TimeFrameFilterPost:
-    from_time: datetime.datetime
-    to_time: datetime.datetime
-
-
-@strawberry.input
-class GeoLocationFilterPost:
-    country: Optional[str] = None
     region: Optional[str] = None
     city: Optional[str] = None
+
+@strawberry.input
+class FilterGeoLocationPost(FilterBasePost):
+    country: str
+    region: Optional[str] = None
+    city: Optional[str] = None
+
+@strawberry.type
+class FilterTimeFrameGet(FilterBaseGet):
+    from_time: datetime.datetime
+    to_time: datetime.datetime
+
+
+@strawberry.input
+class FilterTimeFramePost(FilterBasePost):
+    from_time: datetime.datetime
+    to_time: datetime.datetime
