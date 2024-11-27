@@ -6,6 +6,7 @@ import { nodes } from '@fragments/plugin-state'
 import { LinkKey } from '@graph-state/core'
 import { FragmentInstance } from '@/widgets/renderer/FragmentInstance/FragmentInstance'
 import { useExtendStyle } from '@/widgets/renderer/hooks/useExtendStyle'
+import { useGraph } from '@graph-state/react'
 
 interface LayerProps {
   layerKey: LinkKey
@@ -14,7 +15,7 @@ interface LayerProps {
 
 export const Frame: FC<LayerProps> = ({ layerKey, style }) => {
   const { documentManager } = useContext(BuilderContext)
-  const layerGraph = documentManager.resolve(layerKey)
+  const [layerGraph] = useGraph(documentManager, layerKey)
   const cssStyles = layerGraph?.toCss?.() ?? {}
   const extendedStyle = useExtendStyle(cssStyles, style)
 

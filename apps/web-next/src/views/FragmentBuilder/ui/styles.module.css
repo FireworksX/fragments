@@ -8,7 +8,7 @@
     flex-direction: column;
     flex: 1;
     background: var(--background-light);
-    height: calc(100vh - var(--app-size-header) - var(--app-size-navigation));
+    height: calc(100vh - var(--app-size-header));
     overflow: hidden;
     position: relative;
 }

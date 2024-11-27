@@ -1,10 +1,9 @@
 import { FC } from 'react'
 import { SpringValue } from '@react-spring/web'
-import ControlRow from '@/builder/components/ControlRow/ControlRow'
-import ControlRowWide from '@/builder/components/ControlRow/components/ControlRowWide/ControlRowWide'
-import TabsSelector from '@/app/components/TabsSelector'
-import { tabsSelectorItemsBoolean } from '@/builder/data'
 import { animatableValue } from '@/shared/utils/animatableValue'
+import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
+import { TabsSelector } from '@/shared/ui/TabsSelector'
+import { booleanTabsSelectorItems } from '@/shared/data'
 
 interface TransformNumberValueProps {
   className?: string
@@ -17,7 +16,7 @@ export const TransformBooleanValue: FC<TransformNumberValueProps> = ({ className
     <ControlRow title='Value'>
       <ControlRowWide>
         <TabsSelector
-          items={tabsSelectorItemsBoolean}
+          items={booleanTabsSelectorItems}
           value={animatableValue(value)}
           onChange={({ name }) => onChange(name)}
         />

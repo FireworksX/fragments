@@ -1,8 +1,11 @@
 import { to } from "@react-spring/web";
 import { Extender } from "@/types";
 import { toPx } from "@/shared/toPx.ts";
+import { createConstantInterpolate } from "@/shared/createConstantInterpolate.ts";
+import { createCachedInterpolate } from "@/shared/cachedInterpolate.ts";
 
 export const cornerStylesExtend: Extender = ({ resolveField }) => {
+  const cachedBorderRadius = createCachedInterpolate(``);
   const cornerRadius = resolveField("cornerRadius");
   const topLeftRadius = resolveField("topLeftRadius");
   const topRightRadius = resolveField("topRightRadius");
@@ -10,7 +13,7 @@ export const cornerStylesExtend: Extender = ({ resolveField }) => {
   const bottomRightRadius = resolveField("bottomRightRadius");
 
   return {
-    borderRadius: to(
+    borderRadius: cachedBorderRadius(
       [
         cornerRadius,
         topLeftRadius,

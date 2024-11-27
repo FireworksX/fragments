@@ -92,14 +92,13 @@ export const useFragmentComputedValues = () => {
   const { documentManager } = useContext(BuilderContext)
 
   const getTransformsByType = type =>
-    (transformsByType[type] ?? []).map(transformType => variableTransformsConfig[transformType]).filter(Boolean)
+    (computedValuesByType[type] ?? []).map(transformType => computedValuesConfig[transformType]).filter(Boolean)
 
   const createComputedValue = ({ inputValue, transform, outputType, inputType }: ComputedValueEntity) => {
-    console.log(inputValue, transform, inputType, outputType)
     const transformLinks = transform.transforms.map(transform => {
-      if (transform === variableTransformsConfig.convertFromBoolean) {
+      if (transform === variableTransforms.convertFromBoolean) {
         const defaultOutputValue = defaultValueByType[outputType]
-        return documentManager.createTransformValue(variableTransformsConfig.convertFromBoolean, {
+        return documentManager.createTransformValue(variableTransforms.convertFromBoolean, {
           outputType,
           truthy: defaultOutputValue,
           falsy: defaultOutputValue
@@ -116,9 +115,7 @@ export const useFragmentComputedValues = () => {
       transforms: transformLinks
     })
 
-    console.log(transformLinks, computedValueLink)
-
-    return ''
+    return computedValueLink
   }
 
   return {

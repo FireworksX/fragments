@@ -1,24 +1,23 @@
 import { FC, useContext } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import ControlRow from '@/builder/components/ControlRow/ControlRow'
-import ControlRowWide from '@/builder/components/ControlRow/components/ControlRowWide/ControlRowWide'
-import Select from '@/app/components/Select/Select'
 import { LinkKey } from '@graph-state/core'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
-import { builderVariableTransforms, builderVariableType } from '@fragments/fragments-plugin'
-import { useBuilderVariableTransforms } from '@/builder/hooks/useBuilderVariableTransforms'
-import InputNumber from '@/app/components/InputNumber/InputNumber'
 import { TransformNumberValue } from './components/TransformNumberValue/TransformNumberValue'
-import { TransformConvertFromBooleanValue } from '@/builder/StackCollector/components/variables/StackVariableTransform/components/StackTransformSection/components/TransformConvertFromBooleanValue/TransformConvertFromBooleanValue'
-import Panel from '@/builder/components/Panel/Panel'
-import { TransformBooleanValue } from '@/builder/StackCollector/components/variables/StackVariableTransform/components/StackTransformSection/components/TransformBooleanValue/TransformBooleanValue'
+// import { TransformBooleanValue } from '@/builder/StackCollector/components/variables/StackVariableTransform/components/StackTransformSection/components/TransformBooleanValue/TransformBooleanValue'
+import { useFragmentComputedValues } from '@/shared/hooks/fragmentBuilder/useFragmentComputedValues'
+import { TransformConvertFromBooleanValue } from '@/features/popouts/StackVariableTransform/components/StackTransformSection/components/TransformConvertFromBooleanValue/TransformConvertFromBooleanValue'
+import { Panel } from '@/shared/ui/Panel'
+import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
+import { Select } from '@/shared/ui/Select'
+import { variableTransforms, variableType } from '@fragments/plugin-state'
+import { TransformBooleanValue } from './components/TransformBooleanValue/TransformBooleanValue'
 
 interface StackTransformSectionProps {
   className?: string
   transformLink: LinkKey
-  inputType: keyof typeof builderVariableType
+  inputType: keyof typeof variableType
   isFirst?: boolean
   valueReferenceOptions: unknown
 }
@@ -32,17 +31,17 @@ export const StackTransformSection: FC<StackTransformSectionProps> = ({
 }) => {
   const { documentManager } = useContext(BuilderContext)
   const [transform] = useGraph(documentManager, transformLink)
-  const { getTransformsByType } = useBuilderVariableTransforms()
+  const { getTransformsByType } = useFragmentComputedValues()
   const allTransforms = getTransformsByType(inputType)
-  const withoutReplace = transform.name === builderVariableTransforms.convertFromBoolean
+  const withoutReplace = transform.name === variableTransforms.convertFromBoolean
 
   const Control =
-    transform.name === builderVariableTransforms.convertFromBoolean ? (
+    transform.name === variableTransforms.convertFromBoolean ? (
       <TransformConvertFromBooleanValue {...transform} valueReferenceOptions={valueReferenceOptions} />
     ) : (
       {
-        [builderVariableType.Number]: <TransformNumberValue value={transform.value} onChange={transform.setValue} />,
-        [builderVariableType.Boolean]: <TransformBooleanValue value={transform.value} onChange={transform.setValue} />
+        [variableType.Number]: <TransformNumberValue value={transform.value} onChange={transform.setValue} />,
+        [variableType.Boolean]: <TransformBooleanValue value={transform.value} onChange={transform.setValue} />
       }[inputType]
     )
 

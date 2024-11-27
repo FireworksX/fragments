@@ -17,32 +17,30 @@ export const AssetsProperties: FC<AssetsPropertiesProps> = ({ propertiesTree }) 
   const { createProperty, FRAGMENT_PROPERTY_TYPES } = useFragmentProperties()
 
   return (
-    <Container>
-      <Panel
-        title='Properties'
-        aside={
-          <Dropdown
-            trigger='click'
-            options={
-              <>
-                <DropdownGroup>
-                  {FRAGMENT_PROPERTY_TYPES.map(type => (
-                    <DropdownOption key={type} onClick={() => createProperty(type)}>
-                      {type}
-                    </DropdownOption>
-                  ))}
-                </DropdownGroup>
-              </>
-            }
-          >
-            <Touchable action>
-              <Plus width={14} height={14} />
-            </Touchable>
-          </Dropdown>
-        }
-      >
-        {propertiesTree}
-      </Panel>
-    </Container>
+    <Panel
+      title='Properties'
+      aside={
+        <Dropdown
+          trigger='click'
+          options={
+            <>
+              <DropdownGroup>
+                {FRAGMENT_PROPERTY_TYPES.map(type => (
+                  <DropdownOption key={type} onClick={() => createProperty(type)}>
+                    {type}
+                  </DropdownOption>
+                ))}
+              </DropdownGroup>
+            </>
+          }
+        >
+          <Touchable action>
+            <Plus width={14} height={14} />
+          </Touchable>
+        </Dropdown>
+      }
+    >
+      {propertiesTree}
+    </Panel>
   )
 }

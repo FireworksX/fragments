@@ -1,13 +1,15 @@
-import { to } from "@react-spring/web";
 import { layerDirection, layerMode } from "@fragments/plugin-state";
 import { Extender } from "@/types";
 import { toPx } from "@/shared/toPx.ts";
+import { createConstantInterpolate } from "@/shared/createConstantInterpolate.ts";
+import { createCachedInterpolate } from "@/shared/cachedInterpolate.ts";
 
-export const layoutStylesExtend: Extender = ({ resolveField }) => {
-  const isFlex = to(
-    resolveField("layerMode"),
-    (mode) => mode === layerMode.flex
+export const layoutStylesExtend: Extender = ({ resolveField, graphKey }) => {
+  const cachedFlexDirection = createCachedInterpolate(
+    `${graphKey}-css-flex-direction`
   );
+  const cachedFlexWrap = createCachedInterpolate(`${graphKey}-css-flex-wrap`);
+  const cachedPadding = createCachedInterpolate(`${graphKey}-css-padding`);
 
   const padding = resolveField("padding");
   const paddingTop = resolveField("paddingTop");
@@ -16,15 +18,17 @@ export const layoutStylesExtend: Extender = ({ resolveField }) => {
   const paddingLeft = resolveField("paddingLeft");
 
   return {
-    display: to(isFlex, (value) => (value ? "flex" : "block")),
-    flexDirection: to(resolveField("layerDirection"), (value) =>
-      value === layerDirection.horizontal ? "row" : "column"
+    flexDirection: cachedFlexDirection(
+      [resolveField("layerDirection")],
+      (value) => (value === layerDirection.horizontal ? "row" : "column")
     ),
     alignItems: resolveField("layerAlign"),
     justifyContent: resolveField("layerDistribute"),
-    flexWrap: to(resolveField("layerWrap"), (v) => (v ? "wrap" : "nowrap")),
+    flexWrap: cachedFlexWrap([resolveField("layerWrap")], (v) =>
+      v ? "wrap" : "nowrap"
+    ),
     gap: resolveField("layerGap"),
-    padding: to(
+    padding: cachedPadding(
       [padding, paddingTop, paddingRight, paddingBottom, paddingLeft],
       (padding, paddingTop, paddingRight, paddingBottom, paddingLeft) => {
         if (!padding) {

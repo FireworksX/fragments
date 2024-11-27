@@ -7,6 +7,7 @@ import { getResolvedValue } from "@/shared/getResolvedValue.ts";
 export const collectExtends =
   (extendCollection: Extender[]) =>
   (graph: Graph & { __extendted?: any }, state: GraphState) => {
+    console.log(graph, graph.__extendted);
     if (graph.__extendted === $EXTENDED) return graph;
 
     const graphKey = state.keyOfEntity(graph);

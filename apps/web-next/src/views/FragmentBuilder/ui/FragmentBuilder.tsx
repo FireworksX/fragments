@@ -36,6 +36,10 @@ import StackNumberProperty from '@/features/popouts/StackNumberProperty/ui/Stack
 import StackBooleanProperty from '../../../features/popouts/StackBooleanProperty/ui/StackBooleanProperty'
 import BuilderFragmentInstance from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/BuilderFragmentInstance'
 import BuilderFragmentGrowing from '@/widgets/fragmentBuilder/BuilderFragmentGrowing/ui/BuilderFragmentGrowing'
+import BuilderFragmentProps from '../../../widgets/fragmentBuilder/BuilderFragmentProps/ui/BuilderFragmentProps'
+import { PropertiesTree } from '@/features/fragmentBuilder/PropertiesTree/ui/PropertiesTree'
+import { AssetsProperties } from '@/features/fragmentBuilder/AssetsProperties'
+import StackVariableTransform from '@/features/popouts/StackVariableTransform/StackVariableTransform'
 
 interface FragmentBuilderProps {
   className?: string
@@ -69,6 +73,7 @@ export const FragmentBuilder: FC<FragmentBuilderProps> = ({ className }) => {
             isOpen={isEdit}
             position='right'
             fragmentGrowingNode={<BuilderFragmentGrowing />}
+            fragmentPropsNode={<AssetsProperties propertiesTree={<PropertiesTree />} />}
             positionNode={<BuilderPosition />}
             sizeNode={<BuilderSize />}
             layoutNode={<BuilderLayout />}
@@ -103,7 +108,7 @@ export const FragmentBuilder: FC<FragmentBuilderProps> = ({ className }) => {
                   {/*<StackBooleanVariable name={stackBooleanVariableName} title='Boolean' />*/}
                   {/*<StackObjectVariable name={stackObjectVariableName} title='Object' />*/}
                   {/*<StackStringVariable name={stackStringVariableName} title='String' />*/}
-                  {/*<StackVariableTransform name={stackVariableTransformName} title='Transform' />*/}
+                  <StackVariableTransform name={popoutNames.stackVariableTransform} title='Transform' />
                 </StackCollector>
               </BuilderPopouts>
             </div>

@@ -11,31 +11,33 @@ export const ProjectDetailLayout: FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <main>
-      <HeaderSubNav>
-        {isFragmentView ? (
-          <>
-            <Link type='fragmentPreview' projectSlug={projectSlug} fragmentSlug={fragmentSlug}>
-              <HeaderSubNavCell isActive={!fragmentView}>Preview</HeaderSubNavCell>
-            </Link>
-            <Link type='fragmentEdit' projectSlug={projectSlug} fragmentSlug={fragmentSlug}>
-              <HeaderSubNavCell isActive={fragmentView === 'edit'}>Edit</HeaderSubNavCell>
-            </Link>
-            <HeaderSubNavCell>Integrations</HeaderSubNavCell>
-            <HeaderSubNavCell>Analytics</HeaderSubNavCell>
-            <HeaderSubNavCell>Settings</HeaderSubNavCell>
-          </>
-        ) : (
-          <>
-            <HeaderSubNavCell isActive>Overview</HeaderSubNavCell>
-            <Link type='fragments' projectSlug={projectSlug}>
-              <HeaderSubNavCell>Fragments</HeaderSubNavCell>
-            </Link>
+      {!isFragmentView && (
+        <HeaderSubNav>
+          {isFragmentView ? (
+            <>
+              <Link type='fragmentPreview' projectSlug={projectSlug} fragmentSlug={fragmentSlug}>
+                <HeaderSubNavCell isActive={!fragmentView}>Preview</HeaderSubNavCell>
+              </Link>
+              <Link type='fragmentEdit' projectSlug={projectSlug} fragmentSlug={fragmentSlug}>
+                <HeaderSubNavCell isActive={fragmentView === 'edit'}>Edit</HeaderSubNavCell>
+              </Link>
+              <HeaderSubNavCell>Integrations</HeaderSubNavCell>
+              <HeaderSubNavCell>Analytics</HeaderSubNavCell>
+              <HeaderSubNavCell>Settings</HeaderSubNavCell>
+            </>
+          ) : (
+            <>
+              <HeaderSubNavCell isActive>Overview</HeaderSubNavCell>
+              <Link type='fragments' projectSlug={projectSlug}>
+                <HeaderSubNavCell>Fragments</HeaderSubNavCell>
+              </Link>
 
-            <HeaderSubNavCell>Campaigns</HeaderSubNavCell>
-            <HeaderSubNavCell>Settings</HeaderSubNavCell>
-          </>
-        )}
-      </HeaderSubNav>
+              <HeaderSubNavCell>Campaigns</HeaderSubNavCell>
+              <HeaderSubNavCell>Settings</HeaderSubNavCell>
+            </>
+          )}
+        </HeaderSubNav>
+      )}
 
       {children}
     </main>

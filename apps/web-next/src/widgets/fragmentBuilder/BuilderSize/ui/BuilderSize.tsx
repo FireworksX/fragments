@@ -65,11 +65,11 @@ const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
           <InputNumber suffix='y' {...top} min={Infinity} max={Infinity} />
         </ControlRow>
       )}
-      <ControlRow title='Width' actions={width.actions} isHighlight={width.isOverride}>
+      <ControlRow title='Width' actions={width.actions} isHighlight={width.isHighlight}>
         <InputNumber {...width} disabled={to(allowResizeHorizontal, v => !v)} />
         <Select {...layoutSizingHorizontal}>{Options}</Select>
       </ControlRow>
-      <ControlRow title='Height' actions={height.actions} isHighlight={height.isOverride}>
+      <ControlRow title='Height' actions={height.actions} isHighlight={height.isHighlight}>
         <InputNumber {...height} disabled={to(allowResizeVertical, v => !v)} />
         <Select {...layoutSizingVertical}>{Options}</Select>
       </ControlRow>

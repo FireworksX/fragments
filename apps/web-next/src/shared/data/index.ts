@@ -6,7 +6,8 @@ export const popoutNames = createConstants(
   'colorPicker',
   'stackStringProperty',
   'stackNumberProperty',
-  'stackBooleanProperty'
+  'stackBooleanProperty',
+  'stackVariableTransform'
 )
 
 export const routerParams = createConstants('editMode')

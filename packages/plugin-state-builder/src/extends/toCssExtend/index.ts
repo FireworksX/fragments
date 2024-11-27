@@ -20,13 +20,14 @@ export const toCssExtend: Extender = (payload) => {
       const borderStyles = borderStylesExtend(payload);
 
       return {
-        ...sceneStyles,
         ...positionStyles,
         ...sizesStyles,
         ...layoutStyles,
         ...cornerStyles,
         ...fillStyles,
         ...borderStyles,
+        ...sceneStyles,
+
         userSelect: "none",
       };
     },

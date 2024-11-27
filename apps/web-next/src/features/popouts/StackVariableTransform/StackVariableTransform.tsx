@@ -1,22 +1,14 @@
 import { FC, useContext, useMemo, useState } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import InputText from '@/app/components/InputText/InputText'
-import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { POPOUT_TYPE, popoutsStore } from '@/shared/store/popouts.store'
-import InputNumber from '@/app/components/InputNumber/InputNumber'
-import Stepper from '@/app/components/Stepper/Stepper'
-import Slider from '@/app/components/Slider/Slider'
-import ControlRow from '@/builder/components/ControlRow/ControlRow'
-import ControlRowWide from '@/builder/components/ControlRow/components/ControlRowWide/ControlRowWide'
-import TabsSelector, { TabsSelectorItem } from '@/app/components/TabsSelector'
 import { useGraph, useGraphStack } from '@graph-state/react'
-import { capitalize } from '@/app/utils/capitalize'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { InputSelectVariable } from '@/app/components/InputSelectVariable/InputSelectVariable'
-import { StackTransformSection } from '@/builder/StackCollector/components/variables/StackVariableTransform/components/StackTransformSection/StackTransformSection'
-
-export const stackVariableTransformName = 'stackVariableTransform'
+import { popoutNames } from '@/shared/data'
+import { TabsSelectorItem } from '@/shared/ui/TabsSelector'
+import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
+import { InputSelectVariable } from '@/shared/ui/InputSelectVariable'
+import { StackTransformSection } from './components/StackTransformSection/StackTransformSection'
 
 interface StackBooleanVariableProps {
   className?: string
@@ -35,7 +27,7 @@ const controls: TabsSelectorItem[] = [
 
 const StackVariableTransform: FC<StackBooleanVariableProps> = ({ className }) => {
   const { documentManager } = useContext(BuilderContext)
-  const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${stackVariableTransformName}`)
+  const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackVariableTransform}`)
   const { value: computedValueLink, valueReferenceOptions, onReset } = popout.context ?? {}
   const [computedValue] = useGraph(documentManager, computedValueLink)
   const [inputVariable] = useGraph(documentManager, computedValue.inputValue)

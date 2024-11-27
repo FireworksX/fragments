@@ -75,9 +75,7 @@ export const creators: Plugin = (state) => {
           BREAKPOINT_GAP,
       });
 
-      state.mutate(state.fragment, {
-        children: [nextBreakpoint],
-      });
+      state.resolve(state.fragment).appendChild(nextBreakpoint);
     }
   };
 
@@ -161,6 +159,8 @@ export const creators: Plugin = (state) => {
       [variableTransforms.lt]: createTransformValueLT,
       [variableTransforms.lte]: createTransformValueLTE,
     }[type];
+
+    console.trace(type, options);
 
     if (creator) {
       const transform = creator(options);

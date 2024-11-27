@@ -1,7 +1,7 @@
 .root {
     background: var(--background);
     border-inline: 1px solid var(--border);
-    height: calc(100vh - var(--app-size-header) - var(--app-size-navigation));
+    height: calc(100vh - var(--app-size-header));
     overflow: auto;
     position: absolute;
     left: 0;

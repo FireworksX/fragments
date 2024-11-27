@@ -11,11 +11,10 @@ export const positionStylesExtend: Extender = ({
 
   if (
     renderTargetValue === renderTarget.document &&
-    graphType === nodes.Frame
-  ) {
-    const parent = state.resolve(graph)?.getParent();
-    if (parent?._type === nodes.Fragment) return {};
-  }
+    graphType === nodes.Frame &&
+    state.resolve(graph)?.isTopLevel()
+  )
+    return {};
 
   const positionType = resolveField("positionType") ?? "absolute";
 

@@ -16,6 +16,7 @@ interface ControlsProps extends AsideBarProps {
   cssNode?: ReactNode
   instancePropsNode?: ReactNode
   fragmentGrowingNode?: ReactNode
+  fragmentPropsNode?: ReactNode
 }
 
 const BuilderControls: FC<ControlsProps> = ({
@@ -28,11 +29,14 @@ const BuilderControls: FC<ControlsProps> = ({
   cssNode,
   instancePropsNode,
   fragmentGrowingNode,
+  fragmentPropsNode,
   ...asideProps
 }) => {
   const { selectionGraph } = useBuilderSelection()
 
   const hasGrowing = [nodes.Fragment].some(type => type === selectionGraph?._type)
+  const hasFragmentProps = [nodes.Fragment].some(type => type === selectionGraph?._type)
+  const hasPosition = [nodes.Frame, nodes.Text, nodes.FragmentInstance].some(type => type === selectionGraph?._type)
   const hasSize = [nodes.Frame, nodes.Text, nodes.FragmentInstance].some(type => type === selectionGraph?._type)
   const hasLayout = [nodes.Frame].some(type => type === selectionGraph?._type)
   const hasStyles = [nodes.Frame].some(type => type === selectionGraph?._type)
@@ -44,7 +48,8 @@ const BuilderControls: FC<ControlsProps> = ({
     <AsideBar className={cn(className, styles.root)} {...asideProps}>
       {/*<BuilderLink />*/}
       {hasGrowing && fragmentGrowingNode}
-      {positionNode}
+      {hasFragmentProps && fragmentPropsNode}
+      {hasPosition && positionNode}
       {hasSize && sizeNode}
       {hasLayout && layoutNode}
       {/*<BuilderEffects />*/}

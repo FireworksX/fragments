@@ -2,11 +2,11 @@ import { FC } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { SpringValue } from '@react-spring/web'
-import ControlRow from '@/builder/components/ControlRow/ControlRow'
-import InputNumber from '@/app/components/InputNumber/InputNumber'
-import Stepper from '@/app/components/Stepper/Stepper'
-import Slider from '@/app/components/Slider/Slider'
 import { animatableValue } from '@/shared/utils/animatableValue'
+import { ControlRow } from '@/shared/ui/ControlRow'
+import { InputNumber } from '@/shared/ui/InputNumber'
+import { Slider } from '@/shared/ui/Slider'
+import { Stepper } from '@/shared/ui/Stepper'
 
 interface TransformNumberValueProps {
   value: SpringValue<number> | number

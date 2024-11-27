@@ -46,7 +46,7 @@ export const useFragmentProperties = () => {
 
       popoutsStore.open(popoutName, {
         initial: popoutOptions?.initial ?? true,
-        position: popoutOptions?.position ?? 'left',
+        position: popoutOptions?.position ?? 'right',
         context: {
           propertyLink
         }

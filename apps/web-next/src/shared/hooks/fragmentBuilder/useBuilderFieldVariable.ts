@@ -7,6 +7,10 @@ import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmen
 import { variableType } from '@fragments/plugin-state'
 import { DropdownRenderOption } from '@/shared/ui/RenderDropdown'
 import { useFragmentComputedValues } from '@/shared/hooks/fragmentBuilder/useFragmentComputedValues'
+import { noop } from '@fragments/utils'
+import { popoutsStore } from '@/shared/store/popouts.store'
+import { stackVariableTransformName } from '@/features/popouts/StackVariableTransform/StackVariableTransform'
+import { popoutNames } from '@/shared/data'
 // import {
 //   stackVariableTransformName
 // } from '@/widgets/StackCollector/components/variables/StackVariableTransform/StackVariableTransform'
@@ -49,21 +53,20 @@ export const useBuilderFieldVariable = (layer: Field) => {
   const openTransform = ({ key, value }) => {
     const valueOptions = variableFields[key]?.valueOptions ?? {}
 
-    // todo: fsd
-    // popoutsStore.open(stackVariableTransformName, {
-    //   description: key,
-    //   position: 'right',
-    //   initial: true,
-    //   context: {
-    //     fieldKey: key,
-    //     value,
-    //     valueReferenceOptions: valueOptions,
-    //     onReset: () => {
-    //       handleReset(key)
-    //       popoutsStore.close()
-    //     }
-    //   }
-    // })
+    popoutsStore.open(popoutNames.stackVariableTransform, {
+      description: key,
+      position: 'right',
+      initial: true,
+      context: {
+        fieldKey: key,
+        value,
+        valueReferenceOptions: valueOptions,
+        onReset: () => {
+          handleReset(key)
+          popoutsStore.close()
+        }
+      }
+    })
   }
 
   const handleConnectVariable = ({ key, selection, setter }) => {
@@ -90,27 +93,35 @@ export const useBuilderFieldVariable = (layer: Field) => {
     const getPropertiesForField = (field: string): DropdownRenderOption[] => {
       if (field in variableFields) {
         const fieldValue = variableFields[field]
-        const typeProperties = properties.filter(prop => prop.type === fieldValue.type)
-        const transforms = [] //getTransformsByType(fieldValue.type)
 
-        return typeProperties.map(prop => ({
-          label: prop.name,
-          options: [
-            transforms.map(transform => ({
-              label: transform.label,
-              onClick: () =>
-                createComputedValue({
-                  inputValue: documentManager.keyOfEntity(prop),
-                  outputType: field.type,
-                  transform,
-                  inputType: prop.type
-                })
-            }))
-          ],
-          onClick: () => {
-            setter(prop)
+        return properties.map(prop => {
+          const transforms = fieldValue.type === prop.type ? [] : getTransformsByType(prop.type)
+
+          return {
+            label: prop.name,
+            options: [
+              transforms.map(transform => ({
+                label: transform.label,
+                onClick: () => {
+                  const computedValue = createComputedValue({
+                    inputValue: documentManager.keyOfEntity(prop),
+                    outputType: fieldValue.type,
+                    transform,
+                    inputType: prop.type
+                  })
+
+                  setter(computedValue)
+                }
+              }))
+            ],
+            onClick:
+              transforms?.length === 0
+                ? () => {
+                    setter(prop)
+                  }
+                : noop
           }
-        }))
+        })
       }
 
       return []
@@ -143,13 +154,13 @@ export const useBuilderFieldVariable = (layer: Field) => {
     }
 
     const fieldVariables = getPropertiesForField(key)
-
     const isComputedValue = isComputedValueLink(currentValue)
 
     return {
       hasConnector,
       handleReset: () => handleReset(key),
-      handleClickTransform: () => isComputedValue && openTransform({ key, value: currentValue }),
+      handleClickTransform: () =>
+        isComputedValue ? openTransform({ key, value: currentValue }) : editProperty(currentValue),
       actions: hasConnector
         ? [
             {

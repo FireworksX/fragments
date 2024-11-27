@@ -6,6 +6,8 @@ import {
   sizing,
 } from "@fragments/plugin-state";
 import { Extender } from "@/types";
+import { createConstantInterpolate } from "@/shared/createConstantInterpolate.ts";
+import { createCachedInterpolate } from "@/shared/cachedInterpolate.ts";
 
 const autoSizes = [sizing.Hug, sizing.Fill];
 
@@ -15,6 +17,11 @@ export const sizeStylesExtend: Extender = ({
   graph,
   state,
 }) => {
+  const cachedWidth = createCachedInterpolate(`${graphKey}-css-width`);
+  const cachedHeight = createCachedInterpolate(`${graphKey}-css-height`);
+  const cachedMinWidth = createCachedInterpolate(`${graphKey}-css-minWidth`);
+  const cachedMinHeight = createCachedInterpolate(`${graphKey}-css-minHeight`);
+
   const widthType$ = resolveField("layoutSizingHorizontal");
   const heightType$ = resolveField("layoutSizingVertical");
   const width$ = resolveField("width");
@@ -47,19 +54,19 @@ export const sizeStylesExtend: Extender = ({
         width:
           parent?.horizontalGrow === fragmentGrowingMode.fill
             ? "100%"
-            : to([widthType$, width$], toValue),
+            : cachedWidth([widthType$, width$], toValue),
         height:
           parent?.verticalGrow === fragmentGrowingMode.fill
             ? "100%"
-            : to([heightType$, height$], toValue),
+            : cachedHeight([heightType$, height$], toValue),
       };
     }
   }
 
   return {
-    width: to([widthType$, width$], toValue),
-    height: to([heightType$, height$], toValue),
-    minWidth: to([sizing.Fixed, minWidth$], toValue),
-    minWeight: to([sizing.Fixed, minHeight$], toValue),
+    width: cachedWidth([widthType$, width$], toValue),
+    height: cachedHeight([heightType$, height$], toValue),
+    minWidth: cachedMinWidth([sizing.Fixed, minWidth$], toValue),
+    minHeight: cachedMinHeight([sizing.Fixed, minHeight$], toValue),
   };
 };
