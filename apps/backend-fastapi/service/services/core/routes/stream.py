@@ -35,7 +35,7 @@ def stream_db_to_stream(stream: Stream) -> StreamGet:
     for geo_location in stream.geo_locations_filter:
         filters.append(FilterGeoLocationGet(type=FilterType.GeoLocationType, toggled=geo_location.toggled, country=geo_location.country, region=geo_location.region, city=geo_location.city))
     for frame in stream.time_frames_filter:
-        filters.append(FilterTimeFrameGet(type=FilterType.PageType, toggled=frame.toggled, from_time=frame.from_time, to_time=frame.to_time))
+        filters.append(FilterTimeFrameGet(type=FilterType.TimeFrameType, toggled=frame.toggled, from_time=frame.from_time, to_time=frame.to_time))
 
     return StreamGet(id=stream.id, name=stream.name, deleted=stream.deleted,
                      active=stream.active,

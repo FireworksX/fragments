@@ -5,6 +5,7 @@ from typing import Optional, List, Union
 
 from services.core.routes.schemas.filter import FilterOSTypePost, FilterPagePost, FilterTimeFramePost, \
     FilterDeviceTypePost, FilterGeoLocationPost, FilterType
+from services.core.routes.schemas.stream import FiltersPost
 
 
 def add_os_type_filter_to_stream(stream: Stream, os_type_filter: FilterOSTypePost) -> None:
@@ -24,7 +25,7 @@ def add_device_type_filter_to_stream(stream: Stream, device_type_filter: FilterD
 
 
 def add_page_filter_to_stream(stream: Stream, page_filter: FilterPagePost) -> None:
-    relation: StreamPageFilter = StreamPageFilter(stream_id=stream.id, page=page_filter)
+    relation: StreamPageFilter = StreamPageFilter(stream_id=stream.id, page=page_filter.page)
     relation.stream = stream
     relation.toggled = page_filter.toggled
 
@@ -49,25 +50,24 @@ def add_time_frame_filter_to_stream(stream: Stream, time_frame_filter: FilterTim
 
 
 async def create_stream_db(db: Session, name: str, project_id: int, campaign_id: int, weight: float,
-                           active: bool, deleted: bool, filters: Optional[List[
-        Union[FilterOSTypePost | FilterDeviceTypePost | FilterPagePost | FilterGeoLocationPost | FilterTimeFramePost]]]) -> Stream:
+                           active: bool, deleted: bool, filters: Optional[FiltersPost]) -> Stream:
     stream: Stream = Stream(name=name, project_id=project_id, campaign_id=campaign_id, weight=weight, active=active,
                             deleted=deleted)
     db.add(stream)
     db.commit()
     db.refresh(stream)
 
-    for filter in filters:
-        if filter.type == FilterType.OSType:
-            add_os_type_filter_to_stream(stream, filter)
-        if filter.type == FilterType.DeviceType:
-            add_device_type_filter_to_stream(stream, filter)
-        if filter.type == FilterType.PageType:
-            add_page_filter_to_stream(stream, filter)
-        if filter.type == FilterType.GeoLocationType:
-            add_geolocation_filter_to_stream(stream, filter)
-        if filter.type == FilterType.TimeFrameType:
-            add_time_frame_filter_to_stream(stream, filter)
+    if filters is not None:
+        for os_type in filters.os_types:
+            add_os_type_filter_to_stream(stream, os_type)
+        for device_type in filters.device_types:
+            add_device_type_filter_to_stream(stream, device_type)
+        for page in filters.pages:
+            add_page_filter_to_stream(stream, page)
+        for geo_location in filters.geolocations:
+            add_geolocation_filter_to_stream(stream, geo_location)
+        for time_frame in filters.time_frames:
+            add_time_frame_filter_to_stream(stream, time_frame)
 
     db.commit()
     db.refresh(stream)
@@ -88,8 +88,7 @@ async def get_streams_by_campaign_id_db(db: Session, campaign_id: int, active: O
     return query.all()
 
 
-async def update_stream_by_id_db(db: Session, values: dict, filters: Optional[List[
-        Union[FilterOSTypePost | FilterDeviceTypePost | FilterPagePost | FilterGeoLocationPost | FilterTimeFramePost]]]) -> Stream:
+async def update_stream_by_id_db(db: Session, values: dict, filters: Optional[FiltersPost]) -> Stream:
     stream: Stream = await get_stream_by_id_db(db, values['id'])
     if values.get('active') is not None:
         stream.active = values['active']
@@ -109,17 +108,16 @@ async def update_stream_by_id_db(db: Session, values: dict, filters: Optional[Li
         stream.geo_locations_filter.clear()
         stream.time_frames_filter.clear()
 
-        for filter in filters:
-            if filter.type == FilterType.OSType:
-                add_os_type_filter_to_stream(stream, filter)
-            if filter.type == FilterType.DeviceType:
-                add_device_type_filter_to_stream(stream, filter)
-            if filter.type == FilterType.PageType:
-                add_page_filter_to_stream(stream, filter)
-            if filter.type == FilterType.GeoLocationType:
-                add_geolocation_filter_to_stream(stream, filter)
-            if filter.type == FilterType.TimeFrameType:
-                add_time_frame_filter_to_stream(stream, filter)
+        for os_type in filters.os_types:
+            add_os_type_filter_to_stream(stream, os_type)
+        for device_type in filters.device_types:
+            add_device_type_filter_to_stream(stream, device_type)
+        for page in filters.pages:
+            add_page_filter_to_stream(stream, page)
+        for geo_location in filters.geolocations:
+            add_geolocation_filter_to_stream(stream, geo_location)
+        for time_frame in filters.time_frames:
+            add_time_frame_filter_to_stream(stream, time_frame)
     db.commit()
     db.refresh(stream)
     return stream

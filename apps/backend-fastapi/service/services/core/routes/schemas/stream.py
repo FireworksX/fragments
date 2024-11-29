@@ -18,6 +18,13 @@ class StreamGet:
         Union[FilterOSTypeGet | FilterDeviceTypeGet | FilterPageGet | FilterGeoLocationGet | FilterTimeFrameGet]]
     weight: float
 
+@strawberry.input
+class FiltersPost:
+    os_types: Optional[List[FilterOSTypePost]] = None
+    device_types: Optional[List[FilterDeviceTypePost]] = None
+    geolocations: Optional[List[FilterGeoLocationPost]] = None
+    time_frames: Optional[List[FilterTimeFramePost]] = None
+    pages: Optional[List[FilterPagePost]] = None
 
 @strawberry.input
 class StreamPost:
@@ -25,8 +32,7 @@ class StreamPost:
     active: bool
     deleted: bool
     name: str
-    filters: List[
-        Union[FilterOSTypePost | FilterDeviceTypePost | FilterPagePost | FilterGeoLocationPost | FilterTimeFramePost]]
+    filters: Optional[FiltersPost] = None
     weight: float
 
 
@@ -37,7 +43,5 @@ class StreamPatch:
     active: Optional[bool] = None
     deleted: Optional[bool] = None
     name: Optional[str] = None
-    filters: Optional[List[
-        Union[
-            FilterOSTypePost | FilterDeviceTypePost | FilterPagePost | FilterGeoLocationPost | FilterTimeFramePost]]] = None
+    filters: Optional[FiltersPost] = None
     weight: Optional[float] = None

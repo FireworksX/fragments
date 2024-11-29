@@ -88,7 +88,8 @@ class GeoLocation(Base):
 
 class StreamGeoLocationFilter(Base):
     __tablename__ = "stream_geo_location_filter"
-    stream_id = Column(ForeignKey("stream.id"), primary_key=True)
+    id = Column('id', Integer, primary_key=True, index=True)
+    stream_id = Column(ForeignKey("stream.id"))
 
     stream = relationship("Stream", back_populates="geo_locations_filter")
     country = Column('country', String, nullable=False)
@@ -98,7 +99,8 @@ class StreamGeoLocationFilter(Base):
 
 class StreamTimeFrameFilter(Base):
     __tablename__ = "stream_time_frame_filter"
-    stream_id = Column(ForeignKey("stream.id"), primary_key=True)
+    id = Column('id', Integer, primary_key=True, index=True)
+    stream_id = Column(ForeignKey("stream.id"))
 
     stream = relationship("Stream", back_populates="time_frames_filter")
     from_time = Column('from_time', DateTime, nullable=False)
@@ -108,7 +110,8 @@ class StreamTimeFrameFilter(Base):
 
 class StreamOSTypeFilter(Base):
     __tablename__ = "stream_os_type_filter"
-    stream_id = Column(ForeignKey("stream.id"), primary_key=True)
+    id = Column('id', Integer, primary_key=True, index=True)
+    stream_id = Column(ForeignKey("stream.id"))
 
     stream = relationship("Stream", back_populates="os_types_filter")
     os_type = Column('os_type', Integer, nullable=False)
@@ -116,7 +119,8 @@ class StreamOSTypeFilter(Base):
 
 class StreamDeviceTypeFilter(Base):
     __tablename__ = "stream_device_type_filter"
-    stream_id = Column(ForeignKey("stream.id"), primary_key=True)
+    id = Column('id', Integer, primary_key=True, index=True)
+    stream_id = Column(ForeignKey("stream.id"))
 
     stream = relationship("Stream", back_populates="device_types_filter")
     device_type = Column('device_type', Integer, nullable=False)
@@ -124,7 +128,8 @@ class StreamDeviceTypeFilter(Base):
 
 class StreamPageFilter(Base):
     __tablename__ = "stream_page_filter"
-    stream_id = Column(ForeignKey("stream.id"), primary_key=True)
+    id = Column('id', Integer, primary_key=True, index=True)
+    stream_id = Column(ForeignKey("stream.id"))
 
     stream = relationship("Stream", back_populates="pages_filter")
     page = Column('page', String, nullable=False)

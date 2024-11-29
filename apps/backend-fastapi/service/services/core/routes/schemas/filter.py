@@ -37,7 +37,6 @@ class FilterBaseGet:
 @strawberry.input
 class FilterBasePost:
     toggled: Optional[bool] = True
-    type: FilterType
 
 
 @strawberry.type
