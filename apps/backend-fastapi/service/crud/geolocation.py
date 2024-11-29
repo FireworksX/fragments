@@ -1,11 +1,11 @@
 import json
-from typing import List
+from typing import List, Optional
 
 from database import GeoLocation, Session
 
 
-def get_geo_locations(db: Session) -> List[GeoLocation]:
-
+def get_geo_locations(db: Session, countries_filter: Optional[List[str]],
+                      regions_filter: Optional[List[str]]) -> List[GeoLocation]:
     geo_locations: List[GeoLocation] = db.query(GeoLocation).all()
     if not geo_locations:
         with open("/opt/app/data/cities500.json", "r", encoding="utf-8") as file:
@@ -22,4 +22,13 @@ def get_geo_locations(db: Session) -> List[GeoLocation]:
         ]
         db.add_all(geo_locations)
         db.commit()
-    return geo_locations
+
+    query = db.query(GeoLocation)
+    # Apply filters if provided
+    if countries_filter:
+        query = query.filter(GeoLocation.country.in_(countries_filter))
+    if regions_filter:
+        query = query.filter(GeoLocation.region.in_(regions_filter))
+
+    # Execute the query and return the results
+    return query.all()

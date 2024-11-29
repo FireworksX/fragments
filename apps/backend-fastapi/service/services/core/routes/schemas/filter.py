@@ -1,6 +1,6 @@
 import datetime
 from enum import Enum
-from typing import Optional
+from typing import Optional, List
 
 import strawberry
 
@@ -20,6 +20,7 @@ class DeviceType(Enum):
     DESKTOP = 2
     MOBILE = 3
 
+
 @strawberry.enum
 class FilterType(Enum):
     OSType = 1
@@ -34,6 +35,7 @@ class FilterBaseGet:
     toggled: Optional[bool] = True
     type: FilterType
 
+
 @strawberry.input
 class FilterBasePost:
     toggled: Optional[bool] = True
@@ -43,25 +45,31 @@ class FilterBasePost:
 class FilterOSTypeGet(FilterBaseGet):
     os_type: OSType
 
+
 @strawberry.input
 class FilterOSTypePost(FilterBasePost):
     os_type: OSType
+
 
 @strawberry.type
 class FilterDeviceTypeGet(FilterBaseGet):
     device_type: DeviceType
 
+
 @strawberry.input
 class FilterDeviceTypePost(FilterBasePost):
     device_type: DeviceType
+
 
 @strawberry.type
 class FilterPageGet(FilterBaseGet):
     page: str
 
+
 @strawberry.input
 class FilterPagePost(FilterBasePost):
     page: str
+
 
 @strawberry.type
 class FilterGeoLocationGet(FilterBaseGet):
@@ -69,11 +77,13 @@ class FilterGeoLocationGet(FilterBaseGet):
     region: Optional[str] = None
     city: Optional[str] = None
 
+
 @strawberry.input
 class FilterGeoLocationPost(FilterBasePost):
     country: str
     region: Optional[str] = None
     city: Optional[str] = None
+
 
 @strawberry.type
 class FilterTimeFrameGet(FilterBaseGet):
@@ -85,3 +95,22 @@ class FilterTimeFrameGet(FilterBaseGet):
 class FilterTimeFramePost(FilterBasePost):
     from_time: datetime.datetime
     to_time: datetime.datetime
+
+
+@strawberry.type
+class RegionGet:
+    region: str
+    cities: List[str]
+
+
+@strawberry.type
+class CountryGet:
+    country: str
+    regions: List[RegionGet]
+
+
+@strawberry.type
+class AllFiltersGet:
+    device_types: List[DeviceType]
+    os_types: List[OSType]
+    geo_locations: List[CountryGet]

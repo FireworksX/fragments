@@ -1,6 +1,7 @@
 from .campaign import campaign_by_id, create_campaign_route, update_campaign_route, campaigns_in_project, \
     add_campaign_logo_route, campaign_by_name
 from .filter import get_all_filters
+from .schemas import AllFiltersGet
 from .schemas.feedback import FeedbackPost, FeedbackGet
 from .schemas.stream import StreamGet, StreamPost, StreamPatch
 from .schemas.landing import LandingGet, LandingPost, LandingPatch
@@ -77,8 +78,8 @@ class Query:
             return await landings_in_stream(info, stream_id)
 
     @strawberry.field
-    async def filter(self, info: strawberry.Info[Context]) -> List[Union[FilterOSTypeGet, FilterDeviceTypeGet | FilterGeoLocationGet]]:
-        return await get_all_filters(info)
+    async def filter(self, info: strawberry.Info[Context], countries: Optional[List[str]], regions: Optional[List[str]]) -> AllFiltersGet:
+        return await get_all_filters(info, countries, regions)
 
 
 @strawberry.type
