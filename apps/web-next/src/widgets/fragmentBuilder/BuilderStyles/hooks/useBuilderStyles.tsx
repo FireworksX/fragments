@@ -9,6 +9,7 @@ import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSe
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { popoutsStore } from '@/shared/store/popouts.store'
 import { borderType, nodes } from '@fragments/plugin-state'
+import { getFieldValue, overflow } from '@fragments/plugin-fragment'
 
 const visible: TabsSelectorItem[] = [
   {
@@ -21,7 +22,7 @@ const visible: TabsSelectorItem[] = [
   }
 ]
 
-const overflowOptions = ['hidden', 'visible', 'auto']
+const overflowOptions = Object.keys(overflow)
 
 export const useBuilderStyles = () => {
   const { documentManager } = useContext(BuilderContext)
@@ -32,7 +33,7 @@ export const useBuilderStyles = () => {
     ({ node, key, value }) => {
       switch (key) {
         case 'visible':
-          node.toggleVisible(value)
+          node.setVisible(value)
           break
         case 'opacity':
           node.setOpacity(value)
@@ -53,7 +54,7 @@ export const useBuilderStyles = () => {
           node.setFillType(value)
 
           if (!value) {
-            // $closePopout()
+            // closePopout()
           }
           break
         case 'cornerRadiusSide':
@@ -65,10 +66,10 @@ export const useBuilderStyles = () => {
       switch (key) {
         case 'cornerRadiusSide':
           return {
-            tl: documentManager.resolveValue?.(node, 'topLeftRadius'),
-            tr: documentManager.resolveValue?.(node, 'topRightRadius'),
-            br: documentManager.resolveValue?.(node, 'bottomRightRadius'),
-            bl: documentManager.resolveValue?.(node, 'bottomLeftRadius')
+            tl: getFieldValue(node, 'topLeftRadius', documentManager),
+            tr: getFieldValue(node, 'topRightRadius', documentManager),
+            br: getFieldValue(node, 'bottomRightRadius', documentManager),
+            bl: getFieldValue(node, 'bottomLeftRadius', documentManager)
           }
       }
     }
@@ -118,7 +119,6 @@ export const useBuilderStyles = () => {
     },
     radius: {
       disabled: isTextLayer,
-      mode: to(animatableValue(selectionGraph?.isMixedRadius?.()), v => (!v ? 'plain' : 'sides')),
       isMixed: selectionGraph?.isMixedRadius?.(),
       setCornerSide,
       onChangeRadiusMode,
@@ -136,7 +136,6 @@ export const useBuilderStyles = () => {
       ...cornerRadiusInvoker
     },
     zIndex: {
-      disabled: documentManager.isEmpty(zIndexInvoker.value),
       ...zIndexInvoker,
       onClick: clickZIndex
     },

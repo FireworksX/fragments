@@ -14,6 +14,7 @@ import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { getRandomColor } from '@/shared/utils/random'
 import { SolidPaintStyles } from '@/entities/fragment/SolidPaintStyles'
 import { paintMode } from '@fragments/plugin-state'
+import { colorToObject, objectToColorString } from '@fragments/utils'
 
 export interface StackPanelFillOptions {}
 
@@ -76,17 +77,17 @@ const StackPanelFill: FC<StackPanelFillProps> = ({ className, stackColors }) => 
             color={solidFill.value}
             onChange={color => {
               if (color) {
-                solidFill.onChange(color.rgb)
+                solidFill.onChange(objectToColorString(color.rgb))
               }
             }}
           />
         </Panel>
-        <SolidPaintStyles
-          getInitialColor={() => solidFill.value?.get?.() ?? getRandomColor()}
-          activeColorKey={solidFill.value}
-          onSelect={solidFill.onChange}
-          onCreate={popoutsStore.goPrev}
-        />
+        {/*<SolidPaintStyles*/}
+        {/*  getInitialColor={() => solidFill.value?.get?.() ?? getRandomColor()}*/}
+        {/*  activeColorKey={solidFill.value}*/}
+        {/*  onSelect={solidFill.onChange}*/}
+        {/*  onCreate={popoutsStore.goPrev}*/}
+        {/*/>*/}
       </AnimatedVisible>
 
       <AnimatedVisible visible={to(type, t => t === paintMode.Image)}>

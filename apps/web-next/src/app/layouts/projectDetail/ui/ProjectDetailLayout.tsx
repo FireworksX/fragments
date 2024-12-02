@@ -5,9 +5,9 @@ import { HeaderSubNavCell } from '@/widgets/HeaderSubNav/subNavCell'
 import { FC, PropsWithChildren } from 'react'
 
 export const ProjectDetailLayout: FC<PropsWithChildren> = ({ children }) => {
-  const { fragment, projectSlug } = useParams()
-  const isFragmentView = !!fragment
-  const [fragmentSlug, fragmentView] = fragment || []
+  const { fragmentSlug: fragmentSlugRouter, projectSlug } = useParams()
+  const isFragmentView = !!fragmentSlugRouter
+  const [fragmentSlug, fragmentView] = fragmentSlugRouter || []
 
   return (
     <main>

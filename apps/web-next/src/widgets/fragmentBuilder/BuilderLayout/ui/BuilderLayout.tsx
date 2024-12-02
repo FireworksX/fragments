@@ -12,6 +12,7 @@ import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
 import { Slider } from '@/shared/ui/Slider'
 import { BuilderLayoutPaddings } from '@/features/fragmentBuilder/BuilderLayoutPaddings'
 import { layerMode } from '@fragments/plugin-state'
+import { animatableValue } from '@/shared/utils/animatableValue'
 
 interface BuilderLayoutProps {
   className?: string
@@ -72,7 +73,7 @@ const BuilderLayout: FC<BuilderLayoutProps> = ({ className }) => {
         <TabsSelector
           cellClassName={styles.paddingCell}
           items={padding.items}
-          value={padding.mode}
+          value={to(padding.isMixed, v => (!v ? 'plain' : 'sides'))}
           onChange={({ name }) => padding.onChangeMode(name)}
         />
       </ControlRow>

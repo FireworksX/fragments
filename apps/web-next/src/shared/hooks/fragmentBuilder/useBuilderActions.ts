@@ -2,6 +2,7 @@ import { useCallback, useContext, useMemo } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { nodes } from '@fragments/plugin-state'
+import { stateAlias } from '@/views/FragmentDetail/ui/FragmentDetail'
 
 export const useBuilderActions = () => {
   const { documentManager } = useContext(BuilderContext)
@@ -86,15 +87,16 @@ export const useBuilderActions = () => {
 
   const addBreakpoint = useCallback(() => {
     // if (selectionGraph && documentManager && features.canInsert) {
-    //   const frame = documentManager.createFrame()
-    //   selectionGraph.appendChild(frame)
+    //   const breakpoint = documentManager[stateAlias].createNode({ _type: nodes.Breakpoint })
+    //
+    //   console.log(breakpoint)
     // }
   }, [features.canInsert, selectionGraph, documentManager])
 
   const addFrame = useCallback(() => {
     if (selectionGraph && documentManager && features.canInsert) {
-      const frame = documentManager.createFrame()
-      selectionGraph.appendChild(frame)
+      const frame = documentManager[stateAlias].createNode({ _type: nodes.Frame }, selection)
+      return frame
     }
   }, [features.canInsert, selectionGraph, documentManager])
 

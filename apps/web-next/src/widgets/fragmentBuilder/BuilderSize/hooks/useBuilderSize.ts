@@ -5,6 +5,8 @@ import { animatableValue } from '@/shared/utils/animatableValue'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
+import { to } from '@react-spring/web'
+import { getFieldValue } from '@fragments/plugin-fragment'
 
 export const useBuilderSize = () => {
   const { documentManager } = useContext(BuilderContext)
@@ -27,31 +29,33 @@ export const useBuilderSize = () => {
         node.syncSize()
         break
       case 'left':
-        return node.move(value)
-      case 'top':
         return node.move(null, value)
+      case 'top':
+        return node.move(value)
     }
   })
   const [parent] = useGraph(documentManager, selectionGraph?.getParent())
-  const isTopLevel = selectionGraph?.isTopLevel() ?? false
+  const isTopLevel = selectionGraph?.isRootLayer() ?? false
   const childOfBreakpoint = parent?._type === nodes.Breakpoint
-  const canRelativeSize = !childOfBreakpoint && !isTopLevel
+  const canRelativeSize = !childOfBreakpoint && !isTopLevel && selectionGraph?._type !== nodes.Breakpoint
 
   const hugContentEnabled =
     !!selectionGraph?.children?.length ||
     selectionGraph?._type === nodes.Text ||
     selectionGraph?._type === nodes.FragmentInstance
-  const fillContentEnabled = canRelativeSize && animatableValue(parent?.resolveField('layerMode')) === layerMode.flex
-  const relativeContentEnabled = canRelativeSize
+  const fillContentEnabled = to(
+    [canRelativeSize, getFieldValue(parent, 'layerMode', documentManager)],
+    (can, mode) => can && mode === layerMode.flex
+  )
+
+  const layoutSizingHorizontal = layerInvoker('layoutSizingHorizontal')?.value
+  const layoutSizingVertical = layerInvoker('layoutSizingVertical')?.value
 
   return {
     selectionGraph,
     hugContentEnabled,
     fillContentEnabled,
-    relativeContentEnabled,
-    hasSync:
-      layerInvoker('layoutSizingHorizontal').value !== sizing.Hug &&
-      layerInvoker('layoutSizingVertical').value !== sizing.Hug,
+    hasSync: to([layoutSizingHorizontal, layoutSizingVertical], (h, v) => [h, v].every(v => v !== sizing.Hug)),
     sync: layerInvoker('aspectRatio'),
     isSynced: selectionGraph?.isSynced?.(),
     width: layerInvoker('width'),

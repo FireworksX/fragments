@@ -8,6 +8,7 @@ import { createConstants } from '@fragments/utils'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { to } from '@react-spring/web'
 import { getDomRect } from '@/shared/utils/getDomRect'
+import { getFieldValue } from '@fragments/plugin-fragment'
 
 export const SELECTION_SIDES = createConstants('topLeft', 'top', 'right', 'bottom', 'left')
 
@@ -22,14 +23,14 @@ export const useLayerSelectedResize = () => {
     canvasManager.setResizing(dragging)
 
     if (first) {
-      const targetWidthType = animatableValue(selectionGraph.resolveField('layoutSizingHorizontal'))
-      const targetHeightType = animatableValue(selectionGraph.resolveField('layoutSizingVertical'))
-      const targetLeft = animatableValue(selectionGraph.resolveField('left'))
-      const targetTop = animatableValue(selectionGraph.resolveField('top'))
+      const targetWidthType = animatableValue(getFieldValue(selection, 'layoutSizingHorizontal', documentManager))
+      const targetHeightType = animatableValue(getFieldValue(selection, 'layoutSizingVertical', documentManager))
+      const targetLeft = animatableValue(getFieldValue(selection, 'left', documentManager))
+      const targetTop = animatableValue(getFieldValue(selection, 'top', documentManager))
       const targetRect = getDomRect(selection)
       const parentRect = getDomRect(documentManager.keyOfEntity(selectionGraph.getParent()))
-      const width = animatableValue(selectionGraph.resolveField('width'))
-      const height = animatableValue(selectionGraph.resolveField('height'))
+      const width = animatableValue(getFieldValue(selection, 'width', documentManager))
+      const height = animatableValue(getFieldValue(selection, 'height', documentManager))
 
       memo.from = {
         getWidth: move => {
@@ -66,7 +67,7 @@ export const useLayerSelectedResize = () => {
       const width = memo.from.getWidth(mx * -1)
       if (width > 0) {
         selectionGraph.setWidth(width)
-        selectionGraph.move(memo.from.getLeft(mx))
+        selectionGraph.move(null, memo.from.getLeft(mx))
       }
     }
 
@@ -74,7 +75,7 @@ export const useLayerSelectedResize = () => {
       const height = memo.from.getHeight(my * -1)
       if (height > 0) {
         selectionGraph.setHeight(height)
-        selectionGraph.move(null, memo.from.getTop(my))
+        selectionGraph.move(memo.from.getTop(my))
       }
     }
 

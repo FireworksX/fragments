@@ -1,6 +1,9 @@
 import { useGraph, useGraphFields, useGraphStack } from '@graph-state/react'
 import { useContext, useMemo } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
+import { stateAlias } from '@/views/FragmentDetail/ui/FragmentDetail'
+import { nodes } from '@fragments/plugin-state'
+import { animatableValue } from '@/shared/utils/animatableValue'
 
 const DEFAULT_BREAKPOINTS = [
   { name: 'Mobile', width: 375 },
@@ -19,11 +22,11 @@ export const useBreakpoints = () => {
   const primaryScreen = breakpointValues.find(breakpoint => breakpoint.isPrimary)
 
   const addBreakpoint = (name: string, width: number) => {
-    documentManager.createBreakpoint({ name, width })
+    documentManager[stateAlias].createBreakpointNode({ name, threshold: width })
   }
 
   const thresholds = useMemo(() => {
-    const values = breakpointValues.map(breakpoint => breakpoint.threshold)
+    const values = breakpointValues.map(breakpoint => animatableValue(breakpoint.width))
     // Сначала сортируем брейкпоинты по возрастанию
     const sortedBreakpoints = [...values].sort((a, b) => a - b)
 

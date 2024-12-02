@@ -16,6 +16,7 @@ import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderMana
 import { FloatingBar } from '@/features/fragmentBuilder/FloatingBar'
 import { useBuilderActions } from '@/shared/hooks/fragmentBuilder/useBuilderActions'
 import { useBreakpoints } from '@/shared/hooks/fragmentBuilder/useBreakpoints'
+import { Link } from '@/shared/ui/Link'
 
 interface BuilderFloatBarProps {
   className?: string
@@ -111,7 +112,11 @@ export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
         { kind: 'delimiter' },
         {
           kind: 'component',
-          component: <Button>Publish</Button>
+          component: (
+            <Link type='fragmentPreview'>
+              <Button>Preview</Button>
+            </Link>
+          )
         }
       ]}
     />

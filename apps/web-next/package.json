@@ -20,6 +20,8 @@
     "@fragments/plugin-state": "workspace:*",
     "@fragments/plugin-helpers": "workspace:*",
     "@fragments/plugin-state-builder": "workspace:*",
+    "@fragments/plugin-fragment": "workspace:*",
+    "@fragments/plugin-fragment-spring": "workspace:*",
     "@fragments/renderer": "workspace:*",
     "@fragments/utils": "workspace:*",
     "@graph-state/checkers": "^0.1.2",

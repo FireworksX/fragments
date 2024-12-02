@@ -3,7 +3,7 @@ import { useCallback, useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { isGraphOrKey, LinkKey } from '@graph-state/core'
 import { displayColorInterpolate } from '@/shared/utils/displayColor'
-import { Interpolation, to } from '@react-spring/web'
+import { Interpolation, SpringValue, to } from '@react-spring/web'
 import { objectToColorString } from '@fragments/utils'
 import { nodes } from '@fragments/plugin-state'
 
@@ -15,7 +15,9 @@ export const useDisplayColor = (inputColor?: Color) => {
       const variableValue = resolveValue && resolveValue?._type === nodes.SolidPaintStyle && resolveValue?.color
       const resultColor = variableValue ?? color
 
-      return resultColor instanceof Interpolation ? resultColor : displayColorInterpolate(resultColor)
+      return resultColor instanceof Interpolation || resultColor instanceof SpringValue
+        ? resultColor
+        : displayColorInterpolate(resultColor)
     },
     [documentManager]
   )
@@ -33,7 +35,7 @@ export const useDisplayColor = (inputColor?: Color) => {
 
   const getNameColor = useCallback(
     (color?: Color | LinkKey | Interpolation<Color>) => {
-      if (color instanceof Interpolation) {
+      if (color instanceof Interpolation || color instanceof SpringValue) {
         return to(color, objectToColorString)
       }
 

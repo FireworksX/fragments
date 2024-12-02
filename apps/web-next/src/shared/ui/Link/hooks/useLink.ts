@@ -9,9 +9,14 @@ export const useLink = ({ type, ...inputLinkParams }: UseLinkOptions) => {
   const routerParams = useParams()
   const linkEntity = linkConfig[type]
   const linkParams = linkEntity.params.reduce((acc, param) => {
-    acc[param] = inputLinkParams[param] ?? routerParams[param]
+    let routerParam = routerParams[param]
+    if (param === 'fragmentSlug' && param in routerParams) {
+      routerParam = routerParams[param].at(0)
+    }
+    acc[param] = inputLinkParams[param] ?? routerParam
     return acc
   }, {})
+
   const href = typeof linkEntity.path === 'function' ? linkEntity.path(linkParams) : linkEntity.path
   const pathname = usePathname()
   const isActive = pathname === href

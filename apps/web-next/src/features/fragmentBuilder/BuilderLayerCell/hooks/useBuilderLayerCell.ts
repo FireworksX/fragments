@@ -17,7 +17,7 @@ export const useBuilderLayerCell = (layerKey: LinkKey) => {
   const partialSelected = selected || parents.some(parent => selection === documentManager.keyOfEntity(parent))
   const isFragment = layerGraph?._type === nodes.FragmentInstance
   const breakpointThreshold = useBreakpoints().getThresholdLabel((layerGraph?.threshold ?? 0) + 1)
-  const isPrimaryLayer = layerGraph?.isPrimaryLayer?.()
+  const isPrimaryLayer = layerGraph?.isRootLayer?.()
 
   return {
     type: layerGraph?._type,

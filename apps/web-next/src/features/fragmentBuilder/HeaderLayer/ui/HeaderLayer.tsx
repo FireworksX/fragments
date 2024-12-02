@@ -7,6 +7,7 @@ import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
 import { nodes } from '@fragments/plugin-state'
 import { useBreakpoints } from '@/shared/hooks/fragmentBuilder/useBreakpoints'
+import { animatableValue } from '@/shared/utils/animatableValue'
 
 interface HeaderLayerProps {
   className?: string
@@ -22,12 +23,12 @@ const HeaderLayer: FC<HeaderLayerProps> = ({ className, layerKey }) => {
   const { documentManager } = useContext(BuilderContext)
   const [layerNode] = useGraph(documentManager, layerKey)
   const { breakpointKeys, getThresholdLabel } = useBreakpoints()
-  const breakpointLabel = getThresholdLabel((layerNode?.threshold ?? 0) + 1)
+  const breakpointLabel = getThresholdLabel((animatableValue(layerNode?.threshold) ?? 0) + 1)
 
   return (
     <div className={cn(styles.root, className)}>
       {layerNode?.name ?? layerNode?._id}{' '}
-      {!!breakpointKeys.length && (
+      {!!breakpointKeys.length && layerNode._type === nodes.Breakpoint && (
         <>
           <div className={styles.dot} /> {breakpointLabel}
         </>

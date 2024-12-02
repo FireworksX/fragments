@@ -1,11 +1,12 @@
 import { SceneNode } from '../types'
 import { BuilderFieldOverrides, useBuilderFieldOverrides } from './useBuilderFieldOverrides'
 import { BuilderFieldVariable, useBuilderFieldVariable } from './useBuilderFieldVariable'
-import { omit } from '@fragments/utils'
+import { isBrowser, omit } from '@fragments/utils'
 import { useGraph } from '@graph-state/react'
 import { GraphState, SetOptions } from '@graph-state/core'
 import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
+import { getFieldValue } from '@fragments/plugin-fragment'
 // import { builderNodes } from '../data/promos/creators'
 // import { ComponentProperty } from '../types/componentProperties'
 
@@ -38,8 +39,8 @@ export const useLayerInvoker = (field: Field, setter?: Setter, getter?: Getter) 
 
   return (key: string): LayerInvokerValue => {
     const resultValueGetter = () =>
-      getter?.({ node: entity, key, value: documentManager.resolveValue(field, key) }) ??
-      documentManager.resolveValue(field, key)
+      getter?.({ node: entity, key, value: getFieldValue(field, key, documentManager) }) ??
+      getFieldValue(field, key, documentManager)
     const resultValue = resultValueGetter()
 
     const resultSetter = (newValue: any, options?: SetOptions) =>

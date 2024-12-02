@@ -11,7 +11,7 @@ export const useBuilderPosition = () => {
   const { selection, selectionGraph } = useBuilderSelection()
   const [selectionNode] = useGraph(documentManager, selection)
   const [parent] = useGraph(documentManager, selectionGraph?.getParent())
-  const isTopLevel = selectionGraph?.isTopLevel() ?? false
+  const isRootLayer = selectionGraph?.isRootLayer() ?? false
   const childOfBreakpoint = parent?._type === nodes.Breakpoint
 
   const layerInvoker = useLayerInvoker(selection, ({ key, node, value, prevValue }) => {
@@ -54,7 +54,7 @@ export const useBuilderPosition = () => {
     },
     left: layerInvoker('left'),
     top: layerInvoker('top'),
-    hasPosition: !childOfBreakpoint && !isTopLevel
+    hasPosition: !childOfBreakpoint && !isRootLayer && selectionGraph?._type !== nodes.Breakpoint
     // top: to(selectionRect, ({ y }) => y),
     // left: to(selectionRect, ({ x }) => x),
     // right: to(selectionRect, rect => documentManager.rect.maxX(rect)),

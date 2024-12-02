@@ -14,6 +14,7 @@ import { BoxSide, BoxSizingSides } from '@/shared/ui/BoxSizingSides'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { layerAlign, layerDirection, layerDistribute, layerMode } from '@fragments/plugin-state'
+import { getFieldValue } from '@fragments/plugin-fragment'
 
 const directions: TabsSelectorItem[] = [
   {
@@ -94,10 +95,10 @@ export const useBuilderLayout = () => {
       switch (key) {
         case 'paddingSide':
           return {
-            top: documentManager.resolveValue?.(node, 'paddingTop'),
-            right: documentManager.resolveValue?.(node, 'paddingRight'),
-            bottom: documentManager.resolveValue?.(node, 'paddingBottom'),
-            left: documentManager.resolveValue?.(node, 'paddingLeft')
+            top: getFieldValue(node, 'paddingTop', documentManager),
+            right: getFieldValue(node, 'paddingRight', documentManager),
+            bottom: getFieldValue(node, 'paddingBottom', documentManager),
+            left: getFieldValue(node, 'paddingLeft', documentManager)
           }
       }
     }
@@ -133,7 +134,7 @@ export const useBuilderLayout = () => {
     padding: {
       ...padding,
       mode: to(animatableValue(selectionGraph?.isMixedPadding?.()), v => (!v ? 'plain' : 'sides')),
-      isMixed: animatableValue(selectionGraph?.isMixedPadding?.()),
+      isMixed: selectionGraph?.isMixedPadding?.(),
       items: [
         {
           name: 'plain',

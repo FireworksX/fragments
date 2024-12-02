@@ -54,6 +54,12 @@ importers:
       '@feature-sliced/cli':
         specifier: ^1.0.0
         version: 1.0.0
+      '@fragments/plugin-fragment':
+        specifier: workspace:*
+        version: link:../../packages/plugin-fragment
+      '@fragments/plugin-fragment-spring':
+        specifier: workspace:*
+        version: link:../../packages/plugin-fragment-spring
       '@fragments/plugin-helpers':
         specifier: workspace:*
         version: link:../../packages/plugin-helpers
@@ -217,6 +223,62 @@ importers:
       typescript:
         specifier: ^5.4.5
         version: 5.4.5
+
+  packages/plugin-fragment:
+    dependencies:
+      '@fragments/plugin-helpers':
+        specifier: workspace:*
+        version: link:../plugin-helpers
+      '@fragments/utils':
+        specifier: workspace:*
+        version: link:../utils
+      '@graph-state/checkers':
+        specifier: ^0.1.2
+        version: 0.1.2
+      '@graph-state/core':
+        specifier: ^0.9.1
+        version: 0.9.1
+      '@graph-state/plugin-extend':
+        specifier: ^0.5.0
+        version: 0.5.0
+    devDependencies:
+      tsup:
+        specifier: ^7.2.0
+        version: 7.3.0(postcss@8.4.41)(ts-node@10.9.2(typescript@5.5.4))(typescript@5.5.4)
+      typescript:
+        specifier: ^5.5.4
+        version: 5.5.4
+
+  packages/plugin-fragment-spring:
+    dependencies:
+      '@fragments/plugin-fragment':
+        specifier: workspace:*
+        version: link:../plugin-fragment
+      '@fragments/plugin-helpers':
+        specifier: workspace:*
+        version: link:../plugin-helpers
+      '@fragments/utils':
+        specifier: workspace:*
+        version: link:../utils
+      '@graph-state/checkers':
+        specifier: ^0.1.2
+        version: 0.1.2
+      '@graph-state/core':
+        specifier: ^0.9.1
+        version: 0.9.1
+      '@graph-state/plugin-extend':
+        specifier: ^0.5.0
+        version: 0.5.0
+      '@react-spring/web':
+        specifier: 9.7.4
+        version: 9.7.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+    devDependencies:
+      tsup:
+        specifier: ^7.2.0
+        version: 7.3.0(postcss@8.4.41)(ts-node@10.9.2(typescript@5.5.4))(typescript@5.5.4)
+      typescript:
+        specifier: ^5.5.4
+        version: 5.5.4
 
   packages/plugin-helpers:
     dependencies:

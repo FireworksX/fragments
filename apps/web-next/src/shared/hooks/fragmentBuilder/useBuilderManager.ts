@@ -18,9 +18,9 @@ export const useBuilderManager = () => {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const { fragment } = useParams()
+  const { fragmentSlug: fragmentSlugRouter } = useParams()
   const [builderState] = useGraph(builderManager, builderManager.key)
-  const [fragmentSlug, view] = fragment || []
+  const [fragmentSlug, view] = fragmentSlugRouter || []
   const resolvedMode = Object.keys(builderViews).some(mode => mode === view) ? view : builderViews.preview
 
   const updateUrl = (searchParams: URLSearchParams) => {

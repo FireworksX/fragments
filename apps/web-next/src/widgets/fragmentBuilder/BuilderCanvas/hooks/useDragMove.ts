@@ -2,14 +2,15 @@ import { DragEvent } from './useCanvas'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
+import { getFieldValue } from '@fragments/plugin-fragment'
 
 export const useDragMove = () => {
-  const { canvasManager } = useContext(BuilderContext)
+  const { canvasManager, documentManager } = useContext(BuilderContext)
 
   return ({ memo, movement: [mx, my], first }: DragEvent) => {
     if (first) {
-      const left = animatableValue(memo.targetLayer?.resolveField('left'))
-      const top = animatableValue(memo.targetLayer?.resolveField('top'))
+      const left = animatableValue(getFieldValue(memo.targetLayer, 'left', documentManager))
+      const top = animatableValue(getFieldValue(memo.targetLayer, 'top', documentManager))
 
       memo.from = {
         x: left,

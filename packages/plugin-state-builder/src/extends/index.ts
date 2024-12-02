@@ -49,7 +49,5 @@ export const collectExtends =
 
     extendedData.__extendted_builder = $EXTENDED_BUILDER;
 
-    console.log("__extendted_builder", graph, extendedData);
-
     return extendedData;
   };

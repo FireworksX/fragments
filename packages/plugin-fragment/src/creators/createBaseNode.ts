@@ -1,0 +1,34 @@
+import { BaseNode } from "@/types";
+import { generateId } from "@fragments/utils";
+import { GraphState } from "@graph-state/core";
+import { getKey } from "@/shared";
+import { nodes } from "@/definitions.ts";
+
+export function createBaseNode(
+  type: string,
+  initialNode: Partial<BaseNode>,
+  cache: GraphState
+): BaseNode {
+  const id = initialNode?._id ?? generateId();
+
+  const node: BaseNode = {
+    ...initialNode,
+    _type: type,
+    _id: id,
+    overrides: initialNode?.overrides ?? [],
+    children: initialNode?.children ?? [],
+    parent: initialNode?.parent ?? undefined,
+
+    getParent: () => {
+      const resolvedNode = cache.resolve({ _type: type, _id: id });
+
+      if (resolvedNode) {
+        return cache.resolve(getKey(resolvedNode.parent));
+      }
+
+      return null;
+    },
+  };
+
+  return node;
+}

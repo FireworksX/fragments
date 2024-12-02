@@ -7,7 +7,7 @@ export const isVariableLink = (link: Entity) => {
     return type === nodes.Variable || type === nodes.ComputedValue
   }
 
-  if (isGraph(link)) {
+  if (link && isGraph(link)) {
     return link._type === nodes.Variable || link._type === nodes.ComputedValue
   }
 

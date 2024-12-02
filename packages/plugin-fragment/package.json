@@ -1,0 +1,36 @@
+{
+  "name": "@fragments/plugin-fragment",
+  "private": false,
+  "version": "0.0.1",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "source": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "clear": "rm -r -f ./dist",
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest",
+    "lint": "eslint . --ext .ts,.tsx --fix"
+  },
+  "dependencies": {
+    "@graph-state/core": "^0.9.1",
+    "@graph-state/plugin-extend": "^0.5.0",
+    "@graph-state/checkers": "^0.1.2",
+    "@fragments/utils": "workspace:*",
+    "@fragments/plugin-helpers": "workspace:*"
+  },
+  "devDependencies": {
+    "tsup": "^7.2.0",
+    "typescript": "^5.5.4"
+  }
+}

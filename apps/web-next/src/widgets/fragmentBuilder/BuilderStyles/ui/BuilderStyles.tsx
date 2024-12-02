@@ -22,6 +22,7 @@ import { BuilderStylesCorners } from '@/features/fragmentBuilder/BuilderStylesCo
 import { Stepper } from '@/shared/ui/Stepper'
 import { useDisplayColor } from '@/shared/hooks/fragmentBuilder/useDisplayColor'
 import { borderType, paintMode } from '@fragments/plugin-state'
+import { isValue } from '@fragments/utils'
 
 interface BuilderStylesProps {
   className?: string
@@ -43,7 +44,9 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
           trigger='click'
           options={
             <DropdownGroup>
-              {zIndex.disabled && <DropdownOption onClick={zIndex.onClick}>Z Index</DropdownOption>}
+              <AnimatedVisible visible={to(zIndex.value, v => !isValue(v))}>
+                <DropdownOption onClick={zIndex.onClick}>Z Index</DropdownOption>
+              </AnimatedVisible>
             </DropdownGroup>
           }
         >
@@ -107,7 +110,7 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
             <TabsSelector
               cellClassName={styles.borderCell}
               items={radius.items}
-              value={radius.mode}
+              value={to(radius.isMixed, v => (v ? 'sides' : 'plain'))}
               onChange={({ name }) => radius.onChangeRadiusMode(name)}
             />
           </ControlRow>
@@ -143,12 +146,12 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
         </ControlRow>
       )}
 
-      {!zIndex.disabled && (
+      <AnimatedVisible visible={to(zIndex.value, isValue)}>
         <ControlRow title='Z Index' actions={zIndex.actions} isHighlight={zIndex.isOverride}>
           <InputNumber value={zIndex.value} onChange={zIndex.onChange} />
           <Stepper value={zIndex.value} onChange={zIndex.onChange} />
         </ControlRow>
-      )}
+      </AnimatedVisible>
     </Panel>
   )
 }

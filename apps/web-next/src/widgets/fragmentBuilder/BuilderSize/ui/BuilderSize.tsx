@@ -9,6 +9,7 @@ import { InputNumber } from '@/shared/ui/InputNumber'
 import { Select } from '@/shared/ui/Select'
 import { sizing } from '@fragments/plugin-state'
 import { to } from '@react-spring/web'
+import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
 
 interface BuilderSizeProps {
   className?: string
@@ -19,7 +20,6 @@ const DISABLE_UTILS: (keyof typeof sizing)[] = [sizing.Fill, sizing.Hug]
 const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
   const {
     selectionGraph,
-    relativeContentEnabled,
     hugContentEnabled,
     fillContentEnabled,
     sync,
@@ -38,7 +38,7 @@ const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
 
   const Options = (
     <>
-      <option value={sizing.Relative} disabled={!relativeContentEnabled}>
+      <option value={sizing.Relative} disabled={!canRelativeSize}>
         Rel
       </option>
       <option value={sizing.Fixed}>Fixed</option>
@@ -53,11 +53,11 @@ const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
 
   return (
     <Panel className={cn(styles.root, className)} title='Size & Position'>
-      {hasSync && (
+      <AnimatedVisible visible={hasSync}>
         <div className={styles.lockerWrapper}>
           <BuilderSizeLocker isLocked={isSynced} onClick={sync.onChange} />
         </div>
-      )}
+      </AnimatedVisible>
 
       {!canRelativeSize && (
         <ControlRow title='Position'>

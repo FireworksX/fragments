@@ -42,8 +42,7 @@ export const BuilderLayerTypeIcon: FC<BuilderLayerTypeIconProps> = animated(
     if (type === nodes.FragmentInstance) return <FragmentInstanceIcon className={fragmentIconClassName} />
     if (type === nodes.Fragment) return <FragmentIcon className={primaryIconClassName} />
 
-    if (layerGraph?._type === nodes.Frame && layerGraph?.isBreakpoint)
-      return <BreakpointIcon className={primaryIconClassName} />
+    if (layerGraph?._type === nodes.Breakpoint) return <BreakpointIcon className={primaryIconClassName} />
 
     if (hasLayout) {
       return layoutDirection === layerDirection.horizontal ? (

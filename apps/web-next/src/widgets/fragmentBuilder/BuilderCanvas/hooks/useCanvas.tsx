@@ -105,11 +105,9 @@ export const useCanvas = () => {
           const layerKey = findLayerFromPointerEvent(event)
           const layerNode = documentManager.resolve(layerKey)
 
-          if (layerNode?._type !== nodes.Breakpoint) {
-            dragEvent.memo = {
-              targetLayerLink: layerKey,
-              targetLayer: layerNode
-            }
+          dragEvent.memo = {
+            targetLayerLink: layerKey,
+            targetLayer: layerNode
           }
         }
 
@@ -120,7 +118,7 @@ export const useCanvas = () => {
         const dragPoint = dragMoveHandler(dragEvent)
         // dragPoint = dragCollisionsHandler(dragEvent, dragPoint)
 
-        dragEvent.memo?.targetLayer?.move(dragPoint.x, dragPoint.y)
+        dragEvent.memo?.targetLayer?.move(dragPoint.y, dragPoint.x)
 
         return dragEvent.memo
       },
