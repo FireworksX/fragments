@@ -39,7 +39,7 @@ export function getStableValue<T>(
       return deepMergeObjects({}, defaultValue) as SpringValue<T>;
     }
 
-    return new SpringValue(defaultValue);
+    return new SpringValue(currentValue ?? defaultValue);
   }
 
   if (isObject(currentValue) && isObject(defaultValue)) {
