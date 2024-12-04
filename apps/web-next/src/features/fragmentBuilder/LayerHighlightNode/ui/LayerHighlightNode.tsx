@@ -10,6 +10,7 @@ import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary'
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin'
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin'
 import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
+import { BuilderCanvasTextEditor } from '@/widgets/fragmentBuilder/BuilderCanvasTextEditor'
 
 interface LayerHighlightDraggingProps {
   resizeNode: ReactNode
@@ -55,12 +56,7 @@ export const LayerHighlightNode: FC<LayerHighlightDraggingProps> = ({
           {isSelected && resizeNode}
           {isRichTextSelected && (
             <>
-              <RichTextPlugin
-                contentEditable={<ContentEditable className={styles.contentEditable} />}
-                ErrorBoundary={LexicalErrorBoundary}
-              />
-              <HistoryPlugin />
-              <AutoFocusPlugin />
+              <BuilderCanvasTextEditor />
             </>
           )}
         </animated.div>
@@ -70,7 +66,7 @@ export const LayerHighlightNode: FC<LayerHighlightDraggingProps> = ({
         <LayerHighlightNode key={index} layerKey={child} resizeNode={resizeNode} />
       ))}
 
-      {textContent && <div dangerouslySetInnerHTML={{ __html: textContent }} />}
+      {textContent && <div className={styles.text} dangerouslySetInnerHTML={{ __html: textContent }} />}
 
       {resultChildren}
     </animated.div>

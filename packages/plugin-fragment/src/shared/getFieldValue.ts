@@ -9,7 +9,7 @@ export function getFieldValue<N extends BaseNode>(
 ): any {
   // Получаем значение поля в текущем узле
   const resolvedNode = cache.resolve(node as any);
-  const currentValue = resolvedNode[field];
+  const currentValue = resolvedNode?.[field];
 
   // Если значение существует, возвращаем его
   if (isValue(currentValue)) {
@@ -17,7 +17,7 @@ export function getFieldValue<N extends BaseNode>(
   }
 
   // Если есть overrideFrom, проверяем родителя
-  if (resolvedNode.overrideFrom) {
+  if (resolvedNode?.overrideFrom) {
     const parentNode = cache.resolve(resolvedNode.overrideFrom);
 
     if (parentNode) {

@@ -6,6 +6,7 @@ import { createBreakpointNode } from "@/creators/createBreakpointNode.ts";
 import { animatableValue } from "@/shared/animatableValue.ts";
 import { getFieldValue } from "@fragments/plugin-fragment";
 import { SpringValue } from "@react-spring/web";
+import { createTextNode } from "@/creators/createTextNode.ts";
 
 const BREAKPOINT_GAP = 50;
 
@@ -52,6 +53,8 @@ export function createNode(
     //
     //   console.log(primaryClone);
     // }
+  } else if (node._type === nodes.Text) {
+    node = createTextNode(node, cache);
   }
 
   if (appendTo) {

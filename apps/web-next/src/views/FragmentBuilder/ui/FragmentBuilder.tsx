@@ -40,6 +40,7 @@ import BuilderFragmentProps from '../../../widgets/fragmentBuilder/BuilderFragme
 import { PropertiesTree } from '@/features/fragmentBuilder/PropertiesTree/ui/PropertiesTree'
 import { AssetsProperties } from '@/features/fragmentBuilder/AssetsProperties'
 import StackVariableTransform from '@/features/popouts/StackVariableTransform/StackVariableTransform'
+import { BuilderCanvasTextEditor, CanvasTextEditorProvider } from '@/widgets/fragmentBuilder/BuilderCanvasTextEditor'
 
 interface FragmentBuilderProps {
   className?: string
@@ -59,7 +60,7 @@ export const FragmentBuilder: FC<FragmentBuilderProps> = ({ className }) => {
   }, [])
 
   return (
-    <BuilderTextEditorComposer>
+    <CanvasTextEditorProvider>
       <div className={styles.root}>
         <div className={styles.previewContainer}>
           <BuilderSidebar isOpen={isEdit} assetsNode={<BuilderAssets />} layersNode={<BuilderLayers />} />
@@ -78,7 +79,7 @@ export const FragmentBuilder: FC<FragmentBuilderProps> = ({ className }) => {
             sizeNode={<BuilderSize />}
             layoutNode={<BuilderLayout />}
             stylesNode={<BuilderStyles />}
-            // textNode={<BuilderText />}
+            textNode={<BuilderText />}
             // cssNode={<BuilderCssOverride />}
             // instancePropsNode={<BuilderFragmentInstance />}
           />
@@ -115,6 +116,6 @@ export const FragmentBuilder: FC<FragmentBuilderProps> = ({ className }) => {
           </div>
         )}
       </div>
-    </BuilderTextEditorComposer>
+    </CanvasTextEditorProvider>
   )
 }

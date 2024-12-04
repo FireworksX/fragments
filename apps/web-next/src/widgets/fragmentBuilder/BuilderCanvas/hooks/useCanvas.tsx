@@ -68,11 +68,15 @@ export const useCanvas = () => {
           if (!isTextEditing) {
             const clickedLayerValue = documentManager.resolve(layerKey)
 
-            if (clickedLayerValue?._type === definitions.nodes.Text && event.detail === 2) {
+            if (clickedLayerValue?._type === nodes.Text && event.detail === 2) {
               updateParams({
                 focus: layerKey
               })
               builderManager.toggleTextEditor(true)
+              updateParams({
+                focus: layerKey
+              })
+              return
             }
 
             builderManager.toggleTextEditor(false)
@@ -82,9 +86,14 @@ export const useCanvas = () => {
           } else {
             builderManager.toggleTextEditor(false)
             updateParams({
-              focus: null
+              focus: layerKey
             })
           }
+        } else {
+          builderManager.toggleTextEditor(false)
+          updateParams({
+            focus: null
+          })
         }
       },
       onDrag: dragEvent => {

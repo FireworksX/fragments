@@ -20,7 +20,7 @@ export const useLayerHighlightNode = (layerKey: LinkKey) => {
   const { selection, selectionGraph } = useBuilderSelection()
   const layerStyles = layerNode?.toCss?.() ?? {}
   const children = layerNode?._type === nodes.FragmentInstance ? [layerNode.fragment] : layerNode?.children ?? []
-  const selectionParentKey = documentManager.keyOfEntity(selectionGraph?.getParent())
+  const selectionParentKey = documentManager.keyOfEntity(selectionGraph?.getParent?.())
   const isParentSelected = selectionParentKey === layerKey
 
   return {

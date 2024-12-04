@@ -34,8 +34,8 @@ export const useBuilderSize = () => {
         return node.move(value)
     }
   })
-  const [parent] = useGraph(documentManager, selectionGraph?.getParent())
-  const isTopLevel = selectionGraph?.isRootLayer() ?? false
+  const [parent] = useGraph(documentManager, selectionGraph?.getParent?.())
+  const isTopLevel = selectionGraph?.isRootLayer?.() ?? false
   const childOfBreakpoint = parent?._type === nodes.Breakpoint
   const canRelativeSize = !childOfBreakpoint && !isTopLevel && selectionGraph?._type !== nodes.Breakpoint
 

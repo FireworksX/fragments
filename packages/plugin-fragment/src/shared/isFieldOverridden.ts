@@ -8,6 +8,8 @@ export function isFieldOverridden<T extends BaseNode>(
   field: string,
   cache: GraphState
 ): boolean {
+  if (!node) return false;
+
   // Проверяем значение поля в текущем узле
   const resolvedNode = cache?.resolve(node) as any;
   const value = resolvedNode[field];

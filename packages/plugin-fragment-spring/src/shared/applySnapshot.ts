@@ -3,6 +3,7 @@ import { nodes } from "@/definitions.ts";
 import { createFrameNode } from "@/creators/createFrameNode.ts";
 import { createBreakpointNode } from "@fragments/plugin-fragment";
 import { createFragmentNode } from "@/creators/createFragmentNode.ts";
+import { createTextNode } from "@/creators/createTextNode.ts";
 
 export function applySnapshot(cache: GraphState, snapshot: unknown[]) {
   if (!snapshot) return;
@@ -17,6 +18,9 @@ export function applySnapshot(cache: GraphState, snapshot: unknown[]) {
       }
       if (item._type === nodes.Fragment) {
         item = createFragmentNode(item, cache);
+      }
+      if (item._type === nodes.Text) {
+        item = createTextNode(item, cache);
       }
     }
 

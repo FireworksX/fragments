@@ -4,6 +4,7 @@ import { useGraph, useGraphFields, useGraphStack } from '@graph-state/react'
 import { LinkKey } from '@graph-state/core'
 import { nodes } from '@fragments/plugin-state'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
+import { moveNode } from '@fragments/plugin-fragment-spring'
 
 const findIndexOfNode = (items: unknown[], linkNode: LinkKey) => {
   const index = items.findIndex(item => item.id === linkNode)
@@ -61,7 +62,7 @@ export const useBuilderLayers = () => {
       const toKey = to?.id
       const itemOrder = findIndexOfNode(nextItemsTree, itemKey)
 
-      documentManager.moveNode(itemKey, toKey, itemOrder)
+      moveNode(documentManager, itemKey, toKey, itemOrder)
     }
   }
 
