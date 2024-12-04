@@ -3,22 +3,30 @@ import styles from './styles.module.css'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
 import { animated } from '@react-spring/web'
+import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderManager'
+import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 
 interface TextProps {
   layerKey: string
 }
 
 export const Text: FC<TextProps> = ({ layerKey }) => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager, builderManager } = useContext(BuilderContext)
   const [layerGraph] = useGraph(documentManager, layerKey)
+  const layerInvoker = useLayerInvoker(layerKey)
+  const textContent = layerInvoker('content')?.value
   const cssStyles = layerGraph?.toCss?.() ?? {}
+  const { isTextEditing, focus } = useBuilderManager()
 
   return (
     <animated.div
       className={styles.root}
       data-key={layerKey}
-      style={cssStyles}
-      dangerouslySetInnerHTML={{ __html: layerGraph?.content }}
+      style={{
+        ...cssStyles,
+        opacity: isTextEditing && focus === layerKey ? 0 : cssStyles.opacity
+      }}
+      dangerouslySetInnerHTML={{ __html: textContent }}
     />
   )
 }

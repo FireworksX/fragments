@@ -15,6 +15,7 @@ export function createBaseNode(
     ...initialNode,
     _type: type,
     _id: id,
+    name: initialNode?.name,
     overrides: initialNode?.overrides ?? [],
     children: initialNode?.children ?? [],
     parent: initialNode?.parent ?? undefined,
@@ -27,6 +28,18 @@ export function createBaseNode(
       }
 
       return null;
+    },
+
+    rename(name: string) {
+      cache.mutate({
+        _type: type,
+        _id: id,
+        name,
+      });
+    },
+
+    remove() {
+      cache.invalidate({ _type: type, _id: id });
     },
   };
 

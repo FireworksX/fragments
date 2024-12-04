@@ -1,0 +1,13 @@
+.canvas-rich-editor {
+    pointer-events: auto;
+
+    .tiptap {
+        outline: none;
+        position: absolute;
+        inset: 0;
+
+        & + p {
+            margin: 0;
+        }
+    }
+}

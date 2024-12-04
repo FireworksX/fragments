@@ -102,8 +102,7 @@ export const useBuilderActions = () => {
 
   const addText = useCallback(() => {
     if (selectionGraph && documentManager && features.canInsert) {
-      const frame = documentManager.createText()
-      selectionGraph.appendChild(frame)
+      const node = documentManager[stateAlias].createNode({ _type: nodes.Text }, selection)
     }
   }, [features.canInsert, selectionGraph, documentManager])
 

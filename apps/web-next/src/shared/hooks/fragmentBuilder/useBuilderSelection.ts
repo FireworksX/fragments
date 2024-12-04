@@ -13,5 +13,5 @@ export const useBuilderSelection = () => {
     updateParams({ focus: inputKey })
   }
 
-  return { selection: focus, selectionGraph, select }
+  return { selection: focus, selectionGraph: focus ? selectionGraph : null, select }
 }

@@ -61,11 +61,14 @@ export type Module<N> = (node: N) => N;
 export type Maybe<T> = T | null;
 
 export interface BaseNode extends Graph {
+  name: Maybe<string>;
   overrides: LinkKey[];
   overrideFrom?: LinkKey;
   children?: LinkKey[];
   parent?: LinkKey;
   getParent(): BaseNode | null;
+  rename(name: string): void;
+  remove(): void;
 }
 
 export interface WithPosition<T extends BaseNode> {

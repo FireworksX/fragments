@@ -76,10 +76,11 @@ export function childrenModule<T extends BaseNode>(
           }
 
           return {
+            ...prev,
             children,
           };
         },
-        { replace: true }
+        { replace: (graph) => cache.keyOfEntity(graph) === nodeKey }
       );
     },
     //

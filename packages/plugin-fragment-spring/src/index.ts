@@ -5,6 +5,7 @@ import { makeSnapshot } from "@/shared/makeSnapshot.ts";
 import { applySnapshot } from "@/shared/applySnapshot.ts";
 import { createNode } from "@/shared/createNode.ts";
 import { createBreakpointNode } from "@/creators/createBreakpointNode.ts";
+import { createTextNode } from "@/creators/createTextNode.ts";
 
 const plugin: (root: LinkKey) => Plugin =
   (root: LinkKey) => (state: GraphState<StateEntity>) => {
@@ -22,6 +23,9 @@ const plugin: (root: LinkKey) => Plugin =
       createBreakpointNode: (initialNode: Partial<FrameNode>) =>
         createBreakpointNode(initialNode, state),
 
+      createTextNode: (initialNode: Partial<FrameNode>) =>
+        createTextNode(initialNode, state),
+
       createNode: (initialNode: Partial<BaseNode>, appendTo?: LinkKey = root) =>
         createNode(initialNode, state, appendTo),
 
@@ -38,3 +42,4 @@ export default plugin;
 
 export { resetFieldOverride } from "@/shared/resetFieldOverride.ts";
 export { isOverriddenNode } from "@/shared/isOverriddenNode.ts";
+export { moveNode } from "@/shared/moveNode.ts";

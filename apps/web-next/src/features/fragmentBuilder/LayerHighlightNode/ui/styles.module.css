@@ -24,3 +24,7 @@
         border-style: dashed;
     }
 }
+
+.text {
+    opacity: 0;
+}
