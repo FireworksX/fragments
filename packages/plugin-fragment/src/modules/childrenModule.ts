@@ -30,13 +30,14 @@ export function childrenModule<T extends BaseNode>(
           const childKey =
             child instanceof Object ? cache.keyOfEntity(child as any) : child;
           return {
+            ...prev,
             children: ((prev.children ?? []) as any)?.filter(
               (c: string) => c !== childKey
             ),
           };
         },
         {
-          replace: true,
+          replace: (graph) => cache.keyOfEntity(graph) === nodeKey,
         }
       );
     },
@@ -59,7 +60,7 @@ export function childrenModule<T extends BaseNode>(
             children,
           };
         },
-        { replace: true }
+        { replace: (graph) => cache.keyOfEntity(graph) === nodeKey }
       );
     },
 
