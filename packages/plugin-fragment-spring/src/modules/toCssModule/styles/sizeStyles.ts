@@ -5,7 +5,7 @@ import { getFieldValue, nodes, sizing } from "@fragments/plugin-fragment";
 // import { createConstantInterpolate } from "@/shared/createConstantInterpolate.ts";
 // import { createCachedInterpolate } from "@/shared/cachedInterpolate.ts";
 
-const autoSizes = [sizing.Hug, sizing.Fill];
+const autoSizes = [sizing.Hug];
 
 export const sizeStyles = (node: BaseNode, cache: GraphState) => {
   // const cachedWidth = createCachedInterpolate(`{graphKey}-css-width`);
@@ -29,6 +29,10 @@ export const sizeStyles = (node: BaseNode, cache: GraphState) => {
 
     if (type === sizing.Relative) {
       return `${value}%`;
+    }
+
+    if (type === sizing.Fill) {
+      return `100%`;
     }
 
     return value;

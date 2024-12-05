@@ -31,6 +31,9 @@ export const useBuilderLayerCell = (layerKey: LinkKey) => {
     rename: (name: string) => {
       layerGraph.rename(name)
     },
+    duplicate: () => {
+      layerGraph.duplicate()
+    },
     handleSelect: () => select(layerKey)
   }
 }

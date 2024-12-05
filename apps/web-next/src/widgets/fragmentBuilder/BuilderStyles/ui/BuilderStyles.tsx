@@ -91,17 +91,19 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
         </ControlRow>
       )}
 
-      <ControlRow title='Overflow' {...overflow}>
-        <ControlRowWide>
-          <Select {...overflow}>
-            {overflow.options.map(value => (
-              <option key={value} value={value}>
-                {capitalize(value)}
-              </option>
-            ))}
-          </Select>
-        </ControlRowWide>
-      </ControlRow>
+      {!overflow.disabled && (
+        <ControlRow title='Overflow' {...overflow}>
+          <ControlRowWide>
+            <Select {...overflow}>
+              {overflow.options.map(value => (
+                <option key={value} value={value}>
+                  {capitalize(value)}
+                </option>
+              ))}
+            </Select>
+          </ControlRowWide>
+        </ControlRow>
+      )}
 
       {!radius.disabled && (
         <>

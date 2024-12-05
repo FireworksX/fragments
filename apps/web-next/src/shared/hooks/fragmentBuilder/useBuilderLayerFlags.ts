@@ -24,6 +24,7 @@ export const useBuilderLayerFlags = (layerKey: LinkKey) => {
   const hasLayout$ = to(layerMode$, mode => mode === layerMode.flex)
   const canRemove = layerNode?._type === nodes.Breakpoint ? !layerNode?.isPrimary : true
   const canWrap = layerNode?._type !== nodes.Breakpoint
+  const canDuplicate = layerNode?._type !== nodes.Fragment
   const canRemoveWrapper = layerNode?._type === nodes.Frame && layerNode?.children?.length > 0
 
   const remove = () => layerNode?.remove()
@@ -45,6 +46,7 @@ export const useBuilderLayerFlags = (layerKey: LinkKey) => {
     wrapFrame,
     canWrap,
     removeWrapper,
-    canRemoveWrapper
+    canRemoveWrapper,
+    canDuplicate
   }
 }

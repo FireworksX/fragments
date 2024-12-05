@@ -47,7 +47,9 @@ export const useCanvas = () => {
   const findLayerFromPointerEvent = event => {
     const elementFromPoint = document.elementFromPoint?.(event.clientX, event.clientY)
     const parentFragment = elementFromPoint?.closest(`[data-type="${nodes.FragmentInstance}"]`)
-    return (parentFragment ?? elementFromPoint).getAttribute('data-key')
+    const closestLayer = elementFromPoint?.closest('[data-key]')
+
+    return (parentFragment ?? closestLayer)?.getAttribute('data-key')
   }
 
   useGesture(

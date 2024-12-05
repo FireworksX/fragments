@@ -36,7 +36,8 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
     partialSelected,
     handleSelect,
     selected,
-    rename
+    rename,
+    duplicate
   } = useBuilderLayerCell(layerKey)
   const flags = useBuilderLayerFlags(layerKey)
 
@@ -119,9 +120,9 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
             <DropdownOption description='⌘;' disabled={!flags.isVisible$} onClick={flags.toggleVisible}>
               {to(flags.isVisible$, v => (!v ? 'Show' : 'Hide'))}
             </DropdownOption>
-            {/*  <DropdownOption description='⌘D' disabled={!flags.canDuplicate} onClick={duplicate}>*/}
-            {/*    Duplicate*/}
-            {/*  </DropdownOption>*/}
+            <DropdownOption description='⌘D' disabled={!flags.canDuplicate} onClick={duplicate}>
+              Duplicate
+            </DropdownOption>
             <DropdownOption description='⌫' disabled={!flags.canRemove} onClick={flags.remove}>
               Remove
             </DropdownOption>

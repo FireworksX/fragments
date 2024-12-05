@@ -75,6 +75,15 @@ export const variableType = createConstants(
   "Object"
 );
 
+export const whiteSpace = createConstants(
+  "normal",
+  "nowrap",
+  "pre",
+  "pre-wrap",
+  "pre-line",
+  "break-spaces"
+);
+
 export const variableTransforms = createConstants(
   "convert",
   "exists",

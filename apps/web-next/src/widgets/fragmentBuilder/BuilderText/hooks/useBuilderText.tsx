@@ -18,6 +18,7 @@ import { capitalize } from '@/shared/utils/capitalize'
 import { objectToColorString } from '@fragments/utils'
 import { useGraph } from '@graph-state/react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
+import { whiteSpace } from '@fragments/plugin-fragment'
 
 const aligns: TabsSelectorItem[] = [
   {
@@ -90,6 +91,9 @@ export const useBuilderText = () => {
     switch (key) {
       case 'content':
         node.setContent(value)
+        break
+      case 'whiteSpace':
+        node.setWhiteSpace(value)
         break
     }
   })
@@ -207,6 +211,10 @@ export const useBuilderText = () => {
     letterSpacing: {
       value: fromPx(marks['letterSpacing']) ?? 0,
       onChange: value => onChangeValue('letterSpacing', toPx(value))
+    },
+    whiteSpace: {
+      options: Object.keys(whiteSpace),
+      ...layerInvoker('whiteSpace')
     }
   }
 }

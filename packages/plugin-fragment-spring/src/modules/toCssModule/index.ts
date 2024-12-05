@@ -36,6 +36,7 @@ export const toCssModule = <T extends BaseNode>(node: T, cache: GraphState) => {
         // ...sceneStyles,
         opacity: getFieldValue(node, "opacity", cache),
         overflow: getFieldValue(node, "overflow", cache),
+        whiteSpace: getFieldValue(node, "whiteSpace", cache),
         display: to(
           [
             getFieldValue(node, "visible", cache),

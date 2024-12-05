@@ -1,4 +1,3 @@
-import { nodes } from "@/definitions.ts";
 import { positionModule } from "@/modules/positionModule.ts";
 import { applyModules } from "@/shared/applyModules.ts";
 import { GraphState } from "@graph-state/core";
@@ -11,10 +10,13 @@ import { visibleModule } from "@/modules/visibleModule.ts";
 import { opacityModule } from "@/modules/opacityModule.ts";
 import { overflowModule } from "@/modules/overflowModule.ts";
 import { zIndexModule } from "@/modules/zIndexModule.ts";
-import { createBaseNode } from "@fragments/plugin-fragment";
+import { createBaseNode, nodes, whiteSpace } from "@fragments/plugin-fragment";
 import { cloneModule } from "@/modules/cloneModule.ts";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
 import { getStaticValue } from "@/shared/getStaticValue.ts";
+import { getStableValue } from "@/shared/getStableValue.ts";
+import { copyModule } from "@/modules/copyModule.ts";
+import { duplicateModule } from "@/modules/duplicateModule.ts";
 
 export const modules = [
   positionModule,
@@ -27,6 +29,8 @@ export const modules = [
   overflowModule,
   zIndexModule,
   cloneModule,
+  copyModule,
+  duplicateModule,
 ];
 
 export function createTextNode(
@@ -43,6 +47,16 @@ export function createTextNode(
       cache.mutate(cache.keyOfEntity(textNode), {
         content: value,
       });
+    },
+
+    whiteSpace: getStableValue(
+      textNode,
+      "whiteSpace",
+      whiteSpace.normal,
+      cache
+    ),
+    setWhiteSpace(value: keyof typeof whiteSpace) {
+      setValueToNode(textNode, "whiteSpace", value, cache);
     },
   };
 }

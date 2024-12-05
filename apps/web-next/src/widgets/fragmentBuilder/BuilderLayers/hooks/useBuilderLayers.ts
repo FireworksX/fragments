@@ -62,6 +62,10 @@ export const useBuilderLayers = () => {
       const toKey = to?.id
       const itemOrder = findIndexOfNode(nextItemsTree, itemKey)
 
+      if (documentManager.entityOfKey(toKey)?._type === nodes.Fragment || !toKey) {
+        return
+      }
+
       moveNode(documentManager, itemKey, toKey, itemOrder)
     }
   }

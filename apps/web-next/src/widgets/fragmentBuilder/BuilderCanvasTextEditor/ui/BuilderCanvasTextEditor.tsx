@@ -11,7 +11,13 @@ export const BuilderCanvasTextEditor: FC<BuilderFloatBarProps> = ({ className })
   const editor = useContext(CanvasTextEditorContext)
 
   return (
-    <div className='canvas-rich-editor'>
+    <div
+      className='canvas-rich-editor'
+      onClickCapture={e => {
+        e.preventDefault()
+        e.stopPropagation()
+      }}
+    >
       <EditorContent editor={editor} />
     </div>
   )

@@ -43,7 +43,7 @@ const BuilderControls: FC<ControlsProps> = ({
     type => type === selectionGraph?._type
   )
   const hasLayout = [nodes.Frame, nodes.Breakpoint].some(type => type === selectionGraph?._type)
-  const hasStyles = [nodes.Frame, nodes.Breakpoint].some(type => type === selectionGraph?._type)
+  const hasStyles = [nodes.Frame, nodes.Text].some(type => type === selectionGraph?._type)
   const hasText = [nodes.Text].some(type => type === selectionGraph?._type)
   const hasCssOverride = [nodes.Frame, nodes.Breakpoint].some(type => type === selectionGraph?._type)
   const hasInstanceProps = [nodes.FragmentInstance].some(type => type === selectionGraph?._type)

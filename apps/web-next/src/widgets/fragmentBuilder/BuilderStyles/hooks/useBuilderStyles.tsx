@@ -114,6 +114,7 @@ export const useBuilderStyles = () => {
     },
     opacity: layerInvoker('opacity'),
     overflow: {
+      disabled: isTextLayer,
       options: overflowOptions,
       ...overflowInvoker
     },

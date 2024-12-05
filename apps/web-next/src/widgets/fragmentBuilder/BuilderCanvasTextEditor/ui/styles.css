@@ -1,5 +1,7 @@
 .canvas-rich-editor {
     pointer-events: auto;
+    position: absolute;
+    inset: 0;
 
     .tiptap {
         outline: none;

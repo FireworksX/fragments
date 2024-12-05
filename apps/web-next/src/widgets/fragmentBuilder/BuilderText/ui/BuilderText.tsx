@@ -23,7 +23,8 @@ interface BuilderTextProps {
 const BuilderText: FC<BuilderTextProps> = ({ className }) => {
   const { builderManager } = useContext(BuilderContext)
   const { selectionGraph } = useBuilderSelection()
-  const { weight, content, color, align, fontSize, lineHeight, letterSpacing, transform, decoration } = useBuilderText()
+  const { weight, content, color, align, fontSize, whiteSpace, lineHeight, letterSpacing, transform, decoration } =
+    useBuilderText()
   const { getColor, getNameColor } = useDisplayColor()
   const [{ showTextEditor }] = useGraph(builderManager, builderManager.key)
 
@@ -107,6 +108,16 @@ const BuilderText: FC<BuilderTextProps> = ({ className }) => {
       <ControlRow title='Align'>
         <ControlRowWide>
           <TabsSelector items={align.items} value={align.value} onChange={({ name }) => align.onChange(name)} />
+        </ControlRowWide>
+      </ControlRow>
+
+      <ControlRow title='Space'>
+        <ControlRowWide>
+          <Select value={whiteSpace.value} onChange={whiteSpace.onChange}>
+            {whiteSpace.options.map(option => (
+              <option key={option}>{option}</option>
+            ))}
+          </Select>
         </ControlRowWide>
       </ControlRow>
     </Panel>

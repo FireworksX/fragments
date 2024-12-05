@@ -18,6 +18,8 @@ import { layerModule } from "@/modules/layerModule.ts";
 import { paddingModule } from "@/modules/paddingModule.ts";
 import { childrenModule, createBaseNode } from "@fragments/plugin-fragment";
 import { cloneModule } from "@/modules/cloneModule.ts";
+import { copyModule } from "@/modules/copyModule.ts";
+import { duplicateModule } from "@/modules/duplicateModule.ts";
 
 export const modules = [
   childrenModule,
@@ -36,6 +38,8 @@ export const modules = [
   layerModule,
   paddingModule,
   cloneModule,
+  copyModule,
+  duplicateModule,
 ];
 
 export function createFrameNode(
