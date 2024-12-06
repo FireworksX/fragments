@@ -23,8 +23,19 @@ interface BuilderTextProps {
 const BuilderText: FC<BuilderTextProps> = ({ className }) => {
   const { builderManager } = useContext(BuilderContext)
   const { selectionGraph } = useBuilderSelection()
-  const { weight, content, color, align, fontSize, whiteSpace, lineHeight, letterSpacing, transform, decoration } =
-    useBuilderText()
+  const {
+    isTextEditing,
+    weight,
+    content,
+    color,
+    align,
+    fontSize,
+    whiteSpace,
+    lineHeight,
+    letterSpacing,
+    transform,
+    decoration
+  } = useBuilderText()
   const { getColor, getNameColor } = useDisplayColor()
   const [{ showTextEditor }] = useGraph(builderManager, builderManager.key)
 
@@ -36,11 +47,13 @@ const BuilderText: FC<BuilderTextProps> = ({ className }) => {
       {/*  </BuilderControlRowWide>*/}
       {/*</BuilderControlRow>*/}
 
-      <ControlRow title='Content'>
-        <ControlRowWide>
-          <InputText value={content.textContent} onChangeValue={content.onChange} />
-        </ControlRowWide>
-      </ControlRow>
+      {!isTextEditing && (
+        <ControlRow title='Content'>
+          <ControlRowWide>
+            <InputText value={content.textContent} onChangeValue={content.onChange} />
+          </ControlRowWide>
+        </ControlRow>
+      )}
 
       {/*<BuilderControlRow title='Font'>*/}
       {/*  <BuilderControlRowWide>*/}

@@ -1,7 +1,13 @@
 import { to } from "@react-spring/web";
 import { BaseNode, Extender } from "@/types";
 import { GraphState } from "@graph-state/core";
-import { getFieldValue, nodes, sizing } from "@fragments/plugin-fragment";
+import {
+  fragmentGrowingMode,
+  getFieldValue,
+  nodes,
+  renderTarget,
+  sizing,
+} from "@fragments/plugin-fragment";
 // import { createConstantInterpolate } from "@/shared/createConstantInterpolate.ts";
 // import { createCachedInterpolate } from "@/shared/cachedInterpolate.ts";
 
@@ -19,7 +25,9 @@ export const sizeStyles = (node: BaseNode, cache: GraphState) => {
   const height = getFieldValue(node, "height", cache);
   const minWidth = getFieldValue(node, "minWidth", cache);
   const minHeight = getFieldValue(node, "minHeight", cache);
-  const renderTargetValue = "canvas"; //state.resolve(state.fragment)?.renderTarget;
+  const renderTargetValue = cache.resolve(
+    cache.$fragmentSpring.root
+  )?.renderTarget;
   const graphType = node?._type;
 
   const toValue = (type: keyof typeof sizing, value: number) => {
@@ -38,24 +46,25 @@ export const sizeStyles = (node: BaseNode, cache: GraphState) => {
     return value;
   };
 
-  // if (
-  //   renderTargetValue === renderTarget.document &&
-  //   graphType === nodes.Frame
-  // ) {
-  //   const parent = state.resolve(graphKey)?.getParent();
-  //   if (parent?._type === nodes.Fragment) {
-  //     return {
-  //       width:
-  //         parent?.horizontalGrow === fragmentGrowingMode.fill
-  //           ? "100%"
-  //           : cachedWidth([widthType, width], toValue),
-  //       height:
-  //         parent?.verticalGrow === fragmentGrowingMode.fill
-  //           ? "100%"
-  //           : cachedHeight([heightType, height], toValue),
-  //     };
-  //   }
-  // }
+  if (
+    renderTargetValue === renderTarget.document &&
+    graphType === nodes.Frame
+  ) {
+    const parent = cache.resolve(node)?.getParent();
+
+    if (parent?._type === nodes.Fragment) {
+      return {
+        width:
+          parent?.horizontalGrow === fragmentGrowingMode.fill
+            ? "100%"
+            : to([widthType, width], toValue),
+        height:
+          parent?.verticalGrow === fragmentGrowingMode.fill
+            ? "100%"
+            : to([heightType, height], toValue),
+      };
+    }
+  }
 
   return {
     width: to([widthType, width], toValue),

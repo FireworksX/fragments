@@ -14,6 +14,8 @@ import { Stepper } from '@/shared/ui/Stepper'
 import { Slider } from '@/shared/ui/Slider'
 import { Button } from '@/shared/ui/Button'
 import { popoutNames } from '@/shared/data'
+import { to } from '@react-spring/web'
+import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
 
 interface StackNumberVariableProps {
   className?: string
@@ -96,7 +98,7 @@ const StackNumberProperty: FC<StackNumberVariableProps> = ({ className }) => {
           max={maxInvoker.value}
           onChange={defaultValueInvoker.onChange}
         />
-        {displayStepperInvoker.value ? (
+        <AnimatedVisible visible={displayStepperInvoker.value}>
           <Stepper
             value={defaultValueInvoker.value}
             step={stepInvoker.value}
@@ -104,7 +106,8 @@ const StackNumberProperty: FC<StackNumberVariableProps> = ({ className }) => {
             max={maxInvoker.value}
             onChange={defaultValueInvoker.onChange}
           />
-        ) : (
+        </AnimatedVisible>
+        <AnimatedVisible visible={to(displayStepperInvoker.value, v => !v)}>
           <Slider
             value={defaultValueInvoker.value}
             step={stepInvoker.value}
@@ -112,7 +115,7 @@ const StackNumberProperty: FC<StackNumberVariableProps> = ({ className }) => {
             max={maxInvoker.value}
             onChange={defaultValueInvoker.onChange}
           />
-        )}
+        </AnimatedVisible>
       </ControlRow>
       <ControlRow title='Min'>
         <InputNumber value={minInvoker.value} onChange={minInvoker.onChange} />
@@ -134,7 +137,7 @@ const StackNumberProperty: FC<StackNumberVariableProps> = ({ className }) => {
         <ControlRowWide>
           <TabsSelector
             items={controls}
-            value={displayStepperInvoker.value ? 'stepper' : 'slider'}
+            value={to(displayStepperInvoker.value, v => (v ? 'stepper' : 'slider'))}
             onChange={({ name }) => displayStepperInvoker.onChange(name === 'stepper')}
           />
         </ControlRowWide>

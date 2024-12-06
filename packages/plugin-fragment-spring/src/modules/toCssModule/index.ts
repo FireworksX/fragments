@@ -8,6 +8,7 @@ import { GraphState } from "@graph-state/core";
 import { getFieldValue, layerMode } from "@fragments/plugin-fragment";
 import { to } from "@react-spring/web";
 import { paddingStyles } from "@/modules/toCssModule/styles/paddingStyles.ts";
+import { getResolvedValue } from "@/shared/getResolvedValue.ts";
 
 export const toCssModule = <T extends BaseNode>(node: T, cache: GraphState) => {
   return {
@@ -34,12 +35,12 @@ export const toCssModule = <T extends BaseNode>(node: T, cache: GraphState) => {
         // ...fillStyles,
         // ...borderStyles,
         // ...sceneStyles,
-        opacity: getFieldValue(node, "opacity", cache),
+        opacity: getResolvedValue(getFieldValue(node, "opacity", cache), cache),
         overflow: getFieldValue(node, "overflow", cache),
         whiteSpace: getFieldValue(node, "whiteSpace", cache),
         display: to(
           [
-            getFieldValue(node, "visible", cache),
+            getResolvedValue(getFieldValue(node, "visible", cache), cache),
             getFieldValue(node, "layerMode", cache),
           ],
           (value, lMode) =>

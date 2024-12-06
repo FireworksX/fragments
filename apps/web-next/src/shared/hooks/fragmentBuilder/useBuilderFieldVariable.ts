@@ -94,34 +94,38 @@ export const useBuilderFieldVariable = (layer: Field) => {
       if (field in variableFields) {
         const fieldValue = variableFields[field]
 
-        return properties.map(prop => {
-          const transforms = fieldValue.type === prop.type ? [] : getTransformsByType(prop.type)
+        return properties
+          .map(prop => {
+            const transforms = fieldValue.type === prop.type ? [] : getTransformsByType(prop.type)
 
-          return {
-            label: prop.name,
-            options: [
-              transforms.map(transform => ({
-                label: transform.label,
-                onClick: () => {
-                  const computedValue = createComputedValue({
-                    inputValue: documentManager.keyOfEntity(prop),
-                    outputType: fieldValue.type,
-                    transform,
-                    inputType: prop.type
-                  })
+            if (transforms.length) return null
 
-                  setter(computedValue)
-                }
-              }))
-            ],
-            onClick:
-              transforms?.length === 0
-                ? () => {
-                    setter(prop)
-                  }
-                : noop
-          }
-        })
+            return {
+              label: prop.name ?? prop?._id,
+              // options: [
+              //   transforms.map(transform => ({
+              //     label: transform.label,
+              //     onClick: () => {
+              //       const computedValue = createComputedValue({
+              //         inputValue: documentManager.keyOfEntity(prop),
+              //         outputType: fieldValue.type,
+              //         transform,
+              //         inputType: prop.type
+              //       })
+              //
+              //       setter(computedValue)
+              //     }
+              //   }))
+              // ],
+              onClick:
+                transforms?.length === 0
+                  ? () => {
+                      setter(prop)
+                    }
+                  : noop
+            }
+          })
+          .filter(Boolean)
       }
 
       return []

@@ -67,7 +67,7 @@ const ControlRow: FC<BuilderControlRowProps> = ({
                 onClick={onClickVariable}
                 onReset={onResetVariable}
               >
-                {variableValue.name}
+                {variableValue.name ?? variableValue._id}
               </InputSelectVariable>
             </ControlRowWide>
           )}

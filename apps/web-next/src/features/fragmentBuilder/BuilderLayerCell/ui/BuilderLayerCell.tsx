@@ -2,7 +2,7 @@ import { ElementRef, FC, useEffect, useMemo, useRef, useState } from 'react'
 import cn from 'classnames'
 import { LinkKey } from '@graph-state/core'
 import { isValue } from '@fragments/utils'
-import { to } from '@react-spring/web'
+import { animated, to } from '@react-spring/web'
 import styles from './styles.module.css'
 import CaretRight from '@/shared/icons/next/chevrone-right.svg'
 import { useBuilderLayerCell } from '../hooks/useBuilderLayerCell'
@@ -117,8 +117,8 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
       options={
         <>
           <DropdownGroup minWidth={200}>
-            <DropdownOption description='⌘;' disabled={!flags.isVisible$} onClick={flags.toggleVisible}>
-              {to(flags.isVisible$, v => (!v ? 'Show' : 'Hide'))}
+            <DropdownOption description='⌘;' disabled={!flags.isVisible} onClick={flags.toggleVisible}>
+              {to(flags.isVisible, v => (!v ? 'Show' : 'Hide'))}
             </DropdownOption>
             <DropdownOption description='⌘D' disabled={!flags.canDuplicate} onClick={duplicate}>
               Duplicate
@@ -144,7 +144,7 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
         </>
       }
     >
-      <div
+      <animated.div
         className={cn(
           styles.root,
           className,
@@ -153,6 +153,9 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
           },
           classNames
         )}
+        style={{
+          opacity: to(flags.isVisible, v => (v ? 1 : 0.4))
+        }}
         onClick={handleSelect}
       >
         <Touchable
@@ -168,8 +171,8 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
           <BuilderLayerTypeIcon
             layerKey={layerKey}
             type={type}
-            layoutDirection={flags.layerDirection$}
-            hasLayout={flags.hasLayout$}
+            layoutDirection={flags.layerDirection}
+            hasLayout={flags.hasLayout}
             primaryIconClassName={styles.primaryIcon}
             textIconClassName={styles.textIcon}
             fragmentIconClassName={styles.fragmentIcon}
@@ -206,7 +209,7 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
         <div className={styles.actions}>
           {isPrimaryLayer && 'Primary'} {breakpointThreshold}
         </div>
-      </div>
+      </animated.div>
     </Dropdown>
   )
 }

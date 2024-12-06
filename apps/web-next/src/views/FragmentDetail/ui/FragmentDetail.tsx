@@ -195,7 +195,9 @@ export const FragmentDetail: FC<FragmentDetailProps> = ({ builder, preview }) =>
   const [, view] = fragmentSlug || []
 
   useEffect(() => {
-    fragmentState.resolve(fragmentState.fragment).setRenderTarget(view === 'edit' ? 'canvas' : 'document')
+    nextFragmentState
+      .resolve(nextFragmentState[stateAlias].root)
+      .setRenderTarget(view === 'edit' ? 'canvas' : 'document')
   }, [view])
 
   return (

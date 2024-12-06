@@ -73,8 +73,8 @@ export const FragmentBuilder: FC<FragmentBuilderProps> = ({ className }) => {
           <BuilderControls
             isOpen={isEdit}
             position='right'
-            // fragmentGrowingNode={<BuilderFragmentGrowing />}
-            // fragmentPropsNode={<AssetsProperties propertiesTree={<PropertiesTree />} />}
+            fragmentGrowingNode={<BuilderFragmentGrowing />}
+            fragmentPropsNode={<AssetsProperties propertiesTree={<PropertiesTree />} />}
             positionNode={<BuilderPosition />}
             sizeNode={<BuilderSize />}
             layoutNode={<BuilderLayout />}

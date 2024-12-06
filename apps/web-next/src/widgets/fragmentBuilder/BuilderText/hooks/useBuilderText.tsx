@@ -1,7 +1,7 @@
 import TextAlignLeft from '@/shared/icons/text-align-left.svg'
 import TextAlignRight from '@/shared/icons/text-align-right.svg'
 import TextAlignCenter from '@/shared/icons/text-align-center.svg'
-import { useCallback, useContext, useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { popoutsStore } from '@/shared/store/popouts.store'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderManager'
@@ -86,6 +86,7 @@ export const useBuilderText = () => {
   const { selection, selectionGraph } = useBuilderSelection()
   const { isTextEditing } = useBuilderManager()
   const [{ showTextEditor }] = useGraph(builderManager, builderManager.key)
+  const lastSelectionRef = useRef<any | null>(null)
 
   const layerInvoker = useLayerInvoker(selection, ({ node, key, value }) => {
     switch (key) {
@@ -118,13 +119,14 @@ export const useBuilderText = () => {
   }, [selection, isTextEditing])
 
   useEffect(() => {
-    if (isTextEditing) {
+    if (!isTextEditing && editor) {
       editor.commands.setContent(contentInvoker.value)
     }
   }, [isTextEditing, contentInvoker.value])
 
   const openColor = () => {
     const currentColor = marks.color || '#000'
+    lastSelectionRef.current = editor.state.selection
 
     popoutsStore.open('colorPicker', {
       position: 'right',
@@ -153,7 +155,16 @@ export const useBuilderText = () => {
 
     if (methodName in editor.chain()) {
       if (showTextEditor) {
-        editor.chain().focus()[methodName](value).run()
+        if (lastSelectionRef.current) {
+          editor
+            .chain()
+            .focus()
+            .setTextSelection({ from: lastSelectionRef.current.from, to: lastSelectionRef.current.to })
+            [methodName](value)
+            .run()
+        } else {
+          editor.chain().focus()[methodName](value).run()
+        }
       } else {
         editor.chain().selectAll().focus()[methodName](value).run()
       }

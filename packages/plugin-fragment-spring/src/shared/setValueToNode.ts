@@ -10,27 +10,27 @@ export function setValueToNode<T extends BaseNode>(
   value: unknown,
   cache: GraphState
 ) {
-  // const isVariableValue = isVariableLink(value) || isComputedValueLink(value);
+  const nodeKey = cache.keyOfEntity(node);
+  const isVariableValue = isVariableLink(value) || isComputedValueLink(value);
 
-  // if (isVariableValue) {
-  //   state.mutate(entityLinkKey, (current) => {
-  //     /*
-  //       Если меняем одну переменную на другую переменную, то в
-  //       _${field} всегда должно оставаться изначальное значение
-  //        */
-  //     const saveValue = isVariableLink(current[fieldKey])
-  //       ? current[`_${fieldKey}`]
-  //       : current[fieldKey];
-  //     return {
-  //       [fieldKey]: value,
-  //       [`_${fieldKey}`]: saveValue,
-  //     };
-  //   });
-  //   return;
-  // }
+  if (isVariableValue) {
+    cache.mutate(nodeKey, (current) => {
+      /*
+        Если меняем одну переменную на другую переменную, то в
+        _${field} всегда должно оставаться изначальное значение
+         */
+      const saveValue = isVariableLink(current[field])
+        ? current[`_${field}`]
+        : current[field];
+      return {
+        [field]: value,
+        [`_${field}`]: saveValue,
+      };
+    });
+    return;
+  }
 
   const resolveValue = (cache.resolve(node) ?? node)[field];
-  const nodeKey = cache.keyOfEntity(node);
 
   if (value instanceof Interpolation) {
     cache.mutate(nodeKey, {
