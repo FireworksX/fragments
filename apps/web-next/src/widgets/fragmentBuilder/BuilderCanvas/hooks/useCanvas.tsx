@@ -45,6 +45,8 @@ export const useCanvas = () => {
   }, [canvasManager, measure])
 
   const findLayerFromPointerEvent = event => {
+    if (!event || !isFinite(event.clientX) || !isFinite(event.clientY)) return null
+
     const elementFromPoint = document.elementFromPoint?.(event.clientX, event.clientY)
     const parentFragment = elementFromPoint?.closest(`[data-type="${nodes.FragmentInstance}"]`)
     const closestLayer = elementFromPoint?.closest('[data-key]')

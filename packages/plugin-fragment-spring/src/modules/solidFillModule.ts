@@ -28,7 +28,7 @@ export function solidFillModule<T extends BaseNode>(
 
   return {
     ...node,
-    solidFill: getStableValue(node, "solidFill", getRandomColor(), cache),
+    solidFill: getStableValue(node, "solidFill", null, cache),
     setSolidFill,
   };
 }

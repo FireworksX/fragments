@@ -11,6 +11,7 @@ import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin'
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin'
 import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
 import { BuilderCanvasTextEditor } from '@/widgets/fragmentBuilder/BuilderCanvasTextEditor'
+import { toPx } from '@/shared/utils/toPx'
 
 interface LayerHighlightDraggingProps {
   resizeNode: ReactNode
@@ -51,7 +52,7 @@ export const LayerHighlightNode: FC<LayerHighlightDraggingProps> = ({
         <animated.div
           data-testid='highlight'
           className={cn(styles.mask, { [styles.dashed]: isParentSelected && !isDragging })}
-          style={{ borderWidth }}
+          style={{ '--borderWidth': to(borderWidth, toPx) }}
         >
           {isSelected && resizeNode}
           {isRichTextSelected && (

@@ -10,7 +10,6 @@
     & p {
         margin: 0;
         padding: 0;
-        white-space: pre-wrap;
         pointer-events: none;
     }
 }
@@ -18,9 +17,17 @@
 .mask {
     position: absolute;
     inset: 0;
-    border: 1px solid var(--primary);
 
-    &.dashed {
+    &:after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border: var(--borderWidth, 1px) solid var(--primary);
+    }
+}
+
+.dashed {
+    &:after {
         border-style: dashed;
     }
 }

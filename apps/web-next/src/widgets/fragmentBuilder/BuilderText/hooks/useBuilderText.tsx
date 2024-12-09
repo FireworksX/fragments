@@ -103,26 +103,34 @@ export const useBuilderText = () => {
   const [marks, setMarks] = useState({})
 
   useEffect(() => {
-    if (editor && contentInvoker.value) {
-      editor.commands.setContent(contentInvoker.value)
-
-      editor.on('update', ({ editor }) => {
-        contentInvoker.onChange(generateHTML(editor.getJSON(), canvasEditorExtensions))
-      })
+    const selectionHandler = ({ editor }) => {
+      setMarks(getMarksInSelection(editor))
+    }
+    const updateHandler = ({ editor }) => {
+      contentInvoker.onChange(generateHTML(editor.getJSON(), canvasEditorExtensions))
     }
 
-    if (isTextEditing) {
-      editor.on('selectionUpdate', ({ editor }) => {
-        setMarks(getMarksInSelection(editor))
-      })
+    if (editor) {
+      editor.on('update', updateHandler)
+
+      if (isTextEditing) {
+        editor.on('selectionUpdate', selectionHandler)
+      }
     }
-  }, [selection, isTextEditing])
+
+    return () => {
+      if (editor) {
+        editor.off('selectionUpdate', selectionHandler)
+        editor.off('update', updateHandler)
+      }
+    }
+  }, [selection, isTextEditing, contentInvoker, editor])
 
   useEffect(() => {
     if (!isTextEditing && editor) {
       editor.commands.setContent(contentInvoker.value)
     }
-  }, [isTextEditing, contentInvoker.value])
+  }, [isTextEditing, contentInvoker, editor])
 
   const openColor = () => {
     const currentColor = marks.color || '#000'
@@ -177,6 +185,7 @@ export const useBuilderText = () => {
   }
 
   return {
+    isTextEditing,
     content: {
       ...contentInvoker,
       textContent: editor

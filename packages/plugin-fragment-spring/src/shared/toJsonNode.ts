@@ -8,6 +8,7 @@ export function toJsonNode(value: any) {
   if (isPrimitive(value) && isValue(value)) {
     return value;
   }
+
   return Object.entries(value).reduce((acc, [key, value]) => {
     if (value instanceof SpringValue || value instanceof Interpolation) {
       acc[key] = value.toJSON();

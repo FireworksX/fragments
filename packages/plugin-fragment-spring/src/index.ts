@@ -6,6 +6,7 @@ import { applySnapshot } from "@/shared/applySnapshot.ts";
 import { createNode } from "@/shared/createNode.ts";
 import { createBreakpointNode } from "@/creators/createBreakpointNode.ts";
 import { createTextNode } from "@/creators/createTextNode.ts";
+import { toJsonNode } from "@/shared/toJsonNode.ts";
 
 const plugin: (root: LinkKey) => Plugin =
   (root: LinkKey) => (state: GraphState<StateEntity>) => {
@@ -31,6 +32,7 @@ const plugin: (root: LinkKey) => Plugin =
 
       makeSnapshot: (target?: LinkKey = root) => makeSnapshot(state, target),
       applySnapshot: (snapshot) => applySnapshot(state, snapshot),
+      toJsonNode: toJsonNode,
 
       root,
     };
@@ -43,3 +45,4 @@ export default plugin;
 export { resetFieldOverride } from "@/shared/resetFieldOverride.ts";
 export { isOverriddenNode } from "@/shared/isOverriddenNode.ts";
 export { moveNode } from "@/shared/moveNode.ts";
+// export { toJsonNode } from "@/shared/toJsonNode.ts";
