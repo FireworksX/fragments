@@ -1,1 +1,1 @@
-export { default as Textarea } from './ui/Textarea'
+export { Textarea, TextareaAnimated } from './ui/Textarea'

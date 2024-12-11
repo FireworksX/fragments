@@ -15,10 +15,15 @@ import { canvasEditorExtensions, CanvasTextEditorContext } from '@/widgets/fragm
 import { Editor } from '@tiptap/react'
 import { generateHTML, generateText, generateJSON } from '@tiptap/core'
 import { capitalize } from '@/shared/utils/capitalize'
-import { objectToColorString } from '@fragments/utils'
+import { isValue, objectToColorString, toKebabCase } from '@fragments/utils'
 import { useGraph } from '@graph-state/react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { whiteSpace } from '@fragments/plugin-fragment'
+import { getMarksInSelection } from '../lib/getMarksInSelection'
+import { getTopLevelNodeRanges } from '../lib/getTopLevelNodeRanges'
+import { wrapTextInParagraphWithAttributes } from '../lib/wrapTextInParagraphWithAttributes'
+import { isVariableLink } from '@/shared/utils/isVariableLink'
+import { getResolvedValue } from '@fragments/plugin-fragment-spring'
 
 const aligns: TabsSelectorItem[] = [
   {
@@ -58,48 +63,48 @@ const weights = [
 ]
 const transforms: TextTransform[] = ['none', 'uppercase', 'lowercase', 'capitalize']
 
-const getMarksInSelection = (editor: Editor) => {
-  const { from, to } = editor.state.selection // Диапазон выделения
-  const marksWithAttributes = {}
-
-  editor.state.doc.nodesBetween(from, to, node => {
-    if (!node.marks) return // Пропускаем узлы без меток
-
-    node.marks.forEach(mark => {
-      const markName = mark.type.name
-      const markAttrs = mark.attrs
-
-      Object.entries(markAttrs ?? {}).forEach(([key, value]) => {
-        if (typeof value === 'string' && value.length > 0) {
-          marksWithAttributes[key] = value
-        }
-      })
-    })
-  })
-
-  return marksWithAttributes
-}
-
 export const useBuilderText = () => {
-  const { builderManager } = useContext(BuilderContext)
+  const { builderManager, documentManager } = useContext(BuilderContext)
   const editor = useContext(CanvasTextEditorContext)
   const { selection, selectionGraph } = useBuilderSelection()
   const { isTextEditing } = useBuilderManager()
   const [{ showTextEditor }] = useGraph(builderManager, builderManager.key)
   const lastSelectionRef = useRef<any | null>(null)
 
-  const layerInvoker = useLayerInvoker(selection, ({ node, key, value }) => {
-    switch (key) {
-      case 'content':
-        node.setContent(value)
-        break
-      case 'whiteSpace':
-        node.setWhiteSpace(value)
-        break
+  const layerInvoker = useLayerInvoker(
+    selection,
+    ({ node, key, value }) => {
+      // Если изменяем текст через input, то приходит просто текст и нужно его обернуть в <p>
+      // if (key === 'content' && !value?.startsWith('<') && !isVariableLink(value)) {
+      //   const attrs = editor.getAttributes('paragraph')
+      //   value = wrapTextInParagraphWithAttributes(value, attrs)
+      // }
+
+      switch (key) {
+        case 'content':
+          node.setContent(value)
+          break
+        case 'styleAttributes':
+          node.setStyleAttributes(value)
+          break
+        case 'whiteSpace':
+          node.setWhiteSpace(value)
+          break
+      }
+    },
+    ({ key, node }) => {
+      if (key === 'content') {
+        if (node.variableLink) {
+          return node.variableLink
+        } else {
+          return node.content
+        }
+      }
     }
-  })
+  )
   const fontInvoker = layerInvoker('text.font')
   const contentInvoker = layerInvoker('content')
+  const styleAttributesInvoker = layerInvoker('styleAttributes')
   const [marks, setMarks] = useState({})
 
   useEffect(() => {
@@ -108,6 +113,9 @@ export const useBuilderText = () => {
     }
     const updateHandler = ({ editor }) => {
       contentInvoker.onChange(generateHTML(editor.getJSON(), canvasEditorExtensions))
+
+      const attributes = editor.getAttributes('paragraph')
+      styleAttributesInvoker.onChange(attributes)
     }
 
     if (editor) {
@@ -128,7 +136,13 @@ export const useBuilderText = () => {
 
   useEffect(() => {
     if (!isTextEditing && editor) {
-      editor.commands.setContent(contentInvoker.value)
+      let content = contentInvoker.value
+
+      if (isVariableLink(contentInvoker.value)) {
+        content = selectionGraph?.getContent?.()?.get()
+      }
+
+      editor.commands.setContent(content)
     }
   }, [isTextEditing, contentInvoker, editor])
 
@@ -174,7 +188,9 @@ export const useBuilderText = () => {
           editor.chain().focus()[methodName](value).run()
         }
       } else {
-        editor.chain().selectAll().focus()[methodName](value).run()
+        getTopLevelNodeRanges(editor).forEach(range => {
+          editor.chain().focus().setTextSelection({ from: range.from, to: range.to })[methodName](value).run()
+        })
       }
     }
 
@@ -188,9 +204,10 @@ export const useBuilderText = () => {
     isTextEditing,
     content: {
       ...contentInvoker,
-      textContent: editor
-        ? generateText(generateJSON(contentInvoker.value, canvasEditorExtensions), canvasEditorExtensions)
-        : ''
+      textContent:
+        editor && contentInvoker?.value
+          ? generateText(generateJSON(contentInvoker?.value, canvasEditorExtensions), canvasEditorExtensions)
+          : ''
     },
     font: {
       onClick: openFonts,

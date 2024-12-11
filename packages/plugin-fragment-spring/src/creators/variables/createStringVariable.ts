@@ -1,26 +1,49 @@
-import { generateId } from "@fragments/utils";
 import { nodes, variableType } from "@/definitions.ts";
+import { createBaseVariableNode } from "@/creators/variables/createBaseVariableNode.ts";
+import { GraphState } from "@graph-state/core";
+import { getStableValue } from "@/shared/getStableValue.ts";
+import { setValueToNode } from "@/shared/setValueToNode.ts";
 
-export type CreateStringOptions = Partial<{
-  required: boolean;
+export type CreateNumberOptions = Partial<{
   name: string;
-  defaultValue: string;
-  placeholder: string;
-  displayTextArea: boolean;
+  required: boolean;
+  defaultValue: number;
+  min: number;
+  max: number;
+  step: number;
+  displayStepper: boolean;
 }>;
 
-export const createStringVariable = (options: CreateStringOptions) => {
-  const id = generateId();
+export const createStringVariable = (
+  initialNode: Partial<unknown> = {},
+  cache: GraphState
+) => {
+  const baseNode = createBaseVariableNode(
+    {
+      ...initialNode,
+      defaultValue: initialNode?.defaultValue ?? "",
+    },
+    cache,
+    {
+      staticDefaultValue: true,
+    }
+  );
 
   return {
-    _type: nodes.Variable,
-    _id: options?._id ?? id,
-    name: options?.name || id,
-    required: options?.required || false,
+    ...baseNode,
+    required: getStableValue(baseNode, "required", false, cache),
     type: variableType.String,
-    defaultValue: options?.defaultValue ?? "",
-    placeholder: options?.placeholder ?? null,
-    displayTextArea: options?.displayTextArea ?? false,
-    value: null,
+    placeholder: getStableValue(baseNode, "placeholder", null, cache),
+    isTextarea: getStableValue(baseNode, "isTextarea", false, cache),
+
+    setRequired(value) {
+      setValueToNode(baseNode, "required", value, cache);
+    },
+    setPlaceholder(value) {
+      setValueToNode(baseNode, "placeholder", value, cache);
+    },
+    setIsTextarea(value) {
+      setValueToNode(baseNode, "isTextarea", value, cache);
+    },
   };
 };

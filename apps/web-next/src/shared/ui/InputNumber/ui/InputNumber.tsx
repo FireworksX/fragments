@@ -56,7 +56,6 @@ const InputNumber: FC<InputNumberProps> = animated(
     const inc = () => {
       const nextValue = +(+fixedValue + step)
 
-      console.log(nextValue, fixedValue, step)
       if (typeof max !== 'undefined') {
         onChange(nextValue > max ? fixedValue : nextValue)
       } else {

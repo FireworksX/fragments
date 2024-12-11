@@ -11,6 +11,7 @@ import {
 import { getStaticValue } from "@/shared/getStaticValue.ts";
 import { createNumberVariable } from "@/creators/variables/createNumberVariable.ts";
 import { createBooleanVariable } from "@/creators/variables/createBooleanVariable.ts";
+import { createStringVariable } from "@/creators/variables/createStringVariable.ts";
 
 export const modules = [childrenModule];
 
@@ -25,7 +26,7 @@ export function createFragmentNode(
   const creatorsMethodsMap = {
     [variableType.Number]: createNumberVariable,
     [variableType.Boolean]: createBooleanVariable,
-    // [variableType.String]: createStringVariable,
+    [variableType.String]: createStringVariable,
   };
 
   return {

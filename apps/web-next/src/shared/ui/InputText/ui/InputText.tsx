@@ -12,41 +12,41 @@ interface InputTextProps extends InputHTMLAttributes<HTMLInputElement> {
   value: string | number
   placeholder?: string
   inputRef?: MutableRefObject<ElementRef<'input'>>
-  onChange: (value: string | number) => void
-  onChangeValue: (value: string | number) => void
+  onChange?: (value: string | number) => void
+  onChangeValue?: (value: string | number) => void
 }
 
-const InputText: FC<InputTextProps> = forwardRef<ElementRef<'input'>, InputTextProps>(
-  (
-    {
-      className,
-      classNameInput,
-      size = 'medium',
-      mode = 'primary',
-      placeholder,
-      value,
-      onChange,
-      onChangeValue,
-      ...inputProps
-    },
-    ref
-  ) => {
-    return (
-      <div className={cn(styles.root, className, styles[size], styles[mode])}>
-        <input
-          ref={ref}
-          className={cn(styles.input, classNameInput)}
-          value={value}
-          placeholder={placeholder}
-          onChange={e => {
-            onChange?.(e)
-            onChangeValue?.(e?.target.value)
-          }}
-          {...inputProps}
-        />
-      </div>
-    )
-  }
-)
+const BaseInputText: FC<InputTextProps> = ({
+  className,
+  classNameInput,
+  size = 'medium',
+  mode = 'primary',
+  placeholder,
+  value,
+  inputRef,
+  onChange,
+  onChangeValue,
+  ...inputProps
+}) => {
+  return (
+    <div className={cn(styles.root, className, styles[size], styles[mode])}>
+      <input
+        ref={inputRef}
+        className={cn(styles.input, classNameInput)}
+        value={value}
+        placeholder={placeholder}
+        onChange={e => {
+          onChange?.(e?.target.value)
+          onChangeValue?.(e?.target.value)
+        }}
+        {...inputProps}
+      />
+    </div>
+  )
+}
 
-export default animated(InputText)
+export const InputText = forwardRef<HTMLInputElement, InputTextProps>((props, ref) => (
+  <BaseInputText {...props} inputRef={ref} />
+))
+
+export const InputTextAnimated = animated(BaseInputText)

@@ -1,4 +1,5 @@
 import { Extension } from '@tiptap/core'
+import { createStyleExtension } from '@/widgets/fragmentBuilder/BuilderCanvasTextEditor/lib/createStyleExtension'
 
 export interface TextAlignOptions {
   types: string[] // Узлы, для которых применима метка
@@ -20,49 +21,7 @@ declare module '@tiptap/core' {
   }
 }
 
-export const TextAlign = Extension.create<TextAlignOptions>({
+export const TextAlign = createStyleExtension({
   name: 'textAlign',
-
-  addOptions() {
-    return {
-      types: ['textStyle'],
-      defaultAlign: null
-    }
-  },
-
-  addGlobalAttributes() {
-    return [
-      {
-        types: this.options.types,
-        attributes: {
-          textAlign: {
-            default: this.options.defaultAlign,
-            parseHTML: element => element.style.textAlign?.replace(/['"]+/g, ''),
-            renderHTML: attributes => {
-              if (!attributes.textAlign) {
-                return {}
-              }
-
-              return {
-                style: `text-align: ${attributes.textAlign}`
-              }
-            }
-          }
-        }
-      }
-    ]
-  },
-
-  addCommands() {
-    return {
-      setTextAlign:
-        align =>
-        ({ chain }) =>
-          chain().setMark('textStyle', { textAlign: align }).run(),
-      unsetTextAlign:
-        () =>
-        ({ commands }) =>
-          commands.unsetMark(this.name)
-    }
-  }
+  cssProperty: 'text-align'
 })

@@ -10,13 +10,22 @@ import { visibleModule } from "@/modules/visibleModule.ts";
 import { opacityModule } from "@/modules/opacityModule.ts";
 import { overflowModule } from "@/modules/overflowModule.ts";
 import { zIndexModule } from "@/modules/zIndexModule.ts";
-import { createBaseNode, nodes, whiteSpace } from "@fragments/plugin-fragment";
+import {
+  createBaseNode,
+  getFieldValue,
+  nodes,
+  whiteSpace,
+} from "@fragments/plugin-fragment";
 import { cloneModule } from "@/modules/cloneModule.ts";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
 import { getStaticValue } from "@/shared/getStaticValue.ts";
 import { getStableValue } from "@/shared/getStableValue.ts";
 import { copyModule } from "@/modules/copyModule.ts";
 import { duplicateModule } from "@/modules/duplicateModule.ts";
+import { isVariableLink } from "@/shared/isVariableLink.ts";
+import { to } from "@react-spring/web";
+import { getResolvedValue } from "@/shared/getResolvedValue.ts";
+import { wrapTextInParagraphWithAttributes } from "@/shared/wrapTextInParagraphWithAttributes.ts";
 
 export const modules = [
   positionModule,
@@ -39,13 +48,44 @@ export function createTextNode(
 ) {
   const baseNode = createBaseNode(nodes.Text, initialNode, cache);
   const textNode = applyModules(baseNode, modules, cache);
+  const nodeKey = cache.keyOfEntity(textNode);
 
   return {
     ...textNode,
     content: getStaticValue(textNode, "content", "", cache),
+    variableLink: getStaticValue(textNode, "variableContent", null, cache),
     setContent(value: string) {
-      cache.mutate(cache.keyOfEntity(textNode), {
-        content: value,
+      if (isVariableLink(value)) {
+        cache.mutate(nodeKey, {
+          variableLink: value,
+        });
+      } else {
+        cache.mutate(nodeKey, {
+          content: value,
+        });
+      }
+    },
+
+    getContent() {
+      const content = getFieldValue(nodeKey, "content", cache);
+      const variableLink = getFieldValue(nodeKey, "variableLink", cache);
+      const styleAttributes = getFieldValue(nodeKey, "styleAttributes", cache);
+
+      if (variableLink) {
+        const variableValue = getResolvedValue(variableLink, cache);
+
+        return to(variableValue, (v) =>
+          wrapTextInParagraphWithAttributes(v, styleAttributes)
+        );
+      }
+
+      return content;
+    },
+
+    styleAttributes: getStaticValue(textNode, "styleAttributes", {}, cache),
+    setStyleAttributes(value) {
+      cache.mutate(nodeKey, {
+        styleAttributes: value,
       });
     },
 

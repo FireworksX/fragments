@@ -1,4 +1,5 @@
 import { Extension } from '@tiptap/core'
+import { createStyleExtension } from '@/widgets/fragmentBuilder/BuilderCanvasTextEditor/lib/createStyleExtension'
 
 export interface LineHeightOptions {
   types: string[] // Узлы, для которых применима метка
@@ -20,49 +21,7 @@ declare module '@tiptap/core' {
   }
 }
 
-export const LineHeight = Extension.create<LineHeightOptions>({
+export const LineHeight = createStyleExtension({
   name: 'lineHeight',
-
-  addOptions() {
-    return {
-      types: ['textStyle'],
-      defaultHeight: null
-    }
-  },
-
-  addGlobalAttributes() {
-    return [
-      {
-        types: this.options.types,
-        attributes: {
-          lineHeight: {
-            default: this.options.defaultHeight,
-            parseHTML: element => element.style.lineHeight?.replace(/['"]+/g, ''),
-            renderHTML: attributes => {
-              if (!attributes.lineHeight) {
-                return {}
-              }
-
-              return {
-                style: `line-height: ${attributes.lineHeight}`
-              }
-            }
-          }
-        }
-      }
-    ]
-  },
-
-  addCommands() {
-    return {
-      setLineHeight:
-        height =>
-        ({ chain }) =>
-          chain().setMark('textStyle', { lineHeight: height }).run(),
-      unsetLineHeight:
-        () =>
-        ({ commands }) =>
-          commands.unsetMark(this.name)
-    }
-  }
+  cssProperty: 'line-height'
 })

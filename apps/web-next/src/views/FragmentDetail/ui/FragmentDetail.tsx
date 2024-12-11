@@ -180,6 +180,10 @@ nextFragmentState.$fragmentSpring.applySnapshot([
   },
   {
     _type: 'Text',
+    _id: '28a61138e386e.styleAttributes'
+  },
+  {
+    _type: 'Text',
     _id: 'd7167bbcc0b46',
     name: 'Time',
     overrides: [],
@@ -197,6 +201,10 @@ nextFragmentState.$fragmentSpring.applySnapshot([
     overflow: 'hidden',
     content: '<p><span style="color: rgb(60, 59, 67)">18:00</span></p>',
     whiteSpace: 'nowrap'
+  },
+  {
+    _type: 'Text',
+    _id: 'd7167bbcc0b46.styleAttributes'
   },
   {
     _type: 'Frame',
@@ -250,8 +258,20 @@ nextFragmentState.$fragmentSpring.applySnapshot([
     visible: true,
     opacity: 1,
     overflow: 'hidden',
-    content: '<p><span style="color: rgb(66, 47, 163)">Team A</span></p>',
+    content:
+      '<p style="font-size: 22px"><span style="color: rgb(66, 47, 163)">T</span><span style="font-size: 16px; color: rgb(66, 47, 163)">eam</span><span style="color: rgb(66, 47, 163)"> A</span></p>',
     whiteSpace: 'nowrap'
+  },
+  {
+    _type: 'Text',
+    _id: '152808e346fee.styleAttributes',
+    fontSize: '22px',
+    fontWeight: '',
+    textAlign: 'left',
+    textTransform: '',
+    textDecoration: '',
+    lineHeight: '',
+    letterSpacing: ''
   },
   {
     _type: 'Frame',
@@ -452,6 +472,10 @@ nextFragmentState.$fragmentSpring.applySnapshot([
   },
   {
     _type: 'Text',
+    _id: '146eb8ee59b67.styleAttributes'
+  },
+  {
+    _type: 'Text',
     _id: '600e451e283ba',
     name: 'Team B name',
     overrides: [],
@@ -469,6 +493,10 @@ nextFragmentState.$fragmentSpring.applySnapshot([
     overflow: 'hidden',
     content: '<p><span style="color: rgb(66, 47, 163)">Team A</span></p>',
     whiteSpace: 'nowrap'
+  },
+  {
+    _type: 'Text',
+    _id: '600e451e283ba.styleAttributes'
   },
   {
     _type: 'Frame',
@@ -527,6 +555,10 @@ nextFragmentState.$fragmentSpring.applySnapshot([
     whiteSpace: 'normal'
   },
   {
+    _type: 'Text',
+    _id: '25cc5d58526da.styleAttributes'
+  },
+  {
     _type: 'Frame',
     _id: '75f5d5d76c5a5',
     name: 'Footer button',
@@ -581,6 +613,10 @@ nextFragmentState.$fragmentSpring.applySnapshot([
     overflow: 'hidden',
     content: '2.41',
     whiteSpace: 'normal'
+  },
+  {
+    _type: 'Text',
+    _id: '047a7710ba1fc.styleAttributes'
   }
 ])
 

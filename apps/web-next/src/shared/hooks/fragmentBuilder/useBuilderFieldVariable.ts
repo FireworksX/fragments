@@ -11,6 +11,8 @@ import { noop } from '@fragments/utils'
 import { popoutsStore } from '@/shared/store/popouts.store'
 import { stackVariableTransformName } from '@/features/popouts/StackVariableTransform/StackVariableTransform'
 import { popoutNames } from '@/shared/data'
+import { generateJSON, generateText } from '@tiptap/core'
+import { canvasEditorExtensions } from '@/widgets/fragmentBuilder/BuilderCanvasTextEditor'
 // import {
 //   stackVariableTransformName
 // } from '@/widgets/StackCollector/components/variables/StackVariableTransform/StackVariableTransform'
@@ -32,6 +34,19 @@ const variableFields = {
     type: variableType.Boolean,
     valueOptions: {
       name: 'Visible'
+    }
+  },
+  content: {
+    type: variableType.String,
+    createFormatter: value => {
+      if (value) {
+        return generateText(generateJSON(value, canvasEditorExtensions), canvasEditorExtensions)
+      }
+
+      return value
+    },
+    valueOptions: {
+      name: 'Content'
     }
   }
 }
@@ -98,7 +113,7 @@ export const useBuilderFieldVariable = (layer: Field) => {
           .map(prop => {
             const transforms = fieldValue.type === prop.type ? [] : getTransformsByType(prop.type)
 
-            if (transforms.length) return null
+            if (prop.type !== fieldValue.type) return null
 
             return {
               label: prop.name ?? prop?._id,
@@ -142,7 +157,10 @@ export const useBuilderFieldVariable = (layer: Field) => {
           createdProperty.rename(getVariableName(variableValueOptions.name))
         }
 
-        createdProperty.setDefaultValue(animatableValue(currentValue))
+        const defaultValue =
+          variableField?.createFormatter?.(animatableValue(currentValue)) ?? animatableValue(currentValue)
+
+        createdProperty.setDefaultValue(defaultValue)
 
         if (variableField.type === variableType.Number) {
           if ('step' in variableValueOptions) createdProperty.setStep(variableValueOptions.step)

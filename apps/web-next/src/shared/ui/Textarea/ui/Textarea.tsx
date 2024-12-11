@@ -1,5 +1,5 @@
 'use client'
-import { FC, InputHTMLAttributes } from 'react'
+import { ElementRef, FC, forwardRef, InputHTMLAttributes, MutableRefObject } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
 import cn from 'classnames'
 import styles from './styles.module.css'
@@ -8,20 +8,29 @@ import { animated } from '@react-spring/web'
 interface TextareaProps extends InputHTMLAttributes<HTMLTextAreaElement> {
   value: string
   className?: string
-  onChange(value: TextareaProps['value']): void
+  inputRef?: MutableRefObject<ElementRef<'input'>>
+  onChangeValue: (value: string | number) => void
 }
 
-const Textarea: FC<TextareaProps> = ({ className, value, onChange, ...rest }) => {
+const BaseTextarea: FC<TextareaProps> = ({ className, inputRef, value, onChange, onChangeValue, ...rest }) => {
   return (
     <TextareaAutosize
+      ref={inputRef}
       minRows={1}
       maxRows={10}
       className={cn(styles.root, className)}
       value={value}
-      onChange={({ target: { value } }) => onChange(value)}
+      onChange={e => {
+        onChange?.(e)
+        onChangeValue?.(e.target.value)
+      }}
       {...rest}
     />
   )
 }
 
-export default animated(Textarea)
+export const Textarea = forwardRef<ElementRef<'input'>, TextareaProps>((props, ref) => (
+  <BaseTextarea {...props} inputRef={ref} />
+))
+
+export const TextareaAnimated = animated(BaseTextarea)

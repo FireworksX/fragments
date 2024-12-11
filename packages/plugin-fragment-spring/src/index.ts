@@ -32,7 +32,6 @@ const plugin: (root: LinkKey) => Plugin =
 
       makeSnapshot: (target?: LinkKey = root) => makeSnapshot(state, target),
       applySnapshot: (snapshot) => applySnapshot(state, snapshot),
-      toJsonNode: toJsonNode,
 
       root,
     };
@@ -45,4 +44,5 @@ export default plugin;
 export { resetFieldOverride } from "@/shared/resetFieldOverride.ts";
 export { isOverriddenNode } from "@/shared/isOverriddenNode.ts";
 export { moveNode } from "@/shared/moveNode.ts";
+export { getResolvedValue } from "@/shared/getResolvedValue.ts";
 // export { toJsonNode } from "@/shared/toJsonNode.ts";

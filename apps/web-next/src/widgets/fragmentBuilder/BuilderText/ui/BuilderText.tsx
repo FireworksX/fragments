@@ -37,7 +37,6 @@ const BuilderText: FC<BuilderTextProps> = ({ className }) => {
     decoration
   } = useBuilderText()
   const { getColor, getNameColor } = useDisplayColor()
-  const [{ showTextEditor }] = useGraph(builderManager, builderManager.key)
 
   return (
     <Panel className={className} title='Text'>
@@ -48,7 +47,7 @@ const BuilderText: FC<BuilderTextProps> = ({ className }) => {
       {/*</BuilderControlRow>*/}
 
       {!isTextEditing && (
-        <ControlRow title='Content'>
+        <ControlRow title='Content' {...content}>
           <ControlRowWide>
             <InputText value={content.textContent} onChangeValue={content.onChange} />
           </ControlRowWide>

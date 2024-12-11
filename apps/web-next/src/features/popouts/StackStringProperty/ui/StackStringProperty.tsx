@@ -9,8 +9,10 @@ import { TabsSelector, TabsSelectorItem } from '@/shared/ui/TabsSelector'
 import { capitalize } from '@/shared/utils/capitalize'
 import { popoutNames } from '@/shared/data'
 import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
-import { InputText } from '@/shared/ui/InputText'
-import { Textarea } from '@/shared/ui/Textarea'
+import { InputText, InputTextAnimated } from '@/shared/ui/InputText'
+import { Textarea, TextareaAnimated } from '@/shared/ui/Textarea'
+import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
+import { to } from '@react-spring/web'
 
 interface StackStringVariableProps {
   className?: string
@@ -41,7 +43,11 @@ const StackStringProperty: FC<StackStringVariableProps> = ({ className }) => {
       node.setDisplayStepper(value)
     }
 
-    if (['required', 'placeholder', 'displayTextArea', 'defaultValue'].includes(key)) {
+    if (key === 'placeholder') {
+      node.setPlaceholder(value)
+    }
+
+    if (['required', 'isTextarea', 'defaultValue'].includes(key)) {
       node[`set${capitalize(key)}`](value)
     }
   })
@@ -49,14 +55,14 @@ const StackStringProperty: FC<StackStringVariableProps> = ({ className }) => {
   const nameInvoker = layerInvoker('name')
   const requiredInvoker = layerInvoker('required')
   const placeholderInvoker = layerInvoker('placeholder')
-  const displayTextAreaInvoker = layerInvoker('displayTextArea')
+  const displayTextAreaInvoker = layerInvoker('isTextarea')
   const defaultValueInvoker = layerInvoker('defaultValue')
 
   return (
     <div className={cn(styles.root, className)}>
       <ControlRow title='Name'>
         <ControlRowWide>
-          <InputText {...nameInvoker} />
+          <InputText value={nameInvoker.value} onChangeValue={nameInvoker.onChange} />
         </ControlRowWide>
       </ControlRow>
       <ControlRow title='Required'>
@@ -70,16 +76,17 @@ const StackStringProperty: FC<StackStringVariableProps> = ({ className }) => {
       </ControlRow>
       <ControlRow title='Placeholder'>
         <ControlRowWide>
-          <InputText {...placeholderInvoker} />
+          <InputTextAnimated value={placeholderInvoker.value} onChangeValue={placeholderInvoker.onChange} />
         </ControlRowWide>
       </ControlRow>
       <ControlRow title='Default Value'>
         <ControlRowWide>
-          {displayTextAreaInvoker.value ? (
-            <Textarea {...defaultValueInvoker} />
-          ) : (
-            <InputText {...defaultValueInvoker} />
-          )}
+          <AnimatedVisible visible={displayTextAreaInvoker.value}>
+            <TextareaAnimated value={defaultValueInvoker.value} onChangeValue={defaultValueInvoker.onChange} />
+          </AnimatedVisible>
+          <AnimatedVisible visible={to(displayTextAreaInvoker.value, v => !v)}>
+            <InputTextAnimated value={defaultValueInvoker.value} onChangeValue={defaultValueInvoker.onChange} />
+          </AnimatedVisible>
         </ControlRowWide>
       </ControlRow>
       <ControlRow title='Textarea'>

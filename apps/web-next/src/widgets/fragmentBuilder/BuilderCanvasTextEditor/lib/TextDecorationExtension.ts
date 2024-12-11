@@ -1,4 +1,5 @@
 import { Attribute, Extension, mergeAttributes } from '@tiptap/core'
+import { createStyleExtension } from '@/widgets/fragmentBuilder/BuilderCanvasTextEditor/lib/createStyleExtension'
 
 export interface TextDecorationOptions {
   types: string[] // Узлы, для которых применима метка (например, 'text')
@@ -20,50 +21,7 @@ declare module '@tiptap/core' {
   }
 }
 
-export const TextDecoration = Extension.create<TextDecorationOptions>({
+export const TextDecoration = createStyleExtension({
   name: 'textDecoration',
-
-  addOptions() {
-    return {
-      types: ['textStyle'],
-      defaultDecoration: null
-    }
-  },
-
-  addGlobalAttributes() {
-    return [
-      {
-        types: this.options.types,
-        attributes: {
-          textDecoration: {
-            default: this.options.defaultDecoration,
-            parseHTML: element => element.style.textDecoration?.replace(/['"]+/g, ''),
-            renderHTML: attributes => {
-              if (!attributes.textDecoration) {
-                return {}
-              }
-
-              return {
-                style: `text-decoration: ${attributes.textDecoration}`
-              }
-            }
-          }
-        }
-      }
-    ]
-  },
-
-  addCommands() {
-    return {
-      setTextDecoration:
-        decoration =>
-        ({ chain }) =>
-          chain().setMark('textStyle', { textDecoration: decoration }).run(),
-      unsetTextDecoration:
-        () =>
-        ({ commands }) => {
-          return commands.unsetMark(this.name)
-        }
-    }
-  }
+  cssProperty: 'text-decoration'
 })

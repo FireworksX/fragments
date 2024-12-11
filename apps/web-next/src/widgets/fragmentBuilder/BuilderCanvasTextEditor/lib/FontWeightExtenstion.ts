@@ -1,4 +1,5 @@
 import { Extension } from '@tiptap/core'
+import { createStyleExtension } from '@/widgets/fragmentBuilder/BuilderCanvasTextEditor/lib/createStyleExtension'
 
 export interface FontWeightOptions {
   types: string[] // Узлы, для которых применима метка
@@ -20,49 +21,7 @@ declare module '@tiptap/core' {
   }
 }
 
-export const FontWeight = Extension.create<FontWeightOptions>({
+export const FontWeight = createStyleExtension({
   name: 'fontWeight',
-
-  addOptions() {
-    return {
-      types: ['textStyle'],
-      defaultWeight: null
-    }
-  },
-
-  addGlobalAttributes() {
-    return [
-      {
-        types: this.options.types,
-        attributes: {
-          fontWeight: {
-            default: this.options.defaultWeight,
-            parseHTML: element => element.style.fontWeight?.replace(/['"]+/g, ''),
-            renderHTML: attributes => {
-              if (!attributes.fontWeight) {
-                return {}
-              }
-
-              return {
-                style: `font-weight: ${attributes.fontWeight}`
-              }
-            }
-          }
-        }
-      }
-    ]
-  },
-
-  addCommands() {
-    return {
-      setFontWeight:
-        weight =>
-        ({ chain }) =>
-          chain().setMark('textStyle', { fontWeight: weight }).run(),
-      unsetFontWeight:
-        () =>
-        ({ commands }) =>
-          commands.unsetMark(this.name)
-    }
-  }
+  cssProperty: 'font-weight'
 })

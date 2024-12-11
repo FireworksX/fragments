@@ -8,6 +8,7 @@ import { omit } from '@fragments/utils'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderManager'
 import { nodes } from '@fragments/plugin-state'
+import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 
 const BORDER_SIZE = 1.5
 const DRAG_PARENT_BORDER_SIZE = 3
@@ -18,12 +19,16 @@ export const useLayerHighlightNode = (layerKey: LinkKey) => {
   const [canvas] = useGraph(canvasManager, canvasManager.key)
   const [layerNode] = useGraph(documentManager, layerKey)
   const { selection, selectionGraph } = useBuilderSelection()
+  const layerInvoker = useLayerInvoker(layerKey)
   const layerStyles = layerNode?.toCss?.() ?? {}
   const children = layerNode?._type === nodes.FragmentInstance ? [layerNode.fragment] : layerNode?.children ?? []
   const selectionParentKey = documentManager.keyOfEntity(selectionGraph?.getParent?.())
   const isParentSelected = selectionParentKey === layerKey
 
+  const textContent = layerNode?.getContent?.()
+
   return {
+    documentManager,
     isDragging: canvas.isDragging,
     isHovered: canvas.hoverLayer === layerKey,
     isSelected: selection === layerKey,
@@ -43,6 +48,6 @@ export const useLayerHighlightNode = (layerKey: LinkKey) => {
     },
     children,
     layerNode,
-    textContent: layerNode?._type === nodes.Text && layerNode?.content
+    textContent
   }
 }

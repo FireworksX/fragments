@@ -13,7 +13,7 @@ export const PropertiesTree: FC<PropertiesTreeProps> = () => {
       {properties.map(prop => {
         return (
           <PropertyGenericCell key={prop.name} type={prop.type} onClick={() => editProperty(prop)}>
-            {prop.name ?? prop?._id}
+            {prop.name || prop?._id}
           </PropertyGenericCell>
         )
       })}

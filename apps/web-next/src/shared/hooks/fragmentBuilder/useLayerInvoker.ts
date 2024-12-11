@@ -7,12 +7,14 @@ import { GraphState, SetOptions } from '@graph-state/core'
 import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { getFieldValue } from '@fragments/plugin-fragment'
+import { getResolvedValue } from '@fragments/plugin-fragment-spring'
 // import { builderNodes } from '../data/promos/creators'
 // import { ComponentProperty } from '../types/componentProperties'
 
 export type LayerInvokerValue<TValue = unknown> = {
   property?: any //ComponentProperty
   value: TValue
+  resolvedValue: TValue
   onChange: (newValue: TValue, options?: SetOptions) => void
   onResetProperty?: () => void
 } & BuilderFieldOverrides &
@@ -58,6 +60,7 @@ export const useLayerInvoker = (field: Field, setter?: Setter, getter?: Getter) 
 
     return {
       value: resultValue,
+      resolvedValue: getResolvedValue(resultValue, documentManager),
       onChange: resultSetter,
       actions,
       isHighlight: overrides.isOverride,

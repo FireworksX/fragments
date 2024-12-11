@@ -12,6 +12,8 @@ import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin'
 import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
 import { BuilderCanvasTextEditor } from '@/widgets/fragmentBuilder/BuilderCanvasTextEditor'
 import { toPx } from '@/shared/utils/toPx'
+import { getResolvedValue } from '@fragments/plugin-fragment-spring'
+import { AnimatedHtml } from '@/shared/ui/AnimatedHtml'
 
 interface LayerHighlightDraggingProps {
   resizeNode: ReactNode
@@ -67,7 +69,7 @@ export const LayerHighlightNode: FC<LayerHighlightDraggingProps> = ({
         <LayerHighlightNode key={index} layerKey={child} resizeNode={resizeNode} />
       ))}
 
-      {textContent && <div className={styles.text} dangerouslySetInnerHTML={{ __html: textContent }} />}
+      {textContent && <AnimatedHtml className={styles.text}>{textContent}</AnimatedHtml>}
 
       {resultChildren}
     </animated.div>

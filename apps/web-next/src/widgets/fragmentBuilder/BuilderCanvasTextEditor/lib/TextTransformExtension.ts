@@ -1,4 +1,5 @@
 import { Attribute, Extension, mergeAttributes } from '@tiptap/core'
+import { createStyleExtension } from '@/widgets/fragmentBuilder/BuilderCanvasTextEditor/lib/createStyleExtension'
 
 export interface TextTransformOptions {
   types: string[] // Узлы, для которых применима метка (например, 'text')
@@ -20,50 +21,7 @@ declare module '@tiptap/core' {
   }
 }
 
-export const TextTransform = Extension.create<TextTransformOptions>({
+export const TextTransform = createStyleExtension({
   name: 'textTransform',
-
-  addOptions() {
-    return {
-      types: ['textStyle'],
-      defaultTransform: null
-    }
-  },
-
-  addGlobalAttributes() {
-    return [
-      {
-        types: this.options.types,
-        attributes: {
-          textTransform: {
-            default: this.options.defaultTransform,
-            parseHTML: element => element.style.textTransform?.replace(/['"]+/g, ''),
-            renderHTML: attributes => {
-              if (!attributes.textTransform) {
-                return {}
-              }
-
-              return {
-                style: `text-transform: ${attributes.textTransform}`
-              }
-            }
-          }
-        }
-      }
-    ]
-  },
-
-  addCommands() {
-    return {
-      setTextTransform:
-        transform =>
-        ({ chain }) =>
-          chain().setMark('textStyle', { textTransform: transform }).run(),
-      unsetTextTransform:
-        () =>
-        ({ commands }) => {
-          return commands.unsetMark(this.name)
-        }
-    }
-  }
+  cssProperty: 'text-transform'
 })
