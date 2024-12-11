@@ -7,6 +7,7 @@ export const nodes = createConstants(
   "FragmentInstance",
   "Breakpoint",
   "Frame",
+  "Image",
   "Text",
   "SolidPaintStyle",
   "CssLink",

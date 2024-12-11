@@ -7,6 +7,7 @@ import { animatableValue } from "@/shared/animatableValue.ts";
 import { getFieldValue } from "@fragments/plugin-fragment";
 import { SpringValue } from "@react-spring/web";
 import { createTextNode } from "@/creators/createTextNode.ts";
+import { createImageNode } from "@/creators/createImageNode.ts";
 
 const BREAKPOINT_GAP = 50;
 
@@ -55,6 +56,8 @@ export function createNode(
     // }
   } else if (node._type === nodes.Text) {
     node = createTextNode(node, cache);
+  } else if (node._type === nodes.Image) {
+    node = createImageNode(node, cache);
   }
 
   if (appendTo) {

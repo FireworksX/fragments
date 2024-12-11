@@ -1,8 +1,8 @@
 import { useCallback, useContext, useMemo } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
-import { nodes } from '@fragments/plugin-state'
 import { stateAlias } from '@/views/FragmentDetail/ui/FragmentDetail'
+import { nodes } from '@fragments/plugin-fragment'
 
 export const useBuilderActions = () => {
   const { documentManager } = useContext(BuilderContext)
@@ -106,6 +106,12 @@ export const useBuilderActions = () => {
     }
   }, [features.canInsert, selectionGraph, documentManager])
 
+  const addImage = useCallback(() => {
+    if (selectionGraph && documentManager && features.canInsert) {
+      const node = documentManager[stateAlias].createNode({ _type: nodes.Image }, selection)
+    }
+  }, [features.canInsert, selectionGraph, documentManager])
+
   return {
     features,
     wrapFrame,
@@ -116,6 +122,7 @@ export const useBuilderActions = () => {
     duplicate,
     addText,
     addFrame,
-    addBreakpoint
+    addBreakpoint,
+    addImage
   }
 }

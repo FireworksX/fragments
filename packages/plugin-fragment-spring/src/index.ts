@@ -7,6 +7,7 @@ import { createNode } from "@/shared/createNode.ts";
 import { createBreakpointNode } from "@/creators/createBreakpointNode.ts";
 import { createTextNode } from "@/creators/createTextNode.ts";
 import { toJsonNode } from "@/shared/toJsonNode.ts";
+import { createImageNode } from "@/creators/createImageNode.ts";
 
 const plugin: (root: LinkKey) => Plugin =
   (root: LinkKey) => (state: GraphState<StateEntity>) => {
@@ -26,6 +27,9 @@ const plugin: (root: LinkKey) => Plugin =
 
       createTextNode: (initialNode: Partial<FrameNode>) =>
         createTextNode(initialNode, state),
+
+      createImageNode: (initialNode: Partial<FrameNode>) =>
+        createImageNode(initialNode, state),
 
       createNode: (initialNode: Partial<BaseNode>, appendTo?: LinkKey = root) =>
         createNode(initialNode, state, appendTo),

@@ -4,12 +4,18 @@ import { isComputedValueLink } from "@/shared/isComputedValueLink.ts";
 import { BaseNode } from "@/types";
 import { Interpolation, SpringValue } from "@react-spring/web";
 
+const defaultOptions = {
+  staticValue: false,
+};
+
 export function setValueToNode<T extends BaseNode>(
   node: T,
   field: string,
   value: unknown,
-  cache: GraphState
+  cache: GraphState,
+  inputOptions = {}
 ) {
+  const options = { ...defaultOptions, ...inputOptions };
   const nodeKey = cache.keyOfEntity(node);
   const isVariableValue = isVariableLink(value) || isComputedValueLink(value);
 
@@ -40,7 +46,7 @@ export function setValueToNode<T extends BaseNode>(
     resolveValue.set(value);
   } else {
     cache.mutate(nodeKey, {
-      [field]: new SpringValue(value),
+      [field]: options?.staticValue ? value : new SpringValue(value),
     });
   }
 }

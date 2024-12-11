@@ -1,6 +1,5 @@
 import { useEditor, Editor } from '@tiptap/react'
 import { StarterKit } from '@tiptap/starter-kit'
-import { Color } from '@tiptap/extension-color'
 import { createContext, FC, PropsWithChildren } from 'react'
 import { TextStyle } from '@tiptap/extension-text-style'
 import TextAlign from '@tiptap/extension-text-align'
@@ -10,6 +9,7 @@ import { TextTransform } from './TextTransformExtension'
 import { TextDecoration } from './TextDecorationExtension'
 import { LineHeight } from './LineHeightExtension'
 import { LetterSpacing } from './LetterSpacingExtension'
+import { Color } from './ColorExtension'
 
 export const canvasEditorExtensions = [
   StarterKit,

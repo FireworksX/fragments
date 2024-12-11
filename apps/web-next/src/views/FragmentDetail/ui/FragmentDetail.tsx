@@ -32,8 +32,8 @@ export const stateAlias = '$fragmentSpring'
 
 nextFragmentState.fragment = 'Fragment:g34gherhg3g'
 
-nextFragmentState.$fragmentSpring.applySnapshot([
-  {
+nextFragmentState.$fragmentSpring.applySnapshot({
+  'Fragment:g34gherhg3g': {
     _type: 'Fragment',
     _id: 'g34gherhg3g',
     children: ['Frame:d12bd11e59ee4'],
@@ -48,9 +48,9 @@ nextFragmentState.$fragmentSpring.applySnapshot([
     visible: true,
     overflow: 'hidden',
     overrides: [],
-    properties: []
+    properties: ['Variable:8e348e2255afd']
   },
-  {
+  'Frame:d12bd11e59ee4': {
     _type: 'Frame',
     _id: 'd12bd11e59ee4',
     opacity: 1,
@@ -86,14 +86,14 @@ nextFragmentState.$fragmentSpring.applySnapshot([
     paddingBottom: 30,
     layerWrap: false,
     solidFill: 'rgba(255, 255, 255, 1)',
-    overrides: [],
+    overrides: ['$$Frame:214dba74ab1c5'],
     name: 'card'
   },
-  {
+  'Frame:9c86393a0a501': {
     _type: 'Frame',
     _id: '9c86393a0a501',
     name: 'Head',
-    overrides: [],
+    overrides: ['$$Frame:8a106526d4b4c'],
     children: ['Frame:c1b8a87401ba1', 'Frame:58d53471ec9c7', 'Text:152808e346fee'],
     parent: '$$Frame:d12bd11e59ee4',
     top: 0,
@@ -124,10 +124,10 @@ nextFragmentState.$fragmentSpring.applySnapshot([
     paddingTop: 0,
     paddingBottom: 0
   },
-  {
+  'Frame:c1b8a87401ba1': {
     _type: 'Frame',
     _id: 'c1b8a87401ba1',
-    overrides: [],
+    overrides: ['$$Frame:e28b2fe2fb39e'],
     children: ['Text:28a61138e386e', 'Text:d7167bbcc0b46'],
     parent: '$$Frame:9c86393a0a501',
     top: 0,
@@ -158,11 +158,11 @@ nextFragmentState.$fragmentSpring.applySnapshot([
     paddingTop: 0,
     paddingBottom: 0
   },
-  {
+  'Text:28a61138e386e': {
     _type: 'Text',
     _id: '28a61138e386e',
     name: 'Date',
-    overrides: [],
+    overrides: ['$$Text:245b85b31532'],
     children: [],
     parent: '$$Frame:c1b8a87401ba1',
     top: 36.63781212137166,
@@ -178,15 +178,15 @@ nextFragmentState.$fragmentSpring.applySnapshot([
     content: '<p><span style="color: rgb(60, 59, 67)">18:00</span></p>',
     whiteSpace: 'nowrap'
   },
-  {
+  'Text:28a61138e386e.styleAttributes': {
     _type: 'Text',
     _id: '28a61138e386e.styleAttributes'
   },
-  {
+  'Text:d7167bbcc0b46': {
     _type: 'Text',
     _id: 'd7167bbcc0b46',
     name: 'Time',
-    overrides: [],
+    overrides: ['$$Text:37ad3f527a4fd'],
     children: [],
     parent: '$$Frame:c1b8a87401ba1',
     top: 36.63781212137166,
@@ -202,14 +202,14 @@ nextFragmentState.$fragmentSpring.applySnapshot([
     content: '<p><span style="color: rgb(60, 59, 67)">18:00</span></p>',
     whiteSpace: 'nowrap'
   },
-  {
+  'Text:d7167bbcc0b46.styleAttributes': {
     _type: 'Text',
     _id: 'd7167bbcc0b46.styleAttributes'
   },
-  {
+  'Frame:58d53471ec9c7': {
     _type: 'Frame',
     _id: '58d53471ec9c7',
-    overrides: [],
+    overrides: ['$$Frame:c9d0e239ed304'],
     children: [],
     parent: '$$Frame:9c86393a0a501',
     top: 0,
@@ -241,11 +241,11 @@ nextFragmentState.$fragmentSpring.applySnapshot([
     paddingTop: 0,
     paddingBottom: 0
   },
-  {
+  'Text:152808e346fee': {
     _type: 'Text',
     _id: '152808e346fee',
     name: 'league',
-    overrides: [],
+    overrides: ['$$Text:d0aad1f7e2136'],
     children: [],
     parent: '$$Frame:9c86393a0a501',
     top: 85.69881529039397,
@@ -262,7 +262,7 @@ nextFragmentState.$fragmentSpring.applySnapshot([
       '<p style="font-size: 22px"><span style="color: rgb(66, 47, 163)">T</span><span style="font-size: 16px; color: rgb(66, 47, 163)">eam</span><span style="color: rgb(66, 47, 163)"> A</span></p>',
     whiteSpace: 'nowrap'
   },
-  {
+  'Text:152808e346fee.styleAttributes': {
     _type: 'Text',
     _id: '152808e346fee.styleAttributes',
     fontSize: '22px',
@@ -273,11 +273,11 @@ nextFragmentState.$fragmentSpring.applySnapshot([
     lineHeight: '',
     letterSpacing: ''
   },
-  {
+  'Frame:bf32614cc22ae': {
     _type: 'Frame',
     _id: 'bf32614cc22ae',
     name: 'Teams',
-    overrides: [],
+    overrides: ['$$Frame:19a71c0cac27c'],
     children: ['Frame:692c0173e321a', 'Frame:f1cf861e61e21'],
     parent: '$$Frame:d12bd11e59ee4',
     top: 0,
@@ -308,11 +308,11 @@ nextFragmentState.$fragmentSpring.applySnapshot([
     paddingTop: 0,
     paddingBottom: 0
   },
-  {
+  'Frame:692c0173e321a': {
     _type: 'Frame',
     _id: '692c0173e321a',
     name: 'Logos',
-    overrides: [],
+    overrides: ['$$Frame:c4d37e0fd110d'],
     children: ['Frame:63f57b7c15051', 'Frame:b9e5d9c317bf8'],
     parent: '$$Frame:bf32614cc22ae',
     top: 0,
@@ -343,11 +343,11 @@ nextFragmentState.$fragmentSpring.applySnapshot([
     paddingTop: 0,
     paddingBottom: 0
   },
-  {
+  'Frame:63f57b7c15051': {
     _type: 'Frame',
     _id: '63f57b7c15051',
     name: 'Logo a',
-    overrides: [],
+    overrides: ['$$Frame:e924ad673c699'],
     children: [],
     parent: '$$Frame:692c0173e321a',
     top: 0,
@@ -379,11 +379,11 @@ nextFragmentState.$fragmentSpring.applySnapshot([
     paddingTop: 0,
     paddingBottom: 0
   },
-  {
+  'Frame:b9e5d9c317bf8': {
     _type: 'Frame',
     _id: 'b9e5d9c317bf8',
     name: 'Logo B',
-    overrides: [],
+    overrides: ['$$Frame:2a1f3a925786e'],
     children: [],
     parent: '$$Frame:692c0173e321a',
     top: 0,
@@ -415,11 +415,11 @@ nextFragmentState.$fragmentSpring.applySnapshot([
     paddingTop: 0,
     paddingBottom: 0
   },
-  {
+  'Frame:f1cf861e61e21': {
     _type: 'Frame',
     _id: 'f1cf861e61e21',
     name: 'Names',
-    overrides: [],
+    overrides: ['$$Frame:d5d0c85d8cb04'],
     children: ['Text:146eb8ee59b67', 'Text:600e451e283ba'],
     parent: '$$Frame:bf32614cc22ae',
     top: 0,
@@ -450,11 +450,11 @@ nextFragmentState.$fragmentSpring.applySnapshot([
     paddingTop: 0,
     paddingBottom: 0
   },
-  {
+  'Text:146eb8ee59b67': {
     _type: 'Text',
     _id: '146eb8ee59b67',
     name: 'Team a name',
-    overrides: [],
+    overrides: ['$$Text:313725bff62ce'],
     children: [],
     parent: '$$Frame:f1cf861e61e21',
     top: 0,
@@ -470,15 +470,15 @@ nextFragmentState.$fragmentSpring.applySnapshot([
     content: '<p><span style="color: rgb(66, 47, 163)">Team A</span></p>',
     whiteSpace: 'nowrap'
   },
-  {
+  'Text:146eb8ee59b67.styleAttributes': {
     _type: 'Text',
     _id: '146eb8ee59b67.styleAttributes'
   },
-  {
+  'Text:600e451e283ba': {
     _type: 'Text',
     _id: '600e451e283ba',
     name: 'Team B name',
-    overrides: [],
+    overrides: ['$$Text:ca21c87f8bd26'],
     children: [],
     parent: '$$Frame:f1cf861e61e21',
     top: 0,
@@ -494,15 +494,15 @@ nextFragmentState.$fragmentSpring.applySnapshot([
     content: '<p><span style="color: rgb(66, 47, 163)">Team A</span></p>',
     whiteSpace: 'nowrap'
   },
-  {
+  'Text:600e451e283ba.styleAttributes': {
     _type: 'Text',
     _id: '600e451e283ba.styleAttributes'
   },
-  {
+  'Frame:9896dbb5f5ffd': {
     _type: 'Frame',
     _id: '9896dbb5f5ffd',
     name: 'Footer',
-    overrides: [],
+    overrides: ['$$Frame:b5b22f1a8f004'],
     children: ['Text:25cc5d58526da', 'Frame:75f5d5d76c5a5'],
     parent: '$$Frame:d12bd11e59ee4',
     top: 0,
@@ -534,11 +534,11 @@ nextFragmentState.$fragmentSpring.applySnapshot([
     paddingTop: 2,
     paddingBottom: 2
   },
-  {
+  'Text:25cc5d58526da': {
     _type: 'Text',
     _id: '25cc5d58526da',
     name: 'Text',
-    overrides: [],
+    overrides: ['$$Text:4b4d410e75e6c'],
     children: [],
     parent: '$$Frame:9896dbb5f5ffd',
     top: 0,
@@ -554,15 +554,15 @@ nextFragmentState.$fragmentSpring.applySnapshot([
     content: 'Прогноз',
     whiteSpace: 'normal'
   },
-  {
+  'Text:25cc5d58526da.styleAttributes': {
     _type: 'Text',
     _id: '25cc5d58526da.styleAttributes'
   },
-  {
+  'Frame:75f5d5d76c5a5': {
     _type: 'Frame',
     _id: '75f5d5d76c5a5',
     name: 'Footer button',
-    overrides: [],
+    overrides: ['$$Frame:aeaa16e771399'],
     children: ['Text:047a7710ba1fc'],
     parent: '$$Frame:9896dbb5f5ffd',
     top: 0,
@@ -594,11 +594,11 @@ nextFragmentState.$fragmentSpring.applySnapshot([
     paddingTop: 0,
     paddingBottom: 0
   },
-  {
+  'Text:047a7710ba1fc': {
     _type: 'Text',
     _id: '047a7710ba1fc',
     name: 'Odd vlaue',
-    overrides: [],
+    overrides: ['$$Text:965fa5896ba3d'],
     children: [],
     parent: '$$Frame:75f5d5d76c5a5',
     top: 0,
@@ -612,14 +612,23 @@ nextFragmentState.$fragmentSpring.applySnapshot([
     opacity: 1,
     overflow: 'hidden',
     content: '2.41',
-    whiteSpace: 'normal'
+    whiteSpace: 'normal',
+    variableLink: 'Variable:8e348e2255afd'
   },
-  {
+  'Text:047a7710ba1fc.styleAttributes': {
     _type: 'Text',
     _id: '047a7710ba1fc.styleAttributes'
+  },
+  'Variable:8e348e2255afd': {
+    _type: 'Variable',
+    _id: '8e348e2255afd',
+    defaultValue: '2.41',
+    name: 'Content',
+    required: false,
+    type: 'String',
+    isTextarea: false
   }
-])
-
+})
 const fragmentState = createState({
   initialState: {
     fragment: 'Fragment:g34gherhg3g',

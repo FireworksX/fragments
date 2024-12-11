@@ -41,6 +41,7 @@ import { PropertiesTree } from '@/features/fragmentBuilder/PropertiesTree/ui/Pro
 import { AssetsProperties } from '@/features/fragmentBuilder/AssetsProperties'
 import StackVariableTransform from '@/features/popouts/StackVariableTransform/StackVariableTransform'
 import { BuilderCanvasTextEditor, CanvasTextEditorProvider } from '@/widgets/fragmentBuilder/BuilderCanvasTextEditor'
+import { BuilderImage } from '@/widgets/fragmentBuilder/BuilderImage'
 
 interface FragmentBuilderProps {
   className?: string
@@ -80,6 +81,7 @@ export const FragmentBuilder: FC<FragmentBuilderProps> = ({ className }) => {
             layoutNode={<BuilderLayout />}
             stylesNode={<BuilderStyles />}
             textNode={<BuilderText />}
+            imageNode={<BuilderImage />}
             // cssNode={<BuilderCssOverride />}
             // instancePropsNode={<BuilderFragmentInstance />}
           />

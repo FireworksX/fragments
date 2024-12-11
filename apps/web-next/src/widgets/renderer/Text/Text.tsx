@@ -18,10 +18,6 @@ export const Text: FC<TextProps> = ({ layerKey }) => {
   const [layerGraph] = useGraph(documentManager, layerKey)
   const layerInvoker = useLayerInvoker(layerKey)
   const textContent = layerGraph?.getContent?.()
-  // const textContent = layerInvoker('content')?.value
-  // const styleAttributes = layerInvoker('styleAttributes')?.value
-  // const variableLink = layerInvoker('variableLink')?.value
-  // const [variableNode] = useGraph(documentManager, variableLink)
   const cssStyles = layerGraph?.toCss?.() ?? {}
   const { isTextEditing, focus } = useBuilderManager()
 

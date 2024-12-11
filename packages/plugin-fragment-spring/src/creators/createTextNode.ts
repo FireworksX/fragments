@@ -53,16 +53,28 @@ export function createTextNode(
   return {
     ...textNode,
     content: getStaticValue(textNode, "content", "", cache),
-    variableLink: getStaticValue(textNode, "variableContent", null, cache),
+    variableLink: getStaticValue(textNode, "variableLink", null, cache),
     setContent(value: string) {
       if (isVariableLink(value)) {
         cache.mutate(nodeKey, {
           variableLink: value,
         });
       } else {
-        cache.mutate(nodeKey, {
-          content: value,
-        });
+        if (value.startsWith("<p")) {
+          cache.mutate(nodeKey, {
+            content: value,
+          });
+        } else {
+          const styleAttributes = getFieldValue(
+            nodeKey,
+            "styleAttributes",
+            cache
+          );
+
+          cache.mutate(nodeKey, {
+            content: wrapTextInParagraphWithAttributes(value, styleAttributes),
+          });
+        }
       }
     },
 

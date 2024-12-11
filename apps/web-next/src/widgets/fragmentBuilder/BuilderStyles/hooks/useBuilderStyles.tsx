@@ -8,8 +8,7 @@ import { animatableValue } from '@/shared/utils/animatableValue'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { popoutsStore } from '@/shared/store/popouts.store'
-import { borderType, nodes } from '@fragments/plugin-state'
-import { getFieldValue, overflow } from '@fragments/plugin-fragment'
+import { borderType, getFieldValue, nodes, overflow } from '@fragments/plugin-fragment'
 
 const visible: TabsSelectorItem[] = [
   {
@@ -27,7 +26,8 @@ const overflowOptions = Object.keys(overflow)
 export const useBuilderStyles = () => {
   const { documentManager } = useContext(BuilderContext)
   const { selection, selectionGraph } = useBuilderSelection()
-  const isTextLayer = selectionGraph?._type === nodes.Text
+  const isTextNode = selectionGraph?._type === nodes.Image
+  const isImageNode = selectionGraph?._type === nodes.Text
   const layerInvoker = useLayerInvoker(
     selection,
     ({ node, key, value }) => {
@@ -114,12 +114,12 @@ export const useBuilderStyles = () => {
     },
     opacity: layerInvoker('opacity'),
     overflow: {
-      disabled: isTextLayer,
+      disabled: isTextNode,
       options: overflowOptions,
       ...overflowInvoker
     },
     radius: {
-      disabled: isTextLayer,
+      disabled: isTextNode,
       isMixed: selectionGraph?.isMixedRadius?.(),
       setCornerSide,
       onChangeRadiusMode,
@@ -144,14 +144,14 @@ export const useBuilderStyles = () => {
       borderTypeInvoker,
       borderWidthInvoker,
       borderColorInvoker,
-      disabled: isTextLayer,
+      disabled: isTextNode,
       onClick: openBorder,
       onReset: () => borderTypeInvoker.onChange(borderType.None)
     },
     fill: {
       ...solidFillInvoker,
       type: fillTypeInvoker.value,
-      disabled: isTextLayer,
+      disabled: isTextNode || isImageNode,
       onClick: openFill,
       onReset: () => fillTypeInvoker.onChange(null)
     }

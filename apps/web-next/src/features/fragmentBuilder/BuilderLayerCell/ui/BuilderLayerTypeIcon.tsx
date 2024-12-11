@@ -9,10 +9,11 @@ import Frame from '@/shared/icons/frame.svg'
 import FragmentInstanceIcon from '@/shared/icons/next/component.svg'
 import BreakpointIcon from '@/shared/icons/next/square-dashed.svg'
 import FragmentIcon from '@/shared/icons/next/box.svg'
-import { layerDirection, nodes } from '@fragments/plugin-state'
+import ImageIcon from '@/shared/icons/next/image.svg'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { LinkKey } from '@graph-state/core'
 import { useGraph } from '@graph-state/react'
+import { layerDirection, nodes } from '@fragments/plugin-fragment'
 
 interface BuilderLayerTypeIconProps {
   layerKey: LinkKey
@@ -41,6 +42,7 @@ export const BuilderLayerTypeIcon: FC<BuilderLayerTypeIconProps> = animated(
     if (type === nodes.Text) return <TextFrame className={textIconClassName} />
     if (type === nodes.FragmentInstance) return <FragmentInstanceIcon className={fragmentIconClassName} />
     if (type === nodes.Fragment) return <FragmentIcon className={primaryIconClassName} />
+    if (type === nodes.Image) return <ImageIcon className={primaryIconClassName} />
 
     if (layerGraph?._type === nodes.Breakpoint) return <BreakpointIcon className={primaryIconClassName} />
 

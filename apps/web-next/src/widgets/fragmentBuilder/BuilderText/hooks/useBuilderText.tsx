@@ -74,12 +74,6 @@ export const useBuilderText = () => {
   const layerInvoker = useLayerInvoker(
     selection,
     ({ node, key, value }) => {
-      // Если изменяем текст через input, то приходит просто текст и нужно его обернуть в <p>
-      // if (key === 'content' && !value?.startsWith('<') && !isVariableLink(value)) {
-      //   const attrs = editor.getAttributes('paragraph')
-      //   value = wrapTextInParagraphWithAttributes(value, attrs)
-      // }
-
       switch (key) {
         case 'content':
           node.setContent(value)

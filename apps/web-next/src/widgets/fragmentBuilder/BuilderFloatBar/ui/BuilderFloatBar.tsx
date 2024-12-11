@@ -26,7 +26,7 @@ export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
   const { canvasManager } = useContext(BuilderContext)
   const { isEdit, focus, updateParams } = useBuilderManager()
   const [canvas] = useGraph(canvasManager, canvasManager.key)
-  const { addFrame, addText } = useBuilderActions()
+  const { addFrame, addText, addImage } = useBuilderActions()
   const { allowedBreakpoints, addBreakpoint } = useBreakpoints()
 
   if (!isEdit) {
@@ -86,6 +86,7 @@ export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
                   </Dropdown>
                   <DropdownOption onClick={addFrame}>Add Frame</DropdownOption>
                   <DropdownOption onClick={addText}>Add Text</DropdownOption>
+                  <DropdownOption onClick={addImage}>Add Image</DropdownOption>
                 </DropdownGroup>
               }
             >

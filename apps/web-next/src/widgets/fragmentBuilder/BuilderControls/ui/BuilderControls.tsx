@@ -3,8 +3,8 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import { AsideBar, AsideBarProps } from '@/shared/ui/AsideBar'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
-import { nodes } from '@fragments/plugin-state'
 import BuilderFragmentInstance from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/BuilderFragmentInstance'
+import { nodes } from '@fragments/plugin-fragment'
 
 interface ControlsProps extends AsideBarProps {
   className?: string
@@ -13,6 +13,7 @@ interface ControlsProps extends AsideBarProps {
   layoutNode?: ReactNode
   stylesNode?: ReactNode
   textNode?: ReactNode
+  imageNode?: ReactNode
   cssNode?: ReactNode
   instancePropsNode?: ReactNode
   fragmentGrowingNode?: ReactNode
@@ -26,6 +27,7 @@ const BuilderControls: FC<ControlsProps> = ({
   layoutNode,
   stylesNode,
   textNode,
+  imageNode,
   cssNode,
   instancePropsNode,
   fragmentGrowingNode,
@@ -36,15 +38,16 @@ const BuilderControls: FC<ControlsProps> = ({
 
   const hasGrowing = [nodes.Fragment].some(type => type === selectionGraph?._type)
   const hasFragmentProps = [nodes.Fragment].some(type => type === selectionGraph?._type)
-  const hasPosition = [nodes.Frame, nodes.Breakpoint, nodes.Text, nodes.FragmentInstance].some(
+  const hasPosition = [nodes.Frame, nodes.Breakpoint, nodes.Text, nodes.FragmentInstance, nodes.Image].some(
     type => type === selectionGraph?._type
   )
-  const hasSize = [nodes.Frame, nodes.Breakpoint, nodes.Text, nodes.FragmentInstance].some(
+  const hasSize = [nodes.Frame, nodes.Breakpoint, nodes.Text, nodes.FragmentInstance, nodes.Image].some(
     type => type === selectionGraph?._type
   )
   const hasLayout = [nodes.Frame, nodes.Breakpoint].some(type => type === selectionGraph?._type)
-  const hasStyles = [nodes.Frame, nodes.Text].some(type => type === selectionGraph?._type)
+  const hasStyles = [nodes.Frame, nodes.Text, nodes.Image].some(type => type === selectionGraph?._type)
   const hasText = [nodes.Text].some(type => type === selectionGraph?._type)
+  const hasImage = [nodes.Image].some(type => type === selectionGraph?._type)
   const hasCssOverride = [nodes.Frame, nodes.Breakpoint].some(type => type === selectionGraph?._type)
   const hasInstanceProps = [nodes.FragmentInstance].some(type => type === selectionGraph?._type)
 
@@ -59,6 +62,7 @@ const BuilderControls: FC<ControlsProps> = ({
       {/*<BuilderEffects />*/}
       {hasStyles && stylesNode}
       {hasText && textNode}
+      {hasImage && imageNode}
       {hasInstanceProps && instancePropsNode}
       {hasCssOverride && cssNode}
     </AsideBar>
