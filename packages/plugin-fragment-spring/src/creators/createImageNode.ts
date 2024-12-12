@@ -22,6 +22,7 @@ import { copyModule } from "@/modules/copyModule.ts";
 import { duplicateModule } from "@/modules/duplicateModule.ts";
 import { getStaticValue } from "@/shared/getStaticValue.ts";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
+import { attributesModule } from "@/modules/attributesModule.ts";
 
 export const modules = [
   positionModule,
@@ -35,6 +36,7 @@ export const modules = [
   cloneModule,
   copyModule,
   duplicateModule,
+  attributesModule,
 ];
 
 export function createImageNode(

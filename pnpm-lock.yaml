@@ -26,7 +26,7 @@ importers:
         version: 13.3.0(enquirer@2.4.1)
       next:
         specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 14.2.3(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       prettier:
         specifier: ^2.7.1
         version: 2.8.8
@@ -41,7 +41,7 @@ importers:
         version: 3.11.8(@types/react@18.3.3)(graphql-ws@5.16.0(graphql@16.9.0))(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@apollo/experimental-nextjs-app-support':
         specifier: ^0.11.3
-        version: 0.11.3(@apollo/client@3.11.8(@types/react@18.3.3)(graphql-ws@5.16.0(graphql@16.9.0))(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(next@14.2.3(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
+        version: 0.11.3(@apollo/client@3.11.8(@types/react@18.3.3)(graphql-ws@5.16.0(graphql@16.9.0))(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(next@14.2.3(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
       '@dnd-kit/core':
         specifier: ^6.1.0
         version: 6.1.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -79,8 +79,8 @@ importers:
         specifier: ^0.1.2
         version: 0.1.2
       '@graph-state/core':
-        specifier: ^0.9.2
-        version: 0.9.2
+        specifier: ^0.9.3
+        version: 0.9.3
       '@graph-state/plugin-extend':
         specifier: ^0.5.0
         version: 0.5.0
@@ -137,10 +137,10 @@ importers:
         version: 4.0.0
       next:
         specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 14.2.3(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next-auth:
         specifier: ^4.24.7
-        version: 4.24.7(next@14.2.3(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 4.24.7(next@14.2.3(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
         specifier: ^18
         version: 18.3.1
@@ -1579,8 +1579,8 @@ packages:
   '@graph-state/core@0.9.1':
     resolution: {integrity: sha512-AT/h4GHqoylAtVEs7N1+lKtLNw5hadSkA7He5r8IFE9dTne6ow3sDFfyREEP0xV7w0r4EpGu5kCPbwxrsb9iRw==}
 
-  '@graph-state/core@0.9.2':
-    resolution: {integrity: sha512-oZ/xUqH6fBokQjR4tUgCAkl7qw/PH+NpY+LvEn8lWD+o/kNXKTdIIm3VEP2w7ykQspIAeNfnw5vlHufdcziG2Q==}
+  '@graph-state/core@0.9.3':
+    resolution: {integrity: sha512-g4jU23GrI3hBBtfBW5RP8keUwHKvF4pnblh/SZVOdbSkWGTTIVJqhN9pjH58ZxqOd+C0QISAHaX+IgeyGSiF7Q==}
 
   '@graph-state/plugin-extend@0.4.0':
     resolution: {integrity: sha512-H9FdyIPMgfL88lHcl8o2KFTL8qDm0Bg6nKozzeQhb8xcG8d2PN5oWtD5SZ2HoQltb/HVOStUIthhPkIk1Ct+1A==}
@@ -5917,11 +5917,11 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@apollo/experimental-nextjs-app-support@0.11.3(@apollo/client@3.11.8(@types/react@18.3.3)(graphql-ws@5.16.0(graphql@16.9.0))(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(next@14.2.3(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)':
+  '@apollo/experimental-nextjs-app-support@0.11.3(@apollo/client@3.11.8(@types/react@18.3.3)(graphql-ws@5.16.0(graphql@16.9.0))(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(next@14.2.3(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@apollo/client': 3.11.8(@types/react@18.3.3)(graphql-ws@5.16.0(graphql@16.9.0))(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@apollo/client-react-streaming': 0.11.3(@apollo/client@3.11.8(@types/react@18.3.3)(graphql-ws@5.16.0(graphql@16.9.0))(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
-      next: 14.2.3(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      next: 14.2.3(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
 
   '@ardatan/relay-compiler@12.0.0(graphql@16.9.0)':
@@ -7418,31 +7418,31 @@ snapshots:
     dependencies:
       '@graph-state/checkers': 0.1.2
 
-  '@graph-state/core@0.9.2':
+  '@graph-state/core@0.9.3':
     dependencies:
       '@graph-state/checkers': 0.1.2
 
   '@graph-state/plugin-extend@0.4.0':
     dependencies:
-      '@graph-state/core': 0.9.2
+      '@graph-state/core': 0.9.3
 
   '@graph-state/plugin-extend@0.5.0':
     dependencies:
-      '@graph-state/core': 0.9.2
+      '@graph-state/core': 0.9.3
 
   '@graph-state/plugin-logger@0.2.2':
     dependencies:
-      '@graph-state/core': 0.9.2
+      '@graph-state/core': 0.9.3
 
   '@graph-state/react@0.5.0(react@18.3.1)':
     dependencies:
-      '@graph-state/core': 0.9.2
+      '@graph-state/core': 0.9.3
       react: 18.3.1
       use-sync-external-store: 1.2.2(react@18.3.1)
 
   '@graph-state/react@0.5.1(react@18.3.1)':
     dependencies:
-      '@graph-state/core': 0.9.2
+      '@graph-state/core': 0.9.3
       react: 18.3.1
       use-sync-external-store: 1.2.2(react@18.3.1)
 
@@ -10785,13 +10785,13 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  next-auth@4.24.7(next@14.2.3(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  next-auth@4.24.7(next@14.2.3(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@babel/runtime': 7.24.6
       '@panva/hkdf': 1.1.1
       cookie: 0.5.0
       jose: 4.15.5
-      next: 14.2.3(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      next: 14.2.3(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       oauth: 0.9.15
       openid-client: 5.6.5
       preact: 10.22.0
@@ -10800,7 +10800,7 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       uuid: 8.3.2
 
-  next@14.2.3(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  next@14.2.3(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@next/env': 14.2.3
       '@swc/helpers': 0.5.5
@@ -10810,7 +10810,7 @@ snapshots:
       postcss: 8.4.31
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      styled-jsx: 5.1.1(@babel/core@7.25.2)(react@18.3.1)
+      styled-jsx: 5.1.1(@babel/core@7.24.6)(react@18.3.1)
     optionalDependencies:
       '@next/swc-darwin-arm64': 14.2.3
       '@next/swc-darwin-x64': 14.2.3
@@ -11801,12 +11801,12 @@ snapshots:
 
   strip-json-comments@3.1.1: {}
 
-  styled-jsx@5.1.1(@babel/core@7.25.2)(react@18.3.1):
+  styled-jsx@5.1.1(@babel/core@7.24.6)(react@18.3.1):
     dependencies:
       client-only: 0.0.1
       react: 18.3.1
     optionalDependencies:
-      '@babel/core': 7.25.2
+      '@babel/core': 7.24.6
 
   stylis@4.3.2: {}
 

@@ -20,6 +20,7 @@ import { childrenModule, createBaseNode } from "@fragments/plugin-fragment";
 import { cloneModule } from "@/modules/cloneModule.ts";
 import { copyModule } from "@/modules/copyModule.ts";
 import { duplicateModule } from "@/modules/duplicateModule.ts";
+import { attributesModule } from "@/modules/attributesModule.ts";
 
 export const modules = [
   childrenModule,
@@ -40,6 +41,7 @@ export const modules = [
   cloneModule,
   copyModule,
   duplicateModule,
+  attributesModule,
 ];
 
 export function createFrameNode(

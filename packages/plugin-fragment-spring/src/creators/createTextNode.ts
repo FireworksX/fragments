@@ -26,6 +26,7 @@ import { isVariableLink } from "@/shared/isVariableLink.ts";
 import { to } from "@react-spring/web";
 import { getResolvedValue } from "@/shared/getResolvedValue.ts";
 import { wrapTextInParagraphWithAttributes } from "@/shared/wrapTextInParagraphWithAttributes.ts";
+import { attributesModule } from "@/modules/attributesModule.ts";
 
 export const modules = [
   positionModule,
@@ -40,6 +41,7 @@ export const modules = [
   cloneModule,
   copyModule,
   duplicateModule,
+  attributesModule,
 ];
 
 export function createTextNode(

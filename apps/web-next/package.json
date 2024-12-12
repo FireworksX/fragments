@@ -25,7 +25,7 @@
     "@fragments/renderer": "workspace:*",
     "@fragments/utils": "workspace:*",
     "@graph-state/checkers": "^0.1.2",
-    "@graph-state/core": "^0.9.2",
+    "@graph-state/core": "^0.9.3",
     "@graph-state/plugin-extend": "^0.5.0",
     "@graph-state/plugin-logger": "^0.2.2",
     "@graph-state/react": "^0.5.1",

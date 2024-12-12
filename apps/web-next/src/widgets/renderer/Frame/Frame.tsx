@@ -18,6 +18,7 @@ export const Frame: FC<LayerProps> = ({ layerKey, style }) => {
   const [layerGraph] = useGraph(documentManager, layerKey)
   const cssStyles = layerGraph?.toCss?.() ?? {}
   const extendedStyle = useExtendStyle(cssStyles, style)
+  const attributes = layerGraph?.attributes
 
   if (!layerGraph) {
     return null
@@ -32,7 +33,7 @@ export const Frame: FC<LayerProps> = ({ layerKey, style }) => {
   }
 
   return (
-    <animated.div style={extendedStyle} data-key={layerKey}>
+    <animated.div {...attributes} style={extendedStyle} data-key={layerKey}>
       {layerGraph?.children?.filter(Boolean).map(child => (
         <Frame key={child._id} layerKey={child} />
       ))}
