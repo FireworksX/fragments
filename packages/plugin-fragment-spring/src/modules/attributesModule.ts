@@ -26,12 +26,10 @@ export function attributesModule<T extends BaseNode>(
         nodeKey,
         (prev) => {
           delete prev.attributes[key];
-          const res = {
+          return {
             ...prev,
             attributes: prev.attributes,
           };
-
-          return res;
         },
         {
           replace: (graph) => {

@@ -16,14 +16,14 @@ export type CreateNumberOptions = Partial<{
   displayStepper: boolean;
 }>;
 
-export const createObjectVariable = (
+export const createArrayVariable = (
   initialNode: Partial<unknown> = {},
   cache: GraphState
 ) => {
   const baseNode = createBaseVariableNode(
     {
       ...initialNode,
-      defaultValue: initialNode?.defaultValue ?? {},
+      defaultValue: initialNode?.defaultValue ?? [],
     },
     cache,
     {
@@ -35,19 +35,16 @@ export const createObjectVariable = (
   return {
     ...baseNode,
     required: getStableValue(baseNode, "required", false, cache),
-    type: variableType.Object,
+    type: variableType.Array,
+    valueType: getStaticValue(baseNode, "valueType", null, cache),
     setRequired(value) {
       setValueToNode(baseNode, "required", value, cache);
     },
 
-    setField(key: string, value: LinkKey) {
-      if (isVariableLink(value)) {
-        cache.mutate(nodeKey, {
-          defaultValue: {
-            [key]: value,
-          },
-        });
-      }
+    setValueType(type: keyof typeof variableType) {
+      cache.mutate(nodeKey, {
+        valueType: type,
+      });
     },
 
     // removeField(key) {

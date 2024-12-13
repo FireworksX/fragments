@@ -113,6 +113,8 @@ export const useBuilderFieldVariable = (layer: Field) => {
           .map(prop => {
             const transforms = fieldValue.type === prop.type ? [] : getTransformsByType(prop.type)
 
+            // if ()
+
             if (prop.type !== fieldValue.type) return null
 
             return {

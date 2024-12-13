@@ -48,5 +48,6 @@ export default plugin;
 export { resetFieldOverride } from "@/shared/resetFieldOverride.ts";
 export { isOverriddenNode } from "@/shared/isOverriddenNode.ts";
 export { moveNode } from "@/shared/moveNode.ts";
+export { createNode } from "@/shared/createNode.ts";
 export { getResolvedValue } from "@/shared/getResolvedValue.ts";
 // export { toJsonNode } from "@/shared/toJsonNode.ts";

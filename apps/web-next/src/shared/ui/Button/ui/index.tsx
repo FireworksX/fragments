@@ -1,6 +1,6 @@
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { FC, PropsWithChildren, ReactNode } from 'react'
+import { ElementRef, FC, PropsWithChildren, ReactNode, RefObject } from 'react'
 import { TouchableProps } from '@/shared/ui/Touchable/ui'
 import { Touchable } from '@/shared/ui/Touchable'
 import { Spinner } from '@/shared/ui/Spinner'
@@ -25,6 +25,7 @@ export interface ButtonProps extends TouchableProps, PropsWithChildren {
   className?: string
   icon?: ReactNode
   suffix?: ReactNode
+  ref?: RefObject<ElementRef<'button'>>
 }
 
 const Button: FC<ButtonProps> = ({
@@ -37,6 +38,7 @@ const Button: FC<ButtonProps> = ({
   children,
   suffix,
   icon,
+  ref,
   ...touchProps
 }) => {
   const spinnerColorByMode = {
@@ -46,6 +48,7 @@ const Button: FC<ButtonProps> = ({
 
   return (
     <Touchable
+      ref={ref}
       disabled={disabled}
       className={cn(styles.root, className, styles[mode], styles[size], {
         [styles.stretched]: stretched,

@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { ElementRef, RefObject } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 
@@ -11,6 +11,8 @@ export interface TouchableProps {
   disabled?: boolean
   preventDefault?: boolean
   onClick?: (e?: any) => any
+  isCapture?: boolean
+  ref?: RefObject<ElementRef<'button'> | ElementRef<'div'>>
   [key: string]: any
 }
 
@@ -21,6 +23,8 @@ const Touchable: React.FC<TouchableProps> = ({
   children,
   effect = 'scale',
   preventDefault,
+  isCapture,
+  ref,
   onClick,
   ...rest
 }) => {
@@ -35,13 +39,19 @@ const Touchable: React.FC<TouchableProps> = ({
     }
   }
 
+  if (isCapture) {
+    rest.onClickCapture = !disabled ? proxyOnClick : () => undefined
+  } else {
+    rest.onClick = !disabled ? proxyOnClick : () => undefined
+  }
+
   return (
     <TagName
+      ref={ref}
       className={cn(styles.root, className, {
         [styles.withEffect]: effect !== 'none',
         [styles.asButton]: TagName === 'button'
       })}
-      onClick={!disabled ? proxyOnClick : () => undefined}
       disabled={disabled}
       {...rest}
     >

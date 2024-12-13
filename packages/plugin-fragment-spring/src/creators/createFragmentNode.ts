@@ -12,6 +12,8 @@ import { getStaticValue } from "@/shared/getStaticValue.ts";
 import { createNumberVariable } from "@/creators/variables/createNumberVariable.ts";
 import { createBooleanVariable } from "@/creators/variables/createBooleanVariable.ts";
 import { createStringVariable } from "@/creators/variables/createStringVariable.ts";
+import { createObjectVariable } from "@/creators/variables/createObjectVariable.ts";
+import { createNode } from "@/shared/createNode.ts";
 
 export const modules = [childrenModule];
 
@@ -22,12 +24,6 @@ export function createFragmentNode(
   const baseNode = createBaseNode(nodes.Fragment, initialNode, cache);
   const fragmentNode = applyModules(baseNode, modules, cache);
   const nodeKey = cache.keyOfEntity(baseNode);
-
-  const creatorsMethodsMap = {
-    [variableType.Number]: createNumberVariable,
-    [variableType.Boolean]: createBooleanVariable,
-    [variableType.String]: createStringVariable,
-  };
 
   return {
     ...fragmentNode,
@@ -62,7 +58,10 @@ export function createFragmentNode(
 
     properties: getStaticValue(baseNode, "properties", []),
     createProperty: (type: keyof typeof variableType) => {
-      const createdProperty = creatorsMethodsMap[type]?.({}, cache);
+      const createdProperty = createNode(
+        { _type: nodes.Variable, type },
+        cache
+      );
 
       if (createdProperty) {
         cache.mutate(nodeKey, {

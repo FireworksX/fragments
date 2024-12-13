@@ -3,11 +3,15 @@ import { GraphState, LinkKey } from "@graph-state/core";
 import { nodes } from "@/definitions.ts";
 import { createFrameNode } from "@/creators/createFrameNode.ts";
 import { createBreakpointNode } from "@/creators/createBreakpointNode.ts";
-import { animatableValue } from "@/shared/animatableValue.ts";
-import { getFieldValue } from "@fragments/plugin-fragment";
-import { SpringValue } from "@react-spring/web";
+import { variableType } from "@fragments/plugin-fragment";
 import { createTextNode } from "@/creators/createTextNode.ts";
 import { createImageNode } from "@/creators/createImageNode.ts";
+import { createNumberVariable } from "@/creators/variables/createNumberVariable.ts";
+import { createBooleanVariable } from "@/creators/variables/createBooleanVariable.ts";
+import { createStringVariable } from "@/creators/variables/createStringVariable.ts";
+import { createFragmentNode } from "@/creators/createFragmentNode.ts";
+import { createObjectVariable } from "@/creators/variables/createObjectVariable.ts";
+import { createArrayVariable } from "@/creators/variables/createArrayVariable.ts";
 
 const BREAKPOINT_GAP = 50;
 
@@ -23,41 +27,25 @@ export function createNode(
   if (node._type === nodes.Frame) {
     node = createFrameNode(node, cache);
   } else if (node._type === nodes.Breakpoint) {
-    // const primaryLayerNode = cache.$fragmentSpring.findPrimaryLayer();
-    //
-    // if (primaryLayerNode) {
-    //   const primaryClone = cache.resolve(
-    //     primaryLayerNode.clone({
-    //       threshold: initialNode.threshold,
-    //     })
-    //   );
-    //   const lastLayer = cache
-    //     .resolve(cache.$fragmentSpring.root)
-    //     ?.children?.at(-1);
-    //   const nextLeft =
-    //     animatableValue(getFieldValue(lastLayer, "left", cache)) +
-    //     animatableValue(getFieldValue(lastLayer, "width", cache)) +
-    //     BREAKPOINT_GAP;
-    //   const nextTop = animatableValue(getFieldValue(lastLayer, "top", cache));
-    //
-    //   // node = createBreakpointNode(
-    //   //   {
-    //   //     ...cache.resolve(primaryClone),
-    //   //     threshold: initialNode.threshold,
-    //   //   },
-    //   //   cache
-    //   // );
-    //
-    //   primaryClone._type = nodes.Breakpoint;
-    //   primaryClone.left = new SpringValue(nextLeft);
-    //   primaryClone.top = new SpringValue(nextTop);
-    //
-    //   console.log(primaryClone);
-    // }
+    node = createBreakpointNode(node, cache);
   } else if (node._type === nodes.Text) {
     node = createTextNode(node, cache);
   } else if (node._type === nodes.Image) {
     node = createImageNode(node, cache);
+  } else if (node._type === nodes.Variable && !!node.type) {
+    const creatorsMethodsMap = {
+      [variableType.Number]: createNumberVariable,
+      [variableType.Boolean]: createBooleanVariable,
+      [variableType.String]: createStringVariable,
+      [variableType.Object]: createObjectVariable,
+      [variableType.Array]: createArrayVariable,
+    };
+
+    if (node.type in creatorsMethodsMap) {
+      node = creatorsMethodsMap[node.type](node, cache);
+    }
+  } else if (node._type === nodes.Fragment) {
+    node = createFragmentNode(node, cache);
   }
 
   if (appendTo) {

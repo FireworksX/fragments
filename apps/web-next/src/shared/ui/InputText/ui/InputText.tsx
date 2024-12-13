@@ -14,6 +14,7 @@ interface InputTextProps extends InputHTMLAttributes<HTMLInputElement> {
   inputRef?: MutableRefObject<ElementRef<'input'>>
   onChange?: (value: string | number) => void
   onChangeValue?: (value: string | number) => void
+  onSubmit?: () => void
 }
 
 const BaseInputText: FC<InputTextProps> = ({
@@ -26,6 +27,7 @@ const BaseInputText: FC<InputTextProps> = ({
   inputRef,
   onChange,
   onChangeValue,
+  onSubmit,
   ...inputProps
 }) => {
   return (
@@ -38,6 +40,11 @@ const BaseInputText: FC<InputTextProps> = ({
         onChange={e => {
           onChange?.(e?.target.value)
           onChangeValue?.(e?.target.value)
+        }}
+        onKeyDown={event => {
+          if (event.key === 'Enter' && onSubmit) {
+            onSubmit()
+          }
         }}
         {...inputProps}
       />

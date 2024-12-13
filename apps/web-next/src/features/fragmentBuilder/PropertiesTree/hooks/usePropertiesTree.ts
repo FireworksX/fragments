@@ -1,10 +1,10 @@
 import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
 
 export const usePropertiesTree = () => {
-  const { properties, editProperty } = useFragmentProperties()
+  const { propertyLinks, editProperty } = useFragmentProperties()
 
   return {
-    properties,
+    propertyLinks,
     editProperty
   }
 }
