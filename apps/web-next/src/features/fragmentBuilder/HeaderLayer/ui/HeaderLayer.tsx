@@ -28,7 +28,7 @@ const HeaderLayer: FC<HeaderLayerProps> = ({ className, layerKey }) => {
   return (
     <div className={cn(styles.root, className)}>
       {layerNode?.name ?? layerNode?._id}{' '}
-      {!!breakpointKeys.length && layerNode._type === nodes.Breakpoint && (
+      {!!breakpointKeys.length && layerNode.isBreakpoint && (
         <>
           <div className={styles.dot} /> {breakpointLabel}
         </>

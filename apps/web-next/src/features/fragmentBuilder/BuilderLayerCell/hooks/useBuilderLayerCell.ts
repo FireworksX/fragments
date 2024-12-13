@@ -27,7 +27,8 @@ export const useBuilderLayerCell = (layerKey: LinkKey) => {
     partialSelected,
     isFragment,
     isPrimaryLayer,
-    breakpointThreshold: !isPrimaryLayer && layerGraph?._type === nodes.Frame ? breakpointThreshold : null,
+    breakpointThreshold:
+      !isPrimaryLayer && layerGraph?._type === nodes.Frame && layerGraph?.isBreakpoint ? breakpointThreshold : null,
     rename: (name: string) => {
       layerGraph.rename(name)
     },

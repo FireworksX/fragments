@@ -1,5 +1,5 @@
 'use client'
-import { ElementRef, FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react'
+import { ElementRef, FC, Fragment, ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { animated, useSpring } from '@react-spring/web'
@@ -60,7 +60,7 @@ const TabsSelector: FC<TabsSelectorProps> = animated(({ className, cellClassName
     >
       <animated.div className={styles.switcher} style={switcherStyles} />
       {items.map((el, index) => (
-        <>
+        <Fragment key={el.name}>
           <div className={styles.divider} />
           <Touchable
             className={cn(styles.cell, cellClassName, {
@@ -74,7 +74,7 @@ const TabsSelector: FC<TabsSelectorProps> = animated(({ className, cellClassName
           >
             {el.label}
           </Touchable>
-        </>
+        </Fragment>
       ))}
     </div>
   )

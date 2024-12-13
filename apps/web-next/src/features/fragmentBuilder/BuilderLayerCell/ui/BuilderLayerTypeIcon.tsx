@@ -14,40 +14,31 @@ import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { LinkKey } from '@graph-state/core'
 import { useGraph } from '@graph-state/react'
 import { layerDirection, nodes } from '@fragments/plugin-fragment'
+import { useBuilderLayerFlags } from '@/shared/hooks/fragmentBuilder/useBuilderLayerFlags'
 
 interface BuilderLayerTypeIconProps {
   layerKey: LinkKey
-  type: string
-  hasLayout: boolean
-  layoutDirection: string
   primaryIconClassName?: string
   textIconClassName?: string
   fragmentIconClassName?: string
 }
 
 export const BuilderLayerTypeIcon: FC<BuilderLayerTypeIconProps> = animated(
-  ({
-    className,
-    type,
-    layerKey,
-    hasLayout,
-    layoutDirection,
-    primaryIconClassName,
-    textIconClassName,
-    fragmentIconClassName
-  }) => {
+  ({ className, layerKey, primaryIconClassName, textIconClassName, fragmentIconClassName }) => {
     const { documentManager } = useContext(BuilderContext)
     const [layerGraph] = useGraph(documentManager, layerKey)
+    const flags = useBuilderLayerFlags(layerKey)
+    const type = layerGraph?._type
 
     if (type === nodes.Text) return <TextFrame className={textIconClassName} />
     if (type === nodes.FragmentInstance) return <FragmentInstanceIcon className={fragmentIconClassName} />
     if (type === nodes.Fragment) return <FragmentIcon className={primaryIconClassName} />
     if (type === nodes.Image) return <ImageIcon className={primaryIconClassName} />
 
-    if (layerGraph?._type === nodes.Breakpoint) return <BreakpointIcon className={primaryIconClassName} />
+    if (layerGraph?.isBreakpoint) return <BreakpointIcon className={primaryIconClassName} />
 
-    if (hasLayout) {
-      return layoutDirection === layerDirection.horizontal ? (
+    if (flags.hasLayout) {
+      return flags.layoutDirection === layerDirection.horizontal ? (
         <ColumnsFrame className={primaryIconClassName} />
       ) : (
         <RowsFrame className={primaryIconClassName} />

@@ -1,4 +1,4 @@
-import { ElementRef, FC, useEffect, useMemo, useRef, useState } from 'react'
+import { ComponentRef, ElementRef, FC, useEffect, useMemo, useRef, useState } from 'react'
 import cn from 'classnames'
 import { LinkKey } from '@graph-state/core'
 import { isValue } from '@fragments/utils'
@@ -22,7 +22,7 @@ interface BuilderLayerCellProps {
 }
 
 export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast, layerKey, collapsed, onCollapse }) => {
-  const inputRef = useRef<ElementRef<'input'>>(null)
+  const inputRef = useRef<ComponentRef<'input'>>(null)
   const [editLabel, setEditLabel] = useState<string | undefined>()
   const isActiveEdit = isValue(editLabel)
 
@@ -170,9 +170,6 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
         <div className={styles.headIcon}>
           <BuilderLayerTypeIcon
             layerKey={layerKey}
-            type={type}
-            layoutDirection={flags.layerDirection}
-            hasLayout={flags.hasLayout}
             primaryIconClassName={styles.primaryIcon}
             textIconClassName={styles.textIcon}
             fragmentIconClassName={styles.fragmentIcon}

@@ -55,6 +55,13 @@ export function createFrameNode(
     ...frameNode,
     isRootLayer: () => {
       const resolvedNode = cache.resolve(frameNode);
+      return (
+        resolvedNode.getParent()?._type === nodes.Fragment &&
+        !resolvedNode?.isBreakpoint
+      );
+    },
+    isTopLevel: () => {
+      const resolvedNode = cache.resolve(frameNode);
       return resolvedNode.getParent()?._type === nodes.Fragment;
     },
   };

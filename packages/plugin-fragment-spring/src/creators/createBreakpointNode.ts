@@ -40,6 +40,7 @@ export function createBreakpointNode(
         ...initialNode,
         left: new SpringValue(nextLeft),
         top: new SpringValue(nextTop),
+        isBreakpoint: true,
       })
     );
 

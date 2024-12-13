@@ -5,6 +5,11 @@ import styles from './styles.module.css'
 import DefaultCursor from '@/shared/icons/default-cursor.svg'
 import GrabCursor from '@/shared/icons/grab-cursor.svg'
 import InsertIcon from '@/shared/icons/next/circle-plus.svg'
+import BreakpointsIcon from '@/shared/icons/next/tablet-smartphone.svg'
+import TextIcon from '@/shared/icons/next/type.svg'
+import ImageIcon from '@/shared/icons/next/image.svg'
+import FrameIcon from '@/shared/icons/next/frame.svg'
+import PlayIcon from '@/shared/icons/next/play.svg'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { Touchable } from '@/shared/ui/Touchable'
 import { Dropdown } from '@/shared/ui/Dropdown'
@@ -47,51 +52,29 @@ export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
         {
           kind: 'component',
           component: (
-            <Touchable className={styles.actionButton} TagName='button' onClick={() => undefined}>
-              <GrabCursor width={20} height={20} />
-            </Touchable>
-          )
-        },
-        {
-          kind: 'component',
-          component: (
             <Dropdown
               trigger='click'
               options={
-                <DropdownGroup>
-                  <Dropdown
-                    placement='right'
-                    options={
-                      <>
-                        <DropdownGroup>
-                          {allowedBreakpoints.map(breakpoint => (
-                            <DropdownOption
-                              key={breakpoint.width}
-                              description={`${breakpoint.width}px`}
-                              onClick={() => addBreakpoint(breakpoint.name, breakpoint.width)}
-                            >
-                              {breakpoint.name}
-                            </DropdownOption>
-                          ))}
-                        </DropdownGroup>
-                        <DropdownGroup>
-                          <DropdownOption>Custom</DropdownOption>
-                        </DropdownGroup>
-                      </>
-                    }
-                  >
-                    <DropdownOption hasNested onClick={addFrame}>
-                      Add breakpoint
-                    </DropdownOption>
-                  </Dropdown>
-                  <DropdownOption onClick={addFrame}>Add Frame</DropdownOption>
-                  <DropdownOption onClick={addText}>Add Text</DropdownOption>
-                  <DropdownOption onClick={addImage}>Add Image</DropdownOption>
-                </DropdownGroup>
+                <>
+                  <DropdownGroup>
+                    {allowedBreakpoints.map(breakpoint => (
+                      <DropdownOption
+                        key={breakpoint.width}
+                        description={`${breakpoint.width}px`}
+                        onClick={() => addBreakpoint(breakpoint.name, breakpoint.width)}
+                      >
+                        {breakpoint.name}
+                      </DropdownOption>
+                    ))}
+                  </DropdownGroup>
+                  <DropdownGroup>
+                    <DropdownOption>Custom</DropdownOption>
+                  </DropdownGroup>
+                </>
               }
             >
               <Touchable className={styles.actionButton} TagName='button' onClick={() => undefined}>
-                <InsertIcon width={20} height={20} />
+                <BreakpointsIcon width={20} height={20} />
               </Touchable>
             </Dropdown>
           )
@@ -99,15 +82,25 @@ export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
         {
           kind: 'component',
           component: (
-            <SelectMimicry className={styles.zoomSelect}>
-              <animated.div>
-                {canvas.scale.to(scale =>
-                  Math.floor(scale * 100)
-                    .toFixed(0)
-                    .concat('%')
-                )}
-              </animated.div>
-            </SelectMimicry>
+            <Touchable className={styles.actionButton} TagName='button' onClick={addFrame}>
+              <FrameIcon width={20} height={20} />
+            </Touchable>
+          )
+        },
+        {
+          kind: 'component',
+          component: (
+            <Touchable className={styles.actionButton} TagName='button' onClick={addText}>
+              <TextIcon width={20} height={20} />
+            </Touchable>
+          )
+        },
+        {
+          kind: 'component',
+          component: (
+            <Touchable className={styles.actionButton} TagName='button' onClick={addImage}>
+              <ImageIcon width={20} height={20} />
+            </Touchable>
           )
         },
         { kind: 'delimiter' },

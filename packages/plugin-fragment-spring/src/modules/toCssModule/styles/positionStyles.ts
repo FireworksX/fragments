@@ -1,17 +1,20 @@
 import { GraphState } from "@graph-state/core";
-import { getFieldValue } from "@fragments/plugin-fragment";
+import { getFieldValue, nodes, renderTarget } from "@fragments/plugin-fragment";
 import { animatableValue } from "@/shared/animatableValue.ts";
 
 export const positionStyles = (node, cache: GraphState) => {
-  // const renderTargetValue = state.resolve(state.fragment)?.renderTarget;
-  // const graphType = graph?._type;
+  const renderTargetValue = cache.resolve(
+    cache.$fragmentSpring.root
+  )?.renderTarget;
+  const graphType = node?._type;
   //
-  // if (
-  //   renderTargetValue === renderTarget.document &&
-  //   graphType === nodes.Frame &&
-  //   state.resolve(graph)?.isTopLevel()
-  // )
-  //   return {};
+
+  if (
+    renderTargetValue === renderTarget.document &&
+    graphType === nodes.Frame &&
+    cache.resolve(node)?.isTopLevel()
+  )
+    return {};
   //
   const positionType = getFieldValue(node, "positionType", cache) ?? "absolute";
 
