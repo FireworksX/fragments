@@ -1,6 +1,6 @@
 import { useDrag } from '@use-gesture/react'
 import { animatableValue } from '@/shared/utils/animatableValue'
-import { sizing } from '@fragments/plugin-state'
+import { sizing } from '@fragments/plugin-fragment-spring'
 import { useGraph } from '@graph-state/react'
 import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'

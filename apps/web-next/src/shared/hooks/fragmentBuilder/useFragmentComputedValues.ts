@@ -2,7 +2,7 @@ import { useContext, useMemo } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { LinkKey } from '@graph-state/core'
 import { popoutsStore } from '@/shared/store/popouts.store'
-import { variableTransforms, variableType } from '@fragments/plugin-state'
+import { variableTransforms, variableType } from '@fragments/plugin-fragment-spring'
 // import { stackVariableTransformName } from '@/builder/StackCollector/components/variables/StackVariableTransform/StackVariableTransform'
 
 const computedValuesConfig = {

@@ -11,7 +11,7 @@ import { isVariableLink } from '@/shared/utils/isVariableLink'
 import { isComputedValueLink } from '@/shared/utils/isComputedValueLink'
 import { Touchable } from '@/shared/ui/Touchable'
 import { InputSelectVariable } from '@/shared/ui/InputSelectVariable'
-import { nodes } from '@fragments/plugin-state'
+import { nodes } from '@fragments/plugin-fragment-spring'
 
 interface BuilderControlRowProps extends PropsWithChildren {
   value?: unknown | LinkKey

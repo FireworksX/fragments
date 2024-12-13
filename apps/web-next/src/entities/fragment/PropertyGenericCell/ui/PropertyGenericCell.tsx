@@ -10,7 +10,6 @@ import ArrayIcon from '@/shared/icons/next/brackets.svg'
 import MoreIcon from '@/shared/icons/next/ellipsis.svg'
 import { Cell } from '@/shared/ui/Cell'
 import { Touchable, TouchableProps } from '@/shared/ui/Touchable'
-import { variableType } from '@fragments/plugin-state'
 import { Button } from '@/shared/ui/Button'
 import { Dropdown } from '@/shared/ui/Dropdown'
 import { DropdownGroup } from '@/shared/ui/DropdownGroup'
@@ -20,6 +19,7 @@ import { LinkKey } from '@graph-state/core'
 import { InputText } from '@/shared/ui/InputText'
 import { Select } from '@/shared/ui/Select'
 import { RenderDropdown } from '@/shared/ui/RenderDropdown'
+import { variableType } from '@fragments/plugin-fragment-spring'
 
 interface PropertyBooleanCellProps {
   propertyLink: LinkKey

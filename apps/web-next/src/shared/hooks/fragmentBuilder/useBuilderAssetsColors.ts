@@ -6,7 +6,7 @@ import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { popoutNames } from '@/shared/data'
 import { getRandomColor } from '@/shared/utils/random'
 import { getEntityName } from '@/shared/utils/getEntityName'
-import { nodes } from '@fragments/plugin-state'
+import { nodes } from '@fragments/plugin-fragment-spring'
 
 export interface BuilderAssetsColorsOptions extends Partial<OpenPopoutOptions<'colorPicker'>> {
   initialColor?: Color

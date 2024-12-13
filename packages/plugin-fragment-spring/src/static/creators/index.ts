@@ -28,7 +28,6 @@ import {
   CreateBooleanOptions,
   createBooleanVariable,
 } from "@/static/creators/variables/createBooleanVariable.ts";
-import { Rect } from "@fragments/plugin-helpers";
 import { animatableValue } from "@/shared/animatableValue.ts";
 
 interface CreateSolidPaintStyleOptions {

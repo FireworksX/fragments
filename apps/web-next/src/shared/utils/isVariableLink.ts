@@ -1,5 +1,5 @@
 import { Entity, isGraph, isLinkKey, LinkKey } from '@graph-state/core'
-import { nodes } from '@fragments/plugin-state'
+import { nodes } from '@fragments/plugin-fragment-spring'
 
 export const isVariableLink = (link: Entity) => {
   if (isLinkKey(link)) {

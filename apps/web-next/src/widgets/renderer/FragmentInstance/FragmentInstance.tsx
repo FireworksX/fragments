@@ -1,7 +1,7 @@
 import { FC, useContext } from 'react'
 import { GraphState, LinkKey } from '@graph-state/core'
 import { animated, to } from '@react-spring/web'
-import { nodes, sizing } from '@fragments/plugin-state'
+import { nodes, sizing } from '@fragments/plugin-fragment-spring'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
 import { Fragment } from '@/widgets/renderer/Fragment/Fragment'

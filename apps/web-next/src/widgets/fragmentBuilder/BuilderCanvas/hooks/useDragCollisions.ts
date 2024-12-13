@@ -1,11 +1,11 @@
 import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { DragEvent } from './useCanvas'
-import { definitions } from '@fragments/plugin-state'
-import { Rect } from '@fragments/plugin-helpers'
+import { definitions } from '@fragments/plugin-fragment-spring'
 import { isPartialKey } from '@graph-state/core'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { getDomRect } from '@/shared/utils/getDomRect'
+import { Rect } from '@/shared/utils/Rect'
 
 const domRectToRect = (domRect: DOMRect) => {
   return {

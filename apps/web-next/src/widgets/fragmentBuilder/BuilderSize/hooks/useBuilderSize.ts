@@ -1,6 +1,6 @@
 import { useGraph } from '@graph-state/react'
 import { useContext } from 'react'
-import { layerMode, nodes, sizing } from '@fragments/plugin-state'
+import { layerMode, nodes, sizing } from '@fragments/plugin-fragment-spring'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'

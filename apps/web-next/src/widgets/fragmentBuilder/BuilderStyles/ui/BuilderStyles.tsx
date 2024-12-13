@@ -21,7 +21,7 @@ import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
 import { BuilderStylesCorners } from '@/features/fragmentBuilder/BuilderStylesCorners'
 import { Stepper } from '@/shared/ui/Stepper'
 import { useDisplayColor } from '@/shared/hooks/fragmentBuilder/useDisplayColor'
-import { borderType, paintMode } from '@fragments/plugin-state'
+import { borderType, paintMode } from '@fragments/plugin-fragment-spring'
 import { isValue } from '@fragments/utils'
 
 interface BuilderStylesProps {

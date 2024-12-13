@@ -12,11 +12,9 @@ export function createBreakpointNode(
   initialNode: Partial<FrameNode> = {},
   cache: GraphState
 ) {
-  const primaryLayerNode = cache.$fragmentSpring?.findPrimaryLayer?.();
+  const primaryLayerNode = cache.$fragment?.findPrimaryLayer?.();
   if (primaryLayerNode) {
-    const lastLayer = cache
-      .resolve(cache.$fragmentSpring?.root)
-      ?.children?.at(-1);
+    const lastLayer = cache.resolve(cache.$fragment?.root)?.children?.at(-1);
     const nextLeft =
       animatableValue(getFieldValue(lastLayer, "left", cache)) +
       animatableValue(getFieldValue(lastLayer, "width", cache)) +
@@ -44,7 +42,7 @@ export function createBreakpointNode(
       })
     );
 
-    const parentNode = cache.resolve(cache?.$fragmentSpring?.root);
+    const parentNode = cache.resolve(cache?.$fragment?.root);
     parentNode?.appendChild?.(primaryClone);
   }
   // const frameNode = createFrameNode(initialNode, cache);

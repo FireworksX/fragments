@@ -25,9 +25,7 @@ export const sizeStyles = (node: BaseNode, cache: GraphState) => {
   const height = getFieldValue(node, "height", cache);
   const minWidth = getFieldValue(node, "minWidth", cache);
   const minHeight = getFieldValue(node, "minHeight", cache);
-  const renderTargetValue = cache.resolve(
-    cache.$fragmentSpring.root
-  )?.renderTarget;
+  const renderTargetValue = cache.resolve(cache.$fragment.root)?.renderTarget;
   const graphType = node?._type;
 
   const toValue = (type: keyof typeof sizing, value: number) => {

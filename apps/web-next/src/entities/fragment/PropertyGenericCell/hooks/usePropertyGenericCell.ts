@@ -2,12 +2,11 @@ import { LinkKey } from '@graph-state/core'
 import { ElementRef, useContext, useMemo, useRef, useState } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
-import { variableType } from '@fragments/plugin-state'
 import { DropdownRenderOption } from '@/shared/ui/RenderDropdown'
 import { nextTick } from '@/shared/utils/nextTick'
 import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
 import { createNode } from '@fragments/plugin-fragment-spring'
-import { nodes } from '@fragments/plugin-fragment'
+import { nodes, variableType } from '@fragments/plugin-fragment-spring'
 
 export const usePropertyGenericCell = (propertyLink: LinkKey) => {
   const { createProperty } = useFragmentProperties()

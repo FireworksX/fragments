@@ -15,8 +15,7 @@ export function moveNode(
 ) {
   const node = cache.resolve(nodeLink);
   const nodeParent = node?.getParent();
-  const toNode =
-    cache.resolve(toLink) || cache.resolve(cache.$fragmentSpring.root);
+  const toNode = cache.resolve(toLink) || cache.resolve(cache.$fragment.root);
   const parentKey = cache.keyOfEntity(nodeParent);
 
   if (toLink !== parentKey) {

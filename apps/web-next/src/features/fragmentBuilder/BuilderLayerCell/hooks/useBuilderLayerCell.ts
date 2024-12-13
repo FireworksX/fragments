@@ -4,7 +4,7 @@ import { useGraph } from '@graph-state/react'
 import { LinkKey } from '@graph-state/core'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
-import { nodes } from '@fragments/plugin-state'
+import { nodes } from '@fragments/plugin-fragment-spring'
 import { useBreakpoints } from '@/shared/hooks/fragmentBuilder/useBreakpoints'
 
 export const useBuilderLayerCell = (layerKey: LinkKey) => {

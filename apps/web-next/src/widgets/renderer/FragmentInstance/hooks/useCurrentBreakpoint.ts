@@ -1,5 +1,5 @@
 import { useGraph } from '@graph-state/react'
-import { renderTarget } from '@fragments/plugin-state'
+import { renderTarget } from '@fragments/plugin-fragment-spring'
 import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { LinkKey } from '@graph-state/core'

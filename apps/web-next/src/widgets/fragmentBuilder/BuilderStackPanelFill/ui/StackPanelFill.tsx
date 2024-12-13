@@ -13,7 +13,7 @@ import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSe
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { getRandomColor } from '@/shared/utils/random'
 import { SolidPaintStyles } from '@/entities/fragment/SolidPaintStyles'
-import { paintMode } from '@fragments/plugin-state'
+import { paintMode } from '@fragments/plugin-fragment-spring'
 import { colorToObject, objectToColorString } from '@fragments/utils'
 
 export interface StackPanelFillOptions {}

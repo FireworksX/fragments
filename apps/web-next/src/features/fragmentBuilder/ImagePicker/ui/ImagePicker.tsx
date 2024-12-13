@@ -8,7 +8,7 @@ import { Button } from '@/shared/ui/Button'
 import { LayerInvokerValue } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { Panel } from '@/shared/ui/Panel'
 import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
-import { imagePaintScaleModes } from '@fragments/plugin-state'
+import { imagePaintScaleModes } from '@fragments/plugin-fragment-spring'
 
 export type ImagePickerValue = ImagePaint
 

@@ -7,7 +7,7 @@ import { useBreakpoints } from '@/shared/hooks/fragmentBuilder/useBreakpoints'
 import { LayerHighlightNode } from '@/features/fragmentBuilder/LayerHighlightNode'
 import { LayerSelectedResize } from '@/features/fragmentBuilder/LayerSelectedResize'
 import { HeaderBreakpoint } from '@/features/fragmentBuilder/HeaderBreakpoint'
-import { nodes } from '@fragments/plugin-state'
+import { nodes } from '@fragments/plugin-fragment-spring'
 import { HeaderLayer } from '@/features/fragmentBuilder/HeaderLayer'
 import { useFragmentLayers } from '@/shared/hooks/fragmentBuilder/useFragmentLayers'
 

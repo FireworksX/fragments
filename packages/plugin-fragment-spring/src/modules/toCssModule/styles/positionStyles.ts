@@ -3,9 +3,7 @@ import { getFieldValue, nodes, renderTarget } from "@fragments/plugin-fragment";
 import { animatableValue } from "@/shared/animatableValue.ts";
 
 export const positionStyles = (node, cache: GraphState) => {
-  const renderTargetValue = cache.resolve(
-    cache.$fragmentSpring.root
-  )?.renderTarget;
+  const renderTargetValue = cache.resolve(cache.$fragment.root)?.renderTarget;
   const graphType = node?._type;
   //
 

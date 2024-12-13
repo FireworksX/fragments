@@ -7,7 +7,7 @@ import { LinkKey } from '@graph-state/core'
 import { omit } from '@fragments/utils'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderManager'
-import { nodes } from '@fragments/plugin-state'
+import { nodes } from '@fragments/plugin-fragment-spring'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 
 const BORDER_SIZE = 1.5

@@ -6,7 +6,7 @@ import Close from '@/shared/icons/close.svg'
 import FilterFillIcon from '@/shared/icons/fills/filter-fill.svg'
 import { Touchable } from '@/shared/ui/Touchable'
 import { VariableIcon } from '@/shared/ui/VariableIcon'
-import { variableType } from '@fragments/plugin-state'
+import { variableType } from '@fragments/plugin-fragment-spring'
 
 interface InputSelectVariableProps extends PropsWithChildren {
   type: keyof typeof variableType

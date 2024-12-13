@@ -11,7 +11,7 @@ import { InputNumber } from '@/shared/ui/InputNumber'
 import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
 import { Slider } from '@/shared/ui/Slider'
 import { BuilderLayoutPaddings } from '@/features/fragmentBuilder/BuilderLayoutPaddings'
-import { layerMode } from '@fragments/plugin-state'
+import { layerMode } from '@fragments/plugin-fragment-spring'
 import { animatableValue } from '@/shared/utils/animatableValue'
 
 interface BuilderLayoutProps {

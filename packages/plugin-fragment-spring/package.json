@@ -27,7 +27,6 @@
     "@graph-state/plugin-extend": "^0.5.0",
     "@graph-state/checkers": "^0.1.2",
     "@fragments/utils": "workspace:*",
-    "@fragments/plugin-helpers": "workspace:*",
     "@fragments/plugin-fragment": "workspace:*",
     "@react-spring/web": "9.7.4"
   },

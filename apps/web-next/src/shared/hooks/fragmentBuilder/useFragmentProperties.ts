@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph, useGraphStack } from '@graph-state/react'
-import { variableType } from '@fragments/plugin-state'
+import { variableType } from '@fragments/plugin-fragment-spring'
 import { useFragmentComputedValues } from '@/shared/hooks/fragmentBuilder/useFragmentComputedValues'
 import { useBuilderVariableCreator } from '@/shared/hooks/fragmentBuilder/useBuilderVariableCreator'
 import { LinkKey } from '@graph-state/core'

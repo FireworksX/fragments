@@ -1,7 +1,7 @@
 import { useContext, useMemo } from 'react'
 import { useGraph } from '@graph-state/react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { layerMode, nodes } from '@fragments/plugin-state'
+import { layerMode, nodes } from '@fragments/plugin-fragment-spring'
 import { to } from '@react-spring/web'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'

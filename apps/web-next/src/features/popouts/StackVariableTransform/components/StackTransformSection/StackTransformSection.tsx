@@ -11,7 +11,7 @@ import { TransformConvertFromBooleanValue } from '@/features/popouts/StackVariab
 import { Panel } from '@/shared/ui/Panel'
 import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { Select } from '@/shared/ui/Select'
-import { variableTransforms, variableType } from '@fragments/plugin-state'
+import { variableTransforms, variableType } from '@fragments/plugin-fragment-spring'
 import { TransformBooleanValue } from './components/TransformBooleanValue/TransformBooleanValue'
 
 interface StackTransformSectionProps {

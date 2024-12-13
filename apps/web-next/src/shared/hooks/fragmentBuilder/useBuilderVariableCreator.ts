@@ -6,7 +6,7 @@ import { LinkKey } from '@graph-state/core'
 import { popoutsStore } from '@/shared/store/popouts.store'
 import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { variableType } from '@fragments/plugin-state'
+import { variableType } from '@fragments/plugin-fragment-spring'
 
 export const useBuilderVariableCreator = () => {
   const { documentManager } = useContext(BuilderContext)

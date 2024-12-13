@@ -5,7 +5,7 @@ import { isGraphOrKey, LinkKey } from '@graph-state/core'
 import { displayColorInterpolate } from '@/shared/utils/displayColor'
 import { Interpolation, SpringValue, to } from '@react-spring/web'
 import { objectToColorString } from '@fragments/utils'
-import { nodes } from '@fragments/plugin-state'
+import { nodes } from '@fragments/plugin-fragment-spring'
 
 export const useDisplayColor = (inputColor?: Color) => {
   const { documentManager } = useContext(BuilderContext)

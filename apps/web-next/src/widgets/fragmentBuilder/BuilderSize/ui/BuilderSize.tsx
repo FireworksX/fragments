@@ -7,7 +7,7 @@ import { BuilderSizeLocker } from '@/features/fragmentBuilder/BuilderSizeLocker'
 import { ControlRow } from '@/shared/ui/ControlRow'
 import { InputNumber } from '@/shared/ui/InputNumber'
 import { Select } from '@/shared/ui/Select'
-import { sizing } from '@fragments/plugin-state'
+import { sizing } from '@fragments/plugin-fragment-spring'
 import { to } from '@react-spring/web'
 import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
 

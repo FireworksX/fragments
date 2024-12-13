@@ -2,7 +2,7 @@ import { useGraph, useGraphFields, useGraphStack } from '@graph-state/react'
 import { useContext, useMemo } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { stateAlias } from '@/views/FragmentDetail/ui/FragmentDetail'
-import { nodes } from '@fragments/plugin-state'
+import { nodes } from '@fragments/plugin-fragment-spring'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { LinkKey } from '@graph-state/core'
 

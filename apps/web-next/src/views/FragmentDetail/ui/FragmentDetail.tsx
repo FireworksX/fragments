@@ -11,12 +11,11 @@ import loggerPlugin from '@graph-state/plugin-logger'
 // import { hotKeysScope } from '@/app/hooks/hotkeys/HotKeysProvider'
 import fragmentData from '../fragment.json'
 import fragmentButtonData from '../button.fragment.json'
-import pluginState, { skips as stateSkips } from '@fragments/plugin-state'
-import pluginStateBuilder, { skips as stateBuilderSkips } from '@fragments/plugin-state-builder'
+import pluginState, { skips as stateSkips } from '@fragments/plugin-fragment-spring'
 import { generateId, isBrowser } from '@fragments/utils'
 import { useParams } from 'next/navigation'
 import pluginFragment from '@fragments/plugin-fragment'
-import pluginFragmentSpring from '@fragments/plugin-fragment-spring'
+import pluginFragmentSpring, { skips } from '@fragments/plugin-fragment-spring'
 
 const canvasManager = createCanvasManager()
 const previewManager = createPreviewManager()
@@ -25,14 +24,14 @@ const builderManager = createBuilderManager()
 const nextFragmentState = createState({
   initialState: {},
   plugins: [pluginFragmentSpring('Fragment:g34gherhg3g'), loggerPlugin({ onlyBrowser: true })],
-  skip: [...stateSkips, ...stateBuilderSkips]
+  skip: [...stateSkips, ...skips]
 })
 
-export const stateAlias = '$fragmentSpring'
+export const stateAlias = '$fragment'
 
 nextFragmentState.fragment = 'Fragment:g34gherhg3g'
 
-nextFragmentState.$fragmentSpring.applySnapshot({
+nextFragmentState.$fragment.applySnapshot({
   'Fragment:g34gherhg3g': {
     _type: 'Fragment',
     _id: 'g34gherhg3g',
@@ -629,25 +628,9 @@ nextFragmentState.$fragmentSpring.applySnapshot({
     isTextarea: false
   }
 })
-const fragmentState = createState({
-  initialState: {
-    fragment: 'Fragment:g34gherhg3g',
-    dependencies: []
-  },
-  plugins: [pluginState, pluginStateBuilder, loggerPlugin({ onlyBrowser: true })],
-  skip: [...stateSkips, ...stateBuilderSkips]
-})
-
-fragmentState.applyFragmentModule(fragmentData)
-// fragmentState.applyState(fragmentButtonData)
 
 if (isBrowser) {
-  window.frag = fragmentState
   window.nextFrag = nextFragmentState
-
-  setTimeout(() => {
-    fragmentState.applyFragmentModule(fragmentButtonData)
-  }, 5000)
 }
 
 interface FragmentDetailProps {

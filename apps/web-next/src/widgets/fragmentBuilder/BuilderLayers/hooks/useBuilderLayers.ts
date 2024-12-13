@@ -2,7 +2,7 @@ import { useCallback, useContext, useEffect, useState } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph, useGraphFields, useGraphStack } from '@graph-state/react'
 import { LinkKey } from '@graph-state/core'
-import { nodes } from '@fragments/plugin-state'
+import { nodes } from '@fragments/plugin-fragment-spring'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { moveNode } from '@fragments/plugin-fragment-spring'
 

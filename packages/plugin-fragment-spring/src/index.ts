@@ -11,7 +11,7 @@ import { createImageNode } from "@/creators/createImageNode.ts";
 
 const plugin: (root: LinkKey) => Plugin =
   (root: LinkKey) => (state: GraphState<StateEntity>) => {
-    state.$fragmentSpring = {
+    state.$fragment = {
       findPrimaryLayer: () =>
         state.resolve(
           (state.resolve(root)?.children ?? []).find((child) =>
@@ -45,9 +45,32 @@ const plugin: (root: LinkKey) => Plugin =
 
 export default plugin;
 
+export { skips } from "./skips.ts";
 export { resetFieldOverride } from "@/shared/resetFieldOverride.ts";
 export { isOverriddenNode } from "@/shared/isOverriddenNode.ts";
 export { moveNode } from "@/shared/moveNode.ts";
 export { createNode } from "@/shared/createNode.ts";
 export { getResolvedValue } from "@/shared/getResolvedValue.ts";
 // export { toJsonNode } from "@/shared/toJsonNode.ts";
+
+export {
+  nodes,
+  variableType,
+  renderTarget,
+  renderMode,
+  layerMode,
+  layerAlign,
+  layerDirection,
+  layerDistribute,
+  whiteSpace,
+  overflow,
+  sizing,
+  paintMode,
+  borderType,
+  fragmentGrowingMode,
+  textDecorations,
+  textTransform,
+  positionType,
+  imagePaintScaleModes,
+  variableTransforms,
+} from "@fragments/plugin-fragment";

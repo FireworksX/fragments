@@ -7,7 +7,7 @@ import { LinkKey } from '@graph-state/core'
 import { Cell } from '@/shared/ui/Cell'
 import { Button } from '@/shared/ui/Button'
 import { VariableIcon } from '@/shared/ui/VariableIcon'
-import { variableType } from '@fragments/plugin-state'
+import { variableType } from '@fragments/plugin-fragment-spring'
 
 interface BuilderVariableCellProps {
   variableKey?: LinkKey

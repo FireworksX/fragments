@@ -13,7 +13,7 @@ import { TabsSelectorItem } from '@/shared/ui/TabsSelector'
 import { BoxSide, BoxSizingSides } from '@/shared/ui/BoxSizingSides'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
-import { layerAlign, layerDirection, layerDistribute, layerMode } from '@fragments/plugin-state'
+import { layerAlign, layerDirection, layerDistribute, layerMode } from '@fragments/plugin-fragment-spring'
 import { getFieldValue } from '@fragments/plugin-fragment'
 
 const directions: TabsSelectorItem[] = [

@@ -3,7 +3,7 @@ import ToggleFillIcon from '@/shared/icons/fills/toggle-fill.svg'
 import BarHorizontalIcon from '@/shared/icons/bar-horizontal.svg'
 import TextFrameFillIcon from '@/shared/icons/fills/text-frame-fill.svg'
 import { FC } from 'react'
-import { variableType } from '@fragments/plugin-state'
+import { variableType } from '@fragments/plugin-fragment-spring'
 
 interface VariableIconProps {
   type: keyof typeof variableType

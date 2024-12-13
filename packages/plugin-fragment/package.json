@@ -26,8 +26,7 @@
     "@graph-state/core": "^0.9.1",
     "@graph-state/plugin-extend": "^0.5.0",
     "@graph-state/checkers": "^0.1.2",
-    "@fragments/utils": "workspace:*",
-    "@fragments/plugin-helpers": "workspace:*"
+    "@fragments/utils": "workspace:*"
   },
   "devDependencies": {
     "tsup": "^7.2.0",
