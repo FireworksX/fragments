@@ -23,7 +23,7 @@ const InputSelect: FC<InputSelectProps> = animated(
     return (
       <Touchable
         className={cn(styles.root, className)}
-        title={typeof children === 'string' && children}
+        title={typeof children === 'string' ? children : undefined}
         onClick={onClick}
       >
         {hasIcon && (

@@ -188,18 +188,18 @@ export const useBuilderFieldVariable = (layer: Field) => {
       actions: hasConnector
         ? [
             {
-              key: 'createVariable',
+              name: 'createVariable',
               label: 'Create variable',
               onClick: () => handleCreateVariable()
             },
             {
-              key: 'setVariable',
+              name: 'setVariable',
               label: 'Set variable',
               options: [fieldVariables],
               disabled: fieldVariables.length === 0
             },
             isComputedValue && {
-              key: 'editTransform',
+              name: 'editTransform',
               label: 'Edit Transform',
               onClick: () => openTransform({ key, value: currentValue })
             }

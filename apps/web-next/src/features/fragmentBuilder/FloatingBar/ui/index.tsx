@@ -1,4 +1,4 @@
-import { FC, ReactNode, useContext } from 'react'
+import { FC, Fragment, ReactNode, useContext } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 
@@ -28,7 +28,7 @@ const BuilderFloatingBar: FC<BuilderFloatingBarProps> = ({ className, actions = 
             return <div key={index} className={styles.delimiter} />
           }
           if (cell.kind === 'component') {
-            return cell.component
+            return <Fragment key={index}>{cell.component}</Fragment>
           }
 
           return null

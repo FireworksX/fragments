@@ -9,6 +9,8 @@ import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSe
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { popoutsStore } from '@/shared/store/popouts.store'
 import { borderType, getFieldValue, nodes, overflow } from '@fragments/plugin-fragment'
+import { parseCssSpacing, stringifyCssSpacing } from '@fragments/plugin-fragment-spring'
+import { fromPx } from '@/shared/utils/fromPx'
 
 const visible: TabsSelectorItem[] = [
   {
@@ -28,62 +30,44 @@ export const useBuilderStyles = () => {
   const { selection, selectionGraph } = useBuilderSelection()
   const isTextNode = selectionGraph?._type === nodes.Image
   const isImageNode = selectionGraph?._type === nodes.Text
-  const layerInvoker = useLayerInvoker(
-    selection,
-    ({ node, key, value }) => {
-      switch (key) {
-        case 'visible':
-          node.setVisible(value)
-          break
-        case 'opacity':
-          node.setOpacity(value)
-          break
-        case 'overflow':
-          node.setOverflow(value)
-          break
-        case 'zIndex':
-          node.setZIndex(value)
-          break
-        case 'cornerRadius':
-          node.setCornerRadius(value ? +value : value)
-          break
-        case 'borderType':
-          node.setBorderType(value)
-          break
-        case 'fillType':
-          node.setFillType(value)
+  const layerInvoker = useLayerInvoker(selection, ({ node, key, value }) => {
+    switch (key) {
+      case 'visible':
+        node.setVisible(value)
+        break
+      case 'opacity':
+        node.setOpacity(value)
+        break
+      case 'overflow':
+        node.setOverflow(value)
+        break
+      case 'zIndex':
+        node.setZIndex(value)
+        break
+      case 'cornerRadius':
+        node.setCornerRadius(value)
+        break
+      case 'borderType':
+        node.setBorderType(value)
+        break
+      case 'fillType':
+        node.setFillType(value)
 
-          if (!value) {
-            // closePopout()
-          }
-          break
-        case 'cornerRadiusSide':
-          node.setCornerRadius(value.side, +value.value)
-          break
-      }
-    },
-    ({ key, node }) => {
-      switch (key) {
-        case 'cornerRadiusSide':
-          return {
-            tl: getFieldValue(node, 'topLeftRadius', documentManager),
-            tr: getFieldValue(node, 'topRightRadius', documentManager),
-            br: getFieldValue(node, 'bottomRightRadius', documentManager),
-            bl: getFieldValue(node, 'bottomLeftRadius', documentManager)
-          }
-      }
+        if (!value) {
+          // closePopout()
+        }
+        break
     }
-  )
+  })
   const borderTypeInvoker = layerInvoker('borderType')
   const borderWidthInvoker = layerInvoker('borderWidth')
   const borderColorInvoker = layerInvoker('borderColor')
   const fillTypeInvoker = layerInvoker('fillType')
   const solidFillInvoker = layerInvoker('solidFill')
   const zIndexInvoker = layerInvoker('zIndex')
-  const cornerRadiusSideInvoker = layerInvoker('cornerRadiusSide')
   const cornerRadiusInvoker = layerInvoker('cornerRadius')
   const overflowInvoker = layerInvoker('overflow')
-
+  const [cornerMode, setCornerMode] = useState('plain')
   const [cornerSide, setCornerSide] = useState<CornerSide | undefined>()
 
   const openBorder = () => {
@@ -102,10 +86,6 @@ export const useBuilderStyles = () => {
     zIndexInvoker.onChange(0)
   }
 
-  const onChangeRadiusMode = (mode: 'plain' | 'sides') => {
-    cornerRadiusInvoker.onChange(mode === 'plain' ? 0 : null)
-  }
-
   return {
     selectionGraph,
     visible: {
@@ -120,9 +100,17 @@ export const useBuilderStyles = () => {
     },
     radius: {
       disabled: isTextNode,
-      isMixed: selectionGraph?.isMixedRadius?.(),
+      cornerMode,
+      setCornerMode: mode => {
+        const maxValue = Math.max(
+          ...Object.values(parseCssSpacing(animatableValue(cornerRadiusInvoker.value))).map(fromPx)
+        )
+        if (mode === 'plain') {
+          cornerRadiusInvoker.onChange(maxValue)
+        }
+        setCornerMode(mode)
+      },
       setCornerSide,
-      onChangeRadiusMode,
       items: [
         {
           name: 'plain',
@@ -133,8 +121,13 @@ export const useBuilderStyles = () => {
           label: <CornerSides side={cornerSide} />
         }
       ],
-      sidesInvoker: cornerRadiusSideInvoker,
-      ...cornerRadiusInvoker
+      setCornerSideValue: (side, value) => {
+        const nextSides = { ...parseCssSpacing(animatableValue(cornerRadiusInvoker.value)), [side]: value }
+        cornerRadiusInvoker.onChange(nextSides)
+      },
+      ...cornerRadiusInvoker,
+      value: to(cornerRadiusInvoker.value, fromPx),
+      sidesValues: to(cornerRadiusInvoker.value, parseCssSpacing)
     },
     zIndex: {
       ...zIndexInvoker,

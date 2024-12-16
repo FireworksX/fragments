@@ -69,21 +69,26 @@ const BuilderLayout: FC<BuilderLayoutProps> = ({ className }) => {
       </ControlRow>
 
       <ControlRow title='Padding' actions={padding.actions} isHighlight={padding.isOverride}>
-        <InputNumber value={padding.value} empty={padding.isMixed} onChange={padding.onChange} />
+        <InputNumber
+          value={padding.value}
+          disabled={padding.mode === 'sides'}
+          empty={padding.mode === 'sides'}
+          onChange={padding.onChange}
+        />
         <TabsSelector
           cellClassName={styles.paddingCell}
           items={padding.items}
-          value={to(padding.isMixed, v => (!v ? 'plain' : 'sides'))}
-          onChange={({ name }) => padding.onChangeMode(name)}
+          value={padding.mode}
+          onChange={({ name }) => padding.setPaddingMode(name)}
         />
       </ControlRow>
-      <AnimatedVisible visible={padding.isMixed}>
+      {padding.mode === 'sides' && (
         <BuilderLayoutPaddings
-          values={padding.sidesInvoker.value}
+          values={padding.sidesValues}
           focusSide={padding.setPaddingSide}
-          onChange={(side, value) => padding.sidesInvoker.onChange({ side, value })}
+          onChange={(side, value) => padding.setCornerSideValue(side, value)}
         />
-      </AnimatedVisible>
+      )}
     </Panel>
   )
 }

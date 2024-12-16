@@ -1,4 +1,4 @@
-import { FC, useContext } from 'react'
+import { FC, use, useContext } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { useBuilderStyles } from '../hooks/useBuilderStyles'
@@ -31,7 +31,7 @@ interface BuilderStylesProps {
 const ALLOW_FILL_TYPES = [paintMode.Solid]
 
 const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = use(BuilderContext)
   const { selectionGraph, opacity, overflow, visible, zIndex, radius, fill, border } = useBuilderStyles()
   const { getColor, getNameColor } = useDisplayColor(documentManager)
 
@@ -108,21 +108,21 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
       {!radius.disabled && (
         <>
           <ControlRow title='Radius' actions={radius.actions} isHighlight={radius.isOverride}>
-            <InputNumber value={radius.value} empty={radius.isMixed} onChange={radius.onChange} />
+            <InputNumber value={radius.value} empty={radius.cornerMode === 'sides'} onChange={radius.onChange} />
             <TabsSelector
               cellClassName={styles.borderCell}
               items={radius.items}
-              value={to(radius.isMixed, v => (v ? 'sides' : 'plain'))}
-              onChange={({ name }) => radius.onChangeRadiusMode(name)}
+              value={radius.cornerMode}
+              onChange={({ name }) => radius.setCornerMode(name)}
             />
           </ControlRow>
-          <AnimatedVisible visible={radius.isMixed}>
+          {radius.cornerMode === 'sides' && (
             <BuilderStylesCorners
-              values={radius.sidesInvoker.value}
+              values={radius.sidesValues}
               focusCorner={radius.setCornerSide}
-              onChange={(side, value) => radius.sidesInvoker.onChange({ side, value })}
+              onChange={(side, value) => radius.setCornerSideValue(side, value)}
             />
-          </AnimatedVisible>
+          )}
         </>
       )}
 

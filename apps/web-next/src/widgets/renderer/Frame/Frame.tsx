@@ -35,7 +35,7 @@ export const Frame: FC<LayerProps> = ({ layerKey, style }) => {
   return (
     <animated.div {...attributes} style={extendedStyle} data-key={layerKey}>
       {layerGraph?.children?.filter(Boolean).map(child => (
-        <Frame key={child._id} layerKey={child} />
+        <Frame key={child} layerKey={child} />
       ))}
     </animated.div>
   )

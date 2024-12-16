@@ -1,1 +1,1 @@
-export { BuilderLayoutPaddings } from './ui/BuilderLayoutPaddings'
+export { default as BuilderLayoutPaddings } from './ui/BuilderLayoutPaddings'

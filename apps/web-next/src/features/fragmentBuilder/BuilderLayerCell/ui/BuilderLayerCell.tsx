@@ -165,7 +165,7 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
             onCollapse()
           }}
         >
-          {hasChildren && <CaretRight className={styles.titleCaret} width={10} collapsed={collapsed} />}
+          {hasChildren && <CaretRight className={styles.titleCaret} width={10} />}
         </Touchable>
         <div className={styles.headIcon}>
           <BuilderLayerTypeIcon

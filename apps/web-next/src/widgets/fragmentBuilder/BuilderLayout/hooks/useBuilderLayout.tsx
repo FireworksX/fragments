@@ -13,8 +13,15 @@ import { TabsSelectorItem } from '@/shared/ui/TabsSelector'
 import { BoxSide, BoxSizingSides } from '@/shared/ui/BoxSizingSides'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
-import { layerAlign, layerDirection, layerDistribute, layerMode } from '@fragments/plugin-fragment-spring'
+import {
+  layerAlign,
+  layerDirection,
+  layerDistribute,
+  layerMode,
+  parseCssSpacing
+} from '@fragments/plugin-fragment-spring'
 import { getFieldValue } from '@fragments/plugin-fragment'
+import { fromPx } from '@/shared/utils/fromPx'
 
 const directions: TabsSelectorItem[] = [
   {
@@ -56,60 +63,42 @@ const wrap: TabsSelectorItem[] = [
 export const useBuilderLayout = () => {
   const { documentManager } = useContext(BuilderContext)
   const { selection, selectionGraph } = useBuilderSelection()
-  const layerInvoker = useLayerInvoker(
-    selection,
-    ({ node, key, value }) => {
-      switch (key) {
-        case 'layerMode':
-          if (!node.layerMode) {
-            node.setLayerMode(layerMode.flex)
-          } else {
-            node.setLayerMode(animatableValue(node.layerMode) === layerMode.none ? layerMode.flex : layerMode.none)
-          }
+  const layerInvoker = useLayerInvoker(selection, ({ node, key, value }) => {
+    switch (key) {
+      case 'layerMode':
+        if (!node.layerMode) {
+          node.setLayerMode(layerMode.flex)
+        } else {
+          node.setLayerMode(animatableValue(node.layerMode) === layerMode.none ? layerMode.flex : layerMode.none)
+        }
 
-          break
-        case 'layerDirection':
-          node.setLayerDirection(value)
-          break
-        case 'layerDistribute':
-          node.setLayerDistribute(value)
-          break
-        case 'layerAlign':
-          node.setLayerAlign(value)
-          break
-        case 'layerWrap':
-          node.setLayerWrap(value)
-          break
-        case 'layerGap':
-          node.setLayerGap(+value)
-          break
-        case 'padding':
-          node.setPadding(value ? +value : value)
-          break
-        case 'paddingSide':
-          node.setPadding(value.side, +value.value)
-          break
-      }
-    },
-    ({ key, node }) => {
-      switch (key) {
-        case 'paddingSide':
-          return {
-            top: getFieldValue(node, 'paddingTop', documentManager),
-            right: getFieldValue(node, 'paddingRight', documentManager),
-            bottom: getFieldValue(node, 'paddingBottom', documentManager),
-            left: getFieldValue(node, 'paddingLeft', documentManager)
-          }
-      }
+        break
+      case 'layerDirection':
+        node.setLayerDirection(value)
+        break
+      case 'layerDistribute':
+        node.setLayerDistribute(value)
+        break
+      case 'layerAlign':
+        node.setLayerAlign(value)
+        break
+      case 'layerWrap':
+        node.setLayerWrap(value)
+        break
+      case 'layerGap':
+        node.setLayerGap(+value)
+        break
+      case 'padding':
+        node.setPadding(value)
+        break
+      case 'paddingSide':
+        node.setPadding(value.side, +value.value)
+        break
     }
-  )
+  })
+  const [paddingMode, setPaddingMode] = useState('plain')
   const [paddingSide, setPaddingSide] = useState<BoxSide | undefined>()
-  const padding = layerInvoker('padding')
-  const paddingSideInvoker = layerInvoker('paddingSide')
-
-  const onChangePaddingMode = (mode: 'plain' | 'sides') => {
-    padding.onChange(mode === 'plain' ? 0 : null)
-  }
+  const paddingInvoker = layerInvoker('padding')
 
   return {
     selectionGraph,
@@ -132,9 +121,20 @@ export const useBuilderLayout = () => {
     },
     gap: layerInvoker('layerGap'),
     padding: {
-      ...padding,
-      mode: to(animatableValue(selectionGraph?.isMixedPadding?.()), v => (!v ? 'plain' : 'sides')),
-      isMixed: selectionGraph?.isMixedPadding?.(),
+      ...paddingInvoker,
+      value: to(paddingInvoker.value, fromPx),
+      sidesValues: to(paddingInvoker.value, parseCssSpacing),
+      mode: paddingMode,
+      setPaddingMode: mode => {
+        const maxValue = Math.max(...Object.values(parseCssSpacing(animatableValue(paddingInvoker.value))).map(fromPx))
+        if (mode === 'plain') {
+          paddingInvoker.onChange(maxValue)
+        }
+      },
+      setCornerSideValue: (side, value) => {
+        const nextSides = { ...parseCssSpacing(animatableValue(paddingInvoker.value)), [side]: value }
+        paddingInvoker.onChange(nextSides)
+      },
       items: [
         {
           name: 'plain',
@@ -146,10 +146,7 @@ export const useBuilderLayout = () => {
         }
       ],
       side: paddingSide,
-      setPaddingSide,
-      paddingSide: paddingSideInvoker,
-      onChangeMode: onChangePaddingMode,
-      sidesInvoker: paddingSideInvoker
+      setPaddingSide
     }
   }
 }

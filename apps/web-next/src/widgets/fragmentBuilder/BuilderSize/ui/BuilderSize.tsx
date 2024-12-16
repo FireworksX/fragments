@@ -61,16 +61,16 @@ const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
 
       {!canRelativeSize && (
         <ControlRow title='Position'>
-          <InputNumber suffix='x' {...left} min={Infinity} max={Infinity} />
-          <InputNumber suffix='y' {...top} min={Infinity} max={Infinity} />
+          <InputNumber suffix='x' value={left.value} min={Infinity} max={Infinity} onChange={left.onChange} />
+          <InputNumber suffix='y' value={top.value} min={Infinity} max={Infinity} onChange={top.onChange} />
         </ControlRow>
       )}
       <ControlRow title='Width' actions={width.actions} isHighlight={width.isHighlight}>
-        <InputNumber {...width} disabled={to(allowResizeHorizontal, v => !v)} />
+        <InputNumber value={width.value} disabled={to(allowResizeHorizontal, v => !v)} onChange={width.onChange} />
         <Select {...layoutSizingHorizontal}>{Options}</Select>
       </ControlRow>
       <ControlRow title='Height' actions={height.actions} isHighlight={height.isHighlight}>
-        <InputNumber {...height} disabled={to(allowResizeVertical, v => !v)} />
+        <InputNumber value={height.value} disabled={to(allowResizeVertical, v => !v)} onChange={height.onChange} />
         <Select {...layoutSizingVertical}>{Options}</Select>
       </ControlRow>
     </Panel>

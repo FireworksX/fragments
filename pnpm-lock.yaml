@@ -60,18 +60,6 @@ importers:
       '@fragments/plugin-fragment-spring':
         specifier: workspace:*
         version: link:../../packages/plugin-fragment-spring
-      '@fragments/plugin-helpers':
-        specifier: workspace:*
-        version: link:../../packages/plugin-helpers
-      '@fragments/plugin-state':
-        specifier: workspace:*
-        version: link:../../packages/plugin-state
-      '@fragments/plugin-state-builder':
-        specifier: workspace:*
-        version: link:../../packages/plugin-state-builder
-      '@fragments/renderer':
-        specifier: workspace:*
-        version: link:../../packages/renderer
       '@fragments/utils':
         specifier: workspace:*
         version: link:../../packages/utils
@@ -232,9 +220,6 @@ importers:
 
   packages/plugin-fragment:
     dependencies:
-      '@fragments/plugin-helpers':
-        specifier: workspace:*
-        version: link:../plugin-helpers
       '@fragments/utils':
         specifier: workspace:*
         version: link:../utils
@@ -260,9 +245,6 @@ importers:
       '@fragments/plugin-fragment':
         specifier: workspace:*
         version: link:../plugin-fragment
-      '@fragments/plugin-helpers':
-        specifier: workspace:*
-        version: link:../plugin-helpers
       '@fragments/utils':
         specifier: workspace:*
         version: link:../utils
@@ -278,103 +260,6 @@ importers:
       '@react-spring/web':
         specifier: 9.7.4
         version: 9.7.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-    devDependencies:
-      tsup:
-        specifier: ^7.2.0
-        version: 7.3.0(postcss@8.4.41)(ts-node@10.9.2(typescript@5.5.4))(typescript@5.5.4)
-      typescript:
-        specifier: ^5.5.4
-        version: 5.5.4
-
-  packages/plugin-helpers:
-    dependencies:
-      '@fragments/utils':
-        specifier: workspace:*
-        version: link:../utils
-      '@graph-state/checkers':
-        specifier: ^0.1.2
-        version: 0.1.2
-      '@graph-state/core':
-        specifier: ^0.7.0
-        version: 0.7.0
-    devDependencies:
-      tsup:
-        specifier: ^7.2.0
-        version: 7.3.0(postcss@8.4.41)(ts-node@10.9.2(typescript@5.5.4))(typescript@5.5.4)
-      typescript:
-        specifier: ^5.5.4
-        version: 5.5.4
-
-  packages/plugin-state:
-    dependencies:
-      '@fragments/plugin-helpers':
-        specifier: workspace:*
-        version: link:../plugin-helpers
-      '@fragments/utils':
-        specifier: workspace:*
-        version: link:../utils
-      '@graph-state/checkers':
-        specifier: ^0.1.2
-        version: 0.1.2
-      '@graph-state/core':
-        specifier: ^0.9.0
-        version: 0.9.0
-      '@graph-state/plugin-extend':
-        specifier: ^0.5.0
-        version: 0.5.0
-    devDependencies:
-      tsup:
-        specifier: ^7.2.0
-        version: 7.3.0(postcss@8.4.41)(ts-node@10.9.2(typescript@5.5.4))(typescript@5.5.4)
-      typescript:
-        specifier: ^5.5.4
-        version: 5.5.4
-
-  packages/plugin-state-builder:
-    dependencies:
-      '@fragments/plugin-state':
-        specifier: workspace:*
-        version: link:../plugin-state
-      '@fragments/utils':
-        specifier: workspace:*
-        version: link:../utils
-      '@graph-state/checkers':
-        specifier: ^0.1.2
-        version: 0.1.2
-      '@graph-state/core':
-        specifier: ^0.7.0
-        version: 0.7.0
-      '@graph-state/plugin-extend':
-        specifier: ^0.4.0
-        version: 0.4.0
-      '@react-spring/core':
-        specifier: 9.7.4
-        version: 9.7.4(react@19.0.0)
-      '@react-spring/web':
-        specifier: 9.7.4
-        version: 9.7.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-    devDependencies:
-      tsup:
-        specifier: ^7.2.0
-        version: 7.3.0(postcss@8.4.41)(ts-node@10.9.2(typescript@5.5.4))(typescript@5.5.4)
-      typescript:
-        specifier: ^5.5.4
-        version: 5.5.4
-
-  packages/renderer:
-    dependencies:
-      '@graph-state/core':
-        specifier: ^0.9.0
-        version: 0.9.0
-      '@graph-state/react':
-        specifier: ^0.5.0
-        version: 0.5.0(react@19.0.0)
-      preact:
-        specifier: 10.23.2
-        version: 10.23.2
-      react-use-measure:
-        specifier: ^2.1.1
-        version: 2.1.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
     devDependencies:
       tsup:
         specifier: ^7.2.0
@@ -1573,31 +1458,17 @@ packages:
   '@graph-state/checkers@0.1.2':
     resolution: {integrity: sha512-aKjOVVE5BfsNWZrBElNRx23ThP5NiqVqH3++iBXMrlD6cN/jawyTeaEOa+wqh7uN9bowD4tkfQK2OecepElL7w==}
 
-  '@graph-state/core@0.7.0':
-    resolution: {integrity: sha512-qJhPF8CIPM+fjSSHe1KYZdBSyp+XZjYAvSe0U/4b+ro/1yCXhT5o5ZVvdy9Oie3lZqRfBB8adxeSX80ixlw3Pg==}
-
-  '@graph-state/core@0.9.0':
-    resolution: {integrity: sha512-rmOvblUhrNB5LNZ9aDxJvcI8VOkK2v3EdBOpOk0Mwe4mkbL3T5NNBRydr2z7EcS9djhE9kD8VyG1rs1bj5zmHw==}
-
   '@graph-state/core@0.9.1':
     resolution: {integrity: sha512-AT/h4GHqoylAtVEs7N1+lKtLNw5hadSkA7He5r8IFE9dTne6ow3sDFfyREEP0xV7w0r4EpGu5kCPbwxrsb9iRw==}
 
   '@graph-state/core@0.9.3':
     resolution: {integrity: sha512-g4jU23GrI3hBBtfBW5RP8keUwHKvF4pnblh/SZVOdbSkWGTTIVJqhN9pjH58ZxqOd+C0QISAHaX+IgeyGSiF7Q==}
 
-  '@graph-state/plugin-extend@0.4.0':
-    resolution: {integrity: sha512-H9FdyIPMgfL88lHcl8o2KFTL8qDm0Bg6nKozzeQhb8xcG8d2PN5oWtD5SZ2HoQltb/HVOStUIthhPkIk1Ct+1A==}
-
   '@graph-state/plugin-extend@0.5.0':
     resolution: {integrity: sha512-IxiMqqeyjjMaDcEb82nc3LttmezUeUbZk1VMIgUPh1Is10fQA+OPO0G1Ye7ZtY80eqqAwquiHvNWs3ktg+pkxA==}
 
   '@graph-state/plugin-logger@0.2.2':
     resolution: {integrity: sha512-3iO9Zzam7DdrLzxgic66po/VZvM3RCaRrqayzqJN4jnWdDjTj0E1V5CZkWV8bQ8W0KHNPFpI3uNdzzTRrNHp6w==}
-
-  '@graph-state/react@0.5.0':
-    resolution: {integrity: sha512-QfUx+Kbtx27O+e+TBM9Rajz7YNBPbSYZbQVuqRAG3H/vrk6btJD0ejie8uEHbyeRGR1NI+pOGqBKUj3ATYPy8g==}
-    peerDependencies:
-      react: '>=16.8.0'
 
   '@graph-state/react@0.5.1':
     resolution: {integrity: sha512-XX8OCQintXgJsjNXQabQigqIiLN/LmoLz5ZSejHvsNi2OvLnmrO6AiN4WPu4ZatLNTwRxEXBdyqgH5BS+GtzXA==}
@@ -4926,9 +4797,6 @@ packages:
   preact@10.22.0:
     resolution: {integrity: sha512-RRurnSjJPj4rp5K6XoP45Ui33ncb7e4H7WiOHVpjbkvqvA3U+N8Z6Qbo0AE6leGYBV66n8EhEaFixvIu3SkxFw==}
 
-  preact@10.23.2:
-    resolution: {integrity: sha512-kKYfePf9rzKnxOAKDpsWhg/ysrHPqT+yQ7UW4JjdnqjFIeNUnNcEJvhuA8fDenxAGWzUqtd51DfVg7xp/8T9NA==}
-
   preferred-pm@3.1.3:
     resolution: {integrity: sha512-MkXsENfftWSRpzCzImcp4FRsCc3y1opwB73CfCNWyzMqArju2CrlMHlqB7VexKiPEOjGMbttv1r9fSCn5S610w==}
     engines: {node: '>=10'}
@@ -5092,12 +4960,6 @@ packages:
     peerDependencies:
       react: '*'
       tslib: '*'
-
-  react-use-measure@2.1.1:
-    resolution: {integrity: sha512-nocZhN26cproIiIduswYpV5y5lQpSQS1y/4KuvUCjSKmw7ZWIS/+g3aFnX3WdBkyuGUtTLif3UTqnLLhbDoQig==}
-    peerDependencies:
-      react: '>=16.13'
-      react-dom: '>=16.13'
 
   react-use@17.5.0:
     resolution: {integrity: sha512-PbfwSPMwp/hoL847rLnm/qkjg3sTRCvn6YhUZiHaUa3FA6/aNoFX79ul5Xt70O1rK+9GxSVqkY0eTwMdsR/bWg==}
@@ -7627,14 +7489,6 @@ snapshots:
 
   '@graph-state/checkers@0.1.2': {}
 
-  '@graph-state/core@0.7.0':
-    dependencies:
-      '@graph-state/checkers': 0.1.2
-
-  '@graph-state/core@0.9.0':
-    dependencies:
-      '@graph-state/checkers': 0.1.2
-
   '@graph-state/core@0.9.1':
     dependencies:
       '@graph-state/checkers': 0.1.2
@@ -7643,10 +7497,6 @@ snapshots:
     dependencies:
       '@graph-state/checkers': 0.1.2
 
-  '@graph-state/plugin-extend@0.4.0':
-    dependencies:
-      '@graph-state/core': 0.9.3
-
   '@graph-state/plugin-extend@0.5.0':
     dependencies:
       '@graph-state/core': 0.9.3
@@ -7654,12 +7504,6 @@ snapshots:
   '@graph-state/plugin-logger@0.2.2':
     dependencies:
       '@graph-state/core': 0.9.3
-
-  '@graph-state/react@0.5.0(react@19.0.0)':
-    dependencies:
-      '@graph-state/core': 0.9.3
-      react: 19.0.0
-      use-sync-external-store: 1.2.2(react@19.0.0)
 
   '@graph-state/react@0.5.1(react@19.0.0)':
     dependencies:
@@ -11481,8 +11325,6 @@ snapshots:
 
   preact@10.22.0: {}
 
-  preact@10.23.2: {}
-
   preferred-pm@3.1.3:
     dependencies:
       find-up: 5.0.0
@@ -11684,12 +11526,6 @@ snapshots:
     dependencies:
       react: 19.0.0
       tslib: 2.6.2
-
-  react-use-measure@2.1.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
-    dependencies:
-      debounce: 1.2.1
-      react: 19.0.0
-      react-dom: 19.0.0(react@19.0.0)
 
   react-use@17.5.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:

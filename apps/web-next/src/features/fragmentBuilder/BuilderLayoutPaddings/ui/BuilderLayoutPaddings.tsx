@@ -4,6 +4,7 @@ import { ControlRow } from '@/shared/ui/ControlRow'
 import { ControlRowWide } from '@/shared/ui/ControlRow'
 import { InputGroup } from '@/shared/ui/InputGroup'
 import { InputNumber } from '@/shared/ui/InputNumber'
+import { animated } from '@react-spring/web'
 
 interface BuilderLayoutPaddingsProps {
   values: {
@@ -17,7 +18,7 @@ interface BuilderLayoutPaddingsProps {
   onChange(side: BoxSide, value: number): void
 }
 
-export const BuilderLayoutPaddings: FC<BuilderLayoutPaddingsProps> = ({ className, values, focusSide, onChange }) => (
+const BuilderLayoutPaddings: FC<BuilderLayoutPaddingsProps> = ({ className, values, focusSide, onChange }) => (
   <ControlRow>
     <ControlRowWide>
       <InputGroup>
@@ -53,3 +54,5 @@ export const BuilderLayoutPaddings: FC<BuilderLayoutPaddingsProps> = ({ classNam
     </ControlRowWide>
   </ControlRow>
 )
+
+export default animated(BuilderLayoutPaddings)

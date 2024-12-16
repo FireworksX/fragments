@@ -7,10 +7,10 @@ import { InputNumber } from '@/shared/ui/InputNumber'
 
 interface BuilderStylesCornersProps {
   values: {
-    tl: number
-    tr: number
-    br: number
-    bl: number
+    top: number
+    right: number
+    bottom: number
+    left: number
   }
   className?: string
   focusCorner(corner?: CornerSide): void
@@ -30,32 +30,32 @@ const BuilderStylesCorners: FC<BuilderStylesCornersProps> = ({ className, values
         <InputGroup>
           <InputNumber
             inputRef={tlRef}
-            value={values.tl}
+            value={values.top}
             withoutTicker={true}
-            onFocus={() => focusCorner('tl')}
+            onFocus={() => focusCorner('top')}
             onBlur={() => focusCorner(undefined)}
-            onChange={value => onChange('tl', value)}
+            onChange={value => onChange('top', value)}
           />
           <InputNumber
-            value={values.tr}
+            value={values.right}
             withoutTicker={true}
-            onFocus={() => focusCorner('tr')}
+            onFocus={() => focusCorner('right')}
             onBlur={() => focusCorner(undefined)}
-            onChange={value => onChange('tr', value)}
+            onChange={value => onChange('right', value)}
           />
           <InputNumber
-            value={values.br}
+            value={values.bottom}
             withoutTicker={true}
-            onFocus={() => focusCorner('br')}
+            onFocus={() => focusCorner('bottom')}
             onBlur={() => focusCorner(undefined)}
-            onChange={value => onChange('br', value)}
+            onChange={value => onChange('bottom', value)}
           />
           <InputNumber
-            value={values.bl}
+            value={values.left}
             withoutTicker={true}
-            onFocus={() => focusCorner('bl')}
+            onFocus={() => focusCorner('left')}
             onBlur={() => focusCorner(undefined)}
-            onChange={value => onChange('bl', value)}
+            onChange={value => onChange('left', value)}
           />
         </InputGroup>
       </ControlRowWide>
