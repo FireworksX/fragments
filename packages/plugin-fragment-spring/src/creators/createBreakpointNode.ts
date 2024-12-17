@@ -2,7 +2,7 @@ import { GraphState } from "@graph-state/core";
 import { FrameNode } from "@/types";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
 import { createFrameNode, getFieldValue } from "@fragments/plugin-fragment";
-import { SpringValue } from "@react-spring/web";
+import { SpringValue } from "@fragments/springs-factory";
 import { animatableValue } from "@/shared/animatableValue.ts";
 import { nodes } from "@/definitions.ts";
 

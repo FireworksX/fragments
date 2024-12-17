@@ -19,6 +19,7 @@
     "@feature-sliced/cli": "^1.0.0",
     "@fragments/plugin-fragment": "workspace:*",
     "@fragments/plugin-fragment-spring": "workspace:*",
+    "@fragments/springs-factory": "workspace:*",
     "@fragments/utils": "workspace:*",
     "@graph-state/checkers": "^0.1.2",
     "@graph-state/core": "^0.9.3",

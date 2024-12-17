@@ -1,7 +1,7 @@
 import React, { FC, ReactNode, useContext } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { Frame } from '@/widgets/renderer/Frame/Frame'
+import { Frame } from '@/widgets/renderer/Frame'
 import { useBreakpoints } from '@/shared/hooks/fragmentBuilder/useBreakpoints'
 import { useFragmentLayers } from '@/shared/hooks/fragmentBuilder/useFragmentLayers'
 

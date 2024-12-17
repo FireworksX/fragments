@@ -1,7 +1,8 @@
 import { FC } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { SpringValue, animated, to } from '@react-spring/web'
+import { SpringValue, animated } from '@react-spring/web'
+import { to } from '@fragments/springs-factory'
 
 interface DisplayColorNameProps {
   color?: {

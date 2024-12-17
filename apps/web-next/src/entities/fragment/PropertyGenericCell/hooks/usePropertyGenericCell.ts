@@ -9,7 +9,7 @@ import { createNode } from '@fragments/plugin-fragment-spring'
 import { nodes, variableType } from '@fragments/plugin-fragment-spring'
 
 export const usePropertyGenericCell = (propertyLink: LinkKey) => {
-  const { createProperty } = useFragmentProperties()
+  const { createProperty, editProperty } = useFragmentProperties()
   const { documentManager } = useContext(BuilderContext)
   const [property] = useGraph(documentManager, propertyLink)
   const [creating, setCreating] = useState(false)
@@ -113,6 +113,9 @@ export const usePropertyGenericCell = (propertyLink: LinkKey) => {
     setCreatingName,
     children,
     isOpen,
-    toggleIsOpen: () => setIsOpen(p => !p)
+    toggleIsOpen: () => setIsOpen(p => !p),
+    handleClickProperty: () => {
+      editProperty(propertyLink)
+    }
   }
 }

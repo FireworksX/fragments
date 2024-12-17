@@ -1,10 +1,12 @@
 import { FC, useContext } from 'react'
 import { GraphState, LinkKey } from '@graph-state/core'
-import { animated, to } from '@react-spring/web'
+import { animated } from '@react-spring/web'
+import { to } from '@fragments/springs-factory'
 import { nodes, sizing } from '@fragments/plugin-fragment-spring'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
 import { Fragment } from '@/widgets/renderer/Fragment/Fragment'
+import { useLayerStyles } from '@/shared/hooks/fragmentBuilder/useLayerStyles'
 
 export interface DocumentRenderer {
   layerKey?: LinkKey
@@ -14,7 +16,7 @@ export interface DocumentRenderer {
 export const FragmentInstance: FC<DocumentRenderer> = ({ layerKey }) => {
   const { documentManager } = useContext(BuilderContext)
   const [instanceGraph] = useGraph(documentManager, layerKey)
-  const cssStyles = instanceGraph?.toCss?.() ?? {}
+  const cssStyles = useLayerStyles(layerKey)
   const horizontal = instanceGraph?.resolveField('layoutSizingHorizontal')
   const vertical = instanceGraph?.resolveField('layoutSizingVertical')
 

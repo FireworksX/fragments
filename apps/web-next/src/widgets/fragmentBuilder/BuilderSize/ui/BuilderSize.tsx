@@ -8,8 +8,8 @@ import { ControlRow } from '@/shared/ui/ControlRow'
 import { InputNumber } from '@/shared/ui/InputNumber'
 import { Select } from '@/shared/ui/Select'
 import { sizing } from '@fragments/plugin-fragment-spring'
-import { to } from '@react-spring/web'
 import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
+import { to } from '@fragments/springs-factory'
 
 interface BuilderSizeProps {
   className?: string
@@ -66,11 +66,11 @@ const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
         </ControlRow>
       )}
       <ControlRow title='Width' actions={width.actions} isHighlight={width.isHighlight}>
-        <InputNumber value={width.value} disabled={to(allowResizeHorizontal, v => !v)} onChange={width.onChange} />
+        <InputNumber value={width.value} disabled={allowResizeHorizontal} onChange={width.onChange} />
         <Select {...layoutSizingHorizontal}>{Options}</Select>
       </ControlRow>
       <ControlRow title='Height' actions={height.actions} isHighlight={height.isHighlight}>
-        <InputNumber value={height.value} disabled={to(allowResizeVertical, v => !v)} onChange={height.onChange} />
+        <InputNumber value={height.value} disabled={allowResizeVertical} onChange={height.onChange} />
         <Select {...layoutSizingVertical}>{Options}</Select>
       </ControlRow>
     </Panel>

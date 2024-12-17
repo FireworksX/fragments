@@ -2,11 +2,11 @@ import { LinkKey } from '@graph-state/core'
 import { popoutsStore } from '@/shared/store/popouts.store'
 import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { to } from '@react-spring/web'
 import { isValue } from '@fragments/utils'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
+import { to } from '@fragments/springs-factory'
 
 export const useBuilderCssOverride = () => {
   const { documentManager } = useContext(BuilderContext)

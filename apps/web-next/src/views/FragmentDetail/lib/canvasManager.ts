@@ -94,7 +94,6 @@ export const createCanvasManager = () =>
             y$.start(y)
           }
         }
-      },
-      loggerPlugin()
+      }
     ]
   })

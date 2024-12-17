@@ -1,5 +1,4 @@
 import { useContext, useState } from 'react'
-
 import DirectionVertical from '@/shared/icons/direction-vertical.svg'
 import DirectionHorizontal from '@/shared/icons/direction-horizontal.svg'
 import AlignTop from '@/shared/icons/align-top.svg'
@@ -7,7 +6,6 @@ import AlignBottom from '@/shared/icons/align-bottom.svg'
 import AlignHorizontal from '@/shared/icons/align-horizontal.svg'
 import Rectangle from '@/shared/icons/rectangle.svg'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { to } from '@react-spring/web'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { TabsSelectorItem } from '@/shared/ui/TabsSelector'
 import { BoxSide, BoxSizingSides } from '@/shared/ui/BoxSizingSides'
@@ -22,6 +20,7 @@ import {
 } from '@fragments/plugin-fragment-spring'
 import { getFieldValue } from '@fragments/plugin-fragment'
 import { fromPx } from '@/shared/utils/fromPx'
+import { useInterpolation } from '@/shared/hooks/useInterpolation'
 
 const directions: TabsSelectorItem[] = [
   {
@@ -122,8 +121,8 @@ export const useBuilderLayout = () => {
     gap: layerInvoker('layerGap'),
     padding: {
       ...paddingInvoker,
-      value: to(paddingInvoker.value, fromPx),
-      sidesValues: to(paddingInvoker.value, parseCssSpacing),
+      value: useInterpolation([paddingInvoker.value], fromPx),
+      sidesValues: useInterpolation([paddingInvoker.value], parseCssSpacing),
       mode: paddingMode,
       setPaddingMode: mode => {
         const maxValue = Math.max(...Object.values(parseCssSpacing(animatableValue(paddingInvoker.value))).map(fromPx))

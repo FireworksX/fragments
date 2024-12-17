@@ -8,6 +8,7 @@ import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { getResolvedValue } from '@fragments/plugin-fragment-spring'
 import { AnimatedHtml } from '@/shared/ui/AnimatedHtml'
 import { wrapTextInParagraphWithAttributes } from '@/widgets/fragmentBuilder/BuilderText/lib/wrapTextInParagraphWithAttributes'
+import { useLayerStyles } from '@/shared/hooks/fragmentBuilder/useLayerStyles'
 
 interface TextProps {
   layerKey: string
@@ -18,7 +19,7 @@ export const Text: FC<TextProps> = ({ layerKey }) => {
   const [layerGraph] = useGraph(documentManager, layerKey)
   const layerInvoker = useLayerInvoker(layerKey)
   const textContent = layerGraph?.getContent?.()
-  const cssStyles = layerGraph?.toCss?.() ?? {}
+  const cssStyles = useLayerStyles(layerKey)
   const { isTextEditing, focus } = useBuilderManager()
 
   return (

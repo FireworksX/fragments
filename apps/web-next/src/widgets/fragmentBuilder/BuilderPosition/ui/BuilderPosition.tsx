@@ -8,19 +8,21 @@ import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { InputNumber } from '@/shared/ui/InputNumber'
 import { Select } from '@/shared/ui/Select'
 import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
-import { to } from '@react-spring/web'
+import { to } from '@fragments/springs-factory'
+import { useInterpolation } from '@/shared/hooks/useInterpolation'
 
 interface BuilderPositionProps {
   className?: string
 }
 
 const BuilderPosition: FC<BuilderPositionProps> = ({ className }) => {
-  const { documentManager } = useContext(BuilderContext)
   const { selectionGraph, type, left, top, hasPosition } = useBuilderPosition()
   //
   // if (!selectionGraph?.position && selectionGraph?._type !== builderNodes.Screen) {
   //   return null
   // }
+
+  const isVisible = useInterpolation([type.value], v => v === 'absolute')
 
   if (!hasPosition) {
     return null
@@ -28,7 +30,7 @@ const BuilderPosition: FC<BuilderPositionProps> = ({ className }) => {
 
   return (
     <Panel className={cn(styles.root, className)} title='Position'>
-      <AnimatedVisible visible={to(type.value, v => v === 'absolute')}>
+      <AnimatedVisible visible={isVisible}>
         {/*// <div className={styles.body}>*/}
         {/*//   <BuilderPositionToggle top={top} right={right} bottom={bottom} left={left} />*/}
         {/*// </div>*/}

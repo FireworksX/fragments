@@ -1,11 +1,17 @@
 import cn from 'classnames'
-import { animated, to } from '@react-spring/web'
+import { to } from '@fragments/springs-factory'
+
+import { animated } from '@react-spring/web'
 import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
 import styles from './styles.module.css'
 import { SELECTION_SIDES, useLayerSelectedResize } from '../hooks/useLayerSelectedResize'
+import { useInterpolation } from '@/shared/hooks/useInterpolation'
 
 export const LayerSelectedResize = () => {
   const { handler, allowResizeVertical, allowResizeHorizontal } = useLayerSelectedResize()
+  const visibleHorizontal = useInterpolation([allowResizeHorizontal, allowResizeVertical], (a, b) => a && !b)
+  const visibleVertical = useInterpolation([allowResizeHorizontal, allowResizeVertical], (a, b) => !a && b)
+  const visibleAllDirections = useInterpolation([allowResizeHorizontal, allowResizeVertical], (a, b) => a && b)
 
   return (
     <div className={styles.root}>
@@ -26,7 +32,7 @@ export const LayerSelectedResize = () => {
         <animated.div {...handler([SELECTION_SIDES.left])} className={cn(styles.sideHorizontal, styles.left)} />
       </AnimatedVisible>
 
-      <AnimatedVisible visible={to([allowResizeHorizontal, allowResizeVertical], (a, b) => a && b)}>
+      <AnimatedVisible visible={visibleAllDirections}>
         <animated.div
           {...handler([SELECTION_SIDES.top, SELECTION_SIDES.right])}
           className={cn(styles.corner, styles.cornerHalfRight, styles.topRight)}
@@ -48,7 +54,7 @@ export const LayerSelectedResize = () => {
         />
       </AnimatedVisible>
 
-      <AnimatedVisible visible={to([allowResizeHorizontal, allowResizeVertical], (a, b) => a && !b)}>
+      <AnimatedVisible visible={visibleHorizontal}>
         <animated.div
           {...handler([SELECTION_SIDES.left])}
           className={cn(styles.corner, styles.cornerHorizontal, styles.left, styles.verticalMiddle)}
@@ -59,7 +65,7 @@ export const LayerSelectedResize = () => {
         />
       </AnimatedVisible>
 
-      <AnimatedVisible visible={to([allowResizeHorizontal, allowResizeVertical], (a, b) => !a && b)}>
+      <AnimatedVisible visible={visibleVertical}>
         <animated.div
           {...handler([SELECTION_SIDES.top])}
           className={cn(styles.corner, styles.cornerVertical, styles.top, styles.horizontalMiddle)}

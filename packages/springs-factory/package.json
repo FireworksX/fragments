@@ -1,5 +1,5 @@
 {
-  "name": "@fragments/plugin-fragment-spring",
+  "name": "@fragments/springs-factory",
   "private": false,
   "version": "0.0.1",
   "type": "module",
@@ -23,12 +23,8 @@
     "lint": "eslint . --ext .ts,.tsx --fix"
   },
   "dependencies": {
-    "@graph-state/core": "^0.9.1",
-    "@graph-state/plugin-extend": "^0.5.0",
-    "@graph-state/checkers": "^0.1.2",
     "@fragments/utils": "workspace:*",
     "@fragments/plugin-fragment": "workspace:*",
-    "@fragments/springs-factory": "workspace:*",
     "@react-spring/web": "9.7.4"
   },
   "devDependencies": {

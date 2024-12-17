@@ -30,6 +30,7 @@ export { createBaseNode } from "./creators/createBaseNode.ts";
 
 export { deepMergeObjects } from "@/shared/deepMergeObjexts.ts";
 export { getFieldValue } from "@/shared/getFieldValue.ts";
+export { getFieldValueMap } from "@/shared/getFieldValueMap.ts";
 export { isFieldOverridden } from "@/shared/isFieldOverridden.ts";
 export { toPercent } from "@/shared/toPercent.ts";
 export { toPx } from "@/shared/toPx.ts";

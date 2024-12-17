@@ -60,6 +60,9 @@ importers:
       '@fragments/plugin-fragment-spring':
         specifier: workspace:*
         version: link:../../packages/plugin-fragment-spring
+      '@fragments/springs-factory':
+        specifier: workspace:*
+        version: link:../../packages/springs-factory
       '@fragments/utils':
         specifier: workspace:*
         version: link:../../packages/utils
@@ -245,6 +248,9 @@ importers:
       '@fragments/plugin-fragment':
         specifier: workspace:*
         version: link:../plugin-fragment
+      '@fragments/springs-factory':
+        specifier: workspace:*
+        version: link:../springs-factory
       '@fragments/utils':
         specifier: workspace:*
         version: link:../utils
@@ -257,6 +263,25 @@ importers:
       '@graph-state/plugin-extend':
         specifier: ^0.5.0
         version: 0.5.0
+      '@react-spring/web':
+        specifier: 9.7.4
+        version: 9.7.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+    devDependencies:
+      tsup:
+        specifier: ^7.2.0
+        version: 7.3.0(postcss@8.4.41)(ts-node@10.9.2(typescript@5.5.4))(typescript@5.5.4)
+      typescript:
+        specifier: ^5.5.4
+        version: 5.5.4
+
+  packages/springs-factory:
+    dependencies:
+      '@fragments/plugin-fragment':
+        specifier: workspace:*
+        version: link:../plugin-fragment
+      '@fragments/utils':
+        specifier: workspace:*
+        version: link:../utils
       '@react-spring/web':
         specifier: 9.7.4
         version: 9.7.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)

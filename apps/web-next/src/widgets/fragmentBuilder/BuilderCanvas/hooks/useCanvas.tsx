@@ -8,6 +8,7 @@ import { definitions, nodes } from '@fragments/plugin-fragment-spring'
 import { useDragMove } from './useDragMove'
 import { useDragCollisions } from './useDragCollisions'
 import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderManager'
+import { debounce } from '@fragments/utils'
 
 const SCALE = {
   min: 0.25,
@@ -58,7 +59,9 @@ export const useCanvas = () => {
     {
       onMouseMove: ({ event, dragging, moving, wheeling }) => {
         if (dragging || moving || wheeling) return
-        canvasManager.setHoverLayer(findLayerFromPointerEvent(event))
+        debounce(() => {
+          canvasManager.setHoverLayer(findLayerFromPointerEvent(event))
+        }, 50)()
       },
       onClick: ({ event }) => {
         const layerKey = findLayerFromPointerEvent(event)

@@ -2,7 +2,7 @@ import { ComponentRef, ElementRef, FC, useEffect, useMemo, useRef, useState } fr
 import cn from 'classnames'
 import { LinkKey } from '@graph-state/core'
 import { isValue } from '@fragments/utils'
-import { animated, to } from '@react-spring/web'
+import { animated } from '@react-spring/web'
 import styles from './styles.module.css'
 import CaretRight from '@/shared/icons/next/chevrone-right.svg'
 import { useBuilderLayerCell } from '../hooks/useBuilderLayerCell'
@@ -12,6 +12,7 @@ import { DropdownGroup } from '@/shared/ui/DropdownGroup'
 import { DropdownOption } from '@/shared/ui/DropdownOption'
 import { Touchable } from '@/shared/ui/Touchable'
 import { useBuilderLayerFlags } from '@/shared/hooks/fragmentBuilder/useBuilderLayerFlags'
+import { useInterpolation } from '@/shared/hooks/useInterpolation'
 
 interface BuilderLayerCellProps {
   layerKey: LinkKey
@@ -118,7 +119,7 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
         <>
           <DropdownGroup minWidth={200}>
             <DropdownOption description='⌘;' disabled={!flags.isVisible} onClick={flags.toggleVisible}>
-              {to(flags.isVisible, v => (!v ? 'Show' : 'Hide'))}
+              {useInterpolation([flags.isVisible], v => (!v ? 'Show' : 'Hide'))}
             </DropdownOption>
             <DropdownOption description='⌘D' disabled={!flags.canDuplicate} onClick={duplicate}>
               Duplicate
@@ -154,7 +155,7 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
           classNames
         )}
         style={{
-          opacity: to(flags.isVisible, v => (v ? 1 : 0.4))
+          opacity: useInterpolation([flags.isVisible], v => (v ? 1 : 0.4))
         }}
         onClick={handleSelect}
       >

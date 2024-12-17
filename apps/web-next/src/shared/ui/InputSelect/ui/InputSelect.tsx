@@ -3,9 +3,10 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import Checkerboard from '@/shared/icons/checkerboard.svg'
 import Close from '@/shared/icons/close.svg'
-import { animated, Interpolation, to } from '@react-spring/web'
+import { animated, Interpolation } from '@react-spring/web'
 import { objectToColorString, rgbToHex } from '@fragments/utils'
 import { Touchable } from '@/shared/ui/Touchable'
+import { useInterpolation } from '@/shared/hooks/useInterpolation'
 
 export interface InputSelectProps extends PropsWithChildren {
   icon?: ReactNode
@@ -36,7 +37,10 @@ const InputSelect: FC<InputSelectProps> = animated(
               </div>
             )}
 
-            <animated.div className={styles.iconValue} style={{ backgroundColor: to(color, objectToColorString) }} />
+            <animated.div
+              className={styles.iconValue}
+              style={{ backgroundColor: useInterpolation([color], objectToColorString) }}
+            />
           </div>
         )}
 

@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import Rectangle from '@/shared/icons/rectangle.svg'
-import { to } from '@react-spring/web'
+import { to } from '@fragments/springs-factory'
 import { CornerSide, CornerSides } from '@/shared/ui/CornerSides'
 import { TabsSelectorItem } from '@/shared/ui/TabsSelector'
 import { animatableValue } from '@/shared/utils/animatableValue'
@@ -11,6 +11,8 @@ import { popoutsStore } from '@/shared/store/popouts.store'
 import { borderType, getFieldValue, nodes, overflow } from '@fragments/plugin-fragment'
 import { parseCssSpacing, stringifyCssSpacing } from '@fragments/plugin-fragment-spring'
 import { fromPx } from '@/shared/utils/fromPx'
+import { useInterpolation } from '@/shared/hooks/useInterpolation'
+import { isValue } from '@fragments/utils'
 
 const visible: TabsSelectorItem[] = [
   {
@@ -126,11 +128,12 @@ export const useBuilderStyles = () => {
         cornerRadiusInvoker.onChange(nextSides)
       },
       ...cornerRadiusInvoker,
-      value: to(cornerRadiusInvoker.value, fromPx),
-      sidesValues: to(cornerRadiusInvoker.value, parseCssSpacing)
+      value: useInterpolation([cornerRadiusInvoker.value], fromPx),
+      sidesValues: useInterpolation([cornerRadiusInvoker.value], parseCssSpacing)
     },
     zIndex: {
       ...zIndexInvoker,
+      visible: useInterpolation([zIndexInvoker.value], isValue),
       onClick: clickZIndex
     },
     border: {

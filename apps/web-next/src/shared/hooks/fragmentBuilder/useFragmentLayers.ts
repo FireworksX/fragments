@@ -8,6 +8,8 @@ export const useFragmentLayers = () => {
   const [fragmentGraph] = useGraph(documentManager, documentManager[stateAlias].root)
   const layers = fragmentGraph?.children ?? []
 
+  console.log('useFragmentLayers')
+
   return {
     layers
   }

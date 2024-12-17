@@ -41,7 +41,8 @@ export const PropertyGenericCell: FC<PropertyBooleanCellProps> = ({ propertyLink
     isOpen,
     toggleIsOpen,
     handleCancelAdd,
-    handleAdd
+    handleAdd,
+    handleClickProperty
   } = usePropertyGenericCell(propertyLink)
 
   const Icon = (
@@ -76,6 +77,7 @@ export const PropertyGenericCell: FC<PropertyBooleanCellProps> = ({ propertyLink
             </div>
           </RenderDropdown>
         }
+        onClick={handleClickProperty}
       >
         <div className={styles.body}>{name}</div>
       </Cell>

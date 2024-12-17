@@ -1,6 +1,6 @@
 import { CSSProperties, FC, useContext } from 'react'
 import { GraphState, LinkKey } from '@graph-state/core'
-import { Frame } from '@/widgets/renderer/Frame/Frame'
+import { Frame } from '@/widgets/renderer/Frame'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
 import { useMeasure } from 'react-use'

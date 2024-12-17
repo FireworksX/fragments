@@ -1,4 +1,4 @@
-import { CSSProperties, FC, useCallback, useContext, useRef } from 'react'
+import { CSSProperties, FC, memo, useCallback, useContext, useMemo, useRef } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { animated, Interpolation, SpringValue, to, useSpring } from '@react-spring/web'
 import { Text } from '@/widgets/renderer/Text/Text'
@@ -7,16 +7,17 @@ import { LinkKey } from '@graph-state/core'
 import { FragmentInstance } from '@/widgets/renderer/FragmentInstance/FragmentInstance'
 import { useExtendStyle } from '@/widgets/renderer/hooks/useExtendStyle'
 import { useGraph } from '@graph-state/react'
+import { useLayerStyles } from '@/shared/hooks/fragmentBuilder/useLayerStyles'
 
 interface LayerProps {
   layerKey: LinkKey
   style?: CSSProperties
 }
 
-export const Frame: FC<LayerProps> = ({ layerKey, style }) => {
+const Frame: FC<LayerProps> = ({ layerKey, style }) => {
   const { documentManager } = useContext(BuilderContext)
   const [layerGraph] = useGraph(documentManager, layerKey)
-  const cssStyles = layerGraph?.toCss?.() ?? {}
+  const cssStyles = useLayerStyles(layerKey)
   const extendedStyle = useExtendStyle(cssStyles, style)
   const attributes = layerGraph?.attributes
 
@@ -40,3 +41,5 @@ export const Frame: FC<LayerProps> = ({ layerKey, style }) => {
     </animated.div>
   )
 }
+
+export default memo(Frame)

@@ -1,5 +1,4 @@
 import { FC, useContext } from 'react'
-import { animated, to } from '@react-spring/web'
 import styles from './styles.module.css'
 import { useBuilderLayout } from '../hooks/useBuilderLayout'
 import { Panel } from '@/shared/ui/Panel'
@@ -13,6 +12,7 @@ import { Slider } from '@/shared/ui/Slider'
 import { BuilderLayoutPaddings } from '@/features/fragmentBuilder/BuilderLayoutPaddings'
 import { layerMode } from '@fragments/plugin-fragment-spring'
 import { animatableValue } from '@/shared/utils/animatableValue'
+import { useInterpolation } from '@/shared/hooks/useInterpolation'
 
 interface BuilderLayoutProps {
   className?: string
@@ -20,7 +20,7 @@ interface BuilderLayoutProps {
 
 const BuilderLayout: FC<BuilderLayoutProps> = ({ className }) => {
   const { selectionGraph, direction, mode, align, wrap, distribute, gap, padding } = useBuilderLayout()
-  const enabled = to(mode.value, mode => mode === layerMode.flex)
+  const enabled = useInterpolation([mode.value], mode => mode === layerMode.flex)
 
   return (
     <Panel

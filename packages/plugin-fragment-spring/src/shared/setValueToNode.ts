@@ -2,7 +2,8 @@ import { GraphState } from "@graph-state/core";
 import { isVariableLink } from "@/shared/isVariableLink.ts";
 import { isComputedValueLink } from "@/shared/isComputedValueLink.ts";
 import { BaseNode } from "@/types";
-import { Interpolation, SpringValue } from "@react-spring/web";
+import { Interpolation } from "@react-spring/web";
+import { SpringValue } from "@fragments/springs-factory";
 
 const defaultOptions = {
   staticValue: false,

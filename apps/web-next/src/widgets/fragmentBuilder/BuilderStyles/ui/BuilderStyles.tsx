@@ -4,7 +4,7 @@ import styles from './styles.module.css'
 import { useBuilderStyles } from '../hooks/useBuilderStyles'
 import { GraphValue } from '@graph-state/react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { to } from '@react-spring/web'
+import { to } from '@fragments/springs-factory'
 import { Panel } from '@/shared/ui/Panel'
 import { Dropdown } from '@/shared/ui/Dropdown'
 import { DropdownGroup } from '@/shared/ui/DropdownGroup'
@@ -23,6 +23,7 @@ import { Stepper } from '@/shared/ui/Stepper'
 import { useDisplayColor } from '@/shared/hooks/fragmentBuilder/useDisplayColor'
 import { borderType, paintMode } from '@fragments/plugin-fragment-spring'
 import { isValue } from '@fragments/utils'
+import { useInterpolation } from '@/shared/hooks/useInterpolation'
 
 interface BuilderStylesProps {
   className?: string
@@ -34,6 +35,9 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
   const { documentManager } = use(BuilderContext)
   const { selectionGraph, opacity, overflow, visible, zIndex, radius, fill, border } = useBuilderStyles()
   const { getColor, getNameColor } = useDisplayColor(documentManager)
+  const fillContent = useInterpolation([fill.type], v =>
+    ALLOW_FILL_TYPES.includes(v) ? getNameColor(v /* value */) : v === paintMode.Image ? 'Image' : ''
+  )
 
   return (
     <Panel
@@ -78,10 +82,7 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
                       onReset={fill.onReset}
                       onClick={fill.onClick}
                     >
-                      {value &&
-                        to(fill.type, v =>
-                          ALLOW_FILL_TYPES.includes(v) ? getNameColor(value) : v === paintMode.Image ? 'Image' : ''
-                        )}
+                      {value && fillContent}
                     </InputSelect>
                   </>
                 )
@@ -126,29 +127,29 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
         </>
       )}
 
-      {!border.disabled && (
-        <ControlRow title='Border' actions={border.actions} isHighlight={border.isOverride}>
-          <ControlRowWide>
-            <GraphValue graphState={documentManager} field={border.borderColorInvoker.value} options={{ safe: true }}>
-              {value => (
-                <>
-                  <InputSelect
-                    placeholder='Add...'
-                    hasIcon={to(value, v => !!v && v !== borderType.None)}
-                    color={getColor(value)}
-                    onReset={border.onReset}
-                    onClick={border.onClick}
-                  >
-                    {value && to(border.borderTypeInvoker.value, v => (v !== borderType.None ? v : ''))}
-                  </InputSelect>
-                </>
-              )}
-            </GraphValue>
-          </ControlRowWide>
-        </ControlRow>
-      )}
+      {/*{!border.disabled && (*/}
+      {/*  <ControlRow title='Border' actions={border.actions} isHighlight={border.isOverride}>*/}
+      {/*    <ControlRowWide>*/}
+      {/*      <GraphValue graphState={documentManager} field={border.borderColorInvoker.value} options={{ safe: true }}>*/}
+      {/*        {value => (*/}
+      {/*          <>*/}
+      {/*            <InputSelect*/}
+      {/*              placeholder='Add...'*/}
+      {/*              hasIcon={to(value, v => !!v && v !== borderType.None)}*/}
+      {/*              color={getColor(value)}*/}
+      {/*              onReset={border.onReset}*/}
+      {/*              onClick={border.onClick}*/}
+      {/*            >*/}
+      {/*              {value && to(border.borderTypeInvoker.value, v => (v !== borderType.None ? v : ''))}*/}
+      {/*            </InputSelect>*/}
+      {/*          </>*/}
+      {/*        )}*/}
+      {/*      </GraphValue>*/}
+      {/*    </ControlRowWide>*/}
+      {/*  </ControlRow>*/}
+      {/*)}*/}
 
-      <AnimatedVisible visible={to(zIndex.value, isValue)}>
+      <AnimatedVisible visible={zIndex.visible}>
         <ControlRow title='Z Index' actions={zIndex.actions} isHighlight={zIndex.isOverride}>
           <InputNumber value={zIndex.value} onChange={zIndex.onChange} />
           <Stepper value={zIndex.value} onChange={zIndex.onChange} />

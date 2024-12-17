@@ -1,12 +1,13 @@
 import { useGraph } from '@graph-state/react'
-import { useContext } from 'react'
+import { useContext, useMemo } from 'react'
 import { layerMode, nodes, sizing } from '@fragments/plugin-fragment-spring'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
-import { to } from '@react-spring/web'
+import { to } from '@fragments/springs-factory'
 import { getFieldValue } from '@fragments/plugin-fragment'
+import { useInterpolation } from '@/shared/hooks/useInterpolation'
 
 export const useBuilderSize = () => {
   const { documentManager } = useContext(BuilderContext)
@@ -35,6 +36,7 @@ export const useBuilderSize = () => {
     }
   })
   const [parent] = useGraph(documentManager, selectionGraph?.getParent?.())
+  const parentLayerMode = getFieldValue(parent, 'layerMode', documentManager)
   const isTopLevel = selectionGraph?.isRootLayer?.() ?? false
   const childOfBreakpoint = parent?._type === nodes.Breakpoint
   const canRelativeSize = !childOfBreakpoint && !isTopLevel && selectionGraph?._type !== nodes.Breakpoint
@@ -43,9 +45,9 @@ export const useBuilderSize = () => {
     !!selectionGraph?.children?.length ||
     selectionGraph?._type === nodes.Text ||
     selectionGraph?._type === nodes.FragmentInstance
-  const fillContentEnabled = to(
-    [canRelativeSize, getFieldValue(parent, 'layerMode', documentManager)],
-    (can, mode) => can && mode === layerMode.flex
+  const fillContentEnabled = useMemo(
+    () => to([canRelativeSize, parentLayerMode], (can, mode) => can && mode === layerMode.flex),
+    [canRelativeSize, parentLayerMode]
   )
 
   const layoutSizingHorizontal = layerInvoker('layoutSizingHorizontal')?.value
@@ -55,15 +57,17 @@ export const useBuilderSize = () => {
     selectionGraph,
     hugContentEnabled,
     fillContentEnabled,
-    hasSync: to([layoutSizingHorizontal, layoutSizingVertical], (h, v) => [h, v].every(v => v !== sizing.Hug)),
+    hasSync: useInterpolation([layoutSizingHorizontal, layoutSizingVertical], (h, v) =>
+      [h, v].every(v => v !== sizing.Hug)
+    ),
     sync: layerInvoker('aspectRatio'),
     isSynced: selectionGraph?.isSynced?.(),
     width: layerInvoker('width'),
     height: layerInvoker('height'),
     layoutSizingHorizontal: layerInvoker('layoutSizingHorizontal'),
     layoutSizingVertical: layerInvoker('layoutSizingVertical'),
-    allowResizeHorizontal: selectionGraph?.getAllowResizeHorizontal?.(),
-    allowResizeVertical: selectionGraph?.getAllowResizeVertical?.(),
+    allowResizeHorizontal: useInterpolation([selectionGraph?.getAllowResizeHorizontal?.()], v => !v),
+    allowResizeVertical: useInterpolation([selectionGraph?.getAllowResizeVertical?.()], v => !v),
     left: layerInvoker('left'),
     top: layerInvoker('top'),
     canRelativeSize

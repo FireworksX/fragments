@@ -1,7 +1,8 @@
 import { FC, PropsWithChildren, ReactNode } from 'react'
+import { to } from '@fragments/springs-factory'
 import styles from './styles.module.css'
 import cn from 'classnames'
-import { SpringValue, animated, to } from '@react-spring/web'
+import { SpringValue, animated } from '@react-spring/web'
 import { LinkKey } from '@graph-state/core'
 import { useLayerHighlightNode } from '../hooks/useLayerHighlightNode'
 import { BuilderCanvasTextEditor } from '@/widgets/fragmentBuilder/BuilderCanvasTextEditor'
@@ -47,7 +48,7 @@ export const LayerHighlightNode: FC<LayerHighlightDraggingProps> = ({
         <animated.div
           data-testid='highlight'
           className={cn(styles.mask, { [styles.dashed]: isParentSelected && !isDragging })}
-          style={{ '--borderWidth': to(borderWidth, toPx) }}
+          style={{ '--borderWidth': borderWidth }}
         >
           {isSelected && resizeNode}
           {isRichTextSelected && (

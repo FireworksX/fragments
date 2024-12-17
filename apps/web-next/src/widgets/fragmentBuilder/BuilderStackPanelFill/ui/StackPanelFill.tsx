@@ -2,7 +2,6 @@ import { FC, ReactNode, useContext, useEffect } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { popoutsStore } from '@/shared/store/popouts.store'
-import { animated, to } from '@react-spring/web'
 import { TabsSelector, TabsSelectorItem } from '@/shared/ui/TabsSelector'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
@@ -15,6 +14,7 @@ import { getRandomColor } from '@/shared/utils/random'
 import { SolidPaintStyles } from '@/entities/fragment/SolidPaintStyles'
 import { paintMode } from '@fragments/plugin-fragment-spring'
 import { colorToObject, objectToColorString } from '@fragments/utils'
+import { to } from '@fragments/springs-factory'
 
 export interface StackPanelFillOptions {}
 

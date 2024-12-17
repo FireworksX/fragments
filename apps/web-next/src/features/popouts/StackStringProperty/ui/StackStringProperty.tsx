@@ -12,7 +12,7 @@ import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { InputText, InputTextAnimated } from '@/shared/ui/InputText'
 import { Textarea, TextareaAnimated } from '@/shared/ui/Textarea'
 import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
-import { to } from '@react-spring/web'
+import { to } from '@fragments/springs-factory'
 
 interface StackStringVariableProps {
   className?: string
