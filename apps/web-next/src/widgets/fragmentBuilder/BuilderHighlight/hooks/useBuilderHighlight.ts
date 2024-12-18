@@ -6,8 +6,6 @@ export const useBuilderHighlight = () => {
   const { canvasManager, documentManager } = useContext(BuilderContext)
   const [canvas] = useGraph(canvasManager, canvasManager.key)
 
-  console.log('canvas update', canvas.isMoving)
-
   return {
     opacity: canvas.isMoving ? 0 : 1
   }

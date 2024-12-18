@@ -12,6 +12,7 @@ import { AnimatedHtml } from '@/shared/ui/AnimatedHtml'
 interface LayerHighlightDraggingProps {
   resizeNode: ReactNode
   layerKey: LinkKey
+  renderParents: LinkKey[]
   className?: string
   renderChildren?: (layerNode: unknown) => ReactNode
 }
@@ -20,6 +21,7 @@ export const LayerHighlightNode: FC<LayerHighlightDraggingProps> = ({
   className,
   renderChildren,
   layerKey,
+  renderParents = [],
   resizeNode
 }) => {
   const {
@@ -33,7 +35,7 @@ export const LayerHighlightNode: FC<LayerHighlightDraggingProps> = ({
     isDragging,
     borderWidth,
     isParentSelected
-  } = useLayerHighlightNode(layerKey)
+  } = useLayerHighlightNode(layerKey, renderParents)
 
   const resultChildren = renderChildren ? renderChildren(layerNode) : null
 
@@ -60,7 +62,12 @@ export const LayerHighlightNode: FC<LayerHighlightDraggingProps> = ({
       )}
 
       {children.map((child, index) => (
-        <LayerHighlightNode key={index} layerKey={child} resizeNode={resizeNode} />
+        <LayerHighlightNode
+          key={index}
+          layerKey={child}
+          resizeNode={resizeNode}
+          renderParents={[...renderParents, layerKey]}
+        />
       ))}
 
       {textContent && <AnimatedHtml className={styles.text}>{textContent}</AnimatedHtml>}

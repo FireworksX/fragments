@@ -9,10 +9,6 @@ import {
   variableType,
 } from "@fragments/plugin-fragment";
 import { getStaticValue } from "@/shared/getStaticValue.ts";
-import { createNumberVariable } from "@/creators/variables/createNumberVariable.ts";
-import { createBooleanVariable } from "@/creators/variables/createBooleanVariable.ts";
-import { createStringVariable } from "@/creators/variables/createStringVariable.ts";
-import { createObjectVariable } from "@/creators/variables/createObjectVariable.ts";
 import { createNode } from "@/shared/createNode.ts";
 
 export const modules = [childrenModule];
@@ -27,12 +23,6 @@ export function createFragmentNode(
 
   return {
     ...fragmentNode,
-    renderTarget: renderTarget.document,
-    setRenderTarget: (renderTarget) => {
-      cache.mutate(nodeKey, {
-        renderTarget,
-      });
-    },
     horizontalGrow: getStaticValue(
       baseNode,
       "horizontalGrow",

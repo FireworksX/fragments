@@ -35,9 +35,9 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
   const { documentManager } = use(BuilderContext)
   const { selectionGraph, opacity, overflow, visible, zIndex, radius, fill, border } = useBuilderStyles()
   const { getColor, getNameColor } = useDisplayColor(documentManager)
-  const fillContent = useInterpolation([fill.type], v =>
-    ALLOW_FILL_TYPES.includes(v) ? getNameColor(v /* value */) : v === paintMode.Image ? 'Image' : ''
-  )
+  // const fillContent = useInterpolation([fill.type], v =>
+  //   ALLOW_FILL_TYPES.includes(v) ? getNameColor(v /* value */) : v === paintMode.Image ? 'Image' : ''
+  // )
 
   return (
     <Panel
@@ -82,7 +82,10 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
                       onReset={fill.onReset}
                       onClick={fill.onClick}
                     >
-                      {value && fillContent}
+                      {value &&
+                        to([fill.type], v =>
+                          ALLOW_FILL_TYPES.includes(v) ? getNameColor(value) : v === paintMode.Image ? 'Image' : ''
+                        )}
                     </InputSelect>
                   </>
                 )

@@ -11,7 +11,7 @@ import { getFieldValueMap } from '@fragments/plugin-fragment'
 import { useLayerFlexStyles } from '@/shared/hooks/fragmentBuilder/styles/useLayerFlexStyles'
 import { useRenderTarget } from '@/widgets/renderer/hooks/useRenderTarget'
 
-export const useLayerStyles = (layerLink: LinkKey) => {
+export const useLayerStyles = (layerLink: LinkKey, parents: LinkKey[] = []) => {
   const { documentManager } = use(BuilderContext)
   const [layerNode] = useGraph(documentManager, layerLink)
   const { isCanvas } = useRenderTarget()
@@ -21,8 +21,8 @@ export const useLayerStyles = (layerLink: LinkKey) => {
     ['whiteSpace', 'cornerRadius', 'padding'],
     documentManager
   )
-  const sizeStyles = useLayerSizeStyles(layerLink)
-  const positionStyles = useLayerPositionStyles(layerLink)
+  const sizeStyles = useLayerSizeStyles(layerLink, parents)
+  const positionStyles = useLayerPositionStyles(layerLink, parents)
   const sceneStyles = useLayerSceneStyles(layerLink)
   const fillStyles = useLayerFillStyles(layerLink)
   const flexStyles = useLayerFlexStyles(layerLink)

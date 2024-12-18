@@ -129,6 +129,7 @@ export const useBuilderLayout = () => {
         if (mode === 'plain') {
           paddingInvoker.onChange(maxValue)
         }
+        setPaddingMode(mode)
       },
       setCornerSideValue: (side, value) => {
         const nextSides = { ...parseCssSpacing(animatableValue(paddingInvoker.value)), [side]: value }

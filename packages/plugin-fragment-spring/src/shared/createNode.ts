@@ -12,6 +12,7 @@ import { createStringVariable } from "@/creators/variables/createStringVariable.
 import { createFragmentNode } from "@/creators/createFragmentNode.ts";
 import { createObjectVariable } from "@/creators/variables/createObjectVariable.ts";
 import { createArrayVariable } from "@/creators/variables/createArrayVariable.ts";
+import { createFragmentInstanceNode } from "@/creators/createFragmentInstanceNode.ts";
 
 const BREAKPOINT_GAP = 50;
 
@@ -46,6 +47,8 @@ export function createNode(
     }
   } else if (node._type === nodes.Fragment) {
     node = createFragmentNode(node, cache);
+  } else if (node._type === nodes.FragmentInstance) {
+    node = createFragmentInstanceNode(node, cache);
   }
 
   if (appendTo) {

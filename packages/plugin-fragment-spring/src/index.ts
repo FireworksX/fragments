@@ -1,4 +1,5 @@
 import { GraphState, isGraph, LinkKey, Plugin } from "@graph-state/core";
+import { renderTarget } from "@fragments/plugin-fragment";
 import { BaseNode, FrameNode, StateEntity } from "@/types";
 import { createFrameNode } from "@/creators/createFrameNode.ts";
 import { makeSnapshot } from "@/shared/makeSnapshot.ts";
@@ -6,12 +7,20 @@ import { applySnapshot } from "@/shared/applySnapshot.ts";
 import { createNode } from "@/shared/createNode.ts";
 import { createBreakpointNode } from "@/creators/createBreakpointNode.ts";
 import { createTextNode } from "@/creators/createTextNode.ts";
-import { toJsonNode } from "@/shared/toJsonNode.ts";
 import { createImageNode } from "@/creators/createImageNode.ts";
+import { createFragmentInstanceNode } from "@/creators/createFragmentInstanceNode.ts";
 
 const plugin: (root: LinkKey) => Plugin =
   (root: LinkKey) => (state: GraphState<StateEntity>) => {
     state.$fragment = {
+      renderTarget: renderTarget.document,
+      setRenderTarget: (renderTarget) => {
+        state.$fragment.renderTarget = renderTarget;
+        state.mutate(root, (prev) => ({
+          updateIndex: (prev?.updateIndex ?? 0) + 1,
+        }));
+      },
+
       findPrimaryLayer: () =>
         state.resolve(
           (state.resolve(root)?.children ?? []).find((child) =>
@@ -30,6 +39,9 @@ const plugin: (root: LinkKey) => Plugin =
 
       createImageNode: (initialNode: Partial<FrameNode>) =>
         createImageNode(initialNode, state),
+
+      createFragmentInstanceNode: (initialNode: Partial<FrameNode>) =>
+        createFragmentInstanceNode(initialNode, state),
 
       createNode: (initialNode: Partial<BaseNode>, appendTo?: LinkKey = root) =>
         createNode(initialNode, state, appendTo),

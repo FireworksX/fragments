@@ -6,24 +6,31 @@ import { useGraph } from '@graph-state/react'
 import { useMeasure } from 'react-use'
 import { renderTarget } from '@fragments/plugin-fragment'
 import { useBreakpoints } from '@/shared/hooks/fragmentBuilder/useBreakpoints'
+import { useRenderTarget } from '@/widgets/renderer/hooks/useRenderTarget'
 
 export interface DocumentRenderer {
   layerKey?: LinkKey
-  style?: CSSProperties
+  renderParents?: LinkKey[]
+  // style?: CSSProperties
 }
 
-export const Fragment: FC<DocumentRenderer> = ({ layerKey, style }) => {
+export const Fragment: FC<DocumentRenderer> = ({ layerKey, renderParents = [] }) => {
   const { documentManager } = useContext(BuilderContext)
   const [fragmentGraph] = useGraph(documentManager, layerKey)
-  const fragmentRenderTarget = fragmentGraph.renderTarget
+  const { isDocument } = useRenderTarget()
   const [ref, { width }] = useMeasure()
   const { getThreshold } = useBreakpoints()
 
-  if (fragmentRenderTarget === renderTarget.document) {
+  if (isDocument) {
     const renderLayer = getThreshold(width)?.link
-
-    return <div ref={ref}>{renderLayer && <Frame layerKey={renderLayer} style={style} />}</div>
+    return (
+      <div ref={ref}>
+        {renderLayer && <Frame layerKey={renderLayer} renderParents={[...renderParents, layerKey]} />}
+      </div>
+    )
   }
 
-  return fragmentGraph?.children?.map(childLink => <Frame key={childLink} layerKey={childLink} style={style} />)
+  return fragmentGraph?.children?.map(childLink => (
+    <Frame key={childLink} layerKey={childLink} renderParents={[...renderParents, layerKey]} />
+  ))
 }

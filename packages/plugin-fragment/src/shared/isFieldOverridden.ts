@@ -12,11 +12,11 @@ export function isFieldOverridden<T extends BaseNode>(
 
   // Проверяем значение поля в текущем узле
   const resolvedNode = cache?.resolve(node) as any;
-  const value = resolvedNode[field];
+  const value = resolvedNode?.[field];
 
   // Если значение существует в текущем узле, оно не перезаписывается
   // Если нет overrideFrom, то поле не перезаписывается
-  if (isValue(value) || !resolvedNode.overrideFrom) {
+  if (isValue(value) || !resolvedNode?.overrideFrom) {
     return false;
   }
 

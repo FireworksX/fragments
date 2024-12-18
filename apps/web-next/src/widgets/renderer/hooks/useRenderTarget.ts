@@ -1,16 +1,19 @@
 import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
-import { renderTarget } from '@fragments/plugin-fragment-spring'
+import { renderTarget as defRenderTarget } from '@fragments/plugin-fragment-spring'
 import { stateAlias } from '@/views/FragmentDetail/ui/FragmentDetail'
 
 export const useRenderTarget = () => {
   const { documentManager } = useContext(BuilderContext)
-  const [fragmentGraph] = useGraph(documentManager, documentManager[stateAlias].root)
+  const renderTarget = documentManager[stateAlias].renderTarget
+
+  // Subscribe to root fragment
+  useGraph(documentManager, documentManager[stateAlias].root)
 
   return {
-    renderTarget: fragmentGraph?.renderTarget,
-    isCanvas: fragmentGraph?.renderTarget === renderTarget.canvas,
-    isDocument: fragmentGraph?.renderTarget === renderTarget.document
+    renderTarget: renderTarget,
+    isCanvas: renderTarget === defRenderTarget.canvas,
+    isDocument: renderTarget === defRenderTarget.document
   }
 }

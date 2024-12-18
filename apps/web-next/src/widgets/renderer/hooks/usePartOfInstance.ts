@@ -1,0 +1,18 @@
+import { nodes, renderTarget } from '@fragments/plugin-fragment-spring'
+import { LinkKey } from '@graph-state/core'
+import { use } from 'react'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
+
+export const usePartOfInstance = (layerKey: LinkKey, parents: LinkKey[] = []) => {
+  const { documentManager } = use(BuilderContext)
+  const indexOfInstance = parents.findIndex(key => documentManager.entityOfKey(key)._type === nodes.FragmentInstance)
+  const deepIndex = parents
+    .toReversed()
+    .findIndex(key => documentManager.entityOfKey(key)._type === nodes.FragmentInstance)
+
+  return {
+    isPartOfInstance: indexOfInstance !== -1,
+    deepIndex,
+    instanceKey: parents[indexOfInstance]
+  }
+}

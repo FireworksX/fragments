@@ -11,14 +11,15 @@ import { useLayerStyles } from '@/shared/hooks/fragmentBuilder/useLayerStyles'
 
 interface LayerProps {
   layerKey: LinkKey
-  style?: CSSProperties
+  renderParents: LinkKey[]
+  // style?: CSSProperties
 }
 
-const Frame: FC<LayerProps> = ({ layerKey, style }) => {
+const Frame: FC<LayerProps> = ({ layerKey, renderParents = [] }) => {
   const { documentManager } = useContext(BuilderContext)
   const [layerGraph] = useGraph(documentManager, layerKey)
-  const cssStyles = useLayerStyles(layerKey)
-  const extendedStyle = useExtendStyle(cssStyles, style)
+  const cssStyles = useLayerStyles(layerKey, renderParents)
+  // const extendedStyle = useExtendStyle(cssStyles, style)
   const attributes = layerGraph?.attributes
 
   if (!layerGraph) {
@@ -26,17 +27,17 @@ const Frame: FC<LayerProps> = ({ layerKey, style }) => {
   }
 
   if (layerGraph?._type === nodes.FragmentInstance) {
-    return <FragmentInstance layerKey={layerKey} />
+    return <FragmentInstance layerKey={layerKey} renderParents={renderParents} />
   }
 
   if (layerGraph?._type === nodes.Text) {
-    return <Text layerKey={layerKey} />
+    return <Text layerKey={layerKey} renderParents={renderParents} />
   }
 
   return (
-    <animated.div {...attributes} style={extendedStyle} data-key={layerKey}>
+    <animated.div {...attributes} style={cssStyles} data-key={layerKey}>
       {layerGraph?.children?.filter(Boolean).map(child => (
-        <Frame key={child} layerKey={child} />
+        <Frame key={child} layerKey={child} renderParents={[...renderParents, layerKey]} />
       ))}
     </animated.div>
   )

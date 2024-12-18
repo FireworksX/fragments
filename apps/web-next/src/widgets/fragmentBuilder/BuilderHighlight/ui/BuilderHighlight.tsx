@@ -17,18 +17,18 @@ interface BuilderLayerHighlightProps extends PropsWithChildren {
 
 const BuilderHighlight: FC<BuilderLayerHighlightProps> = ({ className, children }) => {
   const { layers } = useFragmentLayers()
-  // const { opacity } = useBuilderHighlight()
+  const { opacity } = useBuilderHighlight()
 
   return (
-    <animated.div className={cn(className, styles.root)}>
+    <animated.div className={cn(className, styles.root)} style={{ opacity }}>
       {layers.map(breakpointKey => (
         <LayerHighlightNode
           key={breakpointKey}
           layerKey={breakpointKey}
-          // resizeNode={<LayerSelectedResize />}
-          // renderChildren={layerNode => {
-          //   return <HeaderLayer className={styles.layerWrapper} layerKey={breakpointKey} />
-          // }}
+          resizeNode={<LayerSelectedResize />}
+          renderChildren={layerNode => {
+            return <HeaderLayer className={styles.layerWrapper} layerKey={breakpointKey} />
+          }}
         />
       ))}
     </animated.div>
