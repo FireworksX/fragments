@@ -8,8 +8,8 @@ import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSe
 
 export const useBuilderFragmentInstance = () => {
   const { documentManager } = useContext(BuilderContext)
-  const { selection, selectionGraph } = useBuilderSelection()
-  const [fragment] = useGraph(documentManager, selectionGraph?.children?.at(0))
+  const { selectionGraph } = useBuilderSelection()
+  const [fragment] = useGraph(documentManager, selectionGraph?.fragment)
   const fragmentProperties = useGraphStack(documentManager, fragment?.properties ?? [])
 
   return {

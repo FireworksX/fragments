@@ -63,6 +63,7 @@ export { isOverriddenNode } from "@/shared/isOverriddenNode.ts";
 export { moveNode } from "@/shared/moveNode.ts";
 export { createNode } from "@/shared/createNode.ts";
 export { getResolvedValue } from "@/shared/getResolvedValue.ts";
+export { restoreField } from "@/shared/restoreField.ts";
 export * from "@/shared/cssSpacingParser.ts";
 // export { toJsonNode } from "@/shared/toJsonNode.ts";
 

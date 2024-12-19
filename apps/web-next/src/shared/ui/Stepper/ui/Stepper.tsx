@@ -5,6 +5,7 @@ import Plus from '@/shared/icons/plus.svg'
 import Minus from '@/shared/icons/minus.svg'
 import { animated } from '@react-spring/web'
 import { Touchable } from '@/shared/ui/Touchable'
+import { getFixedRationByStep } from '@/shared/utils/getFixedRationByStep'
 
 interface StepperProps {
   className?: string
@@ -20,8 +21,8 @@ const Stepper: FC<StepperProps> = animated(({ className, value, step = 1, min = 
     return null
   }
 
-  const incNextValue = +(value + step > max ? max : value + step).toFixed(1)
-  const decNextValue = +(value - step < min ? min : value - step).toFixed(1)
+  const incNextValue = +(value + step > max ? max : value + step).toFixed(getFixedRationByStep(step))
+  const decNextValue = +(value - step < min ? min : value - step).toFixed(getFixedRationByStep(step))
 
   return (
     <div className={cn(styles.root, className)}>

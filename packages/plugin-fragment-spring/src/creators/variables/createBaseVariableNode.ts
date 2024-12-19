@@ -1,12 +1,13 @@
 import { BaseNode } from "@/types";
 import { generateId, isValue } from "@fragments/utils";
 import { GraphState } from "@graph-state/core";
-import { nodes } from "@fragments/plugin-fragment";
+import { nodes, variableType } from "@fragments/plugin-fragment";
 import { createCachedInterpolate } from "@/shared/cachedInterpolate.ts";
 import { getStableValue } from "@/shared/getStableValue.ts";
 import { getStaticValue } from "@/shared/getStaticValue.ts";
 import { valueSetter } from "../../../../plugin-state-builder/src/shared/valueSetter.ts";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
+import { SpringValue } from "@fragments/springs-factory";
 
 const defaultValue = {
   staticDefaultValue: false,
@@ -54,6 +55,16 @@ export function createBaseVariableNode(
       }
     },
 
+    setValue(value) {
+      if (options.staticDefaultValue) {
+        cache.mutate(nodeKey, {
+          value: value,
+        });
+      } else {
+        setValueToNode(nodeKey, "value", value, cache);
+      }
+    },
+
     getValue() {
       const graph = cache.resolve(nodeKey);
       const value = graph.value;
@@ -63,9 +74,9 @@ export function createBaseVariableNode(
         return isValue(value) ? value : defaultValue;
       }
 
-      return cacheInterpolate([value, defaultValue], (val, defValue) =>
-        isValue(val) ? val : defValue
-      );
+      return cacheInterpolate([value, defaultValue], (val, defValue) => {
+        return isValue(val) ? val : defValue;
+      });
     },
   };
 

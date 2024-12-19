@@ -1,6 +1,7 @@
 import { BaseNode } from "@/types";
 import { GraphState } from "@graph-state/core";
 import { isValue } from "@fragments/utils";
+import { isVariableLink } from "@/shared/isVariableLink.ts";
 
 export function getFieldValue<N extends BaseNode>(
   node: N,
@@ -13,6 +14,10 @@ export function getFieldValue<N extends BaseNode>(
 
   // Если значение существует, возвращаем его
   if (isValue(currentValue)) {
+    if (isVariableLink(currentValue)) {
+      return cache.resolve(currentValue)?.getValue?.() ?? currentValue;
+    }
+
     return currentValue;
   }
 

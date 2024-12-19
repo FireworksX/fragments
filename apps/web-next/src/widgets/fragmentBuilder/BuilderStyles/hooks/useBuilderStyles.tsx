@@ -28,7 +28,6 @@ const visible: TabsSelectorItem[] = [
 const overflowOptions = Object.keys(overflow)
 
 export const useBuilderStyles = () => {
-  const { documentManager } = useContext(BuilderContext)
   const { selection, selectionGraph } = useBuilderSelection()
   const isTextNode = selectionGraph?._type === nodes.Image
   const isImageNode = selectionGraph?._type === nodes.Text

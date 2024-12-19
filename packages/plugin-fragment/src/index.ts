@@ -32,6 +32,7 @@ export { deepMergeObjects } from "@/shared/deepMergeObjexts.ts";
 export { getFieldValue } from "@/shared/getFieldValue.ts";
 export { getFieldValueMap } from "@/shared/getFieldValueMap.ts";
 export { isFieldOverridden } from "@/shared/isFieldOverridden.ts";
+export { restoreVariableField } from "@/shared/restoreVariableField.ts";
 export { toPercent } from "@/shared/toPercent.ts";
 export { toPx } from "@/shared/toPx.ts";
 export * from "./definitions.ts";

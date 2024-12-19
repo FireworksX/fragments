@@ -4,7 +4,7 @@ import { ResultSetter } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { isComputedValueLink } from '@/shared/utils/isComputedValueLink'
 import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
-import { variableType } from '@fragments/plugin-fragment-spring'
+import { restoreField, variableType } from '@fragments/plugin-fragment-spring'
 import { DropdownRenderOption } from '@/shared/ui/RenderDropdown'
 import { useFragmentComputedValues } from '@/shared/hooks/fragmentBuilder/useFragmentComputedValues'
 import { noop } from '@fragments/utils'
@@ -62,7 +62,7 @@ export const useBuilderFieldVariable = (layer: Field) => {
   }
 
   const handleReset = (key: string) => {
-    documentManager.restoreField(layer, key)
+    restoreField(layer, key, documentManager)
   }
 
   const openTransform = ({ key, value }) => {

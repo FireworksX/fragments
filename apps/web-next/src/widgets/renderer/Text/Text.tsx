@@ -19,7 +19,7 @@ interface TextProps {
 export const Text: FC<TextProps> = ({ layerKey, renderParents }) => {
   const { documentManager, builderManager } = useContext(BuilderContext)
   const [layerGraph] = useGraph(documentManager, layerKey)
-  const layerInvoker = useLayerInvoker(layerKey)
+  useGraph(documentManager, layerGraph?.variableLink)
   const textContent = layerGraph?.getContent?.()
   const cssStyles = useLayerStyles(layerKey, renderParents)
   const { isTextEditing, focus } = useBuilderManager()

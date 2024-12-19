@@ -85,7 +85,7 @@ export const FragmentBuilder: FC<FragmentBuilderProps> = ({ className }) => {
             imageNode={<BuilderImage />}
             attributesNode={<BuilderAttributes />}
             // cssNode={<BuilderCssOverride />}
-            // instancePropsNode={<BuilderFragmentInstance />}
+            instancePropsNode={<BuilderFragmentInstance />}
           />
 
           <BuilderFloatBar />

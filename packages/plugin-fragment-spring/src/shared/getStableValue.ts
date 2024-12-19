@@ -6,6 +6,7 @@ import { Interpolation } from "@react-spring/web";
 import { SpringValue } from "@fragments/springs-factory";
 import { isObject, isValue } from "@fragments/utils";
 import { deepMergeObjects } from "@fragments/plugin-fragment";
+import { isVariableLink } from "@/shared/isVariableLink.ts";
 
 export function getStableValue<T>(
   node: BaseNode,
@@ -21,6 +22,10 @@ export function getStableValue<T>(
   const currentValue = (node as any)[field];
 
   if (isValue(currentValue)) {
+    if (isVariableLink(currentValue)) {
+      return currentValue;
+    }
+
     if (
       currentValue instanceof SpringValue ||
       currentValue instanceof Interpolation

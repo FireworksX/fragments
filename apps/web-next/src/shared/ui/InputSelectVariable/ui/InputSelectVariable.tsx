@@ -48,7 +48,7 @@ export const InputSelectVariable: FC<InputSelectVariableProps> = ({
       </animated.div>
 
       {(children || kind === 'computed') && onReset && (
-        <Touchable className={styles.reset} onClick={onReset}>
+        <Touchable className={styles.reset} isCapture onClick={onReset}>
           <Close width={11} height={11} />
         </Touchable>
       )}

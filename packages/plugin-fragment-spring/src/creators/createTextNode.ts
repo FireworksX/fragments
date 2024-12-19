@@ -88,9 +88,9 @@ export function createTextNode(
       if (variableLink) {
         const variableValue = getResolvedValue(variableLink, cache);
 
-        return to(variableValue, (v) =>
-          wrapTextInParagraphWithAttributes(v, styleAttributes)
-        );
+        return to(variableValue, (v) => {
+          return wrapTextInParagraphWithAttributes(v, styleAttributes);
+        });
       }
 
       return content;

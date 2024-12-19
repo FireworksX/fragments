@@ -7,7 +7,7 @@ import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
 import { Fragment } from '@/widgets/renderer/Fragment/Fragment'
 import { useLayerStyles } from '@/shared/hooks/fragmentBuilder/useLayerStyles'
-import { getFieldValueMap } from '@fragments/plugin-fragment'
+import { getFieldValue, getFieldValueMap } from '@fragments/plugin-fragment'
 
 export interface DocumentRenderer {
   layerKey?: LinkKey
@@ -18,29 +18,12 @@ export interface DocumentRenderer {
 export const FragmentInstance: FC<DocumentRenderer> = ({ layerKey, renderParents = [] }) => {
   const { documentManager } = useContext(BuilderContext)
   const [instanceGraph] = useGraph(documentManager, layerKey)
-  const cssStyles = useLayerStyles(layerKey)
-  const { layoutSizingVertical, layoutSizingHorizontal } = getFieldValueMap(
-    layerKey,
-    ['layoutSizingHorizontal', 'layoutSizingVertical'],
-    documentManager
-  )
+  const cssStyles = useLayerStyles(layerKey, renderParents)
+  const instanceFragment = getFieldValue(instanceGraph, 'fragment', documentManager)
 
   return (
     <animated.div data-key={layerKey} data-type={nodes.FragmentInstance} style={cssStyles}>
-      <Fragment
-        layerKey={instanceGraph?.fragment}
-        renderParents={[...renderParents, layerKey]}
-        // style={{
-        //   width: source =>
-        //     to([layoutSizingHorizontal, source], (hSizing, sourceValue) =>
-        //       hSizing === sizing.Hug ? sourceValue : '100%'
-        //     ),
-        //   height: source =>
-        //     to([layoutSizingVertical, source], (wSizing, sourceValue) =>
-        //       wSizing === sizing.Hug ? sourceValue : '100%'
-        //     )
-        // }}
-      />
+      <Fragment layerKey={instanceFragment} renderParents={[...renderParents, layerKey]} />
     </animated.div>
   )
 }

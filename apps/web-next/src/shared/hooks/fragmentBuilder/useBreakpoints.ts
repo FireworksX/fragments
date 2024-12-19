@@ -13,9 +13,9 @@ const DEFAULT_BREAKPOINTS = [
   { name: 'Desktop', width: 1920 }
 ]
 
-export const useBreakpoints = () => {
+export const useBreakpoints = (customFragment: LinkKey) => {
   const { documentManager } = useContext(BuilderContext)
-  const [fragmentGraph] = useGraph(documentManager, documentManager.fragment)
+  const [fragmentGraph] = useGraph(documentManager, customFragment ?? documentManager.fragment)
   const childrenValues = useGraphStack(documentManager, fragmentGraph?.children ?? [])
   const primaryLayer = childrenValues.find(child => child.isRootLayer())
   const breakpointValues = childrenValues.filter(child => child.isBreakpoint)
@@ -30,6 +30,17 @@ export const useBreakpoints = () => {
       link: documentManager.keyOfEntity(breakpoint),
       threshold: animatableValue(breakpoint.threshold)
     }))
+
+    if (values.length === 0) {
+      return [
+        {
+          from: 0,
+          to: Infinity,
+          link: documentManager.keyOfEntity(primaryLayer)
+        }
+      ]
+    }
+
     // Сначала сортируем брейкпоинты по возрастанию
     const sortedBreakpoints = [...values].sort((a, b) => a.threshold - b.threshold)
 

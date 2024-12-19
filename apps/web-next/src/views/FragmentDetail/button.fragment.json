@@ -16,12 +16,16 @@
     "visible": true,
     "overflow": "hidden",
     "overrides": [],
-    "properties": []
+    "properties": [
+      "Variable:8e348e2dsgs255afd",
+      "Variable:bc54149a87db5",
+      "Variable:g43ggreger"
+    ]
   },
   "Frame:gsgsdgsd323r23": {
     "_type": "Frame",
     "_id": "gsgsdgsd323r23",
-    "opacity": 1,
+    "opacity": "Variable:g43ggreger",
     "visible": true,
     "overflow": "visible",
     "children": [
@@ -55,7 +59,7 @@
     "paddingTop": 30,
     "paddingBottom": 30,
     "layerWrap": false,
-    "solidFill": "rgba(255, 255, 255, 1)",
+    "solidFill": "rgba(241, 44, 22, 1)",
     "overrides": [],
     "name": "Button"
   },
@@ -72,11 +76,12 @@
     "height": 34.661758190868426,
     "layoutSizingHorizontal": "Hug",
     "layoutSizingVertical": "Hug",
-    "visible": true,
+    "visible": "Variable:bc54149a87db5",
     "opacity": 1,
     "overflow": "hidden",
     "content": "<p style=\"font-size: 14px; color: rgba(34, 25, 77, 0.37)\">Button</p>",
-    "whiteSpace": "normal"
+    "whiteSpace": "normal",
+    "variableLink": "Variable:8e348e2dsgs255afd"
   },
   "Text:ca553c1ea125.attributes": {
     "_type": "Text",
@@ -92,10 +97,40 @@
     "textDecoration": "",
     "lineHeight": "",
     "letterSpacing": "",
-    "color": "rgba(34, 25, 77, 0.37)"
+    "color": "rgba(0, 0, 0, 1)"
   },
   "Frame:d12bd11e59ee4.attributes": {
     "_type": "Frame",
     "_id": "d12bd11e59ee4.attributes"
+  },
+  "Variable:8e348e2dsgs255afd": {
+    "_type": "Variable",
+    "_id": "8e348e2dsgs255afd",
+    "defaultValue": "Button",
+    "name": "Content",
+    "required": false,
+    "type": "String",
+    "isTextarea": false
+  },
+  "Variable:bc54149a87db5": {
+    "_type": "Variable",
+    "type": "Boolean",
+    "defaultValue": true,
+    "_id": "bc54149a87db5",
+    "name": "hasIcon",
+    "value": null,
+    "required": false
+  },
+  "Variable:g43ggreger": {
+    "_type": "Variable",
+    "type": "Number",
+    "defaultValue": 1,
+    "step": 0.01,
+    "max": 1,
+    "min": 0,
+    "_id": "g43ggreger",
+    "name": "opacity",
+    "value": null,
+    "required": false
   }
 }
