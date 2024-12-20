@@ -1,6 +1,6 @@
 import { GraphState } from "@graph-state/core";
 import { BaseNode, WithSpringFillType } from "@/types";
-import { getStableValue } from "@/shared/getStableValue.ts";
+import { getSpringValue } from "@/shared/getSpringValue.ts";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
 
 export function fillTypeModule<T extends BaseNode>(
@@ -9,7 +9,7 @@ export function fillTypeModule<T extends BaseNode>(
 ): WithSpringFillType<T> {
   return {
     ...node,
-    fillType: getStableValue(node, "fillType", null, cache),
+    fillType: getSpringValue(node, "fillType", null, cache),
     setFillType: (value: number) =>
       setValueToNode(node, "fillType", value, cache),
   };

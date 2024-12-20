@@ -1,7 +1,7 @@
 import { nodes, variableType } from "@/definitions.ts";
 import { createBaseVariableNode } from "@/creators/variables/createBaseVariableNode.ts";
 import { GraphState } from "@graph-state/core";
-import { getStableValue } from "@/shared/getStableValue.ts";
+import { getSpringValue } from "@/shared/getSpringValue.ts";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
 
 export type CreateNumberOptions = Partial<{
@@ -31,14 +31,10 @@ export const createStringVariable = (
 
   return {
     ...baseNode,
-    required: getStableValue(baseNode, "required", false, cache),
     type: variableType.String,
-    placeholder: getStableValue(baseNode, "placeholder", null, cache),
-    isTextarea: getStableValue(baseNode, "isTextarea", false, cache),
+    placeholder: getSpringValue(baseNode, "placeholder", null, cache),
+    isTextarea: getSpringValue(baseNode, "isTextarea", false, cache),
 
-    setRequired(value) {
-      setValueToNode(baseNode, "required", value, cache);
-    },
     setPlaceholder(value) {
       setValueToNode(baseNode, "placeholder", value, cache);
     },

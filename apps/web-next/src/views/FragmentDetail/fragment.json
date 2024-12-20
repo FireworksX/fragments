@@ -24,7 +24,10 @@
     "_type": "FragmentInstance",
     "_id": "buttonInstance",
     "fragment": "Fragment:buttonid",
-    "parent": "$$Frame:d12bd11e59ee4"
+    "parent": "$$Frame:d12bd11e59ee4",
+    "props": {
+      "8e348e2dsgs255afd": "Button 1"
+    }
   },
   "Frame:d12bd11e59ee4": {
     "_type": "Frame",

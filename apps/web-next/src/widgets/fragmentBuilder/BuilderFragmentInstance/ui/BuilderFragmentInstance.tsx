@@ -7,6 +7,7 @@ import { variableType } from '@fragments/plugin-fragment-spring'
 import { InstancePropertyNumber } from './components/InstancePropertyNumber'
 import { InstancePropertyString } from './components/InstancePropertyString'
 import { InstancePropertyBoolean } from './components/InstancePropertyBoolean'
+import { InstancePropertyGeneric } from './components/InstancePropertyGeneric'
 
 interface BuilderSizeProps {
   className?: string
@@ -17,31 +18,9 @@ const BuilderFragmentInstance: FC<BuilderSizeProps> = ({ className }) => {
 
   return (
     <Panel className={cn(styles.root, className)} title={title} aside={<div className={styles.aside}>Fragment</div>}>
-      {properties.map(property => {
-        if (property.type === variableType.Number) {
-          return <InstancePropertyNumber key={property.name} {...property} onChange={property.setValue} />
-        }
-        if (property.type === variableType.String) {
-          return (
-            <InstancePropertyString
-              key={property.name}
-              name={property.name}
-              value={property.value}
-              onChange={property.setValue}
-            />
-          )
-        }
-        if (property.type === variableType.Boolean) {
-          return (
-            <InstancePropertyBoolean
-              key={property.name}
-              name={property.name}
-              value={property.value}
-              onChange={property.onChange}
-            />
-          )
-        }
-      })}
+      {properties.map(property => (
+        <InstancePropertyGeneric key={property._id} property={property} />
+      ))}
     </Panel>
   )
 }

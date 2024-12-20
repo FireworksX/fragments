@@ -1,7 +1,7 @@
 import { BaseNode, WithSpringPosition } from "@/types";
 import { GraphState } from "@graph-state/core";
 import { positionType } from "@/definitions.ts";
-import { getStableValue } from "@/shared/getStableValue.ts";
+import { getSpringValue } from "@/shared/getSpringValue.ts";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
 
 export function positionModule<T extends BaseNode>(
@@ -10,9 +10,9 @@ export function positionModule<T extends BaseNode>(
 ): WithSpringPosition<T> {
   return {
     ...node,
-    top: getStableValue(node, "top", 0, cache),
-    left: getStableValue(node, "left", 0, cache),
-    positionType: getStableValue<keyof typeof positionType>(
+    top: getSpringValue(node, "top", 0, cache),
+    left: getSpringValue(node, "left", 0, cache),
+    positionType: getSpringValue<keyof typeof positionType>(
       node,
       "positionType",
       positionType.absolute,

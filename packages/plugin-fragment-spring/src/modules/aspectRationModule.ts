@@ -1,5 +1,5 @@
 import { isValue } from "@fragments/utils";
-import { getStableValue } from "@/shared/getStableValue.ts";
+import { getSpringValue } from "@/shared/getSpringValue.ts";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
 import { getFieldValue } from "@fragments/plugin-fragment";
 import { BaseNode, WithSpringAspectRatio } from "@/types";
@@ -27,7 +27,7 @@ export const aspectRatioModule = <T extends BaseNode>(
 
   return {
     ...node,
-    aspectRatio: getStableValue(node, "aspectRatio", null, cache),
+    aspectRatio: getSpringValue(node, "aspectRatio", null, cache),
     isSynced,
     syncSize,
   };

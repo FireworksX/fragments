@@ -1,6 +1,6 @@
 import { GraphState } from "@graph-state/core";
 import { BaseNode, WithSpringVisible } from "@/types";
-import { getStableValue } from "@/shared/getStableValue.ts";
+import { getSpringValue } from "@/shared/getSpringValue.ts";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
 
 export function visibleModule<T extends BaseNode>(
@@ -9,7 +9,7 @@ export function visibleModule<T extends BaseNode>(
 ): WithSpringVisible<T> {
   return {
     ...node,
-    visible: getStableValue(node, "visible", true, cache),
+    visible: getSpringValue(node, "visible", true, cache),
     setVisible: (value: number) =>
       setValueToNode(node, "visible", value, cache),
   };

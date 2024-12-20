@@ -1,6 +1,6 @@
 import { GraphState } from "@graph-state/core";
 import { BaseNode, WithSpringZIndex } from "@/types";
-import { getStableValue } from "@/shared/getStableValue.ts";
+import { getSpringValue } from "@/shared/getSpringValue.ts";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
 
 export function zIndexModule<T extends BaseNode>(
@@ -9,7 +9,7 @@ export function zIndexModule<T extends BaseNode>(
 ): WithSpringZIndex<T> {
   return {
     ...node,
-    zIndex: getStableValue(node, "zIndex", null, cache),
+    zIndex: getSpringValue(node, "zIndex", null, cache),
     setZIndex: (value: number) => setValueToNode(node, "zIndex", value, cache),
   };
 }

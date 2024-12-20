@@ -1,7 +1,7 @@
 import { nodes, variableType } from "@/definitions.ts";
 import { createBaseVariableNode } from "@/creators/variables/createBaseVariableNode.ts";
 import { GraphState } from "@graph-state/core";
-import { getStableValue } from "@/shared/getStableValue.ts";
+import { getSpringValue } from "@/shared/getSpringValue.ts";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
 import { base } from "next/dist/build/webpack/config/blocks/base";
 
@@ -29,16 +29,12 @@ export const createNumberVariable = (
 
   return {
     ...baseNode,
-    required: getStableValue(baseNode, "required", false, cache),
     type: variableType.Number,
-    min: getStableValue(baseNode, "min", 1, cache),
-    max: getStableValue(baseNode, "max", 100, cache),
-    step: getStableValue(baseNode, "step", 1, cache),
-    displayStepper: getStableValue(baseNode, "displayStepper", true, cache),
+    min: getSpringValue(baseNode, "min", 1, cache),
+    max: getSpringValue(baseNode, "max", 100, cache),
+    step: getSpringValue(baseNode, "step", 1, cache),
+    displayStepper: getSpringValue(baseNode, "displayStepper", true, cache),
 
-    setRequired(value) {
-      setValueToNode(baseNode, "required", value, cache);
-    },
     setMin(value) {
       setValueToNode(baseNode, "min", value, cache);
     },

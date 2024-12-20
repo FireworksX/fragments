@@ -2,7 +2,7 @@ import { GraphState, isLinkKey, LinkKey } from "@graph-state/core";
 import { nodes } from "@/definitions.ts";
 import { BaseNode, WithSpringSolidFill } from "@/types";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
-import { getStableValue } from "@/shared/getStableValue.ts";
+import { getSpringValue } from "@/shared/getSpringValue.ts";
 import { getRandomColor } from "@/shared/random.ts";
 
 export function solidFillModule<T extends BaseNode>(
@@ -28,7 +28,7 @@ export function solidFillModule<T extends BaseNode>(
 
   return {
     ...node,
-    solidFill: getStableValue(node, "solidFill", null, cache),
+    solidFill: getSpringValue(node, "solidFill", null, cache),
     setSolidFill,
   };
 }

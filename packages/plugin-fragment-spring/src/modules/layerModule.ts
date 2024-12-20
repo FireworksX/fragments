@@ -1,6 +1,6 @@
 import { GraphState } from "@graph-state/core";
 import { BaseNode, WithLayer, WithSpringLayer } from "@/types";
-import { getStableValue } from "@/shared/getStableValue.ts";
+import { getSpringValue } from "@/shared/getSpringValue.ts";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
 import {
   layerAlign,
@@ -15,22 +15,22 @@ export function layerModule<T extends BaseNode>(
 ): WithSpringLayer<T> {
   return {
     ...node,
-    layerMode: getStableValue(node, "layerMode", layerMode.none, cache),
-    layerAlign: getStableValue(node, "layerAlign", layerAlign.start, cache),
-    layerDirection: getStableValue(
+    layerMode: getSpringValue(node, "layerMode", layerMode.none, cache),
+    layerAlign: getSpringValue(node, "layerAlign", layerAlign.start, cache),
+    layerDirection: getSpringValue(
       node,
       "layerDirection",
       layerDirection.horizontal,
       cache
     ),
-    layerDistribute: getStableValue(
+    layerDistribute: getSpringValue(
       node,
       "layerDistribute",
       layerDistribute.start,
       cache
     ),
-    layerWrap: getStableValue(node, "layerWrap", false, cache),
-    layerGap: getStableValue(node, "layerGap", 0, cache),
+    layerWrap: getSpringValue(node, "layerWrap", false, cache),
+    layerGap: getSpringValue(node, "layerGap", 0, cache),
 
     setLayerMode(mode: typeof layerMode) {
       if (Object.keys(layerMode).includes(mode)) {

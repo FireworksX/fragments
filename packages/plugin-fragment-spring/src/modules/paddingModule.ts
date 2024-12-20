@@ -1,6 +1,6 @@
 import { GraphState } from "@graph-state/core";
 import { BaseNode, WithSpringPadding } from "@/types";
-import { getStableValue } from "@/shared/getStableValue.ts";
+import { getSpringValue } from "@/shared/getSpringValue.ts";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
 import {
   parseCssSpacing,
@@ -14,7 +14,7 @@ export function paddingModule<T extends BaseNode>(
 ): WithSpringPadding<T> {
   return {
     ...node,
-    padding: getStableValue(node, "padding", "0px", cache),
+    padding: getSpringValue(node, "padding", "0px", cache),
 
     setPadding(value) {
       if (typeof value === "number") {

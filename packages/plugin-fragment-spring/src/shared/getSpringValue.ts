@@ -8,7 +8,7 @@ import { isObject, isValue } from "@fragments/utils";
 import { deepMergeObjects } from "@fragments/plugin-fragment";
 import { isVariableLink } from "@/shared/isVariableLink.ts";
 
-export function getStableValue<T>(
+export function getSpringValue<T>(
   node: BaseNode,
   field: string,
   defaultValue: T,
@@ -33,24 +33,14 @@ export function getStableValue<T>(
       return currentValue;
     }
 
-    // Если значение отсутствует, возвращаем defaultValue
-    if (typeof defaultValue === "object" && defaultValue !== null) {
-      if (Array.isArray(defaultValue)) {
-        // Если defaultValue — массив, создаём копию
-        return [
-          ...defaultValue.map((v) => new SpringValue(v)),
-        ] as SpringValue<T>;
-      }
-      // Если defaultValue — объект, создаём глубокую копию с рекурсией
-      return deepMergeObjects({}, defaultValue) as SpringValue<T>;
+    if (isObject(currentValue)) {
+      return Object.entries(currentValue).reduce((acc, [key, value]) => {
+        acc[key] = getSpringValue(currentValue, key, defaultValue[key], cache);
+        return acc;
+      }, {});
     }
 
-    return new SpringValue(currentValue ?? defaultValue);
-  }
-
-  if (isObject(currentValue) && isObject(defaultValue)) {
-    // Если оба значения — объекты, объединяем их с рекурсией
-    return deepMergeObjects(defaultValue, currentValue) as T;
+    return new SpringValue(currentValue);
   }
 
   // Если значение есть, возвращаем его

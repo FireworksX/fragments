@@ -1,6 +1,6 @@
 import { GraphState } from "@graph-state/core";
 import { BaseNode, WithSpringCorners } from "@/types";
-import { getStableValue } from "@/shared/getStableValue.ts";
+import { getSpringValue } from "@/shared/getSpringValue.ts";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
 import { stringifyCssSpacing } from "@/shared/cssSpacingParser.ts";
 import { toPx } from "@/shared/pxFormat.ts";
@@ -11,7 +11,7 @@ export function cornersModule<T extends BaseNode>(
 ): WithSpringCorners<T> {
   return {
     ...node,
-    cornerRadius: getStableValue(node, "cornerRadius", "0px", cache),
+    cornerRadius: getSpringValue(node, "cornerRadius", "0px", cache),
     setCornerRadius(value) {
       if (typeof value === "number") {
         setValueToNode(node, "cornerRadius", toPx(value), cache);

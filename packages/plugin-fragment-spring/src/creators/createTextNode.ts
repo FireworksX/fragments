@@ -19,11 +19,11 @@ import {
 import { cloneModule } from "@/modules/cloneModule.ts";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
 import { getStaticValue } from "@/shared/getStaticValue.ts";
-import { getStableValue } from "@/shared/getStableValue.ts";
+import { getSpringValue } from "@/shared/getSpringValue.ts";
 import { copyModule } from "@/modules/copyModule.ts";
 import { duplicateModule } from "@/modules/duplicateModule.ts";
 import { isVariableLink } from "@/shared/isVariableLink.ts";
-import { to } from "@react-spring/web";
+import { SpringValue, to } from "@react-spring/web";
 import { getResolvedValue } from "@/shared/getResolvedValue.ts";
 import { wrapTextInParagraphWithAttributes } from "@/shared/wrapTextInParagraphWithAttributes.ts";
 import { attributesModule } from "@/modules/attributesModule.ts";
@@ -80,17 +80,19 @@ export function createTextNode(
       }
     },
 
-    getContent() {
-      const content = getFieldValue(nodeKey, "content", cache);
-      const variableLink = getFieldValue(nodeKey, "variableLink", cache);
+    /**
+     * Если текст находится внутри FragmentInstance и используется переменная,
+     * то в customContent будет приходить значение из этой переменной
+     * и эта функция будет оборачивать customContent в html со стилями.
+     */
+    getContent(customContent?: string | SpringValue<string>) {
+      const content = customContent ?? getFieldValue(nodeKey, "content", cache);
       const styleAttributes = getFieldValue(nodeKey, "styleAttributes", cache);
 
-      if (variableLink) {
-        const variableValue = getResolvedValue(variableLink, cache);
-
-        return to(variableValue, (v) => {
-          return wrapTextInParagraphWithAttributes(v, styleAttributes);
-        });
+      if (content instanceof SpringValue) {
+        return to(content, (v) =>
+          wrapTextInParagraphWithAttributes(v, styleAttributes)
+        );
       }
 
       return content;
@@ -103,7 +105,7 @@ export function createTextNode(
       });
     },
 
-    whiteSpace: getStableValue(
+    whiteSpace: getSpringValue(
       textNode,
       "whiteSpace",
       whiteSpace.normal,

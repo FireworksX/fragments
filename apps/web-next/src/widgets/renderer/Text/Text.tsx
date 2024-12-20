@@ -1,4 +1,4 @@
-import { FC, useCallback, useContext } from 'react'
+import { FC, use, useCallback, useContext } from 'react'
 import styles from './styles.module.css'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
@@ -10,6 +10,7 @@ import { AnimatedHtml } from '@/shared/ui/AnimatedHtml'
 import { wrapTextInParagraphWithAttributes } from '@/widgets/fragmentBuilder/BuilderText/lib/wrapTextInParagraphWithAttributes'
 import { useLayerStyles } from '@/shared/hooks/fragmentBuilder/useLayerStyles'
 import { LinkKey } from '@graph-state/core'
+import { FragmentInstanceContext } from '@/widgets/renderer/FragmentInstance'
 
 interface TextProps {
   layerKey: string
@@ -17,10 +18,10 @@ interface TextProps {
 }
 
 export const Text: FC<TextProps> = ({ layerKey, renderParents }) => {
-  const { documentManager, builderManager } = useContext(BuilderContext)
+  const { documentManager, builderManager } = use(BuilderContext)
+  const { readProperty } = use(FragmentInstanceContext)
   const [layerGraph] = useGraph(documentManager, layerKey)
-  useGraph(documentManager, layerGraph?.variableLink)
-  const textContent = layerGraph?.getContent?.()
+  const textContent = layerGraph?.getContent?.(readProperty(layerGraph?.variableLink))
   const cssStyles = useLayerStyles(layerKey, renderParents)
   const { isTextEditing, focus } = useBuilderManager()
 

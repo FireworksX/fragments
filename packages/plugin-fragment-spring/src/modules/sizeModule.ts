@@ -1,6 +1,6 @@
 import { GraphState } from "@graph-state/core";
 import { BaseNode, WithSize, WithSpringSize } from "@/types";
-import { getStableValue } from "@/shared/getStableValue.ts";
+import { getSpringValue } from "@/shared/getSpringValue.ts";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
 import { getFieldValue } from "@fragments/plugin-fragment";
 
@@ -43,8 +43,8 @@ export function sizeModule<T extends BaseNode>(
 
   return {
     ...node,
-    width: getStableValue(node, "width", 200, cache),
-    height: getStableValue(node, "height", 200, cache),
+    width: getSpringValue(node, "width", 200, cache),
+    height: getSpringValue(node, "height", 200, cache),
     setWidth,
     setHeight,
   };

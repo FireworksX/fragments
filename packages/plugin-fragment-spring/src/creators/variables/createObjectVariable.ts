@@ -1,6 +1,6 @@
 import { createBaseVariableNode } from "@/creators/variables/createBaseVariableNode.ts";
 import { GraphState, isPartOfGraph, LinkKey } from "@graph-state/core";
-import { getStableValue } from "@/shared/getStableValue.ts";
+import { getSpringValue } from "@/shared/getSpringValue.ts";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
 import { getStaticValue } from "@/shared/getStaticValue.ts";
 import { variableType } from "@fragments/plugin-fragment";
@@ -34,11 +34,7 @@ export const createObjectVariable = (
 
   return {
     ...baseNode,
-    required: getStableValue(baseNode, "required", false, cache),
     type: variableType.Object,
-    setRequired(value) {
-      setValueToNode(baseNode, "required", value, cache);
-    },
 
     setField(key: string, value: LinkKey) {
       if (isVariableLink(value)) {

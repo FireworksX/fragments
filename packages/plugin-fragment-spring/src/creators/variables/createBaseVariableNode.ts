@@ -3,7 +3,7 @@ import { generateId, isValue } from "@fragments/utils";
 import { GraphState } from "@graph-state/core";
 import { nodes, variableType } from "@fragments/plugin-fragment";
 import { createCachedInterpolate } from "@/shared/cachedInterpolate.ts";
-import { getStableValue } from "@/shared/getStableValue.ts";
+import { getSpringValue } from "@/shared/getSpringValue.ts";
 import { getStaticValue } from "@/shared/getStaticValue.ts";
 import { valueSetter } from "../../../../plugin-state-builder/src/shared/valueSetter.ts";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
@@ -21,17 +21,20 @@ export function createBaseVariableNode(
   const options = { ...defaultValue, ...inputOptions };
   const id = initialNode?._id ?? generateId();
   const nodeKey = cache.keyOfEntity({ _type: nodes.Variable, _id: id });
-  const cacheInterpolate = createCachedInterpolate();
 
   const node: BaseNode = {
     ...initialNode,
     _type: nodes.Variable,
     _id: id,
     name: initialNode?.name,
+    required: getSpringValue(initialNode, "required", false, cache),
     defaultValue: !options.staticDefaultValue
-      ? getStableValue(initialNode, "defaultValue", null, cache)
+      ? getSpringValue(initialNode, "defaultValue", null, cache)
       : getStaticValue(initialNode, "defaultValue", null, cache),
-    value: null,
+
+    setRequired(value) {
+      setValueToNode(initialNode, "required", value, cache);
+    },
 
     rename(name: string) {
       cache.mutate({
@@ -53,30 +56,6 @@ export function createBaseVariableNode(
       } else {
         setValueToNode(nodeKey, "defaultValue", value, cache);
       }
-    },
-
-    setValue(value) {
-      if (options.staticDefaultValue) {
-        cache.mutate(nodeKey, {
-          value: value,
-        });
-      } else {
-        setValueToNode(nodeKey, "value", value, cache);
-      }
-    },
-
-    getValue() {
-      const graph = cache.resolve(nodeKey);
-      const value = graph.value;
-      const defaultValue = graph.defaultValue;
-
-      if (options.staticDefaultValue) {
-        return isValue(value) ? value : defaultValue;
-      }
-
-      return cacheInterpolate([value, defaultValue], (val, defValue) => {
-        return isValue(val) ? val : defValue;
-      });
     },
   };
 

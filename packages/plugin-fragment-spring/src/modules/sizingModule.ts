@@ -1,7 +1,7 @@
 import { sizing } from "@/definitions.ts";
 import { BaseNode, WithSpringSizing } from "@/types";
 import { GraphState } from "@graph-state/core";
-import { getStableValue } from "@/shared/getStableValue.ts";
+import { getSpringValue } from "@/shared/getSpringValue.ts";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
 import { createCachedInterpolate } from "@/shared/cachedInterpolate.ts";
 import { getFieldValue } from "@fragments/plugin-fragment";
@@ -31,13 +31,13 @@ export function sizingModule<T extends BaseNode>(
 
   return {
     ...node,
-    layoutSizingHorizontal: getStableValue(
+    layoutSizingHorizontal: getSpringValue(
       node,
       "layoutSizingHorizontal",
       sizing.Fixed,
       cache
     ),
-    layoutSizingVertical: getStableValue(
+    layoutSizingVertical: getSpringValue(
       node,
       "layoutSizingVertical",
       sizing.Fixed,

@@ -1,7 +1,7 @@
 import { GraphState } from "@graph-state/core";
 import { createBaseVariableNode } from "@/creators/variables/createBaseVariableNode.ts";
 import { variableType } from "@fragments/plugin-fragment";
-import { getStableValue } from "@/shared/getStableValue.ts";
+import { getSpringValue } from "@/shared/getSpringValue.ts";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
 
 export type CreateBooleanOptions = Partial<{
@@ -24,10 +24,6 @@ export function createBooleanVariable(
 
   return {
     ...baseNode,
-    required: getStableValue(baseNode, "required", false, cache),
     type: variableType.Boolean,
-    setRequired(value) {
-      setValueToNode(baseNode, "required", value, cache);
-    },
   };
 }
