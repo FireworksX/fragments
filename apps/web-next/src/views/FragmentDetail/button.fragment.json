@@ -80,7 +80,7 @@
     "opacity": 1,
     "overflow": "hidden",
     "content": "<p style=\"font-size: 14px; color: rgba(34, 25, 77, 0.37)\">Button</p>",
-    "whiteSpace": "normal",
+    "whiteSpace": "nowrap",
     "variableLink": "Variable:8e348e2dsgs255afd"
   },
   "Text:ca553c1ea125.attributes": {

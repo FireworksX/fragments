@@ -19,6 +19,7 @@ export const nodes = createConstants(
 export const fragmentGrowingMode = createConstants("auto", "fill");
 
 export const borderType = createConstants("None", "Solid", "Dashed", "Dotted");
+export const linkTarget = createConstants("_blank");
 export const paintMode = createConstants("Solid", "Image");
 export const imagePaintScaleModes = createConstants(
   "Fill",

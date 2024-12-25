@@ -1,47 +1,40 @@
-import { TabsSelectorItem } from '@/app/components/TabsSelector'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
-
-const newTabItems: TabsSelectorItem[] = [
-  {
-    name: true,
-    label: 'Yes'
-  },
-  {
-    name: false,
-    label: 'No'
-  }
-]
+import { booleanTabsSelectorItems } from '@/shared/data'
+import { linkTarget } from '@fragments/plugin-fragment'
 
 export const useBuilderLink = () => {
   const { selection, selectionGraph } = useBuilderSelection()
   const layerInvoker = useLayerInvoker(selection, ({ key, node, value }) => {
     switch (key) {
-      case 'hyperlinkHref':
-        node.setHyperlinkHref(value)
+      case 'href':
+        node.setHref(value)
         break
-      case 'hyperlinkNewTab':
-        node.setHyperlinkNewTab(value)
+      case 'target':
+        node.setTarget(value)
         break
     }
   })
-  const hrefInvoker = layerInvoker('hyperlinkHref')
-  const newTabInvoker = layerInvoker('hyperlinkNewTab')
+  const hrefInvoker = layerInvoker('href')
+  const newTabInvoker = layerInvoker('target')
 
   const onClickHeader = () => {
     if (hrefInvoker.value) {
-      hrefInvoker.onChange(undefined)
+      hrefInvoker.onChange(null)
     } else {
       hrefInvoker.onChange('/')
     }
   }
 
   return {
-    selectionGraph,
+    disabled: !('setHref' in (selectionGraph ?? {})),
     href: hrefInvoker,
     isNewTab: {
       ...newTabInvoker,
-      items: newTabItems
+      items: [
+        { label: 'Yes', name: linkTarget._blank },
+        { label: 'No', name: null }
+      ]
     },
     onClick: onClickHeader
   }

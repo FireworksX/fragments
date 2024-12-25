@@ -8,7 +8,7 @@ import { nodes } from '@fragments/plugin-fragment-spring'
 import { useBreakpoints } from '@/shared/hooks/fragmentBuilder/useBreakpoints'
 
 export const useBuilderLayerCell = (layerKey: LinkKey) => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager, canvasManager } = useContext(BuilderContext)
   const [layerGraph] = useGraph(documentManager, layerKey)
   const layerInvoker = useLayerInvoker(layerKey)
   const { select, selection } = useBuilderSelection()

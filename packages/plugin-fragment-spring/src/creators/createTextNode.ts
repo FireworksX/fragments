@@ -23,7 +23,7 @@ import { getSpringValue } from "@/shared/getSpringValue.ts";
 import { copyModule } from "@/modules/copyModule.ts";
 import { duplicateModule } from "@/modules/duplicateModule.ts";
 import { isVariableLink } from "@/shared/isVariableLink.ts";
-import { SpringValue, to } from "@react-spring/web";
+import { Interpolation, SpringValue, to } from "@react-spring/web";
 import { getResolvedValue } from "@/shared/getResolvedValue.ts";
 import { wrapTextInParagraphWithAttributes } from "@/shared/wrapTextInParagraphWithAttributes.ts";
 import { attributesModule } from "@/modules/attributesModule.ts";
@@ -89,10 +89,11 @@ export function createTextNode(
       const content = customContent ?? getFieldValue(nodeKey, "content", cache);
       const styleAttributes = getFieldValue(nodeKey, "styleAttributes", cache);
 
-      if (content instanceof SpringValue) {
-        return to(content, (v) =>
-          wrapTextInParagraphWithAttributes(v, styleAttributes)
-        );
+      if (content instanceof SpringValue || content instanceof Interpolation) {
+        return to(content, (v) => {
+          console.log(nodeKey, content, v);
+          return wrapTextInParagraphWithAttributes(v, styleAttributes);
+        });
       }
 
       return content;

@@ -21,8 +21,8 @@ export const InstanceProvider: FC<ProviderProps> = ({ instanceLink, children }) 
     <FragmentInstanceContext
       value={{
         instanceLink,
-        props: instanceGraph.props ?? {},
-        readProperty: instanceGraph.readProperty
+        props: instanceGraph?.props ?? {},
+        readProperty: instanceGraph?.readProperty
       }}
     >
       {children}

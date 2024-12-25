@@ -8,16 +8,14 @@ import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { getResolvedValue } from '@fragments/plugin-fragment-spring'
 import { AnimatedHtml } from '@/shared/ui/AnimatedHtml'
 import { wrapTextInParagraphWithAttributes } from '@/widgets/fragmentBuilder/BuilderText/lib/wrapTextInParagraphWithAttributes'
-import { useLayerStyles } from '@/shared/hooks/fragmentBuilder/useLayerStyles'
+import { useLayerStyles } from '../hooks/useLayerStyles'
 import { LinkKey } from '@graph-state/core'
 import { FragmentInstanceContext } from '@/widgets/renderer/FragmentInstance'
+import { BaseRenderNode, defaultRender, defaultRenderNode } from '@/widgets/renderer/Fragment'
 
-interface TextProps {
-  layerKey: string
-  renderParents: LinkKey[]
-}
+interface TextProps extends BaseRenderNode {}
 
-export const Text: FC<TextProps> = ({ layerKey, renderParents }) => {
+export const Text: FC<TextProps> = ({ layerKey, renderParents = [], render = defaultRender }) => {
   const { documentManager, builderManager } = use(BuilderContext)
   const { readProperty } = use(FragmentInstanceContext)
   const [layerGraph] = useGraph(documentManager, layerKey)
@@ -25,8 +23,9 @@ export const Text: FC<TextProps> = ({ layerKey, renderParents }) => {
   const cssStyles = useLayerStyles(layerKey, renderParents)
   const { isTextEditing, focus } = useBuilderManager()
 
-  return (
-    <AnimatedHtml
+  return render(
+    layerKey,
+    <animated.div
       className={styles.root}
       data-key={layerKey}
       style={{
@@ -34,7 +33,7 @@ export const Text: FC<TextProps> = ({ layerKey, renderParents }) => {
         opacity: isTextEditing && focus === layerKey ? 0 : cssStyles.opacity
       }}
     >
-      {textContent}
-    </AnimatedHtml>
+      <AnimatedHtml>{textContent}</AnimatedHtml>
+    </animated.div>
   )
 }

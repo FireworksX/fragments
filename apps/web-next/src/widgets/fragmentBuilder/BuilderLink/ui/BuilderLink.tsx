@@ -1,29 +1,28 @@
-'use client'
 import { FC, useContext } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { useBuilderLink } from './hooks/useBuilderLink'
-import Touchable from '@/app/components/Touchable'
-import TabsSelector from '@/app/components/TabsSelector'
-import SelectMimicry from '@/app/components/SelectMimicry/SelectMimicry'
-import Minus from '@/app/svg/minus.svg'
-import Plus from '@/app/svg/plus.svg'
-import { builderNodes } from '@fragments/fragments-plugin'
-import Panel from '@/builder/components/Panel/Panel'
-import ControlRow from '@/builder/components/ControlRow/ControlRow'
-import ControlRowWide from '@/builder/components/ControlRow/components/ControlRowWide/ControlRowWide'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
+import { useBuilderLink } from '../hooks/useBuilderLink'
+import { Panel } from '@/shared/ui/Panel'
+import { Touchable } from '@/shared/ui/Touchable'
+import MinusIcon from '@/shared/icons/next/minus.svg'
+import PlusIcon from '@/shared/icons/next/plus.svg'
+import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
+import { SelectMimicry } from '@/shared/ui/SelectMimicry'
+import { TabsSelector } from '@/shared/ui/TabsSelector'
+import PanelHeadAside from '@/shared/ui/PanelHeadAside/ui/PanelHeadAside'
+import { InputText } from '@/shared/ui/InputText'
+import { isValue } from '@fragments/utils'
 
 interface BuilderLinkProps {
   className?: string
 }
 
 const BuilderLink: FC<BuilderLinkProps> = ({ className }) => {
-  const { documentManager } = useContext(BuilderContext)
-  const { selectionGraph, href, isNewTab, onClick } = useBuilderLink(documentManager)
-  const isEmpty = !href.value
+  const { href, isNewTab, disabled, onClick } = useBuilderLink()
+  const isEmpty = !isValue(href.value)
 
-  if (![builderNodes.Frame, builderNodes.ComponentVariant].some(type => type === selectionGraph?._type)) {
+  if (disabled) {
     return null
   }
 
@@ -31,17 +30,13 @@ const BuilderLink: FC<BuilderLinkProps> = ({ className }) => {
     <Panel
       className={cn(styles.root, className)}
       title='Link'
-      aside={
-        <Touchable tagName='button' onClick={onClick}>
-          {!isEmpty ? <Minus width={14} height={14} /> : <Plus width={14} height={14} />}
-        </Touchable>
-      }
+      aside={<PanelHeadAside isOpen={!isEmpty} onClick={onClick} />}
     >
       {!isEmpty && (
         <>
           <ControlRow title='Link to'>
             <ControlRowWide>
-              <SelectMimicry />
+              <InputText value={href.value} onChangeValue={href.onChange} />
             </ControlRowWide>
           </ControlRow>
           <ControlRow title='New tab' isHighlight={isNewTab.isOverride} actions={isNewTab.actions}>

@@ -5,6 +5,7 @@ import { LinkKey } from '@graph-state/core'
 import { nodes } from '@fragments/plugin-fragment-spring'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { moveNode } from '@fragments/plugin-fragment-spring'
+import { all } from 'axios'
 
 const findIndexOfNode = (items: unknown[], linkNode: LinkKey) => {
   const index = items.findIndex(item => item.id === linkNode)
@@ -78,7 +79,7 @@ export const useBuilderLayers = () => {
         setExpandedLinkKeys(prev => [...prev, linkKey])
       })
     }
-  }, [selection])
+  }, [documentManager, selection, selectionGraph])
 
   return {
     items,

@@ -38,8 +38,7 @@
     "children": [
       "Frame:9c86393a0a501",
       "Frame:bf32614cc22ae",
-      "Frame:9896dbb5f5ffd",
-      "FragmentInstance:buttonInstance"
+      "Frame:9896dbb5f5ffd"
     ],
     "width": 240,
     "height": 96.71772112485017,

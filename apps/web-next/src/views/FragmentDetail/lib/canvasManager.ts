@@ -12,36 +12,39 @@ export const createCanvasManager = () =>
       x: new SpringValue(0),
       y: new SpringValue(0),
       scale: new SpringValue(1),
-      hoverLayer: null,
-      draggingLayer: null, // LinkKey слоя который сейчас перетаскиваем
-      isDragging: false, // Перетаскиваем ли сейчас какой-нибудь элемент
-      isMoving: false, // Двигаем ли сейчас canvas
-      isResizing: false, // Изменяем ли сейчас размер
-      bounds: [0, 0, 0, 0]
+      focusLayer: null,
+      hoverLayer: new SpringValue(''),
+      draggingLayer: new SpringValue(''), // LinkKey слоя который сейчас перетаскиваем
+      isDragging: new SpringValue(false), // Перетаскиваем ли сейчас какой-нибудь элемент
+      isMoving: new SpringValue(false), // Двигаем ли сейчас canvas
+      isResizing: new SpringValue(false) // Изменяем ли сейчас размер
+      // bounds: [0, 0, 0, 0]
     },
     skip: [isInstanceOf(SpringValue)],
     plugins: [
       state => {
         state.setDragging = (value: boolean, layerLink?: LinkKey) => {
-          state.mutate(
-            state.key,
-            prev => ({
-              ...prev,
-              isDragging: value,
-              draggingLayer: value ? layerLink ?? null : null
-            }),
-            { replace: true }
-          )
+          const currentState = state.resolve(state.key)
+
+          currentState.isDragging.set(value)
+          // state.mutate(
+          //   state.key,
+          //   prev => ({
+          //     ...prev,
+          //     isDragging: value,
+          //     draggingLayer: value ? layerLink ?? null : null
+          //   }),
+          //   { replace: true }
+          // )
         }
         state.setMoving = (value: boolean) => {
-          state.mutate(
-            state.key,
-            prev => ({
-              ...prev,
-              isMoving: value
-            }),
-            { replace: true }
-          )
+          const currentState = state.resolve(state.key)
+          currentState.isMoving.set(value)
+        }
+        state.setFocus = (layerLink: LinkKey) => {
+          state.mutate(state.key, {
+            focusLayer: layerLink
+          })
         }
         state.setResizing = (value: boolean) => {
           state.mutate(
@@ -55,14 +58,8 @@ export const createCanvasManager = () =>
         }
 
         state.setHoverLayer = (layerLink: LinkKey) => {
-          state.mutate(
-            state.key,
-            prev => ({
-              ...prev,
-              hoverLayer: layerLink
-            }),
-            { replace: true }
-          )
+          const currentState = state.resolve(state.key)
+          currentState.hoverLayer.set(layerLink)
         }
 
         state.toCenter = () => {
@@ -77,7 +74,7 @@ export const createCanvasManager = () =>
         }
 
         state.updateBound = (x, y, width, height) => {
-          state.mutate(state.key, prev => ({ ...prev, bounds: [x, y, width, height] }), { replace: true })
+          // state.mutate(state.key, prev => ({ ...prev, bounds: [x, y, width, height] }), { replace: true })
         }
 
         state.scrollAndZoomIntoView = (node: LinkKey) => {

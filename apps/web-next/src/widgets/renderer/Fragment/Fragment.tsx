@@ -1,4 +1,4 @@
-import { CSSProperties, FC, useContext, useMemo } from 'react'
+import React, { CSSProperties, ElementType, FC, ReactNode, useContext, useMemo } from 'react'
 import { GraphState, LinkKey } from '@graph-state/core'
 import { Frame } from '@/widgets/renderer/Frame'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
@@ -8,14 +8,21 @@ import styles from './styles.module.css'
 import { renderTarget } from '@fragments/plugin-fragment'
 import { useBreakpoints } from '@/shared/hooks/fragmentBuilder/useBreakpoints'
 import { useRenderTarget } from '@/widgets/renderer/hooks/useRenderTarget'
+import { animated } from '@react-spring/web'
 
-export interface DocumentRenderer {
+export interface BaseRenderNode {
   layerKey?: LinkKey
   renderParents?: LinkKey[]
+  render?: (layerKey: LinkKey, node: ReactNode) => ReactNode
+}
+
+export const defaultRender = (_, node) => node
+
+export interface DocumentRenderer extends BaseRenderNode {
   // style?: CSSProperties
 }
 
-export const Fragment: FC<DocumentRenderer> = ({ layerKey, renderParents = [] }) => {
+export const Fragment: FC<DocumentRenderer> = ({ layerKey, renderParents = [], render = defaultRender }) => {
   const { documentManager } = useContext(BuilderContext)
   const [fragmentGraph] = useGraph(documentManager, layerKey)
   const { isDocument } = useRenderTarget()
@@ -26,14 +33,20 @@ export const Fragment: FC<DocumentRenderer> = ({ layerKey, renderParents = [] })
   if (isDocument) {
     const renderLayer = getThreshold(width)?.link
 
-    return (
+    return render(
+      layerKey,
       <div ref={ref} className={styles.wrapper}>
         {renderLayer && <Frame layerKey={renderLayer} renderParents={memoRenderParents} />}
       </div>
     )
   }
 
-  return fragmentGraph?.children?.map(childLink => (
-    <Frame key={childLink} layerKey={childLink} renderParents={memoRenderParents} />
-  ))
+  if (render) {
+    return render(
+      layerKey,
+      fragmentGraph?.children?.map(childLink => (
+        <Frame key={childLink} layerKey={childLink} renderParents={memoRenderParents} render={render} />
+      ))
+    )
+  }
 }

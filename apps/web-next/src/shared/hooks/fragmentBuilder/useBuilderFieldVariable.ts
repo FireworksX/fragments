@@ -12,7 +12,7 @@ import { popoutsStore } from '@/shared/store/popouts.store'
 import { stackVariableTransformName } from '@/features/popouts/StackVariableTransform/StackVariableTransform'
 import { popoutNames } from '@/shared/data'
 import { generateJSON, generateText } from '@tiptap/core'
-import { canvasEditorExtensions } from '@/widgets/fragmentBuilder/BuilderCanvasTextEditor'
+import { canvasEditorExtensions } from '@/widgets/fragmentBuilder/BuilderHighlight'
 // import {
 //   stackVariableTransformName
 // } from '@/widgets/StackCollector/components/variables/StackVariableTransform/StackVariableTransform'

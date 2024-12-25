@@ -5,18 +5,14 @@ import { to } from '@fragments/springs-factory'
 import { nodes, sizing } from '@fragments/plugin-fragment-spring'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
-import { Fragment } from '@/widgets/renderer/Fragment/Fragment'
-import { useLayerStyles } from '@/shared/hooks/fragmentBuilder/useLayerStyles'
+import { BaseRenderNode, defaultRender, defaultRenderNode, Fragment } from '@/widgets/renderer/Fragment/Fragment'
+import { useLayerStyles } from '../hooks/useLayerStyles'
 import { getFieldValue, getFieldValueMap } from '@fragments/plugin-fragment'
 import { InstanceProvider } from '@/widgets/renderer/FragmentInstance/lib/FragmentInstanceContext'
 
-export interface DocumentRenderer {
-  layerKey?: LinkKey
-  renderParents?: LinkKey[]
-  documentManager: GraphState
-}
+export interface DocumentRenderer extends BaseRenderNode {}
 
-export const FragmentInstance: FC<DocumentRenderer> = ({ layerKey, renderParents = [] }) => {
+export const FragmentInstance: FC<DocumentRenderer> = ({ layerKey, renderParents = [], render = defaultRender }) => {
   const { documentManager } = useContext(BuilderContext)
   const [instanceGraph] = useGraph(documentManager, layerKey)
   const cssStyles = useLayerStyles(layerKey, renderParents)
@@ -24,9 +20,12 @@ export const FragmentInstance: FC<DocumentRenderer> = ({ layerKey, renderParents
 
   return (
     <InstanceProvider instanceLink={layerKey}>
-      <animated.div data-key={layerKey} data-type={nodes.FragmentInstance} style={cssStyles}>
-        <Fragment layerKey={instanceFragment} renderParents={[...renderParents, layerKey]} />
-      </animated.div>
+      {render(
+        layerKey,
+        <animated.div data-key={layerKey} data-type={nodes.FragmentInstance} style={cssStyles}>
+          <Fragment layerKey={instanceFragment} renderParents={[...renderParents, layerKey]} render={render} />
+        </animated.div>
+      )}
     </InstanceProvider>
   )
 }

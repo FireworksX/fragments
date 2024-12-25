@@ -12,8 +12,6 @@ import { InputNumber } from '@/shared/ui/InputNumber'
 import { Stepper } from '@/shared/ui/Stepper'
 import { TabsSelector } from '@/shared/ui/TabsSelector'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
-import { generateJSON } from '@tiptap/react'
-import { canvasEditorExtensions } from '@/widgets/fragmentBuilder/BuilderCanvasTextEditor'
 import { InputText } from '@/shared/ui/InputText'
 
 interface BuilderTextProps {

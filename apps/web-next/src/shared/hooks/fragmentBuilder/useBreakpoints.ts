@@ -13,7 +13,7 @@ const DEFAULT_BREAKPOINTS = [
   { name: 'Desktop', width: 1920 }
 ]
 
-export const useBreakpoints = (customFragment: LinkKey) => {
+export const useBreakpoints = (customFragment?: LinkKey) => {
   const { documentManager } = useContext(BuilderContext)
   const [fragmentGraph] = useGraph(documentManager, customFragment ?? documentManager.fragment)
   const childrenValues = useGraphStack(documentManager, fragmentGraph?.children ?? [])

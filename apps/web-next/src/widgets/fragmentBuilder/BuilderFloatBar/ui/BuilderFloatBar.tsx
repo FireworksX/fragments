@@ -32,7 +32,6 @@ export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
   const { isEdit, focus, updateParams } = useBuilderManager()
   const [canvas] = useGraph(canvasManager, canvasManager.key)
   const { addFrame, addText, addImage } = useBuilderActions()
-  const { allowedBreakpoints, addBreakpoint } = useBreakpoints()
 
   if (!isEdit) {
     return
@@ -47,36 +46,6 @@ export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
             <Touchable className={styles.actionButton} TagName='button' onClick={() => undefined}>
               <DefaultCursor width={20} height={20} />
             </Touchable>
-          )
-        },
-        {
-          kind: 'component',
-          component: (
-            <Dropdown
-              trigger='click'
-              options={
-                <>
-                  <DropdownGroup>
-                    {allowedBreakpoints.map(breakpoint => (
-                      <DropdownOption
-                        key={breakpoint.width}
-                        description={`${breakpoint.width}px`}
-                        onClick={() => addBreakpoint(breakpoint.name, breakpoint.width)}
-                      >
-                        {breakpoint.name}
-                      </DropdownOption>
-                    ))}
-                  </DropdownGroup>
-                  <DropdownGroup>
-                    <DropdownOption>Custom</DropdownOption>
-                  </DropdownGroup>
-                </>
-              }
-            >
-              <Touchable className={styles.actionButton} TagName='button' onClick={() => undefined}>
-                <BreakpointsIcon width={20} height={20} />
-              </Touchable>
-            </Dropdown>
           )
         },
         {

@@ -1,17 +1,16 @@
 import { useGraph } from '@graph-state/react'
-import { useContext } from 'react'
+import { use, useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderManager'
 
 export const useBuilderSelection = () => {
-  const { documentManager } = useContext(BuilderContext)
-  const { focus, updateParams } = useBuilderManager()
-  const [selectionGraph] = useGraph(documentManager, focus)
+  const { documentManager, canvasManager } = use(BuilderContext)
+  const [canvas] = useGraph(canvasManager, canvasManager.key)
+  const [selectionGraph] = useGraph(documentManager, canvas.focusLayer)
 
   const select = (field: any) => {
     const inputKey = typeof field === 'string' ? field : documentManager.keyOfEntity(field)
-    updateParams({ focus: inputKey })
+    canvasManager.setFocus(inputKey)
   }
 
-  return { selection: focus, selectionGraph: focus ? selectionGraph : null, select }
+  return { selection: canvas.focusLayer, selectionGraph: canvas.focusLayer ? selectionGraph : null, select }
 }

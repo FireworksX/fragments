@@ -36,13 +36,13 @@ import StackNumberProperty from '@/features/popouts/StackNumberProperty/ui/Stack
 import StackBooleanProperty from '../../../features/popouts/StackBooleanProperty/ui/StackBooleanProperty'
 import BuilderFragmentInstance from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/BuilderFragmentInstance'
 import BuilderFragmentGrowing from '@/widgets/fragmentBuilder/BuilderFragmentGrowing/ui/BuilderFragmentGrowing'
-import BuilderFragmentProps from '../../../widgets/fragmentBuilder/BuilderFragmentProps/ui/BuilderFragmentProps'
 import { PropertiesTree } from '@/features/fragmentBuilder/PropertiesTree/ui/PropertiesTree'
 import { AssetsProperties } from '@/features/fragmentBuilder/AssetsProperties'
 import StackVariableTransform from '@/features/popouts/StackVariableTransform/StackVariableTransform'
-import { BuilderCanvasTextEditor, CanvasTextEditorProvider } from '@/widgets/fragmentBuilder/BuilderCanvasTextEditor'
+import { CanvasTextEditorProvider } from '@/widgets/fragmentBuilder/BuilderHighlight'
 import { BuilderImage } from '@/widgets/fragmentBuilder/BuilderImage'
 import BuilderAttributes from '../../../widgets/fragmentBuilder/BuilderAttributes/ui/BuilderAttributes'
+import BuilderLink from '../../../widgets/fragmentBuilder/BuilderLink/ui/BuilderLink'
 
 interface FragmentBuilderProps {
   className?: string
@@ -81,6 +81,7 @@ export const FragmentBuilder: FC<FragmentBuilderProps> = ({ className }) => {
             sizeNode={<BuilderSize />}
             layoutNode={<BuilderLayout />}
             stylesNode={<BuilderStyles />}
+            linkNode={<BuilderLink />}
             textNode={<BuilderText />}
             imageNode={<BuilderImage />}
             attributesNode={<BuilderAttributes />}

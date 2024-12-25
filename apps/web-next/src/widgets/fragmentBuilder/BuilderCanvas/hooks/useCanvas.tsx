@@ -9,8 +9,9 @@ import { useDragMove } from './useDragMove'
 import { useDragCollisions } from './useDragCollisions'
 import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderManager'
 import { debounce } from '@fragments/utils'
+import { animatableValue } from '@/shared/utils/animatableValue'
 
-const SCALE = {
+export const SCALE = {
   min: 0.25,
   max: 3
 }
@@ -41,9 +42,9 @@ export const useCanvas = () => {
   const saveOffset = useRef([0, 0])
   const [measureRef, measure] = useMeasure()
 
-  useEffect(() => {
-    canvasManager.updateBound(measure.left, measure.top, measure.width, measure.height)
-  }, [canvasManager, measure])
+  // useEffect(() => {
+  //   canvasManager.updateBound(measure.left, measure.top, measure.width, measure.height)
+  // }, [canvasManager, measure])
 
   const findLayerFromPointerEvent = event => {
     if (!event || !isFinite(event.clientX) || !isFinite(event.clientY)) return null
@@ -59,52 +60,55 @@ export const useCanvas = () => {
     {
       onMouseMove: ({ event, dragging, moving, wheeling }) => {
         if (dragging || moving || wheeling) return
-        debounce(() => {
-          canvasManager.setHoverLayer(findLayerFromPointerEvent(event))
-        }, 50)()
+        canvasManager.setHoverLayer(findLayerFromPointerEvent(event) ?? '')
       },
       onClick: ({ event }) => {
         const layerKey = findLayerFromPointerEvent(event)
 
         if (documentManager.entityOfKey(layerKey)?._type === nodes.FragmentInstance) {
           builderManager.toggleTextEditor(false)
-          updateParams({
-            focus: layerKey
-          })
+          canvasManager.setFocus(layerKey)
+          // updateParams({
+          //   focus: layerKey
+          // })
         } else if (layerKey) {
           if (!isTextEditing) {
             const clickedLayerValue = documentManager.resolve(layerKey)
 
             if (clickedLayerValue?._type === nodes.Text && event.detail === 2) {
-              updateParams({
-                focus: layerKey
-              })
+              // updateParams({
+              //   focus: layerKey
+              // })
+              canvasManager.setFocus(layerKey)
               builderManager.toggleTextEditor(true)
-              updateParams({
-                focus: layerKey
-              })
+              // updateParams({
+              //   focus: layerKey
+              // })
               return
             }
 
             builderManager.toggleTextEditor(false)
-            updateParams({
-              focus: layerKey
-            })
+            canvasManager.setFocus(layerKey)
+            // updateParams({
+            //   focus: layerKey
+            // })
           } else {
             builderManager.toggleTextEditor(false)
-            updateParams({
-              focus: layerKey
-            })
+            canvasManager.setFocus(layerKey)
+            // updateParams({
+            //   focus: layerKey
+            // })
           }
         } else {
           builderManager.toggleTextEditor(false)
-          updateParams({
-            focus: null
-          })
+          canvasManager.setFocus(null)
+          // updateParams({
+          //   focus: null
+          // })
         }
       },
       onDrag: dragEvent => {
-        if (canvas?.isResizing) return
+        if (animatableValue(canvas?.isResizing)) return
 
         const {
           pinching,

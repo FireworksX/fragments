@@ -30,6 +30,18 @@ export function createBaseNode(
       return null;
     },
 
+    getAllParents(stack = []) {
+      const node = cache.resolve({ _type: type, _id: id });
+      const parent = node.getParent();
+
+      if (parent) {
+        stack.push(parent);
+        parent.getAllParents(stack);
+      }
+
+      return stack;
+    },
+
     rename(name: string) {
       cache.mutate({
         _type: type,

@@ -8,6 +8,7 @@ import { nodes } from '@fragments/plugin-fragment'
 
 interface ControlsProps extends AsideBarProps {
   className?: string
+  linkNode?: ReactNode
   positionNode?: ReactNode
   sizeNode?: ReactNode
   layoutNode?: ReactNode
@@ -24,6 +25,7 @@ interface ControlsProps extends AsideBarProps {
 const BuilderControls: FC<ControlsProps> = ({
   className,
   positionNode,
+  linkNode,
   sizeNode,
   layoutNode,
   stylesNode,
@@ -56,6 +58,7 @@ const BuilderControls: FC<ControlsProps> = ({
   return (
     <AsideBar className={cn(className, styles.root)} {...asideProps}>
       {/*<BuilderLink />*/}
+      {linkNode}
       {hasGrowing && fragmentGrowingNode}
       {hasFragmentProps && fragmentPropsNode}
       {hasPosition && positionNode}
