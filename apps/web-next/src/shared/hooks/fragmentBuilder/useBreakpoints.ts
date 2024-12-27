@@ -22,7 +22,7 @@ export const useBreakpoints = (customFragment?: LinkKey) => {
   const breakpointKeys = breakpointValues.map(documentManager.keyOfEntity)
 
   const addBreakpoint = (name: string, width: number) => {
-    documentManager[stateAlias].createBreakpointNode({ name, threshold: width })
+    documentManager.resolve(documentManager[stateAlias].root).addBreakpoint({ name, threshold: width })
   }
 
   const thresholds = useMemo(() => {

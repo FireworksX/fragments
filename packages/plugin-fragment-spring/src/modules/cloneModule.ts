@@ -23,7 +23,7 @@ export function cloneModule<T extends BaseNode>(
       const nextEntity = createNode(
         {
           ...(overrideNode ?? {}),
-          overrideFrom: nodeKey,
+          overrideFrom: setKey(nodeKey),
           _type: node._type,
           _id: generateId(),
           children: nextChildren,
@@ -33,7 +33,7 @@ export function cloneModule<T extends BaseNode>(
 
       const cloneKey = cache.mutate(nextEntity);
       cache.mutate(nodeKey, {
-        overrides: [setKey(cloneKey)],
+        overrides: [cloneKey],
       });
 
       return cloneKey;

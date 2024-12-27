@@ -6,3 +6,14 @@
     overflow: hidden;
     position: relative;
 }
+
+.body {
+    display: flex;
+    flex: 1;
+}
+
+.aside {
+    width: 270px;
+    transform: initial !important;
+    position: static;
+}

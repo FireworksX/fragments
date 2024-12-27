@@ -26,7 +26,7 @@ const HeaderLayer: FC<HeaderLayerProps> = ({ className, layerKey }) => {
   const isTopNode = !!(layerNode?.isRootLayer?.() || layerNode?.isBreakpoint) && layerNode?._type === nodes.Frame
   const [canvas] = useGraph(canvasManager, canvasManager.key)
 
-  const size = canvas.scale.to([SCALE.min, SCALE.max], [17, 6])
+  const size = canvas.scale.to([SCALE.min, SCALE.max], [15, 6])
 
   if (isTopNode) {
     return <HeaderLayerTop layerKey={layerKey} />

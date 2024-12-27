@@ -2,6 +2,7 @@
 import { BaseNode } from "@/types";
 import { isValue } from "@fragments/utils";
 import { GraphState } from "@graph-state/core";
+import { getKey } from "@/shared/index.ts";
 
 export function isFieldOverridden<T extends BaseNode>(
   node: T,
@@ -21,7 +22,7 @@ export function isFieldOverridden<T extends BaseNode>(
   }
 
   // Проверяем всю цепочку родителей
-  let currentOverrideFrom = resolvedNode.overrideFrom;
+  let currentOverrideFrom = getKey(resolvedNode.overrideFrom);
   while (currentOverrideFrom) {
     const parentNode: BaseNode = cache.resolve(currentOverrideFrom) as BaseNode;
     if (parentNode) {
@@ -32,7 +33,7 @@ export function isFieldOverridden<T extends BaseNode>(
       }
 
       // Переходим к следующему родителю
-      currentOverrideFrom = parentNode.overrideFrom;
+      currentOverrideFrom = getKey(parentNode.overrideFrom);
     }
   }
 

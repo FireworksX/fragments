@@ -12,14 +12,16 @@ import { useLayerStyles } from '../hooks/useLayerStyles'
 import { LinkKey } from '@graph-state/core'
 import { FragmentInstanceContext } from '@/widgets/renderer/FragmentInstance'
 import { BaseRenderNode, defaultRender, defaultRenderNode } from '@/widgets/renderer/Fragment'
+import { useInstanceProp } from '@/widgets/renderer/hooks/useInstanceProp'
+import { useFieldValue } from '@/shared/hooks/fragmentBuilder/useFieldValue'
 
 interface TextProps extends BaseRenderNode {}
 
 export const Text: FC<TextProps> = ({ layerKey, renderParents = [], render = defaultRender }) => {
   const { documentManager, builderManager } = use(BuilderContext)
-  const { readProperty } = use(FragmentInstanceContext)
   const [layerGraph] = useGraph(documentManager, layerKey)
-  const textContent = layerGraph?.getContent?.(readProperty(layerGraph?.variableLink))
+  const instanceContent = useFieldValue(layerKey, 'variableLink')
+  const textContent = layerGraph?.getContent?.(instanceContent)
   const cssStyles = useLayerStyles(layerKey, renderParents)
   const { isTextEditing, focus } = useBuilderManager()
 

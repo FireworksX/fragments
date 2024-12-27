@@ -10,15 +10,10 @@ interface BuilderPreviewContainerProps extends PropsWithChildren {
 }
 
 export const BuilderPreviewContainer: FC<BuilderPreviewContainerProps> = ({ className, children }) => {
-  const { width, bindWidth, height, bindHeight, setWidth, setHeight } = useBuilderPreviewContainer()
+  const { width, bindWidth, height, bindHeight } = useBuilderPreviewContainer()
 
   return (
     <div className={cn(styles.root, className)} data-testid='BuilderPreviewContainer'>
-      <animated.div className={styles.size}>
-        <InputNumber className={styles.sizeInput} value={width} suffix='W' onChange={setWidth} />
-        <InputNumber className={styles.sizeInput} value={height} suffix='H' onChange={setHeight} />
-      </animated.div>
-
       <div className={styles.horizontal}>
         <animated.div {...bindWidth('left')} className={styles.horizontalHandler}>
           <animated.div className={styles.horizontalHandlerInner}></animated.div>

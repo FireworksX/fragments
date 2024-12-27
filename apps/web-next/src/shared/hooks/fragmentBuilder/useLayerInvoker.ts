@@ -60,7 +60,7 @@ export const useLayerInvoker = (field: Field, setter?: Setter, getter?: Getter) 
 
     return {
       value: resultValue,
-      resolvedValue: getResolvedValue(resultValue, documentManager),
+      resolvedValue: resultValue,
       onChange: resultSetter,
       actions,
       isHighlight: overrides.isOverride,

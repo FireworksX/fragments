@@ -91,7 +91,6 @@ export function createTextNode(
 
       if (content instanceof SpringValue || content instanceof Interpolation) {
         return to(content, (v) => {
-          console.log(nodeKey, content, v);
           return wrapTextInParagraphWithAttributes(v, styleAttributes);
         });
       }

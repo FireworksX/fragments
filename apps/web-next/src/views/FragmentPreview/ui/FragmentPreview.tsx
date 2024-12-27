@@ -6,6 +6,8 @@ import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { BuilderPreviewContainer } from '@/widgets/fragmentBuilder/BuilderPreviewContainer'
 import { FragmentInstance } from '@/widgets/renderer/FragmentInstance/FragmentInstance'
 import { Fragment } from '@/widgets/renderer/Fragment/Fragment'
+import { AsideBar } from '@/shared/ui/AsideBar'
+import BuilderFragmentInstance from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/BuilderFragmentInstance'
 
 interface FragmentPreviewProps {
   className?: string
@@ -16,9 +18,14 @@ export const FragmentPreview: FC<FragmentPreviewProps> = ({ className }) => {
 
   return (
     <div className={cn(styles.root, className)} data-testid='BuilderPreview'>
-      <BuilderPreviewContainer>
-        <Fragment layerKey={documentManager.fragment} />
-      </BuilderPreviewContainer>
+      <div className={styles.body}>
+        <AsideBar className={styles.aside}>
+          <BuilderFragmentInstance />
+        </AsideBar>
+        <BuilderPreviewContainer>
+          <Fragment layerKey={documentManager.fragment} />
+        </BuilderPreviewContainer>
+      </div>
     </div>
   )
 }

@@ -5,13 +5,17 @@ import {
   childrenModule,
   createBaseNode,
   fragmentGrowingMode,
+  getFieldValue,
   renderTarget,
   variableType,
 } from "@fragments/plugin-fragment";
 import { getStaticValue } from "@/shared/getStaticValue.ts";
 import { createNode } from "@/shared/createNode.ts";
+import { animatableValue } from "@/shared/animatableValue.ts";
+import { SpringValue } from "@fragments/springs-factory";
 
 export const modules = [childrenModule];
+const BREAKPOINT_GAP = 50;
 
 export function createFragmentNode(
   initialNode: Partial<unknown> = {},
@@ -62,6 +66,30 @@ export function createFragmentNode(
       }
 
       return null;
+    },
+
+    addBreakpoint(node) {
+      const primaryLayerNode = cache.$fragment?.findPrimaryLayer?.();
+      if (primaryLayerNode) {
+        const lastLayer = cache
+          .resolve(cache.$fragment?.root)
+          ?.children?.at(-1);
+        const nextLeft =
+          animatableValue(getFieldValue(lastLayer, "left", cache)) +
+          animatableValue(getFieldValue(lastLayer, "width", cache)) +
+          BREAKPOINT_GAP;
+        const nextTop = animatableValue(getFieldValue(lastLayer, "top", cache));
+
+        const nextBreakpointNode = primaryLayerNode.clone({
+          ...node,
+          left: new SpringValue(nextLeft),
+          top: new SpringValue(nextTop),
+          isBreakpoint: true,
+        });
+
+        const parentNode = cache.resolve(cache?.$fragment?.root);
+        parentNode?.appendChild?.(nextBreakpointNode);
+      }
     },
   };
 }

@@ -18,7 +18,7 @@ import { capitalize } from '@/shared/utils/capitalize'
 import { isValue, objectToColorString, toKebabCase } from '@fragments/utils'
 import { useGraph } from '@graph-state/react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { whiteSpace } from '@fragments/plugin-fragment'
+import { getFieldValue, whiteSpace } from '@fragments/plugin-fragment'
 import { getMarksInSelection } from '../lib/getMarksInSelection'
 import { getTopLevelNodeRanges } from '../lib/getTopLevelNodeRanges'
 import { wrapTextInParagraphWithAttributes } from '../lib/wrapTextInParagraphWithAttributes'
@@ -88,11 +88,8 @@ export const useBuilderText = () => {
     },
     ({ key, node }) => {
       if (key === 'content') {
-        if (node.variableLink) {
-          return node.variableLink
-        } else {
-          return node.content
-        }
+        const variableLink = getFieldValue(node, 'variableLink', documentManager)
+        return variableLink ?? node.content
       }
     }
   )
@@ -133,7 +130,7 @@ export const useBuilderText = () => {
       let content = contentInvoker.value
 
       if (isVariableLink(contentInvoker.value)) {
-        content = selectionGraph?.getContent?.()?.get()
+        content = selectionGraph?.getContent?.()
       }
 
       editor.commands.setContent(content)

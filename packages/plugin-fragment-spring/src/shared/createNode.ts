@@ -25,10 +25,10 @@ export function createNode(
 
   let node = initialNode;
 
-  if (node._type === nodes.Frame) {
-    node = createFrameNode(node, cache);
-  } else if (node._type === nodes.Breakpoint) {
+  if (node._type === nodes.Frame && node?.isBreakpoint) {
     node = createBreakpointNode(node, cache);
+  } else if (node._type === nodes.Frame) {
+    node = createFrameNode(node, cache);
   } else if (node._type === nodes.Text) {
     node = createTextNode(node, cache);
   } else if (node._type === nodes.Image) {
