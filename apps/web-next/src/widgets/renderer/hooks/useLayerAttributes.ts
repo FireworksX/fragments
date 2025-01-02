@@ -9,7 +9,7 @@ import { linkTarget } from '@fragments/plugin-fragment'
 export const useLayerAttributes = (layerKey: LinkKey) => {
   const { documentManager } = use(BuilderContext)
   const [layerGraph] = useGraph(documentManager, layerKey)
-  const attributes = layerGraph?.attributes
+  const attributes = layerGraph?.attributes ?? {}
   let Tag = animated.div
 
   if (isValue(layerGraph?.href)) {

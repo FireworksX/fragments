@@ -5,6 +5,6 @@ export const randomInteger = (min: number, max: number) => {
 };
 
 export const getRandomColor = () => {
-  const colors = ["rgba(86,177,196,1)", "rgba(72,44,196,1)"];
+  const colors = ["#56B1C4FF", "#482CC4FF"];
   return colors.at(randomInteger(0, colors.length - 1));
 };

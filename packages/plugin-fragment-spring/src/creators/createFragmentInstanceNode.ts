@@ -4,7 +4,6 @@ import { applyModules } from "@/shared/applyModules.ts";
 import { GraphState, LinkKey } from "@graph-state/core";
 import { FrameNode } from "@/types";
 import { sizeModule } from "@/modules/sizeModule.ts";
-import { toCssModule } from "@/modules/toCssModule";
 import { sizingModule } from "@/modules/sizingModule.ts";
 import { aspectRatioModule } from "@/modules/aspectRationModule.ts";
 import { visibleModule } from "@/modules/visibleModule.ts";
@@ -30,7 +29,6 @@ import { clone } from "@/shared/clone.ts";
 
 export const modules = [
   positionModule,
-  toCssModule,
   sizeModule,
   sizingModule,
   aspectRatioModule,

@@ -16,7 +16,7 @@
 .delimiter {
     width: calc(100% - 30px);
     height: 1px;
-    background: var(--border);
+    background: rgba(var(--border--rgb), .6);
     margin: 0 15px;
 }
 

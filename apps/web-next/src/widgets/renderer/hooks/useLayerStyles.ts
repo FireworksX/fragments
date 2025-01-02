@@ -9,6 +9,7 @@ import { useLayerFillStyles } from './styles/useLayerFillStyles'
 import { getFieldValueMap } from '@fragments/plugin-fragment'
 import { useLayerFlexStyles } from './styles/useLayerFlexStyles'
 import { useRenderTarget } from '@/widgets/renderer/hooks/useRenderTarget'
+import { useLayerBorderStyles } from '@/widgets/renderer/hooks/styles/useLayerBorderStyles'
 
 export const useLayerStyles = (layerLink: LinkKey, parents: LinkKey[] = []) => {
   const { documentManager } = use(BuilderContext)
@@ -25,6 +26,7 @@ export const useLayerStyles = (layerLink: LinkKey, parents: LinkKey[] = []) => {
   const sceneStyles = useLayerSceneStyles(layerLink)
   const fillStyles = useLayerFillStyles(layerLink)
   const flexStyles = useLayerFlexStyles(layerLink)
+  const borderStyles = useLayerBorderStyles(layerLink)
 
   return useMemo(() => {
     return {
@@ -33,10 +35,22 @@ export const useLayerStyles = (layerLink: LinkKey, parents: LinkKey[] = []) => {
       ...sceneStyles,
       ...fillStyles,
       ...flexStyles,
+      ...borderStyles,
       whiteSpace,
       borderRadius: cornerRadius,
       padding,
       userSelect: isCanvas ? 'none' : null
     }
-  }, [sizeStyles, positionStyles, sceneStyles, fillStyles, flexStyles, whiteSpace, cornerRadius, padding, isCanvas])
+  }, [
+    sizeStyles,
+    positionStyles,
+    sceneStyles,
+    fillStyles,
+    flexStyles,
+    borderStyles,
+    whiteSpace,
+    cornerRadius,
+    padding,
+    isCanvas
+  ])
 }

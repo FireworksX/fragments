@@ -130,27 +130,27 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
         </>
       )}
 
-      {/*{!border.disabled && (*/}
-      {/*  <ControlRow title='Border' actions={border.actions} isHighlight={border.isOverride}>*/}
-      {/*    <ControlRowWide>*/}
-      {/*      <GraphValue graphState={documentManager} field={border.borderColorInvoker.value} options={{ safe: true }}>*/}
-      {/*        {value => (*/}
-      {/*          <>*/}
-      {/*            <InputSelect*/}
-      {/*              placeholder='Add...'*/}
-      {/*              hasIcon={to(value, v => !!v && v !== borderType.None)}*/}
-      {/*              color={getColor(value)}*/}
-      {/*              onReset={border.onReset}*/}
-      {/*              onClick={border.onClick}*/}
-      {/*            >*/}
-      {/*              {value && to(border.borderTypeInvoker.value, v => (v !== borderType.None ? v : ''))}*/}
-      {/*            </InputSelect>*/}
-      {/*          </>*/}
-      {/*        )}*/}
-      {/*      </GraphValue>*/}
-      {/*    </ControlRowWide>*/}
-      {/*  </ControlRow>*/}
-      {/*)}*/}
+      {!border.disabled && (
+        <ControlRow title='Border' actions={border.actions} isHighlight={border.isOverride}>
+          <ControlRowWide>
+            <GraphValue graphState={documentManager} field={border.borderColorInvoker.value} options={{ safe: true }}>
+              {value => (
+                <>
+                  <InputSelect
+                    placeholder='Add...'
+                    hasIcon={to(value, v => !!v && v !== borderType.None)}
+                    color={value}
+                    onReset={border.onReset}
+                    onClick={border.onClick}
+                  >
+                    {value && to(border.borderTypeInvoker.value, v => (v !== borderType.None ? v : ''))}
+                  </InputSelect>
+                </>
+              )}
+            </GraphValue>
+          </ControlRowWide>
+        </ControlRow>
+      )}
 
       <AnimatedVisible visible={zIndex.visible}>
         <ControlRow title='Z Index' actions={zIndex.actions} isHighlight={zIndex.isOverride}>

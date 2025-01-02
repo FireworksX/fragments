@@ -4,7 +4,6 @@ import { applyModules } from "@/shared/applyModules.ts";
 import { GraphState } from "@graph-state/core";
 import { FrameNode } from "@/types";
 import { sizeModule } from "@/modules/sizeModule.ts";
-import { toCssModule } from "@/modules/toCssModule";
 import { sizingModule } from "@/modules/sizingModule.ts";
 import { aspectRatioModule } from "@/modules/aspectRationModule.ts";
 import { visibleModule } from "@/modules/visibleModule.ts";
@@ -22,11 +21,12 @@ import { copyModule } from "@/modules/copyModule.ts";
 import { duplicateModule } from "@/modules/duplicateModule.ts";
 import { attributesModule } from "@/modules/attributesModule.ts";
 import { linkModule } from "@/modules/linkModule.ts";
+import { borderModule } from "@/modules/borderModule.ts";
 
 export const modules = [
   childrenModule,
   positionModule,
-  toCssModule,
+  borderModule,
   sizeModule,
   sizingModule,
   aspectRatioModule,
