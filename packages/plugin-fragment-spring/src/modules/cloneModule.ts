@@ -24,22 +24,32 @@ export function cloneModule<T extends BaseNode>(
           (child) => cache.resolve(child)?.clone?.() ?? child
         ) ?? [];
 
+      const nextId = generateId();
+      const nextKey = cache.keyOfEntity({ _type: node._type, _id: nextId });
+
+      /**
+       * Сначала создаём связь parent-children в graphState
+       * чтобы когда создавалась нода createNode()
+       * поля знали что есть родитель и нужно использовать override
+       */
+      cache.mutate(nodeKey, {
+        overrides: [nextKey],
+      });
+
       const nextEntity = createNode(
         {
           ...(overrideNode ?? {}),
           _type: node._type,
-          _id: generateId(),
+          _id: nextId,
           children: nextChildren,
         },
         cache
       );
 
-      const cloneKey = cache.mutate(nextEntity);
-      cache.mutate(nodeKey, {
-        overrides: [cloneKey],
-      });
+      // const cloneKey = cache.mutate(nextEntity);
+      cache.mutate(nextEntity);
 
-      return cloneKey;
+      return nextKey;
     },
   };
 }

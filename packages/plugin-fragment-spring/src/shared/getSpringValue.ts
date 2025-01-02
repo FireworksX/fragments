@@ -4,7 +4,7 @@ import { GraphState } from "@graph-state/core";
 import { isFieldOverridden } from "@/shared/isFieldOverridden.ts";
 import { Interpolation } from "@react-spring/web";
 import { SpringValue } from "@fragments/springs-factory";
-import { isObject, isValue } from "@fragments/utils";
+import { isBrowser, isObject, isValue } from "@fragments/utils";
 import { deepMergeObjects } from "@fragments/plugin-fragment";
 import { isVariableLink } from "@/shared/isVariableLink.ts";
 

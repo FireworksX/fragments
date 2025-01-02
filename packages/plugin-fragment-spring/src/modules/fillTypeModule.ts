@@ -2,6 +2,7 @@ import { GraphState } from "@graph-state/core";
 import { BaseNode, WithSpringFillType } from "@/types";
 import { getSpringValue } from "@/shared/getSpringValue.ts";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
+import { isBrowser } from "@fragments/utils";
 
 export function fillTypeModule<T extends BaseNode>(
   node: T,

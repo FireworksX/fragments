@@ -3,6 +3,7 @@ import { GraphState } from "@graph-state/core";
 import { isValue } from "@fragments/utils";
 import { isVariableLink } from "@/shared/isVariableLink.ts";
 import { getKey } from "@/shared/index.ts";
+import { getOverrideFrom } from "@/shared/getOverrideFrom.ts";
 
 export function getFieldValue<N extends BaseNode>(
   node: N,
@@ -22,9 +23,11 @@ export function getFieldValue<N extends BaseNode>(
     return currentValue;
   }
 
+  const overrideFrom = getOverrideFrom(node, cache);
+
   // Если есть overrideFrom, проверяем родителя
-  if (resolvedNode?.overrideFrom) {
-    const parentNode = cache.resolve(getKey(resolvedNode.overrideFrom));
+  if (overrideFrom) {
+    const parentNode = cache.resolve(overrideFrom);
 
     if (parentNode) {
       return getFieldValue(parentNode, field, cache);

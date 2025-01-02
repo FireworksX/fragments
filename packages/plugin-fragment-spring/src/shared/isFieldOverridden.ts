@@ -3,7 +3,6 @@ import { BaseNode } from "@/types";
 import { isBrowser, isValue } from "@fragments/utils";
 import { GraphState } from "@graph-state/core";
 import { getOverrideFrom } from "@/shared/getOverrideFrom.ts";
-import { getKey } from "@/shared/index.ts";
 
 export function isFieldOverridden<T extends BaseNode>(
   node: T,
@@ -11,6 +10,7 @@ export function isFieldOverridden<T extends BaseNode>(
   cache: GraphState
 ): boolean {
   const overrideFrom = getOverrideFrom(node, cache);
+
   // Проверяем значение поля в текущем узле
   const value = (node as any)[field];
 
