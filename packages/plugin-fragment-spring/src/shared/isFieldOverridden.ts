@@ -1,7 +1,8 @@
 // Вспомогательная функция для проверки, перезаписывается ли поле в цепочке overrideFrom
 import { BaseNode } from "@/types";
-import { isValue } from "@fragments/utils";
+import { isBrowser, isValue } from "@fragments/utils";
 import { GraphState } from "@graph-state/core";
+import { getOverrideFrom } from "@/shared/getOverrideFrom.ts";
 import { getKey } from "@/shared/index.ts";
 
 export function isFieldOverridden<T extends BaseNode>(
@@ -9,17 +10,18 @@ export function isFieldOverridden<T extends BaseNode>(
   field: string,
   cache: GraphState
 ): boolean {
+  const overrideFrom = getOverrideFrom(node, cache);
   // Проверяем значение поля в текущем узле
   const value = (node as any)[field];
 
   // Если значение существует в текущем узле, оно не перезаписывается
   // Если нет overrideFrom, то поле не перезаписывается
-  if (isValue(value) || !node.overrideFrom) {
+  if (isValue(value) || !overrideFrom) {
     return false;
   }
 
   // Проверяем всю цепочку родителей
-  let currentOverrideFrom = getKey(node.overrideFrom);
+  let currentOverrideFrom = overrideFrom;
   while (currentOverrideFrom) {
     const parentNode: BaseNode = cache.resolve(currentOverrideFrom) as BaseNode;
     if (parentNode) {
@@ -30,7 +32,7 @@ export function isFieldOverridden<T extends BaseNode>(
       }
 
       // Переходим к следующему родителю
-      currentOverrideFrom = getKey(parentNode.overrideFrom);
+      currentOverrideFrom = getOverrideFrom(parentNode, cache);
     }
   }
 

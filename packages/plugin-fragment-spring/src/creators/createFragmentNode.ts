@@ -50,7 +50,7 @@ export function createFragmentNode(
       });
     },
 
-    properties: getStaticValue(baseNode, "properties", []),
+    properties: getStaticValue(baseNode, "properties", [], cache),
     createProperty: (type: keyof typeof variableType) => {
       const createdProperty = createNode(
         { _type: nodes.Variable, type },

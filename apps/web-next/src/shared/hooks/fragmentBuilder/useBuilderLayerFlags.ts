@@ -4,7 +4,7 @@ import { useGraph } from '@graph-state/react'
 import { LinkKey } from '@graph-state/core'
 import { to } from '@react-spring/web'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
-import { nodes } from '@fragments/plugin-fragment'
+import { nodes, layerMode as defLayerMode } from '@fragments/plugin-fragment'
 
 export const useBuilderLayerFlags = (layerKey: LinkKey) => {
   const { documentManager } = useContext(BuilderContext)
@@ -21,7 +21,7 @@ export const useBuilderLayerFlags = (layerKey: LinkKey) => {
   const isVisible = visibleInvoker.value
   const layerMode = layerInvoker('layerMode').value
   const layerDirection = layerInvoker('layerDirection').value
-  const hasLayout = to(layerMode, mode => mode === layerMode?.flex)
+  const hasLayout = to(layerMode, mode => mode === defLayerMode?.flex)
   const canRemove = layerNode?._type === nodes.Breakpoint ? !layerNode?.isPrimary : true
   const canWrap = layerNode?._type !== nodes.Breakpoint
   const canDuplicate = layerNode?._type !== nodes.Fragment

@@ -13,6 +13,10 @@ export function cloneModule<T extends BaseNode>(
   return {
     ...node,
     overrides: node?.overrides ?? [],
+    getOverrideFrom() {
+      const cacheParents = cache.resolveParents(nodeKey);
+      return cacheParents.find((parent) => parent.overrides?.includes(nodeKey));
+    },
     clone(overrideNode: BaseNode) {
       const node = cache.resolve(nodeKey);
       const nextChildren =
@@ -23,7 +27,6 @@ export function cloneModule<T extends BaseNode>(
       const nextEntity = createNode(
         {
           ...(overrideNode ?? {}),
-          overrideFrom: setKey(nodeKey),
           _type: node._type,
           _id: generateId(),
           children: nextChildren,

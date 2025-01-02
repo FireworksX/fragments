@@ -31,7 +31,7 @@ export { default as isBrowser } from "./isBrowser";
 export { generateId } from "./generateId";
 export { colorToObject } from "./colors/colorToObject";
 export { objectToColorString } from "./colors/objectToColorString";
-export { isFiniteNumber, finiteNumber } from "./finiiteNumber";
+export * from "./finiiteNumber";
 export {
   roundedNumber,
   roundedNumberString,

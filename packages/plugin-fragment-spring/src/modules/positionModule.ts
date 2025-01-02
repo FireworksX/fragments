@@ -3,6 +3,9 @@ import { GraphState } from "@graph-state/core";
 import { positionType } from "@/definitions.ts";
 import { getSpringValue } from "@/shared/getSpringValue.ts";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
+import { getFieldValue } from "@fragments/plugin-fragment";
+import { isFiniteNumber } from "@fragments/utils";
+import { animatableValue } from "@/shared/animatableValue.ts";
 
 export function positionModule<T extends BaseNode>(
   node: T,
@@ -23,11 +26,18 @@ export function positionModule<T extends BaseNode>(
       return cache.resolve(node) as WithSpringPosition<T>;
     },
     move(top: number, left: number) {
-      if (typeof top === "number") {
-        setValueToNode(node, "top", top, cache);
-      }
-      if (typeof left === "number") {
-        setValueToNode(node, "left", left, cache);
+      const nodeGraph = cache.resolve(node);
+      const nodePositionType = animatableValue(
+        getFieldValue(nodeGraph, "positionType", cache)
+      );
+
+      if (nodePositionType === positionType.absolute) {
+        if (typeof top === "number" && isFiniteNumber(top)) {
+          setValueToNode(node, "top", top, cache);
+        }
+        if (typeof left === "number" && isFiniteNumber(left)) {
+          setValueToNode(node, "left", left, cache);
+        }
       }
 
       return cache.resolve(node) as WithSpringPosition<T>;

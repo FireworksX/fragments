@@ -38,7 +38,7 @@ export const useLayerPositionStyles = (layerKey: LinkKey, parents: LinkKey[] = [
 
     return {
       position: to(positionType, position => {
-        return isDocumentRender ? 'static' : onlyAbsolute(position, position)
+        return isDocumentRender ? 'static' : position
       }),
       top: to([top, positionType], (top, position) => (isDocumentRender ? 'initial' : onlyAbsolute(position, top))),
       left: to([left, positionType], (left, position) => (isDocumentRender ? 'initial' : onlyAbsolute(position, left)))

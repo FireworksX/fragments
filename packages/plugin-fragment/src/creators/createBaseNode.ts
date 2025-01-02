@@ -10,6 +10,7 @@ export function createBaseNode(
   cache: GraphState
 ): BaseNode {
   const id = initialNode?._id ?? generateId();
+  const nodeKey = cache.keyOfEntity({ _type: type, _id: id });
 
   const node: BaseNode = {
     ...initialNode,
@@ -18,20 +19,23 @@ export function createBaseNode(
     name: initialNode?.name,
     overrides: initialNode?.overrides ?? [],
     children: initialNode?.children ?? [],
-    parent: initialNode?.parent ?? undefined,
+    // parent: initialNode?.parent ?? null,
 
     getParent: () => {
-      const resolvedNode = cache.resolve({ _type: type, _id: id });
+      const cacheParents = cache.resolveParents(nodeKey);
+      const cacheParent = cacheParents.find((parent) =>
+        parent?.children?.includes(nodeKey)
+      );
 
-      if (resolvedNode) {
-        return cache.resolve(getKey(resolvedNode.parent));
+      if (cacheParent) {
+        return cache.resolve(cacheParent);
       }
 
       return null;
     },
 
     getAllParents(stack = []) {
-      const node = cache.resolve({ _type: type, _id: id });
+      const node = cache.resolve(nodeKey);
       const parent = node.getParent();
 
       if (parent) {
@@ -51,7 +55,7 @@ export function createBaseNode(
     },
 
     remove() {
-      cache.invalidate({ _type: type, _id: id });
+      cache.invalidate(nodeKey);
     },
   };
 

@@ -3,17 +3,20 @@ import { BaseNode, WithSize, WithSpringSize } from "@/types";
 import { getSpringValue } from "@/shared/getSpringValue.ts";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
 import { getFieldValue } from "@fragments/plugin-fragment";
+import { isFiniteNumber } from "@fragments/utils";
+import { positiveValue } from "@fragments/utils";
 
 export function sizeModule<T extends BaseNode>(
   node: T,
   cache: GraphState
 ): WithSpringSize<BaseNode> {
   const widthSetter = (value: number) =>
-    setValueToNode(node, "width", value, cache);
+    setValueToNode(node, "width", isFiniteNumber(value) ? value : 0, cache);
   const heightSetter = (value: number) =>
-    setValueToNode(node, "height", value, cache);
+    setValueToNode(node, "height", isFiniteNumber(value) ? value : 0, cache);
 
   const setWidth = (value: number) => {
+    value = positiveValue(value);
     if (typeof value !== "number") {
       return;
     }
@@ -28,6 +31,8 @@ export function sizeModule<T extends BaseNode>(
   };
 
   const setHeight = (value: number) => {
+    value = positiveValue(value);
+
     if (typeof value !== "number") {
       return;
     }

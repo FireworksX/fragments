@@ -170,6 +170,9 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
         </Touchable>
         <div className={styles.headIcon}>
           <BuilderLayerTypeIcon
+            flags={flags}
+            hasLayout={flags.hasLayout}
+            layoutDirection={flags.layerDirection}
             layerKey={layerKey}
             primaryIconClassName={styles.primaryIcon}
             textIconClassName={styles.textIcon}

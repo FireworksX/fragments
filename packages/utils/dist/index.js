@@ -62,6 +62,7 @@ __export(src_exports, {
   objectToColorString: () => objectToColorString,
   omit: () => omit,
   pick: () => pick,
+  positiveValue: () => positiveValue,
   promiseWaiter: () => promiseWaiter,
   replace: () => replace,
   rgbStringToHex: () => rgbStringToHex,
@@ -412,6 +413,12 @@ function isFiniteNumber(value) {
 function finiteNumber(value) {
   return isFiniteNumber(value) ? value : void 0;
 }
+function positiveValue(value) {
+  if (isFiniteNumber(value) && value > 0) {
+    return value;
+  }
+  return 0;
+}
 
 // src/roundedNumber.ts
 function roundedNumber(value, decimals = 0) {
@@ -500,6 +507,7 @@ var interpolationObject = (input) => {
   objectToColorString,
   omit,
   pick,
+  positiveValue,
   promiseWaiter,
   replace,
   rgbStringToHex,
