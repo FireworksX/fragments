@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, Boolean, DateTime, JSON, Table, orm
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, Boolean, DateTime, JSON, Table, orm, func
 from sqlalchemy.orm import relationship
 
 from database import Base
@@ -97,6 +97,7 @@ class StreamGeoLocationFilter(Base):
     city = Column('city', String, nullable=False)
     toggled = Column('toggled', Boolean, nullable=False)
 
+
 class StreamTimeFrameFilter(Base):
     __tablename__ = "stream_time_frame_filter"
     id = Column('id', Integer, primary_key=True, index=True)
@@ -117,6 +118,7 @@ class StreamOSTypeFilter(Base):
     os_type = Column('os_type', Integer, nullable=False)
     toggled = Column('toggled', Boolean, nullable=False)
 
+
 class StreamDeviceTypeFilter(Base):
     __tablename__ = "stream_device_type_filter"
     id = Column('id', Integer, primary_key=True, index=True)
@@ -125,6 +127,7 @@ class StreamDeviceTypeFilter(Base):
     stream = relationship("Stream", back_populates="device_types_filter")
     device_type = Column('device_type', Integer, nullable=False)
     toggled = Column('toggled', Boolean, nullable=False)
+
 
 class StreamPageFilter(Base):
     __tablename__ = "stream_page_filter"
@@ -149,15 +152,16 @@ class Stream(Base):
     weight = Column('weight', Float, nullable=False)
 
     pages_filter = relationship("StreamPageFilter", back_populates="stream", cascade="save-update, merge, "
-                                                                        "delete, delete-orphan")
-    device_types_filter = relationship("StreamDeviceTypeFilter", back_populates="stream", cascade="save-update, merge, "
                                                                                      "delete, delete-orphan")
+    device_types_filter = relationship("StreamDeviceTypeFilter", back_populates="stream", cascade="save-update, merge, "
+                                                                                                  "delete, delete-orphan")
     os_types_filter = relationship("StreamOSTypeFilter", back_populates="stream", cascade="save-update, merge, "
-                                                                             "delete, delete-orphan")
+                                                                                          "delete, delete-orphan")
     time_frames_filter = relationship("StreamTimeFrameFilter", back_populates="stream", cascade="save-update, merge, "
-                                                                                   "delete, delete-orphan")
-    geo_locations_filter = relationship("StreamGeoLocationFilter", back_populates="stream", cascade="save-update, merge, "
-                                                                                       "delete, delete-orphan")
+                                                                                                "delete, delete-orphan")
+    geo_locations_filter = relationship("StreamGeoLocationFilter", back_populates="stream",
+                                        cascade="save-update, merge, "
+                                                "delete, delete-orphan")
 
 
 class Feedback(Base):
@@ -173,23 +177,61 @@ class FragmentMedia(Base):
     id = Column('id', Integer, primary_key=True, index=True)
     media_id = Column(ForeignKey("media.id", ondelete='CASCADE'))
     media = relationship("Media")
-    fragment_id = Column(ForeignKey("fragment.id", ondelete='CASCADE'))
-    fragment = relationship("Fragment", back_populates="assets")
+    fragment_version_id = Column(ForeignKey("fragment_version.id", ondelete='CASCADE'))
+    fragment_version = relationship("FragmentVersion", back_populates="assets")
+
+
+class FragmentVersion(Base):
+    __tablename__ = 'fragment_version'
+
+    id = Column('id', Integer, primary_key=True, index=True)  # Unique ID for the version
+    fragment_id = Column(Integer, ForeignKey("fragment.id"), nullable=False)
+    fragment = relationship("Fragment", back_populates="versions")
+
+    version_id = Column('version_id', String, unique=True, nullable=False)
+    name = Column('name', String, nullable=False)  # Name of the fragment version
+    document = Column('document', JSON, nullable=False)  # Version-specific document
+    props = Column('props', JSON, nullable=False)  # Version-specific properties
+
+    created_at = Column('created_at', DateTime, nullable=False, default=func.now())  # Timestamp for version creation
+    author_id = Column('author_id', Integer, ForeignKey('user.id'), nullable=False)  # Author of the version
+    author = relationship("User")  # Relationship to the User table
+
+    # Self-referential relationship for the "downgrade" (previous) version
+    downgrade_version_id = Column(
+        Integer,
+        ForeignKey("fragment_version.id"),
+        nullable=True
+    )
+    downgrade_version = relationship(
+        "FragmentVersion",
+        remote_side=[id],  # Tells SQLAlchemy which column is on the "remote" side
+        foreign_keys=[downgrade_version_id]
+    )
+
+    # Self-referential relationship for the "upgrade" (next) version
+    upgrade_version_id = Column(
+        Integer,
+        ForeignKey("fragment_version.id"),
+        nullable=True
+    )
+    upgrade_version = relationship(
+        "FragmentVersion",
+        remote_side=[id],
+        foreign_keys=[upgrade_version_id]
+    )
+    assets = relationship("FragmentMedia", back_populates="fragment_version", cascade="save-update, merge, "
+                                                                                      "delete, delete-orphan")
 
 
 class Fragment(Base):
     __tablename__ = 'fragment'
-    id = Column('id', Integer, primary_key=True, index=True)
+
+    id = Column('id', Integer, primary_key=True, index=True)  # Unique ID for the fragment
     project_id = Column('project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False)
     project = relationship("Project")
-    name = Column('name', String)
-    document = Column('document', JSON, nullable=False)
-    props = Column('props', JSON, nullable=False)
-
-    author_id = Column('author_id', Integer, ForeignKey('user.id'))
-    author = relationship("User")
-    assets = relationship("FragmentMedia", back_populates="fragment", cascade="save-update, merge, "
-                                                                              "delete, delete-orphan")
+    versions = relationship("FragmentVersion", back_populates="fragment",
+                            cascade="all, delete-orphan")
 
 
 class Landing(Base):

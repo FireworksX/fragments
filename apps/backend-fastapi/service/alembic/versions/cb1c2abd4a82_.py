@@ -1,8 +1,8 @@
 """
 
-Revision ID: 29ef78cbf746
+Revision ID: cb1c2abd4a82
 Revises: 
-Create Date: 2024-11-28 20:40:08.798615
+Create Date: 2025-01-04 11:08:11.870038
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '29ef78cbf746'
+revision = 'cb1c2abd4a82'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -26,6 +26,11 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_feedback_id'), 'feedback', ['id'], unique=False)
+    op.create_table('fragment',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_fragment_id'), 'fragment', ['id'], unique=False)
     op.create_table('geo_location',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('country', sa.String(), nullable=False),
@@ -55,6 +60,23 @@ def upgrade():
     sa.UniqueConstraint('email')
     )
     op.create_index(op.f('ix_user_id'), 'user', ['id'], unique=False)
+    op.create_table('fragment_version',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('version_id', sa.String(), nullable=False),
+    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('document', sa.JSON(), nullable=False),
+    sa.Column('props', sa.JSON(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), nullable=False),
+    sa.Column('author_id', sa.Integer(), nullable=False),
+    sa.Column('downgrade_version_id', sa.Integer(), nullable=True),
+    sa.Column('upgrade_version_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['author_id'], ['user.id'], ),
+    sa.ForeignKeyConstraint(['downgrade_version_id'], ['fragment_version.id'], ),
+    sa.ForeignKeyConstraint(['upgrade_version_id'], ['fragment_version.id'], ),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('version_id')
+    )
+    op.create_index(op.f('ix_fragment_version_id'), 'fragment_version', ['id'], unique=False)
     op.create_table('project',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=True),
@@ -80,18 +102,15 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_campaign_id'), 'campaign', ['id'], unique=False)
-    op.create_table('fragment',
+    op.create_table('fragment_media',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('project_id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(), nullable=True),
-    sa.Column('document', sa.JSON(), nullable=False),
-    sa.Column('props', sa.JSON(), nullable=False),
-    sa.Column('author_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['author_id'], ['user.id'], ),
-    sa.ForeignKeyConstraint(['project_id'], ['project.id'], ondelete='CASCADE'),
+    sa.Column('media_id', sa.Integer(), nullable=True),
+    sa.Column('fragment_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['fragment_id'], ['fragment_version.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['media_id'], ['media.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_index(op.f('ix_fragment_id'), 'fragment', ['id'], unique=False)
+    op.create_index(op.f('ix_fragment_media_id'), 'fragment_media', ['id'], unique=False)
     op.create_table('project_members_role',
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('project_id', sa.Integer(), nullable=False),
@@ -100,15 +119,6 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('user_id', 'project_id')
     )
-    op.create_table('fragment_media',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('media_id', sa.Integer(), nullable=True),
-    sa.Column('fragment_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['fragment_id'], ['fragment.id'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['media_id'], ['media.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_index(op.f('ix_fragment_media_id'), 'fragment_media', ['id'], unique=False)
     op.create_table('project_camnpaign',
     sa.Column('campaign_id', sa.Integer(), nullable=False),
     sa.Column('project_id', sa.Integer(), nullable=False),
@@ -221,21 +231,23 @@ def downgrade():
     op.drop_index(op.f('ix_stream_id'), table_name='stream')
     op.drop_table('stream')
     op.drop_table('project_camnpaign')
+    op.drop_table('project_members_role')
     op.drop_index(op.f('ix_fragment_media_id'), table_name='fragment_media')
     op.drop_table('fragment_media')
-    op.drop_table('project_members_role')
-    op.drop_index(op.f('ix_fragment_id'), table_name='fragment')
-    op.drop_table('fragment')
     op.drop_index(op.f('ix_campaign_id'), table_name='campaign')
     op.drop_table('campaign')
     op.drop_index(op.f('ix_project_id'), table_name='project')
     op.drop_table('project')
+    op.drop_index(op.f('ix_fragment_version_id'), table_name='fragment_version')
+    op.drop_table('fragment_version')
     op.drop_index(op.f('ix_user_id'), table_name='user')
     op.drop_table('user')
     op.drop_index(op.f('ix_media_id'), table_name='media')
     op.drop_table('media')
     op.drop_index(op.f('ix_geo_location_id'), table_name='geo_location')
     op.drop_table('geo_location')
+    op.drop_index(op.f('ix_fragment_id'), table_name='fragment')
+    op.drop_table('fragment')
     op.drop_index(op.f('ix_feedback_id'), table_name='feedback')
     op.drop_table('feedback')
     # ### end Alembic commands ###

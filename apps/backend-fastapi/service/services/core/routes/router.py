@@ -32,10 +32,10 @@ class Query:
         return await profile(info)
 
     @strawberry.field
-    async def fragment(self, info: strawberry.Info[Context], fragment_id: Optional[int] = None,
+    async def fragment(self, info: strawberry.Info[Context], fragment_id: Optional[int] = None, fragment_version_id: Optional[str] = None,
                        project_id: Optional[int] = None) -> List[FragmentGet]:
         if fragment_id is not None:
-            return [await fragment_by_id(info, fragment_id)]
+            return [await fragment_by_id(info, fragment_id, fragment_version_id)]
         if project_id is not None:
             return await fragments_in_project(info, project_id)
         else:

@@ -15,7 +15,7 @@ from .fragment import fragment_by_id
 from .schemas.landing import LandingGet, LandingPost, LandingPatch
 from .schemas.user import RoleGet, AuthPayload
 from .middleware import Context
-from crud.fragment import Fragment, get_fragment_by_id_db
+from crud.fragment import FragmentVersion, get_fragment_by_id_db
 from database import Session, Project, Landing, Stream, Campaign
 from .utils import get_user_role_in_project
 
@@ -54,7 +54,7 @@ async def create_landing_route(info: strawberry.Info[Context], landing_in: Landi
                             detail=f'User is not allowed to add landing')
 
     if landing_in.fragment_id is not None:
-        fragment: Fragment = await get_fragment_by_id_db(db, landing_in.fragment_id)
+        fragment: FragmentVersion = await get_fragment_by_id_db(db, landing_in.fragment_id)
         if fragment is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Fragment does not exist")
 
@@ -110,7 +110,7 @@ async def landing_by_id(info: strawberry.Info[Context], landing_id: int) -> Land
     if landing is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Landing does not exist")
 
-    fragment: Fragment = await get_fragment_by_id_db(db, landing.fragment.id)
+    fragment: FragmentVersion = await get_fragment_by_id_db(db, landing.fragment.id)
     if fragment is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Fragment does not exist")
 
@@ -144,7 +144,7 @@ async def update_landing_route(info: strawberry.Info[Context], landing_patch: La
                             detail=f'User is not allowed to update landings')
 
     if landing_patch.fragment_id is not None:
-        fragment: Fragment = await get_fragment_by_id_db(db, landing_patch.fragment_id)
+        fragment: FragmentVersion = await get_fragment_by_id_db(db, landing_patch.fragment_id)
         if fragment is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Fragment does not exist")
         if landing_patch.props is not None and fragment.props is None:
