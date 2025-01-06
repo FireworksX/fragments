@@ -181,6 +181,14 @@ class FragmentMedia(Base):
     fragment_version = relationship("FragmentVersion", back_populates="assets")
 
 
+# linked fragments
+class LinkedFragment(Base):
+    __tablename__ = "linked_fragment"
+    linked_fragment_id = Column(ForeignKey("fragment.id"), primary_key=True)
+    fragment_version_id = Column(ForeignKey("fragment_version.id"), primary_key=True)
+    fragment_version = relationship("FragmentVersion", back_populates="linked_fragments")
+    linked_fragment = relationship("Fragment")
+
 class FragmentVersion(Base):
     __tablename__ = 'fragment_version'
 
@@ -222,6 +230,8 @@ class FragmentVersion(Base):
     )
     assets = relationship("FragmentMedia", back_populates="fragment_version", cascade="save-update, merge, "
                                                                                       "delete, delete-orphan")
+
+    linked_fragments = relationship("LinkedFragment", back_populates="fragment_version")
 
 
 class Fragment(Base):

@@ -1,5 +1,5 @@
 from crud.media import get_media_by_id_db
-from database import FragmentMedia
+from database import FragmentMedia, LinkedFragment
 from database.models import Project, FragmentVersion, Fragment
 from sqlalchemy.orm import Session
 from typing import Optional, List
@@ -11,12 +11,16 @@ def calculate_hash() -> str:
     return str(uuid.uuid4())
 
 async def create_fragment_db(db: Session, name: str, author_id: int, project_id: int, document: str,
-                             props: str) -> FragmentVersion:
+                             props: str, linked_fragments: List[int]) -> FragmentVersion:
+    fragments: List[Fragment] = db.query(Fragment).filter(Fragment.id.in_(linked_fragments)).all()
     fragment: Fragment = Fragment(project_id=project_id)
     db.add(fragment)
     db.commit()
     fragment_version: FragmentVersion = FragmentVersion(fragment_id=fragment.id, name=name, author_id=author_id, document=document, props=props, version_id=calculate_hash())
     db.add(fragment_version)
+    for fr in fragments:
+        linked_fragment: LinkedFragment = LinkedFragment(linked_fragment=fr, fragment_version=fragment_version)
+        fragment_version.linked_fragments.append(linked_fragment)
     db.commit()
     db.refresh(fragment_version)
     fragment.versions.append(fragment_version)
@@ -73,7 +77,7 @@ async def get_fragments_by_project_id_db(db: Session, project_id: int) -> List[F
     return query.all()
 
 
-async def update_fragment_by_id_db(db: Session, values: dict) -> FragmentVersion:
+async def update_fragment_by_id_db(db: Session, values: dict, linked_fragments: List[int]) -> FragmentVersion:
     fragment_id: int = values['id']
 
     latest_version = (
@@ -82,11 +86,16 @@ async def update_fragment_by_id_db(db: Session, values: dict) -> FragmentVersion
         .order_by(desc(FragmentVersion.created_at))
         .first()
     )
+    fragments: List[Fragment] = db.query(Fragment).filter(Fragment.id.in_(linked_fragments)).all()
     new_fragment_version: FragmentVersion = FragmentVersion(fragment_id=fragment_id, name=latest_version.name,
                                                             author_id=latest_version.author_id,
                                                             document=latest_version.document,
                                                             props=latest_version.props,
                                                             version_id=calculate_hash())
+    new_fragment_version.linked_fragments.clear()
+    for fr in fragments:
+        linked_fragment: LinkedFragment = LinkedFragment(linked_fragment=fr, fragment_version=new_fragment_version)
+        new_fragment_version.linked_fragments.append(linked_fragment)
     db.commit()
     latest_version.upgrade_version = new_fragment_version
     db.commit()

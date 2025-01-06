@@ -13,6 +13,8 @@ class FragmentPost:
     document: strawberry.scalars.JSON
     props: Optional[strawberry.scalars.JSON] = None
 
+    linked_fragments: Optional[List[int]] = None  # ids of fragments
+
 
 @strawberry.input
 class FragmentPatch:
@@ -21,6 +23,8 @@ class FragmentPatch:
     name: Optional[str] = None
     document: Optional[strawberry.scalars.JSON] = None
     props: Optional[strawberry.scalars.JSON] = None
+
+    linked_fragments: Optional[List[int]] = None  # ids of fragments
 
 
 @strawberry.type
@@ -35,3 +39,5 @@ class FragmentGet:
     assets: List[str]
 
     upgrade_version_hash: Optional[str]
+
+    linked_fragments: Optional[List["FragmentGet"]] = None  # fragments
