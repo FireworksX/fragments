@@ -8,7 +8,7 @@
     flex-direction: column;
     flex: 1;
     background: var(--background-light);
-    height: calc(100vh - var(--app-size-header) - var(--app-size-tabs-height));
+    height: calc(100vh - var(--app-size-header));
     overflow: hidden;
     position: relative;
 }
@@ -28,5 +28,5 @@
     top: 0;
     bottom: 0;
     right: var(--builder-size-right-bar);
-    left: 0;
+    left: var(--builder-size-left-bar);
 }

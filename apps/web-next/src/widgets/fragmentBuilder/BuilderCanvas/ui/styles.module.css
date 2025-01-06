@@ -1,7 +1,7 @@
 .root {
     position: absolute;
     top: 0;
-    left: var(--builder-size-left-bar);
+    left: 0;
     right: var(--builder-size-right-bar);
     bottom: 0;
     overflow: hidden;

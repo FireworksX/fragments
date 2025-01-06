@@ -1,0 +1,12 @@
+.root {
+    position: relative;
+    border-radius: var(--radius-small);
+}
+
+.clone {
+    opacity: .5;
+}
+
+.selected {
+    background: var(--secondary-bg);
+}

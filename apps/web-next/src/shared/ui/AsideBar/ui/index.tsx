@@ -9,7 +9,7 @@ export interface AsideBarProps extends PropsWithChildren {
   className?: string
 }
 
-const AsideBar: FC<AsideBarProps> = ({ className, children, position = 'left', isOpen = false }) => {
+const AsideBar: FC<AsideBarProps> = ({ className, children, position = 'left', isOpen = true }) => {
   const initialOffset = position === 'left' ? '-100%' : '100%'
   const { x } = useSpring({
     x: isOpen ? '0' : initialOffset

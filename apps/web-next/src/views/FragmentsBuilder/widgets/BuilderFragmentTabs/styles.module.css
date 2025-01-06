@@ -1,0 +1,42 @@
+.root {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--background);
+    min-height: var(--app-size-tabs-height);
+    border-bottom: 1px solid var(--border);
+}
+
+.tab {
+    display: flex;
+    align-items: center;
+    padding: 7px 10px;
+    border-radius: var(--radius-second);
+    gap: 5px;
+    color: var(--secondary);
+    transition: var(--animation-transition-default);
+
+    &.active {
+      background: var(--secondary-bg);
+      color: var(--text-color-accent);
+
+      .close {
+          color: var(--text-color-accent);
+      }
+    }
+}
+
+.close {
+    color: var(--secondary);
+    width: 15px;
+    height: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-small);
+    transition: var(--animation-transition-default);
+
+    &:hover {
+        background: var(--secondary-bg);
+    }
+}

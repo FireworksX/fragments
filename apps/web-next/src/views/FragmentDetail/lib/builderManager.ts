@@ -9,7 +9,11 @@ export const createBuilderManager = () =>
   createState({
     initialState: {
       showTextEditor: false,
-      mouseOverLayer: null
+      mouseOverLayer: null,
+      selectedProjectFile: null,
+      tabs: [],
+      activeFragment: null,
+      fragmentModules: []
     },
     skip: [isInstanceOf(SpringValue)],
     plugins: [
@@ -24,6 +28,18 @@ export const createBuilderManager = () =>
 
         state.mouseOverLayer = (layerLink: LinkKey) => state.mutate(state.key, { mouseOverLayer: layerLink })
         state.mouseLeaveLayer = () => state.mutate(state.key, { mouseOverLayer: null })
+
+        state.openFragment = (fragmentKey: LinkKey) => {
+          state.mutate(state.key, {
+            tabs: [fragmentKey]
+          })
+        }
+
+        state.selectProjectFile = (link: LinkKey) => {
+          state.mutate(state.key, {
+            selectedProjectFile: link
+          })
+        }
       }
     ]
   })
