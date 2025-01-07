@@ -1,8 +1,10 @@
 from .campaign import campaign_by_id, create_campaign_route, update_campaign_route, campaigns_in_project, \
     add_campaign_logo_route, campaign_by_name
+from .filesystem import create_project_item_route, get_project_item_route, get_project_items_in_project_route
 from .filter import get_all_filters
 from .schemas import AllFiltersGet
 from .schemas.feedback import FeedbackPost, FeedbackGet
+from .schemas.filesystem import ProjectItem, ProjectItemGet
 from .schemas.stream import StreamGet, StreamPost, StreamPatch
 from .schemas.landing import LandingGet, LandingPost, LandingPatch
 from .schemas.campaign import CampaignGet, CampaignPost, CampaignPatch
@@ -80,6 +82,14 @@ class Query:
     @strawberry.field
     async def filter(self, info: strawberry.Info[Context], countries: Optional[List[str]], regions: Optional[List[str]]) -> AllFiltersGet:
         return await get_all_filters(info, countries, regions)
+
+    @strawberry.field
+    async def get_project_item(self, info: strawberry.Info[Context], project_item_id: int) -> ProjectItemGet:
+        return await get_project_item_route(info, project_item_id)
+
+    @strawberry.field
+    async def get_project_items(self, info: strawberry.Info[Context], project_id: int) -> List[ProjectItemGet]:
+        return await get_project_items_in_project_route(info, project_id)
 
 
 @strawberry.type
@@ -175,4 +185,8 @@ class Mutation:
     @strawberry.mutation
     async def update_landing(self, info: strawberry.Info[Context], landing: LandingPatch) -> LandingGet:
         return await update_landing_route(info, landing)
+
+    @strawberry.mutation
+    async def create_project_item(self, info: strawberry.Info[Context], project_item: ProjectItem) -> ProjectItemGet:
+        return await create_project_item_route(info, project_item)
 

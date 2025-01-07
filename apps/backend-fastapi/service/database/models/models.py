@@ -189,6 +189,7 @@ class LinkedFragment(Base):
     fragment_version = relationship("FragmentVersion", back_populates="linked_fragments")
     linked_fragment = relationship("Fragment")
 
+
 class FragmentVersion(Base):
     __tablename__ = 'fragment_version'
 
@@ -267,3 +268,28 @@ class Media(Base):
     path = Column('path', String)
     ext = Column('ext', String)
     public_path = Column('public_path', String)
+
+class FilesystemProjectItem(Base):
+    __tablename__ = 'filesystem_project_item'
+    id = Column('id', Integer, primary_key=True, index=True)
+    project_id = Column('project_id', Integer, ForeignKey('project.id'))
+    name = Column('name', String)
+    item_type = Column('item_type', Integer, nullable=False)
+    # Reference to the parent (nullable if top-level)
+    parent_id = Column(Integer, ForeignKey('filesystem_project_item.id'), nullable=True)
+
+    # Relationship to the parent
+    parent = relationship(
+        "FilesystemProjectItem",
+        back_populates="nested_items",
+        remote_side="FilesystemProjectItem.id",
+        foreign_keys="[FilesystemProjectItem.parent_id]",
+    )
+
+    # Relationship to children
+    nested_items = relationship(
+        "FilesystemProjectItem",
+        back_populates="parent",
+        foreign_keys="[FilesystemProjectItem.parent_id]",
+        cascade="all, delete-orphan"
+    )
