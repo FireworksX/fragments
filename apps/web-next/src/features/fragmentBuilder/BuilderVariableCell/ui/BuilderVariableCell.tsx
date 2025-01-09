@@ -8,6 +8,7 @@ import { Cell } from '@/shared/ui/Cell'
 import { Button } from '@/shared/ui/Button'
 import { VariableIcon } from '@/shared/ui/VariableIcon'
 import { variableType } from '@fragments/plugin-fragment-spring'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 interface BuilderVariableCellProps {
   variableKey?: LinkKey
@@ -22,7 +23,7 @@ export const BuilderVariableCell: FC<BuilderVariableCellProps> = ({
   variableKey,
   onClick
 }) => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const [variable] = useGraph(documentManager, variableKey)
   const [documentGraph] = useGraph(documentManager, documentManager.root)
   const Icon = <VariableIcon type={variable.type} />

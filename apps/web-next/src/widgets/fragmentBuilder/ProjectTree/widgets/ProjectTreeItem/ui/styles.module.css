@@ -1,5 +1,8 @@
 .root {
     color: var(--text-color-accent);
+    display: flex;
+    gap: var(--gutter-medium);
+    align-items: center;
 
     &:hover {
         .actions {

@@ -25,7 +25,8 @@ const TreeItem = props => {
         onCollapse={props?.onCollapse}
         onCreateFolder={props?.item?.onCreateFolder}
         onCreateFragment={props?.item?.onCreateFragment}
-        onSelectFile={props?.item?.onSelectFile}
+        onSelectItem={props?.item?.onSelectItem}
+        onOpenItem={props?.item?.onOpenItem}
       />
     </ProjectTreeSortableItem>
   )

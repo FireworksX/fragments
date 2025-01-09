@@ -9,7 +9,6 @@ import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { to } from '@fragments/springs-factory'
 
 export const useBuilderCssOverride = () => {
-  const { documentManager } = useContext(BuilderContext)
   const { selection, selectionGraph } = useBuilderSelection()
   const layerInvoker = useLayerInvoker(selection, ({ key, node, value }) => {
     switch (key) {

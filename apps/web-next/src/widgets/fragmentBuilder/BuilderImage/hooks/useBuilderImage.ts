@@ -4,7 +4,6 @@ import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSe
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 
 export const useBuilderImage = () => {
-  const { builderManager, documentManager } = useContext(BuilderContext)
   const { selection } = useBuilderSelection()
 
   const layerInvoker = useLayerInvoker(selection, ({ node, key, value }) => {

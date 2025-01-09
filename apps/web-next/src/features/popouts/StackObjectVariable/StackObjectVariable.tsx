@@ -38,6 +38,7 @@ import { stackObjectFieldsVariableName } from '@/builder/StackCollector/componen
 import ArrowTopRightFill from '@/app/svg/fills/arrow-top-right-fill.svg'
 import PanelHeadAside from '@/builder/components/PanelHeadAside/PanelHeadAside'
 import { useStackObjectFieldsVariable } from './hooks/useStackObjectFieldsVariable'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export const stackObjectVariableName = 'stackObjectVariable'
 
@@ -68,7 +69,7 @@ const requiredControls: TabsSelectorItem[] = [
 ]
 
 const StackObjectVariable: FC<StackObjectVariableProps> = ({ className }) => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${stackObjectVariableName}`)
   const context = popout.context ?? {}
   const [variableGraph] = useGraph(documentManager, context?.variableKey)

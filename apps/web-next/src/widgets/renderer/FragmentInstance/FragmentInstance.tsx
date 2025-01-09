@@ -9,11 +9,12 @@ import { BaseRenderNode, defaultRender, defaultRenderNode, Fragment } from '@/wi
 import { useLayerStyles } from '../hooks/useLayerStyles'
 import { getFieldValue, getFieldValueMap } from '@fragments/plugin-fragment'
 import { InstanceProvider } from '@/widgets/renderer/FragmentInstance/lib/FragmentInstanceContext'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export interface DocumentRenderer extends BaseRenderNode {}
 
 export const FragmentInstance: FC<DocumentRenderer> = ({ layerKey, renderParents = [], render = defaultRender }) => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const [instanceGraph] = useGraph(documentManager, layerKey)
   const cssStyles = useLayerStyles(layerKey, renderParents)
   const instanceFragment = getFieldValue(instanceGraph, 'fragment', documentManager)

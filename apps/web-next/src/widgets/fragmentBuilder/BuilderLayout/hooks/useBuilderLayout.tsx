@@ -60,7 +60,6 @@ const wrap: TabsSelectorItem[] = [
 ]
 
 export const useBuilderLayout = () => {
-  const { documentManager } = useContext(BuilderContext)
   const { selection, selectionGraph } = useBuilderSelection()
   const layerInvoker = useLayerInvoker(selection, ({ node, key, value }) => {
     switch (key) {

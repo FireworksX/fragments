@@ -13,7 +13,7 @@ import { createFragmentInstanceNode } from "@/creators/createFragmentInstanceNod
 const plugin: (root: LinkKey) => Plugin =
   (root: LinkKey) => (state: GraphState<StateEntity>) => {
     state.$fragment = {
-      renderTarget: renderTarget.document,
+      renderTarget: renderTarget.canvas,
       setRenderTarget: (renderTarget) => {
         state.$fragment.renderTarget = renderTarget;
         state.mutate(root, (prev) => ({

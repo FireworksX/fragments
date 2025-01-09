@@ -24,6 +24,7 @@ import { useDisplayColor } from '@/shared/hooks/fragmentBuilder/useDisplayColor'
 import { borderType, paintMode } from '@fragments/plugin-fragment-spring'
 import { isValue } from '@fragments/utils'
 import { useInterpolation } from '@/shared/hooks/useInterpolation'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 interface BuilderStylesProps {
   className?: string
@@ -32,7 +33,7 @@ interface BuilderStylesProps {
 const ALLOW_FILL_TYPES = [paintMode.Solid]
 
 const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
-  const { documentManager } = use(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const { selectionGraph, opacity, overflow, visible, zIndex, radius, fill, border } = useBuilderStyles()
   const { getColor, getNameColor } = useDisplayColor(documentManager)
   // const fillContent = useInterpolation([fill.type], v =>

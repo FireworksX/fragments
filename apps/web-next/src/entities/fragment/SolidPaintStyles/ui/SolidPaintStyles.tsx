@@ -8,6 +8,7 @@ import { InputText } from '@/shared/ui/InputText'
 import { InputSelect } from '@/shared/ui/InputSelect'
 import { ColorCell } from '@/shared/ui/ColorCell'
 import { useBuilderAssetsColors } from '@/shared/hooks/fragmentBuilder/useBuilderAssetsColors'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export type StackColorsValue = Color
 
@@ -20,7 +21,7 @@ interface StackColorsProps {
 }
 
 const SolidPaintStyles: FC<StackColorsProps> = ({ className, activeColorKey, getInitialColor, onSelect, onCreate }) => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const [search, setSearch] = useState('')
   const { colorVariables, editColor, createColor } = useBuilderAssetsColors()
 

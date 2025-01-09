@@ -12,6 +12,7 @@ import { isComputedValueLink } from '@/shared/utils/isComputedValueLink'
 import { Touchable } from '@/shared/ui/Touchable'
 import { InputSelectVariable } from '@/shared/ui/InputSelectVariable'
 import { nodes } from '@fragments/plugin-fragment-spring'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 interface BuilderControlRowProps extends PropsWithChildren {
   value?: unknown | LinkKey
@@ -35,7 +36,7 @@ const ControlRow: FC<BuilderControlRowProps> = ({
   onResetVariable,
   onClickVariable
 }) => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const hasActions = actions.some(action => action.length > 0)
   const isVariable = isVariableLink(value) || isComputedValueLink(value)
 

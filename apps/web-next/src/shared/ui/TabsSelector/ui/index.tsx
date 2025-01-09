@@ -67,6 +67,7 @@ const TabsSelector: FC<TabsSelectorProps> = animated(({ className, cellClassName
               [styles.active]: el.name === value,
               [styles.disabled]: el.disabled
             })}
+            disabled={el.disabled}
             TagName='button'
             data-active={el.name === value}
             key={index}

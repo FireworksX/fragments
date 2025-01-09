@@ -43,6 +43,7 @@ import { CanvasTextEditorProvider } from '@/widgets/fragmentBuilder/BuilderHighl
 import { BuilderImage } from '@/widgets/fragmentBuilder/BuilderImage'
 import BuilderAttributes from '../../../widgets/fragmentBuilder/BuilderAttributes/ui/BuilderAttributes'
 import BuilderLink from '../../../widgets/fragmentBuilder/BuilderLink/ui/BuilderLink'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 interface FragmentBuilderProps {
   className?: string
@@ -50,7 +51,8 @@ interface FragmentBuilderProps {
 
 export const FragmentBuilder: FC<FragmentBuilderProps> = ({ className }) => {
   const { isEdit, focus } = useBuilderManager()
-  const { canvasManager, documentManager } = useContext(BuilderContext)
+  const { canvasManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   // useBuilderHotKeys()
 
   useEffect(() => {

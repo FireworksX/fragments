@@ -5,9 +5,10 @@ import { fragmentGrowingMode, layerMode, nodes } from '@fragments/plugin-fragmen
 import { to } from '@react-spring/web'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export const useBuilderFragmentGrowing = () => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const { selection, selectionGraph } = useBuilderSelection()
 
   const layerInvoker = useLayerInvoker(selection, ({ key, node, value, prevValue }) => {

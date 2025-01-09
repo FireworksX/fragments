@@ -10,9 +10,10 @@ import { getFieldValueMap } from '@fragments/plugin-fragment'
 import { useLayerFlexStyles } from './styles/useLayerFlexStyles'
 import { useRenderTarget } from '@/widgets/renderer/hooks/useRenderTarget'
 import { useLayerBorderStyles } from '@/widgets/renderer/hooks/styles/useLayerBorderStyles'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export const useLayerStyles = (layerLink: LinkKey, parents: LinkKey[] = []) => {
-  const { documentManager } = use(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const [layerNode] = useGraph(documentManager, layerLink)
   const { isCanvas } = useRenderTarget()
 

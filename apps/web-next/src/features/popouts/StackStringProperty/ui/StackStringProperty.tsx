@@ -13,6 +13,7 @@ import { InputText, InputTextAnimated } from '@/shared/ui/InputText'
 import { Textarea, TextareaAnimated } from '@/shared/ui/Textarea'
 import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
 import { to } from '@fragments/springs-factory'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 interface StackStringVariableProps {
   className?: string
@@ -30,7 +31,7 @@ const controls: TabsSelectorItem[] = [
 ]
 
 const StackStringProperty: FC<StackStringVariableProps> = ({ className }) => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackStringProperty}`)
   const context = popout?.context ?? {}
 

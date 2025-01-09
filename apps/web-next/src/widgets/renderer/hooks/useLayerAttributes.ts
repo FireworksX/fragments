@@ -5,9 +5,10 @@ import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { animated } from '@react-spring/web'
 import { isValue } from '@fragments/utils'
 import { linkTarget } from '@fragments/plugin-fragment'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export const useLayerAttributes = (layerKey: LinkKey) => {
-  const { documentManager } = use(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const [layerGraph] = useGraph(documentManager, layerKey)
   const attributes = layerGraph?.attributes ?? {}
   let Tag = animated.div

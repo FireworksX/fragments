@@ -1,0 +1,20 @@
+.root {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: var(--gutter-default);
+}
+
+.title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-color-accent);
+    text-align: center;
+}
+
+.description {
+    font-size: 14px;
+    color: var(--text-color-accent-secondary);
+}

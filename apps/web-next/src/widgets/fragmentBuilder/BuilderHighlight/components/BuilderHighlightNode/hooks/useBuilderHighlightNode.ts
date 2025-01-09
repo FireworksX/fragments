@@ -12,12 +12,14 @@ import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { useLayerStyles } from '@/shared/hooks/fragmentBuilder/useLayerStyles'
 import { toPx } from '@/shared/utils/toPx'
 import { useInstanceProp } from '@/widgets/renderer/hooks/useInstanceProp'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 const BORDER_SIZE = 1.5
 const DRAG_PARENT_BORDER_SIZE = 3
 
 export const useBuilderHighlightNode = (layerKey: LinkKey, renderParents: LinkKey[] = []) => {
-  const { canvasManager, documentManager } = useContext(BuilderContext)
+  const { canvasManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const { isTextEditing } = useBuilderManager()
   const [canvas] = useGraph(canvasManager, canvasManager.key)
   const [layerNode] = useGraph(documentManager, layerKey)

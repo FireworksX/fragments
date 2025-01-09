@@ -6,7 +6,6 @@ import { useBuilderLayerFlags } from '@/shared/hooks/fragmentBuilder/useBuilderL
 import { hotKeysScope } from '@/shared/hooks/hotkeys/HotKeysProvider'
 
 export const useBuilderHotKeys = () => {
-  const { documentManager } = useContext(BuilderContext)
   const { selectionGraph, selection } = useBuilderSelection()
   const layerFlags = useBuilderLayerFlags(selection)
 

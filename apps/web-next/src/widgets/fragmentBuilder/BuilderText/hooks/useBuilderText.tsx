@@ -24,6 +24,7 @@ import { getTopLevelNodeRanges } from '../lib/getTopLevelNodeRanges'
 import { wrapTextInParagraphWithAttributes } from '../lib/wrapTextInParagraphWithAttributes'
 import { isVariableLink } from '@/shared/utils/isVariableLink'
 import { getResolvedValue } from '@fragments/plugin-fragment-spring'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 const aligns: TabsSelectorItem[] = [
   {
@@ -64,7 +65,8 @@ const weights = [
 const transforms: TextTransform[] = ['none', 'uppercase', 'lowercase', 'capitalize']
 
 export const useBuilderText = () => {
-  const { builderManager, documentManager } = useContext(BuilderContext)
+  const { builderManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const editor = useContext(CanvasTextEditorContext)
   const { selection, selectionGraph } = useBuilderSelection()
   const { isTextEditing } = useBuilderManager()

@@ -5,6 +5,7 @@ import { stateAlias } from '@/views/FragmentDetail/ui/FragmentDetail'
 import { nodes } from '@fragments/plugin-fragment-spring'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { LinkKey } from '@graph-state/core'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 const DEFAULT_BREAKPOINTS = [
   { name: 'Mobile', width: 375 },
@@ -14,7 +15,7 @@ const DEFAULT_BREAKPOINTS = [
 ]
 
 export const useBreakpoints = (customFragment?: LinkKey) => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const [fragmentGraph] = useGraph(documentManager, customFragment ?? documentManager.fragment)
   const childrenValues = useGraphStack(documentManager, fragmentGraph?.children ?? [])
   const primaryLayer = childrenValues.find(child => child.isRootLayer())

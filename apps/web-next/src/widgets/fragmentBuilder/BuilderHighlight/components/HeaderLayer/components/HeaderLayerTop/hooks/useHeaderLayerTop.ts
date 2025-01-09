@@ -4,9 +4,10 @@ import { LinkKey } from '@graph-state/core'
 import { useGraph } from '@graph-state/react'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useBreakpoints } from '@/shared/hooks/fragmentBuilder/useBreakpoints'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export const useHeaderLayerTop = (layerKey: LinkKey) => {
-  const { documentManager } = use(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const [layerGraph] = useGraph(documentManager, layerKey)
   const { selection } = useBuilderSelection()
   const { allowedBreakpoints, addBreakpoint, getThresholdLabel } = useBreakpoints()

@@ -3,6 +3,7 @@ import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { LinkKey } from '@graph-state/core'
 import { popoutsStore } from '@/shared/store/popouts.store'
 import { variableTransforms, variableType } from '@fragments/plugin-fragment-spring'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 // import { stackVariableTransformName } from '@/builder/StackCollector/components/variables/StackVariableTransform/StackVariableTransform'
 
 const computedValuesConfig = {
@@ -89,7 +90,7 @@ interface ComputedValueEntity {
 interface OpenComputedValueOptions {}
 
 export const useFragmentComputedValues = () => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
 
   const getTransformsByType = type =>
     (computedValuesByType[type] ?? []).map(transformType => computedValuesConfig[transformType]).filter(Boolean)

@@ -16,3 +16,7 @@
     height: 1px;
     background: rgba(var(--border--rgb), .6);
 }
+
+.hidden {
+    display: none;
+}

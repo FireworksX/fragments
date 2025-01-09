@@ -7,6 +7,7 @@ import { LinkKey } from '@graph-state/core'
 import { moveNode } from '@fragments/plugin-fragment-spring'
 import { generateId } from '@fragments/utils'
 import { nextTick } from '@/shared/utils/nextTick'
+import { useBuilderTabs } from '@/shared/hooks/fragmentBuilder/useBuilderTabs'
 
 const findIndexOfNode = (items: unknown[], linkNode: LinkKey) => {
   const index = items.findIndex(item => item.id === linkNode)
@@ -50,13 +51,25 @@ const list = [
             _type: 'TreeItem',
             _id: generateId(),
             name: 'Button',
-            type: 'fragment'
+            type: 'fragment',
+            target: {
+              _type: 'FragmentModule',
+              _id: generateId(),
+              name: 'Button',
+              fragment: 'Fragment:buttonid'
+            }
           },
           {
             _type: 'TreeItem',
             _id: generateId(),
             name: 'PredictionCard',
-            type: 'fragment'
+            type: 'fragment',
+            target: {
+              _type: 'FragmentModule',
+              _id: generateId(),
+              name: 'PredictionCard',
+              fragment: 'Fragment:g34gherhg3g'
+            }
           }
         ]
       }
@@ -66,14 +79,14 @@ const list = [
 
 export const useProjectTree = () => {
   const [c, setC] = useState(0)
-  const { documentManager, builderManager } = useContext(BuilderContext)
-  const [builder] = useGraph(builderManager, builderManager.key)
-  const { selection, selectionGraph } = useBuilderSelection()
+  const { builderManager } = useContext(BuilderContext)
   const [expandedLinkKeys, setExpandedLinkKeys] = useState<string[]>([])
   const itemRefsMap = useRef({})
+  const { activeTabKey, openTab } = useBuilderTabs()
 
   const getNode = (node, deepIndex = 0) => {
-    const key = documentManager.keyOfEntity(node)
+    const key = builderManager.keyOfEntity(node)
+    const targetKey = builderManager.keyOfEntity(node.target)
     const collapsed = !expandedLinkKeys.includes(key)
     const canHaveChildren = node?.type === 'folder'
 
@@ -83,13 +96,14 @@ export const useProjectTree = () => {
       collapsed,
       children: !canHaveChildren ? [] : (node?.children || []).map(key => getNode(key, deepIndex + 1)),
       canHaveChildren,
-      selected: builder?.selectedProjectFile === key,
+      selected: !!targetKey && activeTabKey === targetKey,
       ref: element => {
         itemRefsMap.current[key] = element
       },
       onCreateFolder: () => handleCreateFolder(key),
       onCreateFragment: () => handleCreateFragment(key),
-      onSelectFile: () => builderManager.selectProjectFile(key)
+      onSelectItem: () => builderManager.selectProjectFile(key),
+      onOpenItem: () => openTab(node.target)
     }
   }
 
@@ -98,7 +112,7 @@ export const useProjectTree = () => {
   const handleCreateFolder = targetLink => {
     if (!targetLink) return null
 
-    const { _id } = documentManager.entityOfKey(targetLink)
+    const { _id } = builderManager.entityOfKey(targetLink)
     const nextFolder = {
       _type: 'TreeItem',
       _id: generateId(),
@@ -109,7 +123,7 @@ export const useProjectTree = () => {
     const fn = list => {
       list?.forEach?.(node => {
         if (node._id === _id) {
-          node.children.push(nextFolder)
+          node.children?.push?.(nextFolder)
         } else {
           fn(node?.children ?? [])
         }
@@ -122,7 +136,7 @@ export const useProjectTree = () => {
     handleCollapse('expanded', targetLink)
 
     nextTick(() => {
-      const nextFolderRef = itemRefsMap.current[documentManager.keyOfEntity(nextFolder)]
+      const nextFolderRef = itemRefsMap.current[builderManager.keyOfEntity(nextFolder)]
       if (nextFolderRef) {
         nextFolderRef?.handleRename()
       }
@@ -132,7 +146,7 @@ export const useProjectTree = () => {
   const handleCreateFragment = targetLink => {
     if (!targetLink) return null
 
-    const { _id } = documentManager.entityOfKey(targetLink)
+    const { _id } = builderManager.entityOfKey(targetLink)
     const nextFolder = {
       _type: 'TreeItem',
       _id: generateId(),
@@ -154,6 +168,12 @@ export const useProjectTree = () => {
 
     setC(p => p + 1)
     handleCollapse('expanded', targetLink)
+    nextTick(() => {
+      const nextFolderRef = itemRefsMap.current[builderManager.keyOfEntity(nextFolder)]
+      if (nextFolderRef) {
+        nextFolderRef?.handleRename()
+      }
+    })
   }
 
   const handleCollapse = (type: 'collapse' | 'expanded', key: LinkKey) => {
@@ -172,23 +192,13 @@ export const useProjectTree = () => {
       const toKey = to?.id
       const itemOrder = findIndexOfNode(nextItemsTree, itemKey)
 
-      if (documentManager.entityOfKey(toKey)?._type === nodes.Fragment || !toKey) {
+      if (builderManager.entityOfKey(toKey)?._type === nodes.Fragment || !toKey) {
         return
       }
 
-      moveNode(documentManager, itemKey, toKey, itemOrder)
+      moveNode(builderManager, itemKey, toKey, itemOrder)
     }
   }
-
-  useEffect(() => {
-    if (selection) {
-      const allParents = selectionGraph?.getAllParents?.() ?? []
-      allParents.forEach(parent => {
-        const linkKey = documentManager.keyOfEntity(parent)
-        setExpandedLinkKeys(prev => [...prev, linkKey])
-      })
-    }
-  }, [documentManager, selection, selectionGraph])
 
   return {
     items,

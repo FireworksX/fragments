@@ -9,6 +9,7 @@ import { TabsSelectorItem } from '@/shared/ui/TabsSelector'
 import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { InputSelectVariable } from '@/shared/ui/InputSelectVariable'
 import { StackTransformSection } from './components/StackTransformSection/StackTransformSection'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 interface StackBooleanVariableProps {
   className?: string
@@ -26,7 +27,7 @@ const controls: TabsSelectorItem[] = [
 ]
 
 const StackVariableTransform: FC<StackBooleanVariableProps> = ({ className }) => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackVariableTransform}`)
   const { value: computedValueLink, valueReferenceOptions, onReset } = popout.context ?? {}
   const [computedValue] = useGraph(documentManager, computedValueLink)

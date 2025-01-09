@@ -26,7 +26,8 @@ interface ProjectTreeItemProps {
   onRename?(name: string): void
   onCreateFolder?(): void
   onCreateFragment?(): void
-  onSelectFile?(): void
+  onSelectItem?(): void
+  onOpenItem?(): void
 }
 
 let clickTimeout
@@ -43,7 +44,8 @@ export const ProjectTreeItem: FC<ProjectTreeItemProps> = ({
   onRename,
   onCreateFolder,
   onCreateFragment,
-  onSelectFile
+  onSelectItem,
+  onOpenItem
 }) => {
   const [localName, setLocalName] = useState<string | null>(null)
   const inputRef = useRef<ComponentRef<'input'>>(null)
@@ -68,79 +70,84 @@ export const ProjectTreeItem: FC<ProjectTreeItemProps> = ({
     handleRename
   }))
 
-  const handleClickCell = () => {
+  const handleClickCell = e => {
     if (type === 'folder') {
       onCollapse?.()
     }
     if (type === 'fragment') {
-      onSelectFile?.()
+      onSelectItem?.()
+
+      if (e?.detail > 1) {
+        onOpenItem?.()
+      }
     }
   }
 
   return (
-    <Cell
-      effect='none'
+    <div
       className={cn(styles.root, className, {
         [styles.fragment]: type === 'fragment',
         [styles.open]: isOpen,
         [styles.selected]: selected
       })}
-      before={
-        <div className={styles.before}>
-          <Touchable className={styles.caret} style={{ opacity: hasChildren ? 1 : 0 }}>
-            <CaretRight width={10} />
-          </Touchable>
-          <div className={styles.icon}>
-            {type === 'folder' && <FolderIcon />}
-            {type === 'fragment' && <FragmentIcon />}
-          </div>
-        </div>
-      }
-      after={
-        <Dropdown
-          trigger='click'
-          hideOnClick
-          stopPropagation
-          options={
-            <>
-              <DropdownGroup>
-                <DropdownOption onClick={onCreateFolder}>New Folder</DropdownOption>
-                <DropdownOption onClick={onCreateFragment}>New Fragment</DropdownOption>
-              </DropdownGroup>
-              <DropdownGroup>
-                <DropdownOption onClick={handleRename}>Rename</DropdownOption>
-                <DropdownOption mode='danger'>Delete</DropdownOption>
-              </DropdownGroup>
-            </>
-          }
-        >
-          <Touchable className={styles.actions}>
-            <EllipsisIcon />
-          </Touchable>
-        </Dropdown>
-      }
-      onClick={handleClickCell}
     >
-      <div className={styles.label} onDoubleClick={handleRename}>
-        <input
-          className={cn(styles.labelInput, { [styles.editable]: isActiveEdit })}
-          value={!isActiveEdit ? name : undefined}
-          ref={inputRef}
-          placeholder={localName}
-          type='text'
-          autoComplete='nope'
-          autoCorrect='off'
-          spellCheck={false}
-          autoFocus={isActiveEdit}
-          onBlur={onEdit}
-          onKeyUp={e => {
-            if (e.key === 'Enter') {
-              onEdit()
-            }
-          }}
-          onChange={e => setLocalName(e.target.value)}
-        />
-      </div>
-    </Cell>
+      <Cell
+        effect='none'
+        before={
+          <div className={styles.before}>
+            <Touchable className={styles.caret} style={{ opacity: hasChildren ? 1 : 0 }}>
+              <CaretRight width={10} />
+            </Touchable>
+            <div className={styles.icon}>
+              {type === 'folder' && <FolderIcon />}
+              {type === 'fragment' && <FragmentIcon />}
+            </div>
+          </div>
+        }
+        onClick={handleClickCell}
+      >
+        <div className={styles.label}>
+          <input
+            className={cn(styles.labelInput, { [styles.editable]: isActiveEdit })}
+            value={!isActiveEdit ? name : undefined}
+            ref={inputRef}
+            placeholder={localName}
+            type='text'
+            autoComplete='nope'
+            autoCorrect='off'
+            spellCheck={false}
+            autoFocus={isActiveEdit}
+            onBlur={onEdit}
+            onKeyUp={e => {
+              if (e.key === 'Enter') {
+                onEdit()
+              }
+            }}
+            onChange={e => setLocalName(e.target.value)}
+          />
+        </div>
+      </Cell>
+      <Dropdown
+        trigger='click'
+        hideOnClick
+        stopPropagation
+        options={
+          <>
+            <DropdownGroup>
+              <DropdownOption onClick={onCreateFolder}>New Folder</DropdownOption>
+              <DropdownOption onClick={onCreateFragment}>New Fragment</DropdownOption>
+            </DropdownGroup>
+            <DropdownGroup>
+              <DropdownOption onClick={handleRename}>Rename</DropdownOption>
+              <DropdownOption mode='danger'>Delete</DropdownOption>
+            </DropdownGroup>
+          </>
+        }
+      >
+        <Touchable className={styles.actions}>
+          <EllipsisIcon />
+        </Touchable>
+      </Dropdown>
+    </div>
   )
 }

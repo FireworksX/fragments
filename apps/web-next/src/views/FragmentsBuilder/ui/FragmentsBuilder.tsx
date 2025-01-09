@@ -14,10 +14,12 @@ import loggerPlugin from '@graph-state/plugin-logger'
 import fragmentData from '@/views/FragmentDetail/fragment.json'
 import { isBrowser } from '@fragments/utils'
 import fragmentButtonData from '@/views/FragmentDetail/button.fragment.json'
-import { BuilderFragmentTabs } from '@/views/FragmentsBuilder/widgets/BuilderFragmentTabs/BuilderFragmentTabs'
+import { BuilderFragmentTabs } from '../widgets/BuilderFragmentTabs'
 import { ProjectTree } from '@/widgets/fragmentBuilder/ProjectTree'
 import { AsideBar } from '@/shared/ui/AsideBar'
 import { FragmentsBuilderAside } from '@/views/FragmentsBuilder/widgets/FragmentsBuilderAside'
+import { useGraph } from '@graph-state/react'
+import { useBuilderTabs } from '@/shared/hooks/fragmentBuilder/useBuilderTabs'
 
 const canvasManager = createCanvasManager()
 const previewManager = createPreviewManager()
@@ -37,6 +39,7 @@ nextFragmentState.$fragment.applySnapshot(fragmentData)
 
 if (isBrowser) {
   window.nextFrag = nextFragmentState
+  window.builderManager = builderManager
 
   setTimeout(() => {
     nextFragmentState.$fragment.applySnapshot(fragmentButtonData)
@@ -46,15 +49,14 @@ if (isBrowser) {
 export const FragmentsBuilder = () => {
   const { fragmentSlug } = useParams()
   const [, view] = fragmentSlug || []
+  const { activeTab } = useBuilderTabs(builderManager)
 
   useEffect(() => {
     nextFragmentState[stateAlias].setRenderTarget('canvas')
   }, [view])
 
   return (
-    <BuilderContext.Provider
-      value={{ documentManager: nextFragmentState, canvasManager, previewManager, builderManager }}
-    >
+    <BuilderContext.Provider value={{ documentManager: null, canvasManager, previewManager, builderManager }}>
       <div className={styles.root}>
         <BuilderFragmentTabs />
 

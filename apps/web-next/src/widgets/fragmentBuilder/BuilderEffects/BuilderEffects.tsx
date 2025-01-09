@@ -15,13 +15,14 @@ import { DropdownGroup } from '@/shared/ui/DropdownGroup'
 import { DropdownOption } from '@/shared/ui/DropdownOption'
 import { capitalize } from '@/shared/utils/capitalize'
 import { InputSelect } from '@/shared/ui/InputSelect'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 interface BuilderEffectsProps {
   className?: string
 }
 
 const BuilderEffects: FC<BuilderEffectsProps> = ({ className }) => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const { selectionGraph, effects, addEffect, clickEffect, resetEffect } = useBuilderEffects(documentManager)
 
   if ([builderNodes.Screen, builderNodes.ComponentInstance].some(type => type === selectionGraph?._type)) {

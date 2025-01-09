@@ -8,9 +8,10 @@ import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSe
 import { to } from '@fragments/springs-factory'
 import { getFieldValue } from '@fragments/plugin-fragment'
 import { useInterpolation } from '@/shared/hooks/useInterpolation'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export const useBuilderSize = () => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const { selection, selectionGraph } = useBuilderSelection()
   const layerInvoker = useLayerInvoker(selection, ({ node, key, value }) => {
     switch (key) {

@@ -8,13 +8,14 @@ import { FragmentInstance } from '@/widgets/renderer/FragmentInstance/FragmentIn
 import { Fragment } from '@/widgets/renderer/Fragment/Fragment'
 import { AsideBar } from '@/shared/ui/AsideBar'
 import BuilderFragmentInstance from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/BuilderFragmentInstance'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 interface FragmentPreviewProps {
   className?: string
 }
 
 export const FragmentPreview: FC<FragmentPreviewProps> = ({ className }) => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
 
   return (
     <div className={cn(styles.root, className)} data-testid='BuilderPreview'>

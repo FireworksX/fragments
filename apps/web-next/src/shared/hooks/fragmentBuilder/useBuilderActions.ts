@@ -3,9 +3,10 @@ import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { stateAlias } from '@/views/FragmentDetail/ui/FragmentDetail'
 import { nodes } from '@fragments/plugin-fragment'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export const useBuilderActions = () => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const { selection, selectionGraph } = useBuilderSelection()
   const type = selectionGraph?._type
   const isComponentType = type === nodes.Component || type === nodes.ComponentSet

@@ -15,6 +15,7 @@ import { LinkKey } from '@graph-state/core'
 import { useGraph } from '@graph-state/react'
 import { layerDirection, nodes } from '@fragments/plugin-fragment'
 import { useBuilderLayerFlags } from '@/shared/hooks/fragmentBuilder/useBuilderLayerFlags'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 interface BuilderLayerTypeIconProps {
   layerKey: LinkKey
@@ -36,7 +37,7 @@ export const BuilderLayerTypeIcon: FC<BuilderLayerTypeIconProps> = animated(
     textIconClassName,
     fragmentIconClassName
   }) => {
-    const { documentManager } = useContext(BuilderContext)
+    const { documentManager } = useBuilderDocument()
     const [layerGraph] = useGraph(documentManager, layerKey)
     const type = layerGraph?._type
 

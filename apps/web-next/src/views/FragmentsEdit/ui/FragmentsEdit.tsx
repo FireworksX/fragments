@@ -32,65 +32,78 @@ import StackStringProperty from '../../../features/popouts/StackStringProperty/u
 import StackNumberProperty from '../../../features/popouts/StackNumberProperty/ui/StackNumberProperty'
 import StackBooleanProperty from '../../../features/popouts/StackBooleanProperty/ui/StackBooleanProperty'
 import StackVariableTransform from '@/features/popouts/StackVariableTransform/StackVariableTransform'
-import React from 'react'
+import React, { use } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
+import { FragmentsEditPlaceholder } from '@/views/FragmentsEdit/components/FragmentsEditPlaceholder'
+import { useFragmentsEdit } from '@/views/FragmentsEdit/hooks/useFragmentsEdit'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export const FragmentsEdit = () => {
+  const { documentManager, fetching } = useBuilderDocument()
+
   return (
     <div className={styles.root}>
-      <div className={styles.previewContainer}>
-        {/*<BuilderSidebar assetsNode={<BuilderAssets />} layersNode={<BuilderLayers />} />*/}
+      {documentManager ? (
+        <>
+          <div className={styles.previewContainer}>
+            {/*<BuilderSidebar assetsNode={<BuilderAssets />} layersNode={<BuilderLayers />} />*/}
 
-        <BuilderCanvas>
-          <BuilderHighlight />
-          <DisplayBreakpoints />
-        </BuilderCanvas>
+            <BuilderCanvas>
+              <BuilderHighlight />
+              <DisplayBreakpoints />
+            </BuilderCanvas>
 
-        <BuilderControls
-          position='right'
-          fragmentGrowingNode={<BuilderFragmentGrowing />}
-          fragmentPropsNode={<AssetsProperties propertiesTree={<PropertiesTree />} />}
-          positionNode={<BuilderPosition />}
-          sizeNode={<BuilderSize />}
-          layoutNode={<BuilderLayout />}
-          stylesNode={<BuilderStyles />}
-          linkNode={<BuilderLink />}
-          textNode={<BuilderText />}
-          imageNode={<BuilderImage />}
-          attributesNode={<BuilderAttributes />}
-          // cssNode={<BuilderCssOverride />}
-          instancePropsNode={<BuilderFragmentInstance />}
-        />
+            <BuilderControls
+              position='right'
+              fragmentGrowingNode={<BuilderFragmentGrowing />}
+              fragmentPropsNode={<AssetsProperties propertiesTree={<PropertiesTree />} />}
+              positionNode={<BuilderPosition />}
+              sizeNode={<BuilderSize />}
+              layoutNode={<BuilderLayout />}
+              stylesNode={<BuilderStyles />}
+              linkNode={<BuilderLink />}
+              textNode={<BuilderText />}
+              imageNode={<BuilderImage />}
+              attributesNode={<BuilderAttributes />}
+              // cssNode={<BuilderCssOverride />}
+              instancePropsNode={<BuilderFragmentInstance />}
+            />
 
-        <BuilderFloatBar />
-      </div>
+            <BuilderFloatBar />
+          </div>
 
-      <div className={styles.overlays}>
-        <CreateCustomBreakpoint />
-        <div className={styles.popoutsOverlay}>
-          <BuilderPopouts>
-            <StackCollector>
-              <StackPanelBorder name='border' title='Border' />
-              <StackPanelFill name='fill' title='Fill' />
-              <StackPanelColorPicker name={popoutNames.colorPicker} title='Color' />
-              {/*/!*<StackPanelFonts name='fonts' title='Fonts' />*!/*/}
-              <StackPanelCssOverride name='cssOverride' title='CSS override' />
-              <StackSolidPaintStyle name={popoutNames.stackSolidPaintStyle} title='Color Variable' />
-              <StackStringProperty name={popoutNames.stackStringProperty} title='String Property' />
-              <StackNumberProperty name={popoutNames.stackNumberProperty} title='Number Property' />
-              <StackBooleanProperty name={popoutNames.stackBooleanProperty} title='Boolean Property' />
-              {/*<StackPanelCssOverrideList name='cssOverrideList' title='CSS overrides' />*/}
-              {/*<StackLoopEffect name='loopEffect' title='Loop Effect' />*/}
+          <div className={styles.overlays}>
+            <CreateCustomBreakpoint />
+            <div className={styles.popoutsOverlay}>
+              <BuilderPopouts>
+                <StackCollector>
+                  <StackPanelBorder name='border' title='Border' />
+                  <StackPanelFill name='fill' title='Fill' />
+                  <StackPanelColorPicker name={popoutNames.colorPicker} title='Color' />
+                  {/*/!*<StackPanelFonts name='fonts' title='Fonts' />*!/*/}
+                  <StackPanelCssOverride name='cssOverride' title='CSS override' />
+                  <StackSolidPaintStyle name={popoutNames.stackSolidPaintStyle} title='Color Variable' />
+                  <StackStringProperty name={popoutNames.stackStringProperty} title='String Property' />
+                  <StackNumberProperty name={popoutNames.stackNumberProperty} title='Number Property' />
+                  <StackBooleanProperty name={popoutNames.stackBooleanProperty} title='Boolean Property' />
+                  {/*<StackPanelCssOverrideList name='cssOverrideList' title='CSS overrides' />*/}
+                  {/*<StackLoopEffect name='loopEffect' title='Loop Effect' />*/}
 
-              {/*<StackNumberVariable name={stackNumberVariableName} title='Number' />*/}
-              {/*<StackBooleanVariable name={stackBooleanVariableName} title='Boolean' />*/}
-              {/*<StackObjectVariable name={stackObjectVariableName} title='Object' />*/}
-              {/*<StackStringVariable name={stackStringVariableName} title='String' />*/}
-              <StackVariableTransform name={popoutNames.stackVariableTransform} title='Transform' />
-            </StackCollector>
-          </BuilderPopouts>
+                  {/*<StackNumberVariable name={stackNumberVariableName} title='Number' />*/}
+                  {/*<StackBooleanVariable name={stackBooleanVariableName} title='Boolean' />*/}
+                  {/*<StackObjectVariable name={stackObjectVariableName} title='Object' />*/}
+                  {/*<StackStringVariable name={stackStringVariableName} title='String' />*/}
+                  <StackVariableTransform name={popoutNames.stackVariableTransform} title='Transform' />
+                </StackCollector>
+              </BuilderPopouts>
+            </div>
+          </div>
+        </>
+      ) : (
+        <div className={styles.previewContainer}>
+          <FragmentsEditPlaceholder fetching={fetching} />
         </div>
-      </div>
+      )}
     </div>
   )
 }

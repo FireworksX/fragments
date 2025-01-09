@@ -7,10 +7,11 @@ import { nextTick } from '@/shared/utils/nextTick'
 import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
 import { createNode } from '@fragments/plugin-fragment-spring'
 import { nodes, variableType } from '@fragments/plugin-fragment-spring'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export const usePropertyGenericCell = (propertyLink: LinkKey) => {
   const { createProperty, editProperty } = useFragmentProperties()
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const [property] = useGraph(documentManager, propertyLink)
   const [creating, setCreating] = useState(false)
   const creatingInputRef = useRef<ElementRef<'input'>>(null)

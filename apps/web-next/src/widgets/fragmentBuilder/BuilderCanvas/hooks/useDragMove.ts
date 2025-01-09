@@ -3,9 +3,11 @@ import { animatableValue } from '@/shared/utils/animatableValue'
 import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { getFieldValue } from '@fragments/plugin-fragment'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export const useDragMove = () => {
-  const { canvasManager, documentManager } = useContext(BuilderContext)
+  const { canvasManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
 
   return ({ memo, movement: [mx, my], first }: DragEvent) => {
     if (first) {

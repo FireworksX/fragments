@@ -11,11 +11,13 @@ import { getDomRect } from '@/shared/utils/getDomRect'
 import { getFieldValue } from '@fragments/plugin-fragment'
 import { SCALE } from '@/widgets/fragmentBuilder/BuilderCanvas/hooks/useCanvas'
 import { toPx } from '@/shared/utils/toPx'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export const SELECTION_SIDES = createConstants('topLeft', 'top', 'right', 'bottom', 'left')
 
 export const useLayerSelectedResize = () => {
-  const { documentManager, canvasManager } = useContext(BuilderContext)
+  const { canvasManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const [canvas] = useGraph(canvasManager, canvasManager.key)
   const { selectionGraph, selection } = useBuilderSelection()
   const allowResizeHorizontal = selectionGraph?.getAllowResizeHorizontal?.()
