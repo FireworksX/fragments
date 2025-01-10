@@ -25,35 +25,34 @@ const canvasManager = createCanvasManager()
 const previewManager = createPreviewManager()
 const builderManager = createBuilderManager()
 
-const nextFragmentState = createState({
-  initialState: {},
-  plugins: [pluginFragmentSpring('Fragment:g34gherhg3g'), loggerPlugin({ onlyBrowser: true })],
-  skip: [...stateSkips, ...skips]
-})
-
-export const stateAlias = '$fragment'
-
-nextFragmentState.fragment = 'Fragment:g34gherhg3g'
-
-nextFragmentState.$fragment.applySnapshot(fragmentData)
-
-if (isBrowser) {
-  window.nextFrag = nextFragmentState
-  window.builderManager = builderManager
-
-  setTimeout(() => {
-    nextFragmentState.$fragment.applySnapshot(fragmentButtonData)
-  }, 2000)
-}
+// const nextFragmentState = createState({
+//   initialState: {},
+//   plugins: [pluginFragmentSpring('Fragment:g34gherhg3g'), loggerPlugin({ onlyBrowser: true })],
+//   skip: [...stateSkips, ...skips]
+// })
+//
+// export const stateAlias = '$fragment'
+//
+// nextFragmentState.fragment = 'Fragment:g34gherhg3g'
+//
+// nextFragmentState.$fragment.applySnapshot(fragmentData)
+//
+// if (isBrowser) {
+//   window.nextFrag = nextFragmentState
+//   window.builderManager = builderManager
+//
+//   setTimeout(() => {
+//     nextFragmentState.$fragment.applySnapshot(fragmentButtonData)
+//   }, 2000)
+// }
 
 export const FragmentsBuilder = () => {
-  const { fragmentSlug } = useParams()
-  const [, view] = fragmentSlug || []
-  const { activeTab } = useBuilderTabs(builderManager)
+  // const { fragmentSlug } = useParams()
+  // const [, view] = fragmentSlug || []
 
-  useEffect(() => {
-    nextFragmentState[stateAlias].setRenderTarget('canvas')
-  }, [view])
+  // useEffect(() => {
+  //   nextFragmentState[stateAlias].setRenderTarget('canvas')
+  // }, [view])
 
   return (
     <BuilderContext.Provider value={{ documentManager: null, canvasManager, previewManager, builderManager }}>

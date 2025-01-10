@@ -17,7 +17,7 @@ export const useLayerFillStyles = (layerKey: LinkKey) => {
 
   return useMemo(() => {
     return {
-      background: to([fillType, solidFill, imageFill], (fillType, solidFill, imageFill) => {
+      backgroundColor: to([fillType, solidFill, imageFill], (fillType, solidFill, imageFill) => {
         if (fillType === paintMode.Solid) {
           return solidFill
         } else if (fillType === paintMode.Image) {

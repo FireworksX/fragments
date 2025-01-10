@@ -6,6 +6,7 @@ import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDoc
 export const useBuilderSelection = () => {
   const { canvasManager } = use(BuilderContext)
   const { documentManager } = useBuilderDocument()
+
   const [canvas] = useGraph(canvasManager, canvasManager.key)
   const [selectionGraph] = useGraph(documentManager, canvas.focusLayer)
 

@@ -55,8 +55,6 @@ export const useLayerSizeStyles = (layerKey: LinkKey, parents: LinkKey[] = []) =
         documentManager
       )
 
-      console.log(layerKey, 1)
-
       return {
         width: to([instanceWidthType, width$], (hSizing, sourceValue) =>
           hSizing === sizing.Hug ? sourceValue : '100%'
@@ -68,14 +66,11 @@ export const useLayerSizeStyles = (layerKey: LinkKey, parents: LinkKey[] = []) =
     }
 
     if (parent?._type === nodes.Fragment && isDocument && !isPartOfInstance) {
-      console.log(layerKey, 2)
       return {
         width: parent?.horizontalGrow === fragmentGrowingMode.fill ? '100%' : width$,
         height: parent?.verticalGrow === fragmentGrowingMode.fill ? '100%' : height$
       }
     }
-
-    console.log(layerKey, 3, width$, toWidth$)
 
     return {
       width: toWidth$,

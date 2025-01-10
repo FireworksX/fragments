@@ -3,6 +3,7 @@ import { SpringValue } from '@react-spring/web'
 import { isInstanceOf } from '@graph-state/checkers'
 import { isValue } from '@fragments/utils'
 import loggerPlugin from '@graph-state/plugin-logger'
+import { documentManagersModule } from '@/views/FragmentDetail/lib/builderManagerModules/documentManagersModule'
 
 export type BuilderManager = GraphState
 
@@ -15,11 +16,11 @@ export const createBuilderManager = () =>
       tabs: [],
       activeTabIndex: -1,
       activeFragment: null,
-      fragmentModules: [],
-      documentManager: null
+      fragmentModules: []
     },
     skip: [isInstanceOf(SpringValue)],
     plugins: [
+      documentManagersModule,
       state => {
         state.toggleTextEditor = (value?: boolean) => {
           if (isValue(value)) {

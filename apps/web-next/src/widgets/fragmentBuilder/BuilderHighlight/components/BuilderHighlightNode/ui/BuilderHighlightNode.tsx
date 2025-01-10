@@ -41,6 +41,7 @@ export const BuilderHighlightNode: FC<LayerHighlightDraggingProps> = ({ layerKey
         node,
         {
           ...node.props,
+          key: node?.props?.layerKey,
           className: cn(node.props?.className, styles.root, {
             [styles.textLayer]: isTextNode,
             [styles.instance]: isInstance

@@ -22,14 +22,6 @@ export const FragmentsBuilderAside: FC<FragmentsBuilderAsideProps> = ({ classNam
   const { documentManager } = useBuilderDocument()
   const [mode, setMode] = useState('project')
 
-  useEffect(() => {
-    if (documentManager) {
-      documentManager?.subscribe('Frame:d12bd11e59ee4', v => {
-        console.trace('Frame:d12bd11e59ee4', v)
-      })
-    }
-  }, [documentManager])
-
   return (
     <Container className={styles.root}>
       <TabsSelector className={styles.selector} items={tabs} value={mode} onChange={({ name }) => setMode(name)} />

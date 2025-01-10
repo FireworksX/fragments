@@ -75,10 +75,10 @@ export const ProjectTreeItem: FC<ProjectTreeItemProps> = ({
       onCollapse?.()
     }
     if (type === 'fragment') {
-      onSelectItem?.()
+      onOpenItem?.()
 
       if (e?.detail > 1) {
-        onOpenItem?.()
+        handleRename(e)
       }
     }
   }

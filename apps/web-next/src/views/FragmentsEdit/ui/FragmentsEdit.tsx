@@ -43,7 +43,7 @@ export const FragmentsEdit = () => {
 
   return (
     <div className={styles.root}>
-      {documentManager ? (
+      {documentManager && !fetching ? (
         <>
           <div className={styles.previewContainer}>
             {/*<BuilderSidebar assetsNode={<BuilderAssets />} layersNode={<BuilderLayers />} />*/}
