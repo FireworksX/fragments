@@ -22,15 +22,14 @@ import { FloatingBar } from '@/features/fragmentBuilder/FloatingBar'
 import { useBuilderActions } from '@/shared/hooks/fragmentBuilder/useBuilderActions'
 import { useBreakpoints } from '@/shared/hooks/fragmentBuilder/useBreakpoints'
 import { Link } from '@/shared/ui/Link'
+import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
 
 interface BuilderFloatBarProps {
   className?: string
 }
 
 export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
-  const { canvasManager } = useContext(BuilderContext)
   const { isEdit, focus, updateParams } = useBuilderManager()
-  const [canvas] = useGraph(canvasManager, canvasManager.key)
   const { addFrame, addText, addImage } = useBuilderActions()
 
   if (!isEdit) {

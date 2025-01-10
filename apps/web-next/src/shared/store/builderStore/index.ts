@@ -2,13 +2,19 @@ import { createState, GraphState, LinkKey } from '@graph-state/core'
 import { SpringValue } from '@react-spring/web'
 import { isInstanceOf } from '@graph-state/checkers'
 import { isValue } from '@fragments/utils'
+import { BuilderStoreDocumentPlugin, documentsPlugin } from './plugins/documentsPlugin'
 import loggerPlugin from '@graph-state/plugin-logger'
-import { documentManagersModule } from '@/views/FragmentDetail/lib/builderManagerModules/documentManagersModule'
+import { canvasPlugin } from '@/shared/store/builderStore/plugins/canvasPlugin'
 
-export type BuilderManager = GraphState
+export interface BuilderStore extends BuilderStoreDocumentPlugin {
+  _type: 'Builder'
+  tabs: LinkKey[]
+  activeTabIndex: number
+}
 
-export const createBuilderManager = () =>
-  createState({
+export const createBuilderStore = () => {
+  return createState<BuilderStore, 'Builder'>({
+    _type: 'Builder',
     initialState: {
       showTextEditor: false,
       mouseOverLayer: null,
@@ -20,7 +26,9 @@ export const createBuilderManager = () =>
     },
     skip: [isInstanceOf(SpringValue)],
     plugins: [
-      documentManagersModule,
+      loggerPlugin({ onlyBrowser: true }),
+      documentsPlugin,
+      canvasPlugin,
       state => {
         state.toggleTextEditor = (value?: boolean) => {
           if (isValue(value)) {
@@ -76,3 +84,4 @@ export const createBuilderManager = () =>
       }
     ]
   })
+}

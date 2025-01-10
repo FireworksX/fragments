@@ -6,7 +6,7 @@ import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDoc
 
 export const useFragmentLayers = () => {
   const { documentManager } = useBuilderDocument()
-  const [fragmentGraph] = useGraph(documentManager, documentManager[stateAlias].root)
+  const [fragmentGraph] = useGraph(documentManager, documentManager.$fragment.root)
   const layers = fragmentGraph?.children ?? []
 
   return {

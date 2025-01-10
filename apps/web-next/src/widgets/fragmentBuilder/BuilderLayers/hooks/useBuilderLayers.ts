@@ -47,7 +47,7 @@ export const useBuilderLayers = () => {
     }
   }
 
-  const items = [getNode(documentManager[stateAlias].root)]
+  const items = [getNode(documentManager.$fragment.root)]
 
   const handleCollapse = (type: 'collapse' | 'expanded', key: LinkKey) => {
     setExpandedLinkKeys(prev => (type === 'expanded' ? [...prev, key] : prev.filter(k => k !== key)))

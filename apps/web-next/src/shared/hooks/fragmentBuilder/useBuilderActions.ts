@@ -96,20 +96,20 @@ export const useBuilderActions = () => {
 
   const addFrame = useCallback(() => {
     if (selectionGraph && documentManager && features.canInsert) {
-      const frame = documentManager[stateAlias].createNode({ _type: nodes.Frame }, selection)
+      const frame = documentManager.$fragment.createNode({ _type: nodes.Frame }, selection)
       return frame
     }
   }, [features.canInsert, selectionGraph, documentManager])
 
   const addText = useCallback(() => {
     if (selectionGraph && documentManager && features.canInsert) {
-      const node = documentManager[stateAlias].createNode({ _type: nodes.Text }, selection)
+      const node = documentManager.$fragment.createNode({ _type: nodes.Text }, selection)
     }
   }, [features.canInsert, selectionGraph, documentManager])
 
   const addImage = useCallback(() => {
     if (selectionGraph && documentManager && features.canInsert) {
-      const node = documentManager[stateAlias].createNode({ _type: nodes.Image }, selection)
+      const node = documentManager.$fragment.createNode({ _type: nodes.Image }, selection)
     }
   }, [features.canInsert, selectionGraph, documentManager])
 

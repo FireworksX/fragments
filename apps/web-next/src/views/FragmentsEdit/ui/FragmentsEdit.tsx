@@ -1,4 +1,4 @@
-import styles from '@/views/FragmentBuilder/ui/styles.module.css'
+import styles from './styles.module.css'
 import { BuilderSidebar } from '@/widgets/fragmentBuilder/BuilderSidebar'
 import { BuilderAssets } from '@/widgets/fragmentBuilder/BuilderAssets'
 import { BuilderLayers } from '@/widgets/fragmentBuilder/BuilderLayers'

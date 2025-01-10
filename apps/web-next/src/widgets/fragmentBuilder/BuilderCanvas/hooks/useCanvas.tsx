@@ -11,6 +11,7 @@ import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderMana
 import { debounce } from '@fragments/utils'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
 
 export const SCALE = {
   min: 0.25,
@@ -20,10 +21,10 @@ export const SCALE = {
 export type DragEvent = Parameters<Parameters<typeof useDrag>[0]>[0]
 
 export const useCanvas = () => {
-  const { builderManager, canvasManager } = useContext(BuilderContext)
+  const { builderManager } = useContext(BuilderContext)
   const { documentManager } = useBuilderDocument()
+  const { canvas, manager: canvasManager } = useBuilderCanvas()
   const { updateParams, isTextEditing } = useBuilderManager()
-  const [canvas] = useGraph(canvasManager, canvasManager.key)
   const pointerRef = useRef<ElementRef<'div'>>(null)
   const dragMoveHandler = useDragMove()
   const dragCollisionsHandler = useDragCollisions()

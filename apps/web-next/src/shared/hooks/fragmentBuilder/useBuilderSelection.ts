@@ -2,12 +2,12 @@ import { useGraph } from '@graph-state/react'
 import { use, useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
 
 export const useBuilderSelection = () => {
-  const { canvasManager } = use(BuilderContext)
   const { documentManager } = useBuilderDocument()
+  const { canvas, manager: canvasManager } = useBuilderCanvas()
 
-  const [canvas] = useGraph(canvasManager, canvasManager.key)
   const [selectionGraph] = useGraph(documentManager, canvas.focusLayer)
 
   const select = (field: any) => {

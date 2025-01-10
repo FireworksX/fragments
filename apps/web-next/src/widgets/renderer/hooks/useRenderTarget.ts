@@ -7,10 +7,10 @@ import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDoc
 
 export const useRenderTarget = () => {
   const { documentManager } = useBuilderDocument()
-  const renderTarget = documentManager[stateAlias].renderTarget
+  const renderTarget = documentManager.$fragment.renderTarget
 
   // Subscribe to root fragment
-  useGraph(documentManager, documentManager[stateAlias].root)
+  useGraph(documentManager, documentManager.$fragment.root)
 
   return {
     renderTarget: renderTarget,
