@@ -7,9 +7,13 @@ from crud.filesystem import create_project_item_db, get_project_item_by_id, get_
 from crud.project import get_project_by_id_db
 from database import Session, Project, FilesystemProjectItem
 from .schemas.filesystem import ProjectItem, ProjectItemGet, ProjectItemPatch
+from .schemas.project import ProjectGet
 from .schemas.user import RoleGet, AuthPayload
 from .middleware import Context
 from .utils import get_user_role_in_project
+
+from fragment import fragment_db_to_fragment
+from project import project_by_id
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
@@ -22,9 +26,9 @@ async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
     return role is not None and role is not RoleGet.DESIGNER
 
 
-def project_item_db_to_project_item(item: FilesystemProjectItem) -> ProjectItemGet:
-    return ProjectItemGet(id=item.id, project_id=item.project_id, name=item.name, item_type=item.item_type,
-                          nested_items=item.nested_items)
+def project_item_db_to_project_item(item: FilesystemProjectItem, project: ProjectGet) -> ProjectItemGet:
+    return ProjectItemGet(id=item.id, name=item.name, item_type=item.item_type,
+                          nested_items=item.nested_items, fragment=fragment_db_to_fragment(item.fragment, project))
 
 
 async def create_project_item_route(info: strawberry.Info[Context], project_item: ProjectItem) -> ProjectItemGet:
@@ -43,7 +47,7 @@ async def create_project_item_route(info: strawberry.Info[Context], project_item
     project_item: FilesystemProjectItem = await create_project_item_db(db, project_item.parent_id, project_item.name,
                                                                        project_item.project_id, project_item.item_type, project_item.fragment_id)
 
-    return project_item_db_to_project_item(project_item)
+    return project_item_db_to_project_item(project_item, await project_by_id(info, project_item.project_id))
 
 
 async def get_project_item_route(info: strawberry.Info[Context], project_item_id: int) -> ProjectItemGet:
@@ -63,7 +67,7 @@ async def get_project_item_route(info: strawberry.Info[Context], project_item_id
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to observe items')
 
-    return project_item_db_to_project_item(project_item)
+    return project_item_db_to_project_item(project_item, await project_by_id(info, project_item.project_id))
 
 
 async def get_project_items_in_project_route(info: strawberry.Info[Context], project_id: int) -> List[ProjectItemGet]:
@@ -79,7 +83,7 @@ async def get_project_items_in_project_route(info: strawberry.Info[Context], pro
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to observe items')
 
-    return [project_item_db_to_project_item(project_item) for project_item in
+    return [project_item_db_to_project_item(project_item, await project_by_id(info, project_item.project_id)) for project_item in
             await get_project_items_by_project_id(db, project_id)]
 
 
@@ -121,4 +125,4 @@ async def update_project_item_route(info: strawberry.Info[Context], item: Projec
                             detail=f'User is not allowed to update items')
 
     item: FilesystemProjectItem = await update_project_item_db(db, item.__dict__, item.nested_items)
-    return project_item_db_to_project_item(item)
+    return project_item_db_to_project_item(project_item, await project_by_id(info, project_item.project_id))

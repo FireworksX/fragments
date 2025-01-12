@@ -8,7 +8,7 @@ class ProjectItem:
 """
 from typing import List, Optional
 from database import Session, FilesystemProjectItem
-from services.core.routes.schemas.filesystem import FileSystemItemType, ProjectItem
+from services.core.routes.schemas.filesystem import FileSystemItemType
 
 
 async def create_project_item_db(db: Session, parent_id: Optional[int], name: str, project_id: int,
@@ -32,12 +32,16 @@ async def update_project_item_db(db: Session, values: dict, nested_items: Option
     item_id = values.get("id")
     item: FilesystemProjectItem = db.query(FilesystemProjectItem).filter(FilesystemProjectItem.id == item_id).first()
 
+    if nested_items is not None and len(nested_items) > 0:
+        item.nested_items.clear()
+        items: List[FilesystemProjectItem] = db.query(FilesystemProjectItem).filter(FilesystemProjectItem.id.in_(nested_items)).all()
+        for it in items:
+            item.nested_items.append(it)
+
     if values.get('name') is not None:
         item.name = values['name']
     if values.get('type') is not None:
         item.item_type = values['type']
-    if nested_items is not None:
-        item.nested_items = nested_items
     db.commit()
     db.refresh(item)
     return item
