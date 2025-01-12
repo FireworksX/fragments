@@ -10,25 +10,23 @@ from crud.media import create_media_db, delete_media_by_public_path_db
 from crud.project import get_project_by_id_db
 from .schemas.fragment import FragmentPost, FragmentPatch, FragmentGet
 from .schemas.project import ProjectGet
-from .schemas.user import RoleGet, UserGet, AuthPayload
+from .schemas.user import RoleGet, AuthPayload
 from .middleware import Context
-from crud.fragment import create_fragment_db, FragmentVersion, get_fragments_by_project_id_db, get_fragment_by_id_db, \
-    update_fragment_by_id_db, add_fragment_media, get_project_id_by_fragment_id
+from crud.fragment import create_fragment_db, Fragment, get_fragments_by_project_id_db, get_fragment_by_id_db, \
+    update_fragment_by_id_db, add_fragment_media
 from database import Session, Project, Media
-from .project import project_by_id, transform_project_campaigns
-from .utils import get_user_role_in_project, transform_project_members
+from .project import project_by_id
+from .utils import get_user_role_in_project
 
-
-async def fragment_db_to_fragment(db: Session, fragment: FragmentVersion, project: ProjectGet) -> FragmentGet:
-    return FragmentGet(id=fragment.fragment_id, version_id=fragment.version_id,
-                       upgrade_version_hash= None if fragment.upgrade_version is None else fragment.upgrade_version.version_id,
+async def fragment_db_to_fragment(fragment: Fragment, project: ProjectGet) -> FragmentGet:
+    return FragmentGet(id=fragment.fragment_id,
                        name=fragment.name, author=fragment.author,
                        document=fragment.document,
                        props=fragment.props, project=project,
                        assets=[] if fragment.assets is None else [relation.media.public_path for relation in
                                                                   fragment.assets],
                        linked_fragments=[] if fragment.linked_fragments is None else [
-                           await fragment_db_to_fragment(db, await get_fragment_by_id_db(db, relation.linked_fragment.id), project) for relation in fragment.linked_fragments])
+                           await fragment_db_to_fragment(relation.linked_fragment, project) for relation in fragment.linked_fragments])
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
@@ -54,9 +52,9 @@ async def create_fragment_route(info: strawberry.Info[Context], fg: FragmentPost
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to add fragments')
 
-    fragment: FragmentVersion = await create_fragment_db(db, fg.name, user.user.id, fg.project_id, fg.document,
-                                                         fg.props, fg.linked_fragments)
-    return await fragment_db_to_fragment(db, fragment, await project_by_id(info, fg.project_id))
+    fragment: Fragment = await create_fragment_db(db, fg.name, user.user.id, fg.project_id, fg.document,
+                                                  fg.props, fg.linked_fragments)
+    return await fragment_db_to_fragment(fragment, await project_by_id(info, fg.project_id))
 
 
 async def fragments_in_project(info: strawberry.Info[Context], project_id: int) -> List[FragmentGet]:
@@ -72,20 +70,18 @@ async def fragments_in_project(info: strawberry.Info[Context], project_id: int) 
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to view fragments')
 
-    fragments: List[FragmentVersion] = await get_fragments_by_project_id_db(db, project_id)
-    print(fragments)
+    fragments: List[Fragment] = await get_fragments_by_project_id_db(db, project_id)
     out: List[FragmentGet] = []
     for fg in fragments:
-        out.append(await fragment_db_to_fragment(db, fg, await project_by_id(info, project_id)))
+        out.append(await fragment_db_to_fragment(fg, await project_by_id(info, project_id)))
     return out
 
 
-async def fragment_by_id(info: strawberry.Info[Context], fragment_id: int,
-                         version_hash: Optional[str] = None) -> FragmentGet:
+async def fragment_by_id(info: strawberry.Info[Context], fragment_id: int) -> FragmentGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
-    fragment: FragmentVersion = await get_fragment_by_id_db(db, fragment_id, version_hash)
-    project_id: int = await get_project_id_by_fragment_id(db, fragment_id)
+    fragment: Fragment = await get_fragment_by_id_db(db, fragment_id)
+    project_id: int = fragment.project_id
     if fragment is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'Fragment with id {fragment_id} does not exist')
@@ -99,17 +95,17 @@ async def fragment_by_id(info: strawberry.Info[Context], fragment_id: int,
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to view fragments')
 
-    return await fragment_db_to_fragment(db, fragment, await project_by_id(info, project.id))
+    return await fragment_db_to_fragment(fragment, await project_by_id(info, project.id))
 
 
 async def add_fragment_asset_route(info: strawberry.Info[Context], file: UploadFile, fragment_id: int) -> FragmentGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
-    fragment: FragmentVersion = await get_fragment_by_id_db(db, fragment_id)
+    fragment: Fragment = await get_fragment_by_id_db(db, fragment_id)
     if fragment is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'Fragment with id {fragment_id} does not exist')
-    project_id: int = await get_project_id_by_fragment_id(db, fragment_id)
+    project_id: int = fragment.project_id
     project: Project = await get_project_by_id_db(db, project_id)
     if project is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
@@ -131,20 +127,19 @@ async def add_fragment_asset_route(info: strawberry.Info[Context], file: UploadF
     if media is None:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail='Failed to create media file')
-    print(filePath, public_url, media.id, fragment_id)
-    fragment: FragmentVersion = await add_fragment_media(db, media.id, fragment_id)
-    return await fragment_db_to_fragment(db, fragment, await project_by_id(info, project.id))
+    fragment: Fragment = await add_fragment_media(db, media.id, fragment_id)
+    return await fragment_db_to_fragment(fragment, await project_by_id(info, project.id))
 
 
 async def remove_fragment_asset_route(info: strawberry.Info[Context], fragment_id: int,
                                       public_path: str) -> FragmentGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
-    fragment: FragmentVersion = await get_fragment_by_id_db(db, fragment_id)
+    fragment: Fragment = await get_fragment_by_id_db(db, fragment_id)
     if fragment is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'Fragment with id {fragment_id} does not exist')
-    project_id: int = await get_project_id_by_fragment_id(db, fragment_id)
+    project_id: int = fragment.project_id
     project: Project = await get_project_by_id_db(db, project_id)
     if project is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
@@ -160,17 +155,17 @@ async def remove_fragment_asset_route(info: strawberry.Info[Context], fragment_i
     except:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'Media not found')
-    return await fragment_db_to_fragment(db, fragment, await project_by_id(info, project.id))
+    return await fragment_db_to_fragment(fragment, await project_by_id(info, project.id))
 
 
 async def update_fragment_route(info: strawberry.Info[Context], fg: FragmentPatch) -> FragmentGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
-    fragment: FragmentVersion = await get_fragment_by_id_db(db, fg.id)
+    fragment: Fragment = await get_fragment_by_id_db(db, fg.id)
     if fragment is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'Fragment with id {fg.id} does not exist')
-    project_id: int = await get_project_id_by_fragment_id(db, fragment.fragment_id)
+    project_id: int = fragment.project_id
     project: ProjectGet = await project_by_id(info, project_id)
     if project is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -180,6 +175,6 @@ async def update_fragment_route(info: strawberry.Info[Context], fg: FragmentPatc
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to update fragments')
 
-    fragment: FragmentVersion = await update_fragment_by_id_db(db, values=fg.__dict__,
-                                                               linked_fragments=fg.linked_fragments)
-    return await fragment_db_to_fragment(db, fragment, project)
+    fragment: Fragment = await update_fragment_by_id_db(db, values=fg.__dict__,
+                                                        linked_fragments=fg.linked_fragments)
+    return await fragment_db_to_fragment(fragment, project)

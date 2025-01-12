@@ -177,27 +177,26 @@ class FragmentMedia(Base):
     id = Column('id', Integer, primary_key=True, index=True)
     media_id = Column(ForeignKey("media.id", ondelete='CASCADE'))
     media = relationship("Media")
-    fragment_version_id = Column(ForeignKey("fragment_version.id", ondelete='CASCADE'))
-    fragment_version = relationship("FragmentVersion", back_populates="assets")
+    fragment_id = Column(ForeignKey("fragment.id", ondelete='CASCADE'))
+    fragment = relationship("Fragment", back_populates="assets")
 
 
 # linked fragments
 class LinkedFragment(Base):
     __tablename__ = "linked_fragment"
     linked_fragment_id = Column(ForeignKey("fragment.id"), primary_key=True)
-    fragment_version_id = Column(ForeignKey("fragment_version.id"), primary_key=True)
-    fragment_version = relationship("FragmentVersion", back_populates="linked_fragments")
+    fragment_id = Column(ForeignKey("fragment.id"), primary_key=True)
+    fragment = relationship("Fragment", back_populates="linked_fragments")
     linked_fragment = relationship("Fragment")
 
 
-class FragmentVersion(Base):
-    __tablename__ = 'fragment_version'
+class Fragment(Base):
+    __tablename__ = 'fragment'
 
     id = Column('id', Integer, primary_key=True, index=True)  # Unique ID for the version
-    fragment_id = Column(Integer, ForeignKey("fragment.id"), nullable=False)
-    fragment = relationship("Fragment", back_populates="versions")
+    project_id = Column('project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False)
+    project = relationship("Project")
 
-    version_id = Column('version_id', String, unique=True, nullable=False)
     name = Column('name', String, nullable=False)  # Name of the fragment version
     document = Column('document', JSON, nullable=False)  # Version-specific document
     props = Column('props', JSON, nullable=False)  # Version-specific properties
@@ -206,44 +205,19 @@ class FragmentVersion(Base):
     author_id = Column('author_id', Integer, ForeignKey('user.id'), nullable=False)  # Author of the version
     author = relationship("User")  # Relationship to the User table
 
-    # Self-referential relationship for the "downgrade" (previous) version
-    downgrade_version_id = Column(
-        Integer,
-        ForeignKey("fragment_version.id"),
-        nullable=True
-    )
-    downgrade_version = relationship(
-        "FragmentVersion",
-        remote_side=[id],  # Tells SQLAlchemy which column is on the "remote" side
-        foreign_keys=[downgrade_version_id]
-    )
-
-    # Self-referential relationship for the "upgrade" (next) version
-    upgrade_version_id = Column(
-        Integer,
-        ForeignKey("fragment_version.id"),
-        nullable=True
-    )
-    upgrade_version = relationship(
-        "FragmentVersion",
-        remote_side=[id],
-        foreign_keys=[upgrade_version_id]
-    )
-    assets = relationship("FragmentMedia", back_populates="fragment_version", cascade="save-update, merge, "
+    assets = relationship("FragmentMedia", back_populates="fragment", cascade="save-update, merge, "
                                                                                       "delete, delete-orphan")
 
-    linked_fragments = relationship("LinkedFragment", back_populates="fragment_version")
+    linked_fragments = relationship("LinkedFragment", back_populates="fragment")
 
-
-class Fragment(Base):
-    __tablename__ = 'fragment'
-
-    id = Column('id', Integer, primary_key=True, index=True)  # Unique ID for the fragment
-    project_id = Column('project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False)
-    project = relationship("Project")
-    versions = relationship("FragmentVersion", back_populates="fragment",
-                            cascade="all, delete-orphan")
-
+    # Back-reference to the single FilesystemProjectItem
+    # uselist=False => 1-to-1, not 1-to-many
+    project_item = relationship(
+        "FilesystemProjectItem",
+        back_populates="fragment",
+        uselist=False,
+        cascade="all, delete-orphan"
+    )
 
 class Landing(Base):
     __tablename__ = 'landing'
@@ -272,11 +246,18 @@ class Media(Base):
 class FilesystemProjectItem(Base):
     __tablename__ = 'filesystem_project_item'
     id = Column('id', Integer, primary_key=True, index=True)
-    project_id = Column('project_id', Integer, ForeignKey('project.id'))
+    project_id = Column('project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'))
     name = Column('name', String)
     item_type = Column('item_type', Integer, nullable=False)
+    fragment_id = Column('fragment_id', Integer, ForeignKey('fragment.id', ondelete='CASCADE'), nullable=True, unique=True)
+    fragment = relationship(
+        "Fragment",
+        back_populates="project_item"
+        # By default, no cascade needed here because
+        # we are relying on the DB to remove this row if `Fragment` is deleted
+    )
     # Reference to the parent (nullable if top-level)
-    parent_id = Column(Integer, ForeignKey('filesystem_project_item.id'), nullable=True)
+    parent_id = Column(Integer, ForeignKey('filesystem_project_item.id', ondelete="CASCADE"), nullable=True)
 
     # Relationship to the parent
     parent = relationship(

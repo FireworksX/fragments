@@ -30,14 +30,11 @@ class FragmentPatch:
 @strawberry.type
 class FragmentGet:
     id: int
-    version_id: str
     project: ProjectGet
     name: str
     author: UserGet
     document: strawberry.scalars.JSON
     props: Optional[strawberry.scalars.JSON] = None
     assets: List[str]
-
-    upgrade_version_hash: Optional[str]
 
     linked_fragments: Optional[List["FragmentGet"]] = None  # fragments

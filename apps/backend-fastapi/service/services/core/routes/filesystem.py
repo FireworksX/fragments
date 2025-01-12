@@ -1,18 +1,12 @@
-from copy import deepcopy
-from typing import List, Optional
-from fastapi import HTTPException, status, UploadFile
+from typing import List
+from fastapi import HTTPException, status
 import strawberry
 
-from conf import service_settings
-from crud.bucket import add_file, delete_file
-from crud.campaign import create_campaign_db, get_campaign_by_id_db, get_campaigns_by_project_id_db, \
-    update_campaign_by_id_db, get_campaign_by_name_and_project_id_db
-from crud.filesystem import create_project_item_db, get_project_item_by_id, get_project_items_by_project_id
-from crud.media import create_media_db, delete_media_by_id_db
+from crud.filesystem import create_project_item_db, get_project_item_by_id, get_project_items_by_project_id, \
+    delete_project_item_by_id, update_project_item_db
 from crud.project import get_project_by_id_db
-from database import Session, Project, Campaign, Media, FilesystemProjectItem
-from .schemas.campaign import CampaignGet, CampaignPost, CampaignPatch
-from .schemas.filesystem import ProjectItem, ProjectItemGet
+from database import Session, Project, FilesystemProjectItem
+from .schemas.filesystem import ProjectItem, ProjectItemGet, ProjectItemPatch
 from .schemas.user import RoleGet, AuthPayload
 from .middleware import Context
 from .utils import get_user_role_in_project
@@ -30,7 +24,7 @@ async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
 
 def project_item_db_to_project_item(item: FilesystemProjectItem) -> ProjectItemGet:
     return ProjectItemGet(id=item.id, project_id=item.project_id, name=item.name, item_type=item.item_type,
-                          items=item.nested_items)
+                          nested_items=item.nested_items)
 
 
 async def create_project_item_route(info: strawberry.Info[Context], project_item: ProjectItem) -> ProjectItemGet:
@@ -44,10 +38,10 @@ async def create_project_item_route(info: strawberry.Info[Context], project_item
     permission: bool = await write_permission(db, user.user.id, project_item.project_id)
     if not permission:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail=f'User is not allowed to create campaigns')
+                            detail=f'User is not allowed to create items')
 
     project_item: FilesystemProjectItem = await create_project_item_db(db, project_item.parent_id, project_item.name,
-                                                                       project_item.project_id, project_item.type)
+                                                                       project_item.project_id, project_item.item_type, project_item.fragment_id)
 
     return project_item_db_to_project_item(project_item)
 
@@ -67,7 +61,7 @@ async def get_project_item_route(info: strawberry.Info[Context], project_item_id
     permission: bool = await write_permission(db, user.user.id, project_item.project_id)
     if not permission:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail=f'User is not allowed to create campaigns')
+                            detail=f'User is not allowed to observe items')
 
     return project_item_db_to_project_item(project_item)
 
@@ -83,7 +77,48 @@ async def get_project_items_in_project_route(info: strawberry.Info[Context], pro
     permission: bool = await write_permission(db, user.user.id, project_id)
     if not permission:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail=f'User is not allowed to create campaigns')
+                            detail=f'User is not allowed to observe items')
 
     return [project_item_db_to_project_item(project_item) for project_item in
             await get_project_items_by_project_id(db, project_id)]
+
+
+async def delete_project_item_route(info: strawberry.Info[Context], item_id: int) -> None:
+    user: AuthPayload = await info.context.user()
+    db: Session = info.context.session()
+
+    project_item: FilesystemProjectItem = await get_project_item_by_id(db, item_id)
+    if project_item is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Item does not exist")
+
+    project: Project = await get_project_by_id_db(db, project_item.project_id)
+    if project is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
+
+    permission: bool = await write_permission(db, user.user.id, project_item.project_id)
+    if not permission:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=f'User is not allowed to delete items')
+
+    await delete_project_item_by_id(db, item_id)
+
+
+async def update_project_item_route(info: strawberry.Info[Context], item: ProjectItemPatch) -> ProjectItemGet:
+    user: AuthPayload = await info.context.user()
+    db: Session = info.context.session()
+
+    project_item: FilesystemProjectItem = await get_project_item_by_id(db, item.id)
+    if project_item is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Item does not exist")
+
+    project: Project = await get_project_by_id_db(db, project_item.project_id)
+    if project is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
+
+    permission: bool = await write_permission(db, user.user.id, project_item.project_id)
+    if not permission:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=f'User is not allowed to update items')
+
+    item: FilesystemProjectItem = await update_project_item_db(db, item.__dict__, item.nested_items)
+    return project_item_db_to_project_item(item)

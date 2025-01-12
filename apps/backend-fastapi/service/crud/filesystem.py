@@ -7,16 +7,13 @@ class ProjectItem:
     items: Optional[List["ProjectItem"]]
 """
 from typing import List, Optional
-
-from fastapi import HTTPException
-
 from database import Session, FilesystemProjectItem
 from services.core.routes.schemas.filesystem import FileSystemItemType, ProjectItem
 
 
 async def create_project_item_db(db: Session, parent_id: Optional[int], name: str, project_id: int,
-                                 item_type: FileSystemItemType) -> FilesystemProjectItem:
-    item: FilesystemProjectItem = FilesystemProjectItem(project_id=project_id, name=name, item_type=int(item_type.value))
+                                 item_type: FileSystemItemType, fragment_id: Optional[int]) -> FilesystemProjectItem:
+    item: FilesystemProjectItem = FilesystemProjectItem(project_id=project_id, name=name, item_type=int(item_type.value), fragment_id=fragment_id)
     if parent_id is not None:
         parent: FilesystemProjectItem = db.query(FilesystemProjectItem).filter(
             FilesystemProjectItem.id == parent_id).first()
@@ -31,7 +28,7 @@ async def create_project_item_db(db: Session, parent_id: Optional[int], name: st
     return item
 
 
-async def update_project_item_db(db: Session, values: dict) -> FilesystemProjectItem:
+async def update_project_item_db(db: Session, values: dict, nested_items: Optional[List[int]]) -> FilesystemProjectItem:
     item_id = values.get("id")
     item: FilesystemProjectItem = db.query(FilesystemProjectItem).filter(FilesystemProjectItem.id == item_id).first()
 
@@ -39,6 +36,8 @@ async def update_project_item_db(db: Session, values: dict) -> FilesystemProject
         item.name = values['name']
     if values.get('type') is not None:
         item.item_type = values['type']
+    if nested_items is not None:
+        item.nested_items = nested_items
     db.commit()
     db.refresh(item)
     return item

@@ -1,10 +1,11 @@
 from .campaign import campaign_by_id, create_campaign_route, update_campaign_route, campaigns_in_project, \
     add_campaign_logo_route, campaign_by_name
-from .filesystem import create_project_item_route, get_project_item_route, get_project_items_in_project_route
+from .filesystem import create_project_item_route, get_project_item_route, get_project_items_in_project_route, \
+    delete_project_item_route, update_project_item_route
 from .filter import get_all_filters
 from .schemas import AllFiltersGet
 from .schemas.feedback import FeedbackPost, FeedbackGet
-from .schemas.filesystem import ProjectItem, ProjectItemGet
+from .schemas.filesystem import ProjectItem, ProjectItemGet, ProjectItemPatch
 from .schemas.stream import StreamGet, StreamPost, StreamPatch
 from .schemas.landing import LandingGet, LandingPost, LandingPatch
 from .schemas.campaign import CampaignGet, CampaignPost, CampaignPatch
@@ -24,7 +25,6 @@ from .project import create_project_route, project_by_id, projects, update_proje
 from .schemas.user import RoleGet, UserGet, AuthPayload
 from fastapi import UploadFile
 from .landing import landing_by_id, landings_in_stream, update_landing_route, create_landing_route
-from .schemas.filter import FilterOSTypeGet, FilterDeviceTypeGet, FilterGeoLocationGet
 
 
 @strawberry.type
@@ -34,10 +34,10 @@ class Query:
         return await profile(info)
 
     @strawberry.field
-    async def fragment(self, info: strawberry.Info[Context], fragment_id: Optional[int] = None, fragment_version_id: Optional[str] = None,
+    async def fragment(self, info: strawberry.Info[Context], fragment_id: Optional[int] = None,
                        project_id: Optional[int] = None) -> List[FragmentGet]:
         if fragment_id is not None:
-            return [await fragment_by_id(info, fragment_id, fragment_version_id)]
+            return [await fragment_by_id(info, fragment_id)]
         if project_id is not None:
             return await fragments_in_project(info, project_id)
         else:
@@ -189,4 +189,12 @@ class Mutation:
     @strawberry.mutation
     async def create_project_item(self, info: strawberry.Info[Context], project_item: ProjectItem) -> ProjectItemGet:
         return await create_project_item_route(info, project_item)
+
+    @strawberry.mutation
+    async def delete_project_item(self, info: strawberry.Info[Context], project_item_id: int) -> None:
+        await delete_project_item_route(info, project_item_id)
+
+    @strawberry.mutation
+    async def update_project_item(self, info: strawberry.Info[Context], project_item: ProjectItemPatch) -> ProjectItemGet:
+        return await update_project_item_route(info, project_item)
 
