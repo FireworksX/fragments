@@ -7,7 +7,7 @@ class ProjectItem:
     items: Optional[List["ProjectItem"]]
 """
 from typing import List, Optional
-from database import Session, FilesystemProjectItem
+from database import Session, FilesystemProjectItem, Fragment
 from services.core.routes.schemas.filesystem import FileSystemItemType
 
 
@@ -39,7 +39,8 @@ async def update_project_item_db(db: Session, values: dict, nested_items: Option
             item.nested_items.append(it)
 
     if values.get('name') is not None:
-        item.name = values['name']
+        if item.fragment is not None:
+            item.fragment.name = values['name']
     if values.get('type') is not None:
         item.item_type = values['type']
     db.commit()
@@ -51,14 +52,56 @@ async def get_project_item_by_id(db: Session, item_id: int) -> Optional[Filesyst
     return db.query(FilesystemProjectItem).filter(FilesystemProjectItem.id == item_id).first()
 
 
-async def delete_project_item_by_id(db: Session, item_id: int) -> bool:
-    rows_deleted = (
-        db.query(FilesystemProjectItem)
-        .filter(FilesystemProjectItem.id == item_id)
-        .delete()
+async def delete_project_item_by_id(session: Session, item_id: int) -> None:
+    """
+    Deletes the FilesystemProjectItem by ID if (and only if)
+    its associated fragment is not linked by any other fragment.
+    Otherwise, raise an exception and log which fragments are referencing it.
+    """
+
+    # 1) Fetch the item and its fragment
+    item = session.query(FilesystemProjectItem).get(item_id)
+    if item is None:
+        raise ValueError(f"No FilesystemProjectItem found with id={item_id}")
+
+    frag = item.fragment
+    if frag is None:
+        # If there's no fragment, just delete the item
+        session.delete(item)
+        session.commit()
+        print(f"Deleted item {item_id} (no fragment present).")
+        return
+
+    # 2) Find fragments that have this fragment in their .linked_fragments
+    referencing_fragments = (
+        session.query(Fragment)
+        .filter(Fragment.id != frag.id)  # exclude the same fragment if self-linked
+        .filter(Fragment.linked_fragments.any(Fragment.id == frag.id))
+        .all()
     )
-    db.commit()
-    return rows_deleted > 0
+
+    if referencing_fragments:
+        # We have one or more fragments referencing `frag`
+        # Log them (here we just print, but you can use Python's `logging` module)
+        referencing_info = [
+            (f.id, f.name) for f in referencing_fragments
+        ]
+        print(
+            f"Cannot delete FilesystemProjectItem {item_id} because its fragment_id={frag.id} "
+            f"is still linked by these other fragment(s): {referencing_info}"
+        )
+        # Raise an error to block deletion
+        raise ValueError(
+            f"Fragment {frag.id} is still linked by these other fragment(s): {referencing_info} "
+            "Deletion of item is not allowed."
+        )
+
+    # 3) If no referencing fragments, safe to delete
+    session.delete(item)
+    session.commit()
+    print(
+        f"Deleted item {item_id}, fragment {frag.id} is not referenced by other fragments."
+    )
 
 
 async def get_project_items_by_project_id(db: Session, project_id: int) -> List[FilesystemProjectItem]:
