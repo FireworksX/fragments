@@ -1,6 +1,6 @@
 import requests
 from conf.settings import service_settings
-from services.core.routes.schemas import FeedbackGet, FeelLevelGet
+from services.core.routes.schemas.feedback import FeelLevelGet, FeedbackGet
 
 BOT_TOKEN = service_settings.TELEGRAM_BOT_TOKEN
 CHAT_ID = service_settings.TELEGRAM_CHAT_ID

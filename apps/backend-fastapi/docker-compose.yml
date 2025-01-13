@@ -12,7 +12,10 @@ services:
       - "80:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./.media:${MEDIA_STORAGE_PATH}
+      - ./.docker_data/media:${MEDIA_STORAGE_PATH}
+      - ./.docker_data/media/avatars:${MEDIA_STORAGE_PATH}/avatars
+      - ./.docker_data/media/projects:${MEDIA_STORAGE_PATH}/projects
+      - ./.docker_data/media/fragments:${MEDIA_STORAGE_PATH}/fragments
     depends_on:
       - core
     networks:
@@ -22,6 +25,7 @@ services:
     container_name: backend-fastapi-core
     environment:
       - RUN_LEVEL=dev
+      - MEDIA_STORAGE_PATH=${MEDIA_STORAGE_PATH}
     entrypoint:
       - uvicorn
       - services.core:app
@@ -35,7 +39,10 @@ services:
         RUN_LEVEL: dev
     volumes:
       - ./service:/opt/app
-      - ./.media:${MEDIA_STORAGE_PATH}
+      - ./.docker_data/media:${MEDIA_STORAGE_PATH}
+      - ./.docker_data/media/avatars:${MEDIA_STORAGE_PATH}/avatars
+      - ./.docker_data/media/projects:${MEDIA_STORAGE_PATH}/projects
+      - ./.docker_data/media/fragments:${MEDIA_STORAGE_PATH}/fragments
     networks:
       - default
     restart: unless-stopped

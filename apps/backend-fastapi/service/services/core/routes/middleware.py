@@ -1,4 +1,4 @@
-from .schemas import UserGet, AuthPayload
+from .schemas.user import UserGet, AuthPayload
 from strawberry.fastapi import BaseContext
 from database import Session
 from database.models import User

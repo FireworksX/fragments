@@ -1,12 +1,14 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 from fastapi import HTTPException, status
 import strawberry
 
 from crud.stream import create_stream_db, update_stream_by_id_db, get_streams_by_campaign_id_db, get_stream_by_id_db
 from crud.campaign import get_campaign_by_id_db
 from database import Session, Stream, Campaign
-from .schemas import AuthPayload, CampaignGet, CampaignPost, RoleGet, StreamPost, StreamGet, DeviceTypeGet, OSTypeGet, \
-    GeoLocationGet, TimeFrameGet, StreamPatch
+from .schemas.filter import FilterOSTypeGet, FilterDeviceTypeGet, FilterGeoLocationGet, FilterTimeFrameGet, \
+    FilterPageGet, FilterType
+from .schemas.stream import StreamGet, StreamPost, StreamPatch
+from .schemas.user import RoleGet, AuthPayload
 from .middleware import Context
 from .utils import get_user_role_in_project
 
@@ -22,19 +24,22 @@ async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
 
 
 def stream_db_to_stream(stream: Stream) -> StreamGet:
+    filters: List[
+        Union[FilterOSTypeGet | FilterDeviceTypeGet | FilterPageGet | FilterGeoLocationGet | FilterTimeFrameGet]] = []
+    for os_type_filter in stream.os_types_filter:
+        filters.append(FilterOSTypeGet(type=FilterType.OSType, toggled=os_type_filter.toggled, os_type=os_type_filter.os_type))
+    for device_type_filter in stream.device_types_filter:
+        filters.append(FilterDeviceTypeGet(type=FilterType.DeviceType, toggled=device_type_filter.toggled, device_type=device_type_filter.device_type))
+    for page in stream.pages_filter:
+        filters.append(FilterPageGet(type=FilterType.PageType, toggled=page.toggled, page=page.page))
+    for geo_location in stream.geo_locations_filter:
+        filters.append(FilterGeoLocationGet(type=FilterType.GeoLocationType, toggled=geo_location.toggled, country=geo_location.country, region=geo_location.region, city=geo_location.city))
+    for frame in stream.time_frames_filter:
+        filters.append(FilterTimeFrameGet(type=FilterType.TimeFrameType, toggled=frame.toggled, from_time=frame.from_time, to_time=frame.to_time))
+
     return StreamGet(id=stream.id, name=stream.name, deleted=stream.deleted,
                      active=stream.active,
-                     campaign_id=stream.campaign_id, weight=stream.weight,
-                     os_types=[OSTypeGet(relation.os_type.os_type) for relation in stream.os_types],
-                     device_types=[DeviceTypeGet(relation.device_type.device_type) for relation in
-                                   stream.device_types],
-                     pages=[relation.page.page for relation in stream.pages], geo_locations=[
-            GeoLocationGet(country=relation.geo_location.country, city=relation.geo_location.city,
-                           region=relation.geo_location.region) for relation in stream.geo_locations],
-                     time_frames=[
-                         TimeFrameGet(to_time=relation.time_frame.to_time,
-                                      from_time=relation.time_frame.from_time) for
-                         relation in stream.time_frames])
+                     campaign_id=stream.campaign_id, weight=stream.weight, filters=filters)
 
 
 async def streams_in_campaign(info: strawberry.Info[Context], campaign_id: int, active: Optional[bool] = None, deleted: Optional[bool] = None) -> List[StreamGet]:
@@ -89,9 +94,8 @@ async def create_stream_route(info: strawberry.Info[Context], strm: StreamPost) 
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to create streams')
 
-    stream: Stream = await create_stream_db(db, strm.name, strm.campaign_id, strm.weight,
-                                            strm.active, strm.deleted, strm.os_types, strm.device_types, strm.pages,
-                                            strm.geo_locations, strm.time_frames)
+    stream: Stream = await create_stream_db(db, strm.name, campaign.project_id, strm.campaign_id, strm.weight,
+                                            strm.active, strm.deleted, strm.filters)
 
     return stream_db_to_stream(stream)
 
@@ -109,6 +113,5 @@ async def update_stream_route(info: strawberry.Info[Context], strm: StreamPatch)
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to create streams')
 
-    stream: Stream = await update_stream_by_id_db(db, strm.__dict__, strm.os_types, strm.device_types, strm.pages,
-                                                  strm.geo_locations, strm.time_frames)
+    stream: Stream = await update_stream_by_id_db(db, strm.__dict__, strm.filters)
     return stream_db_to_stream(stream)
