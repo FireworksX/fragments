@@ -27,6 +27,7 @@ class FragmentPatch:
     linked_fragments: Optional[List[int]] = None  # ids of fragments
 
 
+# depth for linked_fragments
 @strawberry.type
 class FragmentGet:
     id: int

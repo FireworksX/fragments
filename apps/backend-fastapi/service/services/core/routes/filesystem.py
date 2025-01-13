@@ -12,8 +12,8 @@ from .schemas.user import RoleGet, AuthPayload
 from .middleware import Context
 from .utils import get_user_role_in_project
 
-from fragment import fragment_db_to_fragment
-from project import project_by_id
+from .fragment import fragment_db_to_fragment
+from .project import project_by_id
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
@@ -30,7 +30,7 @@ def project_item_db_to_project_item(item: FilesystemProjectItem, project: Projec
     return ProjectItemGet(id=item.id, name=item.name, item_type=item.item_type,
                           nested_items=item.nested_items, fragment=fragment_db_to_fragment(item.fragment, project))
 
-
+# if it is a fragment, use name of fragment
 async def create_project_item_route(info: strawberry.Info[Context], project_item: ProjectItem) -> ProjectItemGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
@@ -87,6 +87,7 @@ async def get_project_items_in_project_route(info: strawberry.Info[Context], pro
             await get_project_items_by_project_id(db, project_id)]
 
 
+# don't allow to remove item if it is referenced by another item (fragment in linked_fragments)
 async def delete_project_item_route(info: strawberry.Info[Context], item_id: int) -> None:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
@@ -106,7 +107,7 @@ async def delete_project_item_route(info: strawberry.Info[Context], item_id: int
 
     await delete_project_item_by_id(db, item_id)
 
-
+# if it is a fragment, chenge name of fragment
 async def update_project_item_route(info: strawberry.Info[Context], item: ProjectItemPatch) -> ProjectItemGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
@@ -125,4 +126,4 @@ async def update_project_item_route(info: strawberry.Info[Context], item: Projec
                             detail=f'User is not allowed to update items')
 
     item: FilesystemProjectItem = await update_project_item_db(db, item.__dict__, item.nested_items)
-    return project_item_db_to_project_item(project_item, await project_by_id(info, project_item.project_id))
+    return project_item_db_to_project_item(item, await project_by_id(info, project_item.project_id))
