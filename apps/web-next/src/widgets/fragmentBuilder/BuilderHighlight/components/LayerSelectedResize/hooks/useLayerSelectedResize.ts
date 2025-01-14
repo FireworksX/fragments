@@ -17,9 +17,8 @@ import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanva
 export const SELECTION_SIDES = createConstants('topLeft', 'top', 'right', 'bottom', 'left')
 
 export const useLayerSelectedResize = () => {
-  const { canvasManager } = useContext(BuilderContext)
   const { documentManager } = useBuilderDocument()
-  const { canvas } = useBuilderCanvas()
+  const { canvas, manager: canvasManager } = useBuilderCanvas()
   const { selectionGraph, selection } = useBuilderSelection()
   const allowResizeHorizontal = selectionGraph?.getAllowResizeHorizontal?.()
   const allowResizeVertical = selectionGraph?.getAllowResizeVertical?.()

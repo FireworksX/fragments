@@ -1,12 +1,29 @@
 .root {
     position: absolute;
-    bottom: 30px;
+    bottom: 70px;
+    height: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(var(--background--rgb), .8);
+    backdrop-filter: blur(5px);
+    padding: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    border-radius: var(--radius-second);
+    z-index: var(--z-index-navigation);
 }
 
 .actionButton {
     color: var(--secondary);
 }
 
-.zoomSelect {
-    min-width: 70px;
+.active {
+    color: var(--primary);
+}
+
+.delimiter {
+    height: 100%;
+    width: 1px;
+    background: var(--border);
 }

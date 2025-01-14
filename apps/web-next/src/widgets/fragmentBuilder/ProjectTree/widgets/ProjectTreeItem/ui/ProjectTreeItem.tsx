@@ -11,6 +11,8 @@ import { Dropdown } from '@/shared/ui/Dropdown'
 import { DropdownGroup } from '@/shared/ui/DropdownGroup'
 import { DropdownOption } from '@/shared/ui/DropdownOption'
 import { isValue } from '@fragments/utils'
+import { ProjectTreeItemOptions } from '@/widgets/fragmentBuilder/ProjectTree/widgets/ProjectTreeItem/components/ProjectTreeItemOptions'
+import SmartCell from '@/shared/ui/SmartCell/ui/SmartCell'
 
 export type ProjectTreeItemType = 'fragment' | 'folder'
 
@@ -47,100 +49,44 @@ export const ProjectTreeItem: FC<ProjectTreeItemProps> = ({
   onSelectItem,
   onOpenItem
 }) => {
-  const [localName, setLocalName] = useState<string | null>(null)
-  const inputRef = useRef<ComponentRef<'input'>>(null)
-  const isActiveEdit = isValue(localName)
-
-  const onEdit = () => {
-    if (localName) {
-      onRename?.(localName)
-    }
-    setLocalName(null)
-    inputRef?.current?.blur()
-  }
-
-  const handleRename = e => {
-    // e?.preventDefault()
-    // e?.stopPropagation()
-    inputRef?.current?.focus()
-    setLocalName('')
-  }
-
-  useImperativeHandle(ref, () => ({
-    handleRename
-  }))
-
   const handleClickCell = e => {
-    if (type === 'folder') {
-      onCollapse?.()
-    }
     if (type === 'fragment') {
       onOpenItem?.()
-
-      if (e?.detail > 1) {
-        handleRename(e)
-      }
     }
   }
 
   return (
     <div
       className={cn(styles.root, className, {
-        [styles.fragment]: type === 'fragment',
-        [styles.open]: isOpen,
-        [styles.selected]: selected
+        [styles.fragment]: type === 'fragment'
       })}
     >
-      <Cell
-        effect='none'
-        before={
-          <div className={styles.before}>
-            <Touchable className={styles.caret} style={{ opacity: hasChildren ? 1 : 0 }}>
-              <CaretRight width={10} />
-            </Touchable>
-            <div className={styles.icon}>
-              {type === 'folder' && <FolderIcon />}
-              {type === 'fragment' && <FragmentIcon />}
-            </div>
-          </div>
+      <SmartCell
+        ref={ref}
+        collapsed={type === 'folder' ? !isOpen : undefined}
+        selected={selected}
+        icon={
+          <>
+            {type === 'folder' && <FolderIcon />}
+            {type === 'fragment' && <FragmentIcon />}
+          </>
         }
+        onEdit={onRename}
+        onToggleCollapse={onCollapse}
         onClick={handleClickCell}
       >
-        <div className={styles.label}>
-          <input
-            className={cn(styles.labelInput, { [styles.editable]: isActiveEdit })}
-            value={!isActiveEdit ? name : undefined}
-            ref={inputRef}
-            placeholder={localName}
-            type='text'
-            autoComplete='nope'
-            autoCorrect='off'
-            spellCheck={false}
-            autoFocus={isActiveEdit}
-            onBlur={onEdit}
-            onKeyUp={e => {
-              if (e.key === 'Enter') {
-                onEdit()
-              }
-            }}
-            onChange={e => setLocalName(e.target.value)}
-          />
-        </div>
-      </Cell>
+        {name}
+      </SmartCell>
       <Dropdown
         trigger='click'
         hideOnClick
         stopPropagation
         options={
           <>
-            <DropdownGroup>
-              <DropdownOption onClick={onCreateFolder}>New Folder</DropdownOption>
-              <DropdownOption onClick={onCreateFragment}>New Fragment</DropdownOption>
-            </DropdownGroup>
-            <DropdownGroup>
-              <DropdownOption onClick={handleRename}>Rename</DropdownOption>
-              <DropdownOption mode='danger'>Delete</DropdownOption>
-            </DropdownGroup>
+            {type === 'fragment' && <ProjectTreeItemOptions type={type} />}
+            {type === 'folder' && (
+              <ProjectTreeItemOptions type={type} onCreateFolder={onCreateFolder} onCreateFragment={onCreateFragment} />
+            )}
           </>
         }
       >

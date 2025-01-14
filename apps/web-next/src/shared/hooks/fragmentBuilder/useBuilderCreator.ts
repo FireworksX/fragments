@@ -2,9 +2,12 @@ import { use } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
 
-export const useBuilderCanvas = () => {
+export const useBuilderCreator = () => {
   const { builderManager } = use(BuilderContext)
-  const [canvas] = useGraph(builderManager, builderManager.$canvas.key)
+  const [creator] = useGraph(builderManager, builderManager.creatorKey)
 
-  return { canvas, manager: builderManager.$canvas }
+  return {
+    creator,
+    manager: builderManager.$creator
+  }
 }

@@ -3,6 +3,7 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { TreeItemComponentProps } from 'dnd-kit-sortable-tree'
+import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
 
 interface ProjectTreeSortableItemProps extends TreeItemComponentProps, PropsWithChildren {
   className?: string
@@ -22,8 +23,6 @@ export const ProjectTreeSortableItem: FC<ProjectTreeSortableItemProps> = ({
   clone,
   ref
 }) => {
-  const { canvasManager } = use(BuilderContext)
-
   return (
     <div
       ref={wrapperRef}

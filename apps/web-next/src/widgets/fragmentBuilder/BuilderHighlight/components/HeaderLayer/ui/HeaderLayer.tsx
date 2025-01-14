@@ -23,7 +23,6 @@ interface HeaderLayerProps {
 }
 
 const HeaderLayer: FC<HeaderLayerProps> = ({ className, layerKey }) => {
-  const { canvasManager } = use(BuilderContext)
   const { documentManager } = useBuilderDocument()
   const [layerNode] = useGraph(documentManager, layerKey)
   const isTopNode = !!(layerNode?.isRootLayer?.() || layerNode?.isBreakpoint) && layerNode?._type === nodes.Frame

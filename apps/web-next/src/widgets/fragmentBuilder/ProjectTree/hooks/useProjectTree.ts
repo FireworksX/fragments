@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState, useTransition } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useGraph, useGraphFields, useGraphStack } from '@graph-state/react'
@@ -186,6 +186,8 @@ export const useProjectTree = () => {
     if (type === 'collapsed' || type === 'expanded') {
       handleCollapse(type, item.id)
     }
+
+    console.log(nextItemsTree, reason)
 
     if (type === 'dropped') {
       const itemKey = draggedItem?.id

@@ -28,6 +28,7 @@ export const documentsPlugin = (state: typeof builderStore) => {
     document: documentGraph
   })
   state.documentKey = 'Document:root'
+  state.getDocumentManager = () => state.resolve(state.documentKey)?.manager
 
   const createDocumentManager = (fragmentKey: LinkKey) => {
     return new Promise(resolve =>

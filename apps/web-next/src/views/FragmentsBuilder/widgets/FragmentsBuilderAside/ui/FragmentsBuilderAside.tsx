@@ -7,6 +7,7 @@ import { BuilderLayers } from '@/widgets/fragmentBuilder/BuilderLayers'
 import cn from 'classnames'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { ProjectAssets } from '@/widgets/fragmentBuilder/ProjectAssets'
 
 interface FragmentsBuilderAsideProps {
   className?: string
@@ -29,6 +30,7 @@ export const FragmentsBuilderAside: FC<FragmentsBuilderAsideProps> = ({ classNam
 
       <ProjectTree className={cn({ [styles.hidden]: mode !== 'project' })} />
       {!!documentManager && <BuilderLayers className={cn({ [styles.hidden]: mode !== 'layers' })} />}
+      <ProjectAssets className={cn({ [styles.hidden]: mode !== 'assets' })} />
     </Container>
   )
 }

@@ -5,6 +5,7 @@ import { isValue } from '@fragments/utils'
 import { BuilderStoreDocumentPlugin, documentsPlugin } from './plugins/documentsPlugin'
 import loggerPlugin from '@graph-state/plugin-logger'
 import { canvasPlugin } from '@/shared/store/builderStore/plugins/canvasPlugin'
+import { creatorPlugin } from '@/shared/store/builderStore/plugins/creatorPlugin'
 
 export interface BuilderStore extends BuilderStoreDocumentPlugin {
   _type: 'Builder'
@@ -29,6 +30,7 @@ export const createBuilderStore = () => {
       loggerPlugin({ onlyBrowser: true }),
       documentsPlugin,
       canvasPlugin,
+      creatorPlugin,
       state => {
         state.toggleTextEditor = (value?: boolean) => {
           if (isValue(value)) {

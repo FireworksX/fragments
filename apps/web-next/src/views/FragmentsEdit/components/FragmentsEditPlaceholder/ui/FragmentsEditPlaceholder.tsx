@@ -4,6 +4,7 @@ import styles from './styles.module.css'
 import LogoIcon from '@/shared/icons/next/logo.svg'
 import { Button } from '@/shared/ui/Button'
 import { Spinner } from '@/shared/ui/Spinner'
+import { useDroppable } from '@dnd-kit/core'
 
 interface FragmentsEditPlaceholderProps {
   fetching?: boolean
@@ -11,8 +12,12 @@ interface FragmentsEditPlaceholderProps {
 }
 
 export const FragmentsEditPlaceholder: FC<FragmentsEditPlaceholderProps> = ({ className, fetching }) => {
+  const { setNodeRef } = useDroppable({
+    id: 'builder-edit-placeholder'
+  })
+
   return (
-    <div className={cn(styles.root, className)}>
+    <div className={cn(styles.root, className)} ref={setNodeRef}>
       <LogoIcon width={40} height={40} />
 
       {fetching ? (

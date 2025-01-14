@@ -48,29 +48,27 @@ export const FragmentsEdit = () => {
           <div className={styles.previewContainer}>
             {/*<BuilderSidebar assetsNode={<BuilderAssets />} layersNode={<BuilderLayers />} />*/}
 
-            <BuilderCanvas>
+            <BuilderCanvas extendNodes={<BuilderFloatBar />}>
               <BuilderHighlight />
               <DisplayBreakpoints />
             </BuilderCanvas>
-
-            <BuilderControls
-              position='right'
-              fragmentGrowingNode={<BuilderFragmentGrowing />}
-              fragmentPropsNode={<AssetsProperties propertiesTree={<PropertiesTree />} />}
-              positionNode={<BuilderPosition />}
-              sizeNode={<BuilderSize />}
-              layoutNode={<BuilderLayout />}
-              stylesNode={<BuilderStyles />}
-              linkNode={<BuilderLink />}
-              textNode={<BuilderText />}
-              imageNode={<BuilderImage />}
-              attributesNode={<BuilderAttributes />}
-              // cssNode={<BuilderCssOverride />}
-              instancePropsNode={<BuilderFragmentInstance />}
-            />
-
-            <BuilderFloatBar />
           </div>
+
+          <BuilderControls
+            position='right'
+            fragmentGrowingNode={<BuilderFragmentGrowing />}
+            fragmentPropsNode={<AssetsProperties propertiesTree={<PropertiesTree />} />}
+            positionNode={<BuilderPosition />}
+            sizeNode={<BuilderSize />}
+            layoutNode={<BuilderLayout />}
+            stylesNode={<BuilderStyles />}
+            linkNode={<BuilderLink />}
+            textNode={<BuilderText />}
+            imageNode={<BuilderImage />}
+            attributesNode={<BuilderAttributes />}
+            // cssNode={<BuilderCssOverride />}
+            instancePropsNode={<BuilderFragmentInstance />}
+          />
 
           <div className={styles.overlays}>
             <CreateCustomBreakpoint />

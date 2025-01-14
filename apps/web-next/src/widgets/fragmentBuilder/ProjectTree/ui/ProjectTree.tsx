@@ -1,9 +1,10 @@
-import React, { FC } from 'react'
+import React, { FC, useRef } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { ProjectTreeItem } from '../widgets/ProjectTreeItem'
 import { useProjectTree } from '@/widgets/fragmentBuilder/ProjectTree/hooks/useProjectTree'
 import dynamic from 'next/dynamic'
+import { restrictToParentElement } from '@dnd-kit/modifiers'
 import { ProjectTreeSortableItem } from '@/widgets/fragmentBuilder/ProjectTree/widgets/ProjectTreeSortableItem'
 
 interface ProjectTreeProps {
@@ -34,9 +35,10 @@ const TreeItem = props => {
 
 export const ProjectTree: FC<ProjectTreeProps> = ({ className }) => {
   const { items, handleChangeItems } = useProjectTree()
+  const treeRef = useRef(null)
 
   return (
-    <div className={cn(styles.root, className)} data-testid='ProjectTree'>
+    <div className={cn(styles.root, className)} ref={treeRef} data-testid='ProjectTree'>
       <SortableTree
         sortableProps={{ animateLayoutChanges: () => false }}
         dropAnimation={null}

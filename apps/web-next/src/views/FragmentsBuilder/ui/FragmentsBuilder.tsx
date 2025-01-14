@@ -6,8 +6,14 @@ import { FragmentsEdit } from '@/views/FragmentsEdit'
 import { BuilderFragmentTabs } from '../widgets/BuilderFragmentTabs'
 import { FragmentsBuilderAside } from '@/views/FragmentsBuilder/widgets/FragmentsBuilderAside'
 import { createBuilderStore } from '@/shared/store/builderStore'
+import { DndContext } from '@dnd-kit/core'
+import { isBrowser } from '@fragments/utils'
 
 const builderManager = createBuilderStore()
+
+if (isBrowser) {
+  window.builderManager = builderManager
+}
 
 export const FragmentsBuilder = () => {
   return (
