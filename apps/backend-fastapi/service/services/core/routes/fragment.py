@@ -19,14 +19,14 @@ from .project import project_by_id
 from .utils import get_user_role_in_project
 
 async def fragment_db_to_fragment(fragment: Fragment, project: ProjectGet) -> FragmentGet:
-    return FragmentGet(id=fragment.fragment_id,
+    return FragmentGet(id=fragment.id,
                        name=fragment.name, author=fragment.author,
                        document=fragment.document,
                        props=fragment.props, project=project,
                        assets=[] if fragment.assets is None else [relation.media.public_path for relation in
                                                                   fragment.assets],
                        linked_fragments=[] if fragment.linked_fragments is None else [
-                           await fragment_db_to_fragment(relation.linked_fragment, project) for relation in fragment.linked_fragments])
+                           await fragment_db_to_fragment(linked_fragment, project) for linked_fragment in fragment.linked_fragments])
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
