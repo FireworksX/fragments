@@ -84,12 +84,14 @@ class Query:
         return await get_all_filters(info, countries, regions)
 
     @strawberry.field
-    async def get_project_item(self, info: strawberry.Info[Context], project_item_id: int) -> ProjectItemGet:
-        return await get_project_item_route(info, project_item_id)
-
-    @strawberry.field
-    async def get_project_items(self, info: strawberry.Info[Context], project_id: int) -> List[ProjectItemGet]:
-        return await get_project_items_in_project_route(info, project_id)
+    async def project_item(self, info: strawberry.Info[Context], project_item_id: Optional[int] = None,
+                                project_id: Optional[int] = None) -> List[ProjectItemGet]:
+        if project_item_id is not None:
+            return [await get_project_item_route(info, project_item_id)]
+        elif project_id is not None:
+            return await get_project_items_in_project_route(info, project_id)
+        else:
+            return []
 
 
 @strawberry.type

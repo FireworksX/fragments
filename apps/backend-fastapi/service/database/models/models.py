@@ -182,13 +182,22 @@ class FragmentMedia(Base):
 
 
 # linked fragments
-class LinkedFragment(Base):
-    __tablename__ = "linked_fragment"
-    linked_fragment_id = Column(ForeignKey("fragment.id"), primary_key=True)
-    fragment_id = Column(ForeignKey("fragment.id"), primary_key=True)
-    fragment = relationship("Fragment", back_populates="linked_fragments")
-    linked_fragment = relationship("Fragment")
-
+fragment_usage = Table(
+    "fragment_usage",
+    Base.metadata,
+    Column(
+        "fragment_id",
+        Integer,
+        ForeignKey("fragment.id", ondelete="CASCADE"),
+        primary_key=True
+    ),
+    Column(
+        "used_fragment_id",
+        Integer,
+        ForeignKey("fragment.id", ondelete="CASCADE"),
+        primary_key=True
+    ),
+)
 
 class Fragment(Base):
     __tablename__ = 'fragment'
@@ -208,7 +217,14 @@ class Fragment(Base):
     assets = relationship("FragmentMedia", back_populates="fragment", cascade="save-update, merge, "
                                                                                       "delete, delete-orphan")
 
-    linked_fragments = relationship("LinkedFragment", back_populates="fragment")
+    linked_fragments = relationship(
+        "Fragment",
+        secondary=fragment_usage,             # use the association table
+        primaryjoin=id == fragment_usage.c.fragment_id,
+        secondaryjoin=id == fragment_usage.c.used_fragment_id,
+        # We do NOT define backref or symmetrical references here,
+        # since we just want "Fragment has an array of fragments it is using."
+    )
 
     # Back-reference to the single FilesystemProjectItem
     # uselist=False => 1-to-1, not 1-to-many
