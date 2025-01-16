@@ -6,7 +6,7 @@ from crud.filesystem import create_project_item_db, get_project_item_by_id, get_
     delete_project_item_by_id, update_project_item_db
 from crud.project import get_project_by_id_db
 from database import Session, Project, FilesystemProjectItem
-from .schemas.filesystem import ProjectItem, ProjectItemGet, ProjectItemPatch
+from .schemas.filesystem import ProjectItem, ProjectItemGet, ProjectItemPatch, ProjectData, FileSystemItemType
 from .schemas.project import ProjectGet
 from .schemas.user import RoleGet, AuthPayload
 from .middleware import Context
@@ -26,14 +26,52 @@ async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
     return role is not None and role is not RoleGet.DESIGNER
 
 
-def project_item_db_to_project_item(item: FilesystemProjectItem, project: ProjectGet) -> ProjectItemGet:
-    return ProjectItemGet(id=item.id, name=item.name if item.fragment is None else item.fragment.name,
-                          item_type=item.item_type,
-                          nested_items=item.nested_items,
-                          fragment=None if item.fragment is None else fragment_db_to_fragment(item.fragment, project))
+def project_item_db_to_project_item(
+    item: FilesystemProjectItem,
+    project: ProjectGet,
+    current_depth: int,
+    max_depth: int
+) -> ProjectItemGet:
+    """
+    Converts a FilesystemProjectItem (from the DB) to a ProjectItemGet (for GraphQL).
+    Recursively processes 'nested_items' until reaching 'max_depth'.
+    """
+
+    item_type = FileSystemItemType(item.item_type)
+
+    # Potentially resolve a 'data' or 'fragment' field if needed
+    data = None
+    if item_type == FileSystemItemType.FRAGMENT and item.fragment:
+        data = fragment_db_to_fragment(item.fragment, project)
+
+    # Example: use the item's own name or the fragment's name, if present
+    name = item.name if not item.fragment else item.fragment.name
+
+    # Decide whether to recurse into children
+    nested_items = None
+    # Only recurse if we haven't hit the depth limit
+    if item.nested_items and current_depth < max_depth:
+        nested_items = [
+            project_item_db_to_project_item(
+                child,
+                project,
+                current_depth=current_depth + 1,
+                max_depth=max_depth
+            )
+            for child in item.nested_items
+        ]
+    # If we're at or beyond max_depth, nested_items will remain None (or you could make it [])
+
+    return ProjectItemGet(
+        id=item.id,
+        name=name,
+        item_type=item_type,  # or item.item_type directly if your enum is handled differently
+        nested_items=nested_items,
+        data=data
+    )
 
 
-async def create_project_item_route(info: strawberry.Info[Context], project_item: ProjectItem) -> ProjectItemGet:
+async def create_project_item_route(info: strawberry.Info[Context], project_item: ProjectItem, max_depth: int) -> ProjectItemGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
@@ -48,12 +86,12 @@ async def create_project_item_route(info: strawberry.Info[Context], project_item
 
     project_item: FilesystemProjectItem = await create_project_item_db(db, project_item.parent_id, project_item.name,
                                                                        project_item.project_id, project_item.item_type,
-                                                                       project_item.fragment_id)
+                                                                       project_item.data_id)
 
-    return project_item_db_to_project_item(project_item, await project_by_id(info, project_item.project_id))
+    return project_item_db_to_project_item(project_item, await project_by_id(info, project_item.project_id), 0, max_depth)
 
 
-async def get_project_item_route(info: strawberry.Info[Context], project_item_id: int) -> ProjectItemGet:
+async def get_project_item_route(info: strawberry.Info[Context], project_item_id: int, max_depth: int) -> ProjectItemGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
@@ -70,10 +108,10 @@ async def get_project_item_route(info: strawberry.Info[Context], project_item_id
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to observe items')
 
-    return project_item_db_to_project_item(project_item, await project_by_id(info, project_item.project_id))
+    return project_item_db_to_project_item(project_item, await project_by_id(info, project_item.project_id), 0, max_depth)
 
 
-async def get_project_items_in_project_route(info: strawberry.Info[Context], project_id: int) -> List[ProjectItemGet]:
+async def get_project_items_in_project_route(info: strawberry.Info[Context], project_id: int, max_depth: int) -> List[ProjectItemGet]:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
@@ -86,7 +124,7 @@ async def get_project_items_in_project_route(info: strawberry.Info[Context], pro
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to observe items')
 
-    return [project_item_db_to_project_item(project_item, await project_by_id(info, project_item.project_id)) for
+    return [project_item_db_to_project_item(project_item, await project_by_id(info, project_item.project_id), 0, max_depth) for
             project_item in
             await get_project_items_by_project_id(db, project_id)]
 
@@ -114,7 +152,7 @@ async def delete_project_item_route(info: strawberry.Info[Context], item_id: int
         raise HTTPException(status_code=409, detail=str(e))
 
 
-async def update_project_item_route(info: strawberry.Info[Context], item: ProjectItemPatch) -> ProjectItemGet:
+async def update_project_item_route(info: strawberry.Info[Context], item: ProjectItemPatch, max_depth: int) -> ProjectItemGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
@@ -132,4 +170,4 @@ async def update_project_item_route(info: strawberry.Info[Context], item: Projec
                             detail=f'User is not allowed to update items')
 
     item: FilesystemProjectItem = await update_project_item_db(db, item.__dict__, item.nested_items)
-    return project_item_db_to_project_item(item, await project_by_id(info, project_item.project_id))
+    return project_item_db_to_project_item(item, await project_by_id(info, project_item.project_id), 0, max_depth)

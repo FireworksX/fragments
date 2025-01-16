@@ -12,7 +12,10 @@ from services.core.routes.schemas.filesystem import FileSystemItemType
 
 
 async def create_project_item_db(db: Session, parent_id: Optional[int], name: str, project_id: int,
-                                 item_type: FileSystemItemType, fragment_id: Optional[int]) -> FilesystemProjectItem:
+                                 item_type: FileSystemItemType, data_id: Optional[int]) -> FilesystemProjectItem:
+    fragment_id: int|None = None
+    if item_type is FileSystemItemType.FRAGMENT:
+        fragment_id = data_id
     item: FilesystemProjectItem = FilesystemProjectItem(project_id=project_id, name=name, item_type=int(item_type.value), fragment_id=fragment_id)
     if parent_id is not None:
         parent: FilesystemProjectItem = db.query(FilesystemProjectItem).filter(
@@ -64,7 +67,7 @@ async def delete_project_item_by_id(session: Session, item_id: int) -> None:
     if item is None:
         raise ValueError(f"No FilesystemProjectItem found with id={item_id}")
 
-    frag = item.fragment
+    frag = item.data
     if frag is None:
         # If there's no fragment, just delete the item
         session.delete(item)
