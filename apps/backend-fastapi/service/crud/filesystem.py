@@ -42,6 +42,7 @@ async def update_project_item_db(db: Session, values: dict, nested_items: Option
             item.nested_items.append(it)
 
     if values.get('name') is not None:
+        item.name = values['name']
         if item.fragment is not None:
             item.fragment.name = values['name']
     if values.get('type') is not None:

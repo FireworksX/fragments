@@ -87,7 +87,9 @@ class Query:
 
     @strawberry.field
     async def project_item(self, info: strawberry.Info[Context], project_item_id: Optional[int] = None,
-                                project_id: Optional[int] = None, max_depth: int = 5) -> List[ProjectItemGet]:
+                                project_id: Optional[int] = None, max_depth: Optional[int] = 5) -> List[ProjectItemGet]:
+        if max_depth is None:
+            max_depth = 5
         if max_depth < 0:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Max depth must be a non-negative integer")
         if project_item_id is not None:
@@ -193,7 +195,9 @@ class Mutation:
         return await update_landing_route(info, landing)
 
     @strawberry.mutation
-    async def create_project_item(self, info: strawberry.Info[Context], project_item: ProjectItem, max_depth: int = 5) -> ProjectItemGet:
+    async def create_project_item(self, info: strawberry.Info[Context], project_item: ProjectItem, max_depth: Optional[int] = 5) -> ProjectItemGet:
+        if max_depth is None:
+            max_depth = 5
         if max_depth < 0:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Max depth must be a non-negative integer")
         return await create_project_item_route(info, project_item, max_depth)
@@ -203,7 +207,9 @@ class Mutation:
         await delete_project_item_route(info, project_item_id)
 
     @strawberry.mutation
-    async def update_project_item(self, info: strawberry.Info[Context], project_item: ProjectItemPatch, max_depth: int = 5) -> ProjectItemGet:
+    async def update_project_item(self, info: strawberry.Info[Context], project_item: ProjectItemPatch, max_depth: Optional[int] = 5) -> ProjectItemGet:
+        if max_depth is None:
+            max_depth = 5
         if max_depth < 0:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Max depth must be a non-negative integer")
         return await update_project_item_route(info, project_item, max_depth)
