@@ -54,6 +54,15 @@ const SmartCell: FC<SmartCellProps> = ({
   const hasCollapsedCaret = isValue(collapsed)
   const isEditable = !!onEdit
 
+  const edit = () => {
+    setLocalName(children)
+    inputRef?.current?.focus()
+  }
+
+  const cancelEdit = () => {
+    setLocalName(null)
+  }
+
   const handlerEdit = () => {
     if (localName) {
       onEdit?.(localName)
@@ -63,15 +72,17 @@ const SmartCell: FC<SmartCellProps> = ({
   }
 
   useImperativeHandle(ref, () => ({
-    handlerEdit
+    edit,
+    cancelEdit
   }))
 
   const handleClickCell = event => {
     if (isEditable) {
       if (event?.detail > 1) {
-        handlerEdit()
+        edit()
       }
-    } else if (isCollapsable) {
+    }
+    if (isCollapsable) {
       onToggleCollapse()
     }
 
@@ -106,7 +117,7 @@ const SmartCell: FC<SmartCellProps> = ({
           autoCorrect='off'
           spellCheck={false}
           autoFocus={isActiveEdit}
-          onBlur={handlerEdit}
+          onBlur={cancelEdit}
           onKeyUp={e => {
             if (e.key === 'Enter') {
               handlerEdit()

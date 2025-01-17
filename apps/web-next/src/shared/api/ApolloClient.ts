@@ -32,7 +32,19 @@ export function makeApolloClient() {
   // use the `ApolloClient` from "@apollo/experimental-nextjs-app-support"
   return new ApolloClient({
     // use the `InMemoryCache` from "@apollo/experimental-nextjs-app-support"
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      typePolicies: {
+        Mutation: {
+          fields: {
+            deleteProjectItem: {
+              merge(_, incoming, { cache, variables }) {
+                cache.evict({ id: `ProjectItemGet:${variables?.projectItemId}` })
+              }
+            }
+          }
+        }
+      }
+    }),
     link: from([authMiddleware, httpLink])
   })
 }

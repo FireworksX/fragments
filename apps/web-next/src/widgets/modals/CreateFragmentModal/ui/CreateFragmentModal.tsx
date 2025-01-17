@@ -9,6 +9,7 @@ import { ModalContainer } from '@/shared/ui/ModalContainer'
 import { Button } from '@/shared/ui/Button'
 import { InputText } from '@/shared/ui/InputText'
 import { modalNames } from '@/shared/data'
+import { useModal } from '@/shared/hooks/useModal'
 
 interface CreateFragmentModalProps {
   className?: string
@@ -23,7 +24,8 @@ export interface CreateFragmentModalContext {
 }
 
 const CreateFragmentModal: FC<CreateFragmentModalProps> = ({ className }) => {
-  const [modal] = useGraph(modalStore, modalStore.key)
+  const { modal } = useModal()
+
   const [name, setName] = useState('')
   const context = modal.context
   const creating = context?.creating ?? false
@@ -54,7 +56,7 @@ const CreateFragmentModal: FC<CreateFragmentModalProps> = ({ className }) => {
         }
       >
         <div className={styles.body}>
-          <InputText placeholder='Name' value={name} autoFocus onChange={setName} />
+          <InputText placeholder='Name' value={name} autoFocus onChangeValue={setName} />
         </div>
       </ModalContainer>
     </Modal>

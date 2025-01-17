@@ -1,43 +1,32 @@
 import { ComponentRef, FC, PropsWithChildren, use, ForwardedRef } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { TreeItemComponentProps } from 'dnd-kit-sortable-tree'
-import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
 
-interface ProjectTreeSortableItemProps extends TreeItemComponentProps, PropsWithChildren {
+interface ProjectTreeSortableItemProps extends PropsWithChildren {
   className?: string
-  ref?: ForwardedRef<ComponentRef<'div'>>
   selected?: boolean
+  deepIndex?: number
+  indentationWidth?: number
 }
 
 export const ProjectTreeSortableItem: FC<ProjectTreeSortableItemProps> = ({
   className,
+  deepIndex = 0,
   selected,
-  children,
-  wrapperRef,
-  indentationWidth,
-  depth,
-  handleProps,
-  style,
-  clone,
-  ref
+  indentationWidth = 20,
+  children
 }) => {
   return (
     <div
-      ref={wrapperRef}
       className={cn(styles.root, className, {
-        [styles.clone]: clone,
         [styles.selected]: selected
       })}
       data-testid='BuilderLayerSortingCell'
       style={{
-        ...style,
-        paddingLeft: clone ? indentationWidth : indentationWidth * depth
+        paddingLeft: indentationWidth * deepIndex
       }}
-      {...handleProps}
     >
-      <div ref={ref}>{children}</div>
+      {children}
     </div>
   )
 }

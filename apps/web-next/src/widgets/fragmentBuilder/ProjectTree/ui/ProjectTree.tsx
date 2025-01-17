@@ -11,50 +11,31 @@ interface ProjectTreeProps {
   className?: string
 }
 
-const SortableTree = dynamic(() => import('dnd-kit-sortable-tree').then(m => m.SortableTree), { ssr: false })
-
-const TreeItem = props => {
-  return (
-    <ProjectTreeSortableItem {...props} selected={props?.item?.selected}>
-      <ProjectTreeItem
-        ref={props?.item?.ref}
-        name={props?.item?.name}
-        type={props?.item?.type}
-        selected={props?.item?.selected}
-        isOpen={!props?.collapsed}
-        hasChildren={props?.childCount > 0}
-        onCollapse={props?.onCollapse}
-        onCreateFolder={props?.item?.onCreateFolder}
-        onCreateFragment={props?.item?.onCreateFragment}
-        onSelectItem={props?.item?.onSelectItem}
-        onOpenItem={props?.item?.onOpenItem}
-      />
-    </ProjectTreeSortableItem>
-  )
-}
-
 export const ProjectTree: FC<ProjectTreeProps> = ({ className }) => {
-  const { items, handleChangeItems } = useProjectTree()
+  const { list, handleChangeItems } = useProjectTree()
   const treeRef = useRef(null)
 
   return (
     <div className={cn(styles.root, className)} ref={treeRef} data-testid='ProjectTree'>
-      <SortableTree
-        sortableProps={{ animateLayoutChanges: () => false }}
-        dropAnimation={null}
-        indicator={false}
-        pointerSensorOptions={{
-          activationConstraint: {
-            tolerance: 5,
-            delay: 250
-          }
-        }}
-        items={items}
-        onItemsChanged={(items, reason) => {
-          handleChangeItems(items, reason)
-        }}
-        TreeItemComponent={TreeItem}
-      />
+      {list.map(item => (
+        <ProjectTreeSortableItem key={item.id} deepIndex={item.deepIndex} selected={item.selected}>
+          <ProjectTreeItem
+            name={item?.name}
+            type={item?.type}
+            selected={item?.selected}
+            isLoading={item?.isLoading}
+            isOpen={!item.collapsed}
+            hasChildren={item.children.length > 0}
+            onCollapse={item.onCollapse}
+            onCreateFolder={item?.onCreateFolder}
+            onCreateFragment={item?.onCreateFragment}
+            onSelectItem={item?.onSelectItem}
+            onOpenItem={item?.onOpenItem}
+            onRename={item?.onRename}
+            onDelete={item?.onDelete}
+          />
+        </ProjectTreeSortableItem>
+      ))}
     </div>
   )
 }

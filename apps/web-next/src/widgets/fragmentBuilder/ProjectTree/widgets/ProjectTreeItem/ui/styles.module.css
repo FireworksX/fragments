@@ -24,3 +24,7 @@
 .fragment {
     --primary: var(--component);
 }
+
+.creatingItem {
+    padding-left: 20px;
+}

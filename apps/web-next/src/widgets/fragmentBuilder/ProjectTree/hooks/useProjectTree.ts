@@ -1,13 +1,12 @@
-import { useContext, useEffect, useRef, useState, useTransition } from 'react'
+import { useContext, useMemo, useState } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
-import { useGraph, useGraphFields, useGraphStack } from '@graph-state/react'
 import { nodes } from '@fragments/plugin-fragment'
 import { LinkKey } from '@graph-state/core'
 import { moveNode } from '@fragments/plugin-fragment-spring'
-import { generateId } from '@fragments/utils'
-import { nextTick } from '@/shared/utils/nextTick'
 import { useBuilderTabs } from '@/shared/hooks/fragmentBuilder/useBuilderTabs'
+import { FileSystemItemType } from '@/__generated__/graphql'
+import { useProjectTree as useProjectTreeMethods } from '@/shared/hooks/useProjectTree'
+import { flattenTree, removeChildrenOf } from '@/widgets/fragmentBuilder/ProjectTree/lib'
 
 const findIndexOfNode = (items: unknown[], linkNode: LinkKey) => {
   const index = items.findIndex(item => item.id === linkNode)
@@ -22,189 +21,97 @@ const findIndexOfNode = (items: unknown[], linkNode: LinkKey) => {
   )
 }
 
-const list = [
-  {
-    _type: 'TreeItem',
-    _id: generateId(),
-    name: 'Project',
-    type: 'folder',
-    children: [
-      {
-        _type: 'TreeItem',
-        _id: generateId(),
-        name: 'Shared',
-        type: 'folder',
-        children: [
-          {
-            _type: 'TreeItem',
-            _id: generateId(),
-            name: 'Header',
-            type: 'folder'
-          },
-          {
-            _type: 'TreeItem',
-            _id: generateId(),
-            name: 'Footer',
-            type: 'folder'
-          },
-          {
-            _type: 'TreeItem',
-            _id: generateId(),
-            name: 'Button',
-            type: 'fragment',
-            target: {
-              _type: 'FragmentModule',
-              _id: generateId(),
-              name: 'Button',
-              fragment: 'Fragment:buttonid'
-            }
-          },
-          {
-            _type: 'TreeItem',
-            _id: generateId(),
-            name: 'PredictionCard',
-            type: 'fragment',
-            target: {
-              _type: 'FragmentModule',
-              _id: generateId(),
-              name: 'PredictionCard',
-              fragment: 'Fragment:g34gherhg3g'
-            }
-          }
-        ]
-      }
-    ]
-  }
-]
-
 export const useProjectTree = () => {
-  const [c, setC] = useState(0)
   const { builderManager } = useContext(BuilderContext)
-  const [expandedLinkKeys, setExpandedLinkKeys] = useState<string[]>([])
-  const itemRefsMap = useRef({})
+  const [collapsedIds, setCollapsedIds] = useState<string[]>([])
   const { activeTabKey, openTab } = useBuilderTabs()
+  const [loadingItems, setLoadingItems] = useState([])
+  const { projectSlug, projectTree, createProjectTreeItem, updateProjectTreeItem, deleteProjectTreeItem } =
+    useProjectTreeMethods()
 
-  const getNode = (node, deepIndex = 0) => {
-    const key = builderManager.keyOfEntity(node)
-    const targetKey = builderManager.keyOfEntity(node.target)
-    const collapsed = !expandedLinkKeys.includes(key)
-    const canHaveChildren = node?.type === 'folder'
+  const setLoading = (id, flag) => setLoadingItems(p => (flag ? [...p, id] : p.filter(item => item !== id)))
 
-    return {
-      ...node,
-      id: key,
-      collapsed,
-      children: !canHaveChildren ? [] : (node?.children || []).map(key => getNode(key, deepIndex + 1)),
-      canHaveChildren,
-      selected: !!targetKey && activeTabKey === targetKey,
-      ref: element => {
-        itemRefsMap.current[key] = element
-      },
-      onCreateFolder: () => handleCreateFolder(key),
-      onCreateFragment: () => handleCreateFragment(key),
-      onSelectItem: () => builderManager.selectProjectFile(key),
-      onOpenItem: () => openTab(node.target)
-    }
-  }
-
-  const items = list.map(getNode)
-
-  const handleCreateFolder = targetLink => {
-    if (!targetLink) return null
-
-    const { _id } = builderManager.entityOfKey(targetLink)
-    const nextFolder = {
-      _type: 'TreeItem',
-      _id: generateId(),
-      name: 'New Folder',
-      type: 'folder'
+  const flatProjectTree = useMemo(() => {
+    const rootItem = {
+      id: 'root',
+      name: 'Project',
+      nestedItems: projectTree ?? [],
+      itemType: FileSystemItemType.Directory
     }
 
-    const fn = list => {
-      list?.forEach?.(node => {
-        if (node._id === _id) {
-          node.children?.push?.(nextFolder)
-        } else {
-          fn(node?.children ?? [])
+    const createItem = async (name: string, parent = 'root', type = FileSystemItemType.Directory) => {
+      setLoading(parent, true)
+
+      await createProjectTreeItem({
+        variables: {
+          projectSlug,
+          parentId: parent === 'root' ? null : parent,
+          name,
+          type
+        }
+      })
+
+      setLoading(parent, false)
+    }
+
+    const renameItem = async (name: string, nodeId: number) => {
+      setLoading(nodeId, true)
+      await updateProjectTreeItem({
+        variables: {
+          projectItemId: nodeId,
+          name
+        }
+      })
+      setLoading(nodeId, false)
+    }
+
+    const deleteItem = async (nodeId: number) => {
+      deleteProjectTreeItem({
+        variables: {
+          projectItemId: nodeId
         }
       })
     }
 
-    fn(list)
+    const buildItem = (node, deepIndex = 0) => {
+      const collapsed = !collapsedIds.includes(node.id)
+      const canHaveChildren = node?.itemType === FileSystemItemType.Directory
+      const hasChildren = (node?.nestedItems || []).length > 0
 
-    setC(p => p + 1)
-    handleCollapse('expanded', targetLink)
-
-    nextTick(() => {
-      const nextFolderRef = itemRefsMap.current[builderManager.keyOfEntity(nextFolder)]
-      if (nextFolderRef) {
-        nextFolderRef?.handleRename()
+      return {
+        id: node.id,
+        type: node.itemType,
+        name: node.name,
+        deepIndex,
+        collapsed,
+        children: !canHaveChildren ? [] : (node?.nestedItems || []).map(key => buildItem(key, deepIndex + 1)),
+        canHaveChildren,
+        isLoading: loadingItems.includes(node.id),
+        selected: false, //!!targetKey && activeTabKey === targetKey,
+        onCreateFolder: (name: string) => createItem(name, node.id, FileSystemItemType.Directory),
+        onCreateFragment: (name: string) => createItem(name, node.id, FileSystemItemType.Fragment),
+        onSelectItem: () => undefined, //builderManager.selectProjectFile(key),
+        onOpenItem: () => openTab(node.target),
+        onCollapse:
+          canHaveChildren && hasChildren
+            ? () => setCollapsedIds(p => (p.includes(node.id) ? p.filter(v => v === node.id) : [...p, node.id]))
+            : null,
+        onRename: (name: string) => renameItem(name, node.id),
+        onDelete: () => deleteItem(node.id)
       }
-    })
-  }
-
-  const handleCreateFragment = targetLink => {
-    if (!targetLink) return null
-
-    const { _id } = builderManager.entityOfKey(targetLink)
-    const nextFolder = {
-      _type: 'TreeItem',
-      _id: generateId(),
-      name: 'New Fragment',
-      type: 'fragment'
     }
 
-    const fn = list => {
-      list?.forEach?.(node => {
-        if (node._id === _id) {
-          node.children.push(nextFolder)
-        } else {
-          fn(node?.children ?? [])
-        }
-      })
-    }
+    const flattenedTree = flattenTree([buildItem(rootItem, 0)])
 
-    fn(list)
+    const collapsedItems = flattenedTree.reduce<UniqueIdentifier[]>(
+      (acc, { children, collapsed, id }) => (collapsed && children?.length ? [...acc, id] : acc),
+      []
+    )
 
-    setC(p => p + 1)
-    handleCollapse('expanded', targetLink)
-    nextTick(() => {
-      const nextFolderRef = itemRefsMap.current[builderManager.keyOfEntity(nextFolder)]
-      if (nextFolderRef) {
-        nextFolderRef?.handleRename()
-      }
-    })
-  }
-
-  const handleCollapse = (type: 'collapse' | 'expanded', key: LinkKey) => {
-    setExpandedLinkKeys(prev => (type === 'expanded' ? [...prev, key] : prev.filter(k => k !== key)))
-  }
-
-  const handleChangeItems = (nextItemsTree, reason) => {
-    const { draggedFromParent: from, draggedItem, item, droppedToParent: to, type } = reason
-
-    if (type === 'collapsed' || type === 'expanded') {
-      handleCollapse(type, item.id)
-    }
-
-    console.log(nextItemsTree, reason)
-
-    if (type === 'dropped') {
-      const itemKey = draggedItem?.id
-      const toKey = to?.id
-      const itemOrder = findIndexOfNode(nextItemsTree, itemKey)
-
-      if (builderManager.entityOfKey(toKey)?._type === nodes.Fragment || !toKey) {
-        return
-      }
-
-      moveNode(builderManager, itemKey, toKey, itemOrder)
-    }
-  }
+    return removeChildrenOf(flattenedTree, collapsedItems)
+  }, [builderManager, collapsedIds, loadingItems, openTab, projectTree])
 
   return {
-    items,
-    handleChangeItems,
-    handleCreateFragment
+    list: flatProjectTree
   }
 }

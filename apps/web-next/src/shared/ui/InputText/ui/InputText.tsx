@@ -38,7 +38,7 @@ const BaseInputText: FC<InputTextProps> = ({
         value={value}
         placeholder={placeholder}
         onChange={e => {
-          onChange?.(e?.target.value)
+          onChange?.(e)
           onChangeValue?.(e?.target.value)
         }}
         onKeyDown={event => {

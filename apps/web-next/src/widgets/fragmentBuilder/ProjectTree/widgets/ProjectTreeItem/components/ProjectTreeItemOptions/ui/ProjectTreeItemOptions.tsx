@@ -3,6 +3,7 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import { DropdownGroup } from '@/shared/ui/DropdownGroup'
 import { DropdownOption } from '@/shared/ui/DropdownOption'
+import { FileSystemItemType } from '@/__generated__/graphql'
 
 interface FragmentOptions {
   type: 'fragment'
@@ -12,7 +13,7 @@ interface FragmentOptions {
 }
 
 interface FolderOptions {
-  type: 'folder'
+  type: FileSystemItemType
   onCreateFolder?(): void
   onCreateFragment?(): void
   onRename?(): void
@@ -22,7 +23,7 @@ interface FolderOptions {
 type ProjectTreeItemOptionsProps = FragmentOptions | FolderOptions
 
 export const ProjectTreeItemOptions: FC<ProjectTreeItemOptionsProps> = props => {
-  if (props.type === 'fragment') {
+  if (props.type === FileSystemItemType.Fragment) {
     return (
       <>
         <DropdownGroup>
@@ -38,7 +39,7 @@ export const ProjectTreeItemOptions: FC<ProjectTreeItemOptionsProps> = props => 
     )
   }
 
-  if (props.type === 'folder') {
+  if (props.type === FileSystemItemType.Directory) {
     return (
       <>
         <DropdownGroup>

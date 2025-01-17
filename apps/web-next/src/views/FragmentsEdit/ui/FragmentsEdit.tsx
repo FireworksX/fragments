@@ -37,6 +37,7 @@ import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { FragmentsEditPlaceholder } from '@/views/FragmentsEdit/components/FragmentsEditPlaceholder'
 import { useFragmentsEdit } from '@/views/FragmentsEdit/hooks/useFragmentsEdit'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import CreateFragmentModal from '../../../widgets/modals/CreateFragmentModal/ui/CreateFragmentModal'
 
 export const FragmentsEdit = () => {
   const { documentManager, fetching } = useBuilderDocument()
@@ -102,6 +103,8 @@ export const FragmentsEdit = () => {
           <FragmentsEditPlaceholder fetching={fetching} />
         </div>
       )}
+
+      <CreateFragmentModal />
     </div>
   )
 }
