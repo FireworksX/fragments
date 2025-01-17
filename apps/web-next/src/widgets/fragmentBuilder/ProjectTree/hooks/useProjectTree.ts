@@ -7,6 +7,7 @@ import { useBuilderTabs } from '@/shared/hooks/fragmentBuilder/useBuilderTabs'
 import { FileSystemItemType } from '@/__generated__/graphql'
 import { useProjectTree as useProjectTreeMethods } from '@/shared/hooks/useProjectTree'
 import { flattenTree, removeChildrenOf } from '@/widgets/fragmentBuilder/ProjectTree/lib'
+import { useGraph } from '@graph-state/react'
 
 const findIndexOfNode = (items: unknown[], linkNode: LinkKey) => {
   const index = items.findIndex(item => item.id === linkNode)
@@ -25,6 +26,7 @@ export const useProjectTree = () => {
   const { builderManager } = useContext(BuilderContext)
   const [collapsedIds, setCollapsedIds] = useState<string[]>([])
   const { activeTabKey, openTab } = useBuilderTabs()
+  const [droppableGraph] = useGraph(builderManager, builderManager.droppableKey)
   const [loadingItems, setLoadingItems] = useState([])
   const { projectSlug, projectTree, createProjectTreeItem, updateProjectTreeItem, deleteProjectTreeItem } =
     useProjectTreeMethods()
@@ -112,6 +114,9 @@ export const useProjectTree = () => {
   }, [builderManager, collapsedIds, loadingItems, openTab, projectTree])
 
   return {
-    list: flatProjectTree
+    list: flatProjectTree,
+    draggableItem: droppableGraph.activeDraggable
+      ? flatProjectTree.find(item => item.id === droppableGraph.activeDraggable.id)
+      : null
   }
 }

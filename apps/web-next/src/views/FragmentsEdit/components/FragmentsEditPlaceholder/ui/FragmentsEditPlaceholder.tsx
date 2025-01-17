@@ -15,7 +15,7 @@ interface FragmentsEditPlaceholderProps {
 }
 
 export const FragmentsEditPlaceholder: FC<FragmentsEditPlaceholderProps> = ({ className, fetching }) => {
-  const { setNodeRef } = useDroppable({
+  const { setNodeRef, isOver } = useDroppable({
     id: 'builder-edit-placeholder'
   })
 
@@ -23,13 +23,18 @@ export const FragmentsEditPlaceholder: FC<FragmentsEditPlaceholderProps> = ({ cl
   const { handleCreateFragment } = useProjectTree()
 
   return (
-    <div className={cn(styles.root, className)} ref={setNodeRef}>
+    <div className={cn(styles.root, className, { [styles.over]: isOver })} ref={setNodeRef}>
       <LogoIcon width={40} height={40} />
 
       {fetching ? (
         <Spinner color='var(--text-color-accent-secondary)' />
       ) : (
-        <>
+        <div
+          className={styles.content}
+          style={{
+            opacity: isOver ? 0 : 1
+          }}
+        >
           <div>
             <h1 className={styles.title}>No such file</h1>
             <p className={styles.description}>Select fragment form project or create new.</p>
@@ -51,7 +56,7 @@ export const FragmentsEditPlaceholder: FC<FragmentsEditPlaceholderProps> = ({ cl
           >
             Create Fragment
           </Button>
-        </>
+        </div>
       )}
     </div>
   )

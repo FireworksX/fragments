@@ -6,8 +6,9 @@ import { FragmentsEdit } from '@/views/FragmentsEdit'
 import { BuilderFragmentTabs } from '../widgets/BuilderFragmentTabs'
 import { FragmentsBuilderAside } from '@/views/FragmentsBuilder/widgets/FragmentsBuilderAside'
 import { createBuilderStore } from '@/shared/store/builderStore'
-import { DndContext } from '@dnd-kit/core'
+import { DndContext, MouseSensor, pointerWithin, useSensor, useSensors } from '@dnd-kit/core'
 import { isBrowser } from '@fragments/utils'
+import { useGraph } from '@graph-state/react'
 
 const builderManager = createBuilderStore()
 
@@ -16,16 +17,40 @@ if (isBrowser) {
 }
 
 export const FragmentsBuilder = () => {
-  return (
-    <BuilderContext value={{ builderManager }}>
-      <div className={styles.root}>
-        <BuilderFragmentTabs />
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        delay: 200,
+        tolerance: 7
+      }
+    })
+  )
 
-        <div className={styles.container}>
-          <FragmentsBuilderAside />
-          <FragmentsEdit />
+  useEffect(() => {
+    builderManager.openTab({
+      _type: 'FragmentModule',
+      _id: 'test',
+      fragment: 'Fragment:g34gherhg3g'
+    })
+  }, [])
+
+  return (
+    <DndContext
+      sensors={sensors}
+      collisionDetection={pointerWithin}
+      onDragEnd={builderManager.$droppable.handleDragEnd}
+      onDragStart={builderManager.$droppable.handleDragStart}
+    >
+      <BuilderContext value={{ builderManager }}>
+        <div className={styles.root}>
+          <BuilderFragmentTabs />
+
+          <div className={styles.container}>
+            <FragmentsBuilderAside />
+            <FragmentsEdit />
+          </div>
         </div>
-      </div>
-    </BuilderContext>
+      </BuilderContext>
+    </DndContext>
   )
 }

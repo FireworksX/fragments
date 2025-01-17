@@ -12,6 +12,8 @@ import { Frame } from '@/widgets/renderer/Frame'
 import { omit } from '@fragments/utils'
 import { RenderAtoms } from '@/widgets/renderer/Fragment'
 import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
+import { useDroppable } from '@dnd-kit/core'
+import { useInterpolation } from '@/shared/hooks/useInterpolation'
 
 interface LayerHighlightDraggingProps {
   headerNode?: ReactNode
@@ -22,6 +24,7 @@ interface LayerHighlightDraggingProps {
 
 export const BuilderHighlightNode: FC<LayerHighlightDraggingProps> = ({ layerKey, headerNode, node, resizeNode }) => {
   const {
+    aa,
     isRichTextSelected,
     isHovered,
     isSelected,
@@ -30,10 +33,16 @@ export const BuilderHighlightNode: FC<LayerHighlightDraggingProps> = ({ layerKey
     isParentSelected,
     isTextNode,
     isInstance,
-    isTopNode
+    isTopNode,
+    isDropOver$,
+    setNodeRef
   } = useBuilderHighlightNode(layerKey, [])
 
   const nodeArray = Children.toArray(node)
+
+  const isVisible = useInterpolation([isSelected, isHovered, isParentSelected, isDropOver$], (...values) =>
+    values.some(Boolean)
+  )
 
   if (nodeArray.length > 0) {
     return nodeArray.map(node => {
@@ -41,6 +50,7 @@ export const BuilderHighlightNode: FC<LayerHighlightDraggingProps> = ({ layerKey
         node,
         {
           ...node.props,
+          ref: setNodeRef,
           key: node?.props?.layerKey,
           className: cn(node.props?.className, styles.root, {
             [styles.textLayer]: isTextNode,
@@ -48,7 +58,7 @@ export const BuilderHighlightNode: FC<LayerHighlightDraggingProps> = ({ layerKey
           })
         },
         <>
-          <AnimatedVisible visible={isSelected || isHovered || isParentSelected}>
+          <AnimatedVisible visible={isVisible}>
             <animated.div
               data-testid='highlight'
               data-higlight={layerKey}

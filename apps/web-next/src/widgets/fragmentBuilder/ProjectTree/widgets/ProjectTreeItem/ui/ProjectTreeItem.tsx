@@ -22,6 +22,7 @@ interface ProjectTreeItemProps {
   isLoading?: boolean
   hasChildren?: boolean
   ref?: ForwardedRef<ComponentRef<'div'>>
+  hasActions?: boolean
   onCollapse?(): void
   onRename?(name: string): void
   onCreateFolder?(): void
@@ -42,6 +43,7 @@ export const ProjectTreeItem: FC<ProjectTreeItemProps> = ({
   isOpen,
   isLoading,
   selected,
+  hasActions = true,
   onCollapse,
   onRename,
   onCreateFolder,
@@ -105,29 +107,31 @@ export const ProjectTreeItem: FC<ProjectTreeItemProps> = ({
         >
           {name}
         </SmartCell>
-        <Dropdown
-          trigger='click'
-          hideOnClick
-          stopPropagation
-          options={
-            <>
-              {type === FileSystemItemType.Fragment && <ProjectTreeItemOptions type={type} onDelete={onDelete} />}
-              {type === FileSystemItemType.Directory && (
-                <ProjectTreeItemOptions
-                  type={type}
-                  onCreateFolder={() => handleCreateNew(FileSystemItemType.Directory)}
-                  onCreateFragment={() => handleCreateNew(FileSystemItemType.Fragment)}
-                  onRename={edit}
-                  onDelete={onDelete}
-                />
-              )}
-            </>
-          }
-        >
-          <Touchable className={styles.actions}>
-            <EllipsisIcon />
-          </Touchable>
-        </Dropdown>
+        {hasActions && (
+          <Dropdown
+            trigger='click'
+            hideOnClick
+            stopPropagation
+            options={
+              <>
+                {type === FileSystemItemType.Fragment && <ProjectTreeItemOptions type={type} onDelete={onDelete} />}
+                {type === FileSystemItemType.Directory && (
+                  <ProjectTreeItemOptions
+                    type={type}
+                    onCreateFolder={() => handleCreateNew(FileSystemItemType.Directory)}
+                    onCreateFragment={() => handleCreateNew(FileSystemItemType.Fragment)}
+                    onRename={edit}
+                    onDelete={onDelete}
+                  />
+                )}
+              </>
+            }
+          >
+            <Touchable className={styles.actions}>
+              <EllipsisIcon />
+            </Touchable>
+          </Dropdown>
+        )}
       </div>
 
       {creatingNew && (

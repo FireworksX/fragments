@@ -5,6 +5,31 @@
     align-items: center;
     flex-direction: column;
     gap: var(--gutter-default);
+    position: relative;
+
+    &:after {
+        content: '';
+        position: absolute;
+        inset: var(--gutter-medium);
+        opacity: 0;
+        transition: var(--animation-transition-default);
+        border: 3px dashed var(--primary);
+        border-radius: var(--radius-main);
+        background: rgba(var(--primary--rgb), .1);
+    }
+}
+
+.over {
+    &:after {
+        opacity: 1;
+    }
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: var(--animation-transition-default);
 }
 
 .title {
