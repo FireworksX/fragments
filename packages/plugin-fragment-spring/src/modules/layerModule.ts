@@ -7,7 +7,7 @@ import {
   layerDirection,
   layerDistribute,
   layerMode,
-} from "@/definitions.ts";
+} from "@fragments/plugin-fragment";
 
 export function layerModule<T extends BaseNode>(
   node: T,

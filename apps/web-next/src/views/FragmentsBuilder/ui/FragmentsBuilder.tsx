@@ -8,7 +8,7 @@ import { FragmentsBuilderAside } from '@/views/FragmentsBuilder/widgets/Fragment
 import { createBuilderStore } from '@/shared/store/builderStore'
 import { DndContext, MouseSensor, pointerWithin, useSensor, useSensors } from '@dnd-kit/core'
 import { isBrowser } from '@fragments/utils'
-import { useGraph } from '@graph-state/react'
+import { useGraph, useGraphEffect } from '@graph-state/react'
 
 const builderManager = createBuilderStore()
 
@@ -30,7 +30,7 @@ export const FragmentsBuilder = () => {
     builderManager.openTab({
       _type: 'FragmentModule',
       _id: 'test',
-      fragment: 'Fragment:g34gherhg3g'
+      fragment: 'Fragment:buttonid'
     })
   }, [])
 

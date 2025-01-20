@@ -1,9 +1,9 @@
-import { nodes, variableType } from "@/definitions.ts";
 import { createBaseVariableNode } from "@/creators/variables/createBaseVariableNode.ts";
 import { GraphState } from "@graph-state/core";
 import { getSpringValue } from "@/shared/getSpringValue.ts";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
 import { base } from "next/dist/build/webpack/config/blocks/base";
+import { variableType } from "@fragments/plugin-fragment";
 
 export type CreateNumberOptions = Partial<{
   name: string;

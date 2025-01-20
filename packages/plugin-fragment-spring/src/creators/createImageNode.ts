@@ -1,4 +1,3 @@
-import { imagePaintScaleModes, nodes } from "@/definitions.ts";
 import { positionModule } from "@/modules/positionModule.ts";
 import { applyModules } from "@/shared/applyModules.ts";
 import { GraphState } from "@graph-state/core";
@@ -9,7 +8,11 @@ import { aspectRatioModule } from "@/modules/aspectRationModule.ts";
 import { visibleModule } from "@/modules/visibleModule.ts";
 import { opacityModule } from "@/modules/opacityModule.ts";
 import { zIndexModule } from "@/modules/zIndexModule.ts";
-import { childrenModule, createBaseNode } from "@fragments/plugin-fragment";
+import {
+  childrenModule,
+  createBaseNode,
+  nodes,
+} from "@fragments/plugin-fragment";
 import { cloneModule } from "@/modules/cloneModule.ts";
 import { copyModule } from "@/modules/copyModule.ts";
 import { duplicateModule } from "@/modules/duplicateModule.ts";

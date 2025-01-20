@@ -5,14 +5,13 @@ import { Container } from '@/shared/ui/Container'
 import { Touchable } from '@/shared/ui/Touchable'
 import CloseIcon from '@/shared/icons/next/close.svg'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { useGraph, useGraphStack } from '@graph-state/react'
+import { useGraph, useGraphEffect, useGraphStack } from '@graph-state/react'
 import { useBuilderTabs } from '@/shared/hooks/fragmentBuilder/useBuilderTabs'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 interface BuilderFragmentTabsProps {
   className?: string
 }
-
-const list = ['PredictionCard', 'Button', 'PredictionOutcome']
 
 export const BuilderFragmentTabs: FC<BuilderFragmentTabsProps> = ({ className }) => {
   const { tabs, selectTab, closeTab } = useBuilderTabs()

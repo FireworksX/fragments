@@ -23,7 +23,6 @@ import { copyModule } from "@/modules/copyModule.ts";
 import { duplicateModule } from "@/modules/duplicateModule.ts";
 import { isVariableLink } from "@/shared/isVariableLink.ts";
 import { Interpolation, SpringValue, to } from "@react-spring/web";
-import { getResolvedValue } from "@/shared/getResolvedValue.ts";
 import { wrapTextInParagraphWithAttributes } from "@/shared/wrapTextInParagraphWithAttributes.ts";
 import { attributesModule } from "@/modules/attributesModule.ts";
 import { borderModule } from "@/modules/borderModule.ts";

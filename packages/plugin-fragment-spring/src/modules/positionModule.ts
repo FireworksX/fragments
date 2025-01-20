@@ -1,9 +1,8 @@
 import { BaseNode, WithSpringPosition } from "@/types";
 import { GraphState } from "@graph-state/core";
-import { positionType } from "@/definitions.ts";
 import { getSpringValue } from "@/shared/getSpringValue.ts";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
-import { getFieldValue } from "@fragments/plugin-fragment";
+import { getFieldValue, positionType } from "@fragments/plugin-fragment";
 import { isFiniteNumber } from "@fragments/utils";
 import { animatableValue } from "@/shared/animatableValue.ts";
 

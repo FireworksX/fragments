@@ -1,4 +1,3 @@
-import { nodes } from "@/definitions.ts";
 import { positionModule } from "@/modules/positionModule.ts";
 import { applyModules } from "@/shared/applyModules.ts";
 import { GraphState } from "@graph-state/core";
@@ -15,7 +14,11 @@ import { fillTypeModule } from "@/modules/fillTypeModule.ts";
 import { cornersModule } from "@/modules/cornersModule.ts";
 import { layerModule } from "@/modules/layerModule.ts";
 import { paddingModule } from "@/modules/paddingModule.ts";
-import { childrenModule, createBaseNode } from "@fragments/plugin-fragment";
+import {
+  childrenModule,
+  createBaseNode,
+  nodes,
+} from "@fragments/plugin-fragment";
 import { cloneModule } from "@/modules/cloneModule.ts";
 import { copyModule } from "@/modules/copyModule.ts";
 import { duplicateModule } from "@/modules/duplicateModule.ts";

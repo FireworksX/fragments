@@ -4,7 +4,6 @@ import { getSpringValue } from "@/shared/getSpringValue.ts";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
 import { getStaticValue } from "@/shared/getStaticValue.ts";
 import { variableType } from "@fragments/plugin-fragment";
-import { isVariableLink } from "@/shared/isVariableLink.ts";
 
 export type CreateNumberOptions = Partial<{
   name: string;

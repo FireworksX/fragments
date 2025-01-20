@@ -1,10 +1,9 @@
-import { sizing } from "@/definitions.ts";
 import { BaseNode, WithSpringSizing } from "@/types";
 import { GraphState } from "@graph-state/core";
 import { getSpringValue } from "@/shared/getSpringValue.ts";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
 import { createCachedInterpolate } from "@/shared/cachedInterpolate.ts";
-import { getFieldValue } from "@fragments/plugin-fragment";
+import { getFieldValue, sizing } from "@fragments/plugin-fragment";
 
 const ALLOW_SIZES = [sizing.Fixed, sizing.Relative];
 

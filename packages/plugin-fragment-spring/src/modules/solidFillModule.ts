@@ -1,8 +1,8 @@
 import { GraphState, isLinkKey, LinkKey } from "@graph-state/core";
-import { nodes } from "@/definitions.ts";
 import { BaseNode, WithSpringSolidFill } from "@/types";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
 import { getSpringValue } from "@/shared/getSpringValue.ts";
+import { nodes } from "@fragments/plugin-fragment";
 
 export function solidFillModule<T extends BaseNode>(
   node: T,

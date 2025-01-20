@@ -1,8 +1,5 @@
 import { GraphState, isPartOfGraph, LinkKey } from "@graph-state/core";
 import { BaseNode, WithChildren } from "@/types";
-import { setKey } from "@/shared";
-import { generateId } from "@fragments/utils";
-import { createNode } from "@/shared/createNode.ts";
 import { getStaticValue } from "@/shared/getStaticValue.ts";
 
 export function attributesModule<T extends BaseNode>(

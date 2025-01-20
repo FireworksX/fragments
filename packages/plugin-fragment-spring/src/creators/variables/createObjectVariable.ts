@@ -1,8 +1,5 @@
 import { createBaseVariableNode } from "@/creators/variables/createBaseVariableNode.ts";
 import { GraphState, isPartOfGraph, LinkKey } from "@graph-state/core";
-import { getSpringValue } from "@/shared/getSpringValue.ts";
-import { setValueToNode } from "@/shared/setValueToNode.ts";
-import { getStaticValue } from "@/shared/getStaticValue.ts";
 import { variableType } from "@fragments/plugin-fragment";
 import { isVariableLink } from "@/shared/isVariableLink.ts";
 

@@ -1,4 +1,3 @@
-import { nodes } from "@/definitions.ts";
 import { applyModules } from "@/shared/applyModules.ts";
 import { GraphState } from "@graph-state/core";
 import {
@@ -6,6 +5,7 @@ import {
   createBaseNode,
   fragmentGrowingMode,
   getFieldValue,
+  nodes,
   renderTarget,
   variableType,
 } from "@fragments/plugin-fragment";

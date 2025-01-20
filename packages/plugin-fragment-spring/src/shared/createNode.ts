@@ -1,9 +1,8 @@
 import { BaseNode } from "@/types";
 import { GraphState, LinkKey } from "@graph-state/core";
-import { nodes } from "@/definitions.ts";
 import { createFrameNode } from "@/creators/createFrameNode.ts";
 import { createBreakpointNode } from "@/creators/createBreakpointNode.ts";
-import { variableType } from "@fragments/plugin-fragment";
+import { nodes, variableType } from "@fragments/plugin-fragment";
 import { createTextNode } from "@/creators/createTextNode.ts";
 import { createImageNode } from "@/creators/createImageNode.ts";
 import { createNumberVariable } from "@/creators/variables/createNumberVariable.ts";
