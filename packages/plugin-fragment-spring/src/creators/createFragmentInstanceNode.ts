@@ -107,7 +107,7 @@ export function createFragmentInstanceNode(
             props: nextProps,
           },
           {
-            replace: (graph) => cache.keyOfEntity(graph) === nodeKey,
+            replace: true,
           }
         );
       }

@@ -11,6 +11,11 @@
     }
 }
 
+.emptyDirectory {
+    --primary: var(--secondary);
+    --fill: var(--secondary-disabled);
+}
+
 .actions {
     opacity: 0;
     transition: var(--animation-transition-default);

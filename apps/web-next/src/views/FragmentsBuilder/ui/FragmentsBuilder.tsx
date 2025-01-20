@@ -43,8 +43,6 @@ export const FragmentsBuilder = () => {
     >
       <BuilderContext value={{ builderManager }}>
         <div className={styles.root}>
-          <BuilderFragmentTabs />
-
           <div className={styles.container}>
             <FragmentsBuilderAside />
             <FragmentsEdit />

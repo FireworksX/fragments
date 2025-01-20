@@ -31,12 +31,7 @@ export const useBuilderHighlightNode = (layerKey: LinkKey, renderParents: LinkKe
   const isParentSelected = selectionParentKey === layerKey
   const isTextNode = layerNode?._type === nodes.Text
   const { setNodeRef, isOver: isDropOver } = useDroppable({ id: layerKey, disabled: layerNode?._type !== nodes.Frame })
-
-  const isDropOver$ = useSpringValue(isDropOver, {
-    onChange(e) {
-      console.log('isDropOver$', e)
-    }
-  })
+  const isDropOver$ = useSpringValue(isDropOver)
 
   useEffect(() => {
     isDropOver$.set(isDropOver)

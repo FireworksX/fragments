@@ -1,4 +1,7 @@
 .root {
     width: var(--builder-size-right-bar);
     padding: 0 15px 15px;
+    background: var(--background);
+    border-left: 1px solid var(--border);
+    overflow: auto;
 }

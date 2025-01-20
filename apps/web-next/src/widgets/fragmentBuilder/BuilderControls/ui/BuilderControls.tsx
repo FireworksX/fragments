@@ -5,6 +5,7 @@ import { AsideBar, AsideBarProps } from '@/shared/ui/AsideBar'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import BuilderFragmentInstance from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/BuilderFragmentInstance'
 import { nodes } from '@fragments/plugin-fragment'
+import { Container } from '@/shared/ui/Container'
 
 interface ControlsProps extends AsideBarProps {
   className?: string
@@ -35,8 +36,7 @@ const BuilderControls: FC<ControlsProps> = ({
   instancePropsNode,
   fragmentGrowingNode,
   fragmentPropsNode,
-  attributesNode,
-  ...asideProps
+  attributesNode
 }) => {
   const { selectionGraph } = useBuilderSelection()
 
@@ -56,7 +56,7 @@ const BuilderControls: FC<ControlsProps> = ({
   const hasInstanceProps = [nodes.FragmentInstance].some(type => type === selectionGraph?._type)
 
   return (
-    <AsideBar className={cn(className, styles.root)} {...asideProps}>
+    <Container className={cn(className, styles.root)}>
       {/*<BuilderLink />*/}
       {linkNode}
       {hasGrowing && fragmentGrowingNode}
@@ -71,7 +71,7 @@ const BuilderControls: FC<ControlsProps> = ({
       {hasInstanceProps && instancePropsNode}
       {hasCssOverride && cssNode}
       {attributesNode}
-    </AsideBar>
+    </Container>
   )
 }
 

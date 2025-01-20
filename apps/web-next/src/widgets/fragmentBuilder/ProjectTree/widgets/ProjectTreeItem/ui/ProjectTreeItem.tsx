@@ -87,7 +87,8 @@ export const ProjectTreeItem: FC<ProjectTreeItemProps> = ({
     <>
       <div
         className={cn(styles.root, className, {
-          [styles.fragment]: type === FileSystemItemType.Fragment
+          [styles.fragment]: type === FileSystemItemType.Fragment,
+          [styles.emptyDirectory]: type === FileSystemItemType.Directory && !hasChildren
         })}
       >
         <SmartCell
@@ -97,7 +98,11 @@ export const ProjectTreeItem: FC<ProjectTreeItemProps> = ({
           isLoading={isLoading}
           icon={
             <>
-              {type === FileSystemItemType.Directory && <FolderIcon />}
+              {type === FileSystemItemType.Directory && (
+                <FolderIcon
+                  className={cn({ [styles.emptyDirectory]: type === FileSystemItemType.Directory && !hasChildren })}
+                />
+              )}
               {type === FileSystemItemType.Fragment && <FragmentIcon />}
             </>
           }
