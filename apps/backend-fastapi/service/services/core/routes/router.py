@@ -1,22 +1,30 @@
-from .campaign import campaign_by_id, create_campaign_route, update_campaign_route, campaigns_in_project
-from .schemas import AuthPayload, UserGet, FragmentGet, MediaGet, FragmentPost, CampaignGet, CampaignPost, FeedbackPost, \
-    FeedbackGet, \
-    GeoLocationGet, StreamGet, StreamPost, ProjectPost, ProjectGet, StreamFragmentGet, \
-    StreamFragmentPost, StreamFragmentPatch, ProjectPatch, StreamPatch, CampaignPatch, FragmentPatch
+from .campaign import campaign_by_id, create_campaign_route, update_campaign_route, campaigns_in_project, \
+    add_campaign_logo_route, campaign_by_name
+from .filesystem import create_project_item_route, get_project_item_route, get_project_items_in_project_route, \
+    delete_project_item_route, update_project_item_route
+from .filter import get_all_filters
+from .schemas import AllFiltersGet
+from .schemas.feedback import FeedbackPost, FeedbackGet
+from .schemas.filesystem import ProjectItem, ProjectItemGet, ProjectItemPatch
+from .schemas.stream import StreamGet, StreamPost, StreamPatch
+from .schemas.landing import LandingGet, LandingPost, LandingPatch
+from .schemas.campaign import CampaignGet, CampaignPost, CampaignPatch
+from .schemas.fragment import FragmentPost, FragmentPatch, FragmentGet
+from .schemas.project import ProjectGet, ProjectPost, ProjectPatch
 
 import strawberry
-from typing import Optional, List
+from typing import Optional, List, Union
 from .middleware import Context
-from .user import login, refresh, profile, signup
-from .fragment import create_fragment_route, fragments_in_project, fragment_by_id, update_fragment_route
-# from .media import upload_asset
+from .user import login, refresh, profile, signup, add_avatar_route
+from .fragment import create_fragment_route, fragments_in_project, fragment_by_id, update_fragment_route, add_fragment_asset_route, remove_fragment_asset_route
 from .stream import create_stream_route, stream_by_id, streams_in_campaign, update_stream_route
 from .feedback import create_feedback
 from .project import create_project_route, project_by_id, projects, update_project_route, \
-    add_user_to_project as add_user_to_project_route, RoleGet, change_user_role as change_user_role_route
+    add_user_to_project as add_user_to_project_route, change_user_role as change_user_role_route, \
+    add_project_logo_route
+from .schemas.user import RoleGet, UserGet, AuthPayload
 from fastapi import UploadFile
-from crud.ipgetter import get_location_by_ip
-from .stream_fragment import stream_fragment_by_id, stream_fragments_in_stream, update_stream_fragment_route, create_stream_fragment_route
+from .landing import landing_by_id, landings_in_stream, update_landing_route, create_landing_route
 
 
 @strawberry.type
@@ -45,8 +53,9 @@ class Query:
             return await campaigns_in_project(info, project_id, active, deleted)
 
     @strawberry.field
-    async def location(self, ip: str) -> GeoLocationGet:
-        return get_location_by_ip(ip)
+    async def campaign_by_name(self, info: strawberry.Info[Context], project_id: int, name: str, limit: Optional[int] = 5, active: Optional[bool] = None, deleted: Optional[bool] = None) -> List[CampaignGet]:
+        return await campaign_by_name(info, project_id, name, limit, active, deleted)
+
 
     @strawberry.field
     async def stream(self, info: strawberry.Info[Context], stream_id: Optional[int] = None,
@@ -64,11 +73,25 @@ class Query:
             return await projects(info)
 
     @strawberry.field
-    async def stream_fragment(self, info: strawberry.Info[Context], stream_id: Optional[int] = None, stream_fragment_id: Optional[int] = None) -> List[StreamFragmentGet]:
-        if stream_fragment_id is not None:
-            return [await stream_fragment_by_id(info, stream_fragment_id)]
+    async def landing(self, info: strawberry.Info[Context], stream_id: Optional[int] = None, landing_id: Optional[int] = None) -> List[LandingGet]:
+        if landing_id is not None:
+            return [await landing_by_id(info, landing_id)]
         else:
-            return await stream_fragments_in_stream(stream_id)
+            return await landings_in_stream(info, stream_id)
+
+    @strawberry.field
+    async def filter(self, info: strawberry.Info[Context], countries: Optional[List[str]], regions: Optional[List[str]]) -> AllFiltersGet:
+        return await get_all_filters(info, countries, regions)
+
+    @strawberry.field
+    async def project_item(self, info: strawberry.Info[Context], project_item_id: Optional[int] = None,
+                                project_id: Optional[int] = None) -> List[ProjectItemGet]:
+        if project_item_id is not None:
+            return [await get_project_item_route(info, project_item_id)]
+        elif project_id is not None:
+            return await get_project_items_in_project_route(info, project_id)
+        else:
+            return []
 
 
 @strawberry.type
@@ -103,10 +126,17 @@ class Mutation:
     async def update_campaign(self, info: strawberry.Info[Context], cmp: CampaignPatch) -> CampaignGet:
         return await update_campaign_route(info, cmp)
 
-    #
-    # @strawberry.mutation
-    # async def asset(self, info: strawberry.Info[Context], file: UploadFile) -> MediaGet:
-    #     return await upload_asset(info, file)
+    @strawberry.mutation
+    async def add_campaign_logo(self, info: strawberry.Info[Context], file: UploadFile, campaign_id: int) -> CampaignGet:
+        return await add_campaign_logo_route(info, file, campaign_id)
+
+    @strawberry.mutation
+    async def add_fragment_asset(self, info: strawberry.Info[Context], file: UploadFile, fragment_id: int) -> FragmentGet:
+        return await add_fragment_asset_route(info, file, fragment_id)
+
+    @strawberry.mutation
+    async def add_avatar(self, info: strawberry.Info[Context], file: UploadFile) -> UserGet:
+        return await add_avatar_route(info, file)
 
     @strawberry.mutation
     async def feedback(self, info: strawberry.Info[Context], fd: FeedbackPost) -> FeedbackGet:
@@ -124,8 +154,21 @@ class Mutation:
     async def create_project(self, info: strawberry.Info[Context], pr: ProjectPost) -> ProjectGet:
         return await create_project_route(info, pr)
 
+    @strawberry.mutation
     async def update_project(self, info: strawberry.Info[Context], pr: ProjectPatch) -> ProjectGet:
         return await update_project_route(info, pr)
+
+    @strawberry.mutation
+    async def add_project_logo(self, info: strawberry.Info[Context], file: UploadFile, project_id: int) -> ProjectGet:
+        return await add_project_logo_route(info, file, project_id)
+
+    @strawberry.mutation
+    async def add_fragment_asset(self, info: strawberry.Info[Context], file: UploadFile, fragment_id: int) -> FragmentGet:
+        return await add_fragment_asset_route(info, file, fragment_id)
+
+    @strawberry.mutation
+    async def remove_fragment_asset(self, info: strawberry.Info[Context], fragment_id: int, public_path: str) -> FragmentGet:
+        return await remove_fragment_asset_route(info, fragment_id, public_path)
 
     @strawberry.mutation
     async def add_user_to_project(self, info: strawberry.Info[Context], user_id: int, project_id: int,
@@ -138,9 +181,22 @@ class Mutation:
         await change_user_role_route(info, user_id, project_id, role)
 
     @strawberry.mutation
-    async def create_stream_fragment(self, info: strawberry.Info[Context], stream_fragment: StreamFragmentPost) -> StreamFragmentGet:
-        return await create_stream_fragment_route(info, stream_fragment)
+    async def create_landing(self, info: strawberry.Info[Context], landings: LandingPost) -> LandingGet:
+        return await create_landing_route(info, landings)
 
     @strawberry.mutation
-    async def update_stream_fragment(self, info: strawberry.Info[Context], stream_fragment: StreamFragmentPatch) -> StreamFragmentGet:
-        return await update_stream_fragment_route(info, stream_fragment)
+    async def update_landing(self, info: strawberry.Info[Context], landing: LandingPatch) -> LandingGet:
+        return await update_landing_route(info, landing)
+
+    @strawberry.mutation
+    async def create_project_item(self, info: strawberry.Info[Context], project_item: ProjectItem) -> ProjectItemGet:
+        return await create_project_item_route(info, project_item)
+
+    @strawberry.mutation
+    async def delete_project_item(self, info: strawberry.Info[Context], project_item_id: int) -> None:
+        await delete_project_item_route(info, project_item_id)
+
+    @strawberry.mutation
+    async def update_project_item(self, info: strawberry.Info[Context], project_item: ProjectItemPatch) -> ProjectItemGet:
+        return await update_project_item_route(info, project_item)
+

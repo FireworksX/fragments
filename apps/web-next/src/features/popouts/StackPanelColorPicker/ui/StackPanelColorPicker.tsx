@@ -13,6 +13,7 @@ import { popoutNames } from '@/shared/data'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { getRandomColor } from '@/shared/utils/random'
 import { isLinkKey, LinkKey } from '@graph-state/core'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export interface StackPanelColorPickerOptions {
   value?: Color
@@ -24,7 +25,7 @@ interface StackPanelColorPickerProps extends StackPanel {
 }
 
 const StackPanelColorPicker: FC<StackPanelColorPickerProps> = ({ className }) => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.colorPicker}`)
   const context = popout.context ?? {}
   const { getColor } = useDisplayColor(documentManager)

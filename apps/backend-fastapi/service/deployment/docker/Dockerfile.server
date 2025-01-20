@@ -4,6 +4,7 @@ FROM python:3.12-slim as base
 ARG RUN_LEVEL
 
 ENV RUN_LEVEL=${RUN_LEVEL}
+ENV MEDIA_STORAGE_PATH=${MEDIA_STORAGE_PATH}
 ENV PIP_DISABLE_PIP_VERSION_CHECK=on
 ENV PIP_NO_CACHE_DIR=off
 ENV PYTHONDONTWRITEBYTECODE=on
@@ -39,6 +40,7 @@ COPY crud /opt/app/crud
 COPY database /opt/app/database
 COPY services /opt/app/services
 COPY utils /opt/app/utils
+COPY data /opt/app/data
 
 COPY deployment/server/server.sh deployment/server/gunicorn_conf.py /opt/app/
 RUN chmod +x server.sh

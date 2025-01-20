@@ -18,70 +18,57 @@ import { DropdownOption } from '@/shared/ui/DropdownOption'
 import { SelectMimicry } from '@/shared/ui/SelectMimicry'
 import { Button } from '@/shared/ui/Button'
 import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderManager'
-import { FloatingBar } from '@/features/fragmentBuilder/FloatingBar'
 import { useBuilderActions } from '@/shared/hooks/fragmentBuilder/useBuilderActions'
 import { useBreakpoints } from '@/shared/hooks/fragmentBuilder/useBreakpoints'
 import { Link } from '@/shared/ui/Link'
+import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
+import { useBuilderCreator } from '@/shared/hooks/fragmentBuilder/useBuilderCreator'
+import cn from 'classnames'
+import { nodes } from '@fragments/plugin-fragment'
 
 interface BuilderFloatBarProps {
   className?: string
 }
 
 export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
-  const { canvasManager } = useContext(BuilderContext)
-  const { isEdit, focus, updateParams } = useBuilderManager()
-  const [canvas] = useGraph(canvasManager, canvasManager.key)
   const { addFrame, addText, addImage } = useBuilderActions()
 
-  if (!isEdit) {
-    return
-  }
+  const { creator, manager } = useBuilderCreator()
+  const createType = creator.createType
 
   return (
-    <FloatingBar
-      actions={[
-        {
-          kind: 'component',
-          component: (
-            <Touchable className={styles.actionButton} TagName='button' onClick={() => undefined}>
-              <DefaultCursor width={20} height={20} />
-            </Touchable>
-          )
-        },
-        {
-          kind: 'component',
-          component: (
-            <Touchable className={styles.actionButton} TagName='button' onClick={addFrame}>
-              <FrameIcon width={20} height={20} />
-            </Touchable>
-          )
-        },
-        {
-          kind: 'component',
-          component: (
-            <Touchable className={styles.actionButton} TagName='button' onClick={addText}>
-              <TextIcon width={20} height={20} />
-            </Touchable>
-          )
-        },
-        {
-          kind: 'component',
-          component: (
-            <Touchable className={styles.actionButton} TagName='button' onClick={addImage}>
-              <ImageIcon width={20} height={20} />
-            </Touchable>
-          )
-        },
-        { kind: 'delimiter' },
-        {
-          kind: 'component',
-          component: (
-            <Link type='fragmentPreview'>
-              <Button>Preview</Button>
-            </Link>
-          )
-        }
-      ]}
-    />
+    <div className={styles.root}>
+      <Touchable
+        className={cn(styles.actionButton, {
+          [styles.active]: createType === nodes.Frame
+        })}
+        TagName='button'
+        onClick={() => manager.setCreatorType(nodes.Frame)}
+      >
+        <FrameIcon width={20} height={20} />
+      </Touchable>
+      <Touchable
+        className={cn(styles.actionButton, {
+          [styles.active]: createType === nodes.Image
+        })}
+        TagName='button'
+        onClick={() => manager.setCreatorType(nodes.Image)}
+      >
+        <ImageIcon width={20} height={20} />
+      </Touchable>
+      <Touchable
+        className={cn(styles.actionButton, {
+          [styles.active]: createType === nodes.Text
+        })}
+        TagName='button'
+        onClick={() => manager.setCreatorType(nodes.Text)}
+      >
+        <TextIcon width={20} height={20} />
+      </Touchable>
+
+      <div className={styles.delimiter} />
+
+      <Button>Preview</Button>
+    </div>
   )
 }

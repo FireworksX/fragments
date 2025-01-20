@@ -6,25 +6,21 @@ import { fragmentGrowingMode, getFieldValue, getFieldValueMap, nodes, sizing } f
 import { to } from '@react-spring/web'
 import { useRenderTarget } from '@/widgets/renderer/hooks/useRenderTarget'
 import { usePartOfInstance } from '@/widgets/renderer/hooks/usePartOfInstance'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { useFieldValue } from '@/shared/hooks/fragmentBuilder/useFieldValue'
 
 const autoSizes = [sizing.Hug]
 const skipNodes = [nodes.Fragment]
 
 export const useLayerSizeStyles = (layerKey: LinkKey, parents: LinkKey[] = []) => {
-  const { documentManager } = use(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const [layerNode] = useGraph(documentManager, layerKey)
   const { isDocument } = useRenderTarget()
   const { isPartOfInstance, deepIndex, instanceKey } = usePartOfInstance(layerKey, parents)
-  const {
-    layoutSizingHorizontal: widthType,
-    layoutSizingVertical: heightType,
-    width,
-    height
-  } = getFieldValueMap(
-    layerNode,
-    ['layoutSizingHorizontal', 'layoutSizingVertical', 'width', 'height'],
-    documentManager
-  )
+  const width$ = useFieldValue(layerKey, 'width')
+  const height$ = useFieldValue(layerKey, 'height')
+  const layoutSizingHorizontal$ = useFieldValue(layerKey, 'layoutSizingHorizontal')
+  const layoutSizingVertical$ = useFieldValue(layerKey, 'layoutSizingVertical')
 
   const toValue = useCallback(
     (type: keyof typeof sizing, value: number) => {
@@ -49,8 +45,8 @@ export const useLayerSizeStyles = (layerKey: LinkKey, parents: LinkKey[] = []) =
     if (skipNodes.includes(layerNode?._type)) return {}
 
     const parent = documentManager.resolve(layerKey)?.getParent()
-    const width$ = to([widthType, width], toValue)
-    const height$ = to([heightType, height], toValue)
+    const toWidth$ = to([layoutSizingHorizontal$, width$], toValue)
+    const toHeight$ = to([layoutSizingVertical$, height$], toValue)
 
     if (isPartOfInstance && deepIndex === 1 && layerNode?._type === nodes.Frame) {
       const { layoutSizingHorizontal: instanceWidthType, layoutSizingVertical: instanceHeightType } = getFieldValueMap(
@@ -77,18 +73,18 @@ export const useLayerSizeStyles = (layerKey: LinkKey, parents: LinkKey[] = []) =
     }
 
     return {
-      width: width$,
-      height: height$
+      width: toWidth$,
+      height: toHeight$
     }
   }, [
     layerNode?._type,
     documentManager,
     layerKey,
-    widthType,
-    width,
+    layoutSizingHorizontal$,
+    width$,
     toValue,
-    heightType,
-    height,
+    layoutSizingVertical$,
+    height$,
     isPartOfInstance,
     deepIndex,
     isDocument,

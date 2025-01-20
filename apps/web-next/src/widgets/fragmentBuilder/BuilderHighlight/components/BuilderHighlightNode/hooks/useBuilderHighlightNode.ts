@@ -12,19 +12,30 @@ import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { useLayerStyles } from '@/shared/hooks/fragmentBuilder/useLayerStyles'
 import { toPx } from '@/shared/utils/toPx'
 import { useInstanceProp } from '@/widgets/renderer/hooks/useInstanceProp'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
+import { useDroppable } from '@dnd-kit/core'
+import { useSpringValue } from '@react-spring/web'
+import { useInterpolation } from '@/shared/hooks/useInterpolation'
 
 const BORDER_SIZE = 1.5
 const DRAG_PARENT_BORDER_SIZE = 3
 
 export const useBuilderHighlightNode = (layerKey: LinkKey, renderParents: LinkKey[] = []) => {
-  const { canvasManager, documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const { isTextEditing } = useBuilderManager()
-  const [canvas] = useGraph(canvasManager, canvasManager.key)
+  const { canvas } = useBuilderCanvas()
   const [layerNode] = useGraph(documentManager, layerKey)
   const { selection, selectionGraph } = useBuilderSelection()
   const selectionParentKey = documentManager.keyOfEntity(selectionGraph?.getParent?.())
   const isParentSelected = selectionParentKey === layerKey
   const isTextNode = layerNode?._type === nodes.Text
+  const { setNodeRef, isOver: isDropOver } = useDroppable({ id: layerKey, disabled: layerNode?._type !== nodes.Frame })
+  const isDropOver$ = useSpringValue(isDropOver)
+
+  useEffect(() => {
+    isDropOver$.set(isDropOver)
+  }, [isDropOver, isDropOver$])
 
   const borderWidth = useMemo(
     () =>
@@ -48,6 +59,7 @@ export const useBuilderHighlightNode = (layerKey: LinkKey, renderParents: LinkKe
   )
 
   return {
+    isDropOver$,
     isTextNode,
     isDragging: canvas.isDragging,
     isHovered: useMemo(() => canvas.hoverLayer.to(v => v === layerKey), [canvas.hoverLayer, layerKey]),
@@ -57,6 +69,7 @@ export const useBuilderHighlightNode = (layerKey: LinkKey, renderParents: LinkKe
     borderWidth,
     borderStyle,
     isInstance: layerNode?._type === nodes.FragmentInstance,
-    isTopNode: layerNode?.isRootLayer?.() || layerNode?.isBreakpoint
+    isTopNode: layerNode?.isRootLayer?.() || layerNode?.isBreakpoint,
+    setNodeRef
   }
 }

@@ -10,11 +10,12 @@ import { useGraph } from '@graph-state/react'
 import { useLayerStyles } from '../hooks/useLayerStyles'
 import { BaseRenderNode, defaultRender, defaultRenderNode } from '@/widgets/renderer/Fragment'
 import { useLayerAttributes } from '@/widgets/renderer/hooks/useLayerAttributes'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 interface LayerProps extends BaseRenderNode {}
 
 const Frame: FC<LayerProps> = ({ layerKey, renderParents = [], render = defaultRender }) => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const [layerGraph] = useGraph(documentManager, layerKey)
   const cssStyles = useLayerStyles(layerKey, renderParents)
   // const extendedStyle = useExtendStyle(cssStyles, style)

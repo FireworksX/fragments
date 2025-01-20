@@ -5,11 +5,12 @@ import { useGraph } from '@graph-state/react'
 import { isFieldOverridden } from '@fragments/plugin-fragment'
 import { isBrowser } from '@fragments/utils'
 import { isOverriddenNode, resetFieldOverride } from '@fragments/plugin-fragment-spring'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export type BuilderFieldOverrides = ReturnType<ReturnType<typeof useBuilderFieldOverrides>>
 
 export const useBuilderFieldOverrides = (layerLink: LinkKey) => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const [layerGraph] = useGraph(documentManager, layerLink)
 
   return (key: string) => {

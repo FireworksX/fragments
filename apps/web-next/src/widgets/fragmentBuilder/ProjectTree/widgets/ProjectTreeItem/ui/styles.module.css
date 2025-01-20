@@ -1,0 +1,35 @@
+.root {
+    color: var(--text-color-accent);
+    display: flex;
+    gap: var(--gutter-medium);
+    align-items: center;
+
+    &:hover {
+        .actions {
+            opacity: 1;
+        }
+    }
+}
+
+.emptyDirectory {
+    --primary: var(--secondary);
+    --fill: var(--secondary-disabled);
+}
+
+.actions {
+    opacity: 0;
+    transition: var(--animation-transition-default);
+    color: var(--text-color-accent);
+    width: 30px;
+    display: flex;
+    align-self: center;
+    justify-content: center;
+}
+
+.fragment {
+    --primary: var(--component);
+}
+
+.creatingItem {
+    padding-left: 20px;
+}

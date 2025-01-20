@@ -4,9 +4,10 @@ import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { layerMode, nodes } from '@fragments/plugin-fragment-spring'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export const useBuilderPosition = () => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const { selection, selectionGraph } = useBuilderSelection()
   const [selectionNode] = useGraph(documentManager, selection)
   const [parent] = useGraph(documentManager, selectionGraph?.getParent?.())

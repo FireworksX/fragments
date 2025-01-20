@@ -7,6 +7,7 @@ import { useBuilderVariableCreator } from '@/shared/hooks/fragmentBuilder/useBui
 import { LinkKey } from '@graph-state/core'
 import { popoutsStore } from '@/shared/store/popouts.store'
 import { popoutNames } from '@/shared/data'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export const FRAGMENT_PROPERTY_TYPES = [
   variableType.Number,
@@ -21,8 +22,9 @@ interface EditPropertyOptions {
 }
 
 export const useFragmentProperties = () => {
-  const { documentManager } = useContext(BuilderContext)
-  const [fragment] = useGraph(documentManager, documentManager.fragment)
+  const { documentManager } = useBuilderDocument()
+  const [fragment] = useGraph(documentManager, documentManager.$fragment.root)
+
   const propertyLinks = fragment?.properties ?? []
   const properties = useGraphStack(documentManager, propertyLinks)
   // const { allowVariables, openVariable } = useBuilderVariableCreator()

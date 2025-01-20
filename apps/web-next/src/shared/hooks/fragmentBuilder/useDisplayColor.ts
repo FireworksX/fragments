@@ -7,9 +7,11 @@ import { Interpolation, SpringValue } from '@react-spring/web'
 import { objectToColorString } from '@fragments/utils'
 import { nodes } from '@fragments/plugin-fragment-spring'
 import { to } from '@fragments/springs-factory'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export const useDisplayColor = (inputColor?: Color) => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
+
   const getColor = useCallback(
     (color?: Color) => {
       const resolveValue = documentManager?.resolve?.(color)

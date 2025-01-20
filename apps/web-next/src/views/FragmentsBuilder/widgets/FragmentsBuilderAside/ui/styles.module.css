@@ -1,0 +1,22 @@
+.root {
+    width: var(--builder-size-left-bar);
+    background: var(--background);
+    display: flex;
+    flex-direction: column;
+    gap: var(--gutter-medium);
+    padding-block: var(--gutter-default);
+    border-right: 1px solid var(--border);
+}
+
+
+.selector {
+}
+
+.delimiter {
+    height: 1px;
+    background: rgba(var(--border--rgb), .6);
+}
+
+.hidden {
+    display: none;
+}

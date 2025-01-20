@@ -3,9 +3,10 @@ import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { stateAlias } from '@/views/FragmentDetail/ui/FragmentDetail'
 import { nodes } from '@fragments/plugin-fragment'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export const useBuilderActions = () => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const { selection, selectionGraph } = useBuilderSelection()
   const type = selectionGraph?._type
   const isComponentType = type === nodes.Component || type === nodes.ComponentSet
@@ -95,20 +96,20 @@ export const useBuilderActions = () => {
 
   const addFrame = useCallback(() => {
     if (selectionGraph && documentManager && features.canInsert) {
-      const frame = documentManager[stateAlias].createNode({ _type: nodes.Frame }, selection)
+      const frame = documentManager.$fragment.createNode({ _type: nodes.Frame }, selection)
       return frame
     }
   }, [features.canInsert, selectionGraph, documentManager])
 
   const addText = useCallback(() => {
     if (selectionGraph && documentManager && features.canInsert) {
-      const node = documentManager[stateAlias].createNode({ _type: nodes.Text }, selection)
+      const node = documentManager.$fragment.createNode({ _type: nodes.Text }, selection)
     }
   }, [features.canInsert, selectionGraph, documentManager])
 
   const addImage = useCallback(() => {
     if (selectionGraph && documentManager && features.canInsert) {
-      const node = documentManager[stateAlias].createNode({ _type: nodes.Image }, selection)
+      const node = documentManager.$fragment.createNode({ _type: nodes.Image }, selection)
     }
   }, [features.canInsert, selectionGraph, documentManager])
 

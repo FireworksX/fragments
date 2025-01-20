@@ -3,7 +3,6 @@ import { nodes } from "@/definitions.ts";
 import { BaseNode, WithSpringSolidFill } from "@/types";
 import { setValueToNode } from "@/shared/setValueToNode.ts";
 import { getSpringValue } from "@/shared/getSpringValue.ts";
-import { getRandomColor } from "@/shared/random.ts";
 
 export function solidFillModule<T extends BaseNode>(
   node: T,

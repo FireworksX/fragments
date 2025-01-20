@@ -9,6 +9,7 @@ import { renderTarget } from '@fragments/plugin-fragment'
 import { useBreakpoints } from '@/shared/hooks/fragmentBuilder/useBreakpoints'
 import { useRenderTarget } from '@/widgets/renderer/hooks/useRenderTarget'
 import { animated } from '@react-spring/web'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export interface BaseRenderNode {
   layerKey?: LinkKey
@@ -23,7 +24,7 @@ export interface DocumentRenderer extends BaseRenderNode {
 }
 
 export const Fragment: FC<DocumentRenderer> = ({ layerKey, renderParents = [], render = defaultRender }) => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const [fragmentGraph] = useGraph(documentManager, layerKey)
   const { isDocument } = useRenderTarget()
   const [ref, { width }] = useMeasure()

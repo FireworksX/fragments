@@ -12,9 +12,10 @@ import { useGraph } from '@graph-state/react'
 import { useRenderTarget } from '@/widgets/renderer/hooks/useRenderTarget'
 import { LinkKey } from '@graph-state/core'
 import { usePartOfInstance } from '@/widgets/renderer/hooks/usePartOfInstance'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export const useLayerPositionStyles = (layerKey: LinkKey, parents: LinkKey[] = []) => {
-  const { documentManager } = use(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const [layerNode] = useGraph(documentManager, layerKey)
   const { isDocument } = useRenderTarget()
   const { positionType, top, left } = getFieldValueMap(layerNode, ['positionType', 'top', 'left'], documentManager)

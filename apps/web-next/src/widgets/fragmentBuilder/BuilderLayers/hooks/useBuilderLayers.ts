@@ -6,6 +6,8 @@ import { nodes } from '@fragments/plugin-fragment-spring'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { moveNode } from '@fragments/plugin-fragment-spring'
 import { all } from 'axios'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { stateAlias } from '@/views/FragmentDetail/ui/FragmentDetail'
 
 const findIndexOfNode = (items: unknown[], linkNode: LinkKey) => {
   const index = items.findIndex(item => item.id === linkNode)
@@ -21,7 +23,7 @@ const findIndexOfNode = (items: unknown[], linkNode: LinkKey) => {
 }
 
 export const useBuilderLayers = () => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const { selection, selectionGraph } = useBuilderSelection()
   const [expandedLinkKeys, setExpandedLinkKeys] = useState<string[]>([])
   const allBreakpoints = useGraphFields(documentManager, nodes.Breakpoint)
@@ -38,14 +40,14 @@ export const useBuilderLayers = () => {
     const isNestedFragment = node?._type === nodes.FragmentInstance && deepIndex > 0
 
     return {
-      id: documentManager.keyOfEntity(node),
+      id: documentManager.keyOfEntity(node) ?? undefined,
       collapsed,
       children: isNestedFragment ? [] : (node?.children || []).map(key => getNode(key, deepIndex + 1)),
       canHaveChildren: [nodes.Frame, nodes.Breakpoint].includes(node?._type)
     }
   }
 
-  const items = [getNode(documentManager.fragment)]
+  const items = [getNode(documentManager.$fragment.root)]
 
   const handleCollapse = (type: 'collapse' | 'expanded', key: LinkKey) => {
     setExpandedLinkKeys(prev => (type === 'expanded' ? [...prev, key] : prev.filter(k => k !== key)))

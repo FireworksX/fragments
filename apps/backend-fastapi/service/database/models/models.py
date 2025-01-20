@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, Boolean, DateTime, JSON, Table
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, Boolean, DateTime, JSON, Table, orm, func
 from sqlalchemy.orm import relationship
 
 from database import Base
@@ -42,6 +42,10 @@ class User(Base):
     avatar_id = Column('avatar_id', Integer, ForeignKey('media.id'))
     avatar = relationship("Media")
 
+    @orm.reconstructor
+    def init(self) -> None:
+        self.logo = None if self.avatar is None else self.avatar.public_path
+
 
 class Project(Base):
     __tablename__ = 'project'
@@ -78,104 +82,86 @@ class GeoLocation(Base):
     __tablename__ = 'geo_location'
     id = Column('id', Integer, primary_key=True, index=True)
     country = Column('country', String, nullable=False)
-    region = Column('region', String, nullable=False)
+    region = Column('region', String)
     city = Column('city', String, nullable=False)
-    stream_id = Column('stream_id', Integer, ForeignKey('stream.id', ondelete='CASCADE'), nullable=False)
 
 
-class StreamGeoLocation(Base):
-    __tablename__ = "stream_geo_location"
-    geo_location_id = Column(ForeignKey("geo_location.id"), primary_key=True)
-    stream_id = Column(ForeignKey("stream.id"), primary_key=True)
-
-    stream = relationship("Stream", back_populates="geo_locations")
-    geo_location = relationship("GeoLocation")
-
-
-class TimeFrame(Base):
-    __tablename__ = 'time_frame'
+class StreamGeoLocationFilter(Base):
+    __tablename__ = "stream_geo_location_filter"
     id = Column('id', Integer, primary_key=True, index=True)
-    stream_id = Column('stream_id', Integer, ForeignKey('stream.id', ondelete='CASCADE'), nullable=False)
+    stream_id = Column(ForeignKey("stream.id"))
+
+    stream = relationship("Stream", back_populates="geo_locations_filter")
+    country = Column('country', String, nullable=False)
+    region = Column('region', String)
+    city = Column('city', String, nullable=False)
+    toggled = Column('toggled', Boolean, nullable=False)
+
+
+class StreamTimeFrameFilter(Base):
+    __tablename__ = "stream_time_frame_filter"
+    id = Column('id', Integer, primary_key=True, index=True)
+    stream_id = Column(ForeignKey("stream.id"))
+
+    stream = relationship("Stream", back_populates="time_frames_filter")
     from_time = Column('from_time', DateTime, nullable=False)
     to_time = Column('to_time', DateTime, nullable=False)
+    toggled = Column('toggled', Boolean, nullable=False)
 
 
-class StreamTimeFrame(Base):
-    __tablename__ = "stream_time_frame"
-    time_frame_id = Column(ForeignKey("time_frame.id"), primary_key=True)
-    stream_id = Column(ForeignKey("stream.id"), primary_key=True)
-
-    stream = relationship("Stream", back_populates="time_frames")
-    time_frame = relationship("TimeFrame")
-
-
-class OSType(Base):
-    __tablename__ = 'os_type'
+class StreamOSTypeFilter(Base):
+    __tablename__ = "stream_os_type_filter"
     id = Column('id', Integer, primary_key=True, index=True)
-    stream_id = Column('stream_id', Integer, ForeignKey('stream.id', ondelete='CASCADE'), nullable=False)
+    stream_id = Column(ForeignKey("stream.id"))
+
+    stream = relationship("Stream", back_populates="os_types_filter")
     os_type = Column('os_type', Integer, nullable=False)
+    toggled = Column('toggled', Boolean, nullable=False)
 
 
-class StreamOSType(Base):
-    __tablename__ = "stream_os_type"
-    os_type_id = Column(ForeignKey("os_type.id"), primary_key=True)
-    stream_id = Column(ForeignKey("stream.id"), primary_key=True)
-
-    stream = relationship("Stream", back_populates="os_types")
-    os_type = relationship("OSType")
-
-
-class DeviceType(Base):
-    __tablename__ = 'device_type'
+class StreamDeviceTypeFilter(Base):
+    __tablename__ = "stream_device_type_filter"
     id = Column('id', Integer, primary_key=True, index=True)
-    stream_id = Column('stream_id', Integer, ForeignKey('stream.id', ondelete='CASCADE'), nullable=False)
+    stream_id = Column(ForeignKey("stream.id"))
+
+    stream = relationship("Stream", back_populates="device_types_filter")
     device_type = Column('device_type', Integer, nullable=False)
+    toggled = Column('toggled', Boolean, nullable=False)
 
 
-class StreamDeviceType(Base):
-    __tablename__ = "stream_device_type"
-    device_type_id = Column(ForeignKey("device_type.id"), primary_key=True)
-    stream_id = Column(ForeignKey("stream.id"), primary_key=True)
-
-    stream = relationship("Stream", back_populates="device_types")
-    device_type = relationship("DeviceType")
-
-
-class Page(Base):
-    __tablename__ = 'page'
+class StreamPageFilter(Base):
+    __tablename__ = "stream_page_filter"
     id = Column('id', Integer, primary_key=True, index=True)
-    stream_id = Column('stream_id', Integer, ForeignKey('stream.id', ondelete='CASCADE'), nullable=False)
+    stream_id = Column(ForeignKey("stream.id"))
+
+    stream = relationship("Stream", back_populates="pages_filter")
     page = Column('page', String, nullable=False)
-
-
-class StreamPage(Base):
-    __tablename__ = "stream_page"
-    page_id = Column(ForeignKey("page.id"), primary_key=True)
-    stream_id = Column(ForeignKey("stream.id"), primary_key=True)
-
-    stream = relationship("Stream", back_populates="pages")
-    page = relationship("Page")
+    toggled = Column('toggled', Boolean, nullable=False)
 
 
 class Stream(Base):
     __tablename__ = 'stream'
     id = Column('id', Integer, primary_key=True, index=True)
     campaign_id = Column('campaign_id', Integer, ForeignKey('campaign.id', ondelete='CASCADE'), nullable=False)
+    campaign = relationship("Campaign")
+    project_id = Column('project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False)
+    project = relationship("Project")
     active = Column('active', Boolean, default=True)
     deleted = Column('deleted', Boolean, default=False)
     name = Column('name', String, nullable=False)
     weight = Column('weight', Float, nullable=False)
 
-    pages = relationship("StreamPage", back_populates="stream", cascade="save-update, merge, "
-                                                                            "delete, delete-orphan")
-    device_types = relationship("StreamDeviceType", back_populates="stream", cascade="save-update, merge, "
-                                                                            "delete, delete-orphan")
-    os_types = relationship("StreamOSType", back_populates="stream", cascade="save-update, merge, "
-                                                                            "delete, delete-orphan")
-    time_frames = relationship("StreamTimeFrame", back_populates="stream", cascade="save-update, merge, "
-                                                                            "delete, delete-orphan")
-    geo_locations = relationship("StreamGeoLocation", back_populates="stream", cascade="save-update, merge, "
-                                                                            "delete, delete-orphan")
+    pages_filter = relationship("StreamPageFilter", back_populates="stream", cascade="save-update, merge, "
+                                                                                     "delete, delete-orphan")
+    device_types_filter = relationship("StreamDeviceTypeFilter", back_populates="stream", cascade="save-update, merge, "
+                                                                                                  "delete, delete-orphan")
+    os_types_filter = relationship("StreamOSTypeFilter", back_populates="stream", cascade="save-update, merge, "
+                                                                                          "delete, delete-orphan")
+    time_frames_filter = relationship("StreamTimeFrameFilter", back_populates="stream", cascade="save-update, merge, "
+                                                                                                "delete, delete-orphan")
+    geo_locations_filter = relationship("StreamGeoLocationFilter", back_populates="stream",
+                                        cascade="save-update, merge, "
+                                                "delete, delete-orphan")
 
 
 class Feedback(Base):
@@ -186,30 +172,83 @@ class Feedback(Base):
     page = Column('page', String, nullable=False)
 
 
+class FragmentMedia(Base):
+    __tablename__ = "fragment_media"
+    id = Column('id', Integer, primary_key=True, index=True)
+    media_id = Column(ForeignKey("media.id", ondelete='CASCADE'))
+    media = relationship("Media")
+    fragment_id = Column(ForeignKey("fragment.id", ondelete='CASCADE'))
+    fragment = relationship("Fragment", back_populates="assets")
+
+
+# linked fragments
+fragment_usage = Table(
+    "fragment_usage",
+    Base.metadata,
+    Column(
+        "fragment_id",
+        Integer,
+        ForeignKey("fragment.id", ondelete="CASCADE"),
+        primary_key=True
+    ),
+    Column(
+        "used_fragment_id",
+        Integer,
+        ForeignKey("fragment.id", ondelete="CASCADE"),
+        primary_key=True
+    ),
+)
+
 class Fragment(Base):
     __tablename__ = 'fragment'
+
+    id = Column('id', Integer, primary_key=True, index=True)  # Unique ID for the version
+    project_id = Column('project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False)
+    project = relationship("Project")
+
+    name = Column('name', String, nullable=False)  # Name of the fragment version
+    document = Column('document', JSON, nullable=False)  # Version-specific document
+    props = Column('props', JSON, nullable=False)  # Version-specific properties
+
+    created_at = Column('created_at', DateTime, nullable=False, default=func.now())  # Timestamp for version creation
+    author_id = Column('author_id', Integer, ForeignKey('user.id'), nullable=False)  # Author of the version
+    author = relationship("User")  # Relationship to the User table
+
+    assets = relationship("FragmentMedia", back_populates="fragment", cascade="save-update, merge, "
+                                                                                      "delete, delete-orphan")
+
+    linked_fragments = relationship(
+        "Fragment",
+        secondary=fragment_usage,             # use the association table
+        primaryjoin=id == fragment_usage.c.fragment_id,
+        secondaryjoin=id == fragment_usage.c.used_fragment_id,
+        # We do NOT define backref or symmetrical references here,
+        # since we just want "Fragment has an array of fragments it is using."
+    )
+
+    # Back-reference to the single FilesystemProjectItem
+    # uselist=False => 1-to-1, not 1-to-many
+    project_item = relationship(
+        "FilesystemProjectItem",
+        back_populates="fragment",
+        uselist=False,
+        cascade="all, delete-orphan"
+    )
+
+class Landing(Base):
+    __tablename__ = 'landing'
     id = Column('id', Integer, primary_key=True, index=True)
     project_id = Column('project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False)
-    name = Column('name', String)
-    document = Column('document', JSON, nullable=False)
-    props = Column('props', JSON, nullable=False)
-
-    author_id = Column('author_id', Integer, ForeignKey('user.id'))
-    author = relationship("User")
-
-
-    ## list of media
-
-
-class StreamFragment(Base):
-    __tablename__ = 'stream_fragment'
-    id = Column('id', Integer, primary_key=True, index=True)
-    project_id = Column('project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False)
+    project = relationship("Project")
     stream_id = Column('stream_id', Integer, ForeignKey('stream.id', ondelete='CASCADE'), nullable=False)
-    fragment_id = Column('fragment_id', Integer, ForeignKey('fragment.id', ondelete='CASCADE'), nullable=False)
-    props = Column('props', JSON, nullable=False)
-    weight = Column('weight', Float, nullable=False)
-    name = Column('name', String)
+    stream = relationship("Stream")
+    fragment_id = Column('fragment_id', Integer, ForeignKey('fragment.id', ondelete='CASCADE'))
+    fragment = relationship("Fragment")
+    props = Column('props', JSON)
+    weight = Column('weight', Float)
+    name = Column('name', String, nullable=False)
+    active = Column('active', Boolean, default=True)
+    deleted = Column('deleted', Boolean, default=False)
 
 
 class Media(Base):
@@ -219,3 +258,35 @@ class Media(Base):
     path = Column('path', String)
     ext = Column('ext', String)
     public_path = Column('public_path', String)
+
+class FilesystemProjectItem(Base):
+    __tablename__ = 'filesystem_project_item'
+    id = Column('id', Integer, primary_key=True, index=True)
+    project_id = Column('project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'))
+    name = Column('name', String)
+    item_type = Column('item_type', Integer, nullable=False)
+    fragment_id = Column('fragment_id', Integer, ForeignKey('fragment.id', ondelete='CASCADE'), nullable=True, unique=True)
+    fragment = relationship(
+        "Fragment",
+        back_populates="project_item"
+        # By default, no cascade needed here because
+        # we are relying on the DB to remove this row if `Fragment` is deleted
+    )
+    # Reference to the parent (nullable if top-level)
+    parent_id = Column(Integer, ForeignKey('filesystem_project_item.id', ondelete="CASCADE"), nullable=True)
+
+    # Relationship to the parent
+    parent = relationship(
+        "FilesystemProjectItem",
+        back_populates="nested_items",
+        remote_side="FilesystemProjectItem.id",
+        foreign_keys="[FilesystemProjectItem.parent_id]",
+    )
+
+    # Relationship to children
+    nested_items = relationship(
+        "FilesystemProjectItem",
+        back_populates="parent",
+        foreign_keys="[FilesystemProjectItem.parent_id]",
+        cascade="all, delete-orphan"
+    )

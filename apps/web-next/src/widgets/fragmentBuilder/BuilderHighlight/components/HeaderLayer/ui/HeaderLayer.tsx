@@ -9,6 +9,8 @@ import { nodes } from '@fragments/plugin-fragment-spring'
 import { HeaderLayerTop } from '@/widgets/fragmentBuilder/BuilderHighlight/components/HeaderLayer/components/HeaderLayerTop'
 import { SCALE } from '@/widgets/fragmentBuilder/BuilderCanvas/hooks/useCanvas'
 import { toPx } from '@/shared/utils/toPx'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
 
 interface HeaderLayerProps {
   className?: string
@@ -21,10 +23,10 @@ interface HeaderLayerProps {
 }
 
 const HeaderLayer: FC<HeaderLayerProps> = ({ className, layerKey }) => {
-  const { documentManager, canvasManager } = use(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const [layerNode] = useGraph(documentManager, layerKey)
   const isTopNode = !!(layerNode?.isRootLayer?.() || layerNode?.isBreakpoint) && layerNode?._type === nodes.Frame
-  const [canvas] = useGraph(canvasManager, canvasManager.key)
+  const { canvas } = useBuilderCanvas()
 
   const size = canvas.scale.to([SCALE.min, SCALE.max], [15, 6])
 

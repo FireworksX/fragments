@@ -1,7 +1,8 @@
 .root {
+    position: relative;
     display: inline-block;
-    width: 7px;
-    height: 7px;
+    width: 5px;
+    height: 5px;
     border-radius: 50%;
     background: var(--background-light);
 
@@ -17,4 +18,23 @@
     /*&.info {*/
     /*    background: var(--info);*/
     /*}*/
+
+    &:after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: inherit;
+        animation: pulse 1s ease-in infinite;
+        opacity: .4;
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.5);
+    }
 }

@@ -7,9 +7,10 @@ import { popoutsStore } from '@/shared/store/popouts.store'
 import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { variableType } from '@fragments/plugin-fragment-spring'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export const useBuilderVariableCreator = () => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
 
   const openVariable = (variableKey: LinkKey, { initial = false, position = 'left' } = {}) => {
     const variableGraph = documentManager.resolve(variableKey)

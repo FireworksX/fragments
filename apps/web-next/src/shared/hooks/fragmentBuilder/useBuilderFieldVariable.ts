@@ -13,6 +13,7 @@ import { stackVariableTransformName } from '@/features/popouts/StackVariableTran
 import { popoutNames } from '@/shared/data'
 import { generateJSON, generateText } from '@tiptap/core'
 import { canvasEditorExtensions } from '@/widgets/fragmentBuilder/BuilderHighlight'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 // import {
 //   stackVariableTransformName
 // } from '@/widgets/StackCollector/components/variables/StackVariableTransform/StackVariableTransform'
@@ -52,7 +53,7 @@ const variableFields = {
 }
 
 export const useBuilderFieldVariable = (layer: Field) => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const { properties, createProperty, editProperty } = useFragmentProperties()
   const { createComputedValue, getTransformsByType } = useFragmentComputedValues()
 

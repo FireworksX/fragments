@@ -5,9 +5,10 @@ import { LinkKey } from '@graph-state/core'
 import { to } from '@react-spring/web'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { nodes, layerMode as defLayerMode } from '@fragments/plugin-fragment'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export const useBuilderLayerFlags = (layerKey: LinkKey) => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const [layerNode] = useGraph(documentManager, layerKey)
   const layerInvoker = useLayerInvoker(layerKey, ({ key, node, value }) => {
     switch (key) {

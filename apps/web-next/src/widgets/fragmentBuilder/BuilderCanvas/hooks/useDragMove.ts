@@ -1,11 +1,14 @@
-import { DragEvent } from './useCanvas'
+import { DragEvent, useCanvas } from './useCanvas'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { getFieldValue } from '@fragments/plugin-fragment'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
 
 export const useDragMove = () => {
-  const { canvasManager, documentManager } = useContext(BuilderContext)
+  const { canvas } = useBuilderCanvas()
+  const { documentManager } = useBuilderDocument()
 
   return ({ memo, movement: [mx, my], first }: DragEvent) => {
     if (first) {
@@ -18,7 +21,7 @@ export const useDragMove = () => {
       }
     }
 
-    const scale = animatableValue(canvasManager.resolve(canvasManager)?.scale)
+    const scale = animatableValue(canvas?.scale)
     const x = mx / scale + (memo?.from?.x ?? 0)
     const y = my / scale + (memo?.from?.y ?? 0)
 

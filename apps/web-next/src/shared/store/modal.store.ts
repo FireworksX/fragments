@@ -24,23 +24,28 @@ export const modalStore = createState({
     context: null
   },
   plugins: [
-    loggerPlugin({ onlyBrowser: true }),
-    graphState => {
-      graphState.open = <TName extends keyof ModalPanelMap>(name: TName, context: ModalPanelMap[TName]) => {
-        graphState.mutate({
+    state => {
+      state.open = <TName extends keyof ModalPanelMap>(name: TName, context: ModalPanelMap[TName]) => {
+        state.mutate({
           name,
           context
         })
       }
 
-      graphState.close = () => {
-        graphState.mutate({
+      state.close = () => {
+        state.mutate({
           name: null,
           context: null
         })
       }
 
-      return graphState
+      state.updateContext = context => {
+        state.mutate({
+          context
+        })
+      }
+
+      return state
     }
   ]
 }) as ModalStore

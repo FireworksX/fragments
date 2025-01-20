@@ -4,9 +4,10 @@ import { ColorCell } from '@/shared/ui/ColorCell'
 import { useBuilderAssetsColors } from '@/shared/hooks/fragmentBuilder/useBuilderAssetsColors'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { Container } from '@/shared/ui/Container'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export const AssetsColors: FC = () => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const { editColor, colorVariables, removeColor } = useBuilderAssetsColors()
 
   if (!colorVariables?.length) return null

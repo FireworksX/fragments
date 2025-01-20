@@ -3,6 +3,7 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import { TreeItemComponentProps } from 'dnd-kit-sortable-tree'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
+import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
 
 interface BuilderLayerSortingCellProps extends PropsWithChildren<TreeItemComponentProps> {
   className?: string
@@ -10,7 +11,7 @@ interface BuilderLayerSortingCellProps extends PropsWithChildren<TreeItemCompone
 
 export const BuilderLayerSortingCell = forwardRef<ElementRef<'div'>, BuilderLayerSortingCellProps>(
   ({ className, children, ...props }, ref) => {
-    const { canvasManager } = use(BuilderContext)
+    const { manager: canvasManager } = useBuilderCanvas()
 
     const mouseOver = () => canvasManager.setHoverLayer(props?.item?.id)
     const mouseLeave = () => canvasManager.setHoverLayer('')

@@ -13,6 +13,7 @@ import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { Select } from '@/shared/ui/Select'
 import { variableTransforms, variableType } from '@fragments/plugin-fragment-spring'
 import { TransformBooleanValue } from './components/TransformBooleanValue/TransformBooleanValue'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 interface StackTransformSectionProps {
   className?: string
@@ -29,7 +30,7 @@ export const StackTransformSection: FC<StackTransformSectionProps> = ({
   inputType,
   valueReferenceOptions = {}
 }) => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const [transform] = useGraph(documentManager, transformLink)
   const { getTransformsByType } = useFragmentComputedValues()
   const allTransforms = getTransformsByType(inputType)

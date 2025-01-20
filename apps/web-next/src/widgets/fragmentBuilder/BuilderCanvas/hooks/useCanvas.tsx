@@ -10,6 +10,9 @@ import { useDragCollisions } from './useDragCollisions'
 import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderManager'
 import { debounce } from '@fragments/utils'
 import { animatableValue } from '@/shared/utils/animatableValue'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
+import { useBuilderCreator } from '@/shared/hooks/fragmentBuilder/useBuilderCreator'
 
 export const SCALE = {
   min: 0.25,
@@ -19,9 +22,12 @@ export const SCALE = {
 export type DragEvent = Parameters<Parameters<typeof useDrag>[0]>[0]
 
 export const useCanvas = () => {
-  const { documentManager, builderManager, canvasManager } = useContext(BuilderContext)
+  const { builderManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
+  const { canvas, manager: canvasManager } = useBuilderCanvas()
   const { updateParams, isTextEditing } = useBuilderManager()
-  const [canvas] = useGraph(canvasManager, canvasManager.key)
+  const { creator, manager } = useBuilderCreator()
+  const createType = creator?.createType
   const pointerRef = useRef<ElementRef<'div'>>(null)
   const dragMoveHandler = useDragMove()
   const dragCollisionsHandler = useDragCollisions()
@@ -64,47 +70,50 @@ export const useCanvas = () => {
       },
       onClick: ({ event }) => {
         const layerKey = findLayerFromPointerEvent(event)
-
-        if (documentManager.entityOfKey(layerKey)?._type === nodes.FragmentInstance) {
-          builderManager.toggleTextEditor(false)
-          canvasManager.setFocus(layerKey)
-          // updateParams({
-          //   focus: layerKey
-          // })
-        } else if (layerKey) {
-          if (!isTextEditing) {
-            const clickedLayerValue = documentManager.resolve(layerKey)
-
-            if (clickedLayerValue?._type === nodes.Text && event.detail === 2) {
-              // updateParams({
-              //   focus: layerKey
-              // })
-              canvasManager.setFocus(layerKey)
-              builderManager.toggleTextEditor(true)
-              // updateParams({
-              //   focus: layerKey
-              // })
-              return
-            }
-
+        if (createType) {
+          manager.createLayer(layerKey)
+        } else {
+          if (documentManager.entityOfKey(layerKey)?._type === nodes.FragmentInstance) {
             builderManager.toggleTextEditor(false)
             canvasManager.setFocus(layerKey)
             // updateParams({
             //   focus: layerKey
             // })
+          } else if (layerKey) {
+            if (!isTextEditing) {
+              const clickedLayerValue = documentManager.resolve(layerKey)
+
+              if (clickedLayerValue?._type === nodes.Text && event.detail === 2) {
+                // updateParams({
+                //   focus: layerKey
+                // })
+                canvasManager.setFocus(layerKey)
+                builderManager.toggleTextEditor(true)
+                // updateParams({
+                //   focus: layerKey
+                // })
+                return
+              }
+
+              builderManager.toggleTextEditor(false)
+              canvasManager.setFocus(layerKey)
+              // updateParams({
+              //   focus: layerKey
+              // })
+            } else {
+              builderManager.toggleTextEditor(false)
+              canvasManager.setFocus(layerKey)
+              // updateParams({
+              //   focus: layerKey
+              // })
+            }
           } else {
             builderManager.toggleTextEditor(false)
-            canvasManager.setFocus(layerKey)
+            canvasManager.setFocus(null)
             // updateParams({
-            //   focus: layerKey
+            //   focus: null
             // })
           }
-        } else {
-          builderManager.toggleTextEditor(false)
-          canvasManager.setFocus(null)
-          // updateParams({
-          //   focus: null
-          // })
         }
       },
       onDrag: dragEvent => {

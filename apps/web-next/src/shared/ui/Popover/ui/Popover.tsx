@@ -1,5 +1,5 @@
 'use client'
-import { ElementRef, FC, PropsWithChildren, ReactNode, useRef } from 'react'
+import { ComponentRef, ElementRef, FC, PropsWithChildren, ReactNode, useRef } from 'react'
 import Tippy, { TippyProps } from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 import { isBrowser } from '@fragments/utils'
@@ -9,12 +9,21 @@ export interface PopoverProps extends TippyProps, PropsWithChildren {
   trigger?: TippyProps['trigger'] | 'rightClick'
   content?: ReactNode
   className?: string
+  stopPropagation?: boolean
 }
 
 export type Instance = Parameters<NonNullable<TippyProps['onCreate']>>[0]
 
-const Popover: FC<PopoverProps> = ({ className, content, children, trigger, appendTo, ...restProps }) => {
-  const targetRef = useRef<ElementRef<'div'>>()
+const Popover: FC<PopoverProps> = ({
+  className,
+  content,
+  children,
+  trigger,
+  appendTo,
+  stopPropagation,
+  ...restProps
+}) => {
+  const targetRef = useRef<ComponentRef<'div'>>()
 
   const onCreate: TippyProps['onCreate'] = instance => {
     if (trigger === 'rightClick') {
@@ -32,6 +41,12 @@ const Popover: FC<PopoverProps> = ({ className, content, children, trigger, appe
 
   const closeHandler = (instance: Instance) => instance.hide()
 
+  const handleClickTarget = e => {
+    if (stopPropagation) {
+      e.stopPropagation()
+    }
+  }
+
   return (
     <Tippy
       className={className}
@@ -47,7 +62,9 @@ const Popover: FC<PopoverProps> = ({ className, content, children, trigger, appe
       }}
       onHide={instance => instance.popper.removeEventListener('click', () => closeHandler(instance))}
     >
-      <div ref={targetRef}>{children}</div>
+      <div ref={targetRef} onClick={event => handleClickTarget(event)}>
+        {children}
+      </div>
     </Tippy>
   )
 }

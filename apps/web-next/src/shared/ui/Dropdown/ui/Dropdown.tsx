@@ -15,6 +15,7 @@ export interface DropdownProps extends PropsWithChildren {
   hideOnClick?: TippyProps['hideOnClick']
   arrow?: TippyProps['arrow']
   onCreate?: (instance: Instance) => void
+  stopPropagation?: PopoverProps['stopPropagation']
 }
 
 const Dropdown: FC<DropdownProps> = ({
@@ -27,6 +28,7 @@ const Dropdown: FC<DropdownProps> = ({
   disabled,
   options,
   arrow,
+  stopPropagation,
   onCreate
 }) => {
   return (
@@ -40,6 +42,7 @@ const Dropdown: FC<DropdownProps> = ({
       arrow={arrow}
       content={<div>{options}</div>}
       hideOnClick={hideOnClick}
+      stopPropagation={stopPropagation}
       onCreate={onCreate}
     >
       {children}

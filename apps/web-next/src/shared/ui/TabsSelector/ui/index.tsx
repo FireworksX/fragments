@@ -33,7 +33,7 @@ const TabsSelector: FC<TabsSelectorProps> = animated(({ className, cellClassName
 
     if (activeCell && activeCell instanceof HTMLElement) {
       switcherApi.start({
-        width: activeCell.getBoundingClientRect().width - 6,
+        width: activeCell.getBoundingClientRect().width - 3,
         x: activeCell.offsetLeft
       })
     }
@@ -61,12 +61,13 @@ const TabsSelector: FC<TabsSelectorProps> = animated(({ className, cellClassName
       <animated.div className={styles.switcher} style={switcherStyles} />
       {items.map((el, index) => (
         <Fragment key={el.name}>
-          <div className={styles.divider} />
+          {index > 0 && <div className={styles.divider} />}
           <Touchable
             className={cn(styles.cell, cellClassName, {
               [styles.active]: el.name === value,
               [styles.disabled]: el.disabled
             })}
+            disabled={el.disabled}
             TagName='button'
             data-active={el.name === value}
             key={index}

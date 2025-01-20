@@ -1,0 +1,17 @@
+.root {}
+
+.collapseTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.collapseIcon {
+    color: var(--primary);
+    --fill: rgba(var(--primary--rgb), .3);
+}
+
+
+.content {
+    padding-left: 15px;
+}

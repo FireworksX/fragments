@@ -10,6 +10,7 @@ import { InstancePropertyBoolean } from '../../InstancePropertyBoolean'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useGraph } from '@graph-state/react'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 interface InstancePropertyGenericProps {
   property: {
@@ -20,7 +21,7 @@ interface InstancePropertyGenericProps {
 }
 
 const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({ className, property }) => {
-  const { documentManager } = use(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const { selection } = useBuilderSelection()
   const [instance] = useGraph(documentManager, selection)
   const instanceProp = instance?.readProperty(property)

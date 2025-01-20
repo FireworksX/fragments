@@ -6,6 +6,7 @@ import { isPartialKey } from '@graph-state/core'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { getDomRect } from '@/shared/utils/getDomRect'
 import { Rect } from '@/shared/utils/Rect'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 const domRectToRect = (domRect: DOMRect) => {
   return {
@@ -17,7 +18,7 @@ const domRectToRect = (domRect: DOMRect) => {
 }
 
 export const useDragCollisions = () => {
-  const { documentManager, canvasManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
 
   const calculateMemoData = (memo, parentLayerKey) => {
     const parentLayerNode = documentManager.resolve(parentLayerKey)

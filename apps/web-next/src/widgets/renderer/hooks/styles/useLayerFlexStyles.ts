@@ -10,9 +10,10 @@ import {
 } from '@fragments/plugin-fragment'
 import { LinkKey } from '@graph-state/core'
 import { to } from '@react-spring/web'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export const useLayerFlexStyles = (layerKey: LinkKey) => {
-  const { documentManager } = use(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const [layerNode] = useGraph(documentManager, layerKey)
   const { layerDirection, layerAlign, layerDistribute, layerWrap, layerGap } = getFieldValueMap(
     layerNode,

@@ -34,6 +34,7 @@ class ServiceSettings(BaseSettings):
         default_factory=lambda: os.getenv("REFRESH_TOKEN_EXPIRE_TIME_MINUTES"))
     REFRESH_TOKEN_SECRET_KEY: str = Field(default_factory=lambda: os.getenv("REFRESH_TOKEN_SECRET_KEY"))
     MEDIA_STORAGE_PATH: str = Field(default_factory=lambda: os.getenv("MEDIA_STORAGE_PATH"))
+    STATIC_SERVER_URL: str = Field(default_factory=lambda: os.getenv("STATIC_SERVER_URL"))
 
 
 service_settings = ServiceSettings()

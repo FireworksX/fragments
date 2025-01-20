@@ -2,17 +2,15 @@
 import { FC } from 'react'
 import styles from './styles.module.css'
 import FragmentsLogo from '@/shared/icons/next/logo.svg'
-import { useParams } from 'next/navigation'
 import { Link } from '@/shared/ui/Link/ui/Link'
 import { Touchable } from '@/shared/ui/Touchable'
-import { BreadcrumbProject } from '@/features/ProjectBreadcrumbs/ui/BreadcrumbProject/BreadcrumbProject'
-import { BreadcrumbFragment } from '@/features/ProjectBreadcrumbs/ui/BreadcrumbFragment/BreadcrumbFragment'
-import { useQuery } from '@apollo/client'
-import { CURRENT_USER } from '@/shared/queries/currentUser'
-import { useProjectBreadcrumbs } from '@/features/ProjectBreadcrumbs/hooks/useProjectBreadcrumbs'
+import { BreadcrumbProject } from '../components/BreadcrumbProject'
+import { useProjectBreadcrumbs } from '../hooks/useProjectBreadcrumbs'
+import { Spinner } from '@/shared/ui/Spinner'
+import { BreadcrumbStage } from '@/features/ProjectBreadcrumbs/components/BreadcrumbStage'
 
 export const ProjectBreadcrumbs: FC = () => {
-  const { project } = useProjectBreadcrumbs()
+  const { project, loading } = useProjectBreadcrumbs()
 
   // const { project: projectDetail } = useProjectDetail()
 
@@ -24,12 +22,16 @@ export const ProjectBreadcrumbs: FC = () => {
         </Touchable>
       </Link>
 
-      {project && (
+      {(loading || project) && (
         <>
           <div className={styles.delimiter} />
-          <BreadcrumbProject name={project.name} logo={project?.logo?.public_path} />
+          {loading && <Spinner size={14} color='var(--text-color-accent)' />}
+          {project && <BreadcrumbProject name={project.name} logo={project?.logo?.public_path} />}
         </>
       )}
+
+      <div className={styles.delimiter} />
+      <BreadcrumbStage />
 
       {/*{fragmentSlug && (*/}
       {/*  <>*/}

@@ -100,7 +100,7 @@
         content: '';
         position: absolute;
         inset: 0;
-        z-index: -1;
+        z-index: 1;
     }
 }
 
@@ -128,11 +128,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    z-index: 2;
 }
 
 .label {
     flex: 1;
     padding: 2px 2px 2px 0;
+    position: relative;
+    z-index: 2;
 }
 
 .collapse {
@@ -141,12 +145,16 @@
     align-items: center;
     justify-content: center;
     align-self: stretch;
+    position: relative;
+    z-index: 2;
 }
 
 .actions {
     font-size: 10px;
     margin-left: auto;
     color: var(--secondary);
+    position: relative;
+    z-index: 2;
 }
 
 .body {

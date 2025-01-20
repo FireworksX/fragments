@@ -14,11 +14,12 @@ import { FragmentInstanceContext } from '@/widgets/renderer/FragmentInstance'
 import { BaseRenderNode, defaultRender, defaultRenderNode } from '@/widgets/renderer/Fragment'
 import { useInstanceProp } from '@/widgets/renderer/hooks/useInstanceProp'
 import { useFieldValue } from '@/shared/hooks/fragmentBuilder/useFieldValue'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 interface TextProps extends BaseRenderNode {}
 
 export const Text: FC<TextProps> = ({ layerKey, renderParents = [], render = defaultRender }) => {
-  const { documentManager, builderManager } = use(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const [layerGraph] = useGraph(documentManager, layerKey)
   const instanceContent = useFieldValue(layerKey, 'variableLink')
   const textContent = layerGraph?.getContent?.(instanceContent)

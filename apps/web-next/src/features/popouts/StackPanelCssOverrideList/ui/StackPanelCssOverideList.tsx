@@ -11,6 +11,7 @@ import { InputText } from '@/shared/ui/InputText'
 import { InputSelect } from '@/shared/ui/InputSelect'
 import { CssCell } from '@/shared/ui/CssCell'
 import { Button } from '@/shared/ui/Button'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export interface StackPanelCssOverrideListOptions {
   selectKeys?: string[]
@@ -22,7 +23,7 @@ interface StackPanelCssOverrideListProps extends StackPanel {
 }
 
 const StackPanelCssOverrideList: FC<StackPanelCssOverrideListProps> = ({ className }) => {
-  const { documentManager } = useContext(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const { selection } = useBuilderSelection()
   const layerInvoker = useLayerInvoker(selection, ({ key, node, value }) => {
     switch (key) {

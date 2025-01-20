@@ -4,9 +4,10 @@ import { useGraph } from '@graph-state/react'
 import { getFieldValue, getFieldValueMap, imagePaintScaleModes, paintMode } from '@fragments/plugin-fragment'
 import { LinkKey } from '@graph-state/core'
 import { to } from '@react-spring/web'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export const useLayerFillStyles = (layerKey: LinkKey) => {
-  const { documentManager } = use(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const [layerNode] = useGraph(documentManager, layerKey)
   const { fillType, solidFill, imageFill, imageFillScaleMode } = getFieldValueMap(
     layerNode,
@@ -16,7 +17,7 @@ export const useLayerFillStyles = (layerKey: LinkKey) => {
 
   return useMemo(() => {
     return {
-      background: to([fillType, solidFill, imageFill], (fillType, solidFill, imageFill) => {
+      backgroundColor: to([fillType, solidFill, imageFill], (fillType, solidFill, imageFill) => {
         if (fillType === paintMode.Solid) {
           return solidFill
         } else if (fillType === paintMode.Image) {

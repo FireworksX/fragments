@@ -6,15 +6,16 @@ import TextFrame from '@/shared/icons/text-frame.svg'
 import ColumnsFrame from '@/shared/icons/columns-frame.svg'
 import RowsFrame from '@/shared/icons/rows-frame.svg'
 import Frame from '@/shared/icons/frame.svg'
-import FragmentInstanceIcon from '@/shared/icons/next/component.svg'
+import FragmentInstanceIcon from '@/shared/icons/next/component-instance.svg'
 import BreakpointIcon from '@/shared/icons/next/square-dashed.svg'
-import FragmentIcon from '@/shared/icons/next/box.svg'
+import FragmentIcon from '@/shared/icons/next/component.svg'
 import ImageIcon from '@/shared/icons/next/image.svg'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { LinkKey } from '@graph-state/core'
 import { useGraph } from '@graph-state/react'
 import { layerDirection, nodes } from '@fragments/plugin-fragment'
 import { useBuilderLayerFlags } from '@/shared/hooks/fragmentBuilder/useBuilderLayerFlags'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 interface BuilderLayerTypeIconProps {
   layerKey: LinkKey
@@ -36,7 +37,7 @@ export const BuilderLayerTypeIcon: FC<BuilderLayerTypeIconProps> = animated(
     textIconClassName,
     fragmentIconClassName
   }) => {
-    const { documentManager } = useContext(BuilderContext)
+    const { documentManager } = useBuilderDocument()
     const [layerGraph] = useGraph(documentManager, layerKey)
     const type = layerGraph?._type
 
