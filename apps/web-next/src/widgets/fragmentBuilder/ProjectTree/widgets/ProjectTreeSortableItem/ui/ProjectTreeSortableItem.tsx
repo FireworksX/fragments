@@ -22,7 +22,14 @@ export const ProjectTreeSortableItem: FC<ProjectTreeSortableItemProps> = ({
   indentationWidth = 20,
   children
 }) => {
-  const { attributes, listeners, setNodeRef } = useDraggable({ id, disabled: type !== FileSystemItemType.Fragment })
+  const { attributes, listeners, setNodeRef } = useDraggable({
+    id,
+    disabled: type !== FileSystemItemType.Fragment,
+    data: {
+      id,
+      area: 'projectTree'
+    }
+  })
 
   return (
     <div

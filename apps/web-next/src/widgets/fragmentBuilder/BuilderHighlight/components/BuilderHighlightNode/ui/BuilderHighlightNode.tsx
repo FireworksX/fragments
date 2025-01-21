@@ -24,7 +24,6 @@ interface LayerHighlightDraggingProps {
 
 export const BuilderHighlightNode: FC<LayerHighlightDraggingProps> = ({ layerKey, headerNode, node, resizeNode }) => {
   const {
-    aa,
     isRichTextSelected,
     isHovered,
     isSelected,

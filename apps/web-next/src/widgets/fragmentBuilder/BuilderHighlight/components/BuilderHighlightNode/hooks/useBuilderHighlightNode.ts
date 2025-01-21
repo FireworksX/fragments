@@ -30,7 +30,11 @@ export const useBuilderHighlightNode = (layerKey: LinkKey, renderParents: LinkKe
   const selectionParentKey = documentManager.keyOfEntity(selectionGraph?.getParent?.())
   const isParentSelected = selectionParentKey === layerKey
   const isTextNode = layerNode?._type === nodes.Text
-  const { setNodeRef, isOver: isDropOver } = useDroppable({ id: layerKey, disabled: layerNode?._type !== nodes.Frame })
+  const { setNodeRef, isOver: isDropOver } = useDroppable({
+    id: layerKey,
+    disabled: layerNode?._type !== nodes.Frame,
+    data: { id: layerKey, area: 'canvas' }
+  })
   const isDropOver$ = useSpringValue(isDropOver)
 
   useEffect(() => {

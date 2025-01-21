@@ -10,20 +10,25 @@ export const droppablePlugin: Plugin = state => {
     _id: 'root',
     activeDraggable: null
   }
+
+  const canvasDroppableGraph = {
+    _type: 'Droppable',
+    _id: 'canvas',
+    active: null,
+    over: null
+  }
+
   const droppableGraphKey = state.keyOfEntity(droppableGraph)
+  const canvasDroppableGraphKey = state.keyOfEntity(canvasDroppableGraph)
   state.droppableKey = droppableGraphKey
-  const onDropListeners = []
+  state.canvasDroppableKey = canvasDroppableGraphKey
 
   state.mutate(state.key, {
-    droppable: droppableGraph
+    droppable: droppableGraph,
+    canvasDroppable: canvasDroppableGraph
   })
 
   state.$droppable = {
-    onDrop(callback) {
-      onDropListeners.push(callback)
-      // TODO Add unsubscribe
-    },
-
     handleDragStart(e: DragStartEvent) {
       const active = e.active
 
@@ -35,11 +40,16 @@ export const droppablePlugin: Plugin = state => {
     handleDragEnd(e: DragEndEvent) {
       const over = e.over
 
-      onDropListeners.forEach(cb => cb({ over }))
-
       state.mutate(droppableGraphKey, {
         activeDraggable: null
       })
+
+      if (over?.data?.current?.area === 'canvas') {
+        state.mutate(canvasDroppableGraphKey, {
+          active: e.active.data?.current,
+          over: e.over?.data?.current
+        })
+      }
     }
   }
 }

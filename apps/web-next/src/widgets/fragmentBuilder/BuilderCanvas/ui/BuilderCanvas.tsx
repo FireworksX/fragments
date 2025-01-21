@@ -3,6 +3,7 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import { mergeRefs } from 'react-merge-refs'
 import { useCanvas } from '../hooks/useCanvas'
+import { useCanvasInsert } from '@/shared/hooks/fragmentBuilder/useCanvasInsert'
 
 interface CanvasProps extends PropsWithChildren {
   className?: string
@@ -10,6 +11,7 @@ interface CanvasProps extends PropsWithChildren {
 }
 
 const BuilderCanvas: FC<CanvasProps> = ({ className, children, extendNodes }) => {
+  useCanvasInsert()
   const { Container, viewportRef, pointerRef, measureRef, containerStyles } = useCanvas()
 
   return (

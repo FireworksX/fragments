@@ -23,7 +23,7 @@ export const FragmentsBuilderContent: FC<FragmentsBuilderContentProps> = ({ clas
     return <FragmentsEditPlaceholder fetching={fetching} />
   }
 
-  return <FragmentPreview />
+  // return <FragmentPreview />
 
   return <FragmentsEdit />
 }

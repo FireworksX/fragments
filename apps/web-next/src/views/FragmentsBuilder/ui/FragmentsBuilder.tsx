@@ -23,7 +23,7 @@ export const FragmentsBuilder = () => {
     builderManager.openTab({
       _type: 'FragmentModule',
       _id: 'test',
-      fragment: 'Fragment:buttonid'
+      fragment: 'Fragment:g34gherhg3g'
     })
   }, [])
 
