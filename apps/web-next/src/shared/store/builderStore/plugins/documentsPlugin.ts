@@ -20,7 +20,8 @@ export const documentsPlugin = (state: typeof builderStore) => {
     _type: 'Document',
     _id: 'root',
     fetching: false,
-    manager: null
+    manager: null,
+    isPreview: false
   }
   const documentGraphKey = state.keyOfEntity(documentGraph)
 

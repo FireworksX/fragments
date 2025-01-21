@@ -7,7 +7,7 @@
     display: flex;
     flex: 1;
     background: var(--background-light);
-    height: calc(100vh - var(--app-size-header));
+    max-height: calc(100vh - var(--app-size-header) -  var(--app-size-tabs-height));
     overflow: hidden;
     position: relative;
 }

@@ -3,14 +3,13 @@ import cn from 'classnames'
 import { animated, to } from '@react-spring/web'
 import styles from './styles.module.css'
 import { useBuilderPreviewContainer } from '../hooks/useBuilderPreviewContainer'
-import { InputNumber } from '@/shared/ui/InputNumber'
 
 interface BuilderPreviewContainerProps extends PropsWithChildren {
   className?: string
 }
 
 export const BuilderPreviewContainer: FC<BuilderPreviewContainerProps> = ({ className, children }) => {
-  const { width, bindWidth, height, bindHeight } = useBuilderPreviewContainer()
+  const { width$, bindWidth, height$, bindHeight } = useBuilderPreviewContainer()
 
   return (
     <div className={cn(styles.root, className)} data-testid='BuilderPreviewContainer'>
@@ -21,8 +20,8 @@ export const BuilderPreviewContainer: FC<BuilderPreviewContainerProps> = ({ clas
         <animated.div
           className={styles.inner}
           style={{
-            width: width,
-            height: height
+            width: width$,
+            height: height$
           }}
         >
           {children}

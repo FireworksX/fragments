@@ -34,7 +34,7 @@ export const authOptions: NextAuthOptions = {
 
           return data?.login
         } catch (e) {
-          console.log(e)
+          // console.log(e)
           return null
         }
       }
@@ -42,7 +42,7 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, user, trigger, session }) {
-      console.log(token, user)
+      // console.log(token, user)
       // if (trigger === 'update') {
       //   if (session.type === 'MANUAL') {
       //     const { data } = await axios.get('/auth/profile')
@@ -71,7 +71,7 @@ export const authOptions: NextAuthOptions = {
       return token
     },
     async session({ session, token }) {
-      console.log(session, token)
+      // console.log(session, token)
       if (token.error) {
         throw new Error('Refresh token has expired')
       }
