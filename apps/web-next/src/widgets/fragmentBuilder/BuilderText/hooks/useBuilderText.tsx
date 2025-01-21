@@ -1,7 +1,7 @@
 import TextAlignLeft from '@/shared/icons/text-align-left.svg'
 import TextAlignRight from '@/shared/icons/text-align-right.svg'
 import TextAlignCenter from '@/shared/icons/text-align-center.svg'
-import { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { use, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { popoutsStore } from '@/shared/store/popouts.store'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderManager'
@@ -65,9 +65,9 @@ const weights = [
 const transforms: TextTransform[] = ['none', 'uppercase', 'lowercase', 'capitalize']
 
 export const useBuilderText = () => {
-  const { builderManager } = useContext(BuilderContext)
+  const { builderManager } = use(BuilderContext)
   const { documentManager } = useBuilderDocument()
-  const editor = useContext(CanvasTextEditorContext)
+  const editor = use(CanvasTextEditorContext)
   const { selection, selectionGraph } = useBuilderSelection()
   const { isTextEditing } = useBuilderManager()
   const [{ showTextEditor }] = useGraph(builderManager, builderManager.key)
@@ -126,6 +126,10 @@ export const useBuilderText = () => {
       }
     }
   }, [selection, isTextEditing, contentInvoker, editor])
+
+  useEffect(() => {
+    setMarks(getMarksInSelection(editor))
+  }, [selection, editor])
 
   useEffect(() => {
     if (!isTextEditing && editor) {

@@ -3,6 +3,7 @@ import fragmentData from '@/shared/data/fragment.json'
 import buttonData from '@/shared/data/button.fragment.json'
 import pluginFragmentSpring, { skips, skips as stateSkips } from '@fragments/plugin-fragment-spring'
 import { builderStore } from '@/shared/store/builderStore'
+import { fragmentModule } from '@/shared/data/fragment.module'
 
 const dataMap = {
   'Fragment:g34gherhg3g': fragmentData,
@@ -30,18 +31,47 @@ export const documentsPlugin = (state: typeof builderStore) => {
   })
   state.documentKey = 'Document:root'
   state.getDocumentManager = () => state.resolve(state.documentKey)?.manager
+  state.cacheDocuments = new Map()
+
+  const getDocumentManager = (fragmentKey: LinkKey) => {
+    if (state.cacheDocuments.has(fragmentKey)) {
+      return state.cacheDocuments.get(fragmentKey)
+    }
+
+    const { _type, _id } = state.entityOfKey(fragmentKey)
+
+    const documentManager = createState({
+      _type,
+      _id,
+      initialState: {},
+      plugins: [pluginFragmentSpring(fragmentKey)],
+      skip: [...stateSkips, ...skips]
+    })
+
+    state.cacheDocuments.set(fragmentKey, documentManager)
+
+    return documentManager
+  }
 
   const createDocumentManager = (fragmentKey: LinkKey) => {
+    const module = fragmentModule
+
     return new Promise(resolve =>
       setTimeout(() => {
-        const documentManager = createState({
-          initialState: {},
-          plugins: [pluginFragmentSpring(fragmentKey)],
-          skip: [...stateSkips, ...skips]
+        const manager = getDocumentManager(fragmentKey)
+
+        const linkedFragments = (module.linkedFragments ?? []).map(linkedModule => {
+          const linkedManager = getDocumentManager(state.keyOfEntity(linkedModule))
+          linkedManager.$fragment.applySnapshot(module.data)
+
+          return linkedManager
         })
 
-        documentManager.$fragment.applySnapshot(dataMap[fragmentKey])
-        resolve(documentManager)
+        manager.$fragment.applySnapshot(module.data)
+        manager.$fragment.linkFragments(linkedFragments)
+
+        // manager.$fragment.applySnapshot(dataMap[fragmentKey])
+        resolve(manager)
       }, 1)
     )
   }

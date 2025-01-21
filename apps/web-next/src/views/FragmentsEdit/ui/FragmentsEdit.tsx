@@ -3,7 +3,11 @@ import { BuilderSidebar } from '@/widgets/fragmentBuilder/BuilderSidebar'
 import { BuilderAssets } from '@/widgets/fragmentBuilder/BuilderAssets'
 import { BuilderLayers } from '@/widgets/fragmentBuilder/BuilderLayers'
 import { BuilderCanvas } from '@/widgets/fragmentBuilder/BuilderCanvas'
-import { BuilderHighlight } from '@/widgets/fragmentBuilder/BuilderHighlight'
+import {
+  BuilderHighlight,
+  CanvasTextEditorContext,
+  CanvasTextEditorProvider
+} from '@/widgets/fragmentBuilder/BuilderHighlight'
 import { DisplayBreakpoints } from '@/widgets/fragmentBuilder/DisplayBreakpoints'
 import { BuilderControls } from '@/widgets/fragmentBuilder/BuilderControls'
 import BuilderFragmentGrowing from '../../../widgets/fragmentBuilder/BuilderFragmentGrowing/ui/BuilderFragmentGrowing'
@@ -39,65 +43,74 @@ import { useFragmentsEdit } from '@/views/FragmentsEdit/hooks/useFragmentsEdit'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import CreateFragmentModal from '../../../widgets/modals/CreateFragmentModal/ui/CreateFragmentModal'
 import { BuilderFragmentTabs } from '@/views/FragmentsBuilder/widgets/BuilderFragmentTabs'
+import { useGraphEffect } from '@graph-state/react'
 
 export const FragmentsEdit = () => {
+  const { documentManager } = useBuilderDocument()
+
+  useGraphEffect(documentManager, 'Updater:root', data => {
+    console.log(data)
+  })
+
   return (
-    <div className={styles.root}>
-      <div className={styles.center}>
-        <div className={styles.previewContainer}>
-          {/*<BuilderSidebar assetsNode={<BuilderAssets />} layersNode={<BuilderLayers />} />*/}
+    <CanvasTextEditorProvider>
+      <div className={styles.root}>
+        <div className={styles.center}>
+          <div className={styles.previewContainer}>
+            {/*<BuilderSidebar assetsNode={<BuilderAssets />} layersNode={<BuilderLayers />} />*/}
 
-          <BuilderCanvas extendNodes={<BuilderFloatBar />}>
-            <BuilderHighlight />
-            <DisplayBreakpoints />
-          </BuilderCanvas>
+            <BuilderCanvas extendNodes={<BuilderFloatBar />}>
+              <BuilderHighlight />
+              <DisplayBreakpoints />
+            </BuilderCanvas>
 
-          <div className={styles.overlays}>
-            <CreateCustomBreakpoint />
-            <div className={styles.popoutsOverlay}>
-              <BuilderPopouts>
-                <StackCollector>
-                  <StackPanelBorder name='border' title='Border' />
-                  <StackPanelFill name='fill' title='Fill' />
-                  <StackPanelColorPicker name={popoutNames.colorPicker} title='Color' />
-                  {/*/!*<StackPanelFonts name='fonts' title='Fonts' />*!/*/}
-                  <StackPanelCssOverride name='cssOverride' title='CSS override' />
-                  <StackSolidPaintStyle name={popoutNames.stackSolidPaintStyle} title='Color Variable' />
-                  <StackStringProperty name={popoutNames.stackStringProperty} title='String Property' />
-                  <StackNumberProperty name={popoutNames.stackNumberProperty} title='Number Property' />
-                  <StackBooleanProperty name={popoutNames.stackBooleanProperty} title='Boolean Property' />
-                  {/*<StackPanelCssOverrideList name='cssOverrideList' title='CSS overrides' />*/}
-                  {/*<StackLoopEffect name='loopEffect' title='Loop Effect' />*/}
+            <div className={styles.overlays}>
+              <CreateCustomBreakpoint />
+              <div className={styles.popoutsOverlay}>
+                <BuilderPopouts>
+                  <StackCollector>
+                    <StackPanelBorder name='border' title='Border' />
+                    <StackPanelFill name='fill' title='Fill' />
+                    <StackPanelColorPicker name={popoutNames.colorPicker} title='Color' />
+                    {/*/!*<StackPanelFonts name='fonts' title='Fonts' />*!/*/}
+                    <StackPanelCssOverride name='cssOverride' title='CSS override' />
+                    <StackSolidPaintStyle name={popoutNames.stackSolidPaintStyle} title='Color Variable' />
+                    <StackStringProperty name={popoutNames.stackStringProperty} title='String Property' />
+                    <StackNumberProperty name={popoutNames.stackNumberProperty} title='Number Property' />
+                    <StackBooleanProperty name={popoutNames.stackBooleanProperty} title='Boolean Property' />
+                    {/*<StackPanelCssOverrideList name='cssOverrideList' title='CSS overrides' />*/}
+                    {/*<StackLoopEffect name='loopEffect' title='Loop Effect' />*/}
 
-                  {/*<StackNumberVariable name={stackNumberVariableName} title='Number' />*/}
-                  {/*<StackBooleanVariable name={stackBooleanVariableName} title='Boolean' />*/}
-                  {/*<StackObjectVariable name={stackObjectVariableName} title='Object' />*/}
-                  {/*<StackStringVariable name={stackStringVariableName} title='String' />*/}
-                  <StackVariableTransform name={popoutNames.stackVariableTransform} title='Transform' />
-                </StackCollector>
-              </BuilderPopouts>
+                    {/*<StackNumberVariable name={stackNumberVariableName} title='Number' />*/}
+                    {/*<StackBooleanVariable name={stackBooleanVariableName} title='Boolean' />*/}
+                    {/*<StackObjectVariable name={stackObjectVariableName} title='Object' />*/}
+                    {/*<StackStringVariable name={stackStringVariableName} title='String' />*/}
+                    <StackVariableTransform name={popoutNames.stackVariableTransform} title='Transform' />
+                  </StackCollector>
+                </BuilderPopouts>
+              </div>
             </div>
           </div>
         </div>
+
+        <BuilderControls
+          position='right'
+          fragmentGrowingNode={<BuilderFragmentGrowing />}
+          fragmentPropsNode={<AssetsProperties propertiesTree={<PropertiesTree />} />}
+          positionNode={<BuilderPosition />}
+          sizeNode={<BuilderSize />}
+          layoutNode={<BuilderLayout />}
+          stylesNode={<BuilderStyles />}
+          linkNode={<BuilderLink />}
+          textNode={<BuilderText />}
+          imageNode={<BuilderImage />}
+          attributesNode={<BuilderAttributes />}
+          // cssNode={<BuilderCssOverride />}
+          instancePropsNode={<BuilderFragmentInstance />}
+        />
+
+        <CreateFragmentModal />
       </div>
-
-      <BuilderControls
-        position='right'
-        fragmentGrowingNode={<BuilderFragmentGrowing />}
-        fragmentPropsNode={<AssetsProperties propertiesTree={<PropertiesTree />} />}
-        positionNode={<BuilderPosition />}
-        sizeNode={<BuilderSize />}
-        layoutNode={<BuilderLayout />}
-        stylesNode={<BuilderStyles />}
-        linkNode={<BuilderLink />}
-        textNode={<BuilderText />}
-        imageNode={<BuilderImage />}
-        attributesNode={<BuilderAttributes />}
-        // cssNode={<BuilderCssOverride />}
-        instancePropsNode={<BuilderFragmentInstance />}
-      />
-
-      <CreateFragmentModal />
-    </div>
+    </CanvasTextEditorProvider>
   )
 }

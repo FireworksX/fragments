@@ -9,11 +9,19 @@ import { createBreakpointNode } from "@/creators/createBreakpointNode.ts";
 import { createTextNode } from "@/creators/createTextNode.ts";
 import { createImageNode } from "@/creators/createImageNode.ts";
 import { createFragmentInstanceNode } from "@/creators/createFragmentInstanceNode.ts";
+import { linkFragment } from "@/shared/linkFragment.ts";
 
 const plugin: (root: LinkKey) => Plugin =
   (root: LinkKey) => (state: GraphState<StateEntity>) => {
+    const updateGraph = {
+      _type: "Updater",
+      _id: "root",
+      updateCount: 0,
+    };
+
     state.$fragment = {
       renderTarget: renderTarget.canvas,
+      updateGraphKey: state.keyOfEntity(updateGraph),
       setRenderTarget: (renderTarget) => {
         state.$fragment.renderTarget = renderTarget;
         state.mutate(root, (prev) => ({
@@ -48,9 +56,21 @@ const plugin: (root: LinkKey) => Plugin =
 
       makeSnapshot: (target?: LinkKey = root) => makeSnapshot(state, target),
       applySnapshot: (snapshot) => applySnapshot(state, snapshot),
+      linkFragments: (fragments: GraphState[] = []) =>
+        linkFragment(state, fragments),
+
+      update: () => {
+        state.mutate(state.keyOfEntity(updateGraph), (prev) => ({
+          updateCount: prev.updateCount + 1,
+        }));
+      },
 
       root,
     };
+
+    state.mutate(state.key, {
+      updater: updateGraph,
+    });
 
     return state;
   };
