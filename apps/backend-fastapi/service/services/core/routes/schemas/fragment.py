@@ -15,6 +15,8 @@ class FragmentPost:
 
     linked_fragments: Optional[List[int]] = None  # ids of fragments
 
+    filesystem_location_id: Optional[int] = None
+
 
 @strawberry.input
 class FragmentPatch:
@@ -25,6 +27,8 @@ class FragmentPatch:
     props: Optional[strawberry.scalars.JSON] = None
 
     linked_fragments: Optional[List[int]] = None  # ids of fragments
+
+    filesystem_location_id: Optional[int] = None
 
 
 # depth for linked_fragments
@@ -39,3 +43,5 @@ class FragmentGet:
     assets: List[str]
 
     linked_fragments: Optional[List["FragmentGet"]] = None  # fragments
+
+    filesystem_location_id: Optional[int] = None

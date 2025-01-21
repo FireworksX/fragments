@@ -2,12 +2,12 @@ from starlette import status
 
 from .campaign import campaign_by_id, create_campaign_route, update_campaign_route, campaigns_in_project, \
     add_campaign_logo_route, campaign_by_name
-from .filesystem import create_project_item_route, get_project_item_route, get_project_items_in_project_route, \
-    delete_project_item_route, update_project_item_route
+from .filesystem import create_directory, get_directory, geet_roots_elements_route, \
+    delete_directory_route, update_directory_route
 from .filter import get_all_filters
 from .schemas import AllFiltersGet
 from .schemas.feedback import FeedbackPost, FeedbackGet
-from .schemas.filesystem import ProjectItem, ProjectItemGet, ProjectItemPatch
+from .schemas.filesystem import ProjectDirectory, ProjectDirectoryGet, ProjectDirectoryPatch
 from .schemas.stream import StreamGet, StreamPost, StreamPatch
 from .schemas.landing import LandingGet, LandingPost, LandingPatch
 from .schemas.campaign import CampaignGet, CampaignPost, CampaignPatch
@@ -87,15 +87,15 @@ class Query:
 
     @strawberry.field
     async def project_item(self, info: strawberry.Info[Context], project_item_id: Optional[int] = None,
-                                project_id: Optional[int] = None, max_depth: Optional[int] = 5) -> List[ProjectItemGet]:
+                                project_id: Optional[int] = None, max_depth: Optional[int] = 5) -> List[ProjectDirectoryGet]:
         if max_depth is None:
             max_depth = 5
         if max_depth < 0:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Max depth must be a non-negative integer")
         if project_item_id is not None:
-            return [await get_project_item_route(info, project_item_id, max_depth)]
+            return [await get_directory(info, project_item_id, max_depth)]
         elif project_id is not None:
-            return await get_project_items_in_project_route(info, project_id, max_depth)
+            return await geet_roots_elements_route(info, project_id, max_depth)
         else:
             return []
 
@@ -195,22 +195,22 @@ class Mutation:
         return await update_landing_route(info, landing)
 
     @strawberry.mutation
-    async def create_project_item(self, info: strawberry.Info[Context], project_item: ProjectItem, max_depth: Optional[int] = 5) -> ProjectItemGet:
+    async def create_project_item(self, info: strawberry.Info[Context], project_item: ProjectDirectory, max_depth: Optional[int] = 5) -> ProjectDirectoryGet:
         if max_depth is None:
             max_depth = 5
         if max_depth < 0:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Max depth must be a non-negative integer")
-        return await create_project_item_route(info, project_item, max_depth)
+        return await create_directory(info, project_item, max_depth)
 
     @strawberry.mutation
     async def delete_project_item(self, info: strawberry.Info[Context], project_item_id: int) -> None:
-        await delete_project_item_route(info, project_item_id)
+        await delete_directory_route(info, project_item_id)
 
     @strawberry.mutation
-    async def update_project_item(self, info: strawberry.Info[Context], project_item: ProjectItemPatch, max_depth: Optional[int] = 5) -> ProjectItemGet:
+    async def update_project_item(self, info: strawberry.Info[Context], project_item: ProjectDirectoryPatch, max_depth: Optional[int] = 5) -> ProjectDirectoryGet:
         if max_depth is None:
             max_depth = 5
         if max_depth < 0:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Max depth must be a non-negative integer")
-        return await update_project_item_route(info, project_item, max_depth)
+        return await update_directory_route(info, project_item, max_depth)
 

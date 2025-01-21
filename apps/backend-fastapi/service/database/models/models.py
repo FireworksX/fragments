@@ -217,6 +217,12 @@ class Fragment(Base):
     assets = relationship("FragmentMedia", back_populates="fragment", cascade="save-update, merge, "
                                                                                       "delete, delete-orphan")
 
+    directory_id = Column('directory_id', Integer, ForeignKey('filesystem_directory.id'))
+    directory = relationship(
+        "FilesystemDirectory",
+        back_populates="fragments"
+    )
+
     linked_fragments = relationship(
         "Fragment",
         secondary=fragment_usage,             # use the association table
@@ -224,15 +230,6 @@ class Fragment(Base):
         secondaryjoin=id == fragment_usage.c.used_fragment_id,
         # We do NOT define backref or symmetrical references here,
         # since we just want "Fragment has an array of fragments it is using."
-    )
-
-    # Back-reference to the single FilesystemProjectItem
-    # uselist=False => 1-to-1, not 1-to-many
-    project_item = relationship(
-        "FilesystemProjectItem",
-        back_populates="fragment",
-        uselist=False,
-        cascade="all, delete-orphan"
     )
 
 class Landing(Base):
@@ -259,34 +256,39 @@ class Media(Base):
     ext = Column('ext', String)
     public_path = Column('public_path', String)
 
-class FilesystemProjectItem(Base):
-    __tablename__ = 'filesystem_project_item'
+
+class FilesystemDirectory(Base):
+    __tablename__ = 'filesystem_directory'
     id = Column('id', Integer, primary_key=True, index=True)
     project_id = Column('project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'))
     name = Column('name', String)
-    item_type = Column('item_type', Integer, nullable=False)
-    fragment_id = Column('fragment_id', Integer, ForeignKey('fragment.id', ondelete='CASCADE'), nullable=True, unique=True)
-    fragment = relationship(
-        "Fragment",
-        back_populates="project_item"
-        # By default, no cascade needed here because
-        # we are relying on the DB to remove this row if `Fragment` is deleted
-    )
     # Reference to the parent (nullable if top-level)
     parent_id = Column(Integer, ForeignKey('filesystem_project_item.id', ondelete="CASCADE"), nullable=True)
-
-    # Relationship to the parent
+    # Relationship to parent
     parent = relationship(
-        "FilesystemProjectItem",
-        back_populates="nested_items",
-        remote_side="FilesystemProjectItem.id",
-        foreign_keys="[FilesystemProjectItem.parent_id]",
+        "FilesystemDirectory",
+        back_populates="subdirectories",
+        remote_side="FilesystemDirectory.id"
     )
 
     # Relationship to children
-    nested_items = relationship(
-        "FilesystemProjectItem",
+    subdirectories = relationship(
+        "FilesystemDirectory",
         back_populates="parent",
-        foreign_keys="[FilesystemProjectItem.parent_id]",
         cascade="all, delete-orphan"
     )
+
+    # Relationship to fragments in this directory
+    fragments = relationship(
+        "Fragment",
+        back_populates="directory",
+        cascade="all, delete-orphan"
+    )
+
+    @property
+    def items(self):
+        """
+        Return a combined list of subdirectories and fragments,
+        e.g. for display in a file manager.
+        """
+        return list(self.subdirectories) + list(self.fragments)

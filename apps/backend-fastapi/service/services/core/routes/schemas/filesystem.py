@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, List, Union
 
 import strawberry
 
@@ -15,28 +15,20 @@ class FileSystemItemType(Enum):
 
 
 @strawberry.input
-class ProjectItem:
+class ProjectDirectory:
     project_id: int
     parent_id: Optional[int] = None
     name: str
-    item_type: FileSystemItemType
-    data_id: Optional[int] = None
 
 
 @strawberry.input
-class ProjectItemPatch:
+class ProjectDirectoryPatch:
     id: int
     name: Optional[str] = None
-    nested_items: Optional[List[int]] = None
-
-
-ProjectData = strawberry.union("ProjectData", (FragmentGet,))
 
 
 @strawberry.type
-class ProjectItemGet:
+class ProjectDirectoryGet:
     id: int
     name: str
-    item_type: FileSystemItemType
-    nested_items: Optional[List["ProjectItemGet"]]
-    data: Optional[ProjectData] = None
+    nested_items: Optional[List[Union[FragmentGet,"ProjectDirectoryGet"]]]
