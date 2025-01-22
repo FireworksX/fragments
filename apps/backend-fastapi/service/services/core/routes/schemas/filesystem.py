@@ -8,12 +8,6 @@ from services.core.routes.schemas.user import UserGet
 from enum import Enum
 
 
-@strawberry.enum
-class FileSystemItemType(Enum):
-    FRAGMENT = 1
-    DIRECTORY = 2
-
-
 @strawberry.input
 class ProjectDirectory:
     project_id: int
@@ -25,10 +19,14 @@ class ProjectDirectory:
 class ProjectDirectoryPatch:
     id: int
     name: Optional[str] = None
+    parent_id: Optional[int] = None
 
 
 @strawberry.type
 class ProjectDirectoryGet:
     id: int
     name: str
-    nested_items: Optional[List[Union[FragmentGet,"ProjectDirectoryGet"]]]
+    parent_id: Optional[int] = None
+    project_id: int
+    fragments: List[FragmentGet]
+    directories: List["ProjectDirectoryGet"]

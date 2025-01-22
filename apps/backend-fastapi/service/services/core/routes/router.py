@@ -2,7 +2,7 @@ from starlette import status
 
 from .campaign import campaign_by_id, create_campaign_route, update_campaign_route, campaigns_in_project, \
     add_campaign_logo_route, campaign_by_name
-from .filesystem import create_directory, get_directory, geet_roots_elements_route, \
+from .filesystem import create_directory_route, get_directory, get_roots_elements_route, \
     delete_directory_route, update_directory_route
 from .filter import get_all_filters
 from .schemas import AllFiltersGet
@@ -15,7 +15,7 @@ from .schemas.fragment import FragmentPost, FragmentPatch, FragmentGet
 from .schemas.project import ProjectGet, ProjectPost, ProjectPatch
 
 import strawberry
-from typing import Optional, List, Union
+from typing import Optional, List
 from .middleware import Context
 from .user import login, refresh, profile, signup, add_avatar_route
 from .fragment import create_fragment_route, fragments_in_project, fragment_by_id, update_fragment_route, add_fragment_asset_route, remove_fragment_asset_route
@@ -25,7 +25,7 @@ from .project import create_project_route, project_by_id, projects, update_proje
     add_user_to_project as add_user_to_project_route, change_user_role as change_user_role_route, \
     add_project_logo_route
 from .schemas.user import RoleGet, UserGet, AuthPayload
-from fastapi import UploadFile, HTTPException
+from fastapi import UploadFile
 from .landing import landing_by_id, landings_in_stream, update_landing_route, create_landing_route
 
 
@@ -86,18 +86,12 @@ class Query:
         return await get_all_filters(info, countries, regions)
 
     @strawberry.field
-    async def project_item(self, info: strawberry.Info[Context], project_item_id: Optional[int] = None,
-                                project_id: Optional[int] = None, max_depth: Optional[int] = 5) -> List[ProjectDirectoryGet]:
-        if max_depth is None:
-            max_depth = 5
-        if max_depth < 0:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Max depth must be a non-negative integer")
-        if project_item_id is not None:
-            return [await get_directory(info, project_item_id, max_depth)]
+    async def directory(self, info: strawberry.Info[Context], directory_id: Optional[int] = None,
+                        project_id: Optional[int] = None) -> ProjectDirectoryGet:
+        if directory_id is not None:
+            return await get_directory(info, directory_id)
         elif project_id is not None:
-            return await geet_roots_elements_route(info, project_id, max_depth)
-        else:
-            return []
+            return await get_roots_elements_route(info, project_id)
 
 
 @strawberry.type
@@ -195,22 +189,14 @@ class Mutation:
         return await update_landing_route(info, landing)
 
     @strawberry.mutation
-    async def create_project_item(self, info: strawberry.Info[Context], project_item: ProjectDirectory, max_depth: Optional[int] = 5) -> ProjectDirectoryGet:
-        if max_depth is None:
-            max_depth = 5
-        if max_depth < 0:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Max depth must be a non-negative integer")
-        return await create_directory(info, project_item, max_depth)
+    async def create_directory(self, info: strawberry.Info[Context], directory: ProjectDirectory) -> ProjectDirectoryGet:
+        return await create_directory_route(info, directory)
 
     @strawberry.mutation
-    async def delete_project_item(self, info: strawberry.Info[Context], project_item_id: int) -> None:
-        await delete_directory_route(info, project_item_id)
+    async def delete_directory(self, info: strawberry.Info[Context], directory_id: int) -> None:
+        await delete_directory_route(info, directory_id)
 
     @strawberry.mutation
-    async def update_project_item(self, info: strawberry.Info[Context], project_item: ProjectDirectoryPatch, max_depth: Optional[int] = 5) -> ProjectDirectoryGet:
-        if max_depth is None:
-            max_depth = 5
-        if max_depth < 0:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Max depth must be a non-negative integer")
-        return await update_directory_route(info, project_item, max_depth)
+    async def update_directory(self, info: strawberry.Info[Context], directory: ProjectDirectoryPatch) -> ProjectDirectoryGet:
+        return await update_directory_route(info, directory)
 

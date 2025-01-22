@@ -1,8 +1,8 @@
 """
 
-Revision ID: 3abf9df0b92c
+Revision ID: dedd332b61b2
 Revises: 
-Create Date: 2025-01-13 12:32:41.953466
+Create Date: 2025-01-22 19:10:32.358757
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '3abf9df0b92c'
+revision = 'dedd332b61b2'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -80,19 +80,16 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_campaign_id'), 'campaign', ['id'], unique=False)
-    op.create_table('fragment',
+    op.create_table('filesystem_directory',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('project_id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(), nullable=False),
-    sa.Column('document', sa.JSON(), nullable=False),
-    sa.Column('props', sa.JSON(), nullable=False),
-    sa.Column('created_at', sa.DateTime(), nullable=False),
-    sa.Column('author_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['author_id'], ['user.id'], ),
+    sa.Column('project_id', sa.Integer(), nullable=True),
+    sa.Column('name', sa.String(), nullable=True),
+    sa.Column('parent_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['parent_id'], ['filesystem_directory.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['project_id'], ['project.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_index(op.f('ix_fragment_id'), 'fragment', ['id'], unique=False)
+    op.create_index(op.f('ix_filesystem_directory_id'), 'filesystem_directory', ['id'], unique=False)
     op.create_table('project_members_role',
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('project_id', sa.Integer(), nullable=False),
@@ -101,36 +98,21 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('user_id', 'project_id')
     )
-    op.create_table('filesystem_project_item',
+    op.create_table('fragment',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('project_id', sa.Integer(), nullable=True),
-    sa.Column('name', sa.String(), nullable=True),
-    sa.Column('item_type', sa.Integer(), nullable=False),
-    sa.Column('fragment_id', sa.Integer(), nullable=True),
-    sa.Column('parent_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['fragment_id'], ['fragment.id'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['parent_id'], ['filesystem_project_item.id'], ondelete='CASCADE'),
+    sa.Column('project_id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('document', sa.JSON(), nullable=False),
+    sa.Column('props', sa.JSON(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), nullable=False),
+    sa.Column('author_id', sa.Integer(), nullable=False),
+    sa.Column('directory_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['author_id'], ['user.id'], ),
+    sa.ForeignKeyConstraint(['directory_id'], ['filesystem_directory.id'], ),
     sa.ForeignKeyConstraint(['project_id'], ['project.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('fragment_id')
-    )
-    op.create_index(op.f('ix_filesystem_project_item_id'), 'filesystem_project_item', ['id'], unique=False)
-    op.create_table('fragment_media',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('media_id', sa.Integer(), nullable=True),
-    sa.Column('fragment_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['fragment_id'], ['fragment.id'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['media_id'], ['media.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_index(op.f('ix_fragment_media_id'), 'fragment_media', ['id'], unique=False)
-    op.create_table('linked_fragment',
-    sa.Column('linked_fragment_id', sa.Integer(), nullable=False),
-    sa.Column('fragment_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['fragment_id'], ['fragment.id'], ),
-    sa.ForeignKeyConstraint(['linked_fragment_id'], ['fragment.id'], ),
-    sa.PrimaryKeyConstraint('linked_fragment_id', 'fragment_id')
-    )
+    op.create_index(op.f('ix_fragment_id'), 'fragment', ['id'], unique=False)
     op.create_table('project_camnpaign',
     sa.Column('campaign_id', sa.Integer(), nullable=False),
     sa.Column('project_id', sa.Integer(), nullable=False),
@@ -157,6 +139,22 @@ def upgrade():
     sa.ForeignKeyConstraint(['campaign_id'], ['campaign.id'], ),
     sa.ForeignKeyConstraint(['stream_id'], ['stream.id'], ),
     sa.PrimaryKeyConstraint('campaign_id', 'stream_id')
+    )
+    op.create_table('fragment_media',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('media_id', sa.Integer(), nullable=True),
+    sa.Column('fragment_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['fragment_id'], ['fragment.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['media_id'], ['media.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_fragment_media_id'), 'fragment_media', ['id'], unique=False)
+    op.create_table('fragment_usage',
+    sa.Column('fragment_id', sa.Integer(), nullable=False),
+    sa.Column('used_fragment_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['fragment_id'], ['fragment.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['used_fragment_id'], ['fragment.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('fragment_id', 'used_fragment_id')
     )
     op.create_table('landing',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -239,18 +237,18 @@ def downgrade():
     op.drop_table('stream_device_type_filter')
     op.drop_index(op.f('ix_landing_id'), table_name='landing')
     op.drop_table('landing')
+    op.drop_table('fragment_usage')
+    op.drop_index(op.f('ix_fragment_media_id'), table_name='fragment_media')
+    op.drop_table('fragment_media')
     op.drop_table('campaign_stream')
     op.drop_index(op.f('ix_stream_id'), table_name='stream')
     op.drop_table('stream')
     op.drop_table('project_camnpaign')
-    op.drop_table('linked_fragment')
-    op.drop_index(op.f('ix_fragment_media_id'), table_name='fragment_media')
-    op.drop_table('fragment_media')
-    op.drop_index(op.f('ix_filesystem_project_item_id'), table_name='filesystem_project_item')
-    op.drop_table('filesystem_project_item')
-    op.drop_table('project_members_role')
     op.drop_index(op.f('ix_fragment_id'), table_name='fragment')
     op.drop_table('fragment')
+    op.drop_table('project_members_role')
+    op.drop_index(op.f('ix_filesystem_directory_id'), table_name='filesystem_directory')
+    op.drop_table('filesystem_directory')
     op.drop_index(op.f('ix_campaign_id'), table_name='campaign')
     op.drop_table('campaign')
     op.drop_index(op.f('ix_project_id'), table_name='project')

@@ -263,7 +263,7 @@ class FilesystemDirectory(Base):
     project_id = Column('project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'))
     name = Column('name', String)
     # Reference to the parent (nullable if top-level)
-    parent_id = Column(Integer, ForeignKey('filesystem_project_item.id', ondelete="CASCADE"), nullable=True)
+    parent_id = Column(Integer, ForeignKey('filesystem_directory.id', ondelete="CASCADE"), nullable=True)
     # Relationship to parent
     parent = relationship(
         "FilesystemDirectory",
