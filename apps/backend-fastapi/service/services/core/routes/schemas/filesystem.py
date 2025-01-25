@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, List, Union
 
 import strawberry
 
@@ -7,29 +7,26 @@ from services.core.routes.schemas.project import ProjectGet
 from services.core.routes.schemas.user import UserGet
 from enum import Enum
 
-@strawberry.enum
-class FileSystemItemType(Enum):
-    FRAGMENT = 1
-    DIRECTORY = 2
 
 @strawberry.input
-class ProjectItem:
+class ProjectDirectory:
     project_id: int
     parent_id: Optional[int] = None
     name: str
-    item_type: FileSystemItemType
-    fragment_id: Optional[int] = None
+
 
 @strawberry.input
-class ProjectItemPatch:
+class ProjectDirectoryPatch:
     id: int
     name: Optional[str] = None
-    nested_items: Optional[List[int]] = None
+    parent_id: Optional[int] = None
+
 
 @strawberry.type
-class ProjectItemGet:
+class ProjectDirectoryGet:
     id: int
     name: str
-    item_type: FileSystemItemType
-    nested_items: Optional[List["ProjectItemGet"]]
-    fragment: Optional[FragmentGet] = None
+    parent_id: Optional[int] = None
+    project_id: int
+    fragments: List[FragmentGet]
+    directories: List["ProjectDirectoryGet"]

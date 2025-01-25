@@ -1,11 +1,13 @@
+from starlette import status
+
 from .campaign import campaign_by_id, create_campaign_route, update_campaign_route, campaigns_in_project, \
     add_campaign_logo_route, campaign_by_name
-from .filesystem import create_project_item_route, get_project_item_route, get_project_items_in_project_route, \
-    delete_project_item_route, update_project_item_route
+from .filesystem import create_directory_route, get_directory, get_roots_elements_route, \
+    delete_directory_route, update_directory_route
 from .filter import get_all_filters
 from .schemas import AllFiltersGet
 from .schemas.feedback import FeedbackPost, FeedbackGet
-from .schemas.filesystem import ProjectItem, ProjectItemGet, ProjectItemPatch
+from .schemas.filesystem import ProjectDirectory, ProjectDirectoryGet, ProjectDirectoryPatch
 from .schemas.stream import StreamGet, StreamPost, StreamPatch
 from .schemas.landing import LandingGet, LandingPost, LandingPatch
 from .schemas.campaign import CampaignGet, CampaignPost, CampaignPatch
@@ -13,7 +15,7 @@ from .schemas.fragment import FragmentPost, FragmentPatch, FragmentGet
 from .schemas.project import ProjectGet, ProjectPost, ProjectPatch
 
 import strawberry
-from typing import Optional, List, Union
+from typing import Optional, List
 from .middleware import Context
 from .user import login, refresh, profile, signup, add_avatar_route
 from .fragment import create_fragment_route, fragments_in_project, fragment_by_id, update_fragment_route, add_fragment_asset_route, remove_fragment_asset_route
@@ -84,14 +86,12 @@ class Query:
         return await get_all_filters(info, countries, regions)
 
     @strawberry.field
-    async def project_item(self, info: strawberry.Info[Context], project_item_id: Optional[int] = None,
-                                project_id: Optional[int] = None) -> List[ProjectItemGet]:
-        if project_item_id is not None:
-            return [await get_project_item_route(info, project_item_id)]
+    async def directory(self, info: strawberry.Info[Context], directory_id: Optional[int] = None,
+                        project_id: Optional[int] = None) -> ProjectDirectoryGet:
+        if directory_id is not None:
+            return await get_directory(info, directory_id)
         elif project_id is not None:
-            return await get_project_items_in_project_route(info, project_id)
-        else:
-            return []
+            return await get_roots_elements_route(info, project_id)
 
 
 @strawberry.type
@@ -189,14 +189,14 @@ class Mutation:
         return await update_landing_route(info, landing)
 
     @strawberry.mutation
-    async def create_project_item(self, info: strawberry.Info[Context], project_item: ProjectItem) -> ProjectItemGet:
-        return await create_project_item_route(info, project_item)
+    async def create_directory(self, info: strawberry.Info[Context], directory: ProjectDirectory) -> ProjectDirectoryGet:
+        return await create_directory_route(info, directory)
 
     @strawberry.mutation
-    async def delete_project_item(self, info: strawberry.Info[Context], project_item_id: int) -> None:
-        await delete_project_item_route(info, project_item_id)
+    async def delete_directory(self, info: strawberry.Info[Context], directory_id: int) -> None:
+        await delete_directory_route(info, directory_id)
 
     @strawberry.mutation
-    async def update_project_item(self, info: strawberry.Info[Context], project_item: ProjectItemPatch) -> ProjectItemGet:
-        return await update_project_item_route(info, project_item)
+    async def update_directory(self, info: strawberry.Info[Context], directory: ProjectDirectoryPatch) -> ProjectDirectoryGet:
+        return await update_directory_route(info, directory)
 

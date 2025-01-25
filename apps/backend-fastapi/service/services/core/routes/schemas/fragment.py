@@ -15,6 +15,8 @@ class FragmentPost:
 
     linked_fragments: Optional[List[int]] = None  # ids of fragments
 
+    directory_id: Optional[int] = None
+
 
 @strawberry.input
 class FragmentPatch:
@@ -26,8 +28,9 @@ class FragmentPatch:
 
     linked_fragments: Optional[List[int]] = None  # ids of fragments
 
+    directory_id: Optional[int] = None
 
-# depth for linked_fragments
+
 @strawberry.type
 class FragmentGet:
     id: int
@@ -38,4 +41,6 @@ class FragmentGet:
     props: Optional[strawberry.scalars.JSON] = None
     assets: List[str]
 
-    linked_fragments: Optional[List["FragmentGet"]] = None  # fragments
+    linked_fragments: Optional[List["FragmentGet"]] = None  # flat list of fragments
+
+    directory_id: Optional[int] = None

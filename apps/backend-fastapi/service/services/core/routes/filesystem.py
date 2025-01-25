@@ -1,12 +1,12 @@
-from typing import List
+from typing import List, Tuple
 from fastapi import HTTPException, status
 import strawberry
 
-from crud.filesystem import create_project_item_db, get_project_item_by_id, get_project_items_by_project_id, \
-    delete_project_item_by_id, update_project_item_db
+from crud.filesystem import create_directory_db, get_directory_by_id_db, get_root_elements_db, \
+    delete_directory_db, updatee_directory_db
 from crud.project import get_project_by_id_db
-from database import Session, Project, FilesystemProjectItem
-from .schemas.filesystem import ProjectItem, ProjectItemGet, ProjectItemPatch
+from database import Session, Project, FilesystemDirectory, Fragment
+from .schemas.filesystem import ProjectDirectory, ProjectDirectoryGet, ProjectDirectoryPatch
 from .schemas.project import ProjectGet
 from .schemas.user import RoleGet, AuthPayload
 from .middleware import Context
@@ -26,54 +26,61 @@ async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
     return role is not None and role is not RoleGet.DESIGNER
 
 
-def project_item_db_to_project_item(item: FilesystemProjectItem, project: ProjectGet) -> ProjectItemGet:
-    return ProjectItemGet(id=item.id, name=item.name if item.fragment is None else item.fragment.name,
-                          item_type=item.item_type,
-                          nested_items=item.nested_items,
-                          fragment=None if item.fragment is None else fragment_db_to_fragment(item.fragment, project))
+def directory_db_to_directory(
+        directory_id: int, name: str, parent_id: int|None, fragments: List[Fragment], directories:List[FilesystemDirectory] , project_get: ProjectGet
+) -> ProjectDirectoryGet:
+    root_directory: ProjectDirectoryGet = ProjectDirectoryGet(id=directory_id, name=name, parent_id=parent_id, fragments=[],
+                                                              directories=[], project_id=project_get.id)
+    for fragment in fragments:
+        root_directory.fragments.append(fragment_db_to_fragment(fragment, project_get))
+
+    for directory in directories:
+        root_directory.directories.append(
+            ProjectDirectoryGet(id=directory.id, name=directory.name, parent_id=directory.parent_id, directories=[],
+                                fragments=[], project_id=directory.project_id))
+    return root_directory
 
 
-async def create_project_item_route(info: strawberry.Info[Context], project_item: ProjectItem) -> ProjectItemGet:
+async def create_directory_route(info: strawberry.Info[Context], directory: ProjectDirectory) -> ProjectDirectoryGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    project: Project = await get_project_by_id_db(db, project_item.project_id)
+    project: Project = await get_project_by_id_db(db, directory.project_id)
     if project is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
 
-    permission: bool = await write_permission(db, user.user.id, project_item.project_id)
+    permission: bool = await write_permission(db, user.user.id, directory.project_id)
     if not permission:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail=f'User is not allowed to create items')
+                            detail=f'User is not allowed to create directories')
 
-    project_item: FilesystemProjectItem = await create_project_item_db(db, project_item.parent_id, project_item.name,
-                                                                       project_item.project_id, project_item.item_type,
-                                                                       project_item.fragment_id)
+    directory_db: FilesystemDirectory = await create_directory_db(db, directory.parent_id, directory.name,
+                                                                  directory.project_id)
 
-    return project_item_db_to_project_item(project_item, await project_by_id(info, project_item.project_id))
+    return directory_db_to_directory(directory_db.id, directory_db.name, directory_db.parent_id,directory_db.fragments, directory_db.subdirectories, await project_by_id(info, directory.project_id))
 
 
-async def get_project_item_route(info: strawberry.Info[Context], project_item_id: int) -> ProjectItemGet:
+async def get_directory(info: strawberry.Info[Context], directory_id: int) -> ProjectDirectoryGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    project_item: FilesystemProjectItem = await get_project_item_by_id(db, project_item_id)
-    if project_item is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Item does not exist")
+    directory_db: FilesystemDirectory = await get_directory_by_id_db(db, directory_id)
+    if directory_db is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Directory does not exist")
 
-    project: Project = await get_project_by_id_db(db, project_item.project_id)
+    project: Project = await get_project_by_id_db(db, directory_db.project_id)
     if project is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
 
-    permission: bool = await write_permission(db, user.user.id, project_item.project_id)
+    permission: bool = await write_permission(db, user.user.id, directory_db.project_id)
     if not permission:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail=f'User is not allowed to observe items')
+                            detail=f'User is not allowed to observe directories')
 
-    return project_item_db_to_project_item(project_item, await project_by_id(info, project_item.project_id))
+    return directory_db_to_directory(directory_db.id, directory_db.name, directory_db.parent_id,directory_db.fragments, directory_db.subdirectories, await project_by_id(info, directory_db.project_id))
 
 
-async def get_project_items_in_project_route(info: strawberry.Info[Context], project_id: int) -> List[ProjectItemGet]:
+async def get_roots_elements_route(info: strawberry.Info[Context], project_id: int) -> ProjectDirectoryGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
@@ -84,52 +91,52 @@ async def get_project_items_in_project_route(info: strawberry.Info[Context], pro
     permission: bool = await write_permission(db, user.user.id, project_id)
     if not permission:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail=f'User is not allowed to observe items')
+                            detail=f'User is not allowed to observe directories')
 
-    return [project_item_db_to_project_item(project_item, await project_by_id(info, project_item.project_id)) for
-            project_item in
-            await get_project_items_by_project_id(db, project_id)]
+    directories, fragments = await get_root_elements_db(db, project_id)
+    return directory_db_to_directory(directory_id=-1, name="root", parent_id=None, fragments=fragments, directories=directories, project_get=await project_by_id(info, project_id))
 
 
 # don't allow to remove item if it is referenced by another item (fragment in linked_fragments)
-async def delete_project_item_route(info: strawberry.Info[Context], item_id: int) -> None:
+async def delete_directory_route(info: strawberry.Info[Context], directory_id: int) -> None:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    project_item: FilesystemProjectItem = await get_project_item_by_id(db, item_id)
-    if project_item is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Item does not exist")
+    directory: FilesystemDirectory = await get_directory_by_id_db(db, directory_id)
+    if directory is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Directory does not exist")
 
-    project: Project = await get_project_by_id_db(db, project_item.project_id)
+    project: Project = await get_project_by_id_db(db, directory.project_id)
     if project is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
 
-    permission: bool = await write_permission(db, user.user.id, project_item.project_id)
+    permission: bool = await write_permission(db, user.user.id, directory.project_id)
     if not permission:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail=f'User is not allowed to delete items')
+                            detail=f'User is not allowed to delete directories')
     try:
-        await delete_project_item_by_id(db, item_id)
+        await delete_directory_db(db, directory_id)
     except ValueError as e:
         raise HTTPException(status_code=409, detail=str(e))
 
 
-async def update_project_item_route(info: strawberry.Info[Context], item: ProjectItemPatch) -> ProjectItemGet:
+async def update_directory_route(info: strawberry.Info[Context],
+                                 directory: ProjectDirectoryPatch) -> ProjectDirectoryGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    project_item: FilesystemProjectItem = await get_project_item_by_id(db, item.id)
-    if project_item is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Item does not exist")
+    directory_db: FilesystemDirectory = await get_directory_by_id_db(db, directory.id)
+    if directory_db is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Directory does not exist")
 
-    project: Project = await get_project_by_id_db(db, project_item.project_id)
+    project: Project = await get_project_by_id_db(db, directory_db.project_id)
     if project is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
 
-    permission: bool = await write_permission(db, user.user.id, project_item.project_id)
+    permission: bool = await write_permission(db, user.user.id, directory_db.project_id)
     if not permission:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail=f'User is not allowed to update items')
+                            detail=f'User is not allowed to update directories')
 
-    item: FilesystemProjectItem = await update_project_item_db(db, item.__dict__, item.nested_items)
-    return project_item_db_to_project_item(item, await project_by_id(info, project_item.project_id))
+    directory_db: FilesystemDirectory = await updatee_directory_db(db, directory.__dict__)
+    return directory_db_to_directory(directory_db.id, directory_db.name, directory_db.parent_id,directory_db.fragments, directory_db.subdirectories, await project_by_id(info, directory_db.project_id))

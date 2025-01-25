@@ -7,8 +7,8 @@ import uuid
 from sqlalchemy import desc, and_, func
 
 async def create_fragment_db(db: Session, name: str, author_id: int, project_id: int, document: str,
-                             props: str, linked_fragments: Optional[List[int]]) -> Fragment:
-    fragment: Fragment = Fragment(project_id=project_id, name=name, author_id=author_id, document=document, props=props)
+                             props: str, linked_fragments: Optional[List[int]], directory_id: int) -> Fragment:
+    fragment: Fragment = Fragment(project_id=project_id, name=name, author_id=author_id, document=document, props=props, directory_id=directory_id)
     if linked_fragments is not None:
         db.add(fragment)
         db.commit()
@@ -46,6 +46,8 @@ async def update_fragment_by_id_db(db: Session, values: dict, linked_fragments: 
         fragment.document = values['document']
     if values.get('props') is not None:
         fragment.props = values['props']
+    if values.get('directory_id') is not None:
+        fragment.directory_id = values['directory_id']
     db.commit()
     db.refresh(fragment)
     return fragment
