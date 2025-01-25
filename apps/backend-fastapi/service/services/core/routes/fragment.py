@@ -13,7 +13,7 @@ from .schemas.project import ProjectGet
 from .schemas.user import RoleGet, AuthPayload
 from .middleware import Context
 from crud.fragment import create_fragment_db, Fragment, get_fragments_by_project_id_db, get_fragment_by_id_db, \
-    update_fragment_by_id_db, add_fragment_media
+    update_fragment_by_id_db, add_fragment_media, delete_fragment_by_id_db
 from database import Session, Project, Media
 from .project import project_by_id
 from .utils import get_user_role_in_project
@@ -232,7 +232,7 @@ async def update_fragment_route(info: strawberry.Info[Context], fg: FragmentPatc
     if project is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'Project with id {fragment.project_id} does not exist or you do not have permission to view it')
-    permission: bool = await write_permission(db, user.user.id, fg.project_id)
+    permission: bool = await write_permission(db, user.user.id, project_id)
     if not permission:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to update fragments')
@@ -240,3 +240,25 @@ async def update_fragment_route(info: strawberry.Info[Context], fg: FragmentPatc
     fragment: Fragment = await update_fragment_by_id_db(db, values=fg.__dict__,
                                                         linked_fragments=fg.linked_fragments)
     return fragment_db_to_fragment(fragment, project)
+
+
+async def delete_fragment_route(info: strawberry.Info[Context], fragment_id: int) -> None:
+    user: AuthPayload = await info.context.user()
+    db: Session = info.context.session()
+    fragment: Fragment = await get_fragment_by_id_db(db, fragment_id)
+    if fragment is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f'Fragment with id {fragment_id} does not exist')
+    project_id: int = fragment.project_id
+    project: ProjectGet = await project_by_id(info, project_id)
+    if project is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f'Project with id {fragment.project_id} does not exist or you do not have permission to view it')
+    permission: bool = await write_permission(db, user.user.id, project_id)
+    if not permission:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=f'User is not allowed to delete fragments')
+    try:
+        await delete_fragment_by_id_db(db, fragment_id)
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e))

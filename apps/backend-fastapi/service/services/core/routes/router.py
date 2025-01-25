@@ -18,7 +18,8 @@ import strawberry
 from typing import Optional, List
 from .middleware import Context
 from .user import login, refresh, profile, signup, add_avatar_route
-from .fragment import create_fragment_route, fragments_in_project, fragment_by_id, update_fragment_route, add_fragment_asset_route, remove_fragment_asset_route
+from .fragment import create_fragment_route, fragments_in_project, fragment_by_id, update_fragment_route, \
+    add_fragment_asset_route, remove_fragment_asset_route, delete_fragment_route
 from .stream import create_stream_route, stream_by_id, streams_in_campaign, update_stream_route
 from .feedback import create_feedback
 from .project import create_project_route, project_by_id, projects, update_project_route, \
@@ -200,3 +201,6 @@ class Mutation:
     async def update_directory(self, info: strawberry.Info[Context], directory: ProjectDirectoryPatch) -> ProjectDirectoryGet:
         return await update_directory_route(info, directory)
 
+    @strawberry.mutation
+    async def delete_fragment(self, info: strawberry.Info[Context], fragment_id: int) -> None:
+        await delete_fragment_route(info, fragment_id)
