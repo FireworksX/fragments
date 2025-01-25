@@ -33,8 +33,8 @@ def directory_db_to_directory(
     root_directory: ProjectDirectoryGet = ProjectDirectoryGet(id=directory_id, name=name, parent_id=parent_id,
                                                               fragments=[],
                                                               directories=[], project_id=project_get.id,
-                                                              hasChildren=True if (len(fragments) + len(
-                                                                  directories)) > 0 else False)
+                                                              empty=False if (len(fragments) + len(
+                                                                  directories)) > 0 else True)
     for fragment in fragments:
         root_directory.fragments.append(fragment_db_to_fragment(fragment, project_get))
 
@@ -42,7 +42,7 @@ def directory_db_to_directory(
         root_directory.directories.append(
             ProjectDirectoryGet(id=directory.id, name=directory.name, parent_id=directory.parent_id, directories=[],
                                 fragments=[], project_id=directory.project_id,
-                                hasChildren=True if len(directory.items) > 0 else False))
+                                empty=False if len(directory.items) > 0 else True))
     return root_directory
 
 
