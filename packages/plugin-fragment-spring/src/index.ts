@@ -19,6 +19,14 @@ const plugin: (root: LinkKey) => Plugin =
       updateCount: 0,
     };
 
+    const orig = state.resolve;
+
+    state.resolve = (...args) => {
+      console.log(args);
+
+      return orig(...args);
+    };
+
     state.$fragment = {
       renderTarget: renderTarget.canvas,
       updateGraphKey: state.keyOfEntity(updateGraph),
