@@ -27,17 +27,22 @@ async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
 
 
 def directory_db_to_directory(
-        directory_id: int, name: str, parent_id: int|None, fragments: List[Fragment], directories:List[FilesystemDirectory] , project_get: ProjectGet
+        directory_id: int, name: str, parent_id: int | None, fragments: List[Fragment],
+        directories: List[FilesystemDirectory], project_get: ProjectGet
 ) -> ProjectDirectoryGet:
-    root_directory: ProjectDirectoryGet = ProjectDirectoryGet(id=directory_id, name=name, parent_id=parent_id, fragments=[],
-                                                              directories=[], project_id=project_get.id)
+    root_directory: ProjectDirectoryGet = ProjectDirectoryGet(id=directory_id, name=name, parent_id=parent_id,
+                                                              fragments=[],
+                                                              directories=[], project_id=project_get.id,
+                                                              empty=False if (len(fragments) + len(
+                                                                  directories)) > 0 else True)
     for fragment in fragments:
         root_directory.fragments.append(fragment_db_to_fragment(fragment, project_get))
 
     for directory in directories:
         root_directory.directories.append(
             ProjectDirectoryGet(id=directory.id, name=directory.name, parent_id=directory.parent_id, directories=[],
-                                fragments=[], project_id=directory.project_id))
+                                fragments=[], project_id=directory.project_id,
+                                empty=False if len(directory.items) > 0 else True))
     return root_directory
 
 
@@ -57,7 +62,8 @@ async def create_directory_route(info: strawberry.Info[Context], directory: Proj
     directory_db: FilesystemDirectory = await create_directory_db(db, directory.parent_id, directory.name,
                                                                   directory.project_id)
 
-    return directory_db_to_directory(directory_db.id, directory_db.name, directory_db.parent_id,directory_db.fragments, directory_db.subdirectories, await project_by_id(info, directory.project_id))
+    return directory_db_to_directory(directory_db.id, directory_db.name, directory_db.parent_id, directory_db.fragments,
+                                     directory_db.subdirectories, await project_by_id(info, directory.project_id))
 
 
 async def get_directory(info: strawberry.Info[Context], directory_id: int) -> ProjectDirectoryGet:
@@ -77,7 +83,8 @@ async def get_directory(info: strawberry.Info[Context], directory_id: int) -> Pr
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to observe directories')
 
-    return directory_db_to_directory(directory_db.id, directory_db.name, directory_db.parent_id,directory_db.fragments, directory_db.subdirectories, await project_by_id(info, directory_db.project_id))
+    return directory_db_to_directory(directory_db.id, directory_db.name, directory_db.parent_id, directory_db.fragments,
+                                     directory_db.subdirectories, await project_by_id(info, directory_db.project_id))
 
 
 async def get_roots_elements_route(info: strawberry.Info[Context], project_id: int) -> ProjectDirectoryGet:
@@ -94,7 +101,8 @@ async def get_roots_elements_route(info: strawberry.Info[Context], project_id: i
                             detail=f'User is not allowed to observe directories')
 
     directories, fragments = await get_root_elements_db(db, project_id)
-    return directory_db_to_directory(directory_id=-1, name="root", parent_id=None, fragments=fragments, directories=directories, project_get=await project_by_id(info, project_id))
+    return directory_db_to_directory(directory_id=-1, name="root", parent_id=None, fragments=fragments,
+                                     directories=directories, project_get=await project_by_id(info, project_id))
 
 
 # don't allow to remove item if it is referenced by another item (fragment in linked_fragments)
@@ -139,4 +147,5 @@ async def update_directory_route(info: strawberry.Info[Context],
                             detail=f'User is not allowed to update directories')
 
     directory_db: FilesystemDirectory = await updatee_directory_db(db, directory.__dict__)
-    return directory_db_to_directory(directory_db.id, directory_db.name, directory_db.parent_id,directory_db.fragments, directory_db.subdirectories, await project_by_id(info, directory_db.project_id))
+    return directory_db_to_directory(directory_db.id, directory_db.name, directory_db.parent_id, directory_db.fragments,
+                                     directory_db.subdirectories, await project_by_id(info, directory_db.project_id))

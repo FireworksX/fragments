@@ -30,3 +30,5 @@ class ProjectDirectoryGet:
     project_id: int
     fragments: List[FragmentGet]
     directories: List["ProjectDirectoryGet"]
+
+    empty: bool = True

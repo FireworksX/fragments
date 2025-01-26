@@ -21,7 +21,6 @@ class FragmentPost:
 @strawberry.input
 class FragmentPatch:
     id: int
-    project_id: int
     name: Optional[str] = None
     document: Optional[strawberry.scalars.JSON] = None
     props: Optional[strawberry.scalars.JSON] = None

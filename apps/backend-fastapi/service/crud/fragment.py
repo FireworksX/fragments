@@ -6,9 +6,11 @@ from typing import Optional, List
 import uuid
 from sqlalchemy import desc, and_, func
 
+
 async def create_fragment_db(db: Session, name: str, author_id: int, project_id: int, document: str,
                              props: str, linked_fragments: Optional[List[int]], directory_id: int) -> Fragment:
-    fragment: Fragment = Fragment(project_id=project_id, name=name, author_id=author_id, document=document, props=props, directory_id=directory_id)
+    fragment: Fragment = Fragment(project_id=project_id, name=name, author_id=author_id, document=document, props=props,
+                                  directory_id=directory_id)
     if linked_fragments is not None:
         db.add(fragment)
         db.commit()
@@ -24,6 +26,7 @@ async def create_fragment_db(db: Session, name: str, author_id: int, project_id:
 
 async def get_fragment_by_id_db(db: Session, fragment_id: int) -> Optional[Fragment]:
     return db.query(Fragment).filter(Fragment.id == fragment_id).first()
+
 
 async def get_fragments_by_project_id_db(db: Session, project_id: int) -> List[Fragment]:
     return db.query(Fragment).filter(Fragment.project_id == project_id).all()
@@ -62,3 +65,37 @@ async def add_fragment_media(db, media_id: int, fragment_id: int) -> Fragment:
     db.commit()
     db.refresh(fragment)
     return fragment
+
+
+async def delete_fragment_by_id_db(db: Session, fragment_id: int) -> None:
+    """
+    Deletes the Fragment with the given ID if (and only if) no other fragment
+    has this fragment in its 'linked_fragments' relationship.
+
+    Raises:
+        ValueError: if the fragment doesn't exist or if other fragments still reference it.
+    """
+    # 1) Get the fragment from the DB
+    fragment = db.query(Fragment).get(fragment_id)
+    if fragment is None:
+        raise ValueError(f"No fragment found with id={fragment_id}")
+
+    # 2) Check if ANY other fragment references this fragment in its linked_fragments
+    referencing_fragments = (
+        db.query(Fragment)
+        .filter(Fragment.id != fragment_id)  # exclude the fragment itself
+        .filter(Fragment.linked_fragments.any(Fragment.id == fragment_id))
+        .all()
+    )
+
+    if referencing_fragments:
+        # At least one fragment references this fragment
+        referencing_info = [(f.id, f.name) for f in referencing_fragments]
+        msg = (
+            f"Cannot delete fragment {fragment_id} because it is still linked by other fragments: {referencing_info}."
+        )
+        raise ValueError(msg)
+
+    # 3) Otherwise, it's safe to delete
+    db.delete(fragment)
+    db.commit()
