@@ -11,7 +11,7 @@ import { createText } from '@/shared/store/builderStore/plugins/creatorPlugin/cr
  */
 
 export const creatorPlugin: Plugin = state => {
-  if (!('documentKey' in state)) {
+  if (!('$documents' in state)) {
     throw new Error('DocumentManager plugin not found.')
   }
   if (!('$canvas' in state)) {

@@ -4,6 +4,7 @@ import styles from './styles.module.css'
 import { DropdownGroup } from '@/shared/ui/DropdownGroup'
 import { DropdownOption } from '@/shared/ui/DropdownOption'
 import { FileSystemItemType } from '@/__generated__/graphql'
+import { projectItemType } from '@/widgets/fragmentBuilder/ProjectTree/hooks/useProjectTree'
 
 interface FragmentOptions {
   type: 'fragment'
@@ -23,7 +24,7 @@ interface FolderOptions {
 type ProjectTreeItemOptionsProps = FragmentOptions | FolderOptions
 
 export const ProjectTreeItemOptions: FC<ProjectTreeItemOptionsProps> = props => {
-  if (props.type === FileSystemItemType.Fragment) {
+  if (props.type === projectItemType.fragment) {
     return (
       <>
         <DropdownGroup>
@@ -39,7 +40,7 @@ export const ProjectTreeItemOptions: FC<ProjectTreeItemOptionsProps> = props => 
     )
   }
 
-  if (props.type === FileSystemItemType.Directory) {
+  if (props.type === projectItemType.directory) {
     return (
       <>
         <DropdownGroup>

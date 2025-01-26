@@ -3,6 +3,7 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import { useDraggable } from '@dnd-kit/core'
 import { FileSystemItemType } from '@/__generated__/graphql'
+import { projectItemType } from '@/widgets/fragmentBuilder/ProjectTree/hooks/useProjectTree'
 
 interface ProjectTreeSortableItemProps extends PropsWithChildren {
   id: string
@@ -24,7 +25,7 @@ export const ProjectTreeSortableItem: FC<ProjectTreeSortableItemProps> = ({
 }) => {
   const { attributes, listeners, setNodeRef } = useDraggable({
     id,
-    disabled: type !== FileSystemItemType.Fragment,
+    disabled: type !== projectItemType.fragment,
     data: {
       id,
       area: 'projectTree'

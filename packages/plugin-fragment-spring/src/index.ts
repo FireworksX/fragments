@@ -19,22 +19,25 @@ const plugin: (root: LinkKey) => Plugin =
       updateCount: 0,
     };
 
-    const orig = state.resolve;
-
-    state.resolve = (...args) => {
-      console.log(args);
-
-      return orig(...args);
+    const linkedFragmentsGraph = {
+      _type: "Linker",
+      _id: "root",
+      fragments: [],
     };
 
     state.$fragment = {
       renderTarget: renderTarget.canvas,
       updateGraphKey: state.keyOfEntity(updateGraph),
+      linkedFragmentsGraphKey: state.keyOfEntity(linkedFragmentsGraph),
       setRenderTarget: (renderTarget) => {
         state.$fragment.renderTarget = renderTarget;
         state.mutate(root, (prev) => ({
           updateIndex: (prev?.updateIndex ?? 0) + 1,
         }));
+      },
+
+      getPropsDefinition: () => {
+        state.resolve(root);
       },
 
       findPrimaryLayer: () =>
@@ -64,11 +67,14 @@ const plugin: (root: LinkKey) => Plugin =
 
       makeSnapshot: (target?: LinkKey = root) => makeSnapshot(state, target),
       applySnapshot: (snapshot) => applySnapshot(state, snapshot),
-      linkFragments: (fragments: GraphState[] = []) =>
-        linkFragment(state, fragments),
+      linkFragments: (fragments: GraphState[] = []) => {
+        state.mutate(state.$fragment.linkedFragmentsGraphKey, {
+          fragments,
+        });
+      },
 
       update: () => {
-        state.mutate(state.keyOfEntity(updateGraph), (prev) => ({
+        state.mutate(state.$fragment.updateGraphKey, (prev) => ({
           updateCount: prev.updateCount + 1,
         }));
       },

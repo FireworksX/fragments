@@ -29,13 +29,22 @@ export const documentsPlugin = (state: typeof builderStore) => {
   state.mutate(state.key, {
     document: documentGraph
   })
-  state.documentKey = 'Document:root'
-  state.getDocumentManager = () => state.resolve(state.documentKey)?.manager
-  state.cacheDocuments = new Map()
+
+  state.$documents = {
+    key: documentGraphKey,
+    cacheDocuments: new Map(),
+    getDocumentManager: (fragmentKey: LinkKey) => {
+      if (fragmentKey) {
+        return state.$documents.cacheDocuments.get(fragmentKey)
+      }
+
+      return state.resolve(state.documentKey)?.manager
+    }
+  }
 
   const getDocumentManager = (fragmentKey: LinkKey) => {
-    if (state.cacheDocuments.has(fragmentKey)) {
-      return state.cacheDocuments.get(fragmentKey)
+    if (state.$documents.cacheDocuments.has(fragmentKey)) {
+      return state.$documents.cacheDocuments.get(fragmentKey)
     }
 
     const { _type, _id } = state.entityOfKey(fragmentKey)
@@ -48,7 +57,7 @@ export const documentsPlugin = (state: typeof builderStore) => {
       skip: [...stateSkips, ...skips]
     })
 
-    state.cacheDocuments.set(fragmentKey, documentManager)
+    state.$documents.cacheDocuments.set(fragmentKey, documentManager)
 
     return documentManager
   }
@@ -62,13 +71,13 @@ export const documentsPlugin = (state: typeof builderStore) => {
 
         const linkedFragments = (module.linkedFragments ?? []).map(linkedModule => {
           const linkedManager = getDocumentManager(state.keyOfEntity(linkedModule))
-          linkedManager.$fragment.applySnapshot(module.data)
+          linkedManager.$fragment.applySnapshot(linkedModule.data)
 
           return linkedManager
         })
 
-        manager.$fragment.applySnapshot(module.data)
         manager.$fragment.linkFragments(linkedFragments)
+        manager.$fragment.applySnapshot(module.data)
 
         // manager.$fragment.applySnapshot(dataMap[fragmentKey])
         resolve(manager)

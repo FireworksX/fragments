@@ -13,12 +13,12 @@ export function flatten<T extends Record<string, any>>(
       isLast: items.length === index + 1,
       parent: parent
     }
-    return [...acc, flattenedItem, ...flatten(item.children ?? [], item.id, depth + 1, flattenedItem)]
+    return [...acc, flattenedItem, ...(item ? flatten(item.children ?? [], item.id, depth + 1, flattenedItem) : [])]
   }, [])
 }
 
 export function flattenTree<T extends Record<string, any>>(items: TreeItems<T>): FlattenedItem<T>[] {
-  return flatten(items)
+  return flatten(items.filter(Boolean))
 }
 
 export function removeChildrenOf<T>(items: FlattenedItem<T>[], ids: UniqueIdentifier[]) {

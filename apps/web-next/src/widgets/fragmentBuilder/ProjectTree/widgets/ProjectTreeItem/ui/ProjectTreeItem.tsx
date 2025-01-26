@@ -10,6 +10,7 @@ import { ProjectTreeItemOptions } from '@/widgets/fragmentBuilder/ProjectTree/wi
 import SmartCell from '@/shared/ui/SmartCell/ui/SmartCell'
 import { FileSystemItemType } from '@/__generated__/graphql'
 import { nextTick } from '@/shared/utils/nextTick'
+import { projectItemType } from '@/widgets/fragmentBuilder/ProjectTree/hooks/useProjectTree'
 
 export type ProjectTreeItemType = 'fragment' | 'folder'
 
@@ -61,12 +62,12 @@ export const ProjectTreeItem: FC<ProjectTreeItemProps> = ({
   }
 
   const handleClickCell = e => {
-    if (type === FileSystemItemType.Fragment) {
+    if (type === projectItemType.fragment) {
       onOpenItem?.()
     }
   }
 
-  const handleCreateNew = (type: FileSystemItemType) => {
+  const handleCreateNew = (type: typeof projectItemType) => {
     setCreatingNew(type)
     nextTick(() => {
       creatingRef.current.edit()
@@ -75,10 +76,10 @@ export const ProjectTreeItem: FC<ProjectTreeItemProps> = ({
 
   const handleFinishCreateNew = (name: string) => {
     setCreatingNew(null)
-    if (creatingNew === FileSystemItemType.Directory) {
+    if (creatingNew === projectItemType.directory) {
       onCreateFolder?.(name)
     }
-    if (creatingNew === FileSystemItemType.Fragment) {
+    if (creatingNew === projectItemType.fragment) {
       onCreateFragment?.(name)
     }
   }
@@ -87,23 +88,23 @@ export const ProjectTreeItem: FC<ProjectTreeItemProps> = ({
     <>
       <div
         className={cn(styles.root, className, {
-          [styles.fragment]: type === FileSystemItemType.Fragment,
-          [styles.emptyDirectory]: type === FileSystemItemType.Directory && !hasChildren
+          [styles.fragment]: type === projectItemType.fragment,
+          [styles.emptyDirectory]: type === projectItemType.directory && !hasChildren
         })}
       >
         <SmartCell
           ref={cellRef}
-          collapsed={type === FileSystemItemType.Directory ? !isOpen : false}
+          collapsed={type === projectItemType.directory ? !isOpen : false}
           selected={selected}
           isLoading={isLoading}
           icon={
             <>
-              {type === FileSystemItemType.Directory && (
+              {type === projectItemType.directory && (
                 <FolderIcon
-                  className={cn({ [styles.emptyDirectory]: type === FileSystemItemType.Directory && !hasChildren })}
+                  className={cn({ [styles.emptyDirectory]: type === projectItemType.directory && !hasChildren })}
                 />
               )}
-              {type === FileSystemItemType.Fragment && <FragmentIcon />}
+              {type === projectItemType.fragment && <FragmentIcon />}
             </>
           }
           onEdit={onRename}
@@ -119,12 +120,14 @@ export const ProjectTreeItem: FC<ProjectTreeItemProps> = ({
             stopPropagation
             options={
               <>
-                {type === FileSystemItemType.Fragment && <ProjectTreeItemOptions type={type} onDelete={onDelete} />}
-                {type === FileSystemItemType.Directory && (
+                {type === projectItemType.fragment && (
+                  <ProjectTreeItemOptions type={type} onRename={edit} onDelete={onDelete} />
+                )}
+                {type === projectItemType.directory && (
                   <ProjectTreeItemOptions
                     type={type}
-                    onCreateFolder={() => handleCreateNew(FileSystemItemType.Directory)}
-                    onCreateFragment={() => handleCreateNew(FileSystemItemType.Fragment)}
+                    onCreateFolder={() => handleCreateNew(projectItemType.directory)}
+                    onCreateFragment={() => handleCreateNew(projectItemType.fragment)}
                     onRename={edit}
                     onDelete={onDelete}
                   />
@@ -142,14 +145,14 @@ export const ProjectTreeItem: FC<ProjectTreeItemProps> = ({
       {creatingNew && (
         <SmartCell
           className={cn(styles.creatingItem, {
-            [styles.fragment]: creatingNew === FileSystemItemType.Fragment
+            [styles.fragment]: creatingNew === projectItemType.fragment
           })}
           ref={creatingRef}
           collapsed={false}
           icon={
             <>
-              {creatingNew === FileSystemItemType.Directory && <FolderIcon />}
-              {creatingNew === FileSystemItemType.Fragment && <FragmentIcon />}
+              {creatingNew === projectItemType.directory && <FolderIcon />}
+              {creatingNew === projectItemType.fragment && <FragmentIcon />}
             </>
           }
           onEdit={handleFinishCreateNew}

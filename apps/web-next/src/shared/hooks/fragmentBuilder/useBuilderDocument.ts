@@ -4,7 +4,7 @@ import { useGraph } from '@graph-state/react'
 
 export const useBuilderDocument = () => {
   const { builderManager } = use(BuilderContext)
-  const [builderDocument] = useGraph(builderManager, builderManager.documentKey)
+  const [builderDocument] = useGraph(builderManager, builderManager.$documents.key)
 
   return {
     fetching: builderDocument.fetching,

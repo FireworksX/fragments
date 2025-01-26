@@ -25,6 +25,7 @@ import { findPathToProperty } from "@/shared/findPathToProperty.ts";
 import { animatableValue } from "@/shared/animatableValue.ts";
 import { SpringValue, to } from "@fragments/springs-factory";
 import { clone } from "@/shared/clone.ts";
+import { linkFragment } from "@/shared/linkFragment.ts";
 
 export const modules = [
   positionModule,
@@ -47,8 +48,21 @@ export function createFragmentInstanceNode(
   const baseNode = createBaseNode(nodes.FragmentInstance, initialNode, cache);
   const frameNode = applyModules(baseNode, modules, cache);
   const nodeKey = cache.keyOfEntity(frameNode);
+  const fragmentKey = baseNode?.fragment;
+  const fragmentDocument = cache
+    .resolve(cache.$fragment.linkedFragmentsGraphKey)
+    ?.fragments?.find((el) => cache.keyOfEntity(el) === fragmentKey);
 
   const baseClone = frameNode.clone;
+
+  console.log(
+    fragmentDocument,
+    fragmentDocument?.resolve(fragmentDocument.$fragment.root)
+  );
+
+  // if (fragmentDocument) {
+  //   linkFragment(cache, fragmentDocument);
+  // }
 
   return {
     ...frameNode,

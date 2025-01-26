@@ -23,6 +23,11 @@
     ],
     "updateIndex": 3
   },
+  "FragmentInstance:instancetest": {
+    "_type": "FragmentInstance",
+    "_id": "instancetest",
+    "fragment": "Fragment:buttonid"
+  },
   "Frame:d12bd11e59ee4": {
     "_type": "Frame",
     "_id": "d12bd11e59ee4",
@@ -32,7 +37,8 @@
     "children": [
       "Frame:9c86393a0a501",
       "Frame:bf32614cc22ae",
-      "Frame:9896dbb5f5ffd"
+      "Frame:9896dbb5f5ffd",
+      "FragmentInstance:instancetest"
     ],
     "width": 240,
     "height": 96.71772112485017,

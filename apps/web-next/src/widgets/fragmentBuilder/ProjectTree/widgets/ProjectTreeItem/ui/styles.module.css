@@ -13,6 +13,7 @@
 
 .emptyDirectory {
     --primary: var(--secondary);
+    --primary--rgb: var(--secondary--rgb);
     --fill: var(var(--secondary--rgb));
 }
 
