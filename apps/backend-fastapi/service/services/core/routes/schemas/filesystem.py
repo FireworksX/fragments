@@ -31,4 +31,4 @@ class ProjectDirectoryGet:
     fragments: List[FragmentGet]
     directories: List["ProjectDirectoryGet"]
 
-    empty: bool = True
+    has_subdirectories: bool = False
