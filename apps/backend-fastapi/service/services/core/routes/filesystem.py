@@ -40,7 +40,7 @@ def directory_db_to_directory(
 
     for directory in directories:
         root_directory.directories.append(
-            ProjectDirectoryGet(id=directory.id, name=directory.name, parent_id=directory_id if directory_id is not None else directory.parent_id, directories=[],
+            ProjectDirectoryGet(id=directory.id, name=directory.name, parent_id=directory_id if directory_id is -1 else directory.parent_id, directories=[],
                                 fragments=[], project_id=directory.project_id,
                                 has_subdirectories=True if len(directory.subdirectories) > 0 else False))
     return root_directory
