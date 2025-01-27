@@ -1,4 +1,5 @@
 import { createState, GraphState, LinkKey, Plugin } from '@graph-state/core'
+import profilerPlugin from '@graph-state/plugin-profiler'
 import fragmentData from '@/shared/data/fragment.json'
 import buttonData from '@/shared/data/button.fragment.json'
 import pluginFragmentSpring, { skips, skips as stateSkips } from '@fragments/plugin-fragment-spring'

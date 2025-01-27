@@ -25,9 +25,9 @@ const documents = {
     "\n  mutation CreateProjectDirectory($projectSlug: Int!, $name: String!, $parentId: Int) {\n    createDirectory(directory: { projectId: $projectSlug, name: $name, parentId: $parentId }) {\n      id\n      name\n    }\n  }\n": types.CreateProjectDirectoryDocument,
     "\n  mutation CreateProjectFragment($projectSlug: Int!, $name: String!, $parentId: Int) {\n    createFragment(fg: { name: $name, projectId: $projectSlug, document: \"{}\", directoryId: $parentId }) {\n      id\n      name\n    }\n  }\n": types.CreateProjectFragmentDocument,
     "\n  mutation DeleteProjectDirectory($directoryId: Int!) {\n    deleteDirectory(directoryId: $directoryId)\n  }\n": types.DeleteProjectDirectoryDocument,
-    "\n  query ProjectTree($projectSlug: Int!) {\n    directory(projectId: $projectSlug) {\n      id\n      name\n      directories {\n        id\n        name\n      }\n      fragments {\n        id\n        name\n      }\n    }\n  }\n": types.ProjectTreeDocument,
+    "\n  query ProjectDirectory($projectSlug: Int!, $directoryId: Int) {\n    directory(projectId: $projectSlug, directoryId: $directoryId) {\n      id\n      name\n      empty\n      parentId\n      fragments {\n        id\n        name\n      }\n    }\n  }\n": types.ProjectDirectoryDocument,
     "\n  mutation UpdateProjectDirectory($directoryId: Int!, $name: String) {\n    updateDirectory(directory: { id: $directoryId, name: $name }) {\n      id\n      name\n    }\n  }\n": types.UpdateProjectDirectoryDocument,
-    "\n  mutation UpdateProjectFragment($fragmentId: Int!, $name: String, $projectId: Int!) {\n    updateFragment(fg: { id: $fragmentId, projectId: $projectId, name: $name }) {\n      id\n      name\n    }\n  }\n": types.UpdateProjectFragmentDocument,
+    "\n  mutation UpdateProjectFragment($fragmentId: Int!, $name: String) {\n    updateFragment(fg: { id: $fragmentId, name: $name }) {\n      id\n      name\n    }\n  }\n": types.UpdateProjectFragmentDocument,
     "\n  mutation AuthSignIn($email: String!, $password: String!) {\n    login(email: $email, password: $password) {\n      user {\n        id\n        email\n        firstName\n        lastName\n      }\n      accessToken\n      refreshToken\n    }\n  }\n": types.AuthSignInDocument,
     "\n  query CurrentProfile {\n    profile {\n      user {\n        id\n        email\n        firstName\n        lastName\n      }\n      accessToken\n      refreshToken\n    }\n  }\n": types.CurrentProfileDocument,
     "\n    mutation AuthLogin($email: String!, $password: String!) {\n      login(email: $email, password: $password) {\n        accessToken\n        refreshToken\n      }\n    }\n": types.AuthLoginDocument,
@@ -100,7 +100,7 @@ export function gql(source: "\n  mutation DeleteProjectDirectory($directoryId: I
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query ProjectTree($projectSlug: Int!) {\n    directory(projectId: $projectSlug) {\n      id\n      name\n      directories {\n        id\n        name\n      }\n      fragments {\n        id\n        name\n      }\n    }\n  }\n"): (typeof documents)["\n  query ProjectTree($projectSlug: Int!) {\n    directory(projectId: $projectSlug) {\n      id\n      name\n      directories {\n        id\n        name\n      }\n      fragments {\n        id\n        name\n      }\n    }\n  }\n"];
+export function gql(source: "\n  query ProjectDirectory($projectSlug: Int!, $directoryId: Int) {\n    directory(projectId: $projectSlug, directoryId: $directoryId) {\n      id\n      name\n      empty\n      parentId\n      fragments {\n        id\n        name\n      }\n    }\n  }\n"): (typeof documents)["\n  query ProjectDirectory($projectSlug: Int!, $directoryId: Int) {\n    directory(projectId: $projectSlug, directoryId: $directoryId) {\n      id\n      name\n      empty\n      parentId\n      fragments {\n        id\n        name\n      }\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -108,7 +108,7 @@ export function gql(source: "\n  mutation UpdateProjectDirectory($directoryId: I
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  mutation UpdateProjectFragment($fragmentId: Int!, $name: String, $projectId: Int!) {\n    updateFragment(fg: { id: $fragmentId, projectId: $projectId, name: $name }) {\n      id\n      name\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateProjectFragment($fragmentId: Int!, $name: String, $projectId: Int!) {\n    updateFragment(fg: { id: $fragmentId, projectId: $projectId, name: $name }) {\n      id\n      name\n    }\n  }\n"];
+export function gql(source: "\n  mutation UpdateProjectFragment($fragmentId: Int!, $name: String) {\n    updateFragment(fg: { id: $fragmentId, name: $name }) {\n      id\n      name\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateProjectFragment($fragmentId: Int!, $name: String) {\n    updateFragment(fg: { id: $fragmentId, name: $name }) {\n      id\n      name\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

@@ -34,7 +34,7 @@ export const useProjectTree = () => {
   const [loadingItems, setLoadingItems] = useState([])
   const {
     projectSlug,
-    projectTree,
+    tree,
     createProjectFragment,
     updateProjectFragment,
     createProjectDirectory,
@@ -109,7 +109,20 @@ export const useProjectTree = () => {
       const itemType = node.__typename === 'ProjectDirectoryGet' ? projectItemType.directory : projectItemType.fragment
       const canHaveChildren = itemType === projectItemType.directory
       const children = [...(node?.directories ?? []), ...(node?.fragments ?? [])]
+      const isEmpty = node?.empty
       const hasChildren = (children || []).length > 0
+
+      const getHandleCollapse = () => {
+        if (canHaveChildren && !isEmpty) {
+          if (hasChildren) {
+            return () => setCollapsedIds(p => (p.includes(node.id) ? p.filter(v => v === node.id) : [...p, node.id]))
+          } else {
+            return () => console.log('load more')
+          }
+        }
+      }
+
+      console.log(node, itemType)
 
       return {
         id: node.id,
@@ -125,16 +138,13 @@ export const useProjectTree = () => {
         onCreateFragment: (name: string) => createItem(name, projectItemType.fragment, node.id),
         onSelectItem: () => undefined, //builderManager.selectProjectFile(key),
         onOpenItem: () => openTab(node.target),
-        onCollapse:
-          canHaveChildren && hasChildren
-            ? () => setCollapsedIds(p => (p.includes(node.id) ? p.filter(v => v === node.id) : [...p, node.id]))
-            : null,
+        onCollapse: getHandleCollapse(),
         onRename: (name: string) => renameItem(name, node.id, itemType),
         onDelete: () => deleteItem(node.id)
       }
     }
 
-    const flattenedTree = flattenTree([buildItem(projectTree, 0)])
+    const flattenedTree = flattenTree([buildItem(tree.at(0), 0)])
 
     const collapsedItems = flattenedTree.reduce<UniqueIdentifier[]>(
       (acc, { children, collapsed, id }) => (collapsed && children?.length ? [...acc, id] : acc),
@@ -142,7 +152,18 @@ export const useProjectTree = () => {
     )
 
     return removeChildrenOf(flattenedTree, collapsedItems)
-  }, [builderManager, collapsedIds, loadingItems, openTab, projectTree])
+  }, [
+    collapsedIds,
+    createProjectDirectory,
+    createProjectFragment,
+    deleteProjectDirectory,
+    loadingItems,
+    openTab,
+    projectSlug,
+    tree,
+    updateProjectDirectory,
+    updateProjectFragment
+  ])
 
   return {
     list: flatProjectTree,

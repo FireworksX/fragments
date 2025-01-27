@@ -28,7 +28,6 @@ export const createBuilderStore = () => {
     },
     skip: [isInstanceOf(SpringValue)],
     plugins: [
-      loggerPlugin({ onlyBrowser: true }),
       documentsPlugin,
       canvasPlugin,
       creatorPlugin,
