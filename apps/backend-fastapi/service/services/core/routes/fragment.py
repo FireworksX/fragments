@@ -55,7 +55,7 @@ def fragment_db_to_fragment(fragment: Fragment, project: ProjectGet) -> Fragment
     # We'll store all *other* fragments in its 'linked_fragments' field, for instance.
     root_fg = FragmentGet(
         id=fragment.id,
-        directory_id=fragment.directory_id,
+        directory_id=-1 if fragment.directory_id is None else fragment.directory_id,
         name=fragment.name,
         author=fragment.author,
         document=fragment.document,
