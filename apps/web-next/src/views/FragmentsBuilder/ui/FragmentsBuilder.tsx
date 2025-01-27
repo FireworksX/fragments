@@ -19,13 +19,13 @@ if (isBrowser) {
 }
 
 export const FragmentsBuilder = () => {
-  useEffect(() => {
-    builderManager.openTab({
-      _type: 'FragmentModule',
-      _id: 'test',
-      fragment: 'Fragment:g34gherhg3g'
-    })
-  }, [])
+  // useEffect(() => {
+  //   builderManager.openTab({
+  //     _type: 'FragmentModule',
+  //     _id: 'test',
+  //     fragment: 'Fragment:g34gherhg3g'
+  //   })
+  // }, [])
 
   return (
     <FragmentBuilderProvider builderManager={builderManager}>

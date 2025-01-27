@@ -95,15 +95,18 @@ const SmartCell: FC<SmartCellProps> = ({
       effect='none'
       before={
         <div className={styles.before}>
-          {hasCollapsedCaret && (
-            <Touchable className={styles.caret} style={{ opacity: isCollapsable ? 1 : 0 }}>
-              <CaretRight width={10} />
-            </Touchable>
-          )}
+          <div className={styles.beforeContent}>
+            {isLoading && <Spinner className={styles.loading} color='var(--text-color-accent-secondary)' size={12} />}
+            {hasCollapsedCaret && (
+              <Touchable className={styles.caret} style={{ opacity: isCollapsable && !isLoading ? 1 : 0 }}>
+                <CaretRight width={10} />
+              </Touchable>
+            )}
+          </div>
+
           {icon && <div className={styles.icon}>{icon}</div>}
         </div>
       }
-      after={isLoading && <Spinner color='var(--text-color-accent-secondary)' size={12} />}
       onClick={handleClickCell}
     >
       <div className={styles.label}>

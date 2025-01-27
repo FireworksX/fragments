@@ -31,6 +31,15 @@
     gap: 5px;
 }
 
+.beforeContent {
+    position: relative;
+}
+
+.loading {
+    position: absolute;
+    inset: 0;
+}
+
 .caret {
     color: var(--text-color-accent);
     width: 18px;

@@ -35,12 +35,15 @@ export const useProjectTree = () => {
   const {
     projectSlug,
     tree,
+    loadDirectory,
     createProjectFragment,
     updateProjectFragment,
     createProjectDirectory,
     updateProjectDirectory,
     deleteProjectDirectory
   } = useProjectTreeMethods()
+
+  console.log(tree)
 
   const setLoading = (id, flag) => setLoadingItems(p => (flag ? [...p, id] : p.filter(item => item !== id)))
 
@@ -108,21 +111,19 @@ export const useProjectTree = () => {
       const collapsed = !collapsedIds.includes(node.id)
       const itemType = node.__typename === 'ProjectDirectoryGet' ? projectItemType.directory : projectItemType.fragment
       const canHaveChildren = itemType === projectItemType.directory
-      const children = [...(node?.directories ?? []), ...(node?.fragments ?? [])]
-      const isEmpty = node?.empty
-      const hasChildren = (children || []).length > 0
+      const children = [...(node?.children ?? []), ...(node?.fragments ?? [])]
+      const loaded = node?.hasSubdirectories && node?.children?.length > 0
+      const hasChildren = (children || []).length > 0 || !!node?.hasSubdirectories
 
       const getHandleCollapse = () => {
-        if (canHaveChildren && !isEmpty) {
-          if (hasChildren) {
+        if (canHaveChildren) {
+          if (loaded) {
             return () => setCollapsedIds(p => (p.includes(node.id) ? p.filter(v => v === node.id) : [...p, node.id]))
           } else {
-            return () => console.log('load more')
+            return () => loadDirectory(node.id)
           }
         }
       }
-
-      console.log(node, itemType)
 
       return {
         id: node.id,
@@ -131,6 +132,7 @@ export const useProjectTree = () => {
         deepIndex,
         collapsed,
         children: !canHaveChildren ? [] : children.map(key => buildItem(key, deepIndex + 1)),
+        hasChildren,
         canHaveChildren,
         isLoading: loadingItems.includes(node.id),
         selected: false, //!!targetKey && activeTabKey === targetKey,

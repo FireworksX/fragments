@@ -12,7 +12,6 @@ export const useBuilderTabs = (inputBuilderManager?: unknown) => {
   const [builder] = useGraph(builderManager, builderManager.key)
   const tabs = useGraphStack(builderManager, builder.tabs)
 
-  const [nodeId, setNodeId] = useSearchParam('node')
   const { value: tabsIds, push } = useLocalStorageArray('tabs', [], { sync: true })
 
   return {
@@ -22,7 +21,6 @@ export const useBuilderTabs = (inputBuilderManager?: unknown) => {
     openTab: target => {
       builderManager.openTab(target)
       push(target)
-      setNodeId(target)
     },
     selectTab: targetOrIndex => {
       if (typeof targetOrIndex === 'number') {

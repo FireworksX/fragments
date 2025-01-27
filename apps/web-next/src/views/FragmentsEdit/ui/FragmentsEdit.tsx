@@ -108,8 +108,6 @@ export const FragmentsEdit = () => {
           // cssNode={<BuilderCssOverride />}
           instancePropsNode={<BuilderFragmentInstance />}
         />
-
-        <CreateFragmentModal />
       </div>
     </CanvasTextEditorProvider>
   )

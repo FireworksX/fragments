@@ -32,7 +32,7 @@ export const ProjectTree: FC<ProjectTreeProps> = ({ className }) => {
             selected={item?.selected}
             isLoading={item?.isLoading}
             isOpen={!item.collapsed}
-            hasChildren={item.children.length > 0}
+            hasChildren={item.hasChildren}
             onCollapse={item.onCollapse}
             onCreateFolder={item?.onCreateFolder}
             onCreateFragment={item?.onCreateFragment}
