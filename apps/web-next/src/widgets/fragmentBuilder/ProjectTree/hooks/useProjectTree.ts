@@ -10,6 +10,7 @@ import { flattenTree, removeChildrenOf } from '@/widgets/fragmentBuilder/Project
 import { useGraph } from '@graph-state/react'
 import { createConstants } from '@fragments/utils'
 import { useProject } from '@/shared/hooks/useProject'
+import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
 
 const findIndexOfNode = (items: unknown[], linkNode: LinkKey) => {
   const index = items.findIndex(item => item.id === linkNode)
@@ -29,7 +30,6 @@ export const projectItemType = createConstants('directory', 'fragment')
 export const useProjectTree = () => {
   const { builderManager } = useContext(BuilderContext)
   const [collapsedIds, setCollapsedIds] = useState<string[]>([])
-  const { activeTabKey, openTab } = useBuilderTabs()
   const [droppableGraph] = useGraph(builderManager, builderManager.droppableKey)
   const [loadingItems, setLoadingItems] = useState([])
   const {
@@ -42,6 +42,7 @@ export const useProjectTree = () => {
     updateProjectDirectory,
     deleteProjectDirectory
   } = useProjectTreeMethods()
+  const { openFragment } = useBuilder()
 
   const setLoading = (id, flag) => setLoadingItems(p => (flag ? [...p, id] : p.filter(item => item !== id)))
 
@@ -137,7 +138,10 @@ export const useProjectTree = () => {
         onCreateFolder: (name: string) => createItem(name, projectItemType.directory, node.id),
         onCreateFragment: (name: string) => createItem(name, projectItemType.fragment, node.id),
         onSelectItem: () => undefined, //builderManager.selectProjectFile(key),
-        onOpenItem: () => openTab(node.target),
+        onOpenItem: () => {
+          openFragment(node.id)
+          //openTab(node.target)
+        },
         onCollapse: getHandleCollapse(),
         onRename: (name: string) => renameItem(name, node.id, itemType),
         onDelete: () => deleteItem(node.id)
@@ -158,7 +162,6 @@ export const useProjectTree = () => {
     createProjectFragment,
     deleteProjectDirectory,
     loadingItems,
-    openTab,
     projectSlug,
     tree,
     updateProjectDirectory,

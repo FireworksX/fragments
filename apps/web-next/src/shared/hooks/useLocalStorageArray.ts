@@ -12,9 +12,15 @@ export const useLocalStorageArray = <T = unknown>(
     setValue(nextValue)
   }
 
+  const splice = (index: number, deleteCount?: number) => {
+    const nextValue = value.toSpliced(index, deleteCount)
+    setValue(nextValue)
+  }
+
   return {
     value,
     push,
+    splice,
     setValue
   }
 }

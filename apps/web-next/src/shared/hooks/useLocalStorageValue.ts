@@ -7,12 +7,12 @@ export interface UseLocalStorageValueOptions {
 
 const hasLocalStorage = isBrowser && typeof window?.localStorage !== 'undefined'
 
-export const useLocalStorageValue = (key: string, initialValue: any, options?: UseLocalStorageValueOptions) => {
+export const useLocalStorageValue = <T>(key: string, initialValue: T, options?: UseLocalStorageValueOptions) => {
   const sync = options?.sync ?? false
 
-  const [value, setValue] = useState(() => {
+  const [value, setValue] = useState<T>(() => {
     const storedValue = hasLocalStorage ? localStorage.getItem(key) : null
-    return storedValue ? JSON.parse(storedValue) : initialValue
+    return storedValue && storedValue !== 'null' ? JSON.parse(storedValue) : initialValue
   })
 
   useEffect(() => {
@@ -23,7 +23,7 @@ export const useLocalStorageValue = (key: string, initialValue: any, options?: U
     if (sync) {
       const handleStorageChange = (event: StorageEvent) => {
         if (event.key === key) {
-          setValue(event.newValue)
+          setValue(JSON.parse(event.newValue))
         }
       }
 
@@ -32,5 +32,5 @@ export const useLocalStorageValue = (key: string, initialValue: any, options?: U
     }
   }, [key, sync])
 
-  return [value, setValue]
+  return [value, setValue] as const
 }
