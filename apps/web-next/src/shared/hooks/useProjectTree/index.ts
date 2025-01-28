@@ -1,37 +1,52 @@
 import { useApolloClient, useMutation, useQuery } from '@apollo/client'
-import { PROJECT_DIRECTORY, PROJECT_TREE } from './lib/projectDirectory'
-import { DELETE_PROJECT_DIRECTORY, DELETE_PROJECT_TREE_ITEM } from './lib/deleteProjectDirectory'
-import { UPDATE_PROJECT_DIRECTORY, UPDATE_PROJECT_TREE_ITEM } from './lib/updateProjectDirectory'
-import { CREATE_PROJECT_DIRECTORY, CREATE_PROJECT_TREE_ITEM } from './lib/createProjectDirectory'
+import { PROJECT_DIRECTORY, PROJECT_DIRECTORY_FRAGMENT } from './lib/projectDirectory'
+import { DELETE_PROJECT_DIRECTORY } from './lib/deleteProjectDirectory'
+import { UPDATE_PROJECT_DIRECTORY } from './lib/updateProjectDirectory'
+import { CREATE_PROJECT_DIRECTORY } from './lib/createProjectDirectory'
 import { useProject } from '@/shared/hooks/useProject'
 import { CREATE_PROJECT_FRAGMENT } from '@/shared/hooks/useProjectTree/lib/createProjectFragment'
 import { UPDATE_PROJECT_FRAGMENT } from '@/shared/hooks/useProjectTree/lib/updateProjectFragment'
 import { useMemo } from 'react'
+import { gql } from '@/__generated__'
 
 export const useProjectTree = () => {
   const client = useApolloClient()
   const cacheData = client.cache.extract()
-  const allDirectories = Object.values(cacheData).filter(item => item?.__typename === 'ProjectDirectoryGet')
+  const allDirectories = Object.values(cacheData)
+    .filter(item => item?.__typename === 'ProjectDirectoryGet')
+    .map(directory => {
+      const object = client.readFragment({
+        id: client.cache.identify(directory),
+        fragment: PROJECT_DIRECTORY_FRAGMENT
+      })
+
+      return object ?? directory
+    })
 
   const tree = useMemo(() => {
-    const rootItem = allDirectories.find(item => item.id === -1)
+    // Создаём карту для быстрого доступа к элементам по их ID
+    const map = new Map()
 
-    if (!rootItem) return []
+    // Добавляем каждый элемент в карту и добавляем ему свойство children
+    allDirectories.forEach(item => {
+      map.set(item.id, { ...item, children: [] })
+    })
 
-    const root: TreeItem = { id: 'root', children: [] }
-    const nodes: Record<string, TreeItem> = { [root.id]: root }
-    const items = allDirectories.map(item => ({ ...item, children: [] }))
+    // Проходим по элементам и распределяем их по дереву
+    return allDirectories.reduce((acc, item) => {
+      if (item.parentId === null) {
+        // Если нет parentId, добавляем в корень
+        acc.push(map.get(item.id))
+      } else {
+        // Если есть parentId, добавляем в children родителя
+        const parent = map.get(item.parentId)
+        if (parent) {
+          parent.children.push(map.get(item.id))
+        }
+      }
 
-    for (const item of items) {
-      const { id, children } = item
-      const parentId = item.parentId ?? root.id
-      const parent = nodes[parentId] ?? allDirectories.find(item => item.id === parentId)
-
-      nodes[id] = { id, children }
-      parent.children.push(item)
-    }
-
-    return root.children
+      return acc
+    }, [])
   }, [allDirectories])
 
   const { projectSlug } = useProject()

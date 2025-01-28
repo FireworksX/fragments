@@ -43,8 +43,6 @@ export const useProjectTree = () => {
     deleteProjectDirectory
   } = useProjectTreeMethods()
 
-  console.log(tree)
-
   const setLoading = (id, flag) => setLoadingItems(p => (flag ? [...p, id] : p.filter(item => item !== id)))
 
   const flatProjectTree = useMemo(() => {
