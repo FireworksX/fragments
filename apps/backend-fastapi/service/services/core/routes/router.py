@@ -2,7 +2,7 @@ from starlette import status
 
 from .campaign import campaign_by_id, create_campaign_route, update_campaign_route, campaigns_in_project, \
     add_campaign_logo_route, campaign_by_name
-from .filesystem import create_directory_route, get_directory, get_roots_elements_route, \
+from .filesystem import create_directory_route, get_directory, \
     delete_directory_route, update_directory_route
 from .filter import get_all_filters
 from .schemas import AllFiltersGet
@@ -18,7 +18,7 @@ import strawberry
 from typing import Optional, List
 from .middleware import Context
 from .user import login, refresh, profile, signup, add_avatar_route
-from .fragment import create_fragment_route, fragments_in_project, fragment_by_id, update_fragment_route, \
+from .fragment import create_fragment_route, fragments_in_project, fragments_by_ids, update_fragment_route, \
     add_fragment_asset_route, remove_fragment_asset_route, delete_fragment_route
 from .stream import create_stream_route, stream_by_id, streams_in_campaign, update_stream_route
 from .feedback import create_feedback
@@ -37,10 +37,10 @@ class Query:
         return await profile(info)
 
     @strawberry.field
-    async def fragment(self, info: strawberry.Info[Context], fragment_id: Optional[int] = None,
+    async def fragment(self, info: strawberry.Info[Context], fragment_ids: Optional[List[int]] = None,
                        project_id: Optional[int] = None) -> List[FragmentGet]:
-        if fragment_id is not None:
-            return [await fragment_by_id(info, fragment_id)]
+        if fragment_ids is not None:
+            return await fragments_by_ids(info, fragment_ids)
         if project_id is not None:
             return await fragments_in_project(info, project_id)
         else:
@@ -87,12 +87,8 @@ class Query:
         return await get_all_filters(info, countries, regions)
 
     @strawberry.field
-    async def directory(self, info: strawberry.Info[Context], directory_id: Optional[int] = None,
-                        project_id: Optional[int] = None) -> ProjectDirectoryGet:
-        if directory_id is not None:
-            return await get_directory(info, directory_id)
-        elif project_id is not None:
-            return await get_roots_elements_route(info, project_id)
+    async def directory(self, info: strawberry.Info[Context], directory_id: int) -> ProjectDirectoryGet:
+        return await get_directory(info, directory_id)
 
 
 @strawberry.type

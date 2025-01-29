@@ -9,14 +9,24 @@ from crud.bucket import add_file, delete_file
 from crud.media import create_media_db, delete_media_by_public_path_db
 from crud.project import get_project_by_id_db
 from .schemas.fragment import FragmentPost, FragmentPatch, FragmentGet
-from .schemas.project import ProjectGet
 from .schemas.user import RoleGet, AuthPayload
 from .middleware import Context
-from crud.fragment import create_fragment_db, Fragment, get_fragments_by_project_id_db, get_fragment_by_id_db, \
-    update_fragment_by_id_db, add_fragment_media, delete_fragment_by_id_db
+from crud.fragment import create_fragment_db, Fragment, get_fragments_by_project_id_db, \
+    update_fragment_by_id_db, add_fragment_media, delete_fragment_by_id_db, get_fragments_by_ids_db, \
+    get_fragment_by_id_db
 from database import Session, Project, Media
-from .project import project_by_id
 from .utils import get_user_role_in_project
+
+
+async def check_read_permissions(db: Session, user_id: int, project_id: int) -> None:
+    project: Project = await get_project_by_id_db(db, project_id)
+    if project is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
+
+    permission: bool = await read_permission(db, user_id, project_id)
+    if not permission:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=f'User is not allowed to view this data')
 
 
 def gather_all_linked_fragments(root_fragment: Fragment) -> list[Fragment]:
@@ -43,7 +53,7 @@ def gather_all_linked_fragments(root_fragment: Fragment) -> list[Fragment]:
     return result
 
 
-def fragment_db_to_fragment(fragment: Fragment, project: ProjectGet) -> FragmentGet:
+def fragment_db_to_fragment(fragment: Fragment) -> FragmentGet:
     """
     Returns a single FragmentGet, whose 'linked_fragments' is a flat list
     of *all* reachable fragments from 'fragment', avoiding cycles.
@@ -55,12 +65,11 @@ def fragment_db_to_fragment(fragment: Fragment, project: ProjectGet) -> Fragment
     # We'll store all *other* fragments in its 'linked_fragments' field, for instance.
     root_fg = FragmentGet(
         id=fragment.id,
-        directory_id=-1 if fragment.directory_id is None else fragment.directory_id,
+        directory_id=fragment.directory_id,
         name=fragment.name,
         author=fragment.author,
         document=fragment.document,
         props=fragment.props,
-        project=project,
         assets=[] if not fragment.assets else [
             relation.media.public_path for relation in fragment.assets
         ],
@@ -80,7 +89,6 @@ def fragment_db_to_fragment(fragment: Fragment, project: ProjectGet) -> Fragment
             author=f.author,
             document=f.document,
             props=f.props,
-            project=project,
             assets=[] if not f.assets else [r.media.public_path for r in f.assets],
             # no recursion on 'linked_fragments' here, because we already flattened them
             linked_fragments=[]
@@ -116,48 +124,35 @@ async def create_fragment_route(info: strawberry.Info[Context], fg: FragmentPost
 
     fragment: Fragment = await create_fragment_db(db, fg.name, user.user.id, fg.project_id, fg.document,
                                                   fg.props, fg.linked_fragments, fg.directory_id)
-    return fragment_db_to_fragment(fragment, await project_by_id(info, fg.project_id))
+    return fragment_db_to_fragment(fragment)
 
 
 async def fragments_in_project(info: strawberry.Info[Context], project_id: int) -> List[FragmentGet]:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    project: Project = await get_project_by_id_db(db, project_id)
-    if project is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
-
-    permission: bool = await read_permission(db, user.user.id, project_id)
-    if not permission:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail=f'User is not allowed to view fragments')
+    await check_read_permissions(db, user.user.id, project_id)
 
     fragments: List[Fragment] = await get_fragments_by_project_id_db(db, project_id)
     out: List[FragmentGet] = []
     for fg in fragments:
-        out.append(fragment_db_to_fragment(fg, await project_by_id(info, project_id)))
+        out.append(fragment_db_to_fragment(fg))
     return out
 
 
-async def fragment_by_id(info: strawberry.Info[Context], fragment_id: int) -> FragmentGet:
+async def fragments_by_ids(info: strawberry.Info[Context], fragment_ids: List[int]) -> List[FragmentGet]:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
-    fragment: Fragment = await get_fragment_by_id_db(db, fragment_id)
-    project_id: int = fragment.project_id
-    if fragment is None:
+    fragments: List[Fragment] = await get_fragments_by_ids_db(db, fragment_ids)
+    if len(fragments) == 0:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f'Fragment with id {fragment_id} does not exist')
+                            detail=f'Fragments with ids {fragment_ids} does not exist')
 
-    project: Project = await get_project_by_id_db(db, project_id)
-    if project is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
-
-    permission: bool = await read_permission(db, user.user.id, project_id)
-    if not permission:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail=f'User is not allowed to view fragments')
-
-    return fragment_db_to_fragment(fragment, await project_by_id(info, project.id))
+    out: List[FragmentGet] = []
+    for fragment in fragments:
+        await check_read_permissions(db, user.user.id, fragment.project_id)
+        out.append(fragment_db_to_fragment(fragment))
+    return out
 
 
 async def add_fragment_asset_route(info: strawberry.Info[Context], file: UploadFile, fragment_id: int) -> FragmentGet:
@@ -190,7 +185,7 @@ async def add_fragment_asset_route(info: strawberry.Info[Context], file: UploadF
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail='Failed to create media file')
     fragment: Fragment = await add_fragment_media(db, media.id, fragment_id)
-    return fragment_db_to_fragment(fragment, await project_by_id(info, project.id))
+    return fragment_db_to_fragment(fragment)
 
 
 async def remove_fragment_asset_route(info: strawberry.Info[Context], fragment_id: int,
@@ -217,7 +212,7 @@ async def remove_fragment_asset_route(info: strawberry.Info[Context], fragment_i
     except:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'Media not found')
-    return fragment_db_to_fragment(fragment, await project_by_id(info, project.id))
+    return fragment_db_to_fragment(fragment)
 
 
 async def update_fragment_route(info: strawberry.Info[Context], fg: FragmentPatch) -> FragmentGet:
@@ -228,10 +223,9 @@ async def update_fragment_route(info: strawberry.Info[Context], fg: FragmentPatc
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'Fragment with id {fg.id} does not exist')
     project_id: int = fragment.project_id
-    project: ProjectGet = await project_by_id(info, project_id)
+    project: Project = await get_project_by_id_db(db, project_id)
     if project is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f'Project with id {fragment.project_id} does not exist or you do not have permission to view it')
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
     permission: bool = await write_permission(db, user.user.id, project_id)
     if not permission:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
@@ -239,7 +233,7 @@ async def update_fragment_route(info: strawberry.Info[Context], fg: FragmentPatc
 
     fragment: Fragment = await update_fragment_by_id_db(db, values=fg.__dict__,
                                                         linked_fragments=fg.linked_fragments)
-    return fragment_db_to_fragment(fragment, project)
+    return fragment_db_to_fragment(fragment)
 
 
 async def delete_fragment_route(info: strawberry.Info[Context], fragment_id: int) -> None:
@@ -250,10 +244,9 @@ async def delete_fragment_route(info: strawberry.Info[Context], fragment_id: int
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'Fragment with id {fragment_id} does not exist')
     project_id: int = fragment.project_id
-    project: ProjectGet = await project_by_id(info, project_id)
+    project: Project = await get_project_by_id_db(db, project_id)
     if project is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f'Project with id {fragment.project_id} does not exist or you do not have permission to view it')
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
     permission: bool = await write_permission(db, user.user.id, project_id)
     if not permission:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
@@ -262,3 +255,16 @@ async def delete_fragment_route(info: strawberry.Info[Context], fragment_id: int
         await delete_fragment_by_id_db(db, fragment_id)
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e))
+
+
+async def fragment_by_id(info: strawberry.Info[Context], fragment_id: int) -> FragmentGet:
+    user: AuthPayload = await info.context.user()
+    db: Session = info.context.session()
+
+    fragment: Fragment = await get_fragment_by_id_db(db, fragment_id)
+    if fragment is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f'Fragment with id {fragment_id} does not exist')
+    project_id: int = fragment.project_id
+    await check_read_permissions(db, user.user.id, project_id)
+    return fragment_db_to_fragment(fragment)

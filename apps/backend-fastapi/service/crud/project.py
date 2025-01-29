@@ -1,3 +1,5 @@
+from crud.filesystem import create_directory_db
+from database import FilesystemDirectory
 from database.models import Project, User, ProjectMemberRole
 from sqlalchemy.orm import Session
 from typing import Optional, List
@@ -28,7 +30,11 @@ async def create_project_db(db: Session, name: str, user_id: int) -> Project:
     db.refresh(project)
 
     await add_user_to_project_db(db, user_id, project.id, 1)  # 1 = owner
-
+    root_directory: FilesystemDirectory = await create_directory_db(db=db, parent_id=None, name=name, project_id=project.id)
+    project.root_directory = root_directory
+    db.add(project)
+    db.commit()
+    db.refresh(project)
     return project
 
 

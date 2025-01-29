@@ -14,7 +14,7 @@ async def get_directory_by_id_db(db: Session, directory_id: int) -> Optional[Fil
     return db.query(FilesystemDirectory).filter(FilesystemDirectory.id == directory_id).first()
 
 
-async def updatee_directory_db(db: Session, values: dict) -> FilesystemDirectory:
+async def update_directory_db(db: Session, values: dict) -> FilesystemDirectory:
     directory_id = values.get("id")
     directory: FilesystemDirectory = db.query(FilesystemDirectory).filter(
         FilesystemDirectory.id == directory_id).first()
@@ -73,24 +73,3 @@ async def delete_directory_db(db: Session, directory_id: int) -> None:
     db.commit()
     print(f"Deleted directory {directory_id}. No fragments in it were referenced by others.")
 
-
-async def get_root_elements_db(db: Session, project_id: int) -> Tuple[List[FilesystemDirectory], List[Fragment]]:
-    top_level_dirs = (
-        db.query(FilesystemDirectory)
-        .filter(
-            FilesystemDirectory.project_id == project_id,
-            FilesystemDirectory.parent_id.is_(None)
-        )
-        .all()
-    )
-
-    top_level_frags = (
-        db.query(Fragment)
-        .filter(
-            Fragment.project_id == project_id,
-            Fragment.directory_id.is_(None)
-        )
-        .all()
-    )
-
-    return top_level_dirs, top_level_frags

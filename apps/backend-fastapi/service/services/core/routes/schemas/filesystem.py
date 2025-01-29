@@ -1,17 +1,14 @@
-from typing import Optional, List, Union
+from typing import Optional, List
 
 import strawberry
 
 from services.core.routes.schemas.fragment import FragmentGet
-from services.core.routes.schemas.project import ProjectGet
-from services.core.routes.schemas.user import UserGet
-from enum import Enum
 
 
 @strawberry.input
 class ProjectDirectory:
     project_id: int
-    parent_id: Optional[int] = None
+    parent_id: int
     name: str
 
 

@@ -2,7 +2,6 @@ from typing import Optional, List
 
 import strawberry
 
-from services.core.routes.schemas.project import ProjectGet
 from services.core.routes.schemas.user import UserGet
 
 
@@ -15,7 +14,7 @@ class FragmentPost:
 
     linked_fragments: Optional[List[int]] = None  # ids of fragments
 
-    directory_id: Optional[int] = None
+    directory_id: int
 
 
 @strawberry.input
@@ -33,7 +32,6 @@ class FragmentPatch:
 @strawberry.type
 class FragmentGet:
     id: int
-    project: ProjectGet
     name: str
     author: UserGet
     document: strawberry.scalars.JSON
@@ -42,4 +40,4 @@ class FragmentGet:
 
     linked_fragments: Optional[List["FragmentGet"]] = None  # flat list of fragments
 
-    directory_id: Optional[int] = None
+    directory_id: int

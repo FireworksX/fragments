@@ -2,18 +2,16 @@ from typing import List, Tuple
 from fastapi import HTTPException, status
 import strawberry
 
-from crud.filesystem import create_directory_db, get_directory_by_id_db, get_root_elements_db, \
-    delete_directory_db, updatee_directory_db
+from crud.filesystem import create_directory_db, get_directory_by_id_db, \
+    delete_directory_db, update_directory_db
 from crud.project import get_project_by_id_db
 from database import Session, Project, FilesystemDirectory, Fragment
 from .schemas.filesystem import ProjectDirectory, ProjectDirectoryGet, ProjectDirectoryPatch
-from .schemas.project import ProjectGet
 from .schemas.user import RoleGet, AuthPayload
 from .middleware import Context
 from .utils import get_user_role_in_project
 
 from .fragment import fragment_db_to_fragment
-from .project import project_by_id
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
@@ -28,19 +26,19 @@ async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
 
 def directory_db_to_directory(
         directory_id: int, name: str, parent_id: int | None, fragments: List[Fragment],
-        directories: List[FilesystemDirectory], project_get: ProjectGet
+        directories: List[FilesystemDirectory], project_id: int
 ) -> ProjectDirectoryGet:
     root_directory: ProjectDirectoryGet = ProjectDirectoryGet(id=directory_id, name=name, parent_id=parent_id,
                                                               fragments=[],
-                                                              directories=[], project_id=project_get.id,
+                                                              directories=[], project_id=project_id,
                                                               has_subdirectories=True if len(
                                                                   directories) > 0 else False)
     for fragment in fragments:
-        root_directory.fragments.append(fragment_db_to_fragment(fragment, project_get))
+        root_directory.fragments.append(fragment_db_to_fragment(fragment))
 
     for directory in directories:
         root_directory.directories.append(
-            ProjectDirectoryGet(id=directory.id, name=directory.name, parent_id=-1 if directory.parent_id is None else directory.parent_id, directories=[],
+            ProjectDirectoryGet(id=directory.id, name=directory.name, parent_id=directory.parent_id, directories=[],
                                 fragments=[], project_id=directory.project_id,
                                 has_subdirectories=True if len(directory.subdirectories) > 0 else False))
     return root_directory
@@ -63,7 +61,7 @@ async def create_directory_route(info: strawberry.Info[Context], directory: Proj
                                                                   directory.project_id)
 
     return directory_db_to_directory(directory_db.id, directory_db.name, directory_db.parent_id, directory_db.fragments,
-                                     directory_db.subdirectories, await project_by_id(info, directory.project_id))
+                                     directory_db.subdirectories, directory.project_id)
 
 
 async def get_directory(info: strawberry.Info[Context], directory_id: int) -> ProjectDirectoryGet:
@@ -84,25 +82,7 @@ async def get_directory(info: strawberry.Info[Context], directory_id: int) -> Pr
                             detail=f'User is not allowed to observe directories')
 
     return directory_db_to_directory(directory_db.id, directory_db.name, directory_db.parent_id, directory_db.fragments,
-                                     directory_db.subdirectories, await project_by_id(info, directory_db.project_id))
-
-
-async def get_roots_elements_route(info: strawberry.Info[Context], project_id: int) -> ProjectDirectoryGet:
-    user: AuthPayload = await info.context.user()
-    db: Session = info.context.session()
-
-    project: Project = await get_project_by_id_db(db, project_id)
-    if project is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
-
-    permission: bool = await write_permission(db, user.user.id, project_id)
-    if not permission:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail=f'User is not allowed to observe directories')
-
-    directories, fragments = await get_root_elements_db(db, project_id)
-    return directory_db_to_directory(directory_id=-1, name="root", parent_id=None, fragments=fragments,
-                                     directories=directories, project_get=await project_by_id(info, project_id))
+                                     directory_db.subdirectories, directory_db.project_id)
 
 
 # don't allow to remove item if it is referenced by another item (fragment in linked_fragments)
@@ -122,6 +102,9 @@ async def delete_directory_route(info: strawberry.Info[Context], directory_id: i
     if not permission:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to delete directories')
+    if directory_id == project.root_directory_id:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail="Could not delete root directory")
+
     try:
         await delete_directory_db(db, directory_id)
     except ValueError as e:
@@ -146,6 +129,6 @@ async def update_directory_route(info: strawberry.Info[Context],
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to update directories')
 
-    directory_db: FilesystemDirectory = await updatee_directory_db(db, directory.__dict__)
+    directory_db: FilesystemDirectory = await update_directory_db(db, directory.__dict__)
     return directory_db_to_directory(directory_db.id, directory_db.name, directory_db.parent_id, directory_db.fragments,
-                                     directory_db.subdirectories, await project_by_id(info, directory_db.project_id))
+                                     directory_db.subdirectories, directory_db.project_id)
