@@ -20,10 +20,10 @@ from database import Session, Project, Landing, Stream, Campaign
 from .utils import get_user_role_in_project
 
 
-def landing_db_to_landing(info, landing_db: Landing) -> LandingGet:
+async def landing_db_to_landing(info, landing_db: Landing) -> LandingGet:
     return LandingGet(id=landing_db.id, name=landing_db.name,
                       props=landing_db.props, weight=landing_db.weight,
-                      fragment=fragment_by_id(info, landing_db.fragment.id), stream=landing_db.stream, active=landing_db.active,
+                      fragment=await fragment_by_id(info, landing_db.fragment.id), stream=landing_db.stream, active=landing_db.active,
                       deleted=landing_db.deleted)
 
 
@@ -75,7 +75,7 @@ async def create_landing_route(info: strawberry.Info[Context], landing_in: Landi
 
     landing: Landing = await create_landing_db(db, landing_in.name, project_id, landing_in.stream_id,
                                                landing_in.fragment_id, landing_in.props, landing_in.weight, landing_in.active, landing_in.deleted)
-    return landing_db_to_landing(info, landing)
+    return await landing_db_to_landing(info, landing)
 
 
 async def landings_in_stream(info: strawberry.Info[Context], stream_id: int) -> List[LandingGet]:
@@ -98,7 +98,7 @@ async def landings_in_stream(info: strawberry.Info[Context], stream_id: int) -> 
     landings: List[Landing] = await get_landings_by_stream_id_db(db, stream_id)
     out: List[LandingGet] = []
     for landing in landings:
-        out.append(landing_db_to_landing(info, landing))
+        out.append(await landing_db_to_landing(info, landing))
     return out
 
 
@@ -123,7 +123,7 @@ async def landing_by_id(info: strawberry.Info[Context], landing_id: int) -> Land
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to get landings')
 
-    return landing_db_to_landing(info, landing)
+    return await landing_db_to_landing(info, landing)
 
 
 async def update_landing_route(info: strawberry.Info[Context], landing_patch: LandingPatch) -> LandingGet:
@@ -166,4 +166,4 @@ async def update_landing_route(info: strawberry.Info[Context], landing_patch: La
 
     landing: Landing = await update_landing_by_id_db(db, values=landing_patch.__dict__)
 
-    return landing_db_to_landing(info, landing)
+    return await landing_db_to_landing(info, landing)

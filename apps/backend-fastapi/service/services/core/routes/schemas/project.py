@@ -3,8 +3,8 @@ from typing import Optional, List
 import strawberry
 
 from services.core.routes.schemas.campaign import CampaignGet
+from services.core.routes.schemas.filesystem import ProjectDirectoryGet
 from services.core.routes.schemas.user import UserGet, UserRoleGet
-
 
 @strawberry.type
 class ProjectGet:
@@ -14,6 +14,7 @@ class ProjectGet:
     owner: UserGet
     members: List[UserRoleGet]
     campaigns: List[CampaignGet]
+    root_directory: ProjectDirectoryGet
 
 
 @strawberry.input

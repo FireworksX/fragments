@@ -24,7 +24,14 @@ async def create_fragment_db(db: Session, name: str, author_id: int, project_id:
     return fragment
 
 
-async def get_fragment_by_id_db(db: Session, fragment_id: int) -> Optional[Fragment]:
+async def get_fragments_by_ids_db(db: Session, fragment_ids: List[int]) -> List[Fragment]:
+    if not fragment_ids:
+        return []
+
+    return db.query(Fragment).filter(Fragment.id.in_(fragment_ids)).all()
+
+
+async def get_fragment_by_id_db(db: Session, fragment_id: int) -> Fragment:
     return db.query(Fragment).filter(Fragment.id == fragment_id).first()
 
 

@@ -59,6 +59,11 @@ class Project(Base):
     members = relationship("ProjectMemberRole", back_populates="project")
     campaigns = relationship("ProjectCampaign", back_populates="project")
 
+    root_directory_id = Column('directory_id', Integer, ForeignKey('filesystem_directory.id'))
+    root_directory = relationship(
+        "FilesystemDirectory", foreign_keys=[root_directory_id]
+    )
+
 
 class Campaign(Base):
     __tablename__ = 'campaign'
@@ -217,7 +222,7 @@ class Fragment(Base):
     assets = relationship("FragmentMedia", back_populates="fragment", cascade="save-update, merge, "
                                                                                       "delete, delete-orphan")
 
-    directory_id = Column('directory_id', Integer, ForeignKey('filesystem_directory.id'))
+    directory_id = Column('directory_id', Integer, ForeignKey('filesystem_directory.id'), nullable=False)
     directory = relationship(
         "FilesystemDirectory",
         back_populates="fragments"
