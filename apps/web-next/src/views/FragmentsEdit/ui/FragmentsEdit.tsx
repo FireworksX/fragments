@@ -44,9 +44,12 @@ import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDoc
 import CreateFragmentModal from '../../../widgets/modals/CreateFragmentModal/ui/CreateFragmentModal'
 import { BuilderFragmentTabs } from '@/views/FragmentsBuilder/widgets/BuilderFragmentTabs'
 import { useGraphEffect } from '@graph-state/react'
+import { useBuilderHotKeys } from '@/shared/hooks/hotkeys/useBuilderHotKeys'
 
 export const FragmentsEdit = () => {
   const { documentManager } = useBuilderDocument()
+
+  useBuilderHotKeys()
 
   useGraphEffect(documentManager, 'Updater:root', data => {
     console.log(data)

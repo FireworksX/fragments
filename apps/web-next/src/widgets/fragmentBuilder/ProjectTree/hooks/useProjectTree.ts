@@ -40,7 +40,8 @@ export const useProjectTree = () => {
     updateProjectFragment,
     createProjectDirectory,
     updateProjectDirectory,
-    deleteProjectDirectory
+    deleteProjectDirectory,
+    deleteProjectFragment
   } = useProjectTreeMethods()
   const { openFragment } = useBuilder()
 
@@ -94,12 +95,22 @@ export const useProjectTree = () => {
       setLoading(nodeId, false)
     }
 
-    const deleteItem = async (nodeId: number) => {
-      deleteProjectDirectory({
-        variables: {
-          directoryId: nodeId
-        }
-      })
+    const deleteItem = async (nodeId: number, type: keyof typeof projectItemType) => {
+      if (type === projectItemType.directory) {
+        deleteProjectDirectory({
+          variables: {
+            directoryId: nodeId
+          }
+        })
+      }
+
+      if (type === projectItemType.fragment) {
+        deleteProjectFragment({
+          variables: {
+            fragmentId: nodeId
+          }
+        })
+      }
     }
 
     const buildItem = (node, deepIndex = 0) => {
@@ -111,13 +122,15 @@ export const useProjectTree = () => {
       const itemType = node.__typename === 'ProjectDirectoryGet' ? projectItemType.directory : projectItemType.fragment
       const canHaveChildren = itemType === projectItemType.directory
       const children = [...(node?.children ?? []), ...(node?.fragments ?? [])]
-      const loaded = node?.hasSubdirectories && node?.children?.length > 0
+      const loaded = node?.hasSubdirectories ? node?.children?.length > 0 : true
       const hasChildren = (children || []).length > 0 || !!node?.hasSubdirectories
 
       const getHandleCollapse = () => {
         if (canHaveChildren) {
           if (loaded) {
-            return () => setCollapsedIds(p => (p.includes(node.id) ? p.filter(v => v === node.id) : [...p, node.id]))
+            return () => {
+              setCollapsedIds(p => (p.includes(node.id) ? p.filter(v => v !== node.id) : [...p, node.id]))
+            }
           } else {
             return () => loadDirectory(node.id)
           }
@@ -144,7 +157,7 @@ export const useProjectTree = () => {
         },
         onCollapse: getHandleCollapse(),
         onRename: (name: string) => renameItem(name, node.id, itemType),
-        onDelete: () => deleteItem(node.id)
+        onDelete: () => deleteItem(node.id, itemType)
       }
     }
 

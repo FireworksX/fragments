@@ -27,3 +27,8 @@
     width: 1px;
     background: var(--border);
 }
+
+.spinner {
+    min-width: 16px;
+    height: 16px;
+}

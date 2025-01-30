@@ -8,6 +8,7 @@ import { CREATE_PROJECT_FRAGMENT } from '@/shared/hooks/useProjectTree/lib/creat
 import { UPDATE_PROJECT_FRAGMENT } from '@/shared/hooks/useProjectTree/lib/updateProjectFragment'
 import { useMemo } from 'react'
 import { gql } from '@/__generated__'
+import { DELETE_PROJECT_FRAGMENT } from '@/shared/hooks/useProjectTree/lib/deleteProjectFragment'
 
 export const useProjectTree = () => {
   const client = useApolloClient()
@@ -63,7 +64,7 @@ export const useProjectTree = () => {
 
   const [createProjectFragment] = useMutation(CREATE_PROJECT_FRAGMENT)
   const [updateProjectFragment] = useMutation(UPDATE_PROJECT_FRAGMENT)
-  // const [deleteProjectDirectory] = useMutation(DELETE_PROJECT_DIRECTORY)
+  const [deleteProjectFragment] = useMutation(DELETE_PROJECT_FRAGMENT)
 
   return {
     projectSlug,
@@ -76,6 +77,7 @@ export const useProjectTree = () => {
     deleteProjectDirectory,
 
     createProjectFragment,
-    updateProjectFragment
+    updateProjectFragment,
+    deleteProjectFragment
   }
 }

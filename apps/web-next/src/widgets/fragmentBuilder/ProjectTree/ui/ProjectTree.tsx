@@ -3,8 +3,6 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import { ProjectTreeItem } from '../widgets/ProjectTreeItem'
 import { useProjectTree } from '@/widgets/fragmentBuilder/ProjectTree/hooks/useProjectTree'
-import dynamic from 'next/dynamic'
-import { restrictToParentElement } from '@dnd-kit/modifiers'
 import { ProjectTreeSortableItem } from '@/widgets/fragmentBuilder/ProjectTree/widgets/ProjectTreeSortableItem'
 import { DragOverlay } from '@dnd-kit/core'
 
@@ -20,7 +18,7 @@ export const ProjectTree: FC<ProjectTreeProps> = ({ className }) => {
     <div className={cn(styles.root, className)} ref={treeRef} data-testid='ProjectTree'>
       {list.map(item => (
         <ProjectTreeSortableItem
-          key={item.id}
+          key={`${item.id}_${item.type}`}
           id={item.id}
           type={item.type}
           deepIndex={item.deepIndex}

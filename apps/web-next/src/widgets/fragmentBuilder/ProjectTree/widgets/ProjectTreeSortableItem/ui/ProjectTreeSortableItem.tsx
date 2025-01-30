@@ -4,6 +4,7 @@ import styles from './styles.module.css'
 import { useDraggable } from '@dnd-kit/core'
 import { FileSystemItemType } from '@/__generated__/graphql'
 import { projectItemType } from '@/widgets/fragmentBuilder/ProjectTree/hooks/useProjectTree'
+import { draggableTypes } from '@/shared/store/builderStore/plugins/droppablePlugin'
 
 interface ProjectTreeSortableItemProps extends PropsWithChildren {
   id: string
@@ -28,6 +29,7 @@ export const ProjectTreeSortableItem: FC<ProjectTreeSortableItemProps> = ({
     disabled: type !== projectItemType.fragment,
     data: {
       id,
+      type: draggableTypes.fragmentProjectItem,
       area: 'projectTree'
     }
   })

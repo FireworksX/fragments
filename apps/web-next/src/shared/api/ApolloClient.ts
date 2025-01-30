@@ -1,4 +1,4 @@
-import { from, HttpLink } from '@apollo/client'
+import { from, gql, HttpLink } from '@apollo/client'
 import { ApolloClient, InMemoryCache } from '@apollo/experimental-nextjs-app-support'
 import { setContext } from '@apollo/client/link/context'
 import { getSession } from 'next-auth/react'
@@ -36,9 +36,46 @@ export function makeApolloClient() {
       typePolicies: {
         Mutation: {
           fields: {
-            deleteProjectItem: {
-              merge(_, incoming, { cache, variables }) {
-                cache.evict({ id: `ProjectItemGet:${variables?.projectItemId}` })
+            deleteFragment: {
+              merge(_, _incoming, { cache, variables }) {
+                cache.evict({ id: `FragmentGet:${variables?.fragmentId}` })
+              }
+            },
+            deleteDirectory: {
+              merge(_, _incoming, { cache, variables }) {
+                cache.evict({ id: `ProjectDirectoryGet:${variables?.directoryId}` })
+              }
+            },
+            createFragment: {
+              merge(outcome, incoming, { cache, variables }) {
+                const parentId = variables?.parentId ?? -1
+
+                if (parentId) {
+                  cache.modify({
+                    id: `ProjectDirectoryGet:${parentId}`, // Родительский объект
+                    fields: {
+                      fragments(existingFragments = []) {
+                        return [...existingFragments, incoming]
+                      }
+                    }
+                  })
+                }
+              }
+            },
+            createDirectory: {
+              merge(outcome, incoming, { cache, variables }) {
+                const parentId = variables?.parentId ?? -1
+
+                if (parentId) {
+                  cache.modify({
+                    id: `ProjectDirectoryGet:${parentId}`, // Родительский объект
+                    fields: {
+                      directories(existingFragments = []) {
+                        return [...existingFragments, incoming]
+                      }
+                    }
+                  })
+                }
               }
             }
           }

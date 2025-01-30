@@ -46,7 +46,6 @@ export const useCanvas = () => {
 
   const viewportRef = useRef()
   const saveOffset = useRef([0, 0])
-  const [measureRef, measure] = useMeasure()
 
   // useEffect(() => {
   //   canvasManager.updateBound(measure.left, measure.top, measure.width, measure.height)
@@ -211,7 +210,6 @@ export const useCanvas = () => {
 
   return {
     viewportRef,
-    measureRef,
     Container: animated.div,
     pointerRef,
     containerStyles: canvas

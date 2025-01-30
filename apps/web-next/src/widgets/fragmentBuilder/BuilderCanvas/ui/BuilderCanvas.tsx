@@ -12,11 +12,11 @@ interface CanvasProps extends PropsWithChildren {
 
 const BuilderCanvas: FC<CanvasProps> = ({ className, children, extendNodes }) => {
   useCanvasInsert()
-  const { Container, viewportRef, pointerRef, measureRef, containerStyles } = useCanvas()
+  const { Container, viewportRef, pointerRef, containerStyles } = useCanvas()
 
   return (
     <div className={cn(className, styles.root)}>
-      <div className={styles.cursorPointer} ref={mergeRefs([pointerRef, measureRef])}>
+      <div className={styles.cursorPointer} ref={pointerRef}>
         <Container
           id='viewport'
           style={{

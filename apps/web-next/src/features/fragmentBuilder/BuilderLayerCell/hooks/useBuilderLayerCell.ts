@@ -9,7 +9,6 @@ import { useBreakpoints } from '@/shared/hooks/fragmentBuilder/useBreakpoints'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export const useBuilderLayerCell = (layerKey: LinkKey) => {
-  const { canvasManager } = useContext(BuilderContext)
   const { documentManager } = useBuilderDocument()
   const [layerGraph] = useGraph(documentManager, layerKey)
   const layerInvoker = useLayerInvoker(layerKey)

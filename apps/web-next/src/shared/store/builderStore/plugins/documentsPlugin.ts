@@ -5,6 +5,7 @@ import buttonData from '@/shared/data/button.fragment.json'
 import pluginFragmentSpring, { skips, skips as stateSkips } from '@fragments/plugin-fragment-spring'
 import { builderStore } from '@/shared/store/builderStore'
 import { fragmentModule } from '@/shared/data/fragment.module'
+import { ApolloClient } from '@apollo/experimental-nextjs-app-support'
 
 const dataMap = {
   'Fragment:g34gherhg3g': fragmentData,
@@ -23,6 +24,7 @@ export const documentsPlugin = (state: typeof builderStore) => {
     _id: 'root',
     fetching: false,
     manager: null,
+    managerKey: null,
     isPreview: false
   }
   const documentGraphKey = state.keyOfEntity(documentGraph)
@@ -34,86 +36,55 @@ export const documentsPlugin = (state: typeof builderStore) => {
   state.$documents = {
     key: documentGraphKey,
     cacheDocuments: new Map(),
+    // apolloClient: null as ApolloClient<any> | null,
+    // setApolloClient: (client: ApolloClient<any>) => (state.$documents.apolloClient = client),
     getDocumentManager: (fragmentKey: LinkKey) => {
       if (fragmentKey) {
         return state.$documents.cacheDocuments.get(fragmentKey)
       }
 
       return state.resolve(state.documentKey)?.manager
-    }
-  }
+    },
 
-  const getDocumentManager = (fragmentKey: LinkKey) => {
-    if (state.$documents.cacheDocuments.has(fragmentKey)) {
-      return state.$documents.cacheDocuments.get(fragmentKey)
-    }
+    // loadFragment(fragmentId: number) {
+    //   const apolloClient = state.$documents.apolloClient as ApolloClient<any> | null
+    //
+    //   if (apolloClient) {
+    //     apolloClient.query()
+    //   }
+    // },
 
-    const { _type, _id } = state.entityOfKey(fragmentKey)
+    createDocumentManager: (fragmentKey: LinkKey, document: unknown) => {
+      if (state.$documents.cacheDocuments.has(fragmentKey)) {
+        return state.$documents.cacheDocuments.get(fragmentKey)
+      }
 
-    const documentManager = createState({
-      _type,
-      _id,
-      initialState: {},
-      plugins: [pluginFragmentSpring(fragmentKey)],
-      skip: [...stateSkips, ...skips]
-    })
+      const { _type, _id } = state.entityOfKey(fragmentKey)
 
-    state.$documents.cacheDocuments.set(fragmentKey, documentManager)
+      const documentManager = createState({
+        _type,
+        _id,
+        initialState: {},
+        plugins: [pluginFragmentSpring(fragmentKey)],
+        skip: [...stateSkips, ...skips]
+      })
 
-    return documentManager
-  }
+      documentManager.$fragment.applySnapshot(document)
 
-  const createDocumentManager = (fragmentKey: LinkKey) => {
-    const module = fragmentModule
+      state.$documents.cacheDocuments.set(fragmentKey, documentManager)
+      return documentManager
+    },
 
-    return new Promise(resolve =>
-      setTimeout(() => {
-        const manager = getDocumentManager(fragmentKey)
+    setActiveDocumentManager: (fragmentKey: LinkKey | null) => {
+      if (fragmentKey === null) {
+        state.mutate(documentGraphKey, { manager: null, managerKey: null })
+        return
+      }
 
-        const linkedFragments = (module.linkedFragments ?? []).map(linkedModule => {
-          const linkedManager = getDocumentManager(state.keyOfEntity(linkedModule))
-          linkedManager.$fragment.applySnapshot(linkedModule.data)
-
-          return linkedManager
-        })
-
-        manager.$fragment.linkFragments(linkedFragments)
-        manager.$fragment.applySnapshot(module.data)
-
-        // manager.$fragment.applySnapshot(dataMap[fragmentKey])
-        resolve(manager)
-      }, 1)
-    )
-  }
-
-  state.subscribe(state.key, async (next, prev) => {
-    if (next?.activeTabIndex !== prev?.activeTabIndex) {
-      const activeTab = state.resolve(next.tabs.at(next.activeTabIndex))
-
-      if (activeTab?._type === 'FragmentModule') {
-        const fragmentKey = activeTab.fragment
-
-        state.mutate(documentGraphKey, { fetching: true })
-        const documentManagerData = await createDocumentManager(fragmentKey)
-        state.mutate(documentGraphKey, { fetching: false, manager: documentManagerData })
-
-        // TODO Remove
-        // if (state.resolve(documentManagerKey)) {
-        //   state.mutate(state.key, { documentManager: documentManagerKey })
-        // } else {
-        //   state.mutate(state.key, { fetchingDocumentManager: true, documentManager: null })
-        //
-        //   const documentManagerData = await createDocumentManager(fragmentKey)
-        //   state.mutate(state.key, {
-        //     documentManager: {
-        //       ...state.entityOfKey(documentManagerKey),
-        //       manager: documentManagerData
-        //     },
-        //     documentManagers: [documentManagerKey],
-        //     fetchingDocumentManager: false
-        //   })
-        // }
+      if (state.$documents.cacheDocuments.has(fragmentKey)) {
+        const manager = state.$documents.cacheDocuments.get(fragmentKey)
+        state.mutate(documentGraphKey, { manager, managerKey: fragmentKey })
       }
     }
-  })
+  }
 }

@@ -5,6 +5,14 @@ schema {
     mutation: Mutation
 }
 
+union FilterOSTypeGetFilterDeviceTypeGetFilterPageGetFilterGeoLocationGetFilterTimeFrameGet = FilterDeviceTypeGet | FilterGeoLocationGet | FilterOSTypeGet | FilterPageGet | FilterTimeFrameGet
+
+type AllFiltersGet {
+    deviceTypes: [DeviceType!]!
+    geoLocations: [CountryGet!]!
+    osTypes: [OSType!]!
+}
+
 type AuthPayload {
     accessToken: String!
     refreshToken: String!
@@ -15,11 +23,16 @@ type CampaignGet {
     active: Boolean!
     author: UserGet!
     deleted: Boolean!
-    description: String!
+    description: String
     id: Int!
-    logoId: Int
+    logo: String
     name: String!
     projectId: Int!
+}
+
+type CountryGet {
+    country: String!
+    regions: [RegionGet!]!
 }
 
 type FeedbackGet {
@@ -28,43 +41,104 @@ type FeedbackGet {
     page: String!
 }
 
-type FragmentGet {
-    author: UserGet!
-    document: JSON!
-    id: Int!
-    name: String!
-    project: ProjectGet!
-    props: JSON!
+type FilterDeviceTypeGet {
+    deviceType: DeviceType!
+    toggled: Boolean
+    type: FilterType!
 }
 
-type GeoLocationGet {
-    city: String!
+type FilterGeoLocationGet {
+    city: String
     country: String!
-    region: String!
+    region: String
+    toggled: Boolean
+    type: FilterType!
+}
+
+type FilterOSTypeGet {
+    osType: OSType!
+    toggled: Boolean
+    type: FilterType!
+}
+
+type FilterPageGet {
+    page: String!
+    toggled: Boolean
+    type: FilterType!
+}
+
+type FilterTimeFrameGet {
+    fromTime: DateTime!
+    toTime: DateTime!
+    toggled: Boolean
+    type: FilterType!
+}
+
+type FragmentGet {
+    assets: [String!]!
+    author: UserGet!
+    directoryId: Int
+    document: JSON!
+    id: Int!
+    linkedFragments: [FragmentGet!]
+    name: String!
+    project: ProjectGet!
+    props: JSON
+}
+
+type LandingGet {
+    active: Boolean!
+    deleted: Boolean!
+    fragment: FragmentGet
+    id: Int!
+    name: String!
+    props: JSON
+    stream: StreamGet!
+    weight: Float
 }
 
 type Mutation {
+    addAvatar(file: Upload!): UserGet!
+    addCampaignLogo(campaignId: Int!, file: Upload!): CampaignGet!
+    addFragmentAsset(file: Upload!, fragmentId: Int!): FragmentGet!
+    addProjectLogo(file: Upload!, projectId: Int!): ProjectGet!
     addUserToProject(projectId: Int!, role: Int!, userId: Int!): Void
     changeUserRole(projectId: Int!, role: RoleGet!, userId: Int!): Void
     createCampaign(cmp: CampaignPost!): CampaignGet!
+    createDirectory(directory: ProjectDirectory!): ProjectDirectoryGet!
     createFragment(fg: FragmentPost!): FragmentGet!
+    createLanding(landings: LandingPost!): LandingGet!
     createProject(pr: ProjectPost!): ProjectGet!
     createStream(strm: StreamPost!): StreamGet!
-    createStreamFragment(streamFragment: StreamFragmentPost!): StreamFragmentGet!
+    deleteDirectory(directoryId: Int!): Void
+    deleteFragment(fragmentId: Int!): Void
     feedback(fd: FeedbackPost!): FeedbackGet!
     login(email: String!, password: String!): AuthPayload!
     refresh: AuthPayload!
+    removeFragmentAsset(fragmentId: Int!, publicPath: String!): FragmentGet!
     signup(email: String!, firstName: String!, lastName: String, password: String!): AuthPayload!
     updateCampaign(cmp: CampaignPatch!): CampaignGet!
+    updateDirectory(directory: ProjectDirectoryPatch!): ProjectDirectoryGet!
     updateFragment(fg: FragmentPatch!): FragmentGet!
+    updateLanding(landing: LandingPatch!): LandingGet!
+    updateProject(pr: ProjectPatch!): ProjectGet!
     updateStream(strm: StreamPatch!): StreamGet!
-    updateStreamFragment(streamFragment: StreamFragmentPatch!): StreamFragmentGet!
+}
+
+type ProjectDirectoryGet {
+    directories: [ProjectDirectoryGet!]!
+    fragments: [FragmentGet!]!
+    hasSubdirectories: Boolean!
+    id: Int!
+    name: String!
+    parentId: Int
+    projectId: Int!
 }
 
 type ProjectGet {
     campaigns: [CampaignGet!]!
     id: Int!
-    logoId: Int
+    logo: String
     members: [UserRoleGet!]!
     name: String!
     owner: UserGet!
@@ -72,40 +146,29 @@ type ProjectGet {
 
 type Query {
     campaign(active: Boolean, campgainId: Int, deleted: Boolean, projectId: Int): [CampaignGet!]!
+    campaignByName(active: Boolean, deleted: Boolean, limit: Int = 5, name: String!, projectId: Int!): [CampaignGet!]!
+    directory(directoryId: Int, projectId: Int): ProjectDirectoryGet!
+    filter(countries: [String!], regions: [String!]): AllFiltersGet!
     fragment(fragmentId: Int, projectId: Int): [FragmentGet!]!
-    location(ip: String!): GeoLocationGet!
+    landing(landingId: Int, streamId: Int): [LandingGet!]!
     profile: AuthPayload!
     project(projectId: Int): [ProjectGet!]!
     stream(active: Boolean, campaignId: Int, deleted: Boolean, streamId: Int): [StreamGet!]!
-    streamFragment(streamFragmentId: Int, streamId: Int): [StreamFragmentGet!]!
 }
 
-type StreamFragmentGet {
-    fragmentId: Int!
-    id: Int!
-    name: String!
-    props: JSON
-    streamId: Int!
-    weight: Float!
+type RegionGet {
+    cities: [String!]!
+    region: String!
 }
 
 type StreamGet {
     active: Boolean!
     campaignId: Int!
     deleted: Boolean!
-    deviceTypes: [DeviceTypeGet!]!
-    geoLocations: [GeoLocationGet!]!
+    filters: [FilterOSTypeGetFilterDeviceTypeGetFilterPageGetFilterGeoLocationGetFilterTimeFrameGet!]!
     id: Int!
     name: String!
-    osTypes: [OSTypeGet!]!
-    pages: [String!]!
-    timeFrames: [TimeFrameGet!]!
     weight: Float!
-}
-
-type TimeFrameGet {
-    fromTime: DateTime!
-    toTime: DateTime!
 }
 
 type UserGet {
@@ -113,6 +176,7 @@ type UserGet {
     firstName: String!
     id: Int!
     lastName: String
+    logo: String
 }
 
 type UserRoleGet {
@@ -120,10 +184,11 @@ type UserRoleGet {
     firstName: String!
     id: Int!
     lastName: String
+    logo: String
     role: RoleGet!
 }
 
-enum DeviceTypeGet {
+enum DeviceType {
     DESKTOP
     MOBILE
     TABLET
@@ -137,7 +202,15 @@ enum FeelLevelGet {
     TWO
 }
 
-enum OSTypeGet {
+enum FilterType {
+    DeviceType
+    GeoLocationType
+    OSType
+    PageType
+    TimeFrameType
+}
+
+enum OSType {
     ANDROID
     IOS
     LINUX
@@ -158,6 +231,8 @@ scalar DateTime
 "The `JSON` scalar type represents JSON values as specified by [ECMA-404](https://ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf)."
 scalar JSON
 
+scalar Upload
+
 "Represents NULL values"
 scalar Void
 
@@ -166,7 +241,6 @@ input CampaignPatch {
     deleted: Boolean
     description: String
     id: Int!
-    logoId: Int
     name: String
 }
 
@@ -174,7 +248,6 @@ input CampaignPost {
     active: Boolean!
     deleted: Boolean!
     description: String
-    logoId: Int
     name: String!
     projectId: Int!
 }
@@ -185,59 +258,109 @@ input FeedbackPost {
     page: String!
 }
 
+input FilterDeviceTypePost {
+    deviceType: DeviceType!
+    toggled: Boolean = true
+}
+
+input FilterGeoLocationPost {
+    city: String
+    country: String!
+    region: String
+    toggled: Boolean = true
+}
+
+input FilterOSTypePost {
+    osType: OSType!
+    toggled: Boolean = true
+}
+
+input FilterPagePost {
+    page: String!
+    toggled: Boolean = true
+}
+
+input FilterTimeFramePost {
+    fromTime: DateTime!
+    toTime: DateTime!
+    toggled: Boolean = true
+}
+
+input FiltersPost {
+    deviceTypes: [FilterDeviceTypePost!]
+    geolocations: [FilterGeoLocationPost!]
+    osTypes: [FilterOSTypePost!]
+    pages: [FilterPagePost!]
+    timeFrames: [FilterTimeFramePost!]
+}
+
 input FragmentPatch {
+    directoryId: Int
     document: JSON
     id: Int!
+    linkedFragments: [Int!]
     name: String
-    projectId: Int!
     props: JSON
 }
 
 input FragmentPost {
+    directoryId: Int
     document: JSON!
+    linkedFragments: [Int!]
     name: String!
     projectId: Int!
     props: JSON
 }
 
-input GeoLocationPost {
-    city: String
-    country: String
-    region: String
-}
-
-input ProjectPost {
-    logoId: String
-    name: String!
-}
-
-input StreamFragmentPatch {
-    fragmentId: Int!
+input LandingPatch {
+    active: Boolean
+    deleted: Boolean
+    fragmentId: Int
     id: Int!
     name: String
     props: JSON
     weight: Float
 }
 
-input StreamFragmentPost {
-    fragmentId: Int!
+input LandingPost {
+    active: Boolean
+    deleted: Boolean
+    fragmentId: Int
     name: String!
     props: JSON
     streamId: Int!
-    weight: Float!
+    weight: Float
+}
+
+input ProjectDirectory {
+    name: String!
+    parentId: Int
+    projectId: Int!
+}
+
+input ProjectDirectoryPatch {
+    id: Int!
+    name: String
+    parentId: Int
+}
+
+input ProjectPatch {
+    id: Int!
+    name: String
+}
+
+input ProjectPost {
+    logo: String
+    name: String!
 }
 
 input StreamPatch {
     active: Boolean
     campaignId: Int!
     deleted: Boolean
-    deviceTypes: [DeviceTypeGet!]
-    geoLocations: [GeoLocationPost!]
+    filters: FiltersPost
     id: Int!
     name: String
-    osTypes: [OSTypeGet!]
-    pages: [String!]
-    timeFrames: [TimeFramePost!]
     weight: Float
 }
 
@@ -245,16 +368,7 @@ input StreamPost {
     active: Boolean!
     campaignId: Int!
     deleted: Boolean!
-    deviceTypes: [DeviceTypeGet!]
-    geoLocations: [GeoLocationPost!]
+    filters: FiltersPost
     name: String!
-    osTypes: [OSTypeGet!]
-    pages: [String!]
-    timeFrames: [TimeFramePost!]
     weight: Float!
-}
-
-input TimeFramePost {
-    fromTime: DateTime!
-    toTime: DateTime!
 }

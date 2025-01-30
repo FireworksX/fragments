@@ -21,6 +21,10 @@
     color: var(--secondary);
     transition: var(--animation-transition-default);
 
+    &:hover {
+        background: rgba(var(--background-secondary--rgb), .4);
+    }
+
     &.active {
       background: var(--secondary-bg);
       color: var(--text-color-accent);

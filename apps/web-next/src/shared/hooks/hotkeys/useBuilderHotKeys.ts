@@ -4,10 +4,23 @@ import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useBuilderLayerFlags } from '@/shared/hooks/fragmentBuilder/useBuilderLayerFlags'
 import { hotKeysScope } from '@/shared/hooks/hotkeys/HotKeysProvider'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { useBuilderDocumentManager } from '@/shared/hooks/fragmentBuilder/useBuilderDocumentManager'
 
 export const useBuilderHotKeys = () => {
   const { selectionGraph, selection } = useBuilderSelection()
   const layerFlags = useBuilderLayerFlags(selection)
+  const { saveFragment } = useBuilderDocumentManager()
+
+  useHotkeys(
+    'meta+s',
+    keyboardEvent => {
+      keyboardEvent.preventDefault()
+
+      saveFragment()
+    },
+    { scopes: [hotKeysScope.builder] }
+  )
 
   useHotkeys(
     'backspace',

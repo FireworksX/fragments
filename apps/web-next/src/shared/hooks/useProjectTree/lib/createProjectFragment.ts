@@ -5,6 +5,7 @@ export const CREATE_PROJECT_FRAGMENT = gql(/* GraphQL */ `
     createFragment(fg: { name: $name, projectId: $projectSlug, document: "{}", directoryId: $parentId }) {
       id
       name
+      directoryId
     }
   }
 `)

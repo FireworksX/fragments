@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, use } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import LogoIcon from '@/shared/icons/next/logo.svg'
@@ -8,7 +8,12 @@ import { useDroppable } from '@dnd-kit/core'
 import { useModal } from '@/shared/hooks/useModal'
 import { modalNames } from '@/shared/data'
 import { useProjectTree } from '@/shared/hooks/useProjectTree'
-import CreateFragmentModal from '../../../../../../../widgets/modals/CreateFragmentModal/ui/CreateFragmentModal'
+import CreateFragmentModal from '@/widgets/modals/CreateFragmentModal/ui/CreateFragmentModal'
+import { useGraphEffect } from '@graph-state/react'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
+import { nodes } from '@fragments/plugin-fragment'
+import { draggableTypes } from '@/shared/store/builderStore/plugins/droppablePlugin'
+import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
 
 interface FragmentsEditPlaceholderProps {
   fetching?: boolean
@@ -16,12 +21,21 @@ interface FragmentsEditPlaceholderProps {
 }
 
 export const FragmentsEditPlaceholder: FC<FragmentsEditPlaceholderProps> = ({ className, fetching }) => {
+  const { builderManager } = use(BuilderContext)
   const { setNodeRef, isOver } = useDroppable({
-    id: 'builder-edit-placeholder'
+    id: 'builderPlaceholder',
+    data: { area: 'builderPlaceholder' }
   })
 
   const { openModal, updateContext, closeModal } = useModal()
   const { createProjectFragment, projectSlug } = useProjectTree()
+  const { openFragment } = useBuilder()
+
+  useGraphEffect(builderManager, builderManager.$droppable.builderPlaceholderDroppableKey, nextValue => {
+    if (nextValue.active?.type === draggableTypes.fragmentProjectItem) {
+      openFragment(nextValue.active.id)
+    }
+  })
 
   return (
     <>

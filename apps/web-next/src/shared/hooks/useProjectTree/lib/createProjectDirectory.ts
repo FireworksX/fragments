@@ -5,6 +5,7 @@ export const CREATE_PROJECT_DIRECTORY = gql(/* GraphQL */ `
     createDirectory(directory: { projectId: $projectSlug, name: $name, parentId: $parentId }) {
       id
       name
+      parentId
     }
   }
 `)

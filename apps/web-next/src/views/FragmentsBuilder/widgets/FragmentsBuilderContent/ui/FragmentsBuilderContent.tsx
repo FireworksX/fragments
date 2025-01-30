@@ -11,13 +11,15 @@ import { ProjectAssets } from '@/widgets/fragmentBuilder/ProjectAssets'
 import { FragmentsEditPlaceholder } from '@/views/FragmentsBuilder/widgets/FragmentsBuilderContent/components/FragmentsEditPlaceholder'
 import { FragmentsEdit } from '@/views/FragmentsEdit'
 import { FragmentPreview } from '@/views/FragmentPreview'
+import { useBuilderDocumentManager } from '@/shared/hooks/fragmentBuilder/useBuilderDocumentManager'
 
 interface FragmentsBuilderContentProps {
   className?: string
 }
 
 export const FragmentsBuilderContent: FC<FragmentsBuilderContentProps> = ({ className }) => {
-  const { documentManager, fetching } = useBuilderDocument()
+  const { fetching } = useBuilderDocumentManager()
+  const { documentManager } = useBuilderDocument()
 
   if (!documentManager || fetching) {
     return <FragmentsEditPlaceholder fetching={fetching} />
