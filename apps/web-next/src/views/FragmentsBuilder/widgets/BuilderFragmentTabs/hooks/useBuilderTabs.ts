@@ -9,10 +9,12 @@ import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
 import { useQuery } from '@apollo/client'
 import { FRAGMENTS_NAMES } from '@/views/FragmentsBuilder/widgets/BuilderFragmentTabs/lib/fragmentsNames'
 import { useProject } from '@/shared/hooks/useProject'
+import { useBuilderDocumentManager } from '@/shared/hooks/fragmentBuilder/useBuilderDocumentManager'
 
 export const useBuilderTabs = () => {
   const { projectSlug } = useProject()
   const { currentFragmentId, openFragment } = useBuilder()
+  const { fetchingUpdate } = useBuilderDocumentManager()
   const { value: tabsIds, push, splice } = useLocalStorageArray<string>('tabs', [], { sync: true })
 
   const { data: fragmentsNames } = useQuery(FRAGMENTS_NAMES, {
@@ -38,7 +40,8 @@ export const useBuilderTabs = () => {
     fragmentsNames?.fragment?.map(fragment => ({
       id: fragment.id,
       name: fragment.name,
-      isActive: fragment.id === +(currentFragmentId ?? 0)
+      isActive: fragment.id === +(currentFragmentId ?? 0),
+      fetching: fragment.id === +(currentFragmentId ?? 0) && fetchingUpdate
     })) ?? []
 
   return {

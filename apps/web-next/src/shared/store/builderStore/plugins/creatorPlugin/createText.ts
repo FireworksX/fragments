@@ -5,7 +5,7 @@ import { getRandomColor } from '@/shared/utils/random'
 const allowTypes = [nodes.Frame]
 
 export const createText = (state, parent) => {
-  const documentManager = state.$documents.getDocumentManager()
+  const documentManager = state.$documents.getCurrentManager()
 
   if (!allowTypes.includes(documentManager.entityOfKey(parent)?._type)) {
     return

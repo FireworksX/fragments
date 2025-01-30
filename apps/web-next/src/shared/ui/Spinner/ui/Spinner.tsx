@@ -8,12 +8,13 @@ interface SpinnerProps {
   className?: string
 }
 
-export const Spinner: FC<SpinnerProps> = ({ className, color = 'var(--background-secondary)', size = 24 }) => (
+export const Spinner: FC<SpinnerProps> = ({ className, color = 'var(--background-secondary)', size = 24, ...rest }) => (
   <div
     className={cn(styles.root, className)}
     style={{
       '--size': `${size}px`,
-      '--color': color
+      '--color': color,
+      ...(rest?.style ?? {})
     }}
   >
     <div className={styles.container}>

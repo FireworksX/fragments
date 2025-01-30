@@ -29,8 +29,6 @@ export const creatorPlugin: Plugin = state => {
     creator: creatorGraph
   })
 
-  state.creatorKey = creatorKey
-
   const setCreatorType = type => {
     state.mutate(creatorKey, prev => {
       return {
@@ -61,6 +59,7 @@ export const creatorPlugin: Plugin = state => {
   }
 
   state.$creator = {
+    key: creatorKey,
     setCreatorType,
     createLayer
   }

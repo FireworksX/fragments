@@ -46,6 +46,10 @@ export const documentsPlugin = (state: typeof builderStore) => {
       return state.resolve(state.documentKey)?.manager
     },
 
+    getCurrentManager: () => {
+      return state.resolve(documentGraphKey)?.manager
+    },
+
     // loadFragment(fragmentId: number) {
     //   const apolloClient = state.$documents.apolloClient as ApolloClient<any> | null
     //
