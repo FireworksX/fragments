@@ -28,8 +28,9 @@ export const useBuilderDocumentManager = () => {
   })
 
   useEffect(() => {
-    if (data?.fragment) {
-      const fragment = data.fragment.at(0)
+    const fragment = data?.fragment?.at(0)
+
+    if (fragment) {
       const document =
         typeof fragment?.document === 'string' ? JSON.parse(data.fragment[0].document ?? '{}') : fragment?.document
       const resultDocument = Object.keys(document).length === 0 ? getEmptyFragment(fragment?.id) : document

@@ -6,10 +6,21 @@ import { useLocalStorageValue } from '@/shared/hooks/useLocalStorageValue'
 import { useParams } from 'next/navigation'
 import { useSearchParam } from '@/shared/hooks/useSearchParams'
 import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
+import { useQuery } from '@apollo/client'
+import { FRAGMENTS_NAMES } from '@/views/FragmentsBuilder/widgets/BuilderFragmentTabs/lib/fragmentsNames'
+import { useProject } from '@/shared/hooks/useProject'
 
-export const useBuilderTabs = (inputBuilderManager?: unknown) => {
+export const useBuilderTabs = () => {
+  const { projectSlug } = useProject()
   const { currentFragmentId, openFragment } = useBuilder()
   const { value: tabsIds, push, splice } = useLocalStorageArray<string>('tabs', [], { sync: true })
+
+  const { data: fragmentsNames } = useQuery(FRAGMENTS_NAMES, {
+    variables: {
+      projectSlug,
+      fragmentIds: tabsIds.map(Number)
+    }
+  })
 
   useEffect(() => {
     if (currentFragmentId && !tabsIds.includes(currentFragmentId)) {
@@ -23,7 +34,12 @@ export const useBuilderTabs = (inputBuilderManager?: unknown) => {
     }
   }, [tabsIds, currentFragmentId])
 
-  const tabs = tabsIds.map(tabId => ({ id: tabId, name: tabId, isActive: tabId === currentFragmentId }))
+  const tabs =
+    fragmentsNames?.fragment?.map(fragment => ({
+      id: fragment.id,
+      name: fragment.name,
+      isActive: fragment.id === +(currentFragmentId ?? 0)
+    })) ?? []
 
   return {
     tabs,

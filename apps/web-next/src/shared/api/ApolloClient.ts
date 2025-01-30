@@ -48,7 +48,7 @@ export function makeApolloClient() {
             },
             createFragment: {
               merge(outcome, incoming, { cache, variables }) {
-                const parentId = variables?.parentId ?? -1
+                const parentId = variables?.parentId
 
                 if (parentId) {
                   cache.modify({

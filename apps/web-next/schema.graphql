@@ -77,12 +77,11 @@ type FilterTimeFrameGet {
 type FragmentGet {
     assets: [String!]!
     author: UserGet!
-    directoryId: Int
+    directoryId: Int!
     document: JSON!
     id: Int!
     linkedFragments: [FragmentGet!]
     name: String!
-    project: ProjectGet!
     props: JSON
 }
 
@@ -142,14 +141,15 @@ type ProjectGet {
     members: [UserRoleGet!]!
     name: String!
     owner: UserGet!
+    rootDirectory: ProjectDirectoryGet!
 }
 
 type Query {
     campaign(active: Boolean, campgainId: Int, deleted: Boolean, projectId: Int): [CampaignGet!]!
     campaignByName(active: Boolean, deleted: Boolean, limit: Int = 5, name: String!, projectId: Int!): [CampaignGet!]!
-    directory(directoryId: Int, projectId: Int): ProjectDirectoryGet!
+    directory(directoryId: Int!): ProjectDirectoryGet!
     filter(countries: [String!], regions: [String!]): AllFiltersGet!
-    fragment(fragmentId: Int, projectId: Int): [FragmentGet!]!
+    fragment(fragmentIds: [Int!], projectId: Int): [FragmentGet!]!
     landing(landingId: Int, streamId: Int): [LandingGet!]!
     profile: AuthPayload!
     project(projectId: Int): [ProjectGet!]!
@@ -304,7 +304,7 @@ input FragmentPatch {
 }
 
 input FragmentPost {
-    directoryId: Int
+    directoryId: Int!
     document: JSON!
     linkedFragments: [Int!]
     name: String!
@@ -334,7 +334,7 @@ input LandingPost {
 
 input ProjectDirectory {
     name: String!
-    parentId: Int
+    parentId: Int!
     projectId: Int!
 }
 

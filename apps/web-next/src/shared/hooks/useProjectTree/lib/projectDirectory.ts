@@ -10,6 +10,7 @@ export const PROJECT_DIRECTORY_FRAGMENT = gql(/* GraphQL */ `
       id
       parentId
       name
+      hasSubdirectories
     }
     fragments {
       id
@@ -19,8 +20,8 @@ export const PROJECT_DIRECTORY_FRAGMENT = gql(/* GraphQL */ `
 `)
 
 export const PROJECT_DIRECTORY = gql(/* GraphQL */ `
-  query ProjectDirectory($projectSlug: Int!, $directoryId: Int) {
-    directory(projectId: $projectSlug, directoryId: $directoryId) {
+  query ProjectDirectory($directoryId: Int!) {
+    directory(directoryId: $directoryId) {
       id
       parentId
       name
@@ -29,6 +30,7 @@ export const PROJECT_DIRECTORY = gql(/* GraphQL */ `
         id
         parentId
         name
+        hasSubdirectories
       }
       fragments {
         id

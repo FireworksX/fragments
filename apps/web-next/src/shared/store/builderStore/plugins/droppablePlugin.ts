@@ -56,8 +56,6 @@ export const droppablePlugin: Plugin = state => {
     handleDragEnd(e: DragEndEvent) {
       const over = e.over
 
-      console.log(e)
-
       state.mutate(droppableGraphKey, {
         activeDraggable: null
       })

@@ -10,6 +10,8 @@ import { useMemo } from 'react'
 import { gql } from '@/__generated__'
 import { DELETE_PROJECT_FRAGMENT } from '@/shared/hooks/useProjectTree/lib/deleteProjectFragment'
 
+export const ROOT_DIRECTORY_ID = -1
+
 export const useProjectTree = () => {
   const client = useApolloClient()
   const cacheData = client.cache.extract()
@@ -50,11 +52,11 @@ export const useProjectTree = () => {
     }, [])
   }, [allDirectories])
 
-  const { projectSlug } = useProject()
+  const { projectSlug, project } = useProject()
 
   const { data, refetch } = useQuery(PROJECT_DIRECTORY, {
     variables: {
-      projectSlug
+      directoryId: project?.rootDirectory.id
     }
   })
 
@@ -68,9 +70,10 @@ export const useProjectTree = () => {
 
   return {
     projectSlug,
+    rootDirectoryId: project?.rootDirectory.id,
     tree,
 
-    loadDirectory: (directoryId: number) => refetch({ projectSlug, directoryId }),
+    loadDirectory: (directoryId: number) => refetch({ directoryId }),
 
     createProjectDirectory,
     updateProjectDirectory,

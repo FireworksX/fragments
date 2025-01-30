@@ -2,7 +2,7 @@ import { gql } from '@/__generated__'
 
 export const FRAGMENT_DOCUMENT = gql(/*GraphQL*/ `
 query FragmentDocument($fragmentSlug: Int!) {
-    fragment(fragmentId: $fragmentSlug) {
+    fragment(fragmentIds: [$fragmentSlug]) {
         id
         name
         document

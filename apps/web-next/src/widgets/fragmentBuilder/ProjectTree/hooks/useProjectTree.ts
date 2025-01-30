@@ -33,6 +33,7 @@ export const useProjectTree = () => {
   const [droppableGraph] = useGraph(builderManager, builderManager.droppableKey)
   const [loadingItems, setLoadingItems] = useState([])
   const {
+    rootDirectoryId,
     projectSlug,
     tree,
     loadDirectory,
@@ -48,14 +49,14 @@ export const useProjectTree = () => {
   const setLoading = (id, flag) => setLoadingItems(p => (flag ? [...p, id] : p.filter(item => item !== id)))
 
   const flatProjectTree = useMemo(() => {
-    const createItem = async (name: string, type: keyof typeof projectItemType, parent = -1) => {
+    const createItem = async (name: string, type: keyof typeof projectItemType, parentId: number) => {
       setLoading(parent, true)
 
       if (type === projectItemType.fragment) {
         await createProjectFragment({
           variables: {
             projectSlug,
-            parentId: parent === -1 ? null : parent,
+            parentId,
             name
           }
         })
@@ -63,7 +64,7 @@ export const useProjectTree = () => {
         await createProjectDirectory({
           variables: {
             projectSlug,
-            parentId: parent === -1 ? null : parent,
+            parentId,
             name
           }
         })
@@ -184,7 +185,9 @@ export const useProjectTree = () => {
   return {
     list: flatProjectTree,
     draggableItem: droppableGraph.activeDraggable
-      ? flatProjectTree.find(item => item.id === droppableGraph.activeDraggable.id)
+      ? flatProjectTree.find(
+          item => item.type === projectItemType.fragment && item.id === droppableGraph.activeDraggable.id
+        )
       : null
   }
 }
