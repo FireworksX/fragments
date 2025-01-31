@@ -1,17 +1,26 @@
-import { use } from 'react'
-import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useSearchParam } from '@/shared/hooks/useSearchParams'
-import { LinkKey } from '@graph-state/core'
 
 export const useBuilder = () => {
   const [currentFragmentId, setCurrentFragmentId] = useSearchParam('node')
+  const [preview, setPreview] = useSearchParam('preview')
+  const isValidId = (id: unknown) => !isNaN(Number(id))
 
-  const openFragment = fragmentId => {
-    setCurrentFragmentId(fragmentId)
+  const openFragment = (fragmentId, preview?: boolean) => {
+    if (isValidId(fragmentId)) {
+      setCurrentFragmentId(fragmentId)
+      setPreview(preview ? '1' : null)
+    }
+  }
+
+  const openPreview = () => {
+    openFragment(currentFragmentId, true)
   }
 
   return {
-    currentFragmentId,
-    openFragment
+    isValidId,
+    currentFragmentId: isValidId(currentFragmentId) ? currentFragmentId : null,
+    isPreview: preview === '1',
+    openFragment,
+    openPreview
   }
 }

@@ -11,6 +11,7 @@ import { zIndexModule } from "@/modules/zIndexModule.ts";
 import {
   childrenModule,
   createBaseNode,
+  imagePaintScaleModes,
   nodes,
 } from "@fragments/plugin-fragment";
 import { cloneModule } from "@/modules/cloneModule.ts";
@@ -43,9 +44,14 @@ export function createImageNode(
 
   return {
     ...imageNode,
-    src: getStaticValue(baseNode, "src", null),
-    alt: getStaticValue(baseNode, "alt", null),
-    objectFit: getStaticValue(baseNode, "objectFit", imagePaintScaleModes.Fit),
+    src: getStaticValue(baseNode, "src", null, cache),
+    alt: getStaticValue(baseNode, "alt", null, cache),
+    objectFit: getStaticValue(
+      baseNode,
+      "objectFit",
+      imagePaintScaleModes.Fit,
+      cache
+    ),
 
     setSrc(value) {
       setValueToNode(baseNode, "src", value, cache, { staticValue: true });

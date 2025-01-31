@@ -27,11 +27,15 @@ export const BuilderFragmentTabs: FC<BuilderFragmentTabsProps> = ({ className })
           key={tab.name}
           effect='none'
           className={cn(styles.tab, { [styles.active]: tab.isActive })}
-          onClick={() => selectTab(tab.id)}
+          onClick={() => selectTab(tab.id, tab.preview)}
         >
           <div className={styles.beforeSlot}>
-            {/*<PreviewIcon className={styles.previewIcon} />*/}
-            <FragmentIcon className={styles.fragmentIcon} style={{ opacity: tab.fetching ? 0 : 1 }} />
+            {tab.preview ? (
+              <PreviewIcon className={styles.previewIcon} />
+            ) : (
+              <FragmentIcon className={styles.fragmentIcon} style={{ opacity: tab.fetching ? 0 : 1 }} />
+            )}
+
             <Spinner
               className={styles.spinner}
               size={12}
@@ -41,7 +45,7 @@ export const BuilderFragmentTabs: FC<BuilderFragmentTabsProps> = ({ className })
           </div>
 
           {tab.name ?? 'Button'}
-          <Touchable className={styles.close} isCapture preventDefault onClick={() => closeTab(tab.id)}>
+          <Touchable className={styles.close} isCapture preventDefault onClick={() => closeTab(index)}>
             <CloseIcon />
           </Touchable>
         </Touchable>

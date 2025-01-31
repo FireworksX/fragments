@@ -8,7 +8,7 @@ export const useSearchParam = (key: string) => {
 
   const value = searchParams.get(key) ?? null
 
-  const setValue = (nextValue: string) => {
+  const setValue = (nextValue: string | null) => {
     if (value !== nextValue) {
       const current = new URLSearchParams(Array.from(searchParams.entries()))
 

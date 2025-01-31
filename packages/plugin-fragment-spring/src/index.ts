@@ -11,6 +11,10 @@ import { createImageNode } from "@/creators/createImageNode.ts";
 import { createFragmentInstanceNode } from "@/creators/createFragmentInstanceNode.ts";
 import { linkFragment } from "@/shared/linkFragment.ts";
 
+let GLOBAL_ENV = {
+  renderTarget: renderTarget.canvas,
+};
+
 const plugin: (root: LinkKey) => Plugin =
   (root: LinkKey) => (state: GraphState<StateEntity>) => {
     const updateGraph = {
@@ -26,11 +30,11 @@ const plugin: (root: LinkKey) => Plugin =
     };
 
     state.$fragment = {
-      renderTarget: renderTarget.canvas,
+      getRenderTarget: () => GLOBAL_ENV.renderTarget,
       updateGraphKey: state.keyOfEntity(updateGraph),
       linkedFragmentsGraphKey: state.keyOfEntity(linkedFragmentsGraph),
       setRenderTarget: (renderTarget) => {
-        state.$fragment.renderTarget = renderTarget;
+        GLOBAL_ENV = { ...GLOBAL_ENV, renderTarget };
         state.mutate(root, (prev) => ({
           updateIndex: (prev?.updateIndex ?? 0) + 1,
         }));

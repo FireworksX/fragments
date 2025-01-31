@@ -1,5 +1,5 @@
 'use client'
-import { FC, useContext } from 'react'
+import { FC, useContext, useEffect } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
@@ -10,6 +10,8 @@ import BuilderFragmentInstance from '@/widgets/fragmentBuilder/BuilderFragmentIn
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { BuilderPreviewContainer } from '../components/BuilderPreviewContainer'
 import { FragmentPreviewContext, FragmentPreviewProvider } from '@/views/FragmentPreview/lib/FragmentPreviewContext'
+import { useRenderTarget } from '@/widgets/renderer/hooks/useRenderTarget'
+import { renderTarget } from '@fragments/plugin-fragment'
 
 interface FragmentPreviewProps {
   className?: string
@@ -17,13 +19,18 @@ interface FragmentPreviewProps {
 
 export const FragmentPreview: FC<FragmentPreviewProps> = ({ className }) => {
   const { documentManager } = useBuilderDocument()
+  const { setRenderTarget } = useRenderTarget()
+
+  useEffect(() => {
+    setRenderTarget(renderTarget.document)
+  }, [])
 
   return (
     <FragmentPreviewProvider>
       <div className={cn(styles.root, className)} data-testid='BuilderPreview'>
         <div className={styles.body}>
           <BuilderPreviewContainer>
-            <Fragment layerKey={documentManager.fragment} />
+            <Fragment layerKey={documentManager.$fragment.root} />
           </BuilderPreviewContainer>
         </div>
       </div>

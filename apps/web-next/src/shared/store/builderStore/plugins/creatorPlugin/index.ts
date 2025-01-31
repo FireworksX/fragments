@@ -4,6 +4,7 @@ import { getRandomColor } from '@/shared/utils/random'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { createFrame } from './createFrame'
 import { createText } from '@/shared/store/builderStore/plugins/creatorPlugin/createText'
+import { createImage } from '@/shared/store/builderStore/plugins/creatorPlugin/createImage'
 
 /**
  * Плагин обслуживает логику работы с добавлением контента на холст.
@@ -47,8 +48,12 @@ export const creatorPlugin: Plugin = state => {
           nextLayer = createFrame(state, parent)
         } else if (type === nodes.Text) {
           nextLayer = createText(state, parent)
+        } else if (type === nodes.Image) {
+          nextLayer = createImage(state, parent)
         }
       }
+
+      console.log(nextLayer)
 
       setCreatorType(null)
 

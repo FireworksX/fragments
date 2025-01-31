@@ -27,14 +27,15 @@ import cn from 'classnames'
 import { nodes } from '@fragments/plugin-fragment'
 import { useBuilderDocumentManager } from '@/shared/hooks/fragmentBuilder/useBuilderDocumentManager'
 import { Spinner } from '@/shared/ui/Spinner'
+import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
 
 interface BuilderFloatBarProps {
   className?: string
 }
 
 export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
-  const { fetchingUpdate } = useBuilderDocumentManager()
   const { creator, manager } = useBuilderCreator()
+  const { openPreview } = useBuilder()
   const createType = creator.createType
 
   return (
@@ -69,13 +70,7 @@ export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
 
       <div className={styles.delimiter} />
 
-      <Button>Preview</Button>
-
-      {fetchingUpdate && (
-        <div className={styles.spinner}>
-          <Spinner size={16} color='var(--secondary)' />
-        </div>
-      )}
+      <Button onClick={() => openPreview()}>Preview</Button>
     </div>
   )
 }

@@ -12,6 +12,7 @@ import { FragmentsEditPlaceholder } from '@/views/FragmentsBuilder/widgets/Fragm
 import { FragmentsEdit } from '@/views/FragmentsEdit'
 import { FragmentPreview } from '@/views/FragmentPreview'
 import { useBuilderDocumentManager } from '@/shared/hooks/fragmentBuilder/useBuilderDocumentManager'
+import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
 
 interface FragmentsBuilderContentProps {
   className?: string
@@ -20,12 +21,15 @@ interface FragmentsBuilderContentProps {
 export const FragmentsBuilderContent: FC<FragmentsBuilderContentProps> = ({ className }) => {
   const { fetching } = useBuilderDocumentManager()
   const { documentManager } = useBuilderDocument()
+  const { isPreview } = useBuilder()
 
   if (!documentManager || fetching) {
     return <FragmentsEditPlaceholder fetching={fetching} />
   }
 
-  // return <FragmentPreview />
+  if (isPreview) {
+    return <FragmentPreview />
+  }
 
   return <FragmentsEdit />
 }

@@ -23,7 +23,7 @@ export const useLocalStorageValue = <T>(key: string, initialValue: T, options?: 
     if (sync) {
       const handleStorageChange = (event: StorageEvent) => {
         if (event.key === key) {
-          setValue(JSON.parse(event.newValue))
+          setValue(JSON.parse(event.newValue) ?? initialValue)
         }
       }
 

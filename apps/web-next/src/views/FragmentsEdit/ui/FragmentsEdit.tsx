@@ -36,7 +36,7 @@ import StackStringProperty from '../../../features/popouts/StackStringProperty/u
 import StackNumberProperty from '../../../features/popouts/StackNumberProperty/ui/StackNumberProperty'
 import StackBooleanProperty from '../../../features/popouts/StackBooleanProperty/ui/StackBooleanProperty'
 import StackVariableTransform from '@/features/popouts/StackVariableTransform/StackVariableTransform'
-import React, { use } from 'react'
+import React, { use, useEffect } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { FragmentsEditPlaceholder } from '@/views/FragmentsEdit/components/FragmentsEditPlaceholder'
 import { useFragmentsEdit } from '@/views/FragmentsEdit/hooks/useFragmentsEdit'
@@ -45,15 +45,22 @@ import CreateFragmentModal from '../../../widgets/modals/CreateFragmentModal/ui/
 import { BuilderFragmentTabs } from '@/views/FragmentsBuilder/widgets/BuilderFragmentTabs'
 import { useGraphEffect } from '@graph-state/react'
 import { useBuilderHotKeys } from '@/shared/hooks/hotkeys/useBuilderHotKeys'
+import { renderTarget } from '@fragments/plugin-fragment'
+import { useRenderTarget } from '@/widgets/renderer/hooks/useRenderTarget'
 
 export const FragmentsEdit = () => {
   const { documentManager } = useBuilderDocument()
+  const { setRenderTarget } = useRenderTarget()
 
   useBuilderHotKeys()
 
   useGraphEffect(documentManager, 'Updater:root', data => {
     console.log(data)
   })
+
+  useEffect(() => {
+    setRenderTarget(renderTarget.canvas)
+  }, [])
 
   return (
     <CanvasTextEditorProvider>

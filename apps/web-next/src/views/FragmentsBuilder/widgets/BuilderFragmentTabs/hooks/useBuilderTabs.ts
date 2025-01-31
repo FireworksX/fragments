@@ -13,45 +13,59 @@ import { useBuilderDocumentManager } from '@/shared/hooks/fragmentBuilder/useBui
 
 export const useBuilderTabs = () => {
   const { projectSlug } = useProject()
-  const { currentFragmentId, openFragment } = useBuilder()
+  const { currentFragmentId, isPreview, isValidId, openFragment } = useBuilder()
   const { fetchingUpdate } = useBuilderDocumentManager()
-  const { value: tabsIds, push, splice } = useLocalStorageArray<string>('tabs', [], { sync: true })
+  const { value: tabsNodes, push, splice } = useLocalStorageArray<string>('tabs', [], { sync: true })
+  const resultTabsNodes = tabsNodes.filter(tab => isValidId(tab?.id))
+  const builderTabKey = tab => `${tab?.id}_${tab?.preview}`
+  const tabsKeys = resultTabsNodes.map(builderTabKey)
 
   const { data: fragmentsNames } = useQuery(FRAGMENTS_NAMES, {
     variables: {
       projectSlug,
-      fragmentIds: tabsIds.map(Number)
+      fragmentIds: resultTabsNodes.map(tab => Number(tab.id))
     }
   })
 
   useEffect(() => {
-    if (currentFragmentId && !tabsIds.includes(currentFragmentId)) {
-      push(currentFragmentId)
+    const alreadyOpen = tabsKeys?.includes(builderTabKey({ id: currentFragmentId, preview: isPreview }))
+
+    if (currentFragmentId && !alreadyOpen) {
+      push({
+        type: 'fragment',
+        id: currentFragmentId,
+        preview: isPreview
+      })
     }
-  }, [currentFragmentId])
+  }, [currentFragmentId, isPreview])
 
   useEffect(() => {
-    if (!tabsIds.includes(currentFragmentId)) {
-      openFragment(tabsIds.at(-1))
+    const alreadyOpen = resultTabsNodes?.find(tab => tab?.id === currentFragmentId?.toString())
+
+    if (!alreadyOpen) {
+      openFragment(resultTabsNodes.at(-1)?.id)
     }
-  }, [tabsIds, currentFragmentId])
+  }, [tabsNodes, currentFragmentId])
 
   const tabs =
-    fragmentsNames?.fragment?.map(fragment => ({
-      id: fragment.id,
-      name: fragment.name,
-      isActive: fragment.id === +(currentFragmentId ?? 0),
-      fetching: fragment.id === +(currentFragmentId ?? 0) && fetchingUpdate
-    })) ?? []
+    resultTabsNodes?.map(tabNode => {
+      const tabName = fragmentsNames?.fragment?.find(fragment => fragment.id === tabNode.id)
+
+      return {
+        id: tabNode.id,
+        name: tabName,
+        preview: tabNode.preview,
+        isActive: tabNode.id === currentFragmentId && tabNode.preview === isPreview,
+        fetching: tabNode.id === currentFragmentId && fetchingUpdate
+      }
+    }) ?? []
 
   return {
     tabs,
-    selectTab: fragmentId => {
-      openFragment(fragmentId)
+    selectTab: (fragmentId, preview: boolean) => {
+      openFragment(fragmentId, preview)
     },
-    closeTab: fragmentId => {
-      const index = tabsIds.indexOf(fragmentId)
-
+    closeTab: index => {
       if (index !== -1) {
         splice(index, 1)
       }
