@@ -54,7 +54,11 @@ export const useProjectTree = () => {
 
   const { projectSlug, project } = useProject()
 
-  const { data, refetch } = useQuery(PROJECT_DIRECTORY, {
+  const {
+    data,
+    refetch,
+    loading: fetchingProjectDirectory
+  } = useQuery(PROJECT_DIRECTORY, {
     variables: {
       directoryId: project?.rootDirectory.id
     }
@@ -72,6 +76,7 @@ export const useProjectTree = () => {
     projectSlug,
     rootDirectoryId: project?.rootDirectory.id,
     tree,
+    fetchingProjectDirectory,
 
     loadDirectory: (directoryId: number) => refetch({ directoryId }),
 

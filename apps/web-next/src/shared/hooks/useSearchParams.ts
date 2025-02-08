@@ -1,28 +1,30 @@
 import { usePathname, useRouter, useSearchParams as useSearchParamsNext } from 'next/navigation'
-import { builderOptions } from '@/shared/hooks/fragmentBuilder/useBuilderManager'
 
-export const useSearchParam = (key: string) => {
+export const useSearchParam = <T extends string>(keys: T[]) => {
   const searchParams = useSearchParamsNext()
   const pathname = usePathname()
   const router = useRouter()
 
-  const value = searchParams.get(key) ?? null
+  const value = keys.reduce<Record<T, unknown>>((acc, key) => {
+    acc[key] = searchParams.get(key) ?? null
+    return acc
+  }, {} as any)
 
-  const setValue = (nextValue: string | null) => {
-    if (value !== nextValue) {
-      const current = new URLSearchParams(Array.from(searchParams.entries()))
+  const setValue = (values: Partial<Record<T, unknown>>) => {
+    const current = new URLSearchParams(Array.from(searchParams.entries()))
 
-      if (!nextValue) {
+    Object.entries(values).forEach(([key, value]) => {
+      if (!value) {
         current.delete(key)
       } else {
-        current.set(key, nextValue)
+        current.set(key, value as any)
       }
+    })
 
-      const search = current.toString()
-      const query = search ? `?${search}` : ''
+    const search = current.toString()
+    const query = search ? `?${search}` : ''
 
-      router.replace(`${pathname}${query}`)
-    }
+    router.replace(`${pathname}${query}`)
   }
 
   return [value, setValue] as const

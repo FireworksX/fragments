@@ -6,10 +6,11 @@ import { useLocalStorageValue } from '@/shared/hooks/useLocalStorageValue'
 import { useParams } from 'next/navigation'
 import { useSearchParam } from '@/shared/hooks/useSearchParams'
 import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
-import { useQuery } from '@apollo/client'
+import { gql, useApolloClient, useQuery } from '@apollo/client'
 import { FRAGMENTS_NAMES } from '@/views/FragmentsBuilder/widgets/BuilderFragmentTabs/lib/fragmentsNames'
 import { useProject } from '@/shared/hooks/useProject'
 import { useBuilderDocumentManager } from '@/shared/hooks/fragmentBuilder/useBuilderDocumentManager'
+import { usePrevious } from 'react-use'
 
 export const useBuilderTabs = () => {
   const { projectSlug } = useProject()
@@ -19,6 +20,8 @@ export const useBuilderTabs = () => {
   const resultTabsNodes = tabsNodes.filter(tab => isValidId(tab?.id))
   const builderTabKey = tab => `${tab?.id}_${tab?.preview}`
   const tabsKeys = resultTabsNodes.map(builderTabKey)
+  const prevTabsNodes = usePrevious(tabsNodes)
+  const apolloClient = useApolloClient()
 
   const { data: fragmentsNames } = useQuery(FRAGMENTS_NAMES, {
     variables: {
@@ -39,21 +42,38 @@ export const useBuilderTabs = () => {
     }
   }, [currentFragmentId, isPreview])
 
+  /**
+   * Обслуживает логику, когда открыто несколько вкладок и
+   * закрываем активную вкладку, то нужно изменить активность
+   * на последнюю вкладку.
+   */
   useEffect(() => {
-    const alreadyOpen = resultTabsNodes?.find(tab => tab?.id === currentFragmentId?.toString())
-
-    if (!alreadyOpen) {
+    if (tabsNodes.length < prevTabsNodes?.length) {
       openFragment(resultTabsNodes.at(-1)?.id)
     }
-  }, [tabsNodes, currentFragmentId])
+  }, [tabsNodes, prevTabsNodes, currentFragmentId, openFragment, resultTabsNodes])
+
+  useEffect(() => {
+    if (!tabsKeys.length) {
+      openFragment(null)
+    }
+  }, [tabsKeys.length])
 
   const tabs =
-    resultTabsNodes?.map(tabNode => {
-      const tabName = fragmentsNames?.fragment?.find(fragment => fragment.id === tabNode.id)
+    resultTabsNodes?.map((tabNode, index) => {
+      const fragment = apolloClient.readFragment({
+        id: `FragmentGet:${tabNode.id}`,
+        fragment: gql`
+          fragment _ on FragmentGet {
+            name
+          }
+        `
+      })
 
       return {
         id: tabNode.id,
-        name: tabName,
+        key: tabsKeys[index],
+        name: fragment?.name,
         preview: tabNode.preview,
         isActive: tabNode.id === currentFragmentId && tabNode.preview === isPreview,
         fetching: tabNode.id === currentFragmentId && fetchingUpdate

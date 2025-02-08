@@ -24,7 +24,7 @@ export const BuilderFragmentTabs: FC<BuilderFragmentTabsProps> = ({ className })
     <Container className={cn(styles.root, className)} data-testid='BuilderFragmentTabs'>
       {tabs.map((tab, index) => (
         <Touchable
-          key={tab.name}
+          key={tab.key}
           effect='none'
           className={cn(styles.tab, { [styles.active]: tab.isActive })}
           onClick={() => selectTab(tab.id, tab.preview)}
@@ -44,7 +44,7 @@ export const BuilderFragmentTabs: FC<BuilderFragmentTabsProps> = ({ className })
             />
           </div>
 
-          {tab.name ?? 'Button'}
+          {tab.name ?? 'Fragment'}
           <Touchable className={styles.close} isCapture preventDefault onClick={() => closeTab(index)}>
             <CloseIcon />
           </Touchable>

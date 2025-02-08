@@ -1,14 +1,22 @@
 import { useSearchParam } from '@/shared/hooks/useSearchParams'
 
 export const useBuilder = () => {
-  const [currentFragmentId, setCurrentFragmentId] = useSearchParam('node')
-  const [preview, setPreview] = useSearchParam('preview')
+  const [searchParams, updateSearchParams] = useSearchParam(['node', 'preview'])
   const isValidId = (id: unknown) => !isNaN(Number(id))
+  const currentFragmentId = searchParams?.node
+  const preview = searchParams?.preview
 
-  const openFragment = (fragmentId, preview?: boolean) => {
-    if (isValidId(fragmentId)) {
-      setCurrentFragmentId(fragmentId)
-      setPreview(preview ? '1' : null)
+  const openFragment = (fragmentId: number | null, preview?: boolean) => {
+    if (fragmentId === null) {
+      updateSearchParams({
+        node: null,
+        preview: null
+      })
+    } else if (isValidId(fragmentId)) {
+      updateSearchParams({
+        node: fragmentId,
+        preview: preview ? '1' : null
+      })
     }
   }
 

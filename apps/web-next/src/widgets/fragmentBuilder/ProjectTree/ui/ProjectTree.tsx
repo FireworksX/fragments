@@ -5,17 +5,23 @@ import { ProjectTreeItem } from '../widgets/ProjectTreeItem'
 import { useProjectTree } from '@/widgets/fragmentBuilder/ProjectTree/hooks/useProjectTree'
 import { ProjectTreeSortableItem } from '@/widgets/fragmentBuilder/ProjectTree/widgets/ProjectTreeSortableItem'
 import { DragOverlay } from '@dnd-kit/core'
+import { Spinner } from '@/shared/ui/Spinner'
 
 interface ProjectTreeProps {
   className?: string
 }
 
 export const ProjectTree: FC<ProjectTreeProps> = ({ className }) => {
-  const { list, draggableItem } = useProjectTree()
+  const { list, draggableItem, fetching } = useProjectTree()
   const treeRef = useRef(null)
 
   return (
     <div className={cn(styles.root, className)} ref={treeRef} data-testid='ProjectTree'>
+      {fetching && (
+        <div className={styles.spinner}>
+          <Spinner size={16} color='var(--secondary)' />
+        </div>
+      )}
       {list.map(item => (
         <ProjectTreeSortableItem
           key={`${item.id}_${item.type}`}

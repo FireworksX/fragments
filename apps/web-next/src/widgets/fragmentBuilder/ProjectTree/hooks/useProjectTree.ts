@@ -36,6 +36,7 @@ export const useProjectTree = () => {
     rootDirectoryId,
     projectSlug,
     tree,
+    fetchingProjectDirectory,
     loadDirectory,
     createProjectFragment,
     updateProjectFragment,
@@ -133,7 +134,12 @@ export const useProjectTree = () => {
               setCollapsedIds(p => (p.includes(node.id) ? p.filter(v => v !== node.id) : [...p, node.id]))
             }
           } else {
-            return () => loadDirectory(node.id)
+            return async () => {
+              setLoading(node.id, true)
+              await loadDirectory(node.id)
+              setCollapsedIds(p => [...p, node.id])
+              setLoading(node.id, false)
+            }
           }
         }
       }
@@ -183,6 +189,7 @@ export const useProjectTree = () => {
   ])
 
   return {
+    fetching: fetchingProjectDirectory,
     list: flatProjectTree,
     draggableItem: droppableGraph.activeDraggable
       ? flatProjectTree.find(

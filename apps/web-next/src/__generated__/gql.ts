@@ -28,8 +28,8 @@ const documents = {
     "\n  mutation CreateProjectFragment($projectSlug: Int!, $name: String!, $parentId: Int!) {\n    createFragment(fg: { name: $name, projectId: $projectSlug, document: \"{}\", directoryId: $parentId }) {\n      id\n      name\n      directoryId\n    }\n  }\n": types.CreateProjectFragmentDocument,
     "\n  mutation DeleteProjectDirectory($directoryId: Int!) {\n    deleteDirectory(directoryId: $directoryId)\n  }\n": types.DeleteProjectDirectoryDocument,
     "\n  mutation DeleteProjectFragment($fragmentId: Int!) {\n    deleteFragment(fragmentId: $fragmentId)\n  }\n": types.DeleteProjectFragmentDocument,
-    "\n  fragment Directory on ProjectDirectoryGet {\n    id\n    parentId\n    name\n    hasSubdirectories\n    directories {\n      id\n      parentId\n      name\n      hasSubdirectories\n    }\n    fragments {\n      id\n      name\n    }\n  }\n": types.DirectoryFragmentDoc,
-    "\n  query ProjectDirectory($directoryId: Int!) {\n    directory(directoryId: $directoryId) {\n      id\n      parentId\n      name\n      hasSubdirectories\n      directories {\n        id\n        parentId\n        name\n        hasSubdirectories\n      }\n      fragments {\n        id\n        name\n      }\n    }\n  }\n": types.ProjectDirectoryDocument,
+    "\n  fragment Directory on ProjectDirectoryGet {\n    id\n    parentId\n    name\n    hasSubdirectories\n    directories {\n      id\n      parentId\n      name\n      hasSubdirectories\n      fragments {\n        id\n        name\n      }\n    }\n    fragments {\n      id\n      name\n    }\n  }\n": types.DirectoryFragmentDoc,
+    "\n  query ProjectDirectory($directoryId: Int!) {\n    directory(directoryId: $directoryId) {\n      id\n      parentId\n      name\n      hasSubdirectories\n      directories {\n        id\n        parentId\n        name\n        hasSubdirectories\n        fragments {\n          id\n          name\n        }\n      }\n      fragments {\n        id\n        name\n      }\n    }\n  }\n": types.ProjectDirectoryDocument,
     "\n  mutation UpdateProjectDirectory($directoryId: Int!, $name: String) {\n    updateDirectory(directory: { id: $directoryId, name: $name }) {\n      id\n      name\n    }\n  }\n": types.UpdateProjectDirectoryDocument,
     "\n  mutation UpdateProjectFragment($fragmentId: Int!, $name: String) {\n    updateFragment(fg: { id: $fragmentId, name: $name }) {\n      id\n      name\n    }\n  }\n": types.UpdateProjectFragmentDocument,
     "\n  mutation AuthSignIn($email: String!, $password: String!) {\n    login(email: $email, password: $password) {\n      user {\n        id\n        email\n        firstName\n        lastName\n      }\n      accessToken\n      refreshToken\n    }\n  }\n": types.AuthSignInDocument,
@@ -39,6 +39,7 @@ const documents = {
     "\n  query ListSteams($campaignSlug: Int!) {\n    stream(campaignId: $campaignSlug) {\n      id\n      weight\n      name\n      active\n    }\n  }\n": types.ListSteamsDocument,
     "\n  query CampaignsList($projectId: Int!) {\n    campaign(projectId: $projectId) {\n      id\n      name\n      active\n      description\n    }\n  }\n": types.CampaignsListDocument,
     "\n  mutation CreateCampaign($name: String!, $description: String, $projectId: Int!) {\n    createCampaign(\n      cmp: { name: $name, description: $description, active: false, deleted: false, projectId: $projectId }\n    ) {\n      active\n      name\n      description\n    }\n  }\n": types.CreateCampaignDocument,
+    "\n          fragment _ on FragmentGet {\n            name\n          }\n        ": types._FragmentDoc,
     "\n  query FragmentsNames($projectSlug: Int!, $fragmentIds: [Int!]) {\n    fragment(projectId: $projectSlug, fragmentIds: $fragmentIds) {\n      id\n      name\n    }\n  }\n": types.FragmentsNamesDocument,
     "\n  mutation CreateProject($name: String!) {\n    createProject(pr: { name: $name }) {\n      name\n      owner {\n        firstName\n        lastName\n      }\n    }\n  }\n": types.CreateProjectDocument,
     "\n  query ProjectsList {\n    project {\n      id\n      name\n    }\n  }\n": types.ProjectsListDocument,
@@ -117,11 +118,11 @@ export function gql(source: "\n  mutation DeleteProjectFragment($fragmentId: Int
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  fragment Directory on ProjectDirectoryGet {\n    id\n    parentId\n    name\n    hasSubdirectories\n    directories {\n      id\n      parentId\n      name\n      hasSubdirectories\n    }\n    fragments {\n      id\n      name\n    }\n  }\n"): (typeof documents)["\n  fragment Directory on ProjectDirectoryGet {\n    id\n    parentId\n    name\n    hasSubdirectories\n    directories {\n      id\n      parentId\n      name\n      hasSubdirectories\n    }\n    fragments {\n      id\n      name\n    }\n  }\n"];
+export function gql(source: "\n  fragment Directory on ProjectDirectoryGet {\n    id\n    parentId\n    name\n    hasSubdirectories\n    directories {\n      id\n      parentId\n      name\n      hasSubdirectories\n      fragments {\n        id\n        name\n      }\n    }\n    fragments {\n      id\n      name\n    }\n  }\n"): (typeof documents)["\n  fragment Directory on ProjectDirectoryGet {\n    id\n    parentId\n    name\n    hasSubdirectories\n    directories {\n      id\n      parentId\n      name\n      hasSubdirectories\n      fragments {\n        id\n        name\n      }\n    }\n    fragments {\n      id\n      name\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query ProjectDirectory($directoryId: Int!) {\n    directory(directoryId: $directoryId) {\n      id\n      parentId\n      name\n      hasSubdirectories\n      directories {\n        id\n        parentId\n        name\n        hasSubdirectories\n      }\n      fragments {\n        id\n        name\n      }\n    }\n  }\n"): (typeof documents)["\n  query ProjectDirectory($directoryId: Int!) {\n    directory(directoryId: $directoryId) {\n      id\n      parentId\n      name\n      hasSubdirectories\n      directories {\n        id\n        parentId\n        name\n        hasSubdirectories\n      }\n      fragments {\n        id\n        name\n      }\n    }\n  }\n"];
+export function gql(source: "\n  query ProjectDirectory($directoryId: Int!) {\n    directory(directoryId: $directoryId) {\n      id\n      parentId\n      name\n      hasSubdirectories\n      directories {\n        id\n        parentId\n        name\n        hasSubdirectories\n        fragments {\n          id\n          name\n        }\n      }\n      fragments {\n        id\n        name\n      }\n    }\n  }\n"): (typeof documents)["\n  query ProjectDirectory($directoryId: Int!) {\n    directory(directoryId: $directoryId) {\n      id\n      parentId\n      name\n      hasSubdirectories\n      directories {\n        id\n        parentId\n        name\n        hasSubdirectories\n        fragments {\n          id\n          name\n        }\n      }\n      fragments {\n        id\n        name\n      }\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -158,6 +159,10 @@ export function gql(source: "\n  query CampaignsList($projectId: Int!) {\n    ca
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation CreateCampaign($name: String!, $description: String, $projectId: Int!) {\n    createCampaign(\n      cmp: { name: $name, description: $description, active: false, deleted: false, projectId: $projectId }\n    ) {\n      active\n      name\n      description\n    }\n  }\n"): (typeof documents)["\n  mutation CreateCampaign($name: String!, $description: String, $projectId: Int!) {\n    createCampaign(\n      cmp: { name: $name, description: $description, active: false, deleted: false, projectId: $projectId }\n    ) {\n      active\n      name\n      description\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n          fragment _ on FragmentGet {\n            name\n          }\n        "): (typeof documents)["\n          fragment _ on FragmentGet {\n            name\n          }\n        "];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

@@ -14,7 +14,7 @@ export const useBuilderDocumentManager = () => {
   const { currentFragmentId } = useBuilder()
   const fragmentKey = `Fragment:${currentFragmentId}`
 
-  const { data, loading } = useQuery(FRAGMENT_DOCUMENT, {
+  const { data, loading: fetchingDocument } = useQuery(FRAGMENT_DOCUMENT, {
     variables: {
       fragmentSlug: +currentFragmentId
     },
@@ -37,10 +37,14 @@ export const useBuilderDocumentManager = () => {
 
       builderManager.$documents.createDocumentManager(fragmentKey, resultDocument)
       builderManager.$documents.setActiveDocumentManager(fragmentKey)
-    } else {
-      builderManager.$documents.setActiveDocumentManager(null)
     }
   }, [data])
+
+  useEffect(() => {
+    if (!currentFragmentId) {
+      builderManager.$documents.setActiveDocumentManager(null)
+    }
+  }, [currentFragmentId])
 
   const saveFragment = async () => {
     const currentDocument = documentManager.$fragment.makeSnapshot()
@@ -55,7 +59,7 @@ export const useBuilderDocumentManager = () => {
 
   return {
     fetchingUpdate,
-    fetching: loading,
+    fetching: fetchingDocument,
     saveFragment
   }
 }
