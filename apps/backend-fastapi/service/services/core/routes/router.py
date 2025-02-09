@@ -87,7 +87,7 @@ class Query:
         return await get_all_filters(info, countries, regions)
 
     @strawberry.field
-    async def directory(self, info: strawberry.Info[Context], directory_id: int) -> ProjectDirectoryGet:
+    async def directory(self, info: strawberry.Info[Context], directory_id: int) -> list[ProjectDirectoryGet]:
         return await get_directory(info, directory_id)
 
 
@@ -186,7 +186,8 @@ class Mutation:
         return await update_landing_route(info, landing)
 
     @strawberry.mutation
-    async def create_directory(self, info: strawberry.Info[Context], directory: ProjectDirectory) -> ProjectDirectoryGet:
+    async def create_directory(self, info: strawberry.Info[Context], directory: ProjectDirectory) -> list[
+        ProjectDirectoryGet]:
         return await create_directory_route(info, directory)
 
     @strawberry.mutation
@@ -194,7 +195,8 @@ class Mutation:
         await delete_directory_route(info, directory_id)
 
     @strawberry.mutation
-    async def update_directory(self, info: strawberry.Info[Context], directory: ProjectDirectoryPatch) -> ProjectDirectoryGet:
+    async def update_directory(self, info: strawberry.Info[Context], directory: ProjectDirectoryPatch) -> list[
+        ProjectDirectoryGet]:
         return await update_directory_route(info, directory)
 
     @strawberry.mutation
