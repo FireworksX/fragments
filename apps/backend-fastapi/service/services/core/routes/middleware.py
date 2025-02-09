@@ -1,7 +1,8 @@
-from .schemas.user import UserGet, AuthPayload
+from crud.project import get_project_by_id_db
+from .schemas.user import AuthPayload
 from strawberry.fastapi import BaseContext
 from database import Session
-from database.models import User
+from database.models import User, Project
 from services.dependencies import get_db
 from crud.user import get_user_by_email_db
 from conf.settings import service_settings
@@ -49,6 +50,31 @@ class Context(BaseContext):
             access_token=authorization,
             refresh_token=refresh
         )
+
+    async def project(self) -> Project | None:
+        if not self.request:
+            return None
+
+        authorization = self.request.headers.get("Authorization", None)
+        if authorization is None:
+            raise credentials_exception
+
+        try:
+            authorization = authorization.split(' ')[1]  # format is 'Bearer token'
+            payload = jwt.decode(authorization, service_settings.ACCESS_TOKEN_SECRET_KEY,
+                                 algorithms=[service_settings.ALGORITHM])
+            project_id: str = payload.get("sub")
+            if project_id is None:
+                raise credentials_exception
+        except InvalidTokenError:
+            raise credentials_exception
+        except IndexError:
+            raise credentials_exception
+
+        project: Project = await get_project_by_id_db(self.session(), int(project_id))
+        if project is None:
+            raise credentials_exception
+        return project
 
     async def refresh_user(self) -> AuthPayload | None:
         if not self.request:

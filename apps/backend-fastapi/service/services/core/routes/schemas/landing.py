@@ -1,9 +1,13 @@
+from datetime import datetime
 from typing import Optional
 
 import strawberry
 
 from services.core.routes.schemas.stream import StreamGet
 from services.core.routes.schemas.fragment import FragmentGet
+from services.core.routes.schemas.filter import FilterOSTypePost, FilterPagePost, FilterPageGet, FilterTimeFrameGet, \
+    FilterTimeFramePost, FilterDeviceTypePost, FilterOSTypeGet, FilterDeviceTypeGet, FilterGeoLocationGet, \
+    FilterGeoLocationPost, OSType, DeviceType
 
 
 @strawberry.type
@@ -38,3 +42,11 @@ class LandingPatch:
     name: Optional[str] = None
     active: Optional[bool] = None
     deleted: Optional[bool] = None
+
+@strawberry.input
+class ClientLanding:
+    os_type: OSType
+    device_type: DeviceType
+    time_frame: datetime
+    page: str
+    ip_address: str

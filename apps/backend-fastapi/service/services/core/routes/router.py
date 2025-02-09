@@ -9,7 +9,7 @@ from .schemas import AllFiltersGet
 from .schemas.feedback import FeedbackPost, FeedbackGet
 from .schemas.filesystem import ProjectDirectory, ProjectDirectoryGet, ProjectDirectoryPatch
 from .schemas.stream import StreamGet, StreamPost, StreamPatch
-from .schemas.landing import LandingGet, LandingPost, LandingPatch
+from .schemas.landing import LandingGet, LandingPost, LandingPatch, ClientLanding
 from .schemas.campaign import CampaignGet, CampaignPost, CampaignPatch
 from .schemas.fragment import FragmentPost, FragmentPatch, FragmentGet
 from .schemas.project import ProjectGet, ProjectPost, ProjectPatch
@@ -89,6 +89,10 @@ class Query:
     @strawberry.field
     async def directory(self, info: strawberry.Info[Context], directory_id: int) -> list[ProjectDirectoryGet]:
         return await get_directory(info, directory_id)
+
+    @strawberry.field
+    async def client_landing(self, info: strawberry.Info[Context], client_landing: ClientLanding) -> LandingGet:
+        return await get_client_landing(info, client_landing)
 
 
 @strawberry.type

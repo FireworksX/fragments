@@ -12,7 +12,7 @@ from crud.stream import get_stream_by_id_db
 from crud.landing import create_landing_db, get_landings_by_stream_id_db, \
     get_landing_by_id_db, update_landing_by_id_db
 from .fragment import fragment_by_id
-from .schemas.landing import LandingGet, LandingPost, LandingPatch
+from .schemas.landing import LandingGet, LandingPost, LandingPatch, ClientLanding
 from .schemas.user import RoleGet, AuthPayload
 from .middleware import Context
 from crud.fragment import Fragment, get_fragment_by_id_db
@@ -167,3 +167,8 @@ async def update_landing_route(info: strawberry.Info[Context], landing_patch: La
     landing: Landing = await update_landing_by_id_db(db, values=landing_patch.__dict__)
 
     return await landing_db_to_landing(info, landing)
+
+
+async def get_client_landing(info: strawberry.Info[Context], client_landing: ClientLanding) -> Landing:
+    project: Project = await info.context.project()
+    db: Session = info.context.session()
