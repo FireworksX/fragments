@@ -1,5 +1,5 @@
 import { GraphState, isGraph, LinkKey, Plugin } from "@graph-state/core";
-import { renderTarget } from "@fragments/plugin-fragment";
+import { renderTarget, nodes } from "@fragments/plugin-fragment";
 import { BaseNode, FrameNode, StateEntity } from "@/types";
 import { createFrameNode } from "@/creators/createFrameNode.ts";
 import { makeSnapshot } from "@/shared/makeSnapshot.ts";
@@ -9,7 +9,6 @@ import { createBreakpointNode } from "@/creators/createBreakpointNode.ts";
 import { createTextNode } from "@/creators/createTextNode.ts";
 import { createImageNode } from "@/creators/createImageNode.ts";
 import { createFragmentInstanceNode } from "@/creators/createFragmentInstanceNode.ts";
-import { linkFragment } from "@/shared/linkFragment.ts";
 
 let GLOBAL_ENV = {
   renderTarget: renderTarget.canvas,
@@ -23,7 +22,7 @@ const plugin: (root: LinkKey) => Plugin =
       updateCount: 0,
     };
 
-    const linkedFragmentsGraph = {
+    const linkerGraph = {
       _type: "Linker",
       _id: "root",
       fragments: [],
@@ -32,7 +31,7 @@ const plugin: (root: LinkKey) => Plugin =
     state.$fragment = {
       getRenderTarget: () => GLOBAL_ENV.renderTarget,
       updateGraphKey: state.keyOfEntity(updateGraph),
-      linkedFragmentsGraphKey: state.keyOfEntity(linkedFragmentsGraph),
+      linkerGraphKey: state.keyOfEntity(linkerGraph),
       setRenderTarget: (renderTarget) => {
         GLOBAL_ENV = { ...GLOBAL_ENV, renderTarget };
         state.mutate(root, (prev) => ({
@@ -72,7 +71,7 @@ const plugin: (root: LinkKey) => Plugin =
       makeSnapshot: (target?: LinkKey = root) => makeSnapshot(state, target),
       applySnapshot: (snapshot) => applySnapshot(state, snapshot),
       linkFragments: (fragments: GraphState[] = []) => {
-        state.mutate(state.$fragment.linkedFragmentsGraphKey, {
+        state.mutate(state.$fragment.linkerGraphKey, {
           fragments,
         });
       },
@@ -88,6 +87,13 @@ const plugin: (root: LinkKey) => Plugin =
 
     state.mutate(state.key, {
       updater: updateGraph,
+      linker: linkerGraph,
+    });
+
+    state.subscribe(() => {
+      const nextFields = state.inspectFields(nodes.FragmentInstance);
+
+      // console.log(nextFields);
     });
 
     return state;

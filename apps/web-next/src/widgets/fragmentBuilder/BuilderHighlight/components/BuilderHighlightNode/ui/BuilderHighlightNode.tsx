@@ -45,10 +45,12 @@ export const BuilderHighlightNode: FC<LayerHighlightDraggingProps> = ({ layerKey
 
   if (nodeArray.length > 0) {
     return nodeArray.map(node => {
+      const nextStyle = omit(node.props?.style ?? {}, 'opacity')
       return cloneElement(
         node,
         {
           ...node.props,
+          style: nextStyle,
           ref: setNodeRef,
           key: node?.props?.layerKey,
           className: cn(node.props?.className, styles.root, {

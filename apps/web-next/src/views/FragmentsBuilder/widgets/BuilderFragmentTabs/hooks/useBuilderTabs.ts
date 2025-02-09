@@ -75,8 +75,8 @@ export const useBuilderTabs = () => {
         key: tabsKeys[index],
         name: fragment?.name,
         preview: tabNode.preview,
-        isActive: tabNode.id === currentFragmentId && tabNode.preview === isPreview,
-        fetching: tabNode.id === currentFragmentId && fetchingUpdate
+        isActive: +tabNode.id === currentFragmentId && tabNode.preview === isPreview,
+        fetching: +tabNode.id === currentFragmentId && fetchingUpdate
       }
     }) ?? []
 

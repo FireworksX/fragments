@@ -19,9 +19,9 @@ export const useBuilderPosition = () => {
       case 'positionType':
         return node.setPositionType(value)
       case 'left':
-        return node.move(value)
-      case 'top':
         return node.move(null, value)
+      case 'top':
+        return node.move(value)
     }
   })
 

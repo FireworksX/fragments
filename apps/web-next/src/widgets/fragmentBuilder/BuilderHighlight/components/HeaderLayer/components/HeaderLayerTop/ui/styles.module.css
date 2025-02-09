@@ -36,9 +36,12 @@
     display: flex;
     flex: 1;
     gap: var(--gutter-medium);
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .preview {
+    min-width: 18px;
     width: 18px;
     height: 18px;
     border-radius: var(--radius-small);
@@ -53,6 +56,8 @@
     font-size: 12px;
     font-weight: 500;
     color: rgba(var(--secondary--rgb), .8);
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .threshold {

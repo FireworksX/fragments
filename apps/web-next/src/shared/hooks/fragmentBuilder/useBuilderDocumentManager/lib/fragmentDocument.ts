@@ -6,6 +6,10 @@ query FragmentDocument($fragmentSlug: Int!) {
         id
         name
         document
+        linkedFragments {
+            id
+            document
+        }
     }
 }
 `)

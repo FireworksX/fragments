@@ -26,7 +26,7 @@ export const useBuilder = () => {
 
   return {
     isValidId,
-    currentFragmentId: isValidId(currentFragmentId) ? currentFragmentId : null,
+    currentFragmentId: isValidId(currentFragmentId) ? +currentFragmentId : null,
     isPreview: preview === '1',
     openFragment,
     openPreview

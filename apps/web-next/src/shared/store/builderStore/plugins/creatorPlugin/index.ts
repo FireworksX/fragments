@@ -5,6 +5,7 @@ import { animatableValue } from '@/shared/utils/animatableValue'
 import { createFrame } from './createFrame'
 import { createText } from '@/shared/store/builderStore/plugins/creatorPlugin/createText'
 import { createImage } from '@/shared/store/builderStore/plugins/creatorPlugin/createImage'
+import { createFragmentInstance } from '@/shared/store/builderStore/plugins/creatorPlugin/createFragmentInstance'
 
 /**
  * Плагин обслуживает логику работы с добавлением контента на холст.
@@ -53,8 +54,6 @@ export const creatorPlugin: Plugin = state => {
         }
       }
 
-      console.log(nextLayer)
-
       setCreatorType(null)
 
       if (nextLayer) {
@@ -66,6 +65,7 @@ export const creatorPlugin: Plugin = state => {
   state.$creator = {
     key: creatorKey,
     setCreatorType,
-    createLayer
+    createLayer,
+    createFragmentInstance
   }
 }

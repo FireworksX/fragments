@@ -50,15 +50,15 @@ export function createFragmentInstanceNode(
   const nodeKey = cache.keyOfEntity(frameNode);
   const fragmentKey = baseNode?.fragment;
   const fragmentDocument = cache
-    .resolve(cache.$fragment.linkedFragmentsGraphKey)
+    .resolve(cache.$fragment.linkerGraphKey)
     ?.fragments?.find((el) => cache.keyOfEntity(el) === fragmentKey);
 
   const baseClone = frameNode.clone;
 
-  console.log(
-    fragmentDocument,
-    fragmentDocument?.resolve(fragmentDocument.$fragment.root)
-  );
+  // console.log(
+  //   fragmentDocument,
+  //   fragmentDocument?.resolve(fragmentDocument.$fragment.root)
+  // );
 
   // if (fragmentDocument) {
   //   linkFragment(cache, fragmentDocument);

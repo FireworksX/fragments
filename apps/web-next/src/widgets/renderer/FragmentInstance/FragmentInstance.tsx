@@ -18,12 +18,14 @@ import {
 export interface DocumentRenderer extends BaseRenderNode {}
 
 export const FragmentInstance: FC<DocumentRenderer> = ({ layerKey, renderParents = [], render = defaultRender }) => {
-  // const { builderManager } = use(BuilderContext)
-  // const { documentManager } = use(FragmentDocumentContext)
+  const { builderManager } = use(BuilderContext)
+  const { documentManager } = use(FragmentDocumentContext)
   // const [instanceGraph] = useGraph(documentManager, layerKey)
   // const cssStyles = useLayerStyles(layerKey, renderParents)
   // const instanceFragmentKey = getFieldValue(instanceGraph, 'fragment', documentManager)
   // const instanceDocumentManager = builderManager.$documents.getDocumentManager(instanceFragmentKey)
+
+  console.log(layerKey)
 
   return null
 
