@@ -43,7 +43,6 @@ def directory_db_to_directory_flat(
         parent_id=directory.parent_id,
         project_id=directory.project_id,
         fragments=[fragment_db_to_fragment(frag) for frag in directory.fragments],
-        directories=[],  # will be filled with all subdirectories (flat)
         has_subdirectories=bool(directory.subdirectories),
         has_fragments=bool(directory.fragments)
     )
@@ -60,7 +59,6 @@ def directory_db_to_directory_flat(
             parent_id=subdir.parent_id,
             project_id=subdir.project_id,
             fragments=[fragment_db_to_fragment(frag) for frag in subdir.fragments],
-            directories=[],  # We flatten, so do not nest further
             has_subdirectories=bool(subdir.subdirectories),
             has_fragments=bool(subdir.fragments)
         )

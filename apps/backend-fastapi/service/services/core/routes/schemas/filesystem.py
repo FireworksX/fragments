@@ -26,7 +26,6 @@ class ProjectDirectoryGet:
     parent_id: Optional[int] = None
     project_id: int
     fragments: List[FragmentGet] # flat list of all fragments
-    directories: List["ProjectDirectoryGet"] #flat list of all directories
 
     has_subdirectories: bool = False
     has_fragments: bool = False
