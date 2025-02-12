@@ -20,34 +20,33 @@ interface BuilderLayoutProps {
 
 const BuilderLayout: FC<BuilderLayoutProps> = ({ className }) => {
   const { selectionGraph, direction, mode, align, wrap, distribute, gap, padding } = useBuilderLayout()
-  const enabled = useInterpolation([mode.value], mode => mode === layerMode.flex)
 
   return (
     <Panel
       className={className}
       title='Layout'
-      hasBody={enabled}
-      aside={<PanelHeadAside isOpen={enabled} onClick={mode.onChange} />}
+      hasBody={mode.enabled}
+      aside={<PanelHeadAside isOpen={mode.enabled} onClick={mode.toggle} />}
     >
-      <ControlRow title='Direction' actions={direction.actions} isHighlight={direction.isOverride}>
+      <ControlRow title='Direction'>
         <ControlRowWide>
           <TabsSelector
             items={direction.items}
             value={direction.value}
-            onChange={({ name }) => direction.onChange(name)}
+            onChange={({ name }) => direction.update(name)}
           />
         </ControlRowWide>
       </ControlRow>
 
-      <ControlRow title='Align' actions={align.actions} isHighlight={align.isOverride}>
+      <ControlRow title='Align'>
         <ControlRowWide>
-          <TabsSelector items={align.items} value={align.value} onChange={({ name }) => align.onChange(name)} />
+          <TabsSelector items={align.items} value={align.value} onChange={({ name }) => align.update(name)} />
         </ControlRowWide>
       </ControlRow>
 
-      <ControlRow title='Distribute' actions={distribute.actions} isHighlight={distribute.isOverride}>
+      <ControlRow title='Distribute'>
         <ControlRowWide>
-          <Select value={distribute.value} onChange={distribute.onChange}>
+          <Select value={distribute.value} onChange={distribute.update}>
             {distribute.items.map(el => (
               <option key={el} value={el}>
                 {el}
@@ -57,15 +56,15 @@ const BuilderLayout: FC<BuilderLayoutProps> = ({ className }) => {
         </ControlRowWide>
       </ControlRow>
 
-      <ControlRow title='Wrap' actions={wrap.actions} isHighlight={wrap.isOverride}>
+      <ControlRow title='Wrap'>
         <ControlRowWide>
-          <TabsSelector items={wrap.items} value={wrap.value} onChange={({ name }) => wrap.onChange(name)} />
+          <TabsSelector items={wrap.items} value={wrap.value} onChange={({ name }) => wrap.update(name)} />
         </ControlRowWide>
       </ControlRow>
 
-      <ControlRow title='Gap' actions={gap.actions} isHighlight={gap.isOverride}>
-        <InputNumber value={gap.value} max={100} onChange={gap.onChange} />
-        <Slider value={gap.value} max={100} onChange={gap.onChange} />
+      <ControlRow title='Gap'>
+        <InputNumber value={gap.value} max={100} onChange={gap.update} />
+        <Slider value={gap.value} max={100} onChange={gap.update} />
       </ControlRow>
 
       <ControlRow title='Padding' actions={padding.actions} isHighlight={padding.isOverride}>

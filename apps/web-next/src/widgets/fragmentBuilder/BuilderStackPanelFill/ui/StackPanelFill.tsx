@@ -15,6 +15,7 @@ import { SolidPaintStyles } from '@/entities/fragment/SolidPaintStyles'
 import { paintMode } from '@fragments/plugin-fragment-spring'
 import { colorToObject, objectToColorString } from '@fragments/utils'
 import { to } from '@fragments/springs-factory'
+import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 
 export interface StackPanelFillOptions {}
 
@@ -35,64 +36,40 @@ const tabs: TabsSelectorItem[] = [
 ]
 
 const StackPanelFill: FC<StackPanelFillProps> = ({ className, stackColors }) => {
-  const { selection, selectionGraph } = useBuilderSelection()
-  const layerInvoker = useLayerInvoker(selection, ({ key, prevValue, documentManager, value, node }) => {
-    switch (key) {
-      case 'solidFill':
-        node.setSolidFill(value)
-        break
-      case 'imageFill':
-        node.setImageFill(value)
-        break
-      case 'imageFillScaleMode':
-        node.setImageFillScaleMode(value)
-        break
-      case 'fills':
-        node.setFill(value)
-        break
-      case 'fillType':
-        node.setFillType(value)
-        break
-    }
-  })
-  const fillType = layerInvoker('fillType')
-  const solidFill = layerInvoker('solidFill')
-  const type = fillType.value
+  const [fillType, setFillType] = useLayerValue('fillType')
+  const [solidFill, setSolidFill] = useLayerValue('solidFill')
 
   useEffect(() => {
-    if (!animatableValue(fillType.value)) {
-      fillType.onChange(paintMode.Solid)
-    }
-    if (!animatableValue(solidFill.value)) {
-      solidFill.onChange(getRandomColor())
+    if (fillType === paintMode.None || !fillType) {
+      setFillType(paintMode.Solid)
     }
   }, [])
 
   return (
     <div className={cn(styles.root, className)}>
-      <TabsSelector items={tabs} value={type} onChange={({ name }) => fillType.onChange(name)} />
-      <AnimatedVisible visible={to(type, t => t === paintMode.Solid)}>
+      <TabsSelector items={tabs} value={fillType} onChange={({ name }) => setFillType(name)} />
+      {fillType === paintMode.Solid && (
         <Panel>
           <ColorPicker
-            color={solidFill.value}
+            color={solidFill}
             onChange={color => {
               if (color) {
-                solidFill.onChange(objectToColorString(color.rgb))
+                setSolidFill(objectToColorString(color.rgb))
               }
             }}
           />
         </Panel>
-        {/*<SolidPaintStyles*/}
-        {/*  getInitialColor={() => solidFill.value?.get?.() ?? getRandomColor()}*/}
-        {/*  activeColorKey={solidFill.value}*/}
-        {/*  onSelect={solidFill.onChange}*/}
-        {/*  onCreate={popoutsStore.goPrev}*/}
-        {/*/>*/}
-      </AnimatedVisible>
+      )}
+      {/*<SolidPaintStyles*/}
+      {/*  getInitialColor={() => solidFill.value?.get?.() ?? getRandomColor()}*/}
+      {/*  activeColorKey={solidFill.value}*/}
+      {/*  onSelect={solidFill.onChange}*/}
+      {/*  onCreate={popoutsStore.goPrev}*/}
+      {/*/>*/}
 
-      <AnimatedVisible visible={to(type, t => t === paintMode.Image)}>
-        <ImagePicker urlInvoker={layerInvoker('imageFill')} scaleModeInvoker={layerInvoker('imageFillScaleMode')} />
-      </AnimatedVisible>
+      {/*<AnimatedVisible visible={to(type, t => t === paintMode.Image)}>*/}
+      {/*  <ImagePicker urlInvoker={layerInvoker('imageFill')} scaleModeInvoker={layerInvoker('imageFillScaleMode')} />*/}
+      {/*</AnimatedVisible>*/}
     </div>
   )
 }

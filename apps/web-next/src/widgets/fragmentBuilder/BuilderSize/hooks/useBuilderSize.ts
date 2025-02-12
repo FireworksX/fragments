@@ -9,38 +9,26 @@ import { to } from '@fragments/springs-factory'
 import { getFieldValue } from '@fragments/plugin-fragment'
 import { useInterpolation } from '@/shared/hooks/useInterpolation'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
+import { useAllowResize } from '@/shared/hooks/fragmentBuilder/useAllowResize'
+import { isValue } from '@fragments/utils'
 
 export const useBuilderSize = () => {
   const { documentManager } = useBuilderDocument()
   const { selection, selectionGraph } = useBuilderSelection()
-  const layerInvoker = useLayerInvoker(selection, ({ node, key, value }) => {
-    switch (key) {
-      case 'width':
-        node.setWidth(+value)
-        break
-      case 'height':
-        node.setHeight(+value)
-        break
-      case 'layoutSizingHorizontal':
-        node.setSizeMode('horizontal', value)
-        break
-      case 'layoutSizingVertical':
-        node.setSizeMode('vertical', value)
-        break
-      case 'aspectRatio':
-        node.syncSize()
-        break
-      case 'left':
-        return node.move(null, value)
-      case 'top':
-        return node.move(value)
-    }
-  })
   const [parent] = useGraph(documentManager, selectionGraph?.getParent?.())
   const parentLayerMode = getFieldValue(parent, 'layerMode', documentManager)
   const isTopLevel = selectionGraph?.isRootLayer?.() ?? false
   const childOfBreakpoint = parent?._type === nodes.Breakpoint
   const canRelativeSize = !childOfBreakpoint && !isTopLevel && selectionGraph?._type !== nodes.Breakpoint
+  const [width, setWidth] = useLayerValue('width')
+  const [height, setHeight] = useLayerValue('height')
+  const [widthType, setWidthType] = useLayerValue('widthType')
+  const [heightType, setHeightType] = useLayerValue('heightType')
+  const [aspectRatio, setAspectRatio] = useLayerValue('aspectRatio')
+  const [top, setTop] = useLayerValue('top')
+  const [left, setLeft] = useLayerValue('left')
+  const { width: isAllowResizeWidth, height: isAllowResizeHeight } = useAllowResize()
 
   const hugContentEnabled =
     !!selectionGraph?.children?.length ||
@@ -51,26 +39,43 @@ export const useBuilderSize = () => {
     [canRelativeSize, parentLayerMode]
   )
 
-  const layoutSizingHorizontal = layerInvoker('layoutSizingHorizontal')?.value
-  const layoutSizingVertical = layerInvoker('layoutSizingVertical')?.value
-
   return {
     selectionGraph,
     hugContentEnabled,
     fillContentEnabled,
-    hasSync: useInterpolation([layoutSizingHorizontal, layoutSizingVertical], (h, v) =>
-      [h, v].every(v => v !== sizing.Hug)
-    ),
-    sync: layerInvoker('aspectRatio'),
-    isSynced: selectionGraph?.isSynced?.(),
-    width: layerInvoker('width'),
-    height: layerInvoker('height'),
-    layoutSizingHorizontal: layerInvoker('layoutSizingHorizontal'),
-    layoutSizingVertical: layerInvoker('layoutSizingVertical'),
-    allowResizeHorizontal: useInterpolation([selectionGraph?.getAllowResizeHorizontal?.()], v => !v),
-    allowResizeVertical: useInterpolation([selectionGraph?.getAllowResizeVertical?.()], v => !v),
-    left: layerInvoker('left'),
-    top: layerInvoker('top'),
+    aspectRatio: {
+      disabled: [widthType, heightType].some(v => v === sizing.Hug),
+      isActive: isValue(aspectRatio),
+      toggle: () => {
+        setAspectRatio(isValue(aspectRatio) ? null : height / width)
+      }
+    },
+    width: {
+      value: width,
+      update: setWidth
+    },
+    height: {
+      value: height,
+      update: setHeight
+    },
+    widthType: {
+      value: widthType,
+      update: setWidthType
+    },
+    heightType: {
+      value: heightType,
+      update: setHeightType
+    },
+    isAllowResizeWidth,
+    isAllowResizeHeight,
+    left: {
+      value: left,
+      update: setLeft
+    },
+    top: {
+      value: top,
+      update: setTop
+    },
     canRelativeSize
   }
 }

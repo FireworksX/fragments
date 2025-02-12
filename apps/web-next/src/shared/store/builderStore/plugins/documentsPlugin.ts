@@ -6,6 +6,7 @@ import pluginFragmentSpring, { skips, skips as stateSkips } from '@fragments/plu
 import { builderStore } from '@/shared/store/builderStore'
 import { fragmentModule } from '@/shared/data/fragment.module'
 import { ApolloClient } from '@apollo/experimental-nextjs-app-support'
+import { createManager } from '@fragments/renderer-editor'
 
 const dataMap = {
   'Fragment:g34gherhg3g': fragmentData,
@@ -63,17 +64,21 @@ export const documentsPlugin = (state: typeof builderStore) => {
         return state.$documents.cacheDocuments.get(fragmentKey)
       }
 
-      const { _type, _id } = state.entityOfKey(fragmentKey)
+      // const { _type, _id } = state.entityOfKey(fragmentKey)
+      //
+      // const documentManager = createState({
+      //   _type,
+      //   _id,
+      //   initialState: {},
+      //   plugins: [pluginFragmentSpring(fragmentKey)],
+      //   skip: [...stateSkips, ...skips]
+      // })
+      //
+      // console.log(document)
+      //
+      // documentManager.$fragment.applySnapshot(document)
 
-      const documentManager = createState({
-        _type,
-        _id,
-        initialState: {},
-        plugins: [pluginFragmentSpring(fragmentKey)],
-        skip: [...stateSkips, ...skips]
-      })
-
-      documentManager.$fragment.applySnapshot(document)
+      const documentManager = createManager(fragmentKey, document)
 
       state.$documents.cacheDocuments.set(fragmentKey, documentManager)
       return documentManager

@@ -146,7 +146,10 @@ export const useCanvas = () => {
         const dragPoint = dragMoveHandler(dragEvent)
         // dragPoint = dragCollisionsHandler(dragEvent, dragPoint)
 
-        dragEvent.memo?.targetLayer?.move(dragPoint.y, dragPoint.x)
+        documentManager.mutate(dragEvent.memo?.targetLayerLink, {
+          top: dragPoint.y,
+          left: dragPoint.x
+        })
 
         return dragEvent.memo
       },

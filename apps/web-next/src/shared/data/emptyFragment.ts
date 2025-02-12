@@ -12,7 +12,6 @@ export const getEmptyFragment = (fragmentId: string) => {
       layoutSizingVertical: 'Fixed',
       horizontalGrow: 'auto',
       verticalGrow: 'auto',
-      renderTarget: 'canvas',
       renderMode: 'parent',
       opacity: 1,
       visible: true,
@@ -33,7 +32,6 @@ export const getEmptyFragment = (fragmentId: string) => {
       layoutSizingVertical: 'Fixed',
       fillType: 'Solid',
       positionType: 'absolute',
-      parent: `$$Fragment:${fragmentId}`,
       solidFill: 'rgba(255, 255, 255, 1)',
       name: 'Layer'
     }

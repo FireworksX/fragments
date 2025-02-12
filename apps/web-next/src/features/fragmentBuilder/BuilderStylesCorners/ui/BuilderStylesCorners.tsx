@@ -6,15 +6,10 @@ import { InputGroup } from '@/shared/ui/InputGroup'
 import { InputNumber } from '@/shared/ui/InputNumber'
 
 interface BuilderStylesCornersProps {
-  values: {
-    top: number
-    right: number
-    bottom: number
-    left: number
-  }
+  values: [number, number, number, number]
   className?: string
-  focusCorner(corner?: CornerSide): void
-  onChange(side: CornerSide, value: number): void
+  focusCorner(sideIndex?: number): void
+  onChange(sideIndex: number, value: number): void
 }
 
 const BuilderStylesCorners: FC<BuilderStylesCornersProps> = ({ className, values, focusCorner, onChange }) => {
@@ -28,35 +23,17 @@ const BuilderStylesCorners: FC<BuilderStylesCornersProps> = ({ className, values
     <ControlRow>
       <ControlRowWide>
         <InputGroup>
-          <InputNumber
-            inputRef={tlRef}
-            value={values.top}
-            withoutTicker={true}
-            onFocus={() => focusCorner('top')}
-            onBlur={() => focusCorner(undefined)}
-            onChange={value => onChange('top', value)}
-          />
-          <InputNumber
-            value={values.right}
-            withoutTicker={true}
-            onFocus={() => focusCorner('right')}
-            onBlur={() => focusCorner(undefined)}
-            onChange={value => onChange('right', value)}
-          />
-          <InputNumber
-            value={values.bottom}
-            withoutTicker={true}
-            onFocus={() => focusCorner('bottom')}
-            onBlur={() => focusCorner(undefined)}
-            onChange={value => onChange('bottom', value)}
-          />
-          <InputNumber
-            value={values.left}
-            withoutTicker={true}
-            onFocus={() => focusCorner('left')}
-            onBlur={() => focusCorner(undefined)}
-            onChange={value => onChange('left', value)}
-          />
+          {values.map((value, index) => (
+            <InputNumber
+              key={index}
+              inputRef={tlRef}
+              value={value}
+              withoutTicker={true}
+              onFocus={() => focusCorner(index)}
+              onBlur={() => focusCorner(undefined)}
+              onChange={value => onChange(index, value)}
+            />
+          ))}
         </InputGroup>
       </ControlRowWide>
     </ControlRow>

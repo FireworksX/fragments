@@ -25,6 +25,7 @@ import { borderType, paintMode } from '@fragments/plugin-fragment-spring'
 import { isValue } from '@fragments/utils'
 import { useInterpolation } from '@/shared/hooks/useInterpolation'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { booleanTabsSelectorItems } from '@/shared/data'
 
 interface BuilderStylesProps {
   className?: string
@@ -49,9 +50,7 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
           trigger='click'
           options={
             <DropdownGroup>
-              <AnimatedVisible visible={to(zIndex.value, v => !isValue(v))}>
-                <DropdownOption onClick={zIndex.onClick}>Z Index</DropdownOption>
-              </AnimatedVisible>
+              {!isValue(zIndex.value) && <DropdownOption onClick={() => zIndex.update(1)}>Z Index</DropdownOption>}
             </DropdownGroup>
           }
         >
@@ -60,38 +59,35 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
       }
     >
       <ControlRow title='Opacity' {...opacity}>
-        <InputNumber value={opacity.value} step={0.1} max={1} min={0} onChange={opacity.onChange} />
-        <Slider value={opacity.value} step={0.1} max={1} min={0} onChange={opacity.onChange} />
+        <InputNumber value={opacity.value} step={0.1} max={1} min={0} onChange={opacity.update} />
+        <Slider value={opacity.value} step={0.1} max={1} min={0} onChange={opacity.update} />
       </ControlRow>
 
       <ControlRow title='Visible' {...visible}>
         <ControlRowWide>
-          <TabsSelector items={visible.items} value={visible.value} onChange={({ name }) => visible.onChange(name)} />
+          <TabsSelector
+            items={booleanTabsSelectorItems}
+            value={visible.value}
+            onChange={({ name }) => visible.update(name)}
+          />
         </ControlRowWide>
       </ControlRow>
 
       {!fill.disabled && (
-        <ControlRow title='Fill' {...fill}>
+        <ControlRow title='Fill'>
           <ControlRowWide>
-            <GraphValue graphState={documentManager} field={fill.value} options={{ safe: true }}>
-              {value => {
-                return (
-                  <>
-                    <InputSelect
-                      hasIcon={to(fill.type, v => !!value && ALLOW_FILL_TYPES.includes(v))}
-                      color={getColor(value)}
-                      onReset={fill.onReset}
-                      onClick={fill.onClick}
-                    >
-                      {value &&
-                        to([fill.type], v =>
-                          ALLOW_FILL_TYPES.includes(v) ? getNameColor(value) : v === paintMode.Image ? 'Image' : ''
-                        )}
-                    </InputSelect>
-                  </>
-                )
-              }}
-            </GraphValue>
+            <InputSelect
+              hasIcon={!!fill.solidFill && ALLOW_FILL_TYPES.includes(fill.type)}
+              color={fill.solidFill}
+              onReset={fill.onReset}
+              onClick={fill.onClick}
+            >
+              {fill.type && ALLOW_FILL_TYPES.includes(fill.type)
+                ? fill.solidFill
+                : fill.type === paintMode.Image
+                ? 'Image'
+                : ''}
+            </InputSelect>
           </ControlRowWide>
         </ControlRow>
       )}
@@ -99,7 +95,7 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
       {!overflow.disabled && (
         <ControlRow title='Overflow' {...overflow}>
           <ControlRowWide>
-            <Select {...overflow}>
+            <Select value={overflow.value} onChange={overflow.update}>
               {overflow.options.map(value => (
                 <option key={value} value={value}>
                   {capitalize(value)}
@@ -112,8 +108,8 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
 
       {!radius.disabled && (
         <>
-          <ControlRow title='Radius' actions={radius.actions} isHighlight={radius.isOverride}>
-            <InputNumber value={radius.value} empty={radius.cornerMode === 'sides'} onChange={radius.onChange} />
+          <ControlRow title='Radius'>
+            <InputNumber value={radius.value} empty={radius.cornerMode === 'sides'} onChange={radius.update} />
             <TabsSelector
               cellClassName={styles.borderCell}
               items={radius.items}
@@ -132,33 +128,27 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
       )}
 
       {!border.disabled && (
-        <ControlRow title='Border' actions={border.actions} isHighlight={border.isOverride}>
+        <ControlRow title='Border'>
           <ControlRowWide>
-            <GraphValue graphState={documentManager} field={border.borderColorInvoker.value} options={{ safe: true }}>
-              {value => (
-                <>
-                  <InputSelect
-                    placeholder='Add...'
-                    hasIcon={to(value, v => !!v && v !== borderType.None)}
-                    color={value}
-                    onReset={border.onReset}
-                    onClick={border.onClick}
-                  >
-                    {value && to(border.borderTypeInvoker.value, v => (v !== borderType.None ? v : ''))}
-                  </InputSelect>
-                </>
-              )}
-            </GraphValue>
+            <InputSelect
+              placeholder='Add...'
+              hasIcon={!!border.borderType && border.borderType !== borderType.None}
+              color={border.borderColor}
+              onReset={border.onReset}
+              onClick={border.onClick}
+            >
+              {border.borderType !== borderType.None ? border.borderType : ''}
+            </InputSelect>
           </ControlRowWide>
         </ControlRow>
       )}
 
-      <AnimatedVisible visible={zIndex.visible}>
-        <ControlRow title='Z Index' actions={zIndex.actions} isHighlight={zIndex.isOverride}>
-          <InputNumber value={zIndex.value} onChange={zIndex.onChange} />
-          <Stepper value={zIndex.value} onChange={zIndex.onChange} />
+      {isValue(zIndex.value) && (
+        <ControlRow title='Z Index'>
+          <InputNumber value={zIndex.value} onChange={zIndex.update} />
+          <Stepper value={zIndex.value} onChange={zIndex.update} />
         </ControlRow>
-      </AnimatedVisible>
+      )}
     </Panel>
   )
 }

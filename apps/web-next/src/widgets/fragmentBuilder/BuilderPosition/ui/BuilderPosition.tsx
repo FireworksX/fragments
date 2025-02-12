@@ -35,14 +35,14 @@ const BuilderPosition: FC<BuilderPositionProps> = ({ className }) => {
         {/*//   <BuilderPositionToggle top={top} right={right} bottom={bottom} left={left} />*/}
         {/*// </div>*/}
         <ControlRow title='Position'>
-          <InputNumber suffix='x' {...left} min={Infinity} max={Infinity} />
-          <InputNumber suffix='y' {...top} min={Infinity} max={Infinity} />
+          <InputNumber suffix='x' value={left.value} min={Infinity} max={Infinity} onChange={left.update} />
+          <InputNumber suffix='y' value={top.value} min={Infinity} max={Infinity} onChange={top.update} />
         </ControlRow>
       </AnimatedVisible>
 
       <ControlRow title='Type'>
         <ControlRowWide>
-          <Select value={type.value} onChange={type.onChange}>
+          <Select value={type.value} onChange={type.update}>
             {type.options.map(option => (
               <option key={option.value} value={option.value} disabled={option.disabled}>
                 {option.label}

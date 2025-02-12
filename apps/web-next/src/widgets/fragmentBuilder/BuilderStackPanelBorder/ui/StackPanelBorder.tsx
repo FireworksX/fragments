@@ -1,8 +1,8 @@
 import { FC, useContext, useEffect } from 'react'
 import { popoutsStore } from '@/shared/store/popouts.store'
-import { isObject, omit } from '@fragments/utils'
+import { isObject, objectToColorString, omit } from '@fragments/utils'
 import { isLinkKey } from '@graph-state/core'
-import { borderType } from '@fragments/plugin-fragment-spring'
+import { borderType as defBorderType } from '@fragments/plugin-fragment-spring'
 import { useDisplayColor } from '@/shared/hooks/fragmentBuilder/useDisplayColor'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { Panel } from '@/shared/ui/Panel'
@@ -15,6 +15,7 @@ import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSe
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { getRandomColor } from '@/shared/utils/random'
 import { popoutNames } from '@/shared/data'
+import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 
 export interface StackPanelBorderOptions {
   value?: BorderData
@@ -26,32 +27,13 @@ interface StackPanelBorderProps extends StackPanel {
 }
 
 const StackPanelBorder: FC<StackPanelBorderProps> = ({ className }) => {
-  const { selection } = useBuilderSelection()
-  const { getColor, getNameColor } = useDisplayColor()
-  const layerInvoker = useLayerInvoker(selection, ({ node, documentManager, value, prevValue, key }) => {
-    switch (key) {
-      case 'borderType':
-        node.setBorderType(value)
-        break
-      case 'borderWidth':
-        node.setBorderWidth(value)
-        break
-      case 'borderColor':
-        node.setBorderColor(value)
-        break
-    }
-  })
-
-  const borderTypeInvoker = layerInvoker('borderType')
-  const borderWidthInvoker = layerInvoker('borderWidth')
-  const borderColorInvoker = layerInvoker('borderColor')
+  const [borderType, setBorderType] = useLayerValue('borderType')
+  const [borderColor, setBorderColor] = useLayerValue('borderColor')
+  const [borderWidth, setBorderWidth] = useLayerValue('borderWidth')
 
   useEffect(() => {
-    if (animatableValue(borderTypeInvoker.value) === borderType.None) {
-      borderTypeInvoker.onChange(borderType.Solid)
-    }
-    if (!animatableValue(borderColorInvoker.value)) {
-      borderColorInvoker.onChange(getRandomColor())
+    if (borderType === defBorderType.None) {
+      setBorderType(defBorderType.Solid)
     }
   }, [])
 
@@ -60,36 +42,32 @@ const StackPanelBorder: FC<StackPanelBorderProps> = ({ className }) => {
       <ControlRow title='Color'>
         <ControlRowWide>
           <InputSelect
-            color={getColor(borderColorInvoker.value)}
+            color={borderColor}
             onClick={() =>
               popoutsStore.open(popoutNames.colorPicker, {
                 context: {
-                  value: borderColorInvoker.value,
+                  value: borderColor,
                   onChange: nextColor => {
-                    borderColorInvoker.onChange(nextColor)
+                    setBorderColor(objectToColorString(nextColor))
                   }
                 }
               })
             }
           >
-            {getNameColor(borderColorInvoker.value)}
+            {borderColor}
           </InputSelect>
         </ControlRowWide>
       </ControlRow>
 
       <ControlRow title='Width'>
-        <InputNumber
-          value={borderWidthInvoker?.value}
-          min={0}
-          onChange={width => borderWidthInvoker.onChange(+width)}
-        />
-        <Stepper value={borderWidthInvoker?.value} min={0} onChange={width => borderWidthInvoker.onChange(+width)} />
+        <InputNumber value={borderWidth} min={0} onChange={width => setBorderWidth(+width)} />
+        <Stepper value={borderWidth} min={0} onChange={width => setBorderWidth(+width)} />
       </ControlRow>
 
       <ControlRow title='Style'>
         <ControlRowWide>
-          <Select value={borderTypeInvoker?.value} onChange={type => borderTypeInvoker.onChange(type)}>
-            {Object.keys(omit(borderType, borderType.None)).map(type => (
+          <Select value={borderType} onChange={type => setBorderType(type)}>
+            {Object.keys(omit(defBorderType, defBorderType.None)).map(type => (
               <option key={type} value={type}>
                 {type}
               </option>

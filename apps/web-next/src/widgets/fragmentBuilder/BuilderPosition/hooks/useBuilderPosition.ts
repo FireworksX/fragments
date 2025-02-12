@@ -5,6 +5,7 @@ import { layerMode, nodes } from '@fragments/plugin-fragment-spring'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 
 export const useBuilderPosition = () => {
   const { documentManager } = useBuilderDocument()
@@ -14,16 +15,9 @@ export const useBuilderPosition = () => {
   const isRootLayer = selectionGraph?.isRootLayer?.() ?? false
   const childOfBreakpoint = parent?._type === nodes.Breakpoint
 
-  const layerInvoker = useLayerInvoker(selection, ({ key, node, value, prevValue }) => {
-    switch (key) {
-      case 'positionType':
-        return node.setPositionType(value)
-      case 'left':
-        return node.move(null, value)
-      case 'top':
-        return node.move(value)
-    }
-  })
+  const [position, setPosition] = useLayerValue('position')
+  const [top, setTop] = useLayerValue('top')
+  const [left, setLeft] = useLayerValue('left')
 
   const disabledFlags = useMemo(() => {
     const parentNode = selectionNode?.getParent?.()
@@ -38,6 +32,8 @@ export const useBuilderPosition = () => {
   return {
     selectionGraph,
     type: {
+      value: position,
+      update: setPosition,
       options: [
         {
           label: 'Relative',
@@ -49,11 +45,16 @@ export const useBuilderPosition = () => {
           value: 'absolute',
           disabled: disabledFlags.absolute
         }
-      ],
-      ...layerInvoker('positionType')
+      ]
     },
-    left: layerInvoker('left'),
-    top: layerInvoker('top'),
+    left: {
+      value: left,
+      update: setLeft
+    },
+    top: {
+      value: top,
+      update: setTop
+    },
     hasPosition: !childOfBreakpoint && !isRootLayer && selectionGraph?._type !== nodes.Breakpoint
     // top: to(selectionRect, ({ y }) => y),
     // left: to(selectionRect, ({ x }) => x),

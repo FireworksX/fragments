@@ -19,18 +19,15 @@ const DISABLE_UTILS: (keyof typeof sizing)[] = [sizing.Fill, sizing.Hug]
 
 const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
   const {
-    selectionGraph,
+    aspectRatio,
     hugContentEnabled,
     fillContentEnabled,
-    sync,
-    isSynced,
-    layoutSizingHorizontal,
-    layoutSizingVertical,
-    hasSync,
+    widthType,
+    heightType,
     width,
     height,
-    allowResizeHorizontal,
-    allowResizeVertical,
+    isAllowResizeWidth,
+    isAllowResizeHeight,
     top,
     left,
     canRelativeSize
@@ -53,25 +50,29 @@ const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
 
   return (
     <Panel className={cn(styles.root, className)} title={canRelativeSize ? 'Size' : 'Size & Position'}>
-      <AnimatedVisible visible={hasSync}>
+      {!aspectRatio.disabled && (
         <div className={styles.lockerWrapper}>
-          <BuilderSizeLocker isLocked={isSynced} onClick={sync.onChange} />
+          <BuilderSizeLocker isLocked={aspectRatio.isActive} onClick={aspectRatio.toggle} />
         </div>
-      </AnimatedVisible>
+      )}
 
       {!canRelativeSize && (
         <ControlRow title='Position'>
-          <InputNumber suffix='x' value={left.value} min={Infinity} max={Infinity} onChange={left.onChange} />
-          <InputNumber suffix='y' value={top.value} min={Infinity} max={Infinity} onChange={top.onChange} />
+          <InputNumber suffix='x' value={left.value} min={Infinity} max={Infinity} onChange={left.update} />
+          <InputNumber suffix='y' value={top.value} min={Infinity} max={Infinity} onChange={top.update} />
         </ControlRow>
       )}
-      <ControlRow title='Width' actions={width.actions} isHighlight={width.isHighlight}>
-        <InputNumber value={width.value} disabled={allowResizeHorizontal} onChange={width.onChange} />
-        <Select {...layoutSizingHorizontal}>{Options}</Select>
+      <ControlRow title='Width'>
+        <InputNumber value={width.value} disabled={!isAllowResizeWidth} onChange={width.update} />
+        <Select value={widthType.value} onChange={widthType.update}>
+          {Options}
+        </Select>
       </ControlRow>
-      <ControlRow title='Height' actions={height.actions} isHighlight={height.isHighlight}>
-        <InputNumber value={height.value} disabled={allowResizeVertical} onChange={height.onChange} />
-        <Select {...layoutSizingVertical}>{Options}</Select>
+      <ControlRow title='Height'>
+        <InputNumber value={height.value} disabled={!isAllowResizeHeight} onChange={height.update} />
+        <Select value={heightType.value} onChange={heightType.update}>
+          {Options}
+        </Select>
       </ControlRow>
     </Panel>
   )

@@ -44,7 +44,7 @@ export const useLayerSizeStyles = (layerKey: LinkKey, parents: LinkKey[] = []) =
   return useMemo(() => {
     if (skipNodes.includes(layerNode?._type)) return {}
 
-    const parent = documentManager.resolve(layerKey)?.getParent()
+    const parent = documentManager.resolve(layerKey)?.getParent?.()
     const toWidth$ = to([layoutSizingHorizontal$, width$], toValue)
     const toHeight$ = to([layoutSizingVertical$, height$], toValue)
 

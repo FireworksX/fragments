@@ -14,13 +14,15 @@ import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import {
   layerAlign,
   layerDirection,
-  layerDistribute,
-  layerMode,
+  layerDistribute as defLayerDistribute,
+  layerMode as defLayerMode,
   parseCssSpacing
 } from '@fragments/plugin-fragment-spring'
 import { getFieldValue } from '@fragments/plugin-fragment'
 import { fromPx } from '@/shared/utils/fromPx'
 import { useInterpolation } from '@/shared/hooks/useInterpolation'
+import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
+import { booleanTabsSelectorItems } from '@/shared/data'
 
 const directions: TabsSelectorItem[] = [
   {
@@ -45,17 +47,6 @@ const aligns: TabsSelectorItem[] = [
   {
     name: layerAlign.end,
     label: <AlignBottom width={16} height={16} />
-  }
-]
-
-const wrap: TabsSelectorItem[] = [
-  {
-    name: true,
-    label: 'Yes'
-  },
-  {
-    name: false,
-    label: 'No'
   }
 ]
 
@@ -98,26 +89,46 @@ export const useBuilderLayout = () => {
   const [paddingSide, setPaddingSide] = useState<BoxSide | undefined>()
   const paddingInvoker = layerInvoker('padding')
 
+  const [layerMode, setLayerMode] = useLayerValue('layerMode')
+  const [layerDirection, setLayerDirection] = useLayerValue('layerDirection')
+  const [layerDistribute, setLayerDistribute] = useLayerValue('layerDistribute')
+  const [layerAlign, setLayerAlign] = useLayerValue('layerAlign')
+  const [layerGap, setLayerGap] = useLayerValue('layerGap')
+  const [layerWrap, setLayerWrap] = useLayerValue('layerWrap')
+
   return {
     selectionGraph,
-    mode: layerInvoker('layerMode'),
+    mode: {
+      value: layerMode,
+      enabled: layerMode === defLayerMode.flex,
+      toggle: () => {
+        setLayerMode(layerMode === defLayerMode.none ? defLayerMode.flex : defLayerMode.none)
+      }
+    },
     direction: {
       items: directions,
-      ...layerInvoker('layerDirection')
+      value: layerDirection,
+      update: setLayerDirection
     },
     align: {
       items: aligns,
-      ...layerInvoker('layerAlign')
+      value: layerAlign,
+      update: setLayerAlign
     },
     wrap: {
-      items: wrap,
-      ...layerInvoker('layerWrap')
+      items: booleanTabsSelectorItems,
+      value: layerWrap,
+      update: setLayerWrap
     },
     distribute: {
-      items: Object.keys(layerDistribute),
-      ...layerInvoker('layerDistribute')
+      items: Object.keys(defLayerDistribute),
+      value: layerDistribute,
+      update: setLayerDistribute
     },
-    gap: layerInvoker('layerGap'),
+    gap: {
+      value: layerGap,
+      update: setLayerGap
+    },
     padding: {
       ...paddingInvoker,
       value: useInterpolation([paddingInvoker.value], fromPx),
