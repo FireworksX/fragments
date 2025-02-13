@@ -11,6 +11,7 @@ import { SCALE } from '@/widgets/fragmentBuilder/BuilderCanvas/hooks/useCanvas'
 import { toPx } from '@/shared/utils/toPx'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
+import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
 
 interface HeaderLayerProps {
   className?: string
@@ -23,9 +24,8 @@ interface HeaderLayerProps {
 }
 
 const HeaderLayer: FC<HeaderLayerProps> = ({ className, layerKey }) => {
-  const { documentManager } = useBuilderDocument()
-  const [layerNode] = useGraph(documentManager, layerKey)
-  const isTopNode = !!(layerNode?.isRootLayer?.() || layerNode?.isBreakpoint) && layerNode?._type === nodes.Frame
+  const { layer, type, isRootLayer, isBreakpoint } = useLayerInfo(layerKey)
+  const isTopNode = !!(isRootLayer || isBreakpoint) && type === nodes.Frame
   const { canvas } = useBuilderCanvas()
 
   const size = canvas.scale.to([SCALE.min, SCALE.max], [15, 6])
@@ -39,7 +39,7 @@ const HeaderLayer: FC<HeaderLayerProps> = ({ className, layerKey }) => {
       className={cn(styles.root, className)}
       style={{ fontSize: size.to(toPx), top: size.to(v => v * -1 - 7) }}
     >
-      {layerNode?.name}
+      {layer?.name}
     </animated.div>
   )
 }

@@ -6,6 +6,7 @@
     background: var(--background);
     min-height: var(--app-size-tabs-height);
     border-bottom: 1px solid var(--border);
+    z-index: var(--z-index-navigation);
 }
 
 .beforeSlot {

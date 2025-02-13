@@ -1,4 +1,4 @@
-import { ElementRef, FC, useEffect, useRef } from 'react'
+import { ComponentRef, ElementRef, FC, useEffect, useRef } from 'react'
 import { animated } from '@react-spring/web'
 import { CornerSide } from '@/shared/ui/CornerSides'
 import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
@@ -13,7 +13,7 @@ interface BuilderStylesCornersProps {
 }
 
 const BuilderStylesCorners: FC<BuilderStylesCornersProps> = ({ className, values, focusCorner, onChange }) => {
-  const tlRef = useRef<ElementRef<'input'>>()
+  const tlRef = useRef<ComponentRef<'input'>>()
 
   useEffect(() => {
     tlRef.current?.focus()
@@ -40,4 +40,4 @@ const BuilderStylesCorners: FC<BuilderStylesCornersProps> = ({ className, values
   )
 }
 
-export default animated(BuilderStylesCorners)
+export default BuilderStylesCorners

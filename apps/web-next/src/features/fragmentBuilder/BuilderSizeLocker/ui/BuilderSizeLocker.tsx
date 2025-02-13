@@ -53,4 +53,4 @@ const BuilderSizeLocker: FC<BuilderSizeLockerProps> = ({ className, isLocked, on
   )
 }
 
-export default animated(BuilderSizeLocker)
+export default BuilderSizeLocker

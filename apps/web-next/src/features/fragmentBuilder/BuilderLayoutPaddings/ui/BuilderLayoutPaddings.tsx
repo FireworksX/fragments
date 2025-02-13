@@ -55,4 +55,4 @@ const BuilderLayoutPaddings: FC<BuilderLayoutPaddingsProps> = ({ className, valu
   </ControlRow>
 )
 
-export default animated(BuilderLayoutPaddings)
+export default BuilderLayoutPaddings

@@ -2,6 +2,7 @@ import { generateId } from '@fragments/utils'
 
 export const getEmptyFragment = (fragmentId: string) => {
   const layerId = generateId()
+  const nId = generateId()
 
   return {
     [`Fragment:${fragmentId}`]: {
@@ -25,7 +26,7 @@ export const getEmptyFragment = (fragmentId: string) => {
       opacity: 1,
       visible: true,
       overflow: 'visible',
-      children: [],
+      children: [`Frame:${nId}`],
       width: 200,
       height: 200,
       layoutSizingHorizontal: 'Fixed',
@@ -33,6 +34,22 @@ export const getEmptyFragment = (fragmentId: string) => {
       fillType: 'Solid',
       positionType: 'absolute',
       solidFill: 'rgba(255, 255, 255, 1)',
+      name: 'Layer'
+    },
+    [`Frame:${nId}`]: {
+      _type: 'Frame',
+      _id: nId,
+      opacity: 1,
+      visible: true,
+      overflow: 'visible',
+      children: [],
+      width: 100,
+      height: 100,
+      layoutSizingHorizontal: 'Fixed',
+      layoutSizingVertical: 'Fixed',
+      fillType: 'Solid',
+      positionType: 'absolute',
+      solidFill: 'rgba(32, 44, 255, 1)',
       name: 'Layer'
     }
   }

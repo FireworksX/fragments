@@ -69,8 +69,8 @@ export const FragmentsEdit = () => {
           <div className={styles.previewContainer}>
             {/*<BuilderSidebar assetsNode={<BuilderAssets />} layersNode={<BuilderLayers />} />*/}
 
+            <BuilderHighlight />
             <BuilderCanvas extendNodes={<BuilderFloatBar />}>
-              <BuilderHighlight />
               <DisplayBreakpoints />
             </BuilderCanvas>
 

@@ -4,4 +4,5 @@
     background: var(--background);
     border-left: 1px solid var(--border);
     overflow: auto;
+    z-index: var(--z-index-navigation);
 }
