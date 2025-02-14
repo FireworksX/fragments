@@ -1,7 +1,6 @@
 import { useContext, useMemo, useRef } from "react";
 import { FragmentContext } from "@/components/Fragment/FragmentContext.tsx";
 import { to, useSpring } from "@react-spring/web";
-import { layerWithOverrides } from "@/shared/layerWithOverrides.ts";
 import { useGraphEffect } from "@graph-state/react";
 import { LinkKey } from "@graph-state/core";
 import { toSize } from "@/shared/hooks/useLayerStyles/toSize.ts";
@@ -10,29 +9,27 @@ import { toPosition } from "@/shared/hooks/useLayerStyles/toPosition.ts";
 import { toLayer } from "@/shared/hooks/useLayerStyles/toLayer.ts";
 import { toBackground } from "@/shared/hooks/useLayerStyles/toBackground.ts";
 import { toBorder } from "@/shared/hooks/useLayerStyles/toBorder.ts";
+import { parseRawLayer } from "@/lib/parseRawLayer.ts";
+import { AnyZodObject, ZodSchema } from "zod";
+import { getOverrider } from "@/shared/helpers/getOverrider.ts";
 
-export const useLayerStyles = (layerKey: LinkKey, schema) => {
+export const useLayerStyles = (layerKey: LinkKey, schema: AnyZodObject) => {
   const { manager: fragmentManager } = useContext(FragmentContext);
-  const layerStylesSchema = useRef(schema.safeParse({}).data);
 
   const [schemaSprings, schemaSpringsApi] = useSpring(() => {
-    const initialData = layerWithOverrides(
-      layerStylesSchema.current,
-      fragmentManager.resolve(layerKey),
-      fragmentManager
-    );
-
-    return initialData;
+    const overrider = getOverrider(layerKey, fragmentManager);
+    return parseRawLayer(schema, fragmentManager.resolve(layerKey), {
+      overrideTarget: overrider,
+    });
   }, []);
 
   useGraphEffect(fragmentManager, layerKey, (data) => {
-    const dataWithOverrides = layerWithOverrides(
-      layerStylesSchema.current,
-      data,
-      fragmentManager
-    );
+    const overrider = getOverrider(layerKey, fragmentManager);
+    const layer = parseRawLayer(schema, data, {
+      overrideTarget: overrider,
+    });
 
-    schemaSpringsApi.set(dataWithOverrides);
+    schemaSpringsApi.set(layer);
   });
 
   return useMemo(() => {

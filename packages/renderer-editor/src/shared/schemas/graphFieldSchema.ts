@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/lib/zod.ts";
 import { nodes } from "@fragments/plugin-fragment";
 
 export const graphFieldSchema = z.object({

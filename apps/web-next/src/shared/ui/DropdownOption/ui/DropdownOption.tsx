@@ -20,47 +20,45 @@ export interface DropdownOptionProps extends PropsWithChildren, TouchableProps {
   onClick?: () => void
 }
 
-const DropdownOption: FC<DropdownOptionProps> = animated(
-  ({
-    className,
-    size = 'medium',
-    icon,
-    indicator,
-    disabled,
-    hasNested,
-    children,
-    fetching,
-    description,
-    mode,
-    suffix,
-    ...touchableProps
-  }) => {
-    return (
-      <Touchable
-        TagName='button'
-        disabled={disabled}
-        className={cn(styles.root, className, styles[size], styles[mode], {
-          [styles.disabled]: disabled
-        })}
-        {...touchableProps}
-      >
-        {icon && <div className={styles.icon}>{icon}</div>}
+const DropdownOption: FC<DropdownOptionProps> = ({
+  className,
+  size = 'medium',
+  icon,
+  indicator,
+  disabled,
+  hasNested,
+  children,
+  fetching,
+  description,
+  mode,
+  suffix,
+  ...touchableProps
+}) => {
+  return (
+    <Touchable
+      TagName='button'
+      disabled={disabled}
+      className={cn(styles.root, className, styles[size], styles[mode], {
+        [styles.disabled]: disabled
+      })}
+      {...touchableProps}
+    >
+      {icon && <div className={styles.icon}>{icon}</div>}
 
-        <div className={styles.body}>
-          {children} <div className={styles.description}>{indicator}</div>
+      <div className={styles.body}>
+        {children} <div className={styles.description}>{indicator}</div>
+      </div>
+      {description && <div className={styles.description}>{description}</div>}
+
+      {(suffix || hasNested || fetching) && (
+        <div>
+          {fetching && <div></div>}
+          {suffix && <div>{suffix}</div>}
+          {hasNested && <CaretRight className={styles.arrow} width={13} height={13} />}
         </div>
-        {description && <div className={styles.description}>{description}</div>}
-
-        {(suffix || hasNested || fetching) && (
-          <div>
-            {fetching && <div></div>}
-            {suffix && <div>{suffix}</div>}
-            {hasNested && <CaretRight className={styles.arrow} width={13} height={13} />}
-          </div>
-        )}
-      </Touchable>
-    )
-  }
-)
+      )}
+    </Touchable>
+  )
+}
 
 export default DropdownOption

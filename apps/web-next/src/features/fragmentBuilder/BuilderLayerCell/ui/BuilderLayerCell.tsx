@@ -28,7 +28,6 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
   const isActiveEdit = isValue(editLabel)
 
   const {
-    type,
     name,
     breakpointThreshold,
     isPrimaryLayer,
@@ -41,30 +40,6 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
     duplicate
   } = useBuilderLayerCell(layerKey)
   const flags = useBuilderLayerFlags(layerKey)
-
-  // const {
-  //   // label,
-  //   type,
-  //   name,
-  //   // children,
-  //   flags,
-  //   min,
-  //   max,
-  //   duplicate,
-  //   remove,
-  //   toggleVisible,
-  //   setPrimary,
-  //   click,
-  //   // rename,
-  //   // setPrimary,
-  //   // toggleVisible,
-  //   // buildFullKey,
-  //   // convertToComponent,
-  //   wrapFrame,
-  //   removeWrapper,
-  //   rename
-  // } = useTreeViewerCell(layerKey)
-  // const isOpen = layerKey in openMap ? openMap[layerKey] : false
 
   const onEdit = () => {
     if (editLabel) {
@@ -119,7 +94,7 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
         <>
           <DropdownGroup minWidth={200}>
             <DropdownOption description='⌘;' disabled={!flags.isVisible} onClick={flags.toggleVisible}>
-              {useInterpolation([flags.isVisible], v => (!v ? 'Show' : 'Hide'))}
+              {!flags.isVisible ? 'Show' : 'Hide'}
             </DropdownOption>
             <DropdownOption description='⌘D' disabled={!flags.canDuplicate} onClick={duplicate}>
               Duplicate
@@ -145,7 +120,7 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
         </>
       }
     >
-      <animated.div
+      <div
         className={cn(
           styles.root,
           className,
@@ -155,7 +130,7 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
           classNames
         )}
         style={{
-          opacity: useInterpolation([flags.isVisible], v => (v ? 1 : 0.4))
+          opacity: flags.isVisible ? 1 : 0.4
         }}
         onClick={handleSelect}
       >
@@ -210,7 +185,7 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
         <div className={styles.actions}>
           {isPrimaryLayer && 'Primary'} {breakpointThreshold}
         </div>
-      </animated.div>
+      </div>
     </Dropdown>
   )
 }

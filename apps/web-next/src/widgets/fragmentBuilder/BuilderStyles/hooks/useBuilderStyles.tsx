@@ -41,7 +41,7 @@ export const useBuilderStyles = () => {
   const [zIndex, setZIndex] = useLayerValue('zIndex')
   const [overflow, setOverflow] = useLayerValue('overflow')
   const [borderRadius, setBorderRadius] = useLayerValue('borderRadius')
-  const borderRadiusSides = borderRadius.split(' ').map(fromPx)
+  const borderRadiusSides = borderRadius?.split(' ')?.map(fromPx)
   const borderRadiusSideByIndex = useMemo(() => {
     if (cornerSide === 0) return 'top'
     if (cornerSide === 1) return 'right'

@@ -3,6 +3,7 @@ import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanva
 import { useGraph } from '@graph-state/react'
 import { isRootLayer } from '@fragments/renderer-editor'
 import { LinkKey } from '@graph-state/core'
+import { getParent, getAllParents } from '@fragments/renderer-editor'
 
 export const useLayerInfo = (layerKey: LinkKey) => {
   const { documentManager } = useBuilderDocument()
@@ -11,7 +12,10 @@ export const useLayerInfo = (layerKey: LinkKey) => {
   return {
     layer,
     type: layer?._type,
-    isBreakpoint: layer?.isBreakpoint,
-    isRootLayer: isRootLayer(documentManager, layerKey)
+    isBreakpoint: !!layer?.isBreakpoint,
+    isPrimary: !!layer?.isPrimary,
+    isRootLayer: isRootLayer(documentManager, layerKey),
+    parent: getParent(documentManager, layerKey) ?? null,
+    allParents: getAllParents(documentManager, layerKey) ?? []
   }
 }

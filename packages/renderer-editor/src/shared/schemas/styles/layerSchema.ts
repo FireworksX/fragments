@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z, layerField } from "@/lib/zod.ts";
 import {
   layerAlign,
   layerDirection,
@@ -7,14 +7,18 @@ import {
 } from "@fragments/plugin-fragment";
 
 export const layerSchema = z.object({
-  layerMode: z.enum(Object.keys(layerMode)).default(layerMode.none),
-  layerAlign: z.enum(Object.keys(layerAlign)).default(layerAlign.start),
-  layerDirection: z
-    .enum(Object.keys(layerDirection))
-    .default(layerDirection.horizontal),
-  layerDistribute: z
-    .enum(Object.keys(layerDistribute))
-    .default(layerDistribute.start),
-  layerWrap: z.boolean().default(false),
-  layerGap: z.number().nonnegative().default(0),
+  layerMode: layerField(z.enum(Object.keys(layerMode)), {
+    fallback: layerMode.none,
+  }),
+  layerAlign: layerField(z.enum(Object.keys(layerAlign)), {
+    fallback: layerAlign.start,
+  }),
+  layerDirection: layerField(z.enum(Object.keys(layerDirection)), {
+    fallback: layerDirection.horizontal,
+  }),
+  layerDistribute: layerField(z.enum(Object.keys(layerDistribute)), {
+    fallback: layerDistribute.start,
+  }),
+  layerWrap: layerField(z.boolean(), { fallback: false }),
+  layerGap: layerField(z.number().nonnegative(), { fallback: 0 }),
 });

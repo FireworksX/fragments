@@ -1,10 +1,12 @@
-import { z } from "zod";
+import { z, layerField } from "@/lib/zod.ts";
 import { overflow, positionType } from "@fragments/plugin-fragment";
 
 export const sceneSchema = z.object({
-  opacity: z.number().default(1),
-  visible: z.boolean().default(true),
-  zIndex: z.number().default(0),
-  borderRadius: z.string().default("0px"),
-  overflow: z.enum(Object.keys(overflow)).default(overflow.hidden),
+  opacity: layerField(z.number(), { fallback: 1 }),
+  visible: layerField(z.boolean(), { fallback: true }),
+  zIndex: layerField(z.number(), { fallback: 0 }),
+  borderRadius: layerField(z.string(), { fallback: "0px" }),
+  overflow: layerField(z.enum(Object.keys(overflow)), {
+    fallback: overflow.hidden,
+  }),
 });

@@ -1,5 +1,8 @@
-import { z } from "zod";
+import { z, layerField } from "@/lib/zod.ts";
 
 export const childrenSchema = z.object({
-  children: z.array(z.string()).default([]),
+  children: layerField(z.array(z.string()), {
+    fallback: [],
+    overridable: false,
+  }),
 });

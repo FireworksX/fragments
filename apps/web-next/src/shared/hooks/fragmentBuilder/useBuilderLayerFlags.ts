@@ -1,43 +1,31 @@
-import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { useContext } from 'react'
-import { useGraph } from '@graph-state/react'
 import { LinkKey } from '@graph-state/core'
-import { to } from '@react-spring/web'
-import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { nodes, layerMode as defLayerMode } from '@fragments/plugin-fragment'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
+import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 
 export const useBuilderLayerFlags = (layerKey: LinkKey) => {
   const { documentManager } = useBuilderDocument()
-  const [layerNode] = useGraph(documentManager, layerKey)
-  const layerInvoker = useLayerInvoker(layerKey, ({ key, node, value }) => {
-    switch (key) {
-      case 'visible':
-        node.toggleVisible(value)
-        break
-    }
-  })
+  const layerInfo = useLayerInfo(layerKey)
+  const [visible, setVisible] = useLayerValue('visible', layerKey)
+  const [layerMode, setLayerMode] = useLayerValue('layerMode', layerKey)
+  const [layerDirection, setLayerDirection] = useLayerValue('layerDirection', layerKey)
 
-  const visibleInvoker = layerInvoker('visible')
-  const isVisible = visibleInvoker.value
-  const layerMode = layerInvoker('layerMode').value
-  const layerDirection = layerInvoker('layerDirection').value
-  const hasLayout = to(layerMode, mode => mode === defLayerMode?.flex)
-  const canRemove = layerNode?._type === nodes.Breakpoint ? !layerNode?.isPrimary : true
-  const canWrap = layerNode?._type !== nodes.Breakpoint
-  const canDuplicate = layerNode?._type !== nodes.Fragment
-  const canRemoveWrapper = layerNode?._type === nodes.Frame && layerNode?.children?.length > 0
+  const hasLayout = layerMode === defLayerMode?.flex
+  const canRemove = layerInfo.type === nodes.Breakpoint ? !layerInfo?.isPrimary : true
+  const canWrap = layerInfo.type !== nodes.Breakpoint
+  const canDuplicate = layerInfo.type !== nodes.Fragment
+  const canRemoveWrapper = layerInfo.type === nodes.Frame && layerInfo.layer?.children?.length > 0
 
-  const remove = () => layerNode?.remove()
+  const remove = () => null //layerNode?.remove()
 
-  const toggleVisible = () => visibleInvoker.onChange()
-
+  const toggleVisible = () => setVisible(!visible)
   const wrapFrame = () => documentManager.createWrapper(layerKey)
   const removeWrapper = () => documentManager.removeWrapper(layerKey)
 
   return {
-    type: layerNode?._type,
-    isVisible,
+    type: layerInfo.type,
+    isVisible: visible,
     layerDirection,
     layerMode,
     hasLayout,
