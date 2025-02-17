@@ -12,6 +12,8 @@ export const parseRawLayer = (
   options?: Options
 ) => {
   try {
+    if (!rawLayer) return null;
+
     const withFallback = options?.withFallback ?? true;
     const overrideTarget = options?.overrideTarget;
     const parsedLayer = schema.parse(rawLayer);

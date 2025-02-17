@@ -17,14 +17,14 @@ export const useLayerStyles = (layerKey: LinkKey, schema: AnyZodObject) => {
   const { manager: fragmentManager } = useContext(FragmentContext);
 
   const [schemaSprings, schemaSpringsApi] = useSpring(() => {
-    const overrider = getOverrider(layerKey, fragmentManager);
+    const overrider = getOverrider(fragmentManager, layerKey);
     return parseRawLayer(schema, fragmentManager.resolve(layerKey), {
       overrideTarget: overrider,
     });
   }, []);
 
   useGraphEffect(fragmentManager, layerKey, (data) => {
-    const overrider = getOverrider(layerKey, fragmentManager);
+    const overrider = getOverrider(fragmentManager, layerKey);
     const layer = parseRawLayer(schema, data, {
       overrideTarget: overrider,
     });

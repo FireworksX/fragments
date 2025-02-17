@@ -20,7 +20,7 @@ export const useLayerValue = (
         schema: null,
       };
     }
-    const overrider = getOverrider(layerKey, manager);
+    const overrider = getOverrider(manager, layerKey);
     const schema = getLayerSchema(manager?.entityOfKey?.(layerKey));
 
     return {

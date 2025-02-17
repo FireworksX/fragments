@@ -3,6 +3,7 @@ import { nodes, layerMode as defLayerMode } from '@fragments/plugin-fragment'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
+import { removeChildren } from '@fragments/renderer-editor'
 
 export const useBuilderLayerFlags = (layerKey: LinkKey) => {
   const { documentManager } = useBuilderDocument()
@@ -17,7 +18,7 @@ export const useBuilderLayerFlags = (layerKey: LinkKey) => {
   const canDuplicate = layerInfo.type !== nodes.Fragment
   const canRemoveWrapper = layerInfo.type === nodes.Frame && layerInfo.layer?.children?.length > 0
 
-  const remove = () => null //layerNode?.remove()
+  const remove = () => removeChildren(documentManager, layerKey)
 
   const toggleVisible = () => setVisible(!visible)
   const wrapFrame = () => documentManager.createWrapper(layerKey)
