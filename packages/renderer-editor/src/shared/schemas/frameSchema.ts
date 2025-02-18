@@ -12,6 +12,10 @@ export const frameSchema = z
       overridable: false,
     }),
     isPrimary: layerField(z.boolean(), { fallback: false, overridable: false }),
+    threshold: layerField(z.number().nonnegative(), {
+      fallback: 320,
+      overridable: false,
+    }),
   })
   .merge(graphFieldSchema)
   .merge(frameStylesSchema)

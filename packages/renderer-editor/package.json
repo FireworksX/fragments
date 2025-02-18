@@ -30,8 +30,8 @@
   "dependencies": {
     "@fragments/plugin-fragment": "workspace:*",
     "@fragments/utils": "workspace:*",
-    "@graph-state/core": "^0.10.0",
-    "@graph-state/react": "^0.6.1",
+    "@graph-state/core": "^0.10.2",
+    "@graph-state/react": "^0.6.3",
     "@react-spring/web": "9.7.4",
     "@types/react": "^19.0.1",
     "@vitejs/plugin-react": "^4.3.4",

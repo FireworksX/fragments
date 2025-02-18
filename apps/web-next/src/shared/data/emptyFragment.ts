@@ -30,7 +30,7 @@ export const getEmptyFragment = (fragmentId: string) => {
       overflow: 'visible',
       children: [`Frame:${nId}`],
       overrides: [`Frame:${breakId}`],
-      width: 200,
+      width: 320,
       height: 200,
       layoutSizingHorizontal: 'Fixed',
       layoutSizingVertical: 'Fixed',
@@ -38,7 +38,8 @@ export const getEmptyFragment = (fragmentId: string) => {
       positionType: 'absolute',
       solidFill: 'rgba(255, 255, 255, 1)',
       name: 'Frame',
-      isPrimary: true
+      isPrimary: true,
+      threshold: 320
     },
     [`Frame:${nId}`]: {
       _type: 'Frame',
@@ -61,10 +62,12 @@ export const getEmptyFragment = (fragmentId: string) => {
       _type: 'Frame',
       _id: breakId,
       children: [`Frame:${breakFId}`],
-      left: 300,
+      left: 370,
+      width: 768,
       name: 'Frame',
       isPrimary: false,
-      isBreakpoint: true
+      isBreakpoint: true,
+      threshold: 768
     },
     [`Frame:${breakFId}`]: {
       _type: 'Frame',

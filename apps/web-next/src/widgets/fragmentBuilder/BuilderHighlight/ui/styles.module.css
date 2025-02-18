@@ -1,3 +1,8 @@
+.root {
+  position: absolute;
+  z-index: var(--z-index-builder-tools);
+}
+
 .highlight {
   pointer-events: none;
   position: fixed;
@@ -19,4 +24,16 @@
 
 .parentHighlight {
   border: var(--borderWidth, 1px) dashed var(--primary);
+}
+
+
+.breakpoints {
+  position: absolute;
+  z-index: var(--z-index-builder-tools);
+}
+
+.breakpointItem {
+  position: absolute;
+  left: 0;
+  top: 0;
 }

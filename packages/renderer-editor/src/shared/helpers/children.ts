@@ -2,6 +2,7 @@ import { Entity, GraphState, LinkKey } from "@graph-state/core";
 import { isPartOfPrimary } from "@/shared/helpers/isPartOfPrimary.ts";
 import { createLayer } from "@/shared/helpers/createLayer.ts";
 import { getOverrider } from "@/shared/helpers/getOverrider.ts";
+import { nodes } from "@fragments/plugin-fragment";
 
 /**
  * Метод добавляет слой в массив children. Но есть дополнительная логика.
@@ -14,6 +15,14 @@ export const appendChildren = (
   target: LinkKey,
   ...children: Entity[]
 ) => {
+  const targetEntity = manager.entityOfKey(target);
+  if (targetEntity._type !== nodes.Frame) {
+    manager.mutate(manager.keyOfEntity(target), {
+      children,
+    });
+    return;
+  }
+
   const primaryTarget = getOverrider(manager, target);
   const isPrimaryTarget = isPartOfPrimary(manager, target);
   const resolveChildren = children
@@ -59,8 +68,10 @@ export const removeChildren = (manager: GraphState, ...layerKeys: Entity[]) => {
   layerKeys.map(manager.resolve).forEach((layer) => {
     const isPrimary = isPartOfPrimary(manager, layer);
 
-    if (isPrimary) {
-      (layer?.overrides ?? []).forEach(manager.invalidate);
+    if (isPrimary || layer?.isBreakpoint) {
+      (layer?.overrides ?? [])
+        .concat(layer?.children ?? [])
+        .forEach(manager.invalidate);
       manager.invalidate(layer);
     } else {
       manager.mutate(manager.keyOfEntity(layer), {

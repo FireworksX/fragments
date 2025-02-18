@@ -4,8 +4,6 @@
     border-radius: var(--radius-second);
     pointer-events: auto;
     min-height: 32px;
-    position: absolute;
-    top: calc(-38px - 10px);
     left: 0;
     right: 0;
     width: 100%;

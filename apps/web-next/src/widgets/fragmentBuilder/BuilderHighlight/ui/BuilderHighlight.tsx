@@ -15,27 +15,39 @@ interface BuilderLayerHighlightProps extends PropsWithChildren {
 }
 
 const BuilderHighlight: FC<BuilderLayerHighlightProps> = ({ className, children }) => {
-  const { selectedStyles, parentStyles, opacity } = useBuilderHighlightNew()
+  const { canvas, selectedStyles, breakpoints, parentStyles, opacity } = useBuilderHighlightNew()
 
   return (
-    <animated.div className={cn(className, styles.root)} style={{ opacity }}>
-      <animated.div className={cn(styles.highlight, styles.selectedHighlight)} style={selectedStyles} />
-      <animated.div className={cn(styles.highlight, styles.parentHighlight)} style={parentStyles} />
-      {/*{layers.map(breakpointKey => (*/}
-      {/*  <Frame*/}
-      {/*    key={breakpointKey}*/}
-      {/*    layerKey={breakpointKey}*/}
-      {/*    render={(layerKey, node) => (*/}
-      {/*      <BuilderHighlightNode*/}
-      {/*        node={node}*/}
-      {/*        layerKey={layerKey}*/}
-      {/*        resizeNode={<LayerSelectedResize />}*/}
-      {/*        headerNode={<HeaderLayer layerKey={layerKey} />}*/}
-      {/*      />*/}
-      {/*    )}*/}
-      {/*  />*/}
-      {/*))}*/}
-    </animated.div>
+    <>
+      <animated.div
+        data-highlight-root
+        className={cn(className, styles.root)}
+        style={{ scale: canvas.scale, x: canvas.x, y: canvas.y }}
+      >
+        <animated.div className={cn(styles.highlight, styles.selectedHighlight)} style={selectedStyles} />
+        <animated.div className={cn(styles.highlight, styles.parentHighlight)} style={parentStyles} />
+
+        {breakpoints.map(breakpoint => (
+          <animated.div key={breakpoint.layerKey} className={cn(styles.breakpointItem)} style={breakpoint.styles}>
+            <HeaderLayer layerKey={breakpoint.layerKey} />
+          </animated.div>
+        ))}
+        {/*{layers.map(breakpointKey => (*/}
+        {/*  <Frame*/}
+        {/*    key={breakpointKey}*/}
+        {/*    layerKey={breakpointKey}*/}
+        {/*    render={(layerKey, node) => (*/}
+        {/*      <BuilderHighlightNode*/}
+        {/*        node={node}*/}
+        {/*        layerKey={layerKey}*/}
+        {/*        resizeNode={<LayerSelectedResize />}*/}
+        {/*        headerNode={<HeaderLayer layerKey={layerKey} />}*/}
+        {/*      />*/}
+        {/*    )}*/}
+        {/*  />*/}
+        {/*))}*/}
+      </animated.div>
+    </>
   )
 }
 

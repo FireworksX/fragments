@@ -12,8 +12,8 @@ export const canvasPlugin: Plugin = state => {
     focusLayer: null,
     hoverLayer: new SpringValue(''),
     draggingLayer: new SpringValue(''), // LinkKey слоя который сейчас перетаскиваем
-    isDragging: new SpringValue(false), // Перетаскиваем ли сейчас какой-нибудь элемент
-    isMoving: new SpringValue(false), // Двигаем ли сейчас canvas
+    isDragging: false, // Перетаскиваем ли сейчас какой-нибудь элемент
+    isMoving: false, // Двигаем ли сейчас canvas
     isResizing: new SpringValue(false) // Изменяем ли сейчас размер
   }
   const canvasGraphKey = state.keyOfEntity(canvasGraph)
@@ -25,12 +25,14 @@ export const canvasPlugin: Plugin = state => {
   state.$canvas = {
     key: canvasGraphKey,
     setDragging(value: boolean, layerLink?: LinkKey) {
-      const currentState = state.resolve(canvasGraphKey)
-      currentState.isDragging.set(value)
+      state.mutate(canvasGraphKey, {
+        isDragging: value
+      })
     },
     setMoving(value: boolean) {
-      const currentState = state.resolve(canvasGraphKey)
-      currentState.isMoving.set(value)
+      state.mutate(canvasGraphKey, {
+        isMoving: value
+      })
     },
     setFocus(layerLink: LinkKey) {
       state.mutate(canvasGraphKey, {

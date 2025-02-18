@@ -6,6 +6,10 @@ import { nodes } from '@fragments/plugin-fragment-spring'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { LinkKey } from '@graph-state/core'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { useBuilderCreator } from '@/shared/hooks/fragmentBuilder/useBuilderCreator'
+import { useFragmentLayers } from '@/shared/hooks/fragmentBuilder/useFragmentLayers'
+import { isPartOfPrimary } from '@fragments/renderer-editor'
+import { getLayer } from '@fragments/renderer-editor'
 
 const DEFAULT_BREAKPOINTS = [
   { name: 'Mobile', width: 375 },
@@ -16,20 +20,23 @@ const DEFAULT_BREAKPOINTS = [
 
 export const useBreakpoints = (customFragment?: LinkKey) => {
   const { documentManager } = useBuilderDocument()
-  const [fragmentGraph] = useGraph(documentManager, customFragment ?? documentManager.fragment)
-  const childrenValues = useGraphStack(documentManager, fragmentGraph?.children ?? [])
-  const primaryLayer = childrenValues.find(child => child.isRootLayer())
-  const breakpointValues = childrenValues.filter(child => child.isBreakpoint)
-  const breakpointKeys = breakpointValues.map(documentManager.keyOfEntity)
+  const { layers } = useFragmentLayers()
+  const childrenValues = useGraphStack(documentManager, layers ?? [], {
+    selector: data => (data ? { threshold: data.threshold, width: data.width } : data)
+  })
+
+  const primaryLayer = childrenValues.find(child => isPartOfPrimary(documentManager, child))
+  const breakpointKeys = childrenValues.map(documentManager.keyOfEntity)
+  const { createBreakpoint } = useBuilderCreator()
 
   const addBreakpoint = (name: string, width: number) => {
-    documentManager.resolve(documentManager.$fragment.root).addBreakpoint({ name, threshold: width })
+    createBreakpoint({ name, threshold: width })
   }
 
   const thresholds = useMemo(() => {
-    const values = breakpointValues.map(breakpoint => ({
+    const values = childrenValues.map(breakpoint => ({
       link: documentManager.keyOfEntity(breakpoint),
-      threshold: animatableValue(breakpoint.threshold)
+      threshold: breakpoint.threshold
     }))
 
     if (values.length === 0) {
@@ -63,7 +70,7 @@ export const useBreakpoints = (customFragment?: LinkKey) => {
     })
 
     return ranges
-  }, [breakpointValues, documentManager, primaryLayer])
+  }, [childrenValues, documentManager, primaryLayer])
 
   const getThreshold = (width: number) => thresholds.find(threshold => threshold.from <= width && threshold.to >= width)
 
@@ -78,15 +85,15 @@ export const useBreakpoints = (customFragment?: LinkKey) => {
 
   const allowedBreakpoints = useMemo(() => {
     const breakpoints = DEFAULT_BREAKPOINTS.filter(
-      breakpoint => !breakpointValues.find(v => v.threshold === breakpoint.width)
+      breakpoint => !childrenValues.find(v => v.threshold === breakpoint.width)
     )
 
     return breakpoints
-  }, [breakpointValues])
+  }, [childrenValues])
 
   return {
     primaryLayer,
-    breakpointValues,
+    childrenValues,
     breakpointKeys,
     getThreshold,
     addBreakpoint,
