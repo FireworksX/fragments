@@ -2,13 +2,19 @@ import React, { FC, useContext } from "react";
 import { animated, useSpring } from "@react-spring/web";
 import { LinkKey } from "@graph-state/core";
 import { useFrameAttributes } from "./hooks/useFrameAttributes.ts";
+import { nodes } from "@fragments/plugin-fragment";
+import { Text } from "@/components/Text";
 
 interface FrameProps {
   layerKey: LinkKey;
 }
 
 export const Frame: FC<FrameProps> = ({ layerKey }) => {
-  const { styles, children } = useFrameAttributes(layerKey);
+  const { styles, children, type } = useFrameAttributes(layerKey);
+
+  if (type === nodes.Text) {
+    return <Text layerKey={layerKey} />;
+  }
 
   return (
     <animated.div style={styles} data-key={layerKey}>

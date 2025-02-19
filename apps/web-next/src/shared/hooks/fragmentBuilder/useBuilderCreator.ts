@@ -37,6 +37,24 @@ export const useBuilderCreator = () => {
     })
   }
 
+  const createText = (parent, externalProps = {}) => {
+    if (![nodes.Frame].includes(documentManager.entityOfKey(parent)?._type)) {
+      return
+    }
+
+    const parentNode = documentManager.resolve(parent)
+    const parentLayerMode = parentNode.layerMode
+
+    appendChildren(documentManager, documentManager.keyOfEntity(parent), {
+      _type: nodes.Text,
+      fillType: paintMode.Solid,
+      position: parentLayerMode === layerMode.flex ? positionType.relative : positionType.absolute,
+      width: 100,
+      height: 100,
+      ...externalProps
+    })
+  }
+
   const createBreakpoint = (options: { name: string; threshold: number }) => {
     const primaryLayer = layers.find(layerKey => isPartOfPrimary(documentManager, layerKey))
     const lastLayer = getLayer(documentManager, layers.at(-1))
@@ -57,6 +75,7 @@ export const useBuilderCreator = () => {
     creator,
     manager: builderManager.$creator,
     createFrame,
-    createBreakpoint
+    createBreakpoint,
+    createText
   }
 }

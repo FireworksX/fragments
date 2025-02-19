@@ -25,6 +25,7 @@ import { wrapTextInParagraphWithAttributes } from '../lib/wrapTextInParagraphWit
 import { isVariableLink } from '@/shared/utils/isVariableLink'
 import { getResolvedValue } from '@fragments/plugin-fragment-spring'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 
 const aligns: TabsSelectorItem[] = [
   {
@@ -73,31 +74,9 @@ export const useBuilderText = () => {
   const [{ showTextEditor }] = useGraph(builderManager, builderManager.key)
   const lastSelectionRef = useRef<any | null>(null)
 
-  const layerInvoker = useLayerInvoker(
-    selection,
-    ({ node, key, value }) => {
-      switch (key) {
-        case 'content':
-          node.setContent(value)
-          break
-        case 'styleAttributes':
-          node.setStyleAttributes(value)
-          break
-        case 'whiteSpace':
-          node.setWhiteSpace(value)
-          break
-      }
-    },
-    ({ key, node }) => {
-      if (key === 'content') {
-        const variableLink = getFieldValue(node, 'variableLink', documentManager)
-        return variableLink ?? node.content
-      }
-    }
-  )
-  const fontInvoker = layerInvoker('text.font')
-  const contentInvoker = layerInvoker('content')
-  const styleAttributesInvoker = layerInvoker('styleAttributes')
+  const [content, setContent] = useLayerValue('content')
+  const [opacity, setOpacity] = useLayerValue('opacity')
+  const saveOpacity = useRef<number | null>(null)
   const [marks, setMarks] = useState({})
 
   useEffect(() => {
@@ -105,10 +84,11 @@ export const useBuilderText = () => {
       setMarks(getMarksInSelection(editor))
     }
     const updateHandler = ({ editor }) => {
-      contentInvoker.onChange(generateHTML(editor.getJSON(), canvasEditorExtensions))
+      setContent(generateHTML(editor.getJSON(), canvasEditorExtensions))
 
-      const attributes = editor.getAttributes('paragraph')
-      styleAttributesInvoker.onChange(attributes)
+      // const attributes = editor.getAttributes('paragraph')
+      // console.log(attributes)
+      // styleAttributesInvoker.onChange(attributes)
     }
 
     if (editor) {
@@ -125,7 +105,7 @@ export const useBuilderText = () => {
         editor.off('update', updateHandler)
       }
     }
-  }, [selection, isTextEditing, contentInvoker, editor])
+  }, [selection, isTextEditing, editor])
 
   useEffect(() => {
     setMarks(getMarksInSelection(editor))
@@ -133,15 +113,28 @@ export const useBuilderText = () => {
 
   useEffect(() => {
     if (!isTextEditing && editor) {
-      let content = contentInvoker.value
-
-      if (isVariableLink(contentInvoker.value)) {
-        content = selectionGraph?.getContent?.()
-      }
+      // if (isVariableLink(contentInvoker.value)) {
+      //   content = selectionGraph?.getContent?.()
+      // }
 
       editor.commands.setContent(content)
     }
-  }, [isTextEditing, contentInvoker, editor])
+  }, [isTextEditing, content, editor])
+
+  useEffect(() => {
+    if (isTextEditing) {
+      saveOpacity.current = opacity
+      setOpacity(0)
+    } else if (saveOpacity.current) {
+      setOpacity(saveOpacity.current)
+    }
+
+    return () => {
+      if (saveOpacity.current) {
+        setOpacity(saveOpacity.current)
+      }
+    }
+  }, [isTextEditing])
 
   const openColor = () => {
     const currentColor = marks.color || '#000'
@@ -200,15 +193,13 @@ export const useBuilderText = () => {
   return {
     isTextEditing,
     content: {
-      ...contentInvoker,
       textContent:
-        editor && contentInvoker?.value
-          ? generateText(generateJSON(contentInvoker?.value, canvasEditorExtensions), canvasEditorExtensions)
-          : ''
+        editor && content ? generateText(generateJSON(content, canvasEditorExtensions), canvasEditorExtensions) : '',
+      update: setContent
     },
     font: {
-      onClick: openFonts,
-      ...layerInvoker('text.font')
+      onClick: openFonts
+      // ...layerInvoker('text.font')
     },
     weight: {
       items: weights,
@@ -247,8 +238,8 @@ export const useBuilderText = () => {
       onChange: value => onChangeValue('letterSpacing', toPx(value))
     },
     whiteSpace: {
-      options: Object.keys(whiteSpace),
-      ...layerInvoker('whiteSpace')
+      options: Object.keys(whiteSpace)
+      // ...layerInvoker('whiteSpace')
     }
   }
 }

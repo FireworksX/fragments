@@ -8,7 +8,7 @@
         position: absolute;
         inset: 0;
 
-        & + p {
+        :where(p) {
             margin: 0;
         }
     }

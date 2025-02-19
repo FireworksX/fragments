@@ -19,11 +19,15 @@
 }
 
 .selectedHighlight {
-  border: var(--borderWidth, 1px) solid var(--primary);
+  &:after {
+    border-style: solid;
+  }
 }
 
 .parentHighlight {
-  border: var(--borderWidth, 1px) dashed var(--primary);
+  &:after {
+    border-style: dashed;
+  }
 }
 
 

@@ -3,14 +3,12 @@ import { generateId } from '@fragments/utils'
 export const getEmptyFragment = (fragmentId: string) => {
   const layerId = generateId()
   const nId = generateId()
-  const breakId = generateId()
-  const breakFId = generateId()
 
   return {
     [`Fragment:${fragmentId}`]: {
       _type: 'Fragment',
       _id: fragmentId,
-      children: [`Frame:${layerId}`, `Frame:${breakId}`],
+      children: [`Frame:${layerId}`],
       layoutSizingHorizontal: 'Fixed',
       layoutSizingVertical: 'Fixed',
       horizontalGrow: 'auto',
@@ -29,7 +27,6 @@ export const getEmptyFragment = (fragmentId: string) => {
       visible: true,
       overflow: 'visible',
       children: [`Frame:${nId}`],
-      overrides: [`Frame:${breakId}`],
       width: 320,
       height: 200,
       layoutSizingHorizontal: 'Fixed',
@@ -47,7 +44,6 @@ export const getEmptyFragment = (fragmentId: string) => {
       opacity: 1,
       visible: true,
       overflow: 'visible',
-      overrides: [`Frame:${breakFId}`],
       children: [],
       width: 100,
       height: 100,
@@ -56,23 +52,6 @@ export const getEmptyFragment = (fragmentId: string) => {
       fillType: 'Solid',
       positionType: 'absolute',
       solidFill: 'rgba(32, 44, 255, 1)',
-      name: 'Frame'
-    },
-    [`Frame:${breakId}`]: {
-      _type: 'Frame',
-      _id: breakId,
-      children: [`Frame:${breakFId}`],
-      left: 370,
-      width: 768,
-      name: 'Frame',
-      isPrimary: false,
-      isBreakpoint: true,
-      threshold: 768
-    },
-    [`Frame:${breakFId}`]: {
-      _type: 'Frame',
-      _id: breakFId,
-      children: [],
       name: 'Frame'
     }
   }

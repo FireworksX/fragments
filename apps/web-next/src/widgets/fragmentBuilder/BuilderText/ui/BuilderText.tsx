@@ -47,7 +47,7 @@ const BuilderText: FC<BuilderTextProps> = ({ className }) => {
       {!isTextEditing && (
         <ControlRow title='Content' {...content}>
           <ControlRowWide>
-            <InputText value={content.textContent} onChangeValue={content.onChange} />
+            <InputText value={content.textContent} onChangeValue={content.update} />
           </ControlRowWide>
         </ControlRow>
       )}

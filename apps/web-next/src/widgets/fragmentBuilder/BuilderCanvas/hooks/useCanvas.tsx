@@ -31,6 +31,7 @@ export const useCanvas = () => {
   const pointerRef = useRef<ElementRef<'div'>>(null)
   const dragMoveHandler = useDragMove()
   const dragCollisionsHandler = useDragCollisions()
+  const { createText } = useBuilderCreator()
 
   useEffect(() => {
     const handler = (e: Event) => e.preventDefault()
@@ -70,7 +71,12 @@ export const useCanvas = () => {
       onClick: ({ event }) => {
         const layerKey = findLayerFromPointerEvent(event)
         if (createType) {
-          manager.createLayer(layerKey)
+          if (createType === nodes.Text) {
+            createText(layerKey)
+            manager.setCreatorType(null)
+          } else {
+            manager.createLayer(layerKey)
+          }
         } else {
           if (documentManager.entityOfKey(layerKey)?._type === nodes.FragmentInstance) {
             builderManager.toggleTextEditor(false)

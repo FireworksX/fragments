@@ -41,6 +41,7 @@
   },
   "devDependencies": {
     "typescript": "^5.5.4",
-    "vite": "^6.1.0"
+    "vite": "^6.1.0",
+    "vite-plugin-css-injected-by-js": "^3.5.2"
   }
 }
