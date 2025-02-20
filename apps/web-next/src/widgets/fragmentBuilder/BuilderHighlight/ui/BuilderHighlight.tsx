@@ -17,11 +17,7 @@ const BuilderHighlight: FC<BuilderLayerHighlightProps> = ({ className, children 
 
   return (
     <>
-      <animated.div
-        data-highlight-root
-        className={cn(className, styles.root)}
-        style={{ scale: canvas.scale, x: canvas.x, y: canvas.y }}
-      >
+      <animated.div data-highlight-root className={cn(className, styles.root)}>
         <animated.div className={cn(styles.highlight, styles.mask, styles.selectedHighlight)} style={selectedStyles}>
           <LayerSelectedResize />
           {isTextEditing && <BuilderCanvasTextEditor />}

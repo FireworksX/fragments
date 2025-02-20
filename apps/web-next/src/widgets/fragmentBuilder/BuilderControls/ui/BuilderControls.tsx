@@ -59,20 +59,24 @@ const BuilderControls: FC<ControlsProps> = ({
 
   return (
     <Container className={cn(className, styles.root)}>
-      {/*<BuilderLink />*/}
-      {linkNode}
-      {hasGrowing && fragmentGrowingNode}
-      {hasFragmentProps && fragmentPropsNode}
-      {hasPosition && positionNode}
-      {hasSize && sizeNode}
-      {hasLayout && layoutNode}
-      {/*<BuilderEffects />*/}
-      {hasStyles && stylesNode}
-      {hasText && textNode}
-      {hasImage && imageNode}
-      {hasInstanceProps && instancePropsNode}
-      {hasCssOverride && cssNode}
-      {attributesNode}
+      {selection && (
+        <>
+          {/*<BuilderLink />*/}
+          {linkNode}
+          {hasGrowing && fragmentGrowingNode}
+          {hasFragmentProps && fragmentPropsNode}
+          {hasPosition && positionNode}
+          {hasSize && sizeNode}
+          {hasLayout && layoutNode}
+          {/*<BuilderEffects />*/}
+          {hasStyles && stylesNode}
+          {hasText && textNode}
+          {hasImage && imageNode}
+          {hasInstanceProps && instancePropsNode}
+          {hasCssOverride && cssNode}
+          {attributesNode}
+        </>
+      )}
     </Container>
   )
 }
