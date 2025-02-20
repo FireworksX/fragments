@@ -53,6 +53,7 @@ export const useLayerStyles = (layerKey: LinkKey, schema: AnyZodObject) => {
       background,
       display,
       border,
+      userSelect: "none",
       ...layerStyle,
     };
   }, Object.values(schemaSprings));

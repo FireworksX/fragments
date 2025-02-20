@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useContext, useMemo, useState } from 'react'
 import DirectionVertical from '@/shared/icons/direction-vertical.svg'
 import DirectionHorizontal from '@/shared/icons/direction-horizontal.svg'
 import AlignTop from '@/shared/icons/align-top.svg'
@@ -23,6 +23,8 @@ import { fromPx } from '@/shared/utils/fromPx'
 import { useInterpolation } from '@/shared/hooks/useInterpolation'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { booleanTabsSelectorItems } from '@/shared/data'
+import { CornerSides } from '@/shared/ui/CornerSides'
+import { toPx } from '@/shared/utils/toPx'
 
 const directions: TabsSelectorItem[] = [
   {
@@ -52,42 +54,9 @@ const aligns: TabsSelectorItem[] = [
 
 export const useBuilderLayout = () => {
   const { selection, selectionGraph } = useBuilderSelection()
-  const layerInvoker = useLayerInvoker(selection, ({ node, key, value }) => {
-    switch (key) {
-      case 'layerMode':
-        if (!node.layerMode) {
-          node.setLayerMode(layerMode.flex)
-        } else {
-          node.setLayerMode(animatableValue(node.layerMode) === layerMode.none ? layerMode.flex : layerMode.none)
-        }
-
-        break
-      case 'layerDirection':
-        node.setLayerDirection(value)
-        break
-      case 'layerDistribute':
-        node.setLayerDistribute(value)
-        break
-      case 'layerAlign':
-        node.setLayerAlign(value)
-        break
-      case 'layerWrap':
-        node.setLayerWrap(value)
-        break
-      case 'layerGap':
-        node.setLayerGap(+value)
-        break
-      case 'padding':
-        node.setPadding(value)
-        break
-      case 'paddingSide':
-        node.setPadding(value.side, +value.value)
-        break
-    }
-  })
   const [paddingMode, setPaddingMode] = useState('plain')
-  const [paddingSide, setPaddingSide] = useState<BoxSide | undefined>()
-  const paddingInvoker = layerInvoker('padding')
+  const [paddingSide, setPaddingSide] = useState<number | undefined>()
+  // const paddingInvoker = layerInvoker('padding')
 
   const [layerMode, setLayerMode] = useLayerValue('layerMode')
   const [layerDirection, setLayerDirection] = useLayerValue('layerDirection')
@@ -95,6 +64,14 @@ export const useBuilderLayout = () => {
   const [layerAlign, setLayerAlign] = useLayerValue('layerAlign')
   const [layerGap, setLayerGap] = useLayerValue('layerGap')
   const [layerWrap, setLayerWrap] = useLayerValue('layerWrap')
+  const [padding, setPadding] = useLayerValue('padding')
+  const paddingSides = padding?.split(' ')?.map(fromPx)
+  const paddingSideByIndex = useMemo(() => {
+    if (paddingSide === 0) return 'top'
+    if (paddingSide === 1) return 'right'
+    if (paddingSide === 2) return 'bottom'
+    if (paddingSide === 3) return 'left'
+  }, [paddingSide])
 
   return {
     selectionGraph,
@@ -130,21 +107,19 @@ export const useBuilderLayout = () => {
       update: setLayerGap
     },
     padding: {
-      ...paddingInvoker,
-      value: useInterpolation([paddingInvoker.value], fromPx),
-      sidesValues: useInterpolation([paddingInvoker.value], parseCssSpacing),
       mode: paddingMode,
-      setPaddingMode: mode => {
-        const maxValue = Math.max(...Object.values(parseCssSpacing(animatableValue(paddingInvoker.value))).map(fromPx))
-        if (mode === 'plain') {
-          paddingInvoker.onChange(maxValue)
+      setMode: mode => {
+        if (mode === 'sides') {
+          const radius = padding ?? '0px'
+          setPadding([radius, radius, radius, radius].join(' '))
+        } else {
+          const radius = padding?.split(' ')?.at(0) ?? '0px'
+          setPadding(radius)
         }
+
         setPaddingMode(mode)
       },
-      setCornerSideValue: (side, value) => {
-        const nextSides = { ...parseCssSpacing(animatableValue(paddingInvoker.value)), [side]: value }
-        paddingInvoker.onChange(nextSides)
-      },
+      setPaddingSide,
       items: [
         {
           name: 'plain',
@@ -152,11 +127,16 @@ export const useBuilderLayout = () => {
         },
         {
           name: 'sides',
-          label: <BoxSizingSides side={paddingSide} />
+          label: <BoxSizingSides side={paddingSideByIndex} />
         }
       ],
-      side: paddingSide,
-      setPaddingSide
+      setSideValue: (sideIndex, value) => {
+        paddingSides[sideIndex] = value
+        setPadding(paddingSides.map(toPx).join(' '))
+      },
+      update: value => setPadding(toPx(value)),
+      value: fromPx(padding),
+      sidesValues: paddingSides
     }
   }
 }

@@ -9,7 +9,7 @@ import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDoc
 
 export const useBuilderFragmentGrowing = () => {
   const { documentManager } = useBuilderDocument()
-  const { selection, selectionGraph } = useBuilderSelection()
+  const { selection } = useBuilderSelection()
 
   const layerInvoker = useLayerInvoker(selection, ({ key, node, value, prevValue }) => {
     switch (key) {
@@ -21,7 +21,6 @@ export const useBuilderFragmentGrowing = () => {
   })
 
   return {
-    selectionGraph,
     options: [
       {
         label: 'Auto',

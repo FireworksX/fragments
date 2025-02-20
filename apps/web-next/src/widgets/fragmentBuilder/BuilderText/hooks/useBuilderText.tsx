@@ -67,9 +67,8 @@ const transforms: TextTransform[] = ['none', 'uppercase', 'lowercase', 'capitali
 
 export const useBuilderText = () => {
   const { builderManager } = use(BuilderContext)
-  const { documentManager } = useBuilderDocument()
   const editor = use(CanvasTextEditorContext)
-  const { selection, selectionGraph } = useBuilderSelection()
+  const { selection } = useBuilderSelection()
   const { isTextEditing } = useBuilderManager()
   const [{ showTextEditor }] = useGraph(builderManager, builderManager.key)
   const lastSelectionRef = useRef<any | null>(null)
@@ -81,7 +80,7 @@ export const useBuilderText = () => {
 
   useEffect(() => {
     const selectionHandler = ({ editor }) => {
-      setMarks(getMarksInSelection(editor))
+      // setMarks(getMarksInSelection(editor))
     }
     const updateHandler = ({ editor }) => {
       setContent(generateHTML(editor.getJSON(), canvasEditorExtensions))
@@ -107,9 +106,9 @@ export const useBuilderText = () => {
     }
   }, [selection, isTextEditing, editor])
 
-  useEffect(() => {
-    setMarks(getMarksInSelection(editor))
-  }, [selection, editor])
+  // useEffect(() => {
+  //   setMarks(getMarksInSelection(editor))
+  // }, [selection, editor])
 
   useEffect(() => {
     if (!isTextEditing && editor) {

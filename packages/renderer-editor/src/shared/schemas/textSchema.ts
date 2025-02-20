@@ -5,7 +5,7 @@ import { textStylesSchema } from "@/shared/schemas/styles/nodes/textStylesSchema
 
 export const textSchema = z
   .object({
-    name: layerField(z.string(), { fallback: "Frame", overridable: false }),
+    name: layerField(z.string(), { fallback: "Text", overridable: false }),
     content: layerField(z.string(), {
       fallback: "",
     }),

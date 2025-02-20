@@ -15,8 +15,6 @@ interface BuilderSizeProps {
   className?: string
 }
 
-const DISABLE_UTILS: (keyof typeof sizing)[] = [sizing.Fill, sizing.Hug]
-
 const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
   const {
     aspectRatio,

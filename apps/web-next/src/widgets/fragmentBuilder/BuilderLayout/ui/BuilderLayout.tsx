@@ -19,7 +19,7 @@ interface BuilderLayoutProps {
 }
 
 const BuilderLayout: FC<BuilderLayoutProps> = ({ className }) => {
-  const { selectionGraph, direction, mode, align, wrap, distribute, gap, padding } = useBuilderLayout()
+  const { direction, mode, align, wrap, distribute, gap, padding } = useBuilderLayout()
 
   return (
     <Panel
@@ -67,25 +67,25 @@ const BuilderLayout: FC<BuilderLayoutProps> = ({ className }) => {
         <Slider value={gap.value} max={100} onChange={gap.update} />
       </ControlRow>
 
-      <ControlRow title='Padding' actions={padding.actions} isHighlight={padding.isOverride}>
+      <ControlRow title='Padding'>
         <InputNumber
           value={padding.value}
           disabled={padding.mode === 'sides'}
           empty={padding.mode === 'sides'}
-          onChange={padding.onChange}
+          onChange={padding.update}
         />
         <TabsSelector
           cellClassName={styles.paddingCell}
           items={padding.items}
           value={padding.mode}
-          onChange={({ name }) => padding.setPaddingMode(name)}
+          onChange={({ name }) => padding.setMode(name)}
         />
       </ControlRow>
       {padding.mode === 'sides' && (
         <BuilderLayoutPaddings
           values={padding.sidesValues}
           focusSide={padding.setPaddingSide}
-          onChange={(side, value) => padding.setCornerSideValue(side, value)}
+          onChange={(side, value) => padding.setSideValue(side, value)}
         />
       )}
     </Panel>

@@ -35,8 +35,7 @@ const ALLOW_FILL_TYPES = [paintMode.Solid]
 
 const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
   const { documentManager } = useBuilderDocument()
-  const { selectionGraph, opacity, overflow, visible, zIndex, radius, fill, border } = useBuilderStyles()
-  const { getColor, getNameColor } = useDisplayColor(documentManager)
+  const { opacity, overflow, visible, zIndex, radius, fill, border } = useBuilderStyles()
   // const fillContent = useInterpolation([fill.type], v =>
   //   ALLOW_FILL_TYPES.includes(v) ? getNameColor(v /* value */) : v === paintMode.Image ? 'Image' : ''
   // )
@@ -50,7 +49,7 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
           trigger='click'
           options={
             <DropdownGroup>
-              {!isValue(zIndex.value) && <DropdownOption onClick={() => zIndex.update(1)}>Z Index</DropdownOption>}
+              {!zIndex.enabled && <DropdownOption onClick={() => zIndex.update(1)}>Z Index</DropdownOption>}
             </DropdownGroup>
           }
         >
@@ -143,7 +142,7 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
         </ControlRow>
       )}
 
-      {isValue(zIndex.value) && (
+      {zIndex.enabled && (
         <ControlRow title='Z Index'>
           <InputNumber value={zIndex.value} onChange={zIndex.update} />
           <Stepper value={zIndex.value} onChange={zIndex.update} />

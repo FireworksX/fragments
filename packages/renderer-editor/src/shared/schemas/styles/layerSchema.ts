@@ -21,4 +21,6 @@ export const layerSchema = z.object({
   }),
   layerWrap: layerField(z.boolean(), { fallback: false }),
   layerGap: layerField(z.number().nonnegative(), { fallback: 0 }),
+
+  padding: layerField(z.string(), { fallback: "0px" }),
 });

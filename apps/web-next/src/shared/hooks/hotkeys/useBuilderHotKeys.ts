@@ -8,7 +8,7 @@ import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDoc
 import { useBuilderDocumentManager } from '@/shared/hooks/fragmentBuilder/useBuilderDocumentManager'
 
 export const useBuilderHotKeys = () => {
-  const { selectionGraph, selection } = useBuilderSelection()
+  const { selection } = useBuilderSelection()
   const layerFlags = useBuilderLayerFlags(selection)
   const { saveFragment } = useBuilderDocumentManager()
 

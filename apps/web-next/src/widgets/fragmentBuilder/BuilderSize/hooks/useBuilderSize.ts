@@ -1,26 +1,18 @@
-import { useGraph } from '@graph-state/react'
-import { useContext, useMemo } from 'react'
 import { layerMode, nodes, sizing } from '@fragments/plugin-fragment-spring'
-import { animatableValue } from '@/shared/utils/animatableValue'
-import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
-import { to } from '@fragments/springs-factory'
-import { getFieldValue } from '@fragments/plugin-fragment'
-import { useInterpolation } from '@/shared/hooks/useInterpolation'
-import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { useAllowResize } from '@/shared/hooks/fragmentBuilder/useAllowResize'
 import { isValue } from '@fragments/utils'
+import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
+
+const DISABLE_UTILS: (keyof typeof sizing)[] = [sizing.Fill, sizing.Hug]
 
 export const useBuilderSize = () => {
-  const { documentManager } = useBuilderDocument()
-  const { selection, selectionGraph } = useBuilderSelection()
-  const [parent] = useGraph(documentManager, selectionGraph?.getParent?.())
-  const parentLayerMode = getFieldValue(parent, 'layerMode', documentManager)
-  const isTopLevel = selectionGraph?.isRootLayer?.() ?? false
+  const { selection } = useBuilderSelection()
+  const { parent, isRootLayer, type, layer } = useLayerInfo(selection)
+  const [parentLayerMode] = useLayerValue('layerMode', parent)
   const childOfBreakpoint = parent?._type === nodes.Breakpoint
-  const canRelativeSize = !childOfBreakpoint && !isTopLevel && selectionGraph?._type !== nodes.Breakpoint
+  const canRelativeSize = !childOfBreakpoint && !isRootLayer && type !== nodes.Breakpoint
   const [width, setWidth] = useLayerValue('width')
   const [height, setHeight] = useLayerValue('height')
   const [widthType, setWidthType] = useLayerValue('widthType')
@@ -30,24 +22,17 @@ export const useBuilderSize = () => {
   const [left, setLeft] = useLayerValue('left')
   const { width: isAllowResizeWidth, height: isAllowResizeHeight } = useAllowResize()
 
-  const hugContentEnabled =
-    !!selectionGraph?.children?.length ||
-    selectionGraph?._type === nodes.Text ||
-    selectionGraph?._type === nodes.FragmentInstance
-  const fillContentEnabled = useMemo(
-    () => to([canRelativeSize, parentLayerMode], (can, mode) => can && mode === layerMode.flex),
-    [canRelativeSize, parentLayerMode]
-  )
+  const hugContentEnabled = !!layer?.children?.length || type === nodes.Text || type === nodes.FragmentInstance
+  const fillContentEnabled = canRelativeSize && parentLayerMode === layerMode.flex
 
   return {
-    selectionGraph,
     hugContentEnabled,
     fillContentEnabled,
     aspectRatio: {
-      disabled: [widthType, heightType].some(v => v === sizing.Hug),
-      isActive: isValue(aspectRatio),
+      disabled: [widthType, heightType].some(v => v === DISABLE_UTILS.includes(v)),
+      isActive: isValue(aspectRatio) && aspectRatio !== -1,
       toggle: () => {
-        setAspectRatio(isValue(aspectRatio) ? null : height / width)
+        setAspectRatio(isValue(aspectRatio) && aspectRatio !== -1 ? -1 : height / width)
       }
     },
     width: {

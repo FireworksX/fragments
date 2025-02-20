@@ -13,6 +13,7 @@ import { animatableValue } from '@/shared/utils/animatableValue'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
 import { useBuilderCreator } from '@/shared/hooks/fragmentBuilder/useBuilderCreator'
+import { nextTick } from '@/shared/utils/nextTick'
 
 export const SCALE = {
   min: 0.25,
@@ -72,8 +73,13 @@ export const useCanvas = () => {
         const layerKey = findLayerFromPointerEvent(event)
         if (createType) {
           if (createType === nodes.Text) {
-            createText(layerKey)
+            const [nextLayerKey] = createText(layerKey, { content: 'text' })
             manager.setCreatorType(null)
+            canvasManager.setFocus(nextLayerKey)
+
+            nextTick(() => {
+              canvasManager.setFocus(nextLayerKey)
+            })
           } else {
             manager.createLayer(layerKey)
           }

@@ -4,12 +4,11 @@ import { useBuilderAssetsCss } from '@/shared/hooks/fragmentBuilder/useBuilderAs
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 
 export const useBuilderAssets = () => {
-  const { selection, selectionGraph } = useBuilderSelection()
   const { editColor, createColor, colorVariables, removeColor } = useBuilderAssetsColors()
   const { cssVariables, createCssOverride, editCssOverride } = useBuilderAssetsCss()
 
   const insertComponent = component => {
-    selectionGraph.appendChild(component.createInstance())
+    // selectionGraph.appendChild(component.createInstance())
   }
 
   return {

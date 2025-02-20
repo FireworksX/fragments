@@ -8,6 +8,7 @@ import { moveNode } from '@fragments/plugin-fragment-spring'
 import { all } from 'axios'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { stateAlias } from '@/views/FragmentDetail/ui/FragmentDetail'
+import { getAllParents } from '@fragments/renderer-editor'
 
 const findIndexOfNode = (items: unknown[], linkNode: LinkKey) => {
   const index = items.findIndex(item => item.id === linkNode)
@@ -24,7 +25,7 @@ const findIndexOfNode = (items: unknown[], linkNode: LinkKey) => {
 
 export const useBuilderLayers = () => {
   const { documentManager } = useBuilderDocument()
-  const { selection, selectionGraph } = useBuilderSelection()
+  const { selection } = useBuilderSelection()
   const [expandedLinkKeys, setExpandedLinkKeys] = useState<string[]>([])
   const allBreakpoints = useGraphFields(documentManager, nodes.Breakpoint)
   const allFrames = useGraphFields(documentManager, nodes.Frame)
@@ -75,13 +76,13 @@ export const useBuilderLayers = () => {
 
   useEffect(() => {
     if (selection) {
-      const allParents = selectionGraph?.getAllParents?.() ?? []
+      const allParents = getAllParents(documentManager, selection)
       allParents.forEach(parent => {
         const linkKey = documentManager.keyOfEntity(parent)
         setExpandedLinkKeys(prev => [...prev, linkKey])
       })
     }
-  }, [documentManager, selection, selectionGraph])
+  }, [documentManager, selection])
 
   return {
     items,

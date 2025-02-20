@@ -7,6 +7,7 @@ import { useBuilderHighlightParent } from './useBuilderHighlightParent'
 import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
 import { nextTick } from '@/shared/utils/nextTick'
 import { animatableValue } from '@/shared/utils/animatableValue'
+import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 
 export const useBuilderHighlightSelected = () => {
   const { selection } = useBuilderSelection()
@@ -15,6 +16,13 @@ export const useBuilderHighlightSelected = () => {
   const rootNode = isBrowser ? document.querySelector(`[data-highlight-root]`) : null
   const selectedNode = isBrowser ? document.querySelector(`[data-key='${selection}']`) : null
   const parentStyles = useBuilderHighlightParent()
+
+  const [left] = useLayerValue('left')
+  const [top] = useLayerValue('top')
+  const [width] = useLayerValue('width')
+  const [height] = useLayerValue('height')
+  const [widthType] = useLayerValue('widthType')
+  const [heightType] = useLayerValue('heightType')
 
   const [selectedStyles, selectStylesApi] = useSpring(() => ({
     top: 0,
@@ -28,9 +36,7 @@ export const useBuilderHighlightSelected = () => {
 
   const getRect = useCallback((node?: Element | null) => node?.getBoundingClientRect?.(), [])
 
-  useEffect(() => {
-    if (canvas.isMoving) return
-
+  const updateHighlight = useCallback(() => {
     const selectedRect = getRect(selectedNode)
     const rootRect = getRect(rootNode)
     const scaleFactor = animatableValue(canvas.scale)
@@ -44,7 +50,15 @@ export const useBuilderHighlightSelected = () => {
         opacity: selectedRect.width === 0 && selectedRect.height === 0 ? 0 : 1
       })
     }
-  }, [canvas.isMoving, canvas.isDragging, getRect, selectStylesApi, selectedNode])
+  }, [selectedNode, rootNode])
+
+  useEffect(() => {
+    updateHighlight()
+  }, [top, left, width, height, widthType, heightType])
+
+  // useEffect(() => {
+  //   if (canvas.isMoving) return
+  // }, [canvas.isMoving, canvas.isDragging, getRect, selectStylesApi, selectedNode])
 
   return { selectedStyles, parentStyles }
 }

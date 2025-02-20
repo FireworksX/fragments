@@ -72,6 +72,7 @@
     border: var(--borderWidth, 1px) solid var(--primary);
     pointer-events: auto;
     position: absolute;
+    z-index: 2;
 }
 
 .cornerHalfRight {

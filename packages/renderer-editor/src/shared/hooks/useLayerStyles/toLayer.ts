@@ -16,7 +16,10 @@ export const toLayer = (layer) => {
       flag ? (value === layerDirection.vertical ? "column" : "row") : null
     ),
     alignItems: to([isFlex, layer.layerAlign], (flag, value) =>
-      flag ? `flex-${value}` : null
+      flag ? value : null
+    ),
+    padding: to([isFlex, layer.padding], (flag, value) =>
+      flag ? value : null
     ),
   };
 };

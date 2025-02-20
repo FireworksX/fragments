@@ -12,6 +12,7 @@ export const useLayerValue = (
 
   return [
     parsedLayer?.[fieldKey],
+    // TODO Add validation for mutate data
     (value) => updateLayerData({ [fieldKey]: value }),
   ];
 };

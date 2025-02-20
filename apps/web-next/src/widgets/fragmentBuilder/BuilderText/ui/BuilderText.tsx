@@ -19,8 +19,6 @@ interface BuilderTextProps {
 }
 
 const BuilderText: FC<BuilderTextProps> = ({ className }) => {
-  const { builderManager } = useContext(BuilderContext)
-  const { selectionGraph } = useBuilderSelection()
   const {
     isTextEditing,
     weight,

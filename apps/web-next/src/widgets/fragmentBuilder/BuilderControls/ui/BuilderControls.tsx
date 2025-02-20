@@ -6,6 +6,7 @@ import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSe
 import BuilderFragmentInstance from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/BuilderFragmentInstance'
 import { nodes } from '@fragments/plugin-fragment'
 import { Container } from '@/shared/ui/Container'
+import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
 
 interface ControlsProps extends AsideBarProps {
   className?: string
@@ -38,22 +39,23 @@ const BuilderControls: FC<ControlsProps> = ({
   fragmentPropsNode,
   attributesNode
 }) => {
-  const { selectionGraph } = useBuilderSelection()
+  const { selection } = useBuilderSelection()
+  const layerInfo = useLayerInfo(selection)
 
-  const hasGrowing = [nodes.Fragment].some(type => type === selectionGraph?._type)
-  const hasFragmentProps = [nodes.Fragment].some(type => type === selectionGraph?._type)
+  const hasGrowing = [nodes.Fragment].some(type => layerInfo.type === type)
+  const hasFragmentProps = [nodes.Fragment].some(type => layerInfo.type === type)
   const hasPosition = [nodes.Frame, nodes.Breakpoint, nodes.Text, nodes.FragmentInstance, nodes.Image].some(
-    type => type === selectionGraph?._type
+    type => layerInfo.type === type
   )
   const hasSize = [nodes.Frame, nodes.Breakpoint, nodes.Text, nodes.FragmentInstance, nodes.Image].some(
-    type => type === selectionGraph?._type
+    type => layerInfo.type === type
   )
-  const hasLayout = [nodes.Frame, nodes.Breakpoint].some(type => type === selectionGraph?._type)
-  const hasStyles = [nodes.Frame, nodes.Text, nodes.Image].some(type => type === selectionGraph?._type)
-  const hasText = [nodes.Text].some(type => type === selectionGraph?._type)
-  const hasImage = [nodes.Image].some(type => type === selectionGraph?._type)
-  const hasCssOverride = [nodes.Frame, nodes.Breakpoint].some(type => type === selectionGraph?._type)
-  const hasInstanceProps = [nodes.FragmentInstance].some(type => type === selectionGraph?._type)
+  const hasLayout = [nodes.Frame, nodes.Breakpoint].some(type => layerInfo.type === type)
+  const hasStyles = [nodes.Frame, nodes.Text, nodes.Image].some(type => layerInfo.type === type)
+  const hasText = [nodes.Text].some(type => layerInfo.type === type)
+  const hasImage = [nodes.Image].some(type => layerInfo.type === type)
+  const hasCssOverride = [nodes.Frame, nodes.Breakpoint].some(type => layerInfo.type === type)
+  const hasInstanceProps = [nodes.FragmentInstance].some(type => layerInfo.type === type)
 
   return (
     <Container className={cn(className, styles.root)}>

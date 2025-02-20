@@ -62,6 +62,8 @@ export const appendChildren = (
       visible: isPrimaryTarget,
     })),
   });
+
+  return resolveChildren.map(manager.keyOfEntity);
 };
 
 export const removeChildren = (manager: GraphState, ...layerKeys: Entity[]) => {

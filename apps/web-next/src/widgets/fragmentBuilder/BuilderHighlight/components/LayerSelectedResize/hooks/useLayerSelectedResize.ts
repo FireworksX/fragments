@@ -13,28 +13,36 @@ import { SCALE } from '@/widgets/fragmentBuilder/BuilderCanvas/hooks/useCanvas'
 import { toPx } from '@/shared/utils/toPx'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
+import { useAllowResize } from '@/shared/hooks/fragmentBuilder/useAllowResize'
+import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
+import { getParent } from '@fragments/renderer-editor'
+import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
 
 export const SELECTION_SIDES = createConstants('topLeft', 'top', 'right', 'bottom', 'left')
 
 export const useLayerSelectedResize = () => {
   const { documentManager } = useBuilderDocument()
   const { canvas, manager: canvasManager } = useBuilderCanvas()
-  const { selectionGraph, selection } = useBuilderSelection()
-  const allowResizeHorizontal = selectionGraph?.getAllowResizeHorizontal?.()
-  const allowResizeVertical = selectionGraph?.getAllowResizeVertical?.()
+  const { selection } = useBuilderSelection()
+  const { type } = useLayerInfo(selection)
+  const { width: isAllowResizeWidth, height: isAllowResizeHeight } = useAllowResize()
+  const [top, setTop] = useLayerValue('top')
+  const [left, setLeft] = useLayerValue('left')
+  const [width, setWidth] = useLayerValue('width')
+  const [height, setHeight] = useLayerValue('height')
+  const [widthType] = useLayerValue('widthType')
+  const [heightType] = useLayerValue('heightType')
 
   const handler = useDrag(({ movement: [mx, my], args: [directions], first, memo = {}, dragging }) => {
     canvasManager.setResizing(dragging)
 
     if (first) {
-      const targetWidthType = animatableValue(getFieldValue(selection, 'layoutSizingHorizontal', documentManager))
-      const targetHeightType = animatableValue(getFieldValue(selection, 'layoutSizingVertical', documentManager))
-      const targetLeft = animatableValue(getFieldValue(selection, 'left', documentManager))
-      const targetTop = animatableValue(getFieldValue(selection, 'top', documentManager))
+      const targetWidthType = widthType
+      const targetHeightType = heightType
+      const targetLeft = left
+      const targetTop = top
       const targetRect = getDomRect(selection)
-      const parentRect = getDomRect(documentManager.keyOfEntity(selectionGraph.getParent()))
-      const width = animatableValue(getFieldValue(selection, 'width', documentManager))
-      const height = animatableValue(getFieldValue(selection, 'height', documentManager))
+      const parentRect = getDomRect(documentManager.keyOfEntity(getParent(documentManager, selection)))
 
       memo.from = {
         getWidth: move => {
@@ -57,29 +65,29 @@ export const useLayerSelectedResize = () => {
     }
 
     const scale = animatableValue(canvas?.scale)
-    const width = memo.from?.getWidth(mx)
-    const height = memo.from?.getHeight(my)
+    const calcWidth = memo.from?.getWidth(mx)
+    const calcHeight = memo.from?.getHeight(my)
 
     if (directions.includes(SELECTION_SIDES.right)) {
-      selectionGraph.setWidth(width)
+      setWidth(calcWidth)
     }
     if (directions.includes(SELECTION_SIDES.bottom)) {
-      selectionGraph.setHeight(height)
+      setHeight(calcHeight)
     }
 
     if (directions.includes(SELECTION_SIDES.left)) {
       const width = memo.from.getWidth(mx * -1)
       if (width > 0) {
-        selectionGraph.setWidth(width)
-        selectionGraph.move(null, memo.from.getLeft(mx))
+        setWidth(width)
+        setLeft(memo.from.getLeft(mx))
       }
     }
 
     if (directions.includes(SELECTION_SIDES.top)) {
       const height = memo.from.getHeight(my * -1)
       if (height > 0) {
-        selectionGraph.setHeight(height)
-        selectionGraph.move(memo.from.getTop(my))
+        setHeight(height)
+        setTop(memo.from.getTop(my))
       }
     }
 
@@ -90,10 +98,10 @@ export const useLayerSelectedResize = () => {
   const borderWidth = useMemo(() => canvas.scale.to([SCALE.min, SCALE.max], [1, 0.8]).to(toPx), [canvas.scale])
 
   return {
-    isInstance: selectionGraph?._type === nodes.FragmentInstance,
+    isInstance: type === nodes.FragmentInstance,
     handler,
-    allowResizeHorizontal,
-    allowResizeVertical,
+    isAllowResizeWidth,
+    isAllowResizeHeight,
     size,
     borderWidth
   }

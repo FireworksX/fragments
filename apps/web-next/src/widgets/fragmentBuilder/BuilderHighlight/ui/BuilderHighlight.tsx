@@ -5,6 +5,7 @@ import styles from './styles.module.css'
 import { HeaderLayer } from '../components/HeaderLayer'
 import { useBuilderHighlightNew } from '@/widgets/fragmentBuilder/BuilderHighlight/hooks/useBuilderHighlightNew'
 import { BuilderCanvasTextEditor } from '@/widgets/fragmentBuilder/BuilderHighlight/components/BuilderCanvasTextEditor'
+import { LayerSelectedResize } from '@/widgets/fragmentBuilder/BuilderHighlight/components/LayerSelectedResize'
 
 interface BuilderLayerHighlightProps extends PropsWithChildren {
   className?: string
@@ -22,6 +23,7 @@ const BuilderHighlight: FC<BuilderLayerHighlightProps> = ({ className, children 
         style={{ scale: canvas.scale, x: canvas.x, y: canvas.y }}
       >
         <animated.div className={cn(styles.highlight, styles.mask, styles.selectedHighlight)} style={selectedStyles}>
+          <LayerSelectedResize />
           {isTextEditing && <BuilderCanvasTextEditor />}
         </animated.div>
         <animated.div className={cn(styles.highlight, styles.mask, styles.parentHighlight)} style={parentStyles} />

@@ -6,13 +6,11 @@ import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSe
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
+import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
 
 export const useBuilderPosition = () => {
-  const { documentManager } = useBuilderDocument()
-  const { selection, selectionGraph } = useBuilderSelection()
-  const [selectionNode] = useGraph(documentManager, selection)
-  const [parent] = useGraph(documentManager, selectionGraph?.getParent?.())
-  const isRootLayer = selectionGraph?.isRootLayer?.() ?? false
+  const { selection } = useBuilderSelection()
+  const { type, parent, isRootLayer } = useLayerInfo(selection)
   const childOfBreakpoint = parent?._type === nodes.Breakpoint
 
   const [position, setPosition] = useLayerValue('position')
@@ -20,17 +18,15 @@ export const useBuilderPosition = () => {
   const [left, setLeft] = useLayerValue('left')
 
   const disabledFlags = useMemo(() => {
-    const parentNode = selectionNode?.getParent?.()
-    const hasLayout = parentNode?.layerMode === layerMode.flex
+    const hasLayout = parent?.layerMode === layerMode.flex
 
     return {
-      absolute: false, //parentNode?._type === {}.Screen,
-      relative: false //!hasLayout
+      absolute: parent?._type === {}.Screen,
+      relative: !hasLayout
     }
-  }, [selectionNode])
+  }, [parent])
 
   return {
-    selectionGraph,
     type: {
       value: position,
       update: setPosition,
@@ -55,7 +51,7 @@ export const useBuilderPosition = () => {
       value: top,
       update: setTop
     },
-    hasPosition: !childOfBreakpoint && !isRootLayer && selectionGraph?._type !== nodes.Breakpoint
+    hasPosition: !childOfBreakpoint && !isRootLayer && type !== nodes.Breakpoint
     // top: to(selectionRect, ({ y }) => y),
     // left: to(selectionRect, ({ x }) => x),
     // right: to(selectionRect, rect => documentManager.rect.maxX(rect)),

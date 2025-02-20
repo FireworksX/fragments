@@ -16,13 +16,13 @@ interface BuilderPositionProps {
 }
 
 const BuilderPosition: FC<BuilderPositionProps> = ({ className }) => {
-  const { selectionGraph, type, left, top, hasPosition } = useBuilderPosition()
+  const { type, left, top, hasPosition } = useBuilderPosition()
   //
   // if (!selectionGraph?.position && selectionGraph?._type !== builderNodes.Screen) {
   //   return null
   // }
 
-  const isVisible = useInterpolation([type.value], v => v === 'absolute')
+  const isVisible = type.value === 'absolute'
 
   if (!hasPosition) {
     return null
