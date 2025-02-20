@@ -12,9 +12,14 @@ import { toBorder } from "@/shared/hooks/useLayerStyles/toBorder.ts";
 import { parseRawLayer } from "@/lib/parseRawLayer.ts";
 import { AnyZodObject, ZodSchema } from "zod";
 import { getOverrider } from "@/shared/helpers/getOverrider.ts";
+import { getParent, isTopLevel } from "@/shared/helpers";
+import { useRenderTarget } from "@/shared/hooks/useRenderTarget.ts";
 
 export const useLayerStyles = (layerKey: LinkKey, schema: AnyZodObject) => {
   const { manager: fragmentManager } = useContext(FragmentContext);
+  const { isDocument } = useRenderTarget(fragmentManager);
+  const isTop = isTopLevel(fragmentManager, layerKey);
+  const layerParent = getParent(fragmentManager, layerKey);
 
   const [schemaSprings, schemaSpringsApi] = useSpring(() => {
     const overrider = getOverrider(fragmentManager, layerKey);
@@ -33,16 +38,23 @@ export const useLayerStyles = (layerKey: LinkKey, schema: AnyZodObject) => {
   });
 
   return useMemo(() => {
-    const { width, height } = toSize(schemaSprings);
+    const { width, height } = toSize(schemaSprings, {
+      isTop,
+      isDocument,
+      layerParent,
+    });
     const { display } = toDisplay(schemaSprings);
-    const { position, top, left } = toPosition(schemaSprings);
+    const { position, top, left } = toPosition(schemaSprings, {
+      isTop,
+      isDocument,
+    });
     const { background } = toBackground(schemaSprings);
     const { border } = toBorder(schemaSprings);
     const layerStyle = toLayer(schemaSprings);
 
     return {
       opacity: schemaSprings.opacity,
-      zIndex: schemaSprings.zIndex,
+      zIndex: schemaSprings.zIndex.to((v) => (v !== -1 ? v : null)),
       overflow: schemaSprings.overflow,
       borderRadius: schemaSprings.borderRadius,
       position,
@@ -56,5 +68,5 @@ export const useLayerStyles = (layerKey: LinkKey, schema: AnyZodObject) => {
       userSelect: "none",
       ...layerStyle,
     };
-  }, Object.values(schemaSprings));
+  }, [...Object.values(schemaSprings), isDocument, isTop, layerParent]);
 };

@@ -5,7 +5,7 @@ import { useLayerChildren } from "@/shared/hooks/useLayerChildren.ts";
 import { useContext } from "react";
 import { FragmentContext } from "@/components/Fragment/FragmentContext.tsx";
 
-export const useFrameAttributes = (layerKey: LinkKey) => {
+export const useFrame = (layerKey: LinkKey) => {
   const { manager: fragmentManager } = useContext(FragmentContext);
   const layer = fragmentManager.entityOfKey(layerKey);
   const styles = useLayerStyles(layerKey, frameStylesSchema);

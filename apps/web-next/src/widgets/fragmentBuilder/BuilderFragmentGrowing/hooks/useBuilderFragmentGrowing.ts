@@ -1,24 +1,9 @@
-import { useContext, useMemo } from 'react'
-import { useGraph } from '@graph-state/react'
-import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { fragmentGrowingMode, layerMode, nodes } from '@fragments/plugin-fragment-spring'
-import { to } from '@react-spring/web'
-import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
-import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
-import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { fragmentGrowingMode } from '@fragments/plugin-fragment-spring'
+import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 
 export const useBuilderFragmentGrowing = () => {
-  const { documentManager } = useBuilderDocument()
-  const { selection } = useBuilderSelection()
-
-  const layerInvoker = useLayerInvoker(selection, ({ key, node, value, prevValue }) => {
-    switch (key) {
-      case 'horizontalGrow':
-        return node.setHorizontalGrow(value)
-      case 'verticalGrow':
-        return node.setVerticalGrow(value)
-    }
-  })
+  const [horizontalGrow, setHorizontalGrow] = useLayerValue('horizontalGrow')
+  const [verticalGrow, setVerticalGrow] = useLayerValue('verticalGrow')
 
   return {
     options: [
@@ -31,7 +16,13 @@ export const useBuilderFragmentGrowing = () => {
         value: fragmentGrowingMode.fill
       }
     ],
-    horizontal: layerInvoker('horizontalGrow'),
-    vertical: layerInvoker('verticalGrow')
+    horizontal: {
+      value: horizontalGrow,
+      update: setHorizontalGrow
+    },
+    vertical: {
+      value: verticalGrow,
+      update: setVerticalGrow
+    }
   }
 }

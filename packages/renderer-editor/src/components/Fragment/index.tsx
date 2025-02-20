@@ -1,8 +1,8 @@
 import { FragmentProvider } from "./FragmentContext.tsx";
 import { GraphState, LinkKey } from "@graph-state/core";
 import { FC } from "react";
-import { useLayerChildren } from "@/shared/hooks/useLayerChildren.ts";
 import { Frame } from "@/components/Frame";
+import { useFragment } from "@/components/Fragment/hooks/useFragment.ts";
 
 interface FragmentProps {
   layerKey: LinkKey;
@@ -10,22 +10,20 @@ interface FragmentProps {
   startLayer?: LinkKey;
 }
 
-export const Fragment: FC<FragmentProps> = ({
-  manager,
-  layerKey,
-  startLayer,
-}) => {
+export const Fragment: FC<FragmentProps> = ({ manager, layerKey }) => {
   if (!manager) {
     throw new Error("Cannot render Fragment without manager");
   }
 
-  const children = useLayerChildren(layerKey, manager);
+  const { ref, children } = useFragment(manager, layerKey);
 
   return (
     <FragmentProvider manager={manager}>
-      {children.map((childLink) => (
-        <Frame key={childLink} layerKey={childLink} />
-      ))}
+      <div ref={ref} data-key={layerKey}>
+        {children.map((childLink) => (
+          <Frame key={childLink} layerKey={childLink} />
+        ))}
+      </div>
     </FragmentProvider>
   );
 };

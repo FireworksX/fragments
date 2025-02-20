@@ -13,7 +13,7 @@ interface BuilderFragmentGrowingProps {
 }
 
 const BuilderFragmentGrowing: FC<BuilderFragmentGrowingProps> = ({ className }) => {
-  const { isPrimaryLayer, options, vertical, horizontal } = useBuilderFragmentGrowing()
+  const { options, vertical, horizontal } = useBuilderFragmentGrowing()
   //
   // if (!selectionGraph?.position && selectionGraph?._type !== builderNodes.Screen) {
   //   return null
@@ -26,7 +26,7 @@ const BuilderFragmentGrowing: FC<BuilderFragmentGrowingProps> = ({ className }) 
     <Panel className={cn(styles.root, className)} title='Growing'>
       <ControlRow title='Verical'>
         <ControlRowWide>
-          <Select value={vertical.value} onChange={vertical.onChange}>
+          <Select value={vertical.value} onChange={vertical.update}>
             {options.map(option => (
               <option key={option.value} value={option.value}>
                 {option.label}
@@ -38,7 +38,7 @@ const BuilderFragmentGrowing: FC<BuilderFragmentGrowingProps> = ({ className }) 
 
       <ControlRow title='Horizontal'>
         <ControlRowWide>
-          <Select value={horizontal.value} onChange={horizontal.onChange}>
+          <Select value={horizontal.value} onChange={horizontal.update}>
             {options.map(option => (
               <option key={option.value} value={option.value}>
                 {option.label}

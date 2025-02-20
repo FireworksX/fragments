@@ -1,7 +1,7 @@
 import React, { FC, useContext } from "react";
 import { animated, useSpring } from "@react-spring/web";
 import { LinkKey } from "@graph-state/core";
-import { useFrameAttributes } from "./hooks/useFrameAttributes.ts";
+import { useFrame } from "./hooks/useFrame.ts";
 import { nodes } from "@fragments/plugin-fragment";
 import { Text } from "@/components/Text";
 
@@ -10,7 +10,7 @@ interface FrameProps {
 }
 
 export const Frame: FC<FrameProps> = ({ layerKey }) => {
-  const { styles, children, type } = useFrameAttributes(layerKey);
+  const { styles, children, type } = useFrame(layerKey);
 
   if (type === nodes.Text) {
     return <Text layerKey={layerKey} />;

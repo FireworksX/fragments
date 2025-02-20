@@ -8,6 +8,7 @@ import { UPDATE_FRAGMENT_DOCUMENT } from './lib/updateFragmentDocument'
 import { getEmptyFragment } from '@/shared/data/emptyFragment'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { nodes } from '@fragments/plugin-fragment'
+import { makeSnapshot } from '@fragments/renderer-editor'
 
 export const useBuilderDocumentManager = () => {
   const { documentManager } = useBuilderDocument()
@@ -39,7 +40,7 @@ export const useBuilderDocumentManager = () => {
       const document =
         typeof fragment?.document === 'string' ? JSON.parse(fragment.document ?? '{}') : fragment?.document
 
-      const resultDocument = getEmptyFragment(fragment?.id) //Object.keys(document).length === 0 ? getEmptyFragment(fragment?.id) : document
+      const resultDocument = Object.keys(document).length === 0 ? getEmptyFragment(fragment?.id) : document
 
       return builderManager.$documents.createDocumentManager(`${nodes.Fragment}:${fragment?.id}`, resultDocument)
     },
@@ -75,17 +76,17 @@ export const useBuilderDocumentManager = () => {
   }, [currentFragmentId])
 
   const saveFragment = async () => {
-    const currentDocument = documentManager.$fragment.makeSnapshot()
-
-    const linkedFragmentsIds = (documentManager.resolve(documentManager?.$fragment?.linkerGraphKey)?.fragments ?? [])
-      .map(manager => +documentManager.entityOfKey(manager?.key)?._id)
-      .filter(v => !isNaN(v))
+    const currentDocument = makeSnapshot(documentManager)
+    //
+    // const linkedFragmentsIds = (documentManager.resolve(documentManager?.$fragment?.linkerGraphKey)?.fragments ?? [])
+    //   .map(manager => +documentManager.entityOfKey(manager?.key)?._id)
+    //   .filter(v => !isNaN(v))
 
     await updateFragment({
       variables: {
         fragmentSlug: +currentFragmentId,
         document: currentDocument,
-        linkedFragments: linkedFragmentsIds
+        linkedFragments: [] //linkedFragmentsIds
       }
     })
   }

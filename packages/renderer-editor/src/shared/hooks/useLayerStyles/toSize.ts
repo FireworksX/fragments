@@ -1,9 +1,9 @@
-import { sizing } from "@fragments/plugin-fragment";
+import { fragmentGrowingMode, sizing } from "@fragments/plugin-fragment";
 import { to } from "@react-spring/web";
 
 const autoSizes = [sizing.Hug];
 
-export const toSize = (layer) => {
+export const toSize = (layer, { isTop, isDocument, layerParent }) => {
   const toValue = (type: keyof typeof sizing, value: number) => {
     if (autoSizes.includes(type)) {
       return "min-content"; //layerNode?._type === nodes.FragmentInstance ? 'auto' : 'min-content'
@@ -25,13 +25,21 @@ export const toSize = (layer) => {
 
   if ("width" in layer && "widthType" in layer) {
     width = to([layer.widthType, layer.width], (type, value) =>
-      toValue(type, value)
+      isTop &&
+      isDocument &&
+      layerParent?.horizontalGrow === fragmentGrowingMode.fill
+        ? "100%"
+        : toValue(type, value)
     );
   }
 
   if ("height" in layer && "heightType" in layer) {
     height = to([layer.heightType, layer.height], (type, value) =>
-      toValue(type, value)
+      isTop &&
+      isDocument &&
+      layerParent?.verticalGrow === fragmentGrowingMode.fill
+        ? "100%"
+        : toValue(type, value)
     );
   }
 

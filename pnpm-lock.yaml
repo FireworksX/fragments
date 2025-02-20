@@ -300,6 +300,9 @@ importers:
       '@fragments/utils':
         specifier: workspace:*
         version: link:../utils
+      '@graph-state/checkers':
+        specifier: ^0.1.2
+        version: 0.1.2
       '@graph-state/core':
         specifier: ^0.10.2
         version: 0.10.2
@@ -321,6 +324,9 @@ importers:
       react-dom:
         specifier: ^18.0.0
         version: 19.0.0(react@19.0.0)
+      react-use-measure:
+        specifier: ^2.1.7
+        version: 2.1.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       vite-plugin-dts:
         specifier: ^4.5.0
         version: 4.5.0(@types/node@20.13.0)(rollup@4.34.6)(typescript@5.5.4)(vite@6.1.0(@types/node@20.13.0)(jiti@2.3.3)(yaml@2.4.2))
@@ -6240,6 +6246,15 @@ packages:
     peerDependencies:
       react: '*'
       tslib: '*'
+
+  react-use-measure@2.1.7:
+    resolution: {integrity: sha512-KrvcAo13I/60HpwGO5jpW7E9DfusKyLPLvuHlUyP5zqnmAPhNc6qTRjUQrdTADl0lpPpDVU2/Gg51UlOGHXbdg==}
+    peerDependencies:
+      react: '>=16.13'
+      react-dom: '>=16.13'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
 
   react-use@17.5.0:
     resolution: {integrity: sha512-PbfwSPMwp/hoL847rLnm/qkjg3sTRCvn6YhUZiHaUa3FA6/aNoFX79ul5Xt70O1rK+9GxSVqkY0eTwMdsR/bWg==}
@@ -14345,6 +14360,12 @@ snapshots:
     dependencies:
       react: 19.0.0
       tslib: 2.6.2
+
+  react-use-measure@2.1.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
+    dependencies:
+      react: 19.0.0
+    optionalDependencies:
+      react-dom: 19.0.0(react@19.0.0)
 
   react-use@17.5.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:

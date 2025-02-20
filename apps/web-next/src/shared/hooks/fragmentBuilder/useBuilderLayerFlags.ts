@@ -26,7 +26,7 @@ export const useBuilderLayerFlags = (layerKey: LinkKey) => {
 
   return {
     type: layerInfo.type,
-    isVisible: visible,
+    isVisible: layerInfo.type !== nodes.Fragment ? visible : true,
     layerDirection,
     layerMode,
     hasLayout,
