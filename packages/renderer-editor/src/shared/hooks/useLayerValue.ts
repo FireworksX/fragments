@@ -1,18 +1,82 @@
+import { useCallback, useContext, useMemo } from "react";
 import { GraphState, LinkKey } from "@graph-state/core";
 import { useGraph } from "@graph-state/react";
 import { getLayer } from "@/shared/helpers/getLayer.ts";
+import { pick } from "@fragments/utils";
+import { getLayerSchema } from "@/lib/getLayerSchema.ts";
+import { isVariableLink } from "@/lib/zod.ts";
+import { FragmentContext } from "@/components/Fragment/FragmentContext.tsx";
+
+/**
+ * Этот хук обслуживает логику получения и зменения значения.
+ * Принимает слой и его поле с которым будем работать.
+ * При изменении значения валидирует поле, если пытаемся установить
+ * не валидные данные, то обновление будет пропущено.
+ *
+ *
+ */
 
 export const useLayerValue = (
   layerKey: LinkKey,
   fieldKey: string,
-  manager: GraphState
+  manager?: GraphState
 ) => {
-  const [_, updateLayerData] = useGraph(manager, layerKey);
-  const parsedLayer = getLayer(manager, layerKey);
+  const { manager: fragmentManager } = useContext(FragmentContext);
+  const resultManager = manager ?? fragmentManager;
+  const [_, updateLayerData] = useGraph(resultManager, layerKey, {
+    selector: (data) => (data ? pick(data, fieldKey) : data),
+  });
 
-  return [
-    parsedLayer?.[fieldKey],
-    // TODO Add validation for mutate data
-    (value) => updateLayerData({ [fieldKey]: value }),
-  ];
+  const parsedLayer = getLayer(resultManager, layerKey);
+  const schema = useMemo(
+    () => getLayerSchema(resultManager?.resolve?.(layerKey)),
+    [layerKey]
+  );
+  const currentValue = parsedLayer?.[fieldKey];
+
+  const restore = useCallback(() => {
+    const tempValue = resultManager.resolve(resultManager?.$fragment?.temp)?.[
+      layerKey
+    ]?.[fieldKey];
+
+    if (tempValue) {
+      updateLayerData({ [fieldKey]: tempValue });
+    }
+  }, [updateLayerData, resultManager]);
+
+  const updateValue = useCallback(
+    (value: unknown) => {
+      const schemaField = schema?.shape?.[fieldKey];
+      const { success: isValid } = schemaField?.safeParse(value) ?? {};
+
+      if (isValid) {
+        if (isVariableLink(value)) {
+          /*
+          Если меняем значение на переменную, то сохраняем значение, чтобы
+          можно было вызвать restore и восстановить значение, которое
+          было до установки переменной
+           */
+          resultManager.mutate(resultManager?.$fragment?.temp, {
+            [layerKey]: {
+              [fieldKey]: currentValue,
+            },
+          });
+
+          resultManager.resolve(resultManager?.$fragment?.temp);
+        }
+
+        updateLayerData({ [fieldKey]: value });
+      }
+    },
+    [schema, updateLayerData, fieldKey, currentValue]
+  );
+
+  const info = useMemo(() => {
+    return {
+      isVariable: isVariableLink(currentValue),
+      restore,
+    };
+  }, [restore, currentValue]);
+
+  return [currentValue, updateValue, info];
 };

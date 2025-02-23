@@ -9,10 +9,12 @@ export const textSchema = z
     content: layerField(z.string(), {
       fallback: "",
     }),
-    variableContent: layerField(z.string(), { fallback: null }),
+    variableContent: layerField(z.string(), { fallback: null, variable: true }),
     attributes: layerField(
       z.object({
-        fontSize: layerField(z.number().nonnegative(), { fallback: 14 }),
+        fontSize: layerField(z.string(), { fallback: "14px" }),
+        color: layerField(z.string(), { fallback: "#000" }),
+        lineHeight: layerField(z.string(), { fallback: "14px" }),
       }),
       { fallback: {} }
     ),

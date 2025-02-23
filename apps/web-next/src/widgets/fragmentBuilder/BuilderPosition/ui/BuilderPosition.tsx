@@ -1,4 +1,4 @@
-import { FC, useContext } from 'react'
+import { FC, memo, useContext } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { useBuilderPosition } from '../hooks/useBuilderPosition'
@@ -8,14 +8,12 @@ import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { InputNumber } from '@/shared/ui/InputNumber'
 import { Select } from '@/shared/ui/Select'
 import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
-import { to } from '@fragments/springs-factory'
-import { useInterpolation } from '@/shared/hooks/useInterpolation'
 
 interface BuilderPositionProps {
   className?: string
 }
 
-const BuilderPosition: FC<BuilderPositionProps> = ({ className }) => {
+const BuilderPosition: FC<BuilderPositionProps> = memo(({ className }) => {
   const { type, left, top, hasPosition } = useBuilderPosition()
   //
   // if (!selectionGraph?.position && selectionGraph?._type !== builderNodes.Screen) {
@@ -53,6 +51,6 @@ const BuilderPosition: FC<BuilderPositionProps> = ({ className }) => {
       </ControlRow>
     </Panel>
   )
-}
+})
 
 export default BuilderPosition

@@ -9,6 +9,16 @@ import { nextTick } from '@/shared/utils/nextTick'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 
+const DEFAULT_STYLES = {
+  top: 0,
+  left: 0,
+  width: 0,
+  height: 0,
+  x: 0,
+  y: 0,
+  opacity: 1
+}
+
 export const useBuilderHighlightSelected = () => {
   const { selection } = useBuilderSelection()
   const { canvas } = useBuilderCanvas()
@@ -24,19 +34,15 @@ export const useBuilderHighlightSelected = () => {
   const [widthType] = useLayerValue('widthType')
   const [heightType] = useLayerValue('heightType')
 
-  const [selectedStyles, selectStylesApi] = useSpring(() => ({
-    top: 0,
-    left: 0,
-    width: 0,
-    height: 0,
-    x: 0,
-    y: 0,
-    opacity: 1
-  }))
+  const [selectedStyles, selectStylesApi] = useSpring(() => DEFAULT_STYLES)
 
   const getRect = useCallback((node?: Element | null) => node?.getBoundingClientRect?.(), [])
 
   const updateHighlight = useCallback(() => {
+    if (!selectedNode) {
+      selectStylesApi.set(DEFAULT_STYLES)
+    }
+
     const selectedRect = getRect(selectedNode)
     const rootRect = getRect(rootNode)
     const scaleFactor = animatableValue(canvas.scale)
@@ -54,7 +60,7 @@ export const useBuilderHighlightSelected = () => {
 
   useEffect(() => {
     updateHighlight()
-  }, [top, left, width, height, widthType, heightType])
+  }, [top, left, width, height, widthType, heightType, selection])
 
   // useEffect(() => {
   //   if (canvas.isMoving) return

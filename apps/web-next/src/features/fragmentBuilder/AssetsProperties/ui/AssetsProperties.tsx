@@ -26,7 +26,7 @@ export const AssetsProperties: FC<AssetsPropertiesProps> = ({ propertiesTree }) 
             <>
               <DropdownGroup>
                 {FRAGMENT_PROPERTY_TYPES.map(type => (
-                  <DropdownOption key={type} onClick={() => createProperty(type)}>
+                  <DropdownOption key={type} onClick={() => createProperty({ type })}>
                     {type}
                   </DropdownOption>
                 ))}

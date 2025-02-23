@@ -4,4 +4,6 @@ export { createManager } from "./lib/createManager.ts";
 export * from "./shared/helpers";
 export * from "./lib/renderTarget.ts";
 export { useLayerValue } from "./shared/hooks/useLayerValue.ts";
+export { useLayerVariableValue } from "./shared/hooks/useLayerVariableValue.ts";
 export { useRenderTarget } from "./shared/hooks/useRenderTarget.ts";
+export { useTextContent } from "./shared/hooks/useTextContent.ts";

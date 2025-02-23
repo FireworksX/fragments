@@ -43,7 +43,16 @@ const BuilderText: FC<BuilderTextProps> = ({ className }) => {
       {/*</BuilderControlRow>*/}
 
       {!isTextEditing && (
-        <ControlRow title='Content' {...content}>
+        <ControlRow
+          title='Content'
+          hasConnector={!content.disabled}
+          value={content.value}
+          variable={{
+            link: content.variableLink,
+            actions: content.actions,
+            onReset: content.resetVariable
+          }}
+        >
           <ControlRowWide>
             <InputText value={content.textContent} onChangeValue={content.update} />
           </ControlRowWide>

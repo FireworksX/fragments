@@ -10,7 +10,7 @@ import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
 
 export const useBuilderPosition = () => {
   const { selection } = useBuilderSelection()
-  const { type, parent, isRootLayer } = useLayerInfo(selection)
+  const { type, parent, isRootLayer, isBreakpoint } = useLayerInfo(selection)
   const childOfBreakpoint = parent?._type === nodes.Breakpoint
 
   const [position, setPosition] = useLayerValue('position')
@@ -51,7 +51,7 @@ export const useBuilderPosition = () => {
       value: top,
       update: setTop
     },
-    hasPosition: !childOfBreakpoint && !isRootLayer && type !== nodes.Breakpoint
+    hasPosition: !childOfBreakpoint && !isRootLayer && !isBreakpoint
     // top: to(selectionRect, ({ y }) => y),
     // left: to(selectionRect, ({ x }) => x),
     // right: to(selectionRect, rect => documentManager.rect.maxX(rect)),

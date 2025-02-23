@@ -1,72 +1,49 @@
-import { useContext, useMemo, useRef } from "react";
-import { FragmentContext } from "@/components/Fragment/FragmentContext.tsx";
-import { to, useSpring } from "@react-spring/web";
-import { useGraphEffect } from "@graph-state/react";
+import { useMemo } from "react";
 import { LinkKey } from "@graph-state/core";
-import { toSize } from "@/shared/hooks/useLayerStyles/toSize.ts";
-import { toDisplay } from "@/shared/hooks/useLayerStyles/toDisplay.ts";
-import { toPosition } from "@/shared/hooks/useLayerStyles/toPosition.ts";
-import { toLayer } from "@/shared/hooks/useLayerStyles/toLayer.ts";
-import { toBackground } from "@/shared/hooks/useLayerStyles/toBackground.ts";
-import { toBorder } from "@/shared/hooks/useLayerStyles/toBorder.ts";
-import { parseRawLayer } from "@/lib/parseRawLayer.ts";
-import { AnyZodObject, ZodSchema } from "zod";
-import { getOverrider } from "@/shared/helpers/getOverrider.ts";
-import { getParent, isTopLevel } from "@/shared/helpers";
-import { useRenderTarget } from "@/shared/hooks/useRenderTarget.ts";
+import { useLayerStyleValue } from "@/shared/hooks/useLayerStyles/useLayerStyleValue.ts";
+import { useLayerSize } from "@/shared/hooks/useLayerStyles/useLayerSize.ts";
+import { useLayerPosition } from "@/shared/hooks/useLayerStyles/useLayerPosition.ts";
+import { useLayerDisplay } from "@/shared/hooks/useLayerStyles/useLayerDisplay.ts";
+import { useLayerBackground } from "@/shared/hooks/useLayerStyles/useLayerBackground.ts";
+import { useLayerBorder } from "@/shared/hooks/useLayerStyles/useLayerBorder.ts";
+import { useLayerLayout } from "@/shared/hooks/useLayerStyles/useLayerLayout.ts";
 
-export const useLayerStyles = (layerKey: LinkKey, schema: AnyZodObject) => {
-  const { manager: fragmentManager } = useContext(FragmentContext);
-  const { isDocument } = useRenderTarget(fragmentManager);
-  const isTop = isTopLevel(fragmentManager, layerKey);
-  const layerParent = getParent(fragmentManager, layerKey);
+export const useLayerStyles = (layerKey: LinkKey) => {
+  const opacity$ = useLayerStyleValue(layerKey, "opacity");
+  const { width$, height$ } = useLayerSize(layerKey);
+  const { position$, top$, left$ } = useLayerPosition(layerKey);
+  const { display$ } = useLayerDisplay(layerKey);
+  const { background$ } = useLayerBackground(layerKey);
+  const { border$ } = useLayerBorder(layerKey);
+  const layout = useLayerLayout(layerKey);
+  const zIndex$ = useLayerStyleValue(layerKey, "zIndex");
+  const overflow$ = useLayerStyleValue(layerKey, "overflow");
+  const whiteSpace$ = useLayerStyleValue(layerKey, "whiteSpace");
+  const borderRadius$ = useLayerStyleValue(layerKey, "borderRadius");
 
-  const [schemaSprings, schemaSpringsApi] = useSpring(() => {
-    const overrider = getOverrider(fragmentManager, layerKey);
-    return parseRawLayer(schema, fragmentManager.resolve(layerKey), {
-      overrideTarget: overrider,
-    });
-  }, []);
-
-  useGraphEffect(fragmentManager, layerKey, (data) => {
-    const overrider = getOverrider(fragmentManager, layerKey);
-    const layer = parseRawLayer(schema, data, {
-      overrideTarget: overrider,
-    });
-
-    schemaSpringsApi.set(layer);
-  });
+  const styles = {
+    opacity: opacity$,
+    zIndex: zIndex$,
+    overflow: overflow$,
+    whiteSpace: whiteSpace$,
+    borderRadius: borderRadius$,
+    position: position$,
+    top: top$,
+    left: left$,
+    width: width$,
+    height: height$,
+    background: background$,
+    display: display$,
+    border: border$,
+    ...layout,
+    userSelect: "none",
+  };
 
   return useMemo(() => {
-    const { width, height } = toSize(schemaSprings, {
-      isTop,
-      isDocument,
-      layerParent,
-    });
-    const { display } = toDisplay(schemaSprings);
-    const { position, top, left } = toPosition(schemaSprings, {
-      isTop,
-      isDocument,
-    });
-    const { background } = toBackground(schemaSprings);
-    const { border } = toBorder(schemaSprings);
-    const layerStyle = toLayer(schemaSprings);
-
     return {
-      opacity: schemaSprings.opacity,
-      zIndex: schemaSprings.zIndex.to((v) => (v !== -1 ? v : null)),
-      overflow: schemaSprings.overflow,
-      borderRadius: schemaSprings.borderRadius,
-      position,
-      top,
-      left,
-      width,
-      height,
-      background,
-      display,
-      border,
+      ...styles,
+      zIndex: styles.zIndex.to((v) => (v !== -1 ? v : null)),
       userSelect: "none",
-      ...layerStyle,
     };
-  }, [...Object.values(schemaSprings), isDocument, isTop, layerParent]);
+  }, Object.values(styles));
 };

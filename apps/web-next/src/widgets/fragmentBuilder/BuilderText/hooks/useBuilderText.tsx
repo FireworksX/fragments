@@ -26,6 +26,9 @@ import { isVariableLink } from '@/shared/utils/isVariableLink'
 import { getResolvedValue } from '@fragments/plugin-fragment-spring'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
+import { useLayerVariables } from '@/shared/hooks/fragmentBuilder/useLayerVariables'
+import { useTextContent } from '@fragments/renderer-editor'
+import { useBuilderDocumentManager } from '@/shared/hooks/fragmentBuilder/useBuilderDocumentManager'
 
 const aligns: TabsSelectorItem[] = [
   {
@@ -67,25 +70,34 @@ const transforms: TextTransform[] = ['none', 'uppercase', 'lowercase', 'capitali
 
 export const useBuilderText = () => {
   const { builderManager } = use(BuilderContext)
+  const { documentManager } = useBuilderDocument()
   const editor = use(CanvasTextEditorContext)
   const { selection } = useBuilderSelection()
   const { isTextEditing } = useBuilderManager()
   const [{ showTextEditor }] = useGraph(builderManager, builderManager.key)
   const lastSelectionRef = useRef<any | null>(null)
 
-  const [content, setContent] = useLayerValue('content')
+  const [attributes, setAttributes] = useLayerValue('attributes')
+  const [content, setContent, contentInfo] = useLayerValue('content')
+  const textContent = useTextContent(selection, documentManager)
   const [opacity, setOpacity] = useLayerValue('opacity')
   const saveOpacity = useRef<number | null>(null)
   const [marks, setMarks] = useState({})
+  const contentVariable = useLayerVariables('content')
 
   useEffect(() => {
     const selectionHandler = ({ editor }) => {
       // setMarks(getMarksInSelection(editor))
     }
     const updateHandler = ({ editor }) => {
-      setContent(generateHTML(editor.getJSON(), canvasEditorExtensions))
+      const contentHtml = generateHTML(editor.getJSON(), canvasEditorExtensions)
+      if (!contentInfo.isVariable) {
+        setContent(contentHtml)
+      }
 
-      // const attributes = editor.getAttributes('paragraph')
+      const attributes = editor.getAttributes('paragraph')
+
+      setAttributes(attributes)
       // console.log(attributes)
       // styleAttributesInvoker.onChange(attributes)
     }
@@ -104,21 +116,20 @@ export const useBuilderText = () => {
         editor.off('update', updateHandler)
       }
     }
-  }, [selection, isTextEditing, editor])
+  }, [selection, isTextEditing, editor, contentInfo])
 
-  // useEffect(() => {
-  //   setMarks(getMarksInSelection(editor))
-  // }, [selection, editor])
+  useEffect(() => {
+    setMarks(getMarksInSelection(editor))
+  }, [selection, editor])
 
   useEffect(() => {
     if (!isTextEditing && editor) {
       // if (isVariableLink(contentInvoker.value)) {
       //   content = selectionGraph?.getContent?.()
       // }
-
-      editor.commands.setContent(content)
+      editor.commands.setContent(textContent)
     }
-  }, [isTextEditing, content, editor])
+  }, [isTextEditing, textContent, editor])
 
   useEffect(() => {
     if (isTextEditing) {
@@ -192,6 +203,8 @@ export const useBuilderText = () => {
   return {
     isTextEditing,
     content: {
+      ...contentVariable,
+      value: content,
       textContent:
         editor && content ? generateText(generateJSON(content, canvasEditorExtensions), canvasEditorExtensions) : '',
       update: setContent

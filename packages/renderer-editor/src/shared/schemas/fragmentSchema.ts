@@ -14,6 +14,10 @@ export const fragmentSchema = z
       fallback: fragmentGrowingMode.auto,
       overridable: false,
     }),
+    properties: layerField(z.array(z.string()), {
+      fallback: [],
+      overridable: false,
+    }),
   })
   .merge(graphFieldSchema)
   .merge(childrenSchema);

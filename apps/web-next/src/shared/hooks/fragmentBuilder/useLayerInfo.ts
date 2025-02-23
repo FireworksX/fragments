@@ -7,7 +7,7 @@ import { getParent, getAllParents } from '@fragments/renderer-editor'
 
 export const useLayerInfo = (layerKey: LinkKey) => {
   const { documentManager } = useBuilderDocument()
-  const [layer] = useGraph(documentManager, layerKey)
+  const layer = documentManager.resolve(layerKey)
 
   return {
     layer,

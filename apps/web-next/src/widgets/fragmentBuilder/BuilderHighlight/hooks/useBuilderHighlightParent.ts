@@ -7,26 +7,33 @@ import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanva
 import { nextTick } from '@/shared/utils/nextTick'
 import { animatableValue } from '@/shared/utils/animatableValue'
 
+const DEFAULT_STYLES = {
+  top: 0,
+  left: 0,
+  width: 0,
+  height: 0,
+  x: 0,
+  y: 0,
+  opacity: 0
+}
+
 export const useBuilderHighlightParent = () => {
   const { selection } = useBuilderSelection()
   const { canvas } = useBuilderCanvas()
   const rootNode = isBrowser ? document.querySelector(`[data-highlight-root]`) : null
   const domNode = isBrowser ? document.querySelector(`[data-key='${selection}']`)?.parentNode : null
 
-  const [styles, stylesApi] = useSpring(() => ({
-    top: 0,
-    left: 0,
-    width: 0,
-    height: 0,
-    x: 0,
-    y: 0,
-    opacity: 1
-  }))
+  const [styles, stylesApi] = useSpring(() => DEFAULT_STYLES)
 
   const getRect = useCallback((node?: Element | null) => node?.getBoundingClientRect?.(), [])
 
   useEffect(() => {
     if (canvas.isMoving) return
+
+    if (!domNode) {
+      stylesApi.set(DEFAULT_STYLES)
+      return
+    }
 
     const selectedRect = getRect(domNode)
     const rootRect = getRect(rootNode)

@@ -16,6 +16,7 @@ import { Button } from '@/shared/ui/Button'
 import { popoutNames } from '@/shared/data'
 import { to } from '@fragments/springs-factory'
 import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
+import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 
 interface StackNumberVariableProps {
   className?: string
@@ -46,99 +47,61 @@ const requiredControls: TabsSelectorItem[] = [
 const StackNumberProperty: FC<StackNumberVariableProps> = ({ className }) => {
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackNumberProperty}`)
   const context = popout?.context ?? {}
-  const layerInvoker = useLayerInvoker(context.propertyLink, ({ node, value, prevValue, key }) => {
-    if (key === 'name') {
-      node.rename(value)
-    }
+  const [name, setName] = useLayerValue('name', context.propertyLink)
+  const [required, setRequired] = useLayerValue('required', context.propertyLink)
+  const [defaultValue, setDefaultValue] = useLayerValue('defaultValue', context.propertyLink)
+  const [step, setStep] = useLayerValue('step', context.propertyLink)
+  const [min, setMin] = useLayerValue('min', context.propertyLink)
+  const [max, setMax] = useLayerValue('max', context.propertyLink)
+  const [displayStepper, setDisplayStepper] = useLayerValue('displayStepper', context.propertyLink)
 
-    if (key === 'step') {
-      node.setStep(
-        value >= animatableValue(prevValue) ? animatableValue(prevValue) * 10 : animatableValue(prevValue) / 10
-      )
-    }
-
-    if (key === 'displayStepper') {
-      node.setDisplayStepper(value)
-    }
-
-    if (['required', 'min', 'max', 'defaultValue'].includes(key)) {
-      node[`set${capitalize(key)}`](value)
-    }
-  })
-
-  const nameInvoker = layerInvoker('name')
-  const requiredInvoker = layerInvoker('required')
-  const defaultValueInvoker = layerInvoker('defaultValue')
-  const stepInvoker = layerInvoker('step')
-  const minInvoker = layerInvoker('min')
-  const maxInvoker = layerInvoker('max')
-  const displayStepperInvoker = layerInvoker('displayStepper')
+  const proxySetStep = value => {
+    setStep(value >= animatableValue(step) ? animatableValue(step) * 10 : animatableValue(step) / 10)
+  }
 
   return (
     <div className={cn(styles.root, className)}>
       <ControlRow title='Name'>
         <ControlRowWide>
-          <InputText value={nameInvoker.value} onChangeValue={nameInvoker.onChange} />
+          <InputText value={name} onChangeValue={setName} />
         </ControlRowWide>
       </ControlRow>
       <ControlRow title='Required'>
         <ControlRowWide>
-          <TabsSelector
-            items={requiredControls}
-            value={requiredInvoker.value}
-            onChange={({ name }) => requiredInvoker.onChange(name)}
-          />
+          <TabsSelector items={requiredControls} value={required} onChange={({ name }) => setRequired} />
         </ControlRowWide>
       </ControlRow>
       <ControlRow title='Default value'>
-        <InputNumber
-          value={defaultValueInvoker.value}
-          step={stepInvoker.value}
-          min={minInvoker.value}
-          max={maxInvoker.value}
-          onChange={defaultValueInvoker.onChange}
-        />
-        <AnimatedVisible visible={displayStepperInvoker.value}>
-          <Stepper
-            value={defaultValueInvoker.value}
-            step={stepInvoker.value}
-            min={minInvoker.value}
-            max={maxInvoker.value}
-            onChange={defaultValueInvoker.onChange}
-          />
-        </AnimatedVisible>
-        <AnimatedVisible visible={to(displayStepperInvoker.value, v => !v)}>
-          <Slider
-            value={defaultValueInvoker.value}
-            step={stepInvoker.value}
-            min={minInvoker.value}
-            max={maxInvoker.value}
-            onChange={defaultValueInvoker.onChange}
-          />
-        </AnimatedVisible>
+        <InputNumber value={defaultValue} step={step} min={min} max={max} onChange={setDefaultValue} />
+        {displayStepper ? (
+          <Stepper value={defaultValue} step={step} min={min} max={max} onChange={setDefaultValue} />
+        ) : (
+          <Slider value={defaultValue} step={step} min={min} max={max} onChange={setDefaultValue} />
+        )}
       </ControlRow>
+
       <ControlRow title='Min'>
-        <InputNumber value={minInvoker.value} onChange={minInvoker.onChange} />
-        <Button mode='secondary' onClick={() => minInvoker.onChange(1)}>
+        <InputNumber value={min} onChange={setMin} />
+        <Button mode='secondary' onClick={() => setMin(1)}>
           Clear
         </Button>
       </ControlRow>
       <ControlRow title='Max'>
-        <InputNumber value={maxInvoker.value} onChange={maxInvoker.onChange} />
-        <Button mode='secondary' onClick={() => minInvoker.onChange(100)}>
+        <InputNumber value={max} onChange={setMax} />
+        <Button mode='secondary' onClick={() => setMax(100)}>
           Clear
         </Button>
       </ControlRow>
       <ControlRow title='Step'>
-        <InputNumber value={stepInvoker.value} step={0.01} onChange={stepInvoker.onChange} />
-        <Stepper value={stepInvoker.value} onChange={stepInvoker.onChange} />
+        <InputNumber value={step} step={0.01} onChange={proxySetStep} />
+        <Stepper value={step} onChange={proxySetStep} />
       </ControlRow>
       <ControlRow title='Control'>
         <ControlRowWide>
           <TabsSelector
             items={controls}
-            value={to(displayStepperInvoker.value, v => (v ? 'stepper' : 'slider'))}
-            onChange={({ name }) => displayStepperInvoker.onChange(name === 'stepper')}
+            value={displayStepper ? 'stepper' : 'slider'}
+            onChange={({ name }) => setDisplayStepper(name === 'stepper')}
           />
         </ControlRowWide>
       </ControlRow>

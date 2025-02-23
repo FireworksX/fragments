@@ -66,6 +66,8 @@ export const appendChildren = (
   return resolveChildren.map(manager.keyOfEntity);
 };
 
+export const insertChildren = (manager: GraphState) => {};
+
 export const removeChildren = (manager: GraphState, ...layerKeys: Entity[]) => {
   layerKeys.map(manager.resolve).forEach((layer) => {
     const isPrimary = isPartOfPrimary(manager, layer);

@@ -1,13 +1,15 @@
 import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph, useGraphStack } from '@graph-state/react'
-import { variableType } from '@fragments/plugin-fragment-spring'
+import { nodes, variableType } from '@fragments/plugin-fragment-spring'
 import { useFragmentComputedValues } from '@/shared/hooks/fragmentBuilder/useFragmentComputedValues'
 import { useBuilderVariableCreator } from '@/shared/hooks/fragmentBuilder/useBuilderVariableCreator'
-import { LinkKey } from '@graph-state/core'
+import { Entity, LinkKey } from '@graph-state/core'
 import { popoutsStore } from '@/shared/store/popouts.store'
 import { popoutNames } from '@/shared/data'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { declareFragmentProperty } from '@fragments/renderer-editor'
+import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 
 export const FRAGMENT_PROPERTY_TYPES = [
   variableType.Number,
@@ -23,15 +25,17 @@ interface EditPropertyOptions {
 
 export const useFragmentProperties = () => {
   const { documentManager } = useBuilderDocument()
-  const [fragment] = useGraph(documentManager, documentManager.$fragment.root)
+  const [properties] = useLayerValue('properties', documentManager.$fragment.root)
 
-  const propertyLinks = fragment?.properties ?? []
-  const properties = useGraphStack(documentManager, propertyLinks)
   // const { allowVariables, openVariable } = useBuilderVariableCreator()
   // const { getTransformsByType, createComputedValue } = useBuilderVariableTransforms()
 
-  const createProperty = type => {
-    return fragment.createProperty(type)
+  const createProperty = (prop: { type: string }) => {
+    return declareFragmentProperty(documentManager, { _type: nodes.Variable, ...prop })
+  }
+
+  const deleteProperty = (prop: Entity) => {
+    documentManager.invalidate(prop)
   }
 
   const editProperty = (propertyLink: LinkKey, popoutOptions?: EditPropertyOptions) => {
@@ -90,22 +94,22 @@ export const useFragmentProperties = () => {
 
   const getAllowedVariablesByType = (type: keyof typeof variableType, onSelect: (selection) => unknown) => {
     if (!type) return []
-    return propertyLinks.map(variableLink => {
-      const variableGraph = documentManager.resolve(variableLink)
-      return {
-        link: variableLink,
-        label: variableGraph.name,
-        transforms: [], //getTransformsVariableByType(type, variableGraph, onSelect),
-        onClick: () => onSelect({ value: variableLink })
-      }
-    })
+    // return propertyLinks.map(variableLink => {
+    //   const variableGraph = documentManager.resolve(variableLink)
+    //   return {
+    //     link: variableLink,
+    //     label: variableGraph.name,
+    //     transforms: [], //getTransformsVariableByType(type, variableGraph, onSelect),
+    //     onClick: () => onSelect({ value: variableLink })
+    //   }
+    // })
   }
 
   return {
     createProperty,
     editProperty,
-    propertyLinks,
-    properties,
+    deleteProperty,
+    properties: properties ?? [],
     // openVariable,
     getAllowedVariablesByType,
     FRAGMENT_PROPERTY_TYPES

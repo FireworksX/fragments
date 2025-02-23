@@ -8,17 +8,22 @@ import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmen
 import { createNode } from '@fragments/plugin-fragment-spring'
 import { nodes, variableType } from '@fragments/plugin-fragment-spring'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
+import { pick } from '@fragments/utils'
 
 export const usePropertyGenericCell = (propertyLink: LinkKey) => {
-  const { createProperty, editProperty } = useFragmentProperties()
+  const { createProperty, editProperty, deleteProperty } = useFragmentProperties()
   const { documentManager } = useBuilderDocument()
-  const [property] = useGraph(documentManager, propertyLink)
+
+  const [name] = useLayerValue('name', propertyLink)
+  const [propertyType] = useLayerValue('type', propertyLink)
+
   const [creating, setCreating] = useState(false)
   const creatingInputRef = useRef<ElementRef<'input'>>(null)
   const creatingButtonRef = useRef<ElementRef<'button'>>(null)
   const [creatingName, setCreatingName] = useState('')
   const creatingType = useRef<any>()
-  const [isOpen, setIsOpen] = useState(property?.type !== variableType.Object)
+  const [isOpen, setIsOpen] = useState(propertyType !== variableType.Object)
 
   const handleShowNameSection = type => {
     creatingType.current = type
@@ -35,37 +40,37 @@ export const usePropertyGenericCell = (propertyLink: LinkKey) => {
       {
         label: 'Remove',
         mode: 'danger',
-        onClick: property?.remove
+        onClick: () => deleteProperty(propertyLink)
       }
     ]
-
-    if (property?.type === variableType.Object) {
-      options.unshift({
-        label: 'Add field',
-        options: [
-          Object.values(variableType).map(type => {
-            if (type === variableType.Array) {
-              return {
-                label: type,
-                options: [
-                  Object.values(variableType)
-                    .filter(t => t !== variableType.Array)
-                    .map(subType => ({ label: subType, onClick: () => handleShowNameSection(subType) }))
-                ]
-              }
-            }
-
-            return {
-              label: type,
-              onClick: () => handleShowNameSection(type)
-            }
-          })
-        ]
-      })
-    }
+    //
+    // if (property?.type === variableType.Object) {
+    //   options.unshift({
+    //     label: 'Add field',
+    //     options: [
+    //       Object.values(variableType).map(type => {
+    //         if (type === variableType.Array) {
+    //           return {
+    //             label: type,
+    //             options: [
+    //               Object.values(variableType)
+    //                 .filter(t => t !== variableType.Array)
+    //                 .map(subType => ({ label: subType, onClick: () => handleShowNameSection(subType) }))
+    //             ]
+    //           }
+    //         }
+    //
+    //         return {
+    //           label: type,
+    //           onClick: () => handleShowNameSection(type)
+    //         }
+    //       })
+    //     ]
+    //   })
+    // }
 
     return options
-  }, [property?.remove, property?.type])
+  }, [propertyType])
 
   const resetCreating = event => {
     if (event?.relatedTarget === creatingButtonRef.current) {
@@ -88,19 +93,19 @@ export const usePropertyGenericCell = (propertyLink: LinkKey) => {
   }
 
   const children = useMemo(() => {
-    if (property?.type === variableType.Object) {
-      return Object.entries(property?.defaultValue ?? {})
-        .filter(([key]) => key !== '_id' && key !== '_type')
-        .map(([, v]) => v)
-    }
+    // if (property?.type === variableType.Object) {
+    //   return Object.entries(property?.defaultValue ?? {})
+    //     .filter(([key]) => key !== '_id' && key !== '_type')
+    //     .map(([, v]) => v)
+    // }
 
     return []
-  }, [property?.defaultValue, property?.type])
+  }, [])
 
   return {
-    type: property?.type as keyof typeof variableType,
-    withExtend: [variableType.Object, variableType.Array].includes(property?.type),
-    name: property?.name || property?._id,
+    type: propertyType as keyof typeof variableType,
+    withExtend: [variableType.Object, variableType.Array].includes(propertyType),
+    name: name || propertyLink,
     creating,
     dropdownActions,
     creatingInputRef,

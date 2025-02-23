@@ -47,10 +47,12 @@ import { useGraphEffect } from '@graph-state/react'
 import { useBuilderHotKeys } from '@/shared/hooks/hotkeys/useBuilderHotKeys'
 import { renderTarget } from '@fragments/plugin-fragment'
 import { useRenderTarget } from '@/widgets/renderer/hooks/useRenderTarget'
+import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 
 export const FragmentsEdit = () => {
   const { documentManager } = useBuilderDocument()
   const { setRenderTarget } = useRenderTarget()
+  const { select } = useBuilderSelection()
 
   useBuilderHotKeys()
 
@@ -61,6 +63,10 @@ export const FragmentsEdit = () => {
   useEffect(() => {
     setRenderTarget(renderTarget.canvas)
   }, [])
+
+  useEffect(() => {
+    select(null)
+  }, [documentManager])
 
   return (
     <CanvasTextEditorProvider>

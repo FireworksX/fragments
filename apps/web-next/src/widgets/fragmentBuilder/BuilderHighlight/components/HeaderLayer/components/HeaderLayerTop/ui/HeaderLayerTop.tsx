@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { FC, memo, ReactNode } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { LinkKey } from '@graph-state/core'
@@ -14,7 +14,7 @@ interface HeaderLayerTopProps {
   layerKey: LinkKey
 }
 
-export const HeaderLayerTop: FC<HeaderLayerTopProps> = ({ layerKey }) => {
+export const HeaderLayerTop: FC<HeaderLayerTopProps> = memo(({ layerKey }) => {
   const { name, selected, allowedBreakpoints, thresholdLabel, addBreakpoint } = useHeaderLayerTop(layerKey)
 
   return (
@@ -58,4 +58,4 @@ export const HeaderLayerTop: FC<HeaderLayerTopProps> = ({ layerKey }) => {
       </Dropdown>
     </div>
   )
-}
+})

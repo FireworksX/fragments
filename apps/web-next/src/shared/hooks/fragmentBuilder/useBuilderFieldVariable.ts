@@ -154,7 +154,7 @@ export const useBuilderFieldVariable = (layer: Field) => {
 
       if (variableField) {
         const variableValueOptions = variableField.valueOptions
-        const createdProperty = createProperty(variableField.type)
+        const createdProperty = createProperty({ type: variableField.type })
 
         if (variableValueOptions && 'name' in variableValueOptions) {
           createdProperty.rename(getVariableName(variableValueOptions.name))

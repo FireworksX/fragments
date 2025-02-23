@@ -10,6 +10,7 @@ import { Select } from '@/shared/ui/Select'
 import { sizing } from '@fragments/plugin-fragment-spring'
 import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
 import { to } from '@fragments/springs-factory'
+import { BuilderSizePositionControl } from '@/widgets/fragmentBuilder/BuilderSize/components/BuilderSizePositionControl'
 
 interface BuilderSizeProps {
   className?: string
@@ -26,8 +27,6 @@ const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
     height,
     isAllowResizeWidth,
     isAllowResizeHeight,
-    top,
-    left,
     canRelativeSize
   } = useBuilderSize()
 
@@ -54,19 +53,32 @@ const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
         </div>
       )}
 
-      {!canRelativeSize && (
-        <ControlRow title='Position'>
-          <InputNumber suffix='x' value={left.value} min={Infinity} max={Infinity} onChange={left.update} />
-          <InputNumber suffix='y' value={top.value} min={Infinity} max={Infinity} onChange={top.update} />
-        </ControlRow>
-      )}
-      <ControlRow title='Width'>
+      {!canRelativeSize && <BuilderSizePositionControl />}
+      <ControlRow
+        title='Width'
+        override={{
+          isOverride: width.info.isOverride || widthType.info.isOverride,
+          onRestOverride: () => {
+            width.info.resetOverride()
+            widthType.info.resetOverride()
+          }
+        }}
+      >
         <InputNumber value={width.value} disabled={!isAllowResizeWidth} onChange={width.update} />
         <Select value={widthType.value} onChange={widthType.update}>
           {Options}
         </Select>
       </ControlRow>
-      <ControlRow title='Height'>
+      <ControlRow
+        title='Height'
+        override={{
+          isOverride: height.info.isOverride || heightType.info.isOverride,
+          onRestOverride: () => {
+            height.info.resetOverride()
+            heightType.info.resetOverride
+          }
+        }}
+      >
         <InputNumber value={height.value} disabled={!isAllowResizeHeight} onChange={height.update} />
         <Select value={heightType.value} onChange={heightType.update}>
           {Options}

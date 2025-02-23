@@ -2,6 +2,11 @@ import { createState, LinkKey } from "@graph-state/core";
 import { isHtmlContent, isHTMLNode } from "@graph-state/checkers";
 
 export const createManager = (fragmentKey: LinkKey, initialDocument = {}) => {
+  const tempGraph = {
+    _type: "Temp",
+    _id: "root",
+  };
+
   const manager = createState({
     _type: "FragmentManager",
     initialState: initialDocument,
@@ -9,11 +14,14 @@ export const createManager = (fragmentKey: LinkKey, initialDocument = {}) => {
       (state) => {
         state.$fragment = {
           root: fragmentKey,
+          temp: "Temp:root",
         };
       },
     ],
     skip: [isHtmlContent, isHTMLNode],
   });
+
+  manager.mutate(tempGraph);
 
   return manager;
 };

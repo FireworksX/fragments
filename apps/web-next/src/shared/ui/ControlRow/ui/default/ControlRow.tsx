@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useContext } from 'react'
+import { FC, PropsWithChildren, useContext, useMemo } from 'react'
 import cn from 'classnames'
 import { LinkKey } from '@graph-state/core'
 import { GraphValue } from '@graph-state/react'
@@ -6,7 +6,7 @@ import styles from './styles.module.css'
 import PlusIcon from '@/shared/icons/fills/plus-fill.svg'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import ControlRowWide from '../wide/ControlRowWide'
-import { RenderDropdown, RenderDropdownProps } from '@/shared/ui/RenderDropdown'
+import { DropdownRenderOption, RenderDropdown, RenderDropdownProps } from '@/shared/ui/RenderDropdown'
 import { isVariableLink } from '@/shared/utils/isVariableLink'
 import { isComputedValueLink } from '@/shared/utils/isComputedValueLink'
 import { Touchable } from '@/shared/ui/Touchable'
@@ -15,37 +15,67 @@ import { nodes } from '@fragments/plugin-fragment-spring'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 interface BuilderControlRowProps extends PropsWithChildren {
-  value?: unknown | LinkKey
   title?: string
   className?: string
   actions?: RenderDropdownProps['options']
   hasConnector?: boolean
+  currentValue?: unknown
   isHighlight?: boolean
-  onResetVariable?: () => unknown
+  override?: {
+    isOverride: boolean
+    onRestOverride: () => void
+  }
+  variable?: {
+    link?: LinkKey
+    actions: DropdownRenderOption[][]
+    onReset: () => void
+  }
   onClickVariable?: () => unknown
 }
 
 const ControlRow: FC<BuilderControlRowProps> = ({
   className,
-  value,
   title,
   hasConnector,
   isHighlight,
+  override,
   children,
   actions = [],
-  onResetVariable,
+  variable,
   onClickVariable
 }) => {
   const { documentManager } = useBuilderDocument()
-  const hasActions = actions.some(action => action.length > 0)
-  const isVariable = isVariableLink(value) || isComputedValueLink(value)
+
+  const resultActions = useMemo<DropdownRenderOption[][]>(() => {
+    const actions = []
+
+    if (override?.isOverride) {
+      actions.push([
+        [
+          {
+            label: 'Reset override',
+            onClick: override?.onRestOverride
+          }
+        ]
+      ])
+    }
+
+    if (variable?.actions) {
+      actions.push(variable.actions)
+    }
+
+    return actions
+  }, [override, variable])
+
+  const hasActions = resultActions.some(action => action.length > 0)
+  const isHighlightResult = isHighlight || override?.isOverride
 
   return (
     <div className={cn(styles.root, className)}>
-      <RenderDropdown appendTo='body' disabled={!hasActions} trigger='click' options={actions} hideOnClick>
+      <RenderDropdown appendTo='body' disabled={!hasActions} trigger='click' options={resultActions} hideOnClick>
         <div
           className={cn(styles.titleWrapper, {
-            [styles.highlight]: isHighlight,
+            [styles.highlight]: isHighlightResult,
             [styles.withAction]: hasActions
           })}
         >
@@ -58,15 +88,15 @@ const ControlRow: FC<BuilderControlRowProps> = ({
         </div>
       </RenderDropdown>
 
-      {isVariable ? (
-        <GraphValue graphState={documentManager} field={value}>
+      {variable?.link ? (
+        <GraphValue graphState={documentManager} field={variable.link}>
           {variableValue => (
             <ControlRowWide>
               <InputSelectVariable
                 kind={variableValue._type === nodes.Variable ? 'variable' : 'computed'}
                 type={variableValue.type}
                 onClick={onClickVariable}
-                onReset={onResetVariable}
+                onReset={variable?.onReset}
               >
                 {variableValue.name ?? variableValue._id}
               </InputSelectVariable>

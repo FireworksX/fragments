@@ -6,4 +6,7 @@ export { isPartOfPrimary } from "./isPartOfPrimary.ts";
 export { getLayer } from "./getLayer.ts";
 export { cloneLayer } from "./cloneLayer.ts";
 export { makeSnapshot } from "./makeSnapshot.ts";
+export { isInheritField } from "./isInheritField.ts";
+export { getOverrider } from "./getOverrider.ts";
+export { declareFragmentProperty } from "./declareFragmentProperty.ts";
 export * from "./children.ts";

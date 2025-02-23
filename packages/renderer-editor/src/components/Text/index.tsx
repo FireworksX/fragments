@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { animated } from "@react-spring/web";
 import { LinkKey } from "@graph-state/core";
-import { useTextAttributes } from "@/components/Text/hooks/useFrameAttributes.ts";
+import { useTextAttributes } from "@/components/Text/hooks/useTextAttributes.ts";
 import cssStyles from "./styles.module.css";
 
 interface TextProps {
