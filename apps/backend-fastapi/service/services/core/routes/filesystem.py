@@ -24,27 +24,51 @@ async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
     return role is not None and role is not RoleGet.DESIGNER
 
 
-def directory_db_to_directory(
-        directory_id: int, name: str, parent_id: int | None, fragments: List[Fragment],
-        directories: List[FilesystemDirectory], project_id: int
-) -> ProjectDirectoryGet:
-    root_directory: ProjectDirectoryGet = ProjectDirectoryGet(id=directory_id, name=name, parent_id=parent_id,
-                                                              fragments=[],
-                                                              directories=[], project_id=project_id,
-                                                              has_subdirectories=True if len(
-                                                                  directories) > 0 else False)
-    for fragment in fragments:
-        root_directory.fragments.append(fragment_db_to_fragment(fragment))
-
-    for directory in directories:
-        root_directory.directories.append(
-            ProjectDirectoryGet(id=directory.id, name=directory.name, parent_id=directory.parent_id, directories=[],
-                                fragments=[], project_id=directory.project_id,
-                                has_subdirectories=True if len(directory.subdirectories) > 0 else False))
-    return root_directory
+def gather_all_subdirectories(directory: FilesystemDirectory) -> List[FilesystemDirectory]:
+    result = []
+    for subdir in directory.subdirectories:
+        result.append(subdir)
+        result.extend(gather_all_subdirectories(subdir))
+    return result
 
 
-async def create_directory_route(info: strawberry.Info[Context], directory: ProjectDirectory) -> ProjectDirectoryGet:
+def directory_db_to_directory_flat(
+        directory: FilesystemDirectory,
+) -> List[ProjectDirectoryGet]:
+    directories = []
+    # Convert the root directory:
+    root_directory = ProjectDirectoryGet(
+        id=directory.id,
+        name=directory.name,
+        parent_id=directory.parent_id,
+        project_id=directory.project_id,
+        fragments=[fragment_db_to_fragment(frag) for frag in directory.fragments],
+        has_subdirectories=bool(directory.subdirectories),
+        has_fragments=bool(directory.fragments)
+    )
+    directories.append(root_directory)
+
+    # Gather a flat list of all recursive subdirectories
+    flat_dirs = gather_all_subdirectories(directory)
+
+    # Convert each subdirectory individually (each gets only its immediate fragments)
+    for subdir in flat_dirs:
+        subdir_get = ProjectDirectoryGet(
+            id=subdir.id,
+            name=subdir.name,
+            parent_id=subdir.parent_id,
+            project_id=subdir.project_id,
+            fragments=[fragment_db_to_fragment(frag) for frag in subdir.fragments],
+            has_subdirectories=bool(subdir.subdirectories),
+            has_fragments=bool(subdir.fragments)
+        )
+        directories.append(subdir_get)
+
+    return directories
+
+
+async def create_directory_route(info: strawberry.Info[Context], directory: ProjectDirectory) -> list[
+    ProjectDirectoryGet]:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
@@ -60,11 +84,10 @@ async def create_directory_route(info: strawberry.Info[Context], directory: Proj
     directory_db: FilesystemDirectory = await create_directory_db(db, directory.parent_id, directory.name,
                                                                   directory.project_id)
 
-    return directory_db_to_directory(directory_db.id, directory_db.name, directory_db.parent_id, directory_db.fragments,
-                                     directory_db.subdirectories, directory.project_id)
+    return directory_db_to_directory_flat(directory_db)
 
 
-async def get_directory(info: strawberry.Info[Context], directory_id: int) -> ProjectDirectoryGet:
+async def get_directory(info: strawberry.Info[Context], directory_id: int) -> list[ProjectDirectoryGet]:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
@@ -81,8 +104,7 @@ async def get_directory(info: strawberry.Info[Context], directory_id: int) -> Pr
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to observe directories')
 
-    return directory_db_to_directory(directory_db.id, directory_db.name, directory_db.parent_id, directory_db.fragments,
-                                     directory_db.subdirectories, directory_db.project_id)
+    return directory_db_to_directory_flat(directory_db)
 
 
 # don't allow to remove item if it is referenced by another item (fragment in linked_fragments)
@@ -112,7 +134,7 @@ async def delete_directory_route(info: strawberry.Info[Context], directory_id: i
 
 
 async def update_directory_route(info: strawberry.Info[Context],
-                                 directory: ProjectDirectoryPatch) -> ProjectDirectoryGet:
+                                 directory: ProjectDirectoryPatch) -> list[ProjectDirectoryGet]:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
@@ -130,5 +152,4 @@ async def update_directory_route(info: strawberry.Info[Context],
                             detail=f'User is not allowed to update directories')
 
     directory_db: FilesystemDirectory = await update_directory_db(db, directory.__dict__)
-    return directory_db_to_directory(directory_db.id, directory_db.name, directory_db.parent_id, directory_db.fragments,
-                                     directory_db.subdirectories, directory_db.project_id)
+    return directory_db_to_directory_flat(directory_db)
