@@ -1,13 +1,14 @@
-import json
-from typing import List
-
 import requests
 
-from services.core.routes.schemas import GeoLocationFilterGet
+
+class GeoLocation:
+    def __init__(self, city: str, region: str, country: str):
+        self.city = city
+        self.region = region
+        self.country = country
 
 
-def get_location_by_ip(ip_address: str):
+def get_location_by_ip(ip_address: str) -> GeoLocation:
     response = requests.get(f'http://ip-api.com/json/{ip_address}')
     data = response.json()
-    return GeoLocationFilterGet(city=data['city'], region=data['regionName'], country=data['country'], lat=data['lat'],
-                                long=data['lon'])
+    return GeoLocation(city=data['city'], region=data['regionName'], country=data['country'])

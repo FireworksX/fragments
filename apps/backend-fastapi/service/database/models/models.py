@@ -46,6 +46,14 @@ class User(Base):
     def init(self) -> None:
         self.logo = None if self.avatar is None else self.avatar.public_path
 
+class ProjectApiKey(Base):
+    __tablename__ = 'project_api_key'
+    id = Column('id', Integer, primary_key=True, index=True)
+    project_id = Column('project_id', Integer, ForeignKey('project.id'))
+    project = relationship("Project")
+    is_private = Column('is_private', Boolean, default=False)
+    key = Column('key', String, nullable=False)
+
 
 class Project(Base):
     __tablename__ = 'project'
@@ -63,6 +71,13 @@ class Project(Base):
     root_directory = relationship(
         "FilesystemDirectory", foreign_keys=[root_directory_id]
     )
+
+    private_key_id = Column('private_key_id', Integer, ForeignKey('project_api_key.id'))
+    private_key = relationship(
+        "ProjectApiKey", foreign_keys=[private_key_id]
+    )
+
+    public_keys = relationship("ProjectApiKey", back_populates="project")
 
 
 class Campaign(Base):

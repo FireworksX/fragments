@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 import strawberry
 from cfgv import ValidationError
 from fastapi import HTTPException
@@ -10,7 +10,7 @@ from crud.campaign import get_campaign_by_id_db
 from crud.project import get_project_by_id_db
 from crud.stream import get_stream_by_id_db
 from crud.landing import create_landing_db, get_landings_by_stream_id_db, \
-    get_landing_by_id_db, update_landing_by_id_db
+    get_landing_by_id_db, update_landing_by_id_db, get_best_landing
 from .fragment import fragment_by_id
 from .schemas.landing import LandingGet, LandingPost, LandingPatch, ClientLanding
 from .schemas.user import RoleGet, AuthPayload
@@ -169,6 +169,9 @@ async def update_landing_route(info: strawberry.Info[Context], landing_patch: La
     return await landing_db_to_landing(info, landing)
 
 
-async def get_client_landing(info: strawberry.Info[Context], client_landing: ClientLanding) -> Landing:
+async def get_client_landing(info: strawberry.Info[Context], client_landing: ClientLanding) -> Optional[LandingGet]:
     project: Project = await info.context.project()
     db: Session = info.context.session()
+
+    landing = await get_best_landing(db, client_landing, project.id)
+    return None if landing is None else await landing_db_to_landing(info, landing)
