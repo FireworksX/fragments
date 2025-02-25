@@ -14,7 +14,7 @@ class ProjectGet:
     owner: UserGet
     members: List[UserRoleGet]
     campaigns: List[CampaignGet]
-    root_directory: ProjectDirectoryGet
+    root_directory_id: int
 
 
 @strawberry.input
