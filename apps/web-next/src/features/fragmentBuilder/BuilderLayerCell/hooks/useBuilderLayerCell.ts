@@ -17,17 +17,17 @@ export const useBuilderLayerCell = (layerKey: LinkKey) => {
   const selected = selection === layerKey
   const partialSelected =
     selected || layerInfo.allParents.some(parent => selection === documentManager.keyOfEntity(parent))
-  const isFragment = layerInfo.type === nodes.FragmentInstance
+  const isInstance = layerInfo.type === nodes.Instance
   const breakpointThreshold = useBreakpoints().getThresholdLabel((layerInfo.layer?.threshold ?? 0) + 1)
   const isPrimaryLayer = layerInfo.isPrimary
 
   return {
     type: layerInfo?.type,
     name: name ?? layerKey,
-    hasChildren: !isFragment && layerInfo?.layer?.children?.length > 0,
+    hasChildren: !isInstance && layerInfo?.layer?.children?.length > 0,
     selected,
     partialSelected,
-    isFragment,
+    isInstance,
     isPrimaryLayer,
     breakpointThreshold:
       !isPrimaryLayer && layerInfo?.type === nodes.Frame && layerInfo?.isBreakpoint ? breakpointThreshold : null,

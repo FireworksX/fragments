@@ -20,7 +20,6 @@ export const BuilderOpacityControl: FC<BuilderOpacityControlProps> = memo(({ cla
       className={className}
       title='Opacity'
       hasConnector={!disabled}
-      value={opacity}
       override={{
         isOverride: opacityInfo.isOverride,
         onRestOverride: opacityInfo.resetOverride

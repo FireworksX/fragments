@@ -2,7 +2,6 @@ import { createState, GraphState, LinkKey } from '@graph-state/core'
 import { SpringValue } from '@react-spring/web'
 import { isInstanceOf } from '@graph-state/checkers'
 import { isValue } from '@fragments/utils'
-import { BuilderStoreDocumentPlugin, documentsPlugin } from './plugins/documentsPlugin'
 import loggerPlugin from '@graph-state/plugin-logger'
 import { canvasPlugin } from '@/shared/store/builderStore/plugins/canvasPlugin'
 import { creatorPlugin } from '@/shared/store/builderStore/plugins/creatorPlugin'
@@ -28,7 +27,6 @@ export const createBuilderStore = () => {
     },
     skip: [isInstanceOf(SpringValue)],
     plugins: [
-      documentsPlugin,
       canvasPlugin,
       creatorPlugin,
       droppablePlugin,

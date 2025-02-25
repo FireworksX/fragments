@@ -5,6 +5,8 @@ import { fragmentSchema } from "@/shared/schemas/fragmentSchema.ts";
 import { booleanVariableSchema } from "@/shared/schemas/variables/booleanVariableSchema.ts";
 import { numberVariableSchema } from "@/shared/schemas/variables/numberVariableSchema.ts";
 import { stringVariableSchema } from "@/shared/schemas/variables/stringVariableSchema.ts";
+import { colorVariableSchema } from "@/shared/schemas/variables/colorVariableSchema.ts";
+import { instanceSchema } from "@/shared/schemas/instanceSchema.ts";
 
 export const getLayerSchema = (layer?: unknown) => {
   if (!layer?._type) return null;
@@ -12,12 +14,14 @@ export const getLayerSchema = (layer?: unknown) => {
   if (layer?._type === nodes.Frame) return frameSchema;
   if (layer?._type === nodes.Text) return textSchema;
   if (layer?._type === nodes.Fragment) return fragmentSchema;
+  if (layer?._type === nodes.Instance) return instanceSchema;
 
   if (layer._type === nodes.Variable) {
     const types = {
       [variableType.Number]: numberVariableSchema,
       [variableType.Boolean]: booleanVariableSchema,
       [variableType.String]: stringVariableSchema,
+      [variableType.Color]: colorVariableSchema,
     };
 
     if (layer.type in types) {

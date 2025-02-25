@@ -31,7 +31,7 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
     name,
     breakpointThreshold,
     isPrimaryLayer,
-    isFragment,
+    isInstance,
     hasChildren,
     partialSelected,
     handleSelect,
@@ -78,12 +78,12 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
       states.push(partialSelected ? styles.emptyPartial : styles.empty)
     }
 
-    if (isFragment) {
+    if (isInstance) {
       states.push(selected ? styles.selectedFragment : styles.fragment)
     }
 
     return [background, radius, states]
-  }, [collapsed, hasChildren, isFragment, isLast, partialSelected, selected])
+  }, [collapsed, hasChildren, isInstance, isLast, partialSelected, selected])
 
   return (
     <Dropdown

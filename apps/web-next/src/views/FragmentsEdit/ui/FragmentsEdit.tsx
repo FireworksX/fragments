@@ -48,6 +48,7 @@ import { useBuilderHotKeys } from '@/shared/hooks/hotkeys/useBuilderHotKeys'
 import { renderTarget } from '@fragments/plugin-fragment'
 import { useRenderTarget } from '@/widgets/renderer/hooks/useRenderTarget'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
+import StackColorProperty from '@/features/popouts/StackColorProperty/ui/StackColorProperty'
 
 export const FragmentsEdit = () => {
   const { documentManager } = useBuilderDocument()
@@ -94,6 +95,7 @@ export const FragmentsEdit = () => {
                     <StackStringProperty name={popoutNames.stackStringProperty} title='String Property' />
                     <StackNumberProperty name={popoutNames.stackNumberProperty} title='Number Property' />
                     <StackBooleanProperty name={popoutNames.stackBooleanProperty} title='Boolean Property' />
+                    <StackColorProperty name={popoutNames.stackColorProperty} title='Color Property' />
                     {/*<StackPanelCssOverrideList name='cssOverrideList' title='CSS overrides' />*/}
                     {/*<StackLoopEffect name='loopEffect' title='Loop Effect' />*/}
 

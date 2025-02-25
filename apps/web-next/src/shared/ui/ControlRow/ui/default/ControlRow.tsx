@@ -28,7 +28,8 @@ interface BuilderControlRowProps extends PropsWithChildren {
   variable?: {
     link?: LinkKey
     actions: DropdownRenderOption[][]
-    onReset: () => void
+    onReset?: () => void
+    onClick?: () => void
   }
   onClickVariable?: () => unknown
 }
@@ -95,7 +96,7 @@ const ControlRow: FC<BuilderControlRowProps> = ({
               <InputSelectVariable
                 kind={variableValue._type === nodes.Variable ? 'variable' : 'computed'}
                 type={variableValue.type}
-                onClick={onClickVariable}
+                onClick={variable?.onClick}
                 onReset={variable?.onReset}
               >
                 {variableValue.name ?? variableValue._id}

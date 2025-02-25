@@ -20,13 +20,20 @@ export const getEmptyFragment = (fragmentId: string) => {
       overrides: [],
       properties: []
     },
+    [`Instance:123`]: {
+      _type: 'Instance',
+      _id: '123',
+      fragment: 'button',
+      widthType: 'Hug',
+      height: 50
+    },
     [`Frame:${layerId}`]: {
       _type: 'Frame',
       _id: layerId,
       opacity: 1,
       visible: true,
       overflow: 'visible',
-      children: [`Frame:${nId}`],
+      children: [`Frame:${nId}`, 'Instance:123'],
       width: 320,
       height: 200,
       layoutSizingHorizontal: 'Fixed',

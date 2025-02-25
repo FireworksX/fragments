@@ -51,6 +51,7 @@ export const PropertyGenericCell: FC<PropertyBooleanCellProps> = ({ propertyLink
       String: StringIcon,
       Boolean: ToggleIcon,
       Object: ObjectIcon,
+      Color: ObjectIcon,
       Array: ArrayIcon
     } as Record<keyof typeof variableType, ElementType>
   )[type]

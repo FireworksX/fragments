@@ -40,7 +40,7 @@ export const BuilderLayerTypeIcon: FC<BuilderLayerTypeIconProps> = ({
   const layerInfo = useLayerInfo(layerKey)
 
   if (layerInfo.type === nodes.Text) return <TextFrame className={textIconClassName} />
-  if (layerInfo.type === nodes.FragmentInstance) return <FragmentInstanceIcon className={fragmentIconClassName} />
+  if (layerInfo.type === nodes.Instance) return <FragmentInstanceIcon className={fragmentIconClassName} />
   if (layerInfo.type === nodes.Fragment) return <FragmentIcon className={primaryIconClassName} />
   if (layerInfo.type === nodes.Image) return <ImageIcon className={primaryIconClassName} />
 

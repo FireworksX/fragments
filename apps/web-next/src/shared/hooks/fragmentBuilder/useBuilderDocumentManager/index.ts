@@ -9,8 +9,11 @@ import { getEmptyFragment } from '@/shared/data/emptyFragment'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { nodes } from '@fragments/plugin-fragment'
 import { makeSnapshot } from '@fragments/renderer-editor'
+import { useGlobalContext } from '@fragments/renderer-editor'
+import { getButtonFragment } from '@/shared/data/buttonFragment'
 
 export const useBuilderDocumentManager = () => {
+  const globalContext = useGlobalContext()
   const { documentManager } = useBuilderDocument()
   const { builderManager } = use(BuilderContext)
   const { currentFragmentId } = useBuilder()
@@ -40,39 +43,18 @@ export const useBuilderDocumentManager = () => {
       const document =
         typeof fragment?.document === 'string' ? JSON.parse(fragment.document ?? '{}') : fragment?.document
 
-      const resultDocument = Object.keys(document).length === 0 ? getEmptyFragment(fragment?.id) : document
+      const resultDocument = getEmptyFragment(fragment?.id) //Object.keys(document).length === 0 ? getEmptyFragment(fragment?.id) : document
 
-      return builderManager.$documents.createDocumentManager(`${nodes.Fragment}:${fragment?.id}`, resultDocument)
+      globalContext.createFragmentManager('button', getButtonFragment())
+
+      return globalContext.createFragmentManager(fragment?.id, resultDocument)
+      // return builderManager.$documents.createDocumentManager(`${nodes.Fragment}:${fragment?.id}`, resultDocument)
     },
     [refetch]
   )
 
   useEffect(() => {
-    const fn = async () => {
-      await createDocumentManager(currentFragmentId)
-      builderManager.$documents.setActiveDocumentManager(`${nodes.Fragment}:${currentFragmentId}`)
-    }
-
-    if (currentFragmentId) {
-      fn()
-    }
-
-    // const fragment = data?.fragment?.at(0)
-    //
-    // if (fragment) {
-    //   const document =
-    //     typeof fragment?.document === 'string' ? JSON.parse(data.fragment[0].document ?? '{}') : fragment?.document
-    //   const resultDocument = Object.keys(document).length === 0 ? getEmptyFragment(fragment?.id) : document
-    //
-    //   builderManager.$documents.createDocumentManager(fragmentKey, resultDocument)
-    //   builderManager.$documents.setActiveDocumentManager(fragmentKey)
-    // }
-  }, [currentFragmentId])
-
-  useEffect(() => {
-    if (!currentFragmentId) {
-      builderManager.$documents.setActiveDocumentManager(null)
-    }
+    createDocumentManager(currentFragmentId)
   }, [currentFragmentId])
 
   const saveFragment = async () => {

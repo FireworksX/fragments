@@ -8,6 +8,7 @@ import { booleanTabsSelectorItems } from '@/shared/data'
 import { InputSelect } from '@/shared/ui/InputSelect'
 import { paintMode } from '@fragments/plugin-fragment'
 import { popoutsStore } from '@/shared/store/popouts.store'
+import { useLayerVariables } from '@/shared/hooks/fragmentBuilder/useLayerVariables'
 
 interface BuilderFillControlProps {
   className?: string
@@ -18,6 +19,7 @@ const ALLOW_FILL_TYPES = [paintMode.Solid]
 export const BuilderFillControl: FC<BuilderFillControlProps> = memo(({ className }) => {
   const [fillType, setFillType] = useLayerValue('fillType')
   const [value, setValue, valueInfo] = useLayerValue('solidFill')
+  const { disabled, actions, editVariable, variableLink, resetVariable } = useLayerVariables('solidFill')
 
   const openFill = () => {
     popoutsStore.open('fill', {
@@ -29,9 +31,16 @@ export const BuilderFillControl: FC<BuilderFillControlProps> = memo(({ className
     <ControlRow
       className={className}
       title='Fill'
+      hasConnector={!disabled}
       override={{
         isOverride: valueInfo.isOverride,
         onRestOverride: valueInfo.resetOverride
+      }}
+      variable={{
+        link: variableLink,
+        actions,
+        onClick: editVariable,
+        onReset: resetVariable
       }}
     >
       <ControlRowWide>

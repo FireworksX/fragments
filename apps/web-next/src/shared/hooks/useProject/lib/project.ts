@@ -7,7 +7,6 @@ export const PROJECT = gql(/* GraphQL */ `
       name
       rootDirectory {
         id
-        hasSubdirectories
       }
     }
   }

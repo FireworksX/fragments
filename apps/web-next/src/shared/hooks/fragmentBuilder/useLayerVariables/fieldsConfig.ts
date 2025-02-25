@@ -15,6 +15,11 @@ export const fieldsConfig = {
     name: 'Visible',
     defaultValue: true
   },
+  solidFill: {
+    type: variableType.Color,
+    name: 'Fill',
+    defaultValue: '#fff'
+  },
   content: {
     type: variableType.String,
     name: 'Content'

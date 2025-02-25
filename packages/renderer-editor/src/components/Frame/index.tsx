@@ -4,6 +4,7 @@ import { LinkKey } from "@graph-state/core";
 import { useFrame } from "./hooks/useFrame.ts";
 import { nodes } from "@fragments/plugin-fragment";
 import { Text } from "@/components/Text";
+import { Instance } from "@/components/Instance";
 
 interface FrameProps {
   layerKey: LinkKey;
@@ -14,6 +15,10 @@ export const Frame: FC<FrameProps> = ({ layerKey }) => {
 
   if (type === nodes.Text) {
     return <Text layerKey={layerKey} />;
+  }
+
+  if (type === nodes.Instance) {
+    return <Instance layerKey={layerKey} />;
   }
 
   return (

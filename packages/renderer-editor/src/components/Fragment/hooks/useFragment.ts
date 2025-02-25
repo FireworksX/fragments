@@ -3,8 +3,12 @@ import { useLayerChildren } from "@/shared/hooks/useLayerChildren.ts";
 import { useMemo } from "react";
 import { useRenderTarget } from "@/shared/hooks/useRenderTarget.ts";
 import { findBreakpoint } from "@/shared/helpers/findBreakpoint.ts";
+import { useFragmentManager } from "@/shared/hooks/useFragmentManager.ts";
+import { nodes } from "@fragments/plugin-fragment";
 
-export const useFragment = (manager, layerKey) => {
+export const useFragment = (fragmentId: string) => {
+  const manager = useFragmentManager(fragmentId);
+  const layerKey = `${nodes.Fragment}:${fragmentId}`;
   const [ref, fragmentRect] = useMeasure();
   const children = useLayerChildren(layerKey, manager);
   const { isDocument } = useRenderTarget(manager);
@@ -21,6 +25,7 @@ export const useFragment = (manager, layerKey) => {
   }, [children, manager, fragmentRect.width]);
 
   return {
+    manager,
     ref,
     children: resultChildren,
   };

@@ -44,10 +44,10 @@ const BuilderControls: FC<ControlsProps> = ({
 
   const hasGrowing = [nodes.Fragment].some(type => layerInfo.type === type)
   const hasFragmentProps = [nodes.Fragment].some(type => layerInfo.type === type)
-  const hasPosition = [nodes.Frame, nodes.Breakpoint, nodes.Text, nodes.FragmentInstance, nodes.Image].some(
+  const hasPosition = [nodes.Frame, nodes.Breakpoint, nodes.Text, nodes.Instance, nodes.Image].some(
     type => layerInfo.type === type
   )
-  const hasSize = [nodes.Frame, nodes.Breakpoint, nodes.Text, nodes.FragmentInstance, nodes.Image].some(
+  const hasSize = [nodes.Frame, nodes.Breakpoint, nodes.Text, nodes.Instance, nodes.Image].some(
     type => layerInfo.type === type
   )
   const hasLayout = [nodes.Frame, nodes.Breakpoint].some(type => layerInfo.type === type)
@@ -55,7 +55,7 @@ const BuilderControls: FC<ControlsProps> = ({
   const hasText = [nodes.Text].some(type => layerInfo.type === type)
   const hasImage = [nodes.Image].some(type => layerInfo.type === type)
   const hasCssOverride = [nodes.Frame, nodes.Breakpoint].some(type => layerInfo.type === type)
-  const hasInstanceProps = [nodes.FragmentInstance].some(type => layerInfo.type === type)
+  const hasInstanceProps = [nodes.Instance].some(type => layerInfo.type === type)
 
   return (
     <Container className={cn(className, styles.root)}>

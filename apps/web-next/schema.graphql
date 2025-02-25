@@ -104,7 +104,7 @@ type Mutation {
     addUserToProject(projectId: Int!, role: Int!, userId: Int!): Void
     changeUserRole(projectId: Int!, role: RoleGet!, userId: Int!): Void
     createCampaign(cmp: CampaignPost!): CampaignGet!
-    createDirectory(directory: ProjectDirectory!): ProjectDirectoryGet!
+    createDirectory(directory: ProjectDirectory!): [ProjectDirectoryGet!]!
     createFragment(fg: FragmentPost!): FragmentGet!
     createLanding(landings: LandingPost!): LandingGet!
     createProject(pr: ProjectPost!): ProjectGet!
@@ -117,7 +117,7 @@ type Mutation {
     removeFragmentAsset(fragmentId: Int!, publicPath: String!): FragmentGet!
     signup(email: String!, firstName: String!, lastName: String, password: String!): AuthPayload!
     updateCampaign(cmp: CampaignPatch!): CampaignGet!
-    updateDirectory(directory: ProjectDirectoryPatch!): ProjectDirectoryGet!
+    updateDirectory(directory: ProjectDirectoryPatch!): [ProjectDirectoryGet!]!
     updateFragment(fg: FragmentPatch!): FragmentGet!
     updateLanding(landing: LandingPatch!): LandingGet!
     updateProject(pr: ProjectPatch!): ProjectGet!
@@ -125,8 +125,8 @@ type Mutation {
 }
 
 type ProjectDirectoryGet {
-    directories: [ProjectDirectoryGet!]!
     fragments: [FragmentGet!]!
+    hasFragments: Boolean!
     hasSubdirectories: Boolean!
     id: Int!
     name: String!
@@ -147,7 +147,7 @@ type ProjectGet {
 type Query {
     campaign(active: Boolean, campgainId: Int, deleted: Boolean, projectId: Int): [CampaignGet!]!
     campaignByName(active: Boolean, deleted: Boolean, limit: Int = 5, name: String!, projectId: Int!): [CampaignGet!]!
-    directory(directoryId: Int!): ProjectDirectoryGet!
+    directory(directoryId: Int!): [ProjectDirectoryGet!]!
     filter(countries: [String!], regions: [String!]): AllFiltersGet!
     fragment(fragmentIds: [Int!], projectId: Int): [FragmentGet!]!
     landing(landingId: Int, streamId: Int): [LandingGet!]!

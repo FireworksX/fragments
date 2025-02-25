@@ -47,7 +47,8 @@ export const useFragmentProperties = () => {
         [variableType.Number]: popoutNames.stackNumberProperty,
         [variableType.Boolean]: popoutNames.stackBooleanProperty,
         // [builderVariableType.Object]: stackObjectVariableName,
-        [variableType.String]: popoutNames.stackStringProperty
+        [variableType.String]: popoutNames.stackStringProperty,
+        [variableType.Color]: popoutNames.stackColorProperty
       }[type]
 
       popoutsStore.open(popoutName, {

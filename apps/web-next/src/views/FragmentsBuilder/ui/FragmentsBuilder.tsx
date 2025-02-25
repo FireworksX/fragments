@@ -11,11 +11,15 @@ import { isBrowser } from '@fragments/utils'
 import { useGraph, useGraphEffect } from '@graph-state/react'
 import { FragmentBuilderProvider } from '@/views/FragmentsBuilder/lib/FragmentBuilderProvider'
 import { FragmentsBuilderContent } from '@/views/FragmentsBuilder/widgets/FragmentsBuilderContent'
+import { createGlobalContext, FragmentsGlobalContext } from '@fragments/renderer-editor'
 
 const builderManager = createBuilderStore()
 
+const globalContext = createGlobalContext()
+
 if (isBrowser) {
   window.builderManager = builderManager
+  window.globalContext = globalContext
 }
 
 export const FragmentsBuilder = () => {
@@ -28,16 +32,18 @@ export const FragmentsBuilder = () => {
   // }, [])
 
   return (
-    <FragmentBuilderProvider builderManager={builderManager}>
-      <div className={styles.root}>
-        <div className={styles.container}>
-          <FragmentsBuilderAside />
-          <div className={styles.content}>
-            <BuilderFragmentTabs />
-            <FragmentsBuilderContent />
+    <FragmentsGlobalContext value={globalContext}>
+      <FragmentBuilderProvider builderManager={builderManager}>
+        <div className={styles.root}>
+          <div className={styles.container}>
+            <FragmentsBuilderAside />
+            <div className={styles.content}>
+              <BuilderFragmentTabs />
+              <FragmentsBuilderContent />
+            </div>
           </div>
         </div>
-      </div>
-    </FragmentBuilderProvider>
+      </FragmentBuilderProvider>
+    </FragmentsGlobalContext>
   )
 }

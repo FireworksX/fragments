@@ -13,9 +13,6 @@ import { createFragmentInstance } from '@/shared/store/builderStore/plugins/crea
  */
 
 export const creatorPlugin: Plugin = state => {
-  if (!('$documents' in state)) {
-    throw new Error('DocumentManager plugin not found.')
-  }
   if (!('$canvas' in state)) {
     throw new Error('CanvasManager plugin not found.')
   }
