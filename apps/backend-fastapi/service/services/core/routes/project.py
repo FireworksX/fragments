@@ -61,7 +61,7 @@ async def project_by_id(info: strawberry.Info[Context], project_id: int) -> Proj
                             detail=f'User is not allowed to obtain project')
 
     return ProjectGet(id=project.id, name=project.name, logo=None if project.logo is None else project.logo.public_path,
-                      owner=project.owner, root_directory=await get_directory(info, project.root_directory_id),
+                      owner=project.owner, root_directory_id=project.root_directory_id,
                       members=transform_project_members(project), campaigns=await transform_project_campaigns(db, project))
 
 
@@ -71,7 +71,7 @@ async def create_project_route(info: strawberry.Info[Context], pr: ProjectPost) 
     project: Project = await create_project_db(db, pr.name, user.user.id)
 
     return ProjectGet(id=project.id, name=project.name, logo=None if project.logo is None else project.logo.public_path,
-                      owner=project.owner, root_directory=await get_directory(info, project.root_directory_id),
+                      owner=project.owner, root_directory_id=project.root_directory_id,
                       members=transform_project_members(project), campaigns= await transform_project_campaigns(db, project))
 
 
@@ -127,7 +127,7 @@ async def update_project_route(info: strawberry.Info[Context], pr: ProjectPatch)
     project: Project = await update_project_by_id_db(db, values=pr.__dict__)
 
     return ProjectGet(id=project.id, name=project.name, logo=None if project.logo is None else project.logo.public_path,
-                      owner=project.owner, root_directory=await get_directory(info, project.root_directory_id),
+                      owner=project.owner, root_directory_id=project.root_directory_id,
                       members=transform_project_members(project), campaigns=await transform_project_campaigns(db, project))
 
 
@@ -167,5 +167,5 @@ async def add_project_logo_route(info: strawberry.Info[Context], file: UploadFil
         await delete_media_by_id_db(db, old_logo.id)
 
     return ProjectGet(id=project.id, name=project.name, logo=None if project.logo is None else project.logo.public_path,
-                      owner=project.owner, root_directory=await get_directory(info, project.root_directory_id),
+                      owner=project.owner, root_directory_id=project.root_directory_id,
                       members=transform_project_members(project), campaigns=await transform_project_campaigns(db, project))
