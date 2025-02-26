@@ -14,12 +14,12 @@ interface BuilderSizeProps {
 }
 
 const BuilderFragmentInstance: FC<BuilderSizeProps> = ({ className }) => {
-  const { properties, title } = useBuilderFragmentInstance()
+  const { name, definition, instanceManager } = useBuilderFragmentInstance()
 
   return (
-    <Panel className={cn(styles.root, className)} title={title} aside={<div className={styles.aside}>Fragment</div>}>
-      {properties.map(property => (
-        <InstancePropertyGeneric key={property._id} property={property} />
+    <Panel className={cn(styles.root, className)} title={name} aside={<div className={styles.aside}>Fragment</div>}>
+      {definition.map(property => (
+        <InstancePropertyGeneric key={property} property={property} instanceManager={instanceManager} />
       ))}
     </Panel>
   )

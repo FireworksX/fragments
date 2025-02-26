@@ -11,13 +11,14 @@ interface InstanceProps {
 
 export const InstanceContext = createContext({
   layerKey: null,
+  manager: null,
 });
 
 export const Instance: FC<InstanceProps> = ({ layerKey }) => {
-  const { styles, fragmentId } = useInstance(layerKey);
+  const { styles, fragmentId, manager } = useInstance(layerKey);
 
   return (
-    <InstanceContext value={{ layerKey }}>
+    <InstanceContext value={{ layerKey, manager }}>
       <animated.div data-key={layerKey} style={styles}>
         <Fragment fragmentId={fragmentId} />
       </animated.div>

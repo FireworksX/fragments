@@ -13,7 +13,7 @@ import { useGlobalContext } from '@fragments/renderer-editor'
 import { getButtonFragment } from '@/shared/data/buttonFragment'
 
 export const useBuilderDocumentManager = () => {
-  const globalContext = useGlobalContext()
+  const { context: globalContext } = useGlobalContext()
   const { documentManager } = useBuilderDocument()
   const { builderManager } = use(BuilderContext)
   const { currentFragmentId } = useBuilder()

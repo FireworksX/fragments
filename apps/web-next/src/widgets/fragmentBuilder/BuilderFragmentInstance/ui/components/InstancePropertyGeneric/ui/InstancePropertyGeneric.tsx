@@ -11,53 +11,65 @@ import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useGraph } from '@graph-state/react'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { GraphState, LinkKey } from '@graph-state/core'
+import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
+import { useInstancePropertyValue } from '@fragments/renderer-editor'
 
 interface InstancePropertyGenericProps {
-  property: {
-    type: keyof typeof variableType
-  }
+  property: LinkKey
+  instanceManager: GraphState
   className?: string
   onChange(value: boolean): void
 }
 
-const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({ className, property }) => {
+const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({ className, property, instanceManager }) => {
   const { documentManager } = useBuilderDocument()
   const { selection } = useBuilderSelection()
-  const [instance] = useGraph(documentManager, selection)
-  const instanceProp = instance?.readProperty(property)
+  const [type] = useLayerValue('type', property, instanceManager)
+  const [value, setValue, valueInfo] = useInstancePropertyValue(documentManager, selection, property)
+  const propertyLayer = valueInfo?.propertyLayer ?? {}
 
-  if (property.type === variableType.Number) {
+  if (type === variableType.Number) {
     return (
       <InstancePropertyNumber
-        value={instanceProp}
-        name={property.name}
-        step={property.step}
-        min={property.min}
-        max={property.max}
-        onChange={value => instance.updateProperty(property, value)}
+        value={value}
+        name={propertyLayer.name}
+        step={propertyLayer.step}
+        min={propertyLayer.min}
+        max={propertyLayer.max}
+        displayStepper={propertyLayer.displayStepper}
+        onChange={setValue}
       />
     )
   }
 
-  if (property.type === variableType.String) {
-    return (
-      <InstancePropertyString
-        value={instanceProp}
-        name={property.name}
-        onChange={value => instance.updateProperty(property, value)}
-      />
-    )
-  }
+  return <h1>test</h1>
+  // const { documentManager } = useBuilderDocument()
+  // const { selection } = useBuilderSelection()
+  // const [instance] = useGraph(documentManager, selection)
+  // const instanceProp = instance?.readProperty(property)
+  //
 
-  if (property.type === variableType.Boolean) {
-    return (
-      <InstancePropertyBoolean
-        value={instanceProp}
-        name={property.name}
-        onChange={value => instance.updateProperty(property, value)}
-      />
-    )
-  }
+  //
+  // if (property.type === variableType.String) {
+  //   return (
+  //     <InstancePropertyString
+  //       value={instanceProp}
+  //       name={property.name}
+  //       onChange={value => instance.updateProperty(property, value)}
+  //     />
+  //   )
+  // }
+  //
+  // if (property.type === variableType.Boolean) {
+  //   return (
+  //     <InstancePropertyBoolean
+  //       value={instanceProp}
+  //       name={property.name}
+  //       onChange={value => instance.updateProperty(property, value)}
+  //     />
+  //   )
+  // }
 }
 
-export default animated(InstancePropertyGeneric)
+export default InstancePropertyGeneric

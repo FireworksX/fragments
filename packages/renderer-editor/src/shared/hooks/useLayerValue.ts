@@ -1,19 +1,17 @@
 import { useCallback, useContext, useMemo } from "react";
 import { GraphState, LinkKey } from "@graph-state/core";
 import { useGraph } from "@graph-state/react";
-import { getLayer } from "@/shared/helpers/getLayer.ts";
 import { pick } from "@fragments/utils";
-import { getLayerSchema } from "@/lib/getLayerSchema.ts";
 import { isVariableLink } from "@/lib/zod.ts";
 import { FragmentContext } from "@/components/Fragment/FragmentContext.tsx";
+import { useLayer } from "@/shared/hooks/useLayer.ts";
+import { layerSchema } from "@/shared/schemas/styles/layerSchema.ts";
 
 /**
  * Этот хук обслуживает логику получения и зменения значения.
  * Принимает слой и его поле с которым будем работать.
  * При изменении значения валидирует поле, если пытаемся установить
  * не валидные данные, то обновление будет пропущено.
- *
- *
  */
 
 export const useLayerValue = (
@@ -27,12 +25,8 @@ export const useLayerValue = (
     selector: (data) => (data ? pick(data, fieldKey) : data),
   });
 
-  const parsedLayer = getLayer(resultManager, layerKey);
-  const schema = useMemo(
-    () => getLayerSchema(resultManager?.resolve?.(layerKey)),
-    [layerKey]
-  );
-  const currentValue = parsedLayer?.[fieldKey];
+  const { layer, schema } = useLayer(layerKey, resultManager);
+  const currentValue = layer?.[fieldKey];
 
   const restore = useCallback(() => {
     const tempValue = resultManager.resolve(resultManager?.$fragment?.temp)?.[

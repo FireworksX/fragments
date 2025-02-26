@@ -15,12 +15,12 @@ export const getButtonFragment = () => {
       visible: true,
       overflow: 'hidden',
       overrides: [],
-      properties: []
+      properties: ['Variable:62218c840bd11']
     },
     [`Frame:100`]: {
       _type: 'Frame',
       _id: 100,
-      opacity: 1,
+      opacity: 'Variable:62218c840bd11',
       visible: true,
       overflow: 'visible',
       children: [],
@@ -34,6 +34,16 @@ export const getButtonFragment = () => {
       name: 'Frame',
       isPrimary: true,
       threshold: 320
+    },
+    'Variable:62218c840bd11': {
+      _id: '62218c840bd11',
+      _type: 'Variable',
+      type: 'Number',
+      name: 'Opacity',
+      max: 1,
+      min: 0,
+      step: 0.01,
+      displayStepper: false
     }
   }
 }

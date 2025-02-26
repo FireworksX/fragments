@@ -1,15 +1,19 @@
-import { useContext, useEffect } from "react";
+import { use, useContext, useEffect } from "react";
 import { FragmentContext } from "@/components/Fragment/FragmentContext.tsx";
 import { useLayerValue } from "@/shared/hooks/useLayerValue.ts";
 import { isVariableLink } from "@/lib/zod.ts";
 import { GraphState, LinkKey } from "@graph-state/core";
+import { InstanceContext } from "@/components/Instance";
+import { useInstancePropertyValue } from "@/shared/hooks/useInstancePropertyValue.ts";
 
 export const useLayerVariableValue = (
   layerKey: LinkKey,
   fieldKey: string,
   manager?: GraphState
 ) => {
-  const { manager: fragmentManager } = useContext(FragmentContext);
+  const { layerKey: instanceLayerKey, manager: instanceManager } =
+    use(InstanceContext);
+  const { manager: fragmentManager } = use(FragmentContext);
   const resultManager = manager ?? fragmentManager;
   const [layerValue, updateValue, info] = useLayerValue(
     layerKey,
@@ -22,9 +26,14 @@ export const useLayerVariableValue = (
     "defaultValue",
     resultManager
   );
+  const [instanceValue] = useInstancePropertyValue(
+    instanceLayerKey && isVariable ? instanceManager : null,
+    instanceLayerKey,
+    layerValue
+  );
 
   return [
-    isVariable ? variableValue : layerValue,
+    isVariable ? instanceValue ?? variableValue : layerValue,
     updateValue,
     {
       ...info,

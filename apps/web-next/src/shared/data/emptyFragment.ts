@@ -25,7 +25,21 @@ export const getEmptyFragment = (fragmentId: string) => {
       _id: '123',
       fragment: 'button',
       widthType: 'Hug',
-      height: 50
+      height: 50,
+      props: {
+        '62218c840bd11': 0
+      }
+    },
+    [`Instance:321`]: {
+      _type: 'Instance',
+      _id: '321',
+      fragment: 'button',
+      widthType: 'Hug',
+      height: 50,
+      top: 100,
+      props: {
+        '62218c840bd11': 0.4
+      }
     },
     [`Frame:${layerId}`]: {
       _type: 'Frame',
@@ -33,7 +47,7 @@ export const getEmptyFragment = (fragmentId: string) => {
       opacity: 1,
       visible: true,
       overflow: 'visible',
-      children: [`Frame:${nId}`, 'Instance:123'],
+      children: [`Frame:${nId}`, 'Instance:123', 'Instance:321'],
       width: 320,
       height: 200,
       layoutSizingHorizontal: 'Fixed',

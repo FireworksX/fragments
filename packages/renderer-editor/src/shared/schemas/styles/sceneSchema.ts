@@ -2,7 +2,7 @@ import { z, layerField } from "@/lib/zod.ts";
 import { overflow, positionType } from "@fragments/plugin-fragment";
 
 export const sceneSchema = z.object({
-  opacity: layerField(z.number().nonnegative(), {
+  opacity: layerField(z.number().nonnegative().max(1), {
     fallback: 1,
     variable: true,
   }),
