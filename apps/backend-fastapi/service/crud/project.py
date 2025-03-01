@@ -92,8 +92,9 @@ async def add_project_public_api_key(db: Session, project_id: int) -> Project:
     db.refresh(project)
     return project
 
-async def delete_project_public_api_key(db: Session, project_id: int, public_api_key:str) -> None:
-    public_api_key:ProjectApiKey = db.query(ProjectApiKey).filter(ProjectApiKey.key == public_api_key).first()
+
+async def delete_project_public_api_key(db: Session, project_id: int, public_api_key: str) -> None:
+    public_api_key: ProjectApiKey = db.query(ProjectApiKey).filter(ProjectApiKey.key == public_api_key).first()
     if public_api_key.project_id != project_id:
         raise ValueError("Can't remove unrelated key")
     if public_api_key.is_private:
@@ -101,6 +102,13 @@ async def delete_project_public_api_key(db: Session, project_id: int, public_api
     else:
         db.delete(public_api_key)
         db.commit()
+
+
+async def validate_project_public_api_key(db: Session, public_api_key: str) -> Project:
+    public_api_key: ProjectApiKey = db.query(ProjectApiKey).filter(ProjectApiKey.key == public_api_key).first()
+    if public_api_key is None:
+        raise ValueError("Invalid public key")
+    return public_api_key.project
 
 
 async def create_project_db(db: Session, name: str, user_id: int) -> Project:

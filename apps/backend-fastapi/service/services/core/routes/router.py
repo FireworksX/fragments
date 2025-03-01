@@ -27,7 +27,7 @@ from .project import create_project_route, project_by_id, projects, update_proje
     add_project_logo_route, add_project_public_key_route, delete_project_public_key_route, change_project_private_key_route
 from .schemas.user import RoleGet, UserGet, AuthPayload
 from fastapi import UploadFile
-from .landing import landing_by_id, landings_in_stream, update_landing_route, create_landing_route
+from .landing import landing_by_id, landings_in_stream, update_landing_route, create_landing_route, get_client_landing
 
 
 @strawberry.type
@@ -91,7 +91,7 @@ class Query:
         return await get_directory(info, directory_id)
 
     @strawberry.field
-    async def client_landing(self, info: strawberry.Info[Context], client_landing: ClientLanding) -> LandingGet:
+    async def client_landing(self, info: strawberry.Info[Context], client_landing: ClientLanding) -> Optional[LandingGet]:
         return await get_client_landing(info, client_landing)
 
 

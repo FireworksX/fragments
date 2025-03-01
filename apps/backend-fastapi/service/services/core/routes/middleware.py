@@ -1,4 +1,4 @@
-from crud.project import get_project_by_id_db
+from crud.project import get_project_by_id_db, validate_project_public_api_key
 from .schemas.user import AuthPayload
 from strawberry.fastapi import BaseContext
 from database import Session
@@ -60,21 +60,16 @@ class Context(BaseContext):
             raise credentials_exception
 
         try:
-            authorization = authorization.split(' ')[1]  # format is 'Bearer token'
-            payload = jwt.decode(authorization, service_settings.ACCESS_TOKEN_SECRET_KEY,
-                                 algorithms=[service_settings.ALGORITHM])
-            project_id: str = payload.get("sub")
-            if project_id is None:
+            public_key = authorization.split(' ')[1]  # format is 'Bearer token'
+            project: Project = await validate_project_public_api_key(self.session(), public_key)
+            if project is None:
                 raise credentials_exception
-        except InvalidTokenError:
-            raise credentials_exception
         except IndexError:
             raise credentials_exception
-
-        project: Project = await get_project_by_id_db(self.session(), int(project_id))
-        if project is None:
+        except ValueError:
             raise credentials_exception
-        return project
+        else:
+            return project
 
     async def refresh_user(self) -> AuthPayload | None:
         if not self.request:

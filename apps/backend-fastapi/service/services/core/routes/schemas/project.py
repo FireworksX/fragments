@@ -15,6 +15,8 @@ class ProjectGet:
     members: List[UserRoleGet]
     campaigns: List[CampaignGet]
     root_directory_id: int
+    private_key: str
+    public_keys: List[str]
 
 
 @strawberry.input
