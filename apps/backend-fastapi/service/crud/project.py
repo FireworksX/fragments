@@ -10,7 +10,7 @@ from typing import Optional, List
 from conf.settings import ServiceSettings
 
 
-def generate_private_api_key(project_id: int) -> str:
+def generate_api_key(project_id: int) -> str:
     """
     Generate a private API key that incorporates the project_id.
 
@@ -43,6 +43,7 @@ def generate_private_api_key(project_id: int) -> str:
     api_key = f"{project_id}-{random_hex}-{signature}"
     return api_key
 
+
 async def add_user_to_project_db(db: Session, user_id: int, project_id: int, role: int) -> None:
     project: Project = db.query(Project).filter((Project.id == project_id)).first()
     role: ProjectMemberRole = ProjectMemberRole(role=role)
@@ -60,9 +61,47 @@ async def change_user_role_db(db: Session, user_id: int, project_id: int, role: 
             member.role = role
     db.commit()
 
+
 async def generate_project_private_api_key(project_id: int) -> ProjectApiKey:
-    private_api_key: str = generate_private_api_key(project_id)
+    private_api_key: str = generate_api_key(project_id)
     return ProjectApiKey(project_id=project_id, is_private=True, key=private_api_key)
+
+
+async def generate_project_public_api_key(project_id: int) -> ProjectApiKey:
+    public_api_key: str = generate_api_key(project_id)
+    return ProjectApiKey(project_id=project_id, is_private=False, key=public_api_key)
+
+
+async def change_project_private_api_key(db: Session, project_id: int) -> Project:
+    project: Project = await get_project_by_id_db(db, project_id)
+    api_key: ProjectApiKey = await generate_project_private_api_key(project.id)
+    db.add(api_key)
+    db.commit()
+    db.refresh(api_key)
+    project.private_key_id = api_key.id
+    db.refresh(project)
+    return project
+
+
+async def add_project_public_api_key(db: Session, project_id: int) -> Project:
+    project: Project = await get_project_by_id_db(db, project_id)
+    api_key: ProjectApiKey = await generate_project_public_api_key(project.id)
+    db.add(api_key)
+    db.commit()
+    project.public_keys.append(api_key)
+    db.refresh(project)
+    return project
+
+async def delete_project_public_api_key(db: Session, project_id: int, public_api_key:str) -> None:
+    public_api_key:ProjectApiKey = db.query(ProjectApiKey).filter(ProjectApiKey.key == public_api_key).first()
+    if public_api_key.project_id != project_id:
+        raise ValueError("Can't remove unrelated key")
+    if public_api_key.is_private:
+        raise ValueError("Can't remove private key")
+    else:
+        db.delete(public_api_key)
+        db.commit()
+
 
 async def create_project_db(db: Session, name: str, user_id: int) -> Project:
     project: Project = Project(name=name, owner_id=user_id)
@@ -77,7 +116,8 @@ async def create_project_db(db: Session, name: str, user_id: int) -> Project:
     project.private_key_id = api_key.id
 
     await add_user_to_project_db(db, user_id, project.id, 1)  # 1 = owner
-    root_directory: FilesystemDirectory = await create_directory_db(db=db, parent_id=None, name=name, project_id=project.id)
+    root_directory: FilesystemDirectory = await create_directory_db(db=db, parent_id=None, name=name,
+                                                                    project_id=project.id)
     project.root_directory = root_directory
 
     db.add(project)

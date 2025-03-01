@@ -14,7 +14,8 @@ from .schemas.project import ProjectGet, ProjectPost, ProjectPatch
 from .schemas.user import RoleGet, AuthPayload
 from .middleware import Context
 from crud.project import create_project_db, get_project_by_id_db, get_user_project_role, get_projects_by_user_id_db, \
-    update_project_by_id_db, add_user_to_project_db, change_user_role_db
+    update_project_by_id_db, add_user_to_project_db, change_user_role_db, add_project_public_api_key, \
+    delete_project_public_api_key, change_project_private_api_key
 from crud.user import get_user_by_id_db
 from database import Session, Media
 from database.models import Project, User, ProjectMemberRole
@@ -72,7 +73,52 @@ async def create_project_route(info: strawberry.Info[Context], pr: ProjectPost) 
 
     return ProjectGet(id=project.id, name=project.name, logo=None if project.logo is None else project.logo.public_path,
                       owner=project.owner, root_directory_id=project.root_directory_id,
-                      members=transform_project_members(project), campaigns= await transform_project_campaigns(db, project))
+                      members=transform_project_members(project),
+                      campaigns=await transform_project_campaigns(db, project))
+
+async def change_project_private_key_route(info: strawberry.Info[Context], project_id: int) -> ProjectGet:
+    user: AuthPayload = await info.context.user()
+    db: Session = info.context.session()
+    permission: bool = await write_permission(db, user.user.id, project_id)
+    if not permission:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=f'User is not allowed to change private key')
+
+    project: Project = await change_project_private_api_key(db, project_id)
+    return ProjectGet(id=project.id, name=project.name, logo=None if project.logo is None else project.logo.public_path,
+                      owner=project.owner, root_directory=await get_directory(info, project.root_directory_id),
+                      members=transform_project_members(project),
+                      campaigns=await transform_project_campaigns(db, project))
+
+
+async def add_project_public_key_route(info: strawberry.Info[Context], project_id: int) -> ProjectGet:
+    user: AuthPayload = await info.context.user()
+    db: Session = info.context.session()
+    permission: bool = await write_permission(db, user.user.id, project_id)
+    if not permission:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=f'User is not allowed to add public keys')
+
+    project: Project = await add_project_public_api_key(db, project_id)
+    return ProjectGet(id=project.id, name=project.name, logo=None if project.logo is None else project.logo.public_path,
+                      owner=project.owner, root_directory=await get_directory(info, project.root_directory_id),
+                      members=transform_project_members(project),
+                      campaigns=await transform_project_campaigns(db, project))
+
+
+async def delete_project_public_key_route(info: strawberry.Info[Context], project_id: int, public_key: str) -> None:
+    user: AuthPayload = await info.context.user()
+    db: Session = info.context.session()
+    permission: bool = await write_permission(db, user.user.id, project_id)
+    if not permission:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=f'User is not allowed to delete public keys')
+    try:
+        await delete_project_public_api_key(db, project_id, public_key)
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                            detail=str(e))
+>>>>>>> f24adc6 (f)
 
 
 async def add_user_to_project(info: strawberry.Info[Context], user_id: int, project_id: int, role_to_add: int) -> None:
@@ -128,7 +174,8 @@ async def update_project_route(info: strawberry.Info[Context], pr: ProjectPatch)
 
     return ProjectGet(id=project.id, name=project.name, logo=None if project.logo is None else project.logo.public_path,
                       owner=project.owner, root_directory_id=project.root_directory_id,
-                      members=transform_project_members(project), campaigns=await transform_project_campaigns(db, project))
+                      members=transform_project_members(project),
+                      campaigns=await transform_project_campaigns(db, project))
 
 
 async def add_project_logo_route(info: strawberry.Info[Context], file: UploadFile, project_id: int) -> ProjectGet:
@@ -168,4 +215,5 @@ async def add_project_logo_route(info: strawberry.Info[Context], file: UploadFil
 
     return ProjectGet(id=project.id, name=project.name, logo=None if project.logo is None else project.logo.public_path,
                       owner=project.owner, root_directory_id=project.root_directory_id,
-                      members=transform_project_members(project), campaigns=await transform_project_campaigns(db, project))
+                      members=transform_project_members(project),
+                      campaigns=await transform_project_campaigns(db, project))

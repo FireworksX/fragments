@@ -24,7 +24,7 @@ from .stream import create_stream_route, stream_by_id, streams_in_campaign, upda
 from .feedback import create_feedback
 from .project import create_project_route, project_by_id, projects, update_project_route, \
     add_user_to_project as add_user_to_project_route, change_user_role as change_user_role_route, \
-    add_project_logo_route
+    add_project_logo_route, add_project_public_key_route, delete_project_public_key_route, change_project_private_key_route
 from .schemas.user import RoleGet, UserGet, AuthPayload
 from fastapi import UploadFile
 from .landing import landing_by_id, landings_in_stream, update_landing_route, create_landing_route
@@ -206,3 +206,15 @@ class Mutation:
     @strawberry.mutation
     async def delete_fragment(self, info: strawberry.Info[Context], fragment_id: int) -> None:
         await delete_fragment_route(info, fragment_id)
+
+    @strawberry.mutation
+    async def change_project_private_key(self, info: strawberry.Info[Context], project_id: int) -> ProjectGet:
+        return await change_project_private_key_route(info, project_id)
+
+    @strawberry.mutation
+    async def add_project_public_key(self, info: strawberry.Info[Context], project_id: int) -> ProjectGet:
+        return await add_project_public_key_route(info, project_id)
+
+    @strawberry.mutation
+    async def delete_project_public_key(self, info: strawberry.Info[Context], project_id: int, public_key: str) -> None:
+        await delete_project_public_key_route(info, project_id, public_key)
