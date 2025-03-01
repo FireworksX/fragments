@@ -1,12 +1,17 @@
-import { useContext, useMemo, useState } from 'react'
+import { createContext, useContext, useMemo, useState } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { nodes } from '@fragments/plugin-fragment'
 import { LinkKey } from '@graph-state/core'
 import { moveNode } from '@fragments/plugin-fragment-spring'
 import { useBuilderTabs } from '@/shared/hooks/fragmentBuilder/useBuilderTabs'
 import { FileSystemItemType } from '@/__generated__/graphql'
-import { useProjectTree as useProjectTreeMethods } from '@/shared/hooks/useProjectTree'
-import { flattenTree, removeChildrenOf } from '@/widgets/fragmentBuilder/ProjectTree/lib'
+import { useProjectFiles, useProjectFiles as useProjectTreeMethods } from '../../../../shared/hooks/useProjectFiles'
+import {
+  buildFolderStructure,
+  flattenTree,
+  formatDirectories,
+  removeChildrenOf
+} from '@/widgets/fragmentBuilder/ProjectTree/lib'
 import { useGraph } from '@graph-state/react'
 import { createConstants } from '@fragments/utils'
 import { useProject } from '@/shared/hooks/useProject'
@@ -28,173 +33,25 @@ const findIndexOfNode = (items: unknown[], linkNode: LinkKey) => {
 export const projectItemType = createConstants('directory', 'fragment')
 
 export const useProjectTree = () => {
-  const { builderManager } = useContext(BuilderContext)
-  const [collapsedIds, setCollapsedIds] = useState<string[]>([])
-  const [droppableGraph] = useGraph(builderManager, builderManager.droppableKey)
-  const [loadingItems, setLoadingItems] = useState([])
-  const {
-    rootDirectoryId,
-    projectSlug,
-    tree,
-    fetchingProjectDirectory,
-    loadDirectory,
-    createProjectFragment,
-    updateProjectFragment,
-    createProjectDirectory,
-    updateProjectDirectory,
-    deleteProjectDirectory,
-    deleteProjectFragment
-  } = useProjectTreeMethods()
-  const { openFragment } = useBuilder()
+  const [openedIds, setOpenedIds] = useState<string[]>([])
+  const { directories, fetchingProjectDirectory } = useProjectTreeMethods()
 
-  const setLoading = (id, flag) => setLoadingItems(p => (flag ? [...p, id] : p.filter(item => item !== id)))
+  const directoriesList = useMemo(() => {
+    return buildFolderStructure(directories, openedIds)
+  }, [directories, openedIds])
 
-  const flatProjectTree = useMemo(() => {
-    const createItem = async (name: string, type: keyof typeof projectItemType, parentId: number) => {
-      setLoading(parent, true)
-
-      if (type === projectItemType.fragment) {
-        await createProjectFragment({
-          variables: {
-            projectSlug,
-            parentId,
-            name
-          }
-        })
-      } else if (type === projectItemType.directory) {
-        await createProjectDirectory({
-          variables: {
-            projectSlug,
-            parentId,
-            name
-          }
-        })
-      }
-
-      setLoading(parent, false)
-    }
-
-    const renameItem = async (name: string, nodeId: number, type: keyof typeof projectItemType) => {
-      setLoading(nodeId, true)
-
-      if (type === projectItemType.fragment) {
-        await updateProjectFragment({
-          variables: {
-            projectId: projectSlug,
-            fragmentId: nodeId,
-            name
-          }
-        })
-      } else if (type === projectItemType.directory) {
-        await updateProjectDirectory({
-          variables: {
-            directoryId: nodeId,
-            name
-          }
-        })
-      }
-
-      setLoading(nodeId, false)
-    }
-
-    const deleteItem = async (nodeId: number, type: keyof typeof projectItemType) => {
-      if (type === projectItemType.directory) {
-        deleteProjectDirectory({
-          variables: {
-            directoryId: nodeId
-          }
-        })
-      }
-
-      if (type === projectItemType.fragment) {
-        deleteProjectFragment({
-          variables: {
-            fragmentId: nodeId
-          }
-        })
-      }
-    }
-
-    const buildItem = (node, deepIndex = 0) => {
-      if (!node) {
-        return null
-      }
-
-      const collapsed = !collapsedIds.includes(node.id)
-      const itemType = node.__typename === 'ProjectDirectoryGet' ? projectItemType.directory : projectItemType.fragment
-      const canHaveChildren = itemType === projectItemType.directory
-      const children = [...(node?.children ?? []), ...(node?.fragments ?? [])]
-      const loaded = node?.hasSubdirectories ? node?.children?.length > 0 : true
-      const hasChildren = (children || []).length > 0 || !!node?.hasSubdirectories
-
-      const getHandleCollapse = () => {
-        if (canHaveChildren) {
-          if (loaded) {
-            return () => {
-              setCollapsedIds(p => (p.includes(node.id) ? p.filter(v => v !== node.id) : [...p, node.id]))
-            }
-          } else {
-            return async () => {
-              setLoading(node.id, true)
-              await loadDirectory(node.id)
-              setCollapsedIds(p => [...p, node.id])
-              setLoading(node.id, false)
-            }
-          }
-        }
-      }
-
-      return {
-        id: node.id,
-        type: itemType,
-        name: node.name === 'root' ? 'Project' : node.name,
-        deepIndex,
-        collapsed,
-        children: !canHaveChildren ? [] : children.map(key => buildItem(key, deepIndex + 1)),
-        hasChildren,
-        canHaveChildren,
-        isLoading: loadingItems.includes(node.id),
-        selected: false, //!!targetKey && activeTabKey === targetKey,
-        onCreateFolder: (name: string) => createItem(name, projectItemType.directory, node.id),
-        onCreateFragment: (name: string) => createItem(name, projectItemType.fragment, node.id),
-        onSelectItem: () => undefined, //builderManager.selectProjectFile(key),
-        onOpenItem: () => {
-          openFragment(node.id)
-          //openTab(node.target)
-        },
-        onCollapse: getHandleCollapse(),
-        onRename: (name: string) => renameItem(name, node.id, itemType),
-        onDelete: () => deleteItem(node.id, itemType)
-      }
-    }
-
-    const flattenedTree = flattenTree([buildItem(tree.at(0), 0)])
-
-    const collapsedItems = flattenedTree.reduce<UniqueIdentifier[]>(
-      (acc, { children, collapsed, id }) => (collapsed && children?.length ? [...acc, id] : acc),
-      []
-    )
-
-    return removeChildrenOf(flattenedTree, collapsedItems)
-  }, [
-    collapsedIds,
-    createProjectDirectory,
-    createProjectFragment,
-    deleteProjectDirectory,
-    loadingItems,
-    projectSlug,
-    tree,
-    updateProjectDirectory,
-    updateProjectFragment
-  ])
+  const toggleIsOpen = (id: number, flag: boolean) =>
+    setOpenedIds(p => (flag ? [...p, id] : p.filter(item => item !== id)))
 
   return {
+    openedIds,
+    toggleIsOpen,
     fetching: fetchingProjectDirectory,
-    list: flatProjectTree,
-    draggableItem: droppableGraph.activeDraggable
-      ? flatProjectTree.find(
-          item => item.type === projectItemType.fragment && item.id === droppableGraph.activeDraggable.id
-        )
-      : null
+    list: directoriesList
+    // draggableItem: droppableGraph.activeDraggable
+    //   ? flatProjectTree.find(
+    //       item => item.type === projectItemType.fragment && item.id === droppableGraph.activeDraggable.id
+    //     )
+    //   : null
   }
 }

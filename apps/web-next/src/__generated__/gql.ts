@@ -23,12 +23,11 @@ const documents = {
     "\n  query StreamDetail($streamSlug: Int!) {\n    stream(streamId: $streamSlug) {\n      id\n      name\n      active\n      weight\n    }\n  }\n": types.StreamDetailDocument,
     "\nquery FragmentDocument($fragmentSlug: Int!) {\n    fragment(fragmentIds: [$fragmentSlug]) {\n        id\n        name\n        document\n        linkedFragments {\n            id\n            document\n        }\n    }\n}\n": types.FragmentDocumentDocument,
     "\n    mutation UpdateFragmentDocument($fragmentSlug: Int!, $name: String, $document: JSON, $linkedFragments: [Int!]) {\n        updateFragment(fg: {id: $fragmentSlug, name: $name, document: $document, linkedFragments: $linkedFragments}) {\n            id\n            name\n            document\n        }\n    }\n": types.UpdateFragmentDocumentDocument,
-    "\n  query Project($projectSlug: Int!) {\n    project(projectId: $projectSlug) {\n      id\n      name\n      rootDirectory {\n        id\n      }\n    }\n  }\n": types.ProjectDocument,
+    "\n  query Project($projectSlug: Int!) {\n    project(projectId: $projectSlug) {\n      id\n      name\n      rootDirectoryId\n    }\n  }\n": types.ProjectDocument,
     "\n  mutation CreateProjectDirectory($projectSlug: Int!, $name: String!, $parentId: Int!) {\n    createDirectory(directory: { projectId: $projectSlug, name: $name, parentId: $parentId }) {\n      id\n      name\n      parentId\n    }\n  }\n": types.CreateProjectDirectoryDocument,
     "\n  mutation CreateProjectFragment($projectSlug: Int!, $name: String!, $parentId: Int!) {\n    createFragment(fg: { name: $name, projectId: $projectSlug, document: \"{}\", directoryId: $parentId }) {\n      id\n      name\n      directoryId\n    }\n  }\n": types.CreateProjectFragmentDocument,
-    "\n  mutation DeleteProjectDirectory($directoryId: Int!) {\n    deleteDirectory(directoryId: $directoryId)\n  }\n": types.DeleteProjectDirectoryDocument,
-    "\n  mutation DeleteProjectFragment($fragmentId: Int!) {\n    deleteFragment(fragmentId: $fragmentId)\n  }\n": types.DeleteProjectFragmentDocument,
-    "\n  fragment Directory on ProjectDirectoryGet {\n    id\n    parentId\n    name\n    hasSubdirectories\n    hasFragments\n    fragments {\n      id\n      name\n    }\n  }\n": types.DirectoryFragmentDoc,
+    "\n  mutation DeleteProjectDirectory($id: Int!) {\n    deleteDirectory(directoryId: $id)\n  }\n": types.DeleteProjectDirectoryDocument,
+    "\n  mutation DeleteProjectFragment($id: Int!) {\n    deleteFragment(fragmentId: $id)\n  }\n": types.DeleteProjectFragmentDocument,
     "\n  query ProjectDirectory($directoryId: Int!) {\n    directory(directoryId: $directoryId) {\n      id\n      parentId\n      name\n      hasSubdirectories\n      hasFragments\n      fragments {\n        id\n        name\n      }\n    }\n  }\n": types.ProjectDirectoryDocument,
     "\n  mutation UpdateProjectDirectory($directoryId: Int!, $name: String) {\n    updateDirectory(directory: { id: $directoryId, name: $name }) {\n      id\n      name\n    }\n  }\n": types.UpdateProjectDirectoryDocument,
     "\n  mutation UpdateProjectFragment($fragmentId: Int!, $name: String) {\n    updateFragment(fg: { id: $fragmentId, name: $name }) {\n      id\n      name\n    }\n  }\n": types.UpdateProjectFragmentDocument,
@@ -43,6 +42,8 @@ const documents = {
     "\n  query FragmentsNames($projectSlug: Int!, $fragmentIds: [Int!]) {\n    fragment(projectId: $projectSlug, fragmentIds: $fragmentIds) {\n      id\n      name\n    }\n  }\n": types.FragmentsNamesDocument,
     "\n  mutation CreateProject($name: String!) {\n    createProject(pr: { name: $name }) {\n      name\n      owner {\n        firstName\n        lastName\n      }\n    }\n  }\n": types.CreateProjectDocument,
     "\n  query ProjectsList {\n    project {\n      id\n      name\n    }\n  }\n": types.ProjectsListDocument,
+    "\n  fragment DirectoryTreeItem on ProjectDirectoryGet {\n    name\n    parentId\n    hasSubdirectories\n    hasFragments\n  }\n": types.DirectoryTreeItemFragmentDoc,
+    "\n  fragment FragmentTreeItem on FragmentGet {\n    name\n  }\n": types.FragmentTreeItemFragmentDoc,
 };
 
 /**
@@ -98,7 +99,7 @@ export function gql(source: "\n    mutation UpdateFragmentDocument($fragmentSlug
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query Project($projectSlug: Int!) {\n    project(projectId: $projectSlug) {\n      id\n      name\n      rootDirectory {\n        id\n      }\n    }\n  }\n"): (typeof documents)["\n  query Project($projectSlug: Int!) {\n    project(projectId: $projectSlug) {\n      id\n      name\n      rootDirectory {\n        id\n      }\n    }\n  }\n"];
+export function gql(source: "\n  query Project($projectSlug: Int!) {\n    project(projectId: $projectSlug) {\n      id\n      name\n      rootDirectoryId\n    }\n  }\n"): (typeof documents)["\n  query Project($projectSlug: Int!) {\n    project(projectId: $projectSlug) {\n      id\n      name\n      rootDirectoryId\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -110,15 +111,11 @@ export function gql(source: "\n  mutation CreateProjectFragment($projectSlug: In
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  mutation DeleteProjectDirectory($directoryId: Int!) {\n    deleteDirectory(directoryId: $directoryId)\n  }\n"): (typeof documents)["\n  mutation DeleteProjectDirectory($directoryId: Int!) {\n    deleteDirectory(directoryId: $directoryId)\n  }\n"];
+export function gql(source: "\n  mutation DeleteProjectDirectory($id: Int!) {\n    deleteDirectory(directoryId: $id)\n  }\n"): (typeof documents)["\n  mutation DeleteProjectDirectory($id: Int!) {\n    deleteDirectory(directoryId: $id)\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  mutation DeleteProjectFragment($fragmentId: Int!) {\n    deleteFragment(fragmentId: $fragmentId)\n  }\n"): (typeof documents)["\n  mutation DeleteProjectFragment($fragmentId: Int!) {\n    deleteFragment(fragmentId: $fragmentId)\n  }\n"];
-/**
- * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function gql(source: "\n  fragment Directory on ProjectDirectoryGet {\n    id\n    parentId\n    name\n    hasSubdirectories\n    hasFragments\n    fragments {\n      id\n      name\n    }\n  }\n"): (typeof documents)["\n  fragment Directory on ProjectDirectoryGet {\n    id\n    parentId\n    name\n    hasSubdirectories\n    hasFragments\n    fragments {\n      id\n      name\n    }\n  }\n"];
+export function gql(source: "\n  mutation DeleteProjectFragment($id: Int!) {\n    deleteFragment(fragmentId: $id)\n  }\n"): (typeof documents)["\n  mutation DeleteProjectFragment($id: Int!) {\n    deleteFragment(fragmentId: $id)\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -175,6 +172,14 @@ export function gql(source: "\n  mutation CreateProject($name: String!) {\n    c
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  query ProjectsList {\n    project {\n      id\n      name\n    }\n  }\n"): (typeof documents)["\n  query ProjectsList {\n    project {\n      id\n      name\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  fragment DirectoryTreeItem on ProjectDirectoryGet {\n    name\n    parentId\n    hasSubdirectories\n    hasFragments\n  }\n"): (typeof documents)["\n  fragment DirectoryTreeItem on ProjectDirectoryGet {\n    name\n    parentId\n    hasSubdirectories\n    hasFragments\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  fragment FragmentTreeItem on FragmentGet {\n    name\n  }\n"): (typeof documents)["\n  fragment FragmentTreeItem on FragmentGet {\n    name\n  }\n"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

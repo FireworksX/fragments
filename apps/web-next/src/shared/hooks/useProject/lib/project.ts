@@ -5,9 +5,7 @@ export const PROJECT = gql(/* GraphQL */ `
     project(projectId: $projectSlug) {
       id
       name
-      rootDirectory {
-        id
-      }
+      rootDirectoryId
     }
   }
 `)

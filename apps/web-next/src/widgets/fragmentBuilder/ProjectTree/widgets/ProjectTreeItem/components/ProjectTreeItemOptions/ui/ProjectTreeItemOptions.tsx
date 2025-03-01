@@ -48,10 +48,12 @@ export const ProjectTreeItemOptions: FC<ProjectTreeItemOptionsProps> = props => 
           <DropdownOption onClick={props.onCreateFragment}>New Fragment</DropdownOption>
         </DropdownGroup>
         <DropdownGroup>
-          <DropdownOption onClick={props.onRename}>Rename</DropdownOption>
-          <DropdownOption mode='danger' onClick={props.onDelete}>
-            Delete
-          </DropdownOption>
+          {props.onRename && <DropdownOption onClick={props.onRename}>Rename</DropdownOption>}
+          {props.onDelete && (
+            <DropdownOption mode='danger' onClick={props.onDelete}>
+              Delete
+            </DropdownOption>
+          )}
         </DropdownGroup>
       </>
     )

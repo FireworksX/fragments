@@ -7,7 +7,7 @@ import { Spinner } from '@/shared/ui/Spinner'
 import { useDroppable } from '@dnd-kit/core'
 import { useModal } from '@/shared/hooks/useModal'
 import { modalNames } from '@/shared/data'
-import { useProjectTree } from '@/shared/hooks/useProjectTree'
+import { useProjectFiles } from '@/shared/hooks/useProjectFiles'
 import CreateFragmentModal from '@/widgets/modals/CreateFragmentModal/ui/CreateFragmentModal'
 import { useGraphEffect } from '@graph-state/react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
@@ -28,7 +28,7 @@ export const FragmentsEditPlaceholder: FC<FragmentsEditPlaceholderProps> = ({ cl
   })
 
   const { openModal, updateContext, closeModal } = useModal()
-  const { createProjectFragment, projectSlug } = useProjectTree()
+  const { createProjectFragment, projectSlug } = useProjectFiles()
   const { openFragment } = useBuilder()
 
   useGraphEffect(builderManager, builderManager.$droppable.builderPlaceholderDroppableKey, nextValue => {

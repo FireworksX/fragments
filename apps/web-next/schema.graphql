@@ -141,7 +141,7 @@ type ProjectGet {
     members: [UserRoleGet!]!
     name: String!
     owner: UserGet!
-    rootDirectory: ProjectDirectoryGet!
+    rootDirectoryId: Int!
 }
 
 type Query {

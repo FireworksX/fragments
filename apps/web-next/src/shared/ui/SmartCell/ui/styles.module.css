@@ -74,7 +74,6 @@
 .labelInput {
     width: 100%;
     font-size: 12px;
-    text-transform: capitalize;
     outline: none;
     background: transparent;
     pointer-events: none;

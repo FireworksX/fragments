@@ -1,3 +1,5 @@
+import { projectItemType } from '@/widgets/fragmentBuilder/ProjectTree/hooks/useProjectTree'
+
 export function flatten<T extends Record<string, any>>(
   items: TreeItems<T>,
   parentId: UniqueIdentifier | null = null,
@@ -34,4 +36,39 @@ export function removeChildrenOf<T>(items: FlattenedItem<T>[], ids: UniqueIdenti
 
     return true
   })
+}
+
+type Folder = {
+  id: string
+  parentId?: string | null
+}
+
+export function buildFolderStructure(folders: Folder[], opened: string[]): (Folder & { deepIndex: number })[] {
+  const folderMap = new Map(folders.map(f => [f.id, f]))
+  const result: ResultItem[] = []
+
+  function getDeepIndex(folder: Folder): number {
+    if (!folder.parentId) return 0
+    return folderMap.get(folder.parentId) ? getDeepIndex(folderMap.get(folder.parentId)!) + 1 : 0
+  }
+
+  function processFolder(folder: Folder) {
+    const deepIndex = getDeepIndex(folder)
+    result.push({ id: folder.id, deepIndex, type: projectItemType.directory })
+
+    if (opened.includes(folder.id)) {
+      // Добавляем фрагменты после папки
+      folder.fragments?.forEach(file =>
+        result.push({ id: file.id, deepIndex: deepIndex + 1, type: projectItemType.fragment })
+      )
+
+      // Добавляем вложенные папки
+      folders.filter(f => f.parentId === folder.id).forEach(subFolder => processFolder(subFolder))
+    }
+  }
+
+  // Начинаем с корневых папок
+  folders.filter(f => !f.parentId).forEach(rootFolder => processFolder(rootFolder))
+
+  return result
 }

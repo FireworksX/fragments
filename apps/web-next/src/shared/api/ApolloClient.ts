@@ -55,6 +55,7 @@ export function makeApolloClient() {
                     id: `ProjectDirectoryGet:${parentId}`, // Родительский объект
                     fields: {
                       fragments(existingFragments = []) {
+                        console.log(parentId, existingFragments, incoming)
                         return [...existingFragments, incoming]
                       }
                     }
@@ -65,17 +66,18 @@ export function makeApolloClient() {
             createDirectory: {
               merge(outcome, incoming, { cache, variables }) {
                 const parentId = variables?.parentId ?? -1
-
-                if (parentId) {
-                  cache.modify({
-                    id: `ProjectDirectoryGet:${parentId}`, // Родительский объект
-                    fields: {
-                      directories(existingFragments = []) {
-                        return [...existingFragments, incoming]
-                      }
-                    }
-                  })
-                }
+                // Нужно получить рутовую папку и отмутировать query
+                // if (parentId) {
+                //   cache.writeQuery({ query: '' })
+                //   cache.modify({
+                //     id: `ProjectDirectoryGet:${parentId}`, // Родительский объект
+                //     fields: {
+                //       directories(existingFragments = []) {
+                //         return [...existingFragments, incoming]
+                //       }
+                //     }
+                //   })
+                // }
               }
             }
           }
