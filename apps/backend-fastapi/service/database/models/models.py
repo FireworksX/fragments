@@ -46,13 +46,17 @@ class User(Base):
     def init(self) -> None:
         self.logo = None if self.avatar is None else self.avatar.public_path
 
+
 class ProjectApiKey(Base):
     __tablename__ = 'project_api_key'
     id = Column('id', Integer, primary_key=True, index=True)
-    project_id = Column('project_id', Integer, ForeignKey('project.id'))
-    project = relationship("Project")
     is_private = Column('is_private', Boolean, default=False)
-    key = Column('key', String, nullable=False)
+    key = Column('key', String, unique=True, nullable=False)
+
+    project_id = Column(Integer, ForeignKey("project.id", ondelete="CASCADE"), nullable=False)
+
+    # Back reference to Project (One-to-Many)
+    project = relationship("Project", back_populates="public_keys", foreign_keys=[project_id])
 
 
 class Project(Base):
@@ -72,12 +76,50 @@ class Project(Base):
         "FilesystemDirectory", foreign_keys=[root_directory_id]
     )
 
-    private_key_id = Column('private_key_id', Integer, ForeignKey('project_api_key.id'))
-    private_key = relationship(
-        "ProjectApiKey", foreign_keys=[private_key_id]
+    # One-to-Many: Project → Multiple API Keys
+    public_keys = relationship("ProjectApiKey", back_populates="project", cascade="all, delete-orphan",
+                               foreign_keys=[ProjectApiKey.project_id])
+
+    # One-to-One: Project → Private Key
+    private_key_id = Column(Integer, ForeignKey('project_api_key.id', ondelete="SET NULL"), unique=True, nullable=True)
+    private_key = relationship("ProjectApiKey", foreign_keys=[private_key_id], post_update=True)
+
+
+class FilesystemDirectory(Base):
+    __tablename__ = 'filesystem_directory'
+    id = Column('id', Integer, primary_key=True, index=True)
+    project_id = Column('project_id', Integer)
+    name = Column('name', String)
+    # Reference to the parent (nullable if top-level)
+    parent_id = Column(Integer, ForeignKey('filesystem_directory.id', ondelete="CASCADE"), nullable=True)
+    # Relationship to parent
+    parent = relationship(
+        "FilesystemDirectory",
+        back_populates="subdirectories",
+        remote_side="FilesystemDirectory.id"
     )
 
-    public_keys = relationship("ProjectApiKey", back_populates="project")
+    # Relationship to children
+    subdirectories = relationship(
+        "FilesystemDirectory",
+        back_populates="parent",
+        cascade="all, delete-orphan"
+    )
+
+    # Relationship to fragments in this directory
+    fragments = relationship(
+        "Fragment",
+        back_populates="directory",
+        cascade="all, delete-orphan"
+    )
+
+    @property
+    def items(self):
+        """
+        Return a combined list of subdirectories and fragments,
+        e.g. for display in a file manager.
+        """
+        return list(self.subdirectories) + list(self.fragments)
 
 
 class Campaign(Base):
@@ -219,6 +261,7 @@ fragment_usage = Table(
     ),
 )
 
+
 class Fragment(Base):
     __tablename__ = 'fragment'
 
@@ -235,7 +278,7 @@ class Fragment(Base):
     author = relationship("User")  # Relationship to the User table
 
     assets = relationship("FragmentMedia", back_populates="fragment", cascade="save-update, merge, "
-                                                                                      "delete, delete-orphan")
+                                                                              "delete, delete-orphan")
 
     directory_id = Column('directory_id', Integer, ForeignKey('filesystem_directory.id'), nullable=False)
     directory = relationship(
@@ -245,12 +288,13 @@ class Fragment(Base):
 
     linked_fragments = relationship(
         "Fragment",
-        secondary=fragment_usage,             # use the association table
+        secondary=fragment_usage,  # use the association table
         primaryjoin=id == fragment_usage.c.fragment_id,
         secondaryjoin=id == fragment_usage.c.used_fragment_id,
         # We do NOT define backref or symmetrical references here,
         # since we just want "Fragment has an array of fragments it is using."
     )
+
 
 class Landing(Base):
     __tablename__ = 'landing'
@@ -275,40 +319,3 @@ class Media(Base):
     path = Column('path', String)
     ext = Column('ext', String)
     public_path = Column('public_path', String)
-
-
-class FilesystemDirectory(Base):
-    __tablename__ = 'filesystem_directory'
-    id = Column('id', Integer, primary_key=True, index=True)
-    project_id = Column('project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'))
-    name = Column('name', String)
-    # Reference to the parent (nullable if top-level)
-    parent_id = Column(Integer, ForeignKey('filesystem_directory.id', ondelete="CASCADE"), nullable=True)
-    # Relationship to parent
-    parent = relationship(
-        "FilesystemDirectory",
-        back_populates="subdirectories",
-        remote_side="FilesystemDirectory.id"
-    )
-
-    # Relationship to children
-    subdirectories = relationship(
-        "FilesystemDirectory",
-        back_populates="parent",
-        cascade="all, delete-orphan"
-    )
-
-    # Relationship to fragments in this directory
-    fragments = relationship(
-        "Fragment",
-        back_populates="directory",
-        cascade="all, delete-orphan"
-    )
-
-    @property
-    def items(self):
-        """
-        Return a combined list of subdirectories and fragments,
-        e.g. for display in a file manager.
-        """
-        return list(self.subdirectories) + list(self.fragments)

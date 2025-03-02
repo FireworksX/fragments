@@ -7,7 +7,7 @@ from database import FilesystemDirectory
 from database.models import Project, User, ProjectMemberRole, ProjectApiKey
 from sqlalchemy.orm import Session
 from typing import Optional, List
-from conf.settings import ServiceSettings
+from conf.settings import service_settings
 
 
 def generate_api_key(project_id: int) -> str:
@@ -29,7 +29,7 @@ def generate_api_key(project_id: int) -> str:
     Returns:
       str: The generated API key.
     """
-    secret_key: str = ServiceSettings.ACCESS_TOKEN_SECRET_KEY
+    secret_key: str = service_settings.ACCESS_TOKEN_SECRET_KEY
     # Generate a random hex string (32 hex characters = 16 bytes)
     random_hex = secrets.token_hex(16)
 

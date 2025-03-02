@@ -45,7 +45,7 @@ async def project_db_to_project(info: strawberry.Info[Context], db: Session, pro
                       members=transform_project_members(project),
                       campaigns=await transform_project_campaigns(db, project),
                       private_key=project.private_key.key,
-                      public_keys=[] if project.private_key is None else [public_key.key for public_key in
+                      public_keys=[] if project.public_keys is None else [public_key.key for public_key in
                                                                           project.public_keys])
 
 

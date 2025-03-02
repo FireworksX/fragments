@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from typing import Optional, List
 
 from services.core.routes.schemas.landing import ClientLanding
-from ipgetter import get_location_by_ip, GeoLocation
+from .ipgetter import get_location_by_ip, GeoLocation
 
 
 async def create_landing_db(db: Session, name: str, project_id: int, stream_id: int, fragment_id: Optional[int] = None,
