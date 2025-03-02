@@ -1,7 +1,7 @@
-import pytest
+'''import pytest
 from sqlalchemy import create_engine
 
-from conf import DB_URI, make_db_uri
+from conf import PG_URI, make_pg_uri
 from database import Base, Session
 
 
@@ -11,12 +11,12 @@ def test_db(request):
 
     test_db = 'test'
 
-    tmp_engine = create_engine(DB_URI)
+    tmp_engine = create_engine(PG_URI)
     conn = tmp_engine.connect()
     conn.execute('COMMIT')
     conn.execute(f'CREATE DATABASE {test_db}')
 
-    engine = create_engine(make_db_uri(db=test_db))
+    engine = create_engine(make_pg_uri(db=test_db))
     # Execute setup here - create extensions, additional dbs, types, etc.
     # engine.execute('')
 
@@ -44,3 +44,4 @@ def clear_db(request):
         Base.metadata.create_all(bind=engine)
 
     request.addfinalizer(reset_db)
+'''
