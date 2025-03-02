@@ -78,7 +78,8 @@ async def change_project_private_api_key(db: Session, project_id: int) -> Projec
     db.add(api_key)
     db.commit()
     db.refresh(api_key)
-    project.private_key_id = api_key.id
+    project.private_key = api_key
+    db.commit()
     db.refresh(project)
     return project
 

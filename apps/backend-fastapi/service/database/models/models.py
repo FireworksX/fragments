@@ -78,7 +78,7 @@ class Project(Base):
 
     # One-to-Many: Project → Multiple API Keys
     public_keys = relationship("ProjectApiKey", back_populates="project", cascade="all, delete-orphan",
-                               foreign_keys=[ProjectApiKey.project_id])
+                               foreign_keys=[ProjectApiKey.project_id], primaryjoin="and_(Project.id == ProjectApiKey.project_id, ProjectApiKey.is_private == False)",)
 
     # One-to-One: Project → Private Key
     private_key_id = Column(Integer, ForeignKey('project_api_key.id', ondelete="SET NULL"), unique=True, nullable=True)

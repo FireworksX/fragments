@@ -47,7 +47,7 @@ async def update_landing_by_id_db(db: Session, values: dict) -> Landing:
     return landing
 
 
-def stream_matches_client(stream: Stream, client: ClientLanding) -> bool:
+async def stream_matches_client(stream: Stream, client: ClientLanding) -> bool:
     client_location: GeoLocation = get_location_by_ip(client.ip_address)
     if stream.pages_filter:
         toggled_pages = [pf for pf in stream.pages_filter if pf.toggled]
@@ -85,7 +85,7 @@ def stream_matches_client(stream: Stream, client: ClientLanding) -> bool:
     return True
 
 
-def get_best_landing(db: Session, client: ClientLanding, project_id: int) -> Optional[Landing]:
+async def get_best_landing(db: Session, client: ClientLanding, project_id: int) -> Optional[Landing]:
     streams = db.query(Stream).filter(
         Stream.project_id == project_id,
         Stream.active == True,
