@@ -1,0 +1,3 @@
+mutation DeleteProjectDirectory($id: Int!) {
+    deleteDirectory(directoryId: $id)
+}

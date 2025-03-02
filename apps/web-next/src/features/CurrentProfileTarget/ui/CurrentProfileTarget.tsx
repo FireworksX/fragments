@@ -4,11 +4,10 @@ import { FC } from 'react'
 import { Touchable } from '@/shared/ui/Touchable'
 import { Avatar } from '@/shared/ui/Avatar'
 import { CurrentProfileDropdown } from './CurrentProfileDropdown'
-import { useQuery } from '@apollo/client'
-import { CURRENT_USER } from '@/shared/queries/currentUser'
+import { useCurrentUser } from '@/shared/hooks/useCurrentUser'
 
 export const CurrentProfileTarget: FC = () => {
-  const { data } = useQuery(CURRENT_USER)
+  const { data } = useCurrentUser()
 
   return (
     <Dropdown trigger='click' options={<CurrentProfileDropdown />}>

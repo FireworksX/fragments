@@ -5,8 +5,7 @@ import { JWT } from 'next-auth/jwt'
 import axiosLib from 'axios'
 import { axios } from '@/shared/api/axios'
 import { getClient, query } from '@/shared/api/ApolloRSCClient'
-import { AUTH_LOGIN } from '@/app/queries/authLogin'
-import { AUTH_SIGN_IN } from '@/shared/queries/authSignIn'
+import { AuthSignInDocument } from '@/app/lib/queries/AuthSignIn.generated'
 // Your own logic for dealing with plaintext password strings; be careful!
 // import { saltAndHashPassword } from "@/utils/password"
 
@@ -26,7 +25,7 @@ export const authOptions: NextAuthOptions = {
       authorize: async credentials => {
         try {
           const { data, errors } = await getClient().mutate({
-            mutation: AUTH_SIGN_IN,
+            mutation: AuthSignInDocument,
             variables: { email: credentials.email, password: credentials.password }
           })
 

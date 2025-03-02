@@ -1,14 +1,24 @@
 {
   "schema": "http://localhost/graphql",
   "documents": [
-    "src/**/*.{ts,tsx}"
+    "src/**/*.gql"
   ],
   "generates": {
-    "./src/__generated__/": {
-      "preset": "client",
+    "src": {
+      "preset": "near-operation-file",
       "presetConfig": {
-        "gqlTagName": "gql"
-      }
+        "extension": ".generated.ts",
+        "baseTypesPath": "/__generated__/types.ts"
+      },
+      "plugins": [
+        "typescript-operations",
+        "typescript-react-apollo"
+      ]
+    },
+    "src/__generated__/types.ts": {
+      "plugins": [
+        "typescript"
+      ]
     }
   },
   "ignoreNoDocuments": true

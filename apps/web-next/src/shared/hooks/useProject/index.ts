@@ -1,12 +1,12 @@
 import { useParams } from 'next/navigation'
 import { useQuery } from '@apollo/client'
-import { PROJECT } from '@/shared/hooks/useProject/lib/project'
+import { useProjectQuery } from './queries/Project.generated'
 
 export const useProject = () => {
   const { projectSlug: urlProjectSlug } = useParams()
   const projectSlug = urlProjectSlug ? +urlProjectSlug : 0
 
-  const { data, loading } = useQuery(PROJECT, {
+  const { data, loading } = useProjectQuery({
     variables: {
       projectSlug
     }

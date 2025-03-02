@@ -8,11 +8,13 @@ import { modalNames } from '@/shared/data'
 import { useMutation, useQuery } from '@apollo/client'
 import { CREATE_PROJECT } from '@/views/ProjectsList/lib/createProject'
 import { PROJECTS_LIST } from '@/views/ProjectsList/lib/projectsList'
+import { useProjectsListQuery } from '@/views/ProjectsList/queries/ProjectsList.generated'
+import { useCreateProjectMutation } from '@/views/ProjectsList/queries/CreateProject.generated'
 
 export const useProjectsListView = () => {
   const [, updateModal] = useGraph(modalStore, modalStore.key)
-  const [executeCreateProject, createProjectData] = useMutation(CREATE_PROJECT)
-  const { data } = useQuery(PROJECTS_LIST)
+  const [executeCreateProject, createProjectData] = useCreateProjectMutation()
+  const { data } = useProjectsListQuery()
 
   const onCreateProject: CreateProjectModalContext['onCreate'] = async project => {
     await executeCreateProject({

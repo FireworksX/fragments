@@ -7,10 +7,10 @@ import { useParams } from 'next/navigation'
 import { useSearchParam } from '@/shared/hooks/useSearchParams'
 import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
 import { gql, useApolloClient, useQuery } from '@apollo/client'
-import { FRAGMENTS_NAMES } from '@/views/FragmentsBuilder/widgets/BuilderFragmentTabs/lib/fragmentsNames'
 import { useProject } from '@/shared/hooks/useProject'
 import { useBuilderDocumentManager } from '@/shared/hooks/fragmentBuilder/useBuilderDocumentManager'
 import { usePrevious } from 'react-use'
+import { useFragmentsNamesQuery } from '@/views/FragmentsBuilder/widgets/BuilderFragmentTabs/queries/FragmentsNames.generated'
 
 export const useBuilderTabs = () => {
   const { projectSlug } = useProject()
@@ -23,7 +23,7 @@ export const useBuilderTabs = () => {
   const prevTabsNodes = usePrevious(tabsNodes)
   const apolloClient = useApolloClient()
 
-  const { data: fragmentsNames } = useQuery(FRAGMENTS_NAMES, {
+  const { data: fragmentsNames } = useFragmentsNamesQuery({
     variables: {
       projectSlug,
       fragmentIds: resultTabsNodes.map(tab => Number(tab.id))

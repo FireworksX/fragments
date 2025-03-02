@@ -1,0 +1,7 @@
+mutation CreateProjectFragment($projectSlug: Int!, $name: String!, $parentId: Int!) {
+    createFragment(fg: { name: $name, projectId: $projectSlug, document: "{}", directoryId: $parentId }) {
+        id
+        name
+        directoryId
+    }
+}

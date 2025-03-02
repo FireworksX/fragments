@@ -7,8 +7,7 @@ import { requestType } from '@/shared/hooks/requests/requestConfig'
 import { DropdownGroup } from '@/shared/ui/DropdownGroup'
 import { Container } from '@/shared/ui/Container'
 import { DropdownOption } from '@/shared/ui/DropdownOption'
-import { useQuery } from '@apollo/client'
-import { CURRENT_USER } from '@/shared/queries/currentUser'
+import { useCurrentUser } from '@/shared/hooks/useCurrentUser'
 
 interface CurrentProfileDropdownProps {
   className?: string
@@ -16,7 +15,7 @@ interface CurrentProfileDropdownProps {
 
 export const CurrentProfileDropdown: FC<CurrentProfileDropdownProps> = ({ className }) => {
   const { trigger } = useSignOut()
-  const { data, loading, error } = useQuery(CURRENT_USER)
+  const { data, loading, error } = useCurrentUser()
 
   if (!loading || error) return
 

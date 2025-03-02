@@ -11,6 +11,8 @@ import { nodes } from '@fragments/plugin-fragment'
 import { makeSnapshot } from '@fragments/renderer-editor'
 import { useGlobalContext } from '@fragments/renderer-editor'
 import { getButtonFragment } from '@/shared/data/buttonFragment'
+import { useFragmentDocumentQuery } from '@/shared/hooks/fragmentBuilder/useBuilderDocumentManager/queries/FragmentDocument.generated'
+import { useUpdateFragmentDocumentMutation } from '@/shared/hooks/fragmentBuilder/useBuilderDocumentManager/queries/UpdateFragmentDocument.generated'
 
 export const useBuilderDocumentManager = () => {
   const { context: globalContext } = useGlobalContext()
@@ -23,11 +25,11 @@ export const useBuilderDocumentManager = () => {
     data,
     loading: fetchingDocument,
     refetch
-  } = useQuery(FRAGMENT_DOCUMENT, {
+  } = useFragmentDocumentQuery({
     skip: true
   })
 
-  const [updateFragment, { loading: fetchingUpdate }] = useMutation(UPDATE_FRAGMENT_DOCUMENT, {
+  const [updateFragment, { loading: fetchingUpdate }] = useUpdateFragmentDocumentMutation({
     variables: {
       fragmentSlug: +currentFragmentId
     }
@@ -43,7 +45,7 @@ export const useBuilderDocumentManager = () => {
       const document =
         typeof fragment?.document === 'string' ? JSON.parse(fragment.document ?? '{}') : fragment?.document
 
-      const resultDocument = getEmptyFragment(fragment?.id) //Object.keys(document).length === 0 ? getEmptyFragment(fragment?.id) : document
+      const resultDocument = Object.keys(document).length === 0 ? getEmptyFragment(fragment?.id) : document
 
       globalContext.createFragmentManager('button', getButtonFragment())
 

@@ -1,0 +1,12 @@
+query CurrentUser {
+    profile {
+        user {
+            id
+            email
+            firstName
+            lastName
+        }
+        accessToken
+        refreshToken
+    }
+}

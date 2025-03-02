@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@apollo/client": "^3.11.8",
-    "@fragments/renderer-editor": "workspace:*",
     "@apollo/experimental-nextjs-app-support": "^0.11.3",
     "@dnd-kit/core": "^6.1.0",
     "@dnd-kit/modifiers": "^9.0.0",
@@ -21,6 +20,7 @@
     "@feature-sliced/cli": "^1.0.0",
     "@fragments/plugin-fragment": "workspace:*",
     "@fragments/plugin-fragment-spring": "workspace:*",
+    "@fragments/renderer-editor": "workspace:*",
     "@fragments/springs-factory": "workspace:*",
     "@fragments/utils": "workspace:*",
     "@graph-state/checkers": "^0.1.2",
@@ -61,6 +61,10 @@
   "devDependencies": {
     "@graphql-codegen/cli": "^5.0.3",
     "@graphql-codegen/client-preset": "^4.4.0",
+    "@graphql-codegen/near-operation-file-preset": "^3.0.0",
+    "@graphql-codegen/typescript": "^4.1.5",
+    "@graphql-codegen/typescript-operations": "^4.5.1",
+    "@graphql-codegen/typescript-react-apollo": "^4.3.2",
     "@graphql-typed-document-node/core": "^3.2.0",
     "@parcel/watcher": "^2.4.1",
     "@svgr/webpack": "^8.1.0",

@@ -1,0 +1,13 @@
+query ProjectDirectory($directoryId: Int!) {
+    directory(directoryId: $directoryId) {
+        id
+        parentId
+        name
+        hasSubdirectories
+        hasFragments
+        fragments {
+            id
+            name
+        }
+    }
+}
