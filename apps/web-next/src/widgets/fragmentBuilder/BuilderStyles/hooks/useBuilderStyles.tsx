@@ -3,6 +3,7 @@ import { nodes } from '@fragments/plugin-fragment'
 import { isValue } from '@fragments/utils'
 import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
+import { useEffect } from 'react'
 
 export const useBuilderStyles = () => {
   const { selection } = useBuilderSelection()

@@ -1,4 +1,4 @@
-import { use, useContext, useEffect } from "react";
+import { use, useContext, useEffect, useMemo } from "react";
 import { FragmentContext } from "@/components/Fragment/FragmentContext.tsx";
 import { useLayerValue } from "@/shared/hooks/useLayerValue.ts";
 import { isVariableLink } from "@/lib/zod.ts";
@@ -15,7 +15,7 @@ export const useLayerVariableValue = (
     use(InstanceContext);
   const { manager: fragmentManager } = use(FragmentContext);
   const resultManager = manager ?? fragmentManager;
-  const [layerValue, updateValue, info] = useLayerValue(
+  const [layerValue, updateValue, layerInfo] = useLayerValue(
     layerKey,
     fieldKey,
     resultManager
@@ -32,13 +32,18 @@ export const useLayerVariableValue = (
     layerValue
   );
 
+  const info = useMemo(
+    () => ({
+      ...layerInfo,
+      isVariable,
+      rawValue: layerValue,
+    }),
+    [layerInfo, isVariable]
+  );
+
   return [
     isVariable ? instanceValue ?? variableValue : layerValue,
     updateValue,
-    {
-      ...info,
-      isVariable,
-      rawValue: layerValue,
-    },
+    info,
   ];
 };

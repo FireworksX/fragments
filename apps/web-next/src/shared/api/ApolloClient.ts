@@ -38,12 +38,12 @@ export function makeApolloClient() {
           fields: {
             deleteFragment: {
               merge(_, _incoming, { cache, variables }) {
-                cache.evict({ id: `FragmentGet:${variables?.fragmentId}` })
+                cache.evict({ id: `FragmentGet:${variables?.id}` })
               }
             },
             deleteDirectory: {
               merge(_, _incoming, { cache, variables }) {
-                cache.evict({ id: `ProjectDirectoryGet:${variables?.directoryId}` })
+                cache.evict({ id: `ProjectDirectoryGet:${variables?.id}` })
               }
             },
             createFragment: {

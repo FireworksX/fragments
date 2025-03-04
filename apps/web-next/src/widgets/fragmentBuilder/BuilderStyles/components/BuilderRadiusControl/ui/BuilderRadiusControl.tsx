@@ -33,6 +33,18 @@ export const BuilderRadiusControl: FC<BuilderRadiusControlProps> = memo(({ class
     setValue(borderRadiusSides.map(toPx).join(' '))
   }
 
+  const setCornerModeProxy = mode => {
+    if (mode === 'sides') {
+      const radius = value ?? '0px'
+      setValue([radius, radius, radius, radius].join(' '))
+    } else {
+      const radius = value?.split(' ')?.at(0) ?? '0px'
+      setValue(radius)
+    }
+
+    setCornerMode(mode)
+  }
+
   return (
     <>
       <ControlRow
@@ -57,7 +69,7 @@ export const BuilderRadiusControl: FC<BuilderRadiusControlProps> = memo(({ class
             }
           ]}
           value={cornerMode}
-          onChange={({ name }) => setCornerMode(name)}
+          onChange={({ name }) => setCornerModeProxy(name)}
         />
       </ControlRow>
       {cornerMode === 'sides' && (

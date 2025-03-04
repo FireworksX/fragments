@@ -7,16 +7,18 @@ import { removeChildren } from '@fragments/renderer-editor'
 
 export const useBuilderLayerFlags = (layerKey: LinkKey) => {
   const { documentManager } = useBuilderDocument()
-  const layerInfo = useLayerInfo(layerKey)
-  const [visible, setVisible] = useLayerValue('visible', layerKey)
-  const [layerMode, setLayerMode] = useLayerValue('layerMode', layerKey)
-  const [layerDirection, setLayerDirection] = useLayerValue('layerDirection', layerKey)
+  // const layerInfo = useLayerInfo(layerKey)
+  const [visible, setVisible] = useLayerValue('visible', layerKey, null, 'flags')
+  // const [layerMode, setLayerMode] = useLayerValue('layerMode', layerKey)
+  // const [layerDirection, setLayerDirection] = useLayerValue('layerDirection', layerKey)
 
-  const hasLayout = layerMode === defLayerMode?.flex
-  const canRemove = layerInfo.type === nodes.Breakpoint ? !layerInfo?.isPrimary : true
-  const canWrap = layerInfo.type !== nodes.Breakpoint
-  const canDuplicate = layerInfo.type !== nodes.Fragment
-  const canRemoveWrapper = layerInfo.type === nodes.Frame && layerInfo.layer?.children?.length > 0
+  const layerInfo = {}
+  // const visible = true
+  const hasLayout = false //layerMode === defLayerMode?.flex
+  const canRemove = false //layerInfo.type === nodes.Breakpoint ? !layerInfo?.isPrimary : true
+  const canWrap = false //layerInfo.type !== nodes.Breakpoint
+  const canDuplicate = false //layerInfo.type !== nodes.Fragment
+  const canRemoveWrapper = false //layerInfo.type === nodes.Frame && layerInfo.layer?.children?.length > 0
 
   const remove = () => removeChildren(documentManager, layerKey)
 
@@ -27,8 +29,8 @@ export const useBuilderLayerFlags = (layerKey: LinkKey) => {
   return {
     type: layerInfo.type,
     isVisible: layerInfo.type !== nodes.Fragment ? visible : true,
-    layerDirection,
-    layerMode,
+    layerDirection: '',
+    layerMode: '',
     hasLayout,
     canRemove,
     remove,

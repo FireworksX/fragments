@@ -8,6 +8,7 @@ import { nodes } from "@fragments/plugin-fragment";
 
 export const useFragment = (fragmentId: string) => {
   const manager = useFragmentManager(fragmentId);
+
   const layerKey = `${nodes.Fragment}:${fragmentId}`;
   const [ref, fragmentRect] = useMeasure();
   const children = useLayerChildren(layerKey, manager);

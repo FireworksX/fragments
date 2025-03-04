@@ -17,3 +17,9 @@
     transform: initial !important;
     position: static;
 }
+
+.properties {
+    position: absolute;
+    right: 30px;
+    top: 30px;
+}

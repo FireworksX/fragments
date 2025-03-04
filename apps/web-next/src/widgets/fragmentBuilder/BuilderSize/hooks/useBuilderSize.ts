@@ -20,7 +20,7 @@ export const useBuilderSize = () => {
   const [aspectRatio, setAspectRatio] = useLayerValue('aspectRatio')
   const { width: isAllowResizeWidth, height: isAllowResizeHeight } = useAllowResize()
 
-  const hugContentEnabled = !!layer?.children?.length || type === nodes.Text || type === nodes.FragmentInstance
+  const hugContentEnabled = !!layer?.children?.length || type === nodes.Text || type === nodes.Instance
   const fillContentEnabled = canRelativeSize && parentLayerMode === layerMode.flex
 
   return {

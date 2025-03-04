@@ -9,14 +9,16 @@ import { FragmentPreviewProvider } from '@/views/FragmentPreview/lib/FragmentPre
 import { useRenderTarget } from '@/widgets/renderer/hooks/useRenderTarget'
 import { renderTarget as defRenderTarget } from '@fragments/plugin-fragment'
 import { Fragment } from '@fragments/renderer-editor'
+import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
+import { BuilderPreviewProperties } from '@/views/FragmentPreview/components/BuilderPreviewProperties'
 
 interface FragmentPreviewProps {
   className?: string
 }
 
 export const FragmentPreview: FC<FragmentPreviewProps> = ({ className }) => {
-  const { documentManager } = useBuilderDocument()
   const { setRenderTarget } = useRenderTarget()
+  const { currentFragmentId } = useBuilder()
 
   useEffect(() => {
     setRenderTarget(defRenderTarget.document)
@@ -26,8 +28,9 @@ export const FragmentPreview: FC<FragmentPreviewProps> = ({ className }) => {
     <FragmentPreviewProvider>
       <div className={cn(styles.root, className)} data-testid='BuilderPreview'>
         <div className={styles.body}>
+          <BuilderPreviewProperties className={styles.properties} />
           <BuilderPreviewContainer>
-            <Fragment layerKey={documentManager.$fragment.root} manager={documentManager} />
+            <Fragment fragmentId={currentFragmentId} />
             {/*<Fragment layerKey={documentManager.$fragment.root} />*/}
           </BuilderPreviewContainer>
         </div>

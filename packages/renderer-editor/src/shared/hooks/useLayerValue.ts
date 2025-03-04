@@ -1,4 +1,4 @@
-import { useCallback, useContext, useMemo } from "react";
+import { useCallback, useContext, useEffect, useMemo } from "react";
 import { GraphState, LinkKey } from "@graph-state/core";
 import { useGraph } from "@graph-state/react";
 import { pick } from "@fragments/utils";
@@ -70,7 +70,7 @@ export const useLayerValue = (
       isVariable: isVariableLink(currentValue),
       restore,
     };
-  }, [restore, currentValue]);
+  }, []);
 
   return [currentValue, updateValue, info];
 };

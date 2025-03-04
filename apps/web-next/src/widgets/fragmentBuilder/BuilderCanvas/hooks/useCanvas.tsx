@@ -32,7 +32,7 @@ export const useCanvas = () => {
   const pointerRef = useRef<ElementRef<'div'>>(null)
   const dragMoveHandler = useDragMove()
   const dragCollisionsHandler = useDragCollisions()
-  const { createText } = useBuilderCreator()
+  const { createText, createFrame } = useBuilderCreator()
 
   useEffect(() => {
     const handler = (e: Event) => e.preventDefault()
@@ -74,7 +74,14 @@ export const useCanvas = () => {
           if (createType === nodes.Text) {
             const [nextLayerKey] = createText(layerKey, { content: 'text' })
             manager.setCreatorType(null)
-            canvasManager.setFocus(nextLayerKey)
+
+            nextTick(() => {
+              canvasManager.setFocus(nextLayerKey)
+            })
+          }
+          if (createType === nodes.Frame) {
+            const [nextLayerKey] = createFrame(layerKey)
+            manager.setCreatorType(null)
 
             nextTick(() => {
               canvasManager.setFocus(nextLayerKey)

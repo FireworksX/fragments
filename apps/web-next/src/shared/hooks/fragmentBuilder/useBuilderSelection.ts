@@ -3,7 +3,7 @@ import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanva
 import { isRootLayer } from '@fragments/renderer-editor'
 import { useEffect } from 'react'
 
-export const useBuilderSelection = () => {
+export const useBuilderSelection = a => {
   const { documentManager } = useBuilderDocument()
   const { canvas, manager: canvasManager } = useBuilderCanvas()
   const selectionLayerKey = canvas.focusLayer

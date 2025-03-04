@@ -35,7 +35,12 @@ export const useLayerStyles = (layerKey: LinkKey) => {
     background: background$,
     display: display$,
     border: border$,
-    ...layout,
+    gap: layout.gap$,
+    flexWrap: layout.flexWrap$,
+    justifyContent: layout.justifyContent$,
+    flexDirection: layout.flexDirection$,
+    alignItems: layout.alignItems$,
+    padding: layout.padding$,
     userSelect: "none",
   };
 
