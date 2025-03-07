@@ -4,18 +4,20 @@ import styles from './styles.module.css'
 import { Container } from '@/shared/ui/Container'
 import { Touchable } from '@/shared/ui/Touchable'
 import { isValue } from '@fragments/utils'
+import { Link } from '@/shared/ui/Link'
 
 interface CampaignPreviewItemProps {
   name: string
   logo?: string
   isActive?: boolean
+  slug: string
   stats?: { label: string; value: string }[]
   className?: string
 }
 
-export const CampaignPreviewItem: FC<CampaignPreviewItemProps> = ({ className, name, isActive, stats, logo }) => {
+export const CampaignPreviewItem: FC<CampaignPreviewItemProps> = ({ className, name, slug, isActive, stats, logo }) => {
   return (
-    <Touchable className={cn(className)}>
+    <Link className={cn(className)} type='campaign' campaignSlug={slug}>
       <Container className={styles.root}>
         <div className={styles.header}>
           {isValue(isActive) && (
@@ -36,6 +38,6 @@ export const CampaignPreviewItem: FC<CampaignPreviewItemProps> = ({ className, n
           </div>
         )}
       </Container>
-    </Touchable>
+    </Link>
   )
 }

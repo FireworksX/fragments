@@ -1,13 +1,12 @@
-import { useMutation, useQuery } from '@apollo/client'
 import { useParams } from 'next/navigation'
-import { CAMPAIGN_DETAIL } from '@/shared/api/campaign/query/campaignDetail'
-import { CHANGE_CAMPAIGN_ACTIVE } from '@/shared/api/campaign/mutation/changeCampaignActive'
+import { useCampaignDetailQuery } from '@/views/CampaignDetailLayout/queries/CampaignDetail.generated'
+import { useChangeCampaignActiveMutation } from '@/views/CampaignDetailLayout/queries/ChangeCampaignActive.generated'
 
 export const useCampaignDetail = () => {
   const { campaignSlug, projectSlug, streamSlug } = useParams()
 
-  const [executeChangeCampaignActive, { loading: loadingChangeCampaignActive }] = useMutation(CHANGE_CAMPAIGN_ACTIVE)
-  const { data: campaignData } = useQuery(CAMPAIGN_DETAIL, {
+  const [executeChangeCampaignActive, { loading: loadingChangeCampaignActive }] = useChangeCampaignActiveMutation()
+  const { data: campaignData } = useCampaignDetailQuery({
     variables: { campaignSlug: +campaignSlug }
   })
   const campaign = campaignData?.campaign?.at(0)

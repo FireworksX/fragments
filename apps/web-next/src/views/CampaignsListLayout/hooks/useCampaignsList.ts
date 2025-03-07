@@ -6,12 +6,14 @@ import { useGraph } from '@graph-state/react'
 import { useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import { campaignsList } from '../lib/campaingsList'
+import { useCampaignsListQuery } from '@/views/CampaignsListLayout/queries/CampaingsList.generated'
+import { useCreateCampaignMutation } from '@/views/CampaignsListLayout/queries/CreateCampaign.generated'
 
 export const useCampaignsList = () => {
   const { projectSlug } = useParams()
   const [, updateModal] = useGraph(modalStore, modalStore.key)
-  const [createCampaign, { data: createdCampaign, loading: createCampaignLoading }] = useMutation(CREATE_CAMPAIGN)
-  const { data: campaignsListData, loading: campaignsListLoading } = useQuery(campaignsList, {
+  const [createCampaign, { data: createdCampaign, loading: createCampaignLoading }] = useCreateCampaignMutation()
+  const { data: campaignsListData } = useCampaignsListQuery({
     variables: {
       projectId: +projectSlug
     }

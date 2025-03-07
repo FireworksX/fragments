@@ -1,0 +1,6 @@
+mutation ChangeCampaignActive($campaignSlug: Int!, $active: Boolean!) {
+    updateCampaign(cmp: { id: $campaignSlug, active: $active }) {
+        id
+        active
+    }
+}

@@ -26,6 +26,7 @@ export const CampaignsListLayout = ({ children }) => {
               key={campaign.id}
               className={styles.card}
               name={campaign.name}
+              slug={campaign.id}
               isActive={campaign.active}
             />
           ))}

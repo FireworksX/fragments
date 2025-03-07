@@ -6,20 +6,20 @@ import { CHANGE_STREAM_ACTIVE } from '@/shared/api/stream/mutation/changeStreamA
 
 export const useStreamPreviewItem = (item: StreamPreviewItemProps) => {
   const { campaignSlug } = useParams()
-  const [executeUpdateStream, { loading: loadingUpdateStream }] = useMutation(CHANGE_STREAM_ACTIVE)
+  // const [executeUpdateStream, { loading: loadingUpdateStream }] = useMutation(CHANGE_STREAM_ACTIVE)
 
   const toggleActive = () => {
-    executeUpdateStream({
-      variables: {
-        streamSlug: +item.id,
-        campaignSlug: +campaignSlug,
-        active: !item.active
-      }
-    })
+    // executeUpdateStream({
+    //   variables: {
+    //     streamSlug: +item.id,
+    //     campaignSlug: +campaignSlug,
+    //     active: !item.active
+    //   }
+    // })
   }
 
   return {
     toggleActive,
-    loadingUpdateStream
+    loadingUpdateStream: false
   }
 }

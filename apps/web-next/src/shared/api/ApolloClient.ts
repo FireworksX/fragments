@@ -93,6 +93,19 @@ export function makeApolloClient() {
                   })
                 }
               }
+            },
+
+            createCampaign: {
+              merge(outcome, incoming, { cache, variables }) {
+                cache.modify({
+                  fields: {
+                    campaign(list = []) {
+                      console.log(list, incoming, outcome)
+                      return [...list, incoming]
+                    }
+                  }
+                })
+              }
             }
           }
         }

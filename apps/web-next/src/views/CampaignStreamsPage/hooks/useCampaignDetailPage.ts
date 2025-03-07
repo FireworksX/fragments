@@ -6,13 +6,14 @@ import { useEffect } from 'react'
 import { useGraph } from '@graph-state/react'
 import { LIST_STREAMS } from '../lib/listStreams'
 import { DEFAULT_LOCAL_STREAM } from '@/widgets/modals/ConfigureStreamModal'
+import { useListSteamsQuery } from '@/views/CampaignStreamsPage/queries/ListStreams.generated'
 
 export const useCampaignDetailPage = () => {
   const { campaignSlug, projectSlug } = useParams()
   // const [executeCreateStream, { loading: loadingCreateStream }] = useMutation(CREATE_STREAM)
   // const [executeUpdateStream, { loading: loadingUpdateStream }] = useMutation(UPDATE_STREAM)
   // const [, updateModal] = useGraph(modalStore, modalStore.key)
-  const { data: listStreams } = useQuery(LIST_STREAMS, {
+  const { data: listStreams } = useListSteamsQuery({
     variables: {
       campaignSlug: +campaignSlug
     }
