@@ -7,6 +7,11 @@ export const createManager = (fragmentKey: LinkKey, initialDocument = {}) => {
     _id: "root",
   };
 
+  const springGraph = {
+    _type: "Spring",
+    _id: "root",
+  };
+
   const manager = createState({
     _type: "FragmentManager",
     initialState: initialDocument,
@@ -22,6 +27,7 @@ export const createManager = (fragmentKey: LinkKey, initialDocument = {}) => {
   });
 
   manager.mutate(tempGraph);
+  manager.mutate(springGraph);
 
   return manager;
 };

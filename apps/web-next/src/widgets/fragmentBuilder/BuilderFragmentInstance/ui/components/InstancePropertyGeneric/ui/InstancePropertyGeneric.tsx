@@ -14,6 +14,8 @@ import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDoc
 import { GraphState, LinkKey } from '@graph-state/core'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { useInstancePropertyValue } from '@fragments/renderer-editor'
+import { useLayerVariableValue } from '@fragments/renderer-editor'
+import { useLayer } from '@fragments/renderer-editor'
 
 interface InstancePropertyGenericProps {
   property: LinkKey

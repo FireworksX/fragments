@@ -14,6 +14,8 @@ import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDoc
 import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
 import { useBuilderCreator } from '@/shared/hooks/fragmentBuilder/useBuilderCreator'
 import { nextTick } from '@/shared/utils/nextTick'
+import { useLayerValue$ } from '@fragments/renderer-editor'
+import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 
 export const SCALE = {
   min: 0.25,
@@ -23,6 +25,7 @@ export const SCALE = {
 export type DragEvent = Parameters<Parameters<typeof useDrag>[0]>[0]
 
 export const useCanvas = () => {
+  const { selection } = useBuilderSelection()
   const { builderManager } = useContext(BuilderContext)
   const { documentManager } = useBuilderDocument()
   const { canvas, manager: canvasManager } = useBuilderCanvas()
@@ -33,6 +36,7 @@ export const useCanvas = () => {
   const dragMoveHandler = useDragMove()
   const dragCollisionsHandler = useDragCollisions()
   const { createText, createFrame } = useBuilderCreator()
+  const [_, up] = useLayerValue$(selection, 'left', documentManager)
 
   useEffect(() => {
     const handler = (e: Event) => e.preventDefault()
@@ -164,10 +168,12 @@ export const useCanvas = () => {
         const dragPoint = dragMoveHandler(dragEvent)
         // dragPoint = dragCollisionsHandler(dragEvent, dragPoint)
 
-        documentManager.mutate(dragEvent.memo?.targetLayerLink, {
-          top: dragPoint.y,
-          left: dragPoint.x
-        })
+        // documentManager.mutate(dragEvent.memo?.targetLayerLink, {
+        //   top: dragPoint.y,
+        //   left: dragPoint.x
+        // })
+
+        up(dragPoint.x)
 
         return dragEvent.memo
       },

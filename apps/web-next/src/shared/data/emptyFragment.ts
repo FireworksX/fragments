@@ -47,7 +47,7 @@ export const getEmptyFragment = (fragmentId: string) => {
       opacity: 1,
       visible: true,
       overflow: 'visible',
-      children: [`Frame:${nId}`, 'Instance:123', 'Instance:321'],
+      children: [`Frame:${nId}`],
       width: 320,
       height: 200,
       layoutSizingHorizontal: 'Fixed',
@@ -76,4 +76,30 @@ export const getEmptyFragment = (fragmentId: string) => {
       name: 'Frame'
     }
   }
+}
+
+const cardComponent = {
+  _type: 'Component',
+  _id: 'card',
+  children: [
+    { _type: 'Frame' },
+    {
+      _type: 'Instance',
+      ref: 'Component:button',
+      props: {
+        opacity: 1,
+        content: 'Action'
+      }
+    }
+  ]
+}
+
+const buttonComponent = {
+  _type: 'Component',
+  _id: 'button',
+  propsDefinition: {
+    opacity: 'number',
+    content: 'string'
+  },
+  children: [{ _type: 'Frame', style: { opacity: 'Component:button.opacity' } }]
 }

@@ -11,6 +11,8 @@ import { renderTarget as defRenderTarget } from '@fragments/plugin-fragment'
 import { Fragment } from '@fragments/renderer-editor'
 import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
 import { BuilderPreviewProperties } from '@/views/FragmentPreview/components/BuilderPreviewProperties'
+import { Instance } from '@fragments/renderer-editor'
+import { useInstancePropertyValue } from '@fragments/renderer-editor/src'
 
 interface FragmentPreviewProps {
   className?: string
@@ -30,7 +32,19 @@ export const FragmentPreview: FC<FragmentPreviewProps> = ({ className }) => {
         <div className={styles.body}>
           <BuilderPreviewProperties className={styles.properties} />
           <BuilderPreviewContainer>
-            <Fragment fragmentId={currentFragmentId} />
+            {/*<Fragment fragmentId={currentFragmentId} />*/}
+            <Instance
+              fragmentId={currentFragmentId}
+              props={{
+                '141a87103cfbe': 0.1
+              }}
+            />
+            {/*<Instance*/}
+            {/*  fragment={'18'}*/}
+            {/*  props={{*/}
+            {/*    '62218c840bd11': 0.4*/}
+            {/*  }}*/}
+            {/*/>*/}
             {/*<Fragment layerKey={documentManager.$fragment.root} />*/}
           </BuilderPreviewContainer>
         </div>

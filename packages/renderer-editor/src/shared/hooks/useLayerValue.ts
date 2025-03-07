@@ -5,10 +5,9 @@ import { pick } from "@fragments/utils";
 import { isVariableLink } from "@/lib/zod.ts";
 import { FragmentContext } from "@/components/Fragment/FragmentContext.tsx";
 import { useLayer } from "@/shared/hooks/useLayer.ts";
-import { layerSchema } from "@/shared/schemas/styles/layerSchema.ts";
 
 /**
- * Этот хук обслуживает логику получения и зменения значения.
+ * Этот хук обслуживает логику получения и изменения значения.
  * Принимает слой и его поле с которым будем работать.
  * При изменении значения валидирует поле, если пытаемся установить
  * не валидные данные, то обновление будет пропущено.
@@ -39,7 +38,12 @@ export const useLayerValue = (
   }, [updateLayerData, resultManager]);
 
   const updateValue = useCallback(
-    (value: unknown) => {
+    (inputValue: unknown) => {
+      let value = inputValue;
+      if (typeof value === "function") {
+        value = value(currentValue);
+      }
+
       const schemaField = schema?.shape?.[fieldKey];
       const { success: isValid } = schemaField?.safeParse(value) ?? {};
 
@@ -65,12 +69,12 @@ export const useLayerValue = (
     [schema, updateLayerData, fieldKey, currentValue]
   );
 
-  const info = useMemo(() => {
-    return {
+  return [
+    currentValue,
+    updateValue,
+    {
       isVariable: isVariableLink(currentValue),
       restore,
-    };
-  }, []);
-
-  return [currentValue, updateValue, info];
+    },
+  ];
 };

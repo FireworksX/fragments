@@ -8,17 +8,22 @@ import { FragmentContext } from "@/components/Fragment/FragmentContext.tsx";
 import { useLayerStyleValue } from "@/shared/hooks/useLayerStyles/useLayerStyleValue.ts";
 import { InstanceContext } from "@/components/Instance";
 import { useLayerVariableValue } from "@/shared/hooks/useLayerVariableValue.ts";
+import { useReadInstanceProperty } from "@/shared/hooks/useReadInstanceProperty.ts";
 
 const autoSizes = [sizing.Hug];
 
 export const useLayerSize = (layerKey: LinkKey) => {
   const { manager: fragmentManager } = use(FragmentContext);
-  const { layerKey: instanceLayerKey, manager: instanceManager } =
+  const { layerKey: instanceLayerKey, parentManager: instanceManager } =
     use(InstanceContext);
   const { isDocument } = useRenderTarget(fragmentManager);
   const isTop = isTopLevel(fragmentManager, layerKey);
   const isPartOfInstance = !!instanceLayerKey;
   const layerParent = getParent(fragmentManager, layerKey);
+
+  // useReadInstanceProperty()
+  // layerKey,
+
   const [instanceWidthType] = useLayerVariableValue(
     instanceLayerKey,
     "widthType",
