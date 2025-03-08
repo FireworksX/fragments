@@ -32,6 +32,11 @@ async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
     return role is not None and role is not RoleGet.DESIGNER
 
 
+async def private_key_permission(db: Session, user_id: int, project_id: int) -> bool:
+    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
+    return role is not None and role is RoleGet.OWNER or role is RoleGet.ADMIN
+
+
 async def transform_project_campaigns(db: Session, project: Project) -> List[CampaignGet]:
     res: List[CampaignGet] = []
     for campaign_relation in project.campaigns:
@@ -40,11 +45,13 @@ async def transform_project_campaigns(db: Session, project: Project) -> List[Cam
 
 
 async def project_db_to_project(info: strawberry.Info[Context], db: Session, project: Project) -> ProjectGet:
+    user: AuthPayload = await info.context.user()
+    permission: bool = await private_key_permission(db, user.user.id, project.id)
     return ProjectGet(id=project.id, name=project.name, logo=None if project.logo is None else project.logo.public_path,
                       owner=project.owner, root_directory_id=project.root_directory_id,
                       members=transform_project_members(project),
                       campaigns=await transform_project_campaigns(db, project),
-                      private_key=project.private_key.key,
+                      private_key=project.private_key.key if permission else None,
                       public_keys=[] if project.public_keys is None else [public_key.key for public_key in
                                                                           project.public_keys])
 
@@ -83,7 +90,7 @@ async def create_project_route(info: strawberry.Info[Context], pr: ProjectPost) 
 async def change_project_private_key_route(info: strawberry.Info[Context], project_id: int) -> ProjectGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
-    permission: bool = await write_permission(db, user.user.id, project_id)
+    permission: bool = await private_key_permission(db, user.user.id, project_id)
     if not permission:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to change private key')

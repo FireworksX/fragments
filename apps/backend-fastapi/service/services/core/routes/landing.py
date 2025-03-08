@@ -6,7 +6,6 @@ from starlette import status
 from jsonschema import validate
 import json
 
-from crud.campaign import get_campaign_by_id_db
 from crud.project import get_project_by_id_db
 from crud.stream import get_stream_by_id_db
 from crud.landing import create_landing_db, get_landings_by_stream_id_db, \
@@ -16,14 +15,15 @@ from .schemas.landing import LandingGet, LandingPost, LandingPatch, ClientLandin
 from .schemas.user import RoleGet, AuthPayload
 from .middleware import Context
 from crud.fragment import Fragment, get_fragment_by_id_db
-from database import Session, Project, Landing, Stream, Campaign
+from database import Session, Project, Landing, Stream
 from .utils import get_user_role_in_project
 
 
 async def landing_db_to_landing(info, landing_db: Landing) -> LandingGet:
     return LandingGet(id=landing_db.id, name=landing_db.name,
                       props=landing_db.props, weight=landing_db.weight,
-                      fragment=await fragment_by_id(info, landing_db.fragment.id), stream=landing_db.stream, active=landing_db.active,
+                      fragment=await fragment_by_id(info, landing_db.fragment.id), stream=landing_db.stream,
+                      active=landing_db.active,
                       deleted=landing_db.deleted)
 
 
@@ -74,7 +74,8 @@ async def create_landing_route(info: strawberry.Info[Context], landing_in: Landi
         landing_in.active = False
 
     landing: Landing = await create_landing_db(db, landing_in.name, project_id, landing_in.stream_id,
-                                               landing_in.fragment_id, landing_in.props, landing_in.weight, landing_in.active, landing_in.deleted)
+                                               landing_in.fragment_id, landing_in.props, landing_in.weight,
+                                               landing_in.active, landing_in.deleted)
     return await landing_db_to_landing(info, landing)
 
 
@@ -163,13 +164,13 @@ async def update_landing_route(info: strawberry.Info[Context], landing_patch: La
             raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE,
                                 detail=f'Cant activate landing without fragment')
 
-
     landing: Landing = await update_landing_by_id_db(db, values=landing_patch.__dict__)
 
     return await landing_db_to_landing(info, landing)
 
 
-async def get_client_landing(info: strawberry.Info[Context], client_landing: ClientLanding) -> Optional[LandingGet]:
+async def get_client_landing(info: strawberry.Info[Context]) -> Optional[LandingGet]:
+    client_landing: ClientLanding = await info.context.client_landing()
     project: Project = await info.context.project()
     db: Session = info.context.session()
 

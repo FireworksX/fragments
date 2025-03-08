@@ -45,8 +45,8 @@ class LandingPatch:
 
 @strawberry.input
 class ClientLanding:
-    os_type: OSType
-    device_type: DeviceType
-    time_frame: datetime
-    page: str
-    ip_address: str
+    os_type: Optional[OSType]
+    device_type: Optional[DeviceType]
+    time_frame: Optional[datetime]
+    page: Optional[str]
+    ip_address: Optional[str]

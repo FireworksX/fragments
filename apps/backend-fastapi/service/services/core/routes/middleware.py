@@ -1,4 +1,8 @@
+from datetime import datetime, timezone
+from typing import Optional
+
 from crud.project import get_project_by_id_db, validate_project_public_api_key
+from .schemas.landing import ClientLanding
 from .schemas.user import AuthPayload
 from strawberry.fastapi import BaseContext
 from database import Session
@@ -10,12 +14,46 @@ from services.core.utils import create_access_token, create_refresh_token
 import jwt
 from jwt.exceptions import InvalidTokenError
 from fastapi import HTTPException, status
+from .schemas.filter import DeviceType, OSType
+
+from user_agents import parse as user_agent_parser
 
 credentials_exception = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
     detail="Could not validate credentials",
     headers={"Authorization": "token"},
 )
+
+
+class UserAgentInfo:
+    device_type: Optional[DeviceType] = None
+    os_type: Optional[OSType] = None
+
+    def __init__(self, user_agent: str) -> None:
+        user_agent_info = user_agent_parser(user_agent)
+        if user_agent_info.is_mobile:
+            self.device_type = DeviceType.MOBILE
+        elif user_agent_info.is_tablet:
+            self.device_type = DeviceType.TABLET
+        elif user_agent_info.is_pc:
+            self.device_type = DeviceType.DESKTOP
+        else:
+            print('unknown device type', user_agent_info)
+            self.device_type = None
+
+        if user_agent_info.os.family == 'Android':
+            self.os_type = OSType.ANDROID
+        elif user_agent_info.os.family in ['Windows', 'Chrome OS']:
+            self.os_type = OSType.WINDOWS
+        elif user_agent_info.os.family == 'Mac OS X':
+            self.os_type = OSType.MACOS
+        elif 'Linux' in user_agent_info.ua_string and 'X11' in user_agent_info.ua_string:
+            self.os_type = OSType.LINUX
+        elif user_agent_info.device.family in ['iPhone', 'iOS-Device']:
+            self.os_type = OSType.IOS
+        else:
+            print('unknown OS type', user_agent_info)
+            self.os_type = None
 
 
 class Context(BaseContext):
@@ -70,6 +108,20 @@ class Context(BaseContext):
             raise credentials_exception
         else:
             return project
+
+    async def client_landing(self) -> ClientLanding:
+        agent_header = self.request.headers.get("User-Agent", None)
+        user_agent: UserAgentInfo = UserAgentInfo(agent_header)
+
+        user_ip: Optional[str] = self.request.headers.get('X-User-Ip', None)
+        if user_ip is None:
+            user_ip = self.request.headers.get("X-Forwarded-For", self.request.client.host)
+        page: Optional[str] = self.request.headers.get('Referrer', None)
+        gmt_time = datetime.now(timezone.utc)
+
+        print(f'os_type={user_agent.os_type}, device_type={user_agent.device_type}, time_frame={gmt_time}, page={page}, ip_address={user_ip}')
+        return ClientLanding(os_type=user_agent.os_type, device_type=user_agent, time_frame=gmt_time, page=page,
+                             ip_address=user_ip)
 
     async def refresh_user(self) -> AuthPayload | None:
         if not self.request:

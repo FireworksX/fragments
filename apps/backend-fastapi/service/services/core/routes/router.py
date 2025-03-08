@@ -91,8 +91,8 @@ class Query:
         return await get_directory(info, directory_id)
 
     @strawberry.field
-    async def client_landing(self, info: strawberry.Info[Context], client_landing: ClientLanding) -> Optional[LandingGet]:
-        return await get_client_landing(info, client_landing)
+    async def client_landing(self, info: strawberry.Info[Context]) -> Optional[LandingGet]:
+        return await get_client_landing(info)
 
 
 @strawberry.type

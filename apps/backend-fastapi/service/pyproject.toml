@@ -12,6 +12,7 @@ fastapi = {extras = ["full"], version = "^0.111.1"}
 strawberry-graphql = "^0.237.3"
 pydantic-extra-types = "^2.9.0"
 
+user-agents= "^2.2.0"
 pycountry = "^24.6.1"
 jsonschema ="^4.23.0"
 thefuzz ="0.22.1"
