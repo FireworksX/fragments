@@ -43,6 +43,7 @@ __export(src_exports, {
   filterDeep: () => filterDeep,
   findDeep: () => findDeep,
   finiteNumber: () => finiteNumber,
+  fromPx: () => fromPx,
   generateId: () => generateId,
   get: () => get,
   hexToRgb: () => hexToRgb,
@@ -75,9 +76,19 @@ __export(src_exports, {
   times: () => times,
   toKebabCase: () => toKebabCase,
   toLongHex: () => toLongHex,
+  toPx: () => toPx,
   toSpringFields: () => toSpringFields
 });
 module.exports = __toCommonJS(src_exports);
+
+// src/converts.ts
+var fromPx = (val) => {
+  if (typeof val === "string") {
+    return Number(val.replace("px", ""));
+  }
+  return val || 0;
+};
+var toPx = (val) => typeof val === "string" || typeof val === "number" ? `${val}px` : "0px";
 
 // src/isObject.ts
 var isObject = (input) => {
@@ -488,6 +499,7 @@ var interpolationObject = (input) => {
   filterDeep,
   findDeep,
   finiteNumber,
+  fromPx,
   generateId,
   get,
   hexToRgb,
@@ -520,6 +532,7 @@ var interpolationObject = (input) => {
   times,
   toKebabCase,
   toLongHex,
+  toPx,
   toSpringFields
 });
 //# sourceMappingURL=index.js.map

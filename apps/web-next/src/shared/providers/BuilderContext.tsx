@@ -1,5 +1,6 @@
 import { createContext } from 'react'
 
 export const BuilderContext = createContext({
-  builderManager: null
+  builderManager: null,
+  globalManager: null
 })

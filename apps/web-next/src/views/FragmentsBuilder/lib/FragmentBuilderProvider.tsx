@@ -5,9 +5,14 @@ import { FC, PropsWithChildren } from 'react'
 
 interface FragmentBuilderProviderProps extends PropsWithChildren {
   builderManager: GraphState
+  globalManager: unknown
 }
 
-export const FragmentBuilderProvider: FC<FragmentBuilderProviderProps> = ({ builderManager, children }) => {
+export const FragmentBuilderProvider: FC<FragmentBuilderProviderProps> = ({
+  builderManager,
+  globalManager,
+  children
+}) => {
   const sensors = useSensors(
     useSensor(MouseSensor, {
       activationConstraint: {
@@ -24,7 +29,7 @@ export const FragmentBuilderProvider: FC<FragmentBuilderProviderProps> = ({ buil
       onDragEnd={builderManager.$droppable.handleDragEnd}
       onDragStart={builderManager.$droppable.handleDragStart}
     >
-      <BuilderContext value={{ builderManager }}>{children}</BuilderContext>
+      <BuilderContext value={{ builderManager, globalManager }}>{children}</BuilderContext>
     </DndContext>
   )
 }

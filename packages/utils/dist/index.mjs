@@ -16,6 +16,15 @@ var __spreadValues = (a, b) => {
   return a;
 };
 
+// src/converts.ts
+var fromPx = (val) => {
+  if (typeof val === "string") {
+    return Number(val.replace("px", ""));
+  }
+  return val || 0;
+};
+var toPx = (val) => typeof val === "string" || typeof val === "number" ? `${val}px` : "0px";
+
 // src/isObject.ts
 var isObject = (input) => {
   return typeof input === "object" && input !== null && !Array.isArray(input);
@@ -424,6 +433,7 @@ export {
   filterDeep,
   findDeep,
   finiteNumber,
+  fromPx,
   generateId,
   get,
   hexToRgb,
@@ -456,6 +466,7 @@ export {
   times,
   toKebabCase,
   toLongHex,
+  toPx,
   toSpringFields
 };
 //# sourceMappingURL=index.mjs.map

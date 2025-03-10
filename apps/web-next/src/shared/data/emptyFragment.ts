@@ -2,7 +2,7 @@ import { generateId } from '@fragments/utils'
 
 export const getEmptyFragment = (fragmentId: string) => {
   const layerId = generateId()
-  const nId = generateId()
+  const nId = '123'
 
   return {
     [`Fragment:${fragmentId}`]: {

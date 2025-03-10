@@ -9,15 +9,15 @@ import { getEmptyFragment } from '@/shared/data/emptyFragment'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { nodes } from '@fragments/plugin-fragment'
 import { makeSnapshot } from '@fragments/renderer-editor'
-import { useGlobalContext } from '@fragments/renderer-editor'
 import { getButtonFragment } from '@/shared/data/buttonFragment'
 import { useFragmentDocumentQuery } from '@/shared/hooks/fragmentBuilder/useBuilderDocumentManager/queries/FragmentDocument.generated'
 import { useUpdateFragmentDocumentMutation } from '@/shared/hooks/fragmentBuilder/useBuilderDocumentManager/queries/UpdateFragmentDocument.generated'
+import { useGlobalManager } from '@/shared/hooks/fragmentBuilder/useBuilderGlobalContext'
 
 export const useBuilderDocumentManager = () => {
-  const { context: globalContext } = useGlobalContext()
   const { documentManager } = useBuilderDocument()
   const { builderManager } = use(BuilderContext)
+  const { globalManager } = useGlobalManager()
   const { currentFragmentId } = useBuilder()
   const fragmentKey = `Fragment:${currentFragmentId}`
 
@@ -45,11 +45,10 @@ export const useBuilderDocumentManager = () => {
       const document =
         typeof fragment?.document === 'string' ? JSON.parse(fragment.document ?? '{}') : fragment?.document
 
-      const resultDocument = getEmptyFragment(fragment?.id) //Object.keys(document).length === 0 ? getEmptyFragment(fragment?.id) : document
+      const resultDocument = Object.keys(document).length === 0 ? getEmptyFragment(fragment?.id) : document
 
-      globalContext.createFragmentManager('button', getButtonFragment())
-
-      return globalContext.createFragmentManager(fragment?.id, resultDocument)
+      globalManager.createFragmentManager('button', getButtonFragment())
+      return globalManager.createFragmentManager(fragment?.id, resultDocument)
       // return builderManager.$documents.createDocumentManager(`${nodes.Fragment}:${fragment?.id}`, resultDocument)
     },
     [refetch]

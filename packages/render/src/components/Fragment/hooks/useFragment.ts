@@ -1,0 +1,33 @@
+import { useMemo } from "preact/compat";
+import useMeasure from "react-use-measure";
+import { useLayerChildren } from "@/shared/hooks/useLayerChildren";
+import { useRenderTarget } from "@/shared/hooks/useRenderTarget";
+import { findBreakpoint } from "@/shared/helpers/findBreakpoint";
+import { useFragmentManager } from "@/shared/hooks/useFragmentManager";
+import { nodes } from "@/definitions";
+import { GraphState } from "@graph-state/core";
+
+export const useFragment = (fragmentId: string, context?: GraphState) => {
+  const manager = useFragmentManager(fragmentId, context);
+  const layerKey = `${nodes.Fragment}:${fragmentId}`;
+  const [ref, fragmentRect] = useMeasure();
+  const children = useLayerChildren(layerKey, manager);
+  const { isDocument } = useRenderTarget(manager);
+
+  const resultChildren = useMemo(() => {
+    if (isDocument) {
+      const breakpoints = children?.map(manager.resolve);
+      const activeBreakpoint = findBreakpoint(breakpoints, fragmentRect.width);
+
+      return [manager.keyOfEntity(activeBreakpoint)];
+    }
+
+    return children;
+  }, [children, manager, fragmentRect.width]);
+
+  return {
+    manager,
+    ref,
+    children: resultChildren,
+  };
+};

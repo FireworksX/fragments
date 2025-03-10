@@ -16,6 +16,7 @@ import { useBuilderCreator } from '@/shared/hooks/fragmentBuilder/useBuilderCrea
 import { nextTick } from '@/shared/utils/nextTick'
 import { useLayerValue$ } from '@fragments/renderer-editor'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
+import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 
 export const SCALE = {
   min: 0.25,
@@ -36,7 +37,6 @@ export const useCanvas = () => {
   const dragMoveHandler = useDragMove()
   const dragCollisionsHandler = useDragCollisions()
   const { createText, createFrame } = useBuilderCreator()
-  const [_, up] = useLayerValue$(selection, 'left', documentManager)
 
   useEffect(() => {
     const handler = (e: Event) => e.preventDefault()

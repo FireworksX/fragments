@@ -20,6 +20,8 @@
     "@feature-sliced/cli": "^1.0.0",
     "@fragments/plugin-fragment": "workspace:*",
     "@fragments/plugin-fragment-spring": "workspace:*",
+    "@fragments/render": "workspace:*",
+    "@fragments/render-react": "workspace:*",
     "@fragments/renderer-editor": "workspace:*",
     "@fragments/springs-factory": "workspace:*",
     "@fragments/utils": "workspace:*",
@@ -45,6 +47,7 @@
     "jwt-decode": "^4.0.0",
     "next": "15.1.0",
     "next-auth": "^4.24.7",
+    "preact": "^10.26.4",
     "react": "^19.0.0",
     "react-collapse": "^5.1.1",
     "react-color": "^2.19.3",
@@ -56,7 +59,9 @@
     "react-textarea-autosize": "^8.5.3",
     "react-use": "^17.5.0",
     "swr": "^2.2.5",
-    "use-sync-external-store": "^1.2.2"
+    "use-sync-external-store": "^1.2.2",
+    "zod": "^3.24.1",
+    "zod-metadata": "^1.1.1"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^5.0.3",
