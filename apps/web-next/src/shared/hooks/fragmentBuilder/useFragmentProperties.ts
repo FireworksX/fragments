@@ -40,6 +40,7 @@ export const useFragmentProperties = () => {
 
   const editProperty = (propertyLink: LinkKey, popoutOptions?: EditPropertyOptions) => {
     const property = documentManager.resolve(propertyLink)
+
     if (property) {
       const type = property?.type
 

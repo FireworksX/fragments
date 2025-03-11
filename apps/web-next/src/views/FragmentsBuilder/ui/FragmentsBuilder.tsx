@@ -12,7 +12,7 @@ import { useGraph, useGraphEffect } from '@graph-state/react'
 import { FragmentBuilderProvider } from '@/views/FragmentsBuilder/lib/FragmentBuilderProvider'
 import { FragmentsBuilderContent } from '@/views/FragmentsBuilder/widgets/FragmentsBuilderContent'
 import { Fragment } from '@fragments/render-react'
-import { createGlobalManager, useFragmentManager } from '@fragments/render'
+import { createGlobalManager, useFragmentManager } from '@fragments/render-core'
 
 const builderManager = createBuilderStore()
 

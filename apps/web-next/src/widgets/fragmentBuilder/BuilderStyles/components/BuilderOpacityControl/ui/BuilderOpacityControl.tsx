@@ -13,7 +13,7 @@ interface BuilderOpacityControlProps {
 
 export const BuilderOpacityControl: FC<BuilderOpacityControlProps> = memo(({ className }) => {
   const [opacity, setOpacity, opacityInfo] = useLayerValue('opacity')
-  const { disabled, actions, variableLink, resetVariable } = useLayerVariables('opacity')
+  const { disabled, actions, variableLink, resetVariable, editVariable } = useLayerVariables('opacity')
 
   return (
     <ControlRow
@@ -27,6 +27,7 @@ export const BuilderOpacityControl: FC<BuilderOpacityControlProps> = memo(({ cla
       variable={{
         link: variableLink,
         actions,
+        onClick: editVariable,
         onReset: resetVariable
       }}
     >

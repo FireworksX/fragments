@@ -1,5 +1,5 @@
 {
-  "name": "@fragments/render-react",
+  "name": "@fragments/render-core",
   "private": false,
   "version": "0.0.1",
   "type": "module",
@@ -23,19 +23,20 @@
     "lint": "eslint . --ext .ts,.tsx --fix"
   },
   "peerDependencies": {
-    "react": "^17.0.2"
+    "preact": "^10.0.0"
   },
   "dependencies": {
-    "@fragments/render-core": "workspace:*",
     "@fragments/utils": "workspace:*",
+    "@fragments/definition": "workspace:*",
     "@graph-state/checkers": "^0.1.2",
     "@graph-state/core": "^0.10.2",
     "@graph-state/react": "^0.6.3",
-    "@types/react": "^19.0.1",
-    "react-use-measure": "^2.1.7"
+    "react": "^19.0.0",
+    "react-use-measure": "^2.1.7",
+    "use-sync-external-store": "^1.2.2"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.4",
+    "@preact/preset-vite": "^2.10.1",
     "typescript": "^5.5.4",
     "vite": "^6.1.0",
     "vite-plugin-css-injected-by-js": "^3.5.2",

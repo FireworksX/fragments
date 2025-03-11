@@ -64,9 +64,9 @@ export const useLayerVariables = (field: keyof typeof fieldsConfig) => {
     createVariable,
     resetVariable: fieldInfo?.restore,
     editVariable: () => {
-      fieldInfo?.isVariable && editProperty(fieldValue)
+      fieldInfo?.isVariable && editProperty(fieldInfo?.rawValue)
     },
-    variableLink: fieldInfo?.isVariable ? fieldValue : null,
+    variableLink: fieldInfo?.isVariable ? fieldInfo?.rawValue : null,
     actions: !disabled
       ? [
           {

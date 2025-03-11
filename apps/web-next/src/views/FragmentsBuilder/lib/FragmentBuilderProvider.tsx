@@ -1,7 +1,8 @@
+import { FC, PropsWithChildren } from 'react'
 import { DndContext, MouseSensor, pointerWithin, useSensor, useSensors } from '@dnd-kit/core'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { GraphState } from '@graph-state/core'
-import { FC, PropsWithChildren } from 'react'
+import { GlobalManager } from '@fragments/render-react'
 
 interface FragmentBuilderProviderProps extends PropsWithChildren {
   builderManager: GraphState
@@ -29,7 +30,9 @@ export const FragmentBuilderProvider: FC<FragmentBuilderProviderProps> = ({
       onDragEnd={builderManager.$droppable.handleDragEnd}
       onDragStart={builderManager.$droppable.handleDragStart}
     >
-      <BuilderContext value={{ builderManager, globalManager }}>{children}</BuilderContext>
+      <GlobalManager value={globalManager}>
+        <BuilderContext value={{ builderManager, globalManager }}>{children}</BuilderContext>
+      </GlobalManager>
     </DndContext>
   )
 }

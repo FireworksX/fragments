@@ -5,8 +5,9 @@ import { GraphState, LinkKey } from '@graph-state/core'
 import { useLayerVariableValue as useLayerValueLib, isInheritField, isPartOfPrimary } from '@fragments/renderer-editor'
 import { useGraph } from '@graph-state/react'
 import { pick } from '@fragments/utils'
-import { isVariableLink } from '@/shared/data/schemas/zod'
 import { useNormalizeLayer } from '@/shared/hooks/fragmentBuilder/useNormalizeLayer'
+import { isValidLayerField } from '@fragments/definition'
+import { isVariableLink } from '@/shared/utils/isVariableLink'
 
 export const useLayerValue = (fieldKey: string, layerKey?: LinkKey) => {
   const { documentManager } = useBuilderDocument()
@@ -17,8 +18,9 @@ export const useLayerValue = (fieldKey: string, layerKey?: LinkKey) => {
     selector: data => (data ? pick(data, fieldKey) : data)
   })
 
-  const { layer, schema } = useNormalizeLayer(layerKey, resultManager)
+  const { layer, rawLayer } = useNormalizeLayer(layerKey)
   const currentValue = layer?.[fieldKey]
+  const rawValue = rawLayer?.[fieldKey]
 
   const isInherit = isInheritField(resultManager, key, fieldKey)
   const isOverride = !isInherit && !isPartOfPrimary(resultManager, key)
@@ -34,8 +36,7 @@ export const useLayerValue = (fieldKey: string, layerKey?: LinkKey) => {
 
   const updateValue = useCallback(
     (value: unknown) => {
-      const schemaField = schema?.shape?.[fieldKey]
-      const { success: isValid } = schemaField?.safeParse(value) ?? {}
+      const isValid = isValidLayerField(layer, fieldKey, value)
 
       if (isValid) {
         if (isVariableLink(value)) {
@@ -56,8 +57,12 @@ export const useLayerValue = (fieldKey: string, layerKey?: LinkKey) => {
         updateLayerData({ [fieldKey]: value })
       }
     },
-    [schema?.shape, fieldKey, updateLayerData, resultManager, layerKey, currentValue]
+    [layer, fieldKey, updateLayerData, resultManager, layerKey, currentValue]
   )
 
-  return [currentValue, updateValue, { isOverride, resetOverride, isVariable: isVariableLink(currentValue), restore }]
+  return [
+    currentValue,
+    updateValue,
+    { isOverride, resetOverride, isVariable: isVariableLink(rawValue), rawValue, restore }
+  ]
 }
