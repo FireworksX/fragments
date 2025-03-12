@@ -22,20 +22,19 @@ var __export = (target, all) => {
   for (var name in all)
     __defProp(target, name, { get: all[name], enumerable: true });
 };
-var __copyProps = (to2, from, except, desc) => {
+var __copyProps = (to, from, except, desc) => {
   if (from && typeof from === "object" || typeof from === "function") {
     for (let key of __getOwnPropNames(from))
-      if (!__hasOwnProp.call(to2, key) && key !== except)
-        __defProp(to2, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
   }
-  return to2;
+  return to;
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
 // src/index.ts
 var src_exports = {};
 __export(src_exports, {
-  applyObjectValues: () => applyObjectValues,
   colorToObject: () => colorToObject,
   createConstants: () => createConstants,
   debounce: () => debounce,
@@ -48,7 +47,6 @@ __export(src_exports, {
   get: () => get,
   hexToRgb: () => hexToRgb,
   injectLink: () => injectLink,
-  interpolationObject: () => interpolationObject,
   isAbsoluteUrl: () => isAbsoluteUrl,
   isBrowser: () => isBrowser_default,
   isEmptyValue: () => isEmptyValue,
@@ -76,8 +74,7 @@ __export(src_exports, {
   times: () => times,
   toKebabCase: () => toKebabCase,
   toLongHex: () => toLongHex,
-  toPx: () => toPx,
-  toSpringFields: () => toSpringFields
+  toPx: () => toPx
 });
 module.exports = __toCommonJS(src_exports);
 
@@ -451,47 +448,8 @@ function roundWithOffset(value, offset) {
   }
   return Math.round(value - offset) + offset;
 }
-
-// src/animated/applyObjectValues.ts
-var import_core = require("@react-spring/core");
-var applyObjectValues = (target, value) => {
-  const resultValue = __spreadValues({}, target);
-  Object.keys(resultValue).forEach((key) => {
-    if (key in value) {
-      if (resultValue[key] instanceof import_core.SpringValue) {
-        resultValue[key].set(value[key]);
-      } else {
-        resultValue[key] = value[key];
-      }
-    }
-  });
-  return resultValue;
-};
-
-// src/animated/toSpringFields.ts
-var import_core2 = require("@react-spring/core");
-var toSpringFields = (input) => {
-  if (!input)
-    return input;
-  return Object.entries(input).reduce((acc, [key, value]) => {
-    acc[key] = isPrimitive(value) ? new import_core2.SpringValue(value) : value;
-    return acc;
-  }, {});
-};
-
-// src/animated/interpolationObject.ts
-var import_core3 = require("@react-spring/core");
-var interpolationObject = (input) => {
-  if (!input)
-    return input;
-  return (0, import_core3.to)(Object.values(input), (...values) => {
-    const keys = Object.keys(input);
-    return Object.fromEntries(keys.map((key, index) => [key, values[index]]));
-  });
-};
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  applyObjectValues,
   colorToObject,
   createConstants,
   debounce,
@@ -504,7 +462,6 @@ var interpolationObject = (input) => {
   get,
   hexToRgb,
   injectLink,
-  interpolationObject,
   isAbsoluteUrl,
   isBrowser,
   isEmptyValue,
@@ -532,7 +489,6 @@ var interpolationObject = (input) => {
   times,
   toKebabCase,
   toLongHex,
-  toPx,
-  toSpringFields
+  toPx
 });
 //# sourceMappingURL=index.js.map

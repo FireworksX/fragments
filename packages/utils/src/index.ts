@@ -36,7 +36,3 @@ export {
   roundedNumberString,
   roundWithOffset,
 } from "./roundedNumber";
-
-export * from "./animated/applyObjectValues";
-export * from "./animated/toSpringFields";
-export * from "./animated/interpolationObject";

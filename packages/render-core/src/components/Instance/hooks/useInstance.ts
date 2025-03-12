@@ -1,4 +1,4 @@
-import { use, useContext, useMemo } from "react";
+import { useContext, useMemo } from "preact/compat";
 import { FragmentContext } from "@/components/Fragment/FragmentContext.tsx";
 import { useLayerStyles } from "@/shared/hooks/useLayerStyles/useLayerStyles.ts";
 import { useGraph } from "@graph-state/react";
@@ -18,7 +18,7 @@ import { useFragmentProperties } from "@/shared/hooks/useFragmentProperties.ts";
 1. Пропсы мы получаем снаружи
  */
 export const useInstance = (instanceProps: InstanceProps) => {
-  const { manager: parentManager } = use(FragmentContext);
+  const { manager: parentManager } = useContext(FragmentContext);
   const [instanceLayer] = useGraph(parentManager, instanceProps.layerKey);
   const instanceLayerProps = instanceLayer?.props ?? {};
   const styles = useLayerStyles(instanceProps.layerKey);

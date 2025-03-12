@@ -27,7 +27,7 @@ export const getEmptyFragment = (fragmentId: string) => {
       widthType: 'Hug',
       height: 50,
       props: {
-        '62218c840bd11': 0
+        '62218c840bd11': 0.7
       }
     },
     [`Instance:321`]: {
@@ -47,7 +47,7 @@ export const getEmptyFragment = (fragmentId: string) => {
       opacity: 1,
       visible: true,
       overflow: 'visible',
-      children: [`Frame:${nId}`],
+      children: [`Frame:${nId}`, 'Instance:123', 'Instance:321'],
       width: 320,
       height: 200,
       layoutSizingHorizontal: 'Fixed',

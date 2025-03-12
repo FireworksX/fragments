@@ -1,8 +1,7 @@
-import { createContext, FC } from "react";
+import { createContext, FC } from "preact/compat";
 import { LinkKey } from "@graph-state/core";
-import { useInstance } from "@/components/Instance/hooks/useInstance.ts";
 import { Fragment } from "@/components/Fragment";
-import { animated } from "@react-spring/web";
+import { useInstance } from "./hooks/useInstance";
 
 export interface InstanceProps {
   layerKey?: LinkKey;
@@ -39,9 +38,9 @@ export const Instance: FC<InstanceProps> = (instanceProps) => {
       }}
     >
       {parentManager ? (
-        <animated.div data-key={instanceProps.layerKey} style={styles}>
+        <div data-key={instanceProps.layerKey} style={styles}>
           <Fragment fragmentId={fragmentId} />
-        </animated.div>
+        </div>
       ) : (
         <Fragment fragmentId={fragmentId} />
       )}

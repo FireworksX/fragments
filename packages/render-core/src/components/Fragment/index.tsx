@@ -5,27 +5,32 @@ import { nodes } from "@/definitions";
 import styles from "./styles.module.css";
 import { LinkKey } from "@graph-state/core";
 import { Frame } from "@/components/Frame";
+import { GlobalManager } from "@/components/GlobalManager";
+import { useGlobalManager } from "@/shared/hooks/useGlobalManager";
 
 interface FragmentProps {
-  globalContext?: unknown;
+  globalManager?: unknown;
   fragmentId: string;
   startLayer?: LinkKey;
 }
 
-export const Fragment: FC<FragmentProps> = ({ fragmentId, globalContext }) => {
-  const { ref, children, manager } = useFragment(fragmentId, globalContext);
+export const Fragment: FC<FragmentProps> = ({ fragmentId, globalManager }) => {
+  const { manager: resultGlobalManager } = useGlobalManager(globalManager);
+  const { ref, children, manager } = useFragment(fragmentId, globalManager);
 
   return (
-    <FragmentProvider manager={manager}>
-      <div
-        ref={ref}
-        data-key={`${nodes.Fragment}:${fragmentId}`}
-        className={styles.fragment}
-      >
-        {children.map((childLink) => (
-          <Frame key={childLink} layerKey={childLink} />
-        ))}
-      </div>
-    </FragmentProvider>
+    <GlobalManager value={resultGlobalManager}>
+      <FragmentProvider manager={manager}>
+        <div
+          ref={ref}
+          data-key={`${nodes.Fragment}:${fragmentId}`}
+          className={styles.fragment}
+        >
+          {children.map((childLink) => (
+            <Frame key={childLink} layerKey={childLink} />
+          ))}
+        </div>
+      </FragmentProvider>
+    </GlobalManager>
   );
 };

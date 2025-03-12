@@ -13,9 +13,9 @@ import { useGraph } from '@graph-state/react'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { GraphState, LinkKey } from '@graph-state/core'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
-import { useInstancePropertyValue } from '@fragments/renderer-editor'
 import { useLayerVariableValue } from '@fragments/renderer-editor'
 import { useLayer } from '@fragments/renderer-editor'
+import { useInstancePropertyValue } from '@/shared/hooks/fragmentBuilder/useInstancePropertyValue'
 
 interface InstancePropertyGenericProps {
   property: LinkKey
@@ -27,9 +27,9 @@ interface InstancePropertyGenericProps {
 const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({ className, property, instanceManager }) => {
   const { documentManager } = useBuilderDocument()
   const { selection } = useBuilderSelection()
-  const [type] = useLayerValue('type', property, instanceManager)
-  const [value, setValue, valueInfo] = useInstancePropertyValue(documentManager, selection, property)
+  const [value, setValue, valueInfo] = useInstancePropertyValue(selection, property)
   const propertyLayer = valueInfo?.propertyLayer ?? {}
+  const type = valueInfo?.propertyLayer?.type
 
   if (type === variableType.Number) {
     return (

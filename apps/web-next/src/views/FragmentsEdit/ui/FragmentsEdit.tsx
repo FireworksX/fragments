@@ -44,6 +44,7 @@ import { renderTarget } from '@fragments/plugin-fragment'
 import { useRenderTarget } from '@/widgets/renderer/hooks/useRenderTarget'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import StackColorProperty from '@/features/popouts/StackColorProperty/ui/StackColorProperty'
+import { getNormalizeLayer } from '@fragments/definition'
 
 export const FragmentsEdit = () => {
   const { documentManager } = useBuilderDocument()

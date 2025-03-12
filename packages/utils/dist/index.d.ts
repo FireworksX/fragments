@@ -1,3 +1,6 @@
+declare const fromPx: (val?: string | number) => number;
+declare const toPx: (val?: string | number) => string;
+
 declare const isObject: (input: unknown) => input is Record<string, unknown>;
 
 declare const isValue: <T>(value: T) => value is Exclude<T, null | undefined>;
@@ -113,17 +116,14 @@ interface Color {
     b: number;
     a?: number;
 }
-declare const objectToColorString: (color: Color) => string | null;
+declare const objectToColorString: <T extends Color>(color: T) => string | T;
 
 declare function isFiniteNumber(value: unknown): value is number;
 declare function finiteNumber(value: unknown): number | undefined;
+declare function positiveValue<T = unknown>(value: T): number;
 
 declare function roundedNumber(value: number, decimals?: number): number;
 declare function roundedNumberString(value: number, decimals?: number): string;
 declare function roundWithOffset(value: number, offset: number): number;
 
-declare const applyObjectValues: (target: Record<string, any>, value: Record<string, any>) => {
-    [x: string]: any;
-};
-
-export { applyObjectValues, colorToObject, createConstants, debounce, eventEmitter, filterDeep, findDeep, finiteNumber, generateId, get, hexToRgb, injectLink, isAbsoluteUrl, _default as isBrowser, isEmptyValue, isFiniteNumber, isHTMLNode, isObject, isPrimitive, isValue, iterator, mergeIterator, noop, objectToColorString, omit, pick, promiseWaiter, replace, rgbStringToHex, rgbToHex, rgbToRgba, roundWithOffset, roundedNumber, roundedNumberString, set, times, toKebabCase, toLongHex };
+export { colorToObject, createConstants, debounce, eventEmitter, filterDeep, findDeep, finiteNumber, fromPx, generateId, get, hexToRgb, injectLink, isAbsoluteUrl, _default as isBrowser, isEmptyValue, isFiniteNumber, isHTMLNode, isObject, isPrimitive, isValue, iterator, mergeIterator, noop, objectToColorString, omit, pick, positiveValue, promiseWaiter, replace, rgbStringToHex, rgbToHex, rgbToRgba, roundWithOffset, roundedNumber, roundedNumberString, set, times, toKebabCase, toLongHex, toPx };

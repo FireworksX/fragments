@@ -1,5 +1,5 @@
 import { createContext } from "preact/compat";
-import { FRAGMENTS_GLOBAL_CONTEXT } from "@/lib/createGlobalContext";
+import { getGlobalManager } from "@/shared/managers/createGlobalManager";
 
 // interface FragmentsGlobalContextProps {
 //   layerKey: LinkKey;
@@ -7,7 +7,7 @@ import { FRAGMENTS_GLOBAL_CONTEXT } from "@/lib/createGlobalContext";
 //   startLayer?: LinkKey;
 // }
 
-export const FragmentsGlobalContext = createContext(FRAGMENTS_GLOBAL_CONTEXT);
+export const GlobalManager = createContext(getGlobalManager());
 
 // export const FragmentsGlobalContext: FC<FragmentsGlobalContextProps> = ({
 //   manager,

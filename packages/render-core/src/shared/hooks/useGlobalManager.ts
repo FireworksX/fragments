@@ -1,21 +1,23 @@
 import { useGraph } from "@graph-state/react";
 import { GraphState } from "@graph-state/core";
-import { getGlobalManager } from "@/shared/managers/createGlobalManager";
+import { useContext } from "preact/compat";
+import { GlobalManager } from "@/components/GlobalManager";
 
 export const useGlobalManager = (globalContext?: GraphState) => {
-  const resultContext = globalContext ?? getGlobalManager();
-  const [globalManagerGraph] = useGraph(resultContext, resultContext?.key);
+  const currentGlobalManager = useContext(GlobalManager);
+  const resultManager = globalContext ?? currentGlobalManager;
+  const [globalManagerGraph] = useGraph(resultManager, resultManager?.key);
 
   const getFragmentManager = (id: string) =>
     globalManagerGraph?.fragmentsManagers?.[id];
 
   const setRenderTarget = (value) => {
-    resultContext?.setRenderTarget(value);
+    resultManager?.setRenderTarget(value);
   };
 
   return {
     globalManagerGraph,
-    context: resultContext,
+    manager: resultManager,
     getFragmentManager,
     setRenderTarget,
   };

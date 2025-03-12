@@ -17,8 +17,8 @@
   },
   "scripts": {
     "clear": "rm -r -f ./dist",
-    "build": "tsup",
-    "dev": "tsup --watch",
+    "build": "echo 'mock'",
+    "dev": "echo 'mock'",
     "test": "vitest",
     "lint": "eslint . --ext .ts,.tsx --fix"
   },

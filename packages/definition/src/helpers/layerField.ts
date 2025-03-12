@@ -1,15 +1,16 @@
 import * as v from "valibot";
+import { BaseTransformation } from "valibot/dist";
+import { nodes } from "@/constants";
 
-export const linkValidator = v.pipe(
-  v.string(),
-  v.check((value) => !!value && value.split(":")?.length === 2)
+export const linkValidator = v.check(
+  (value) => !!value && value?.split?.(":")?.length === 2
 );
 
-// export const isLink = (value: unknown) =>
-//   linkValidator.safeParse(value)?.success;
-//
-// export const isVariableLink = (value: unknown) =>
-//   isLink(value) && value?.split(":")?.at(0) === nodes.Variable;
+export const isLink = (value: unknown) =>
+  v.safeParse(linkValidator, value)?.success;
+
+export const isVariableLink = (value: unknown) =>
+  isLink(value) && value?.split?.(":")?.at(0) === nodes.Variable;
 
 export const getMetadata = (schema: v.ObjectSchema<any, any>) => {
   const pipelines = schema?.pipe ?? [];
@@ -20,22 +21,16 @@ export const getMetadata = (schema: v.ObjectSchema<any, any>) => {
 };
 
 export const layerField = <T>(
-  schema: v.UnknownSchema,
-  meta?: { fallback: T; overridable?: boolean; variable?: boolean }
+  schema: v.BaseSchema<any, any, any>,
+  meta?: {
+    fallback: T;
+    overridable?: boolean;
+    variable?: boolean;
+  }
 ) => {
-  let base = v.optional(schema);
+  const modifiedSchema = meta?.variable
+    ? v.union([schema, v.pipe(v.string(), linkValidator)])
+    : schema;
 
-  if (meta?.variable) {
-    base = v.pipe(base, v.union([base, linkValidator]));
-  }
-
-  if (typeof meta?.fallback !== "undefined") {
-    base = v.fallback(base, meta.fallback);
-  }
-
-  if (meta) {
-    base = v.pipe(base, v.metadata(meta));
-  }
-
-  return base;
+  return v.pipe(v.optional(modifiedSchema), v.metadata(meta ?? {}));
 };

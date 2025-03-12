@@ -15,10 +15,10 @@ export const Frame: FC<FrameProps> = ({ layerKey }) => {
   if (type === nodes.Text) {
     return <Text layerKey={layerKey} />;
   }
-  //
-  // if (type === nodes.Instance) {
-  //   return <Instance layerKey={layerKey} />;
-  // }
+
+  if (type === nodes.Instance) {
+    return <Instance layerKey={layerKey} />;
+  }
 
   return (
     <div style={styles} data-key={layerKey}>

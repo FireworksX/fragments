@@ -7,12 +7,12 @@ import { useFragmentManager } from "@/shared/hooks/useFragmentManager";
 import { nodes } from "@/definitions";
 import { GraphState } from "@graph-state/core";
 
-export const useFragment = (fragmentId: string, globalContext?: GraphState) => {
-  const manager = useFragmentManager(fragmentId, globalContext);
+export const useFragment = (fragmentId: string, globalManager?: GraphState) => {
+  const manager = useFragmentManager(fragmentId, globalManager);
   const layerKey = `${nodes.Fragment}:${fragmentId}`;
   const [ref, fragmentRect] = useMeasure();
   const children = useLayerChildren(layerKey, manager);
-  const { isDocument } = useRenderTarget(globalContext);
+  const { isDocument } = useRenderTarget(globalManager);
 
   const resultChildren = useMemo(() => {
     if (isDocument) {

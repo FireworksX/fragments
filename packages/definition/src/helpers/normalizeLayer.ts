@@ -17,12 +17,13 @@ export const normalizeLayer = (
 
     const withFallback = options?.withFallback ?? true;
     const overrideTarget = options?.overrideTarget;
+
     const parsedLayer = v.parse(schema, rawLayer);
 
     return Object.fromEntries(
       Object.entries(schema.entries).map(([key, schemaEntity]) => {
         const schemaMeta = getMetadata(schemaEntity);
-        const fallback = withFallback ? v.getFallback(schemaEntity) : null;
+        const fallback = withFallback ? schemaMeta?.fallback : null;
 
         const overrideValue =
           schemaMeta?.overridable !== false && overrideTarget

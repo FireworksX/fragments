@@ -5,7 +5,7 @@ import { GlobalManager } from "@/components/GlobalManager";
 // Обёртка для Preact-компонента
 export function createReactComponent(PreactComponent: any) {
   return function ReactWrapper(props: any) {
-    const globalContext = useContext(GlobalManager);
+    const globalManager = useContext(GlobalManager);
     const containerRef = React.useRef<HTMLDivElement | null>(null);
 
     // Используем React-эффект для управления жизненным циклом Preact-компонента
@@ -15,7 +15,7 @@ export function createReactComponent(PreactComponent: any) {
         render(
           createElement(PreactComponent, {
             ...props,
-            globalContext: props?.globalContext ?? globalContext,
+            globalManager: props?.globalManager ?? globalManager,
           }),
           containerRef.current
         );
@@ -27,7 +27,7 @@ export function createReactComponent(PreactComponent: any) {
           render(null, containerRef.current);
         }
       };
-    }, [props, globalContext]); // Зависимость от props, чтобы обновлять компонент при их изменении
+    }, [props, globalManager]); // Зависимость от props, чтобы обновлять компонент при их изменении
 
     // Возвращаем React-элемент, который будет контейнером для Preact-компонента
     return React.createElement("div", { ref: containerRef });

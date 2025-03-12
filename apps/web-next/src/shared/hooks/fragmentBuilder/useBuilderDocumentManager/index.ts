@@ -45,7 +45,7 @@ export const useBuilderDocumentManager = () => {
       const document =
         typeof fragment?.document === 'string' ? JSON.parse(fragment.document ?? '{}') : fragment?.document
 
-      const resultDocument = Object.keys(document).length === 0 ? getEmptyFragment(fragment?.id) : document
+      const resultDocument = getEmptyFragment(fragment?.id) //Object.keys(document).length === 0 ? getEmptyFragment(fragment?.id) : document
 
       globalManager.createFragmentManager('button', getButtonFragment())
       return globalManager.createFragmentManager(fragment?.id, resultDocument)

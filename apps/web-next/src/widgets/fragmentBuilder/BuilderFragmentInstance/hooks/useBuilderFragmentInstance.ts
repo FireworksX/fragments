@@ -1,7 +1,7 @@
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
-import { useInstanceDefinition } from '@fragments/renderer-editor'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
+import { useInstanceDefinition } from '@/shared/hooks/fragmentBuilder/useInstanceDefinition'
 
 export const useBuilderFragmentInstance = () => {
   const { documentManager } = useBuilderDocument()

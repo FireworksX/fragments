@@ -15,20 +15,6 @@ export const useInstancePropertyValue = (
     return [null, () => null, {}];
   }
 
-  /*
-  ХУК ДЛЯ ВНЕШНЕГО ИСПОЛЬЗОВАНИЯ
-
-  Достаём manager для фрагмента, к которому привязан Instance, чтобы
-  из этого менеджера достать данные о propertyKey, его тип и тд.
-
-  Когда мы это узнаем, сможем получить zod схему для этого проперти и
-  из этой схемы достать defaultValue
-   */
-  // const { manager: instanceManager } = useInstanceDefinition(
-  //   manager,
-  //   instanceKey
-  // );
-
   const instanceFragment = manager.resolve(instanceKey)?.fragment;
   const { manager: innerManager } = useFragmentProperties(instanceFragment);
 

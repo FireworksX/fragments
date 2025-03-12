@@ -1,5 +1,5 @@
 import { useGraph } from "@graph-state/react";
-import { useFragmentManager } from "@/shared/hooks/useFragmentManager.ts";
+import { useFragmentManager } from "@/shared/hooks/useFragmentManager";
 
 export const useFragmentProperties = (fragmentId: string) => {
   const manager = useFragmentManager(fragmentId);
