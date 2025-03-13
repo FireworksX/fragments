@@ -18,7 +18,7 @@ export const getEmptyFragment = (fragmentId: string) => {
       visible: true,
       overflow: 'hidden',
       overrides: [],
-      properties: []
+      properties: ['Variable:62218c840bd111']
     },
     [`Instance:123`]: {
       _type: 'Instance',
@@ -62,7 +62,7 @@ export const getEmptyFragment = (fragmentId: string) => {
     [`Frame:${nId}`]: {
       _type: 'Frame',
       _id: nId,
-      opacity: 1,
+      opacity: 'Variable:62218c840bd111',
       visible: true,
       overflow: 'visible',
       children: [],
@@ -74,6 +74,16 @@ export const getEmptyFragment = (fragmentId: string) => {
       positionType: 'absolute',
       solidFill: 'rgba(32, 44, 255, 1)',
       name: 'Frame'
+    },
+    'Variable:62218c840bd111': {
+      _id: '62218c840bd111',
+      _type: 'Variable',
+      type: 'Number',
+      name: 'Opacity',
+      max: 1,
+      min: 0,
+      step: 0.01,
+      displayStepper: false
     }
   }
 }

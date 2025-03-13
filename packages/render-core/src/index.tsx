@@ -1,5 +1,6 @@
 // export * from "./components/Frame";
 export * from "./components/Fragment";
+export * from "./components/Instance";
 
 export { createGlobalManager } from "@/shared/managers/createGlobalManager";
 // export { createManager } from "@/shared/managers/createManager";

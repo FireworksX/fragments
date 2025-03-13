@@ -7,6 +7,7 @@ export interface InstanceProps {
   layerKey?: LinkKey;
   fragmentId?: string;
   props?: Record<string, unknown>;
+  globalManager?: unknown;
 }
 
 export const InstanceContext = createContext({
@@ -25,6 +26,7 @@ export const Instance: FC<InstanceProps> = (instanceProps) => {
     props,
     innerManager,
     definitions,
+    globalManager,
   } = useInstance(instanceProps);
 
   return (
@@ -39,10 +41,10 @@ export const Instance: FC<InstanceProps> = (instanceProps) => {
     >
       {parentManager ? (
         <div data-key={instanceProps.layerKey} style={styles}>
-          <Fragment fragmentId={fragmentId} />
+          <Fragment fragmentId={fragmentId} globalManager={globalManager} />
         </div>
       ) : (
-        <Fragment fragmentId={fragmentId} />
+        <Fragment fragmentId={fragmentId} globalManager={globalManager} />
       )}
     </InstanceContext>
   );

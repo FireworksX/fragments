@@ -8,9 +8,7 @@ export const useFragmentManager = (
   const { globalManagerGraph, getFragmentManager } =
     useGlobalManager(globalContext);
   if (!globalManagerGraph) {
-    throw new Error(
-      "Need declare global context. Use <FragmentsGlobalContext> and createGlobalContext."
-    );
+    throw new Error("Need declare global context");
   }
 
   return getFragmentManager(fragmentId);

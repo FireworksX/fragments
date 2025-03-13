@@ -93,6 +93,7 @@ const ControlRow: FC<BuilderControlRowProps> = ({
         <GraphValue graphState={documentManager} field={variable.link}>
           {variableValue => (
             <ControlRowWide>
+              {console.log(variableValue)}
               <InputSelectVariable
                 kind={variableValue._type === nodes.Variable ? 'variable' : 'computed'}
                 type={variableValue.type}

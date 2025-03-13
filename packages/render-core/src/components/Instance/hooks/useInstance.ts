@@ -4,6 +4,7 @@ import { useLayerStyles } from "@/shared/hooks/useLayerStyles/useLayerStyles.ts"
 import { useGraph } from "@graph-state/react";
 import { InstanceProps } from "@/components/Instance";
 import { useFragmentProperties } from "@/shared/hooks/useFragmentProperties.ts";
+import { useGlobalManager } from "@/shared/hooks/useGlobalManager";
 
 /*
 Работаем по следующему принципу. Instance может рендериться внутри родителя (Fragment)
@@ -23,6 +24,9 @@ export const useInstance = (instanceProps: InstanceProps) => {
   const instanceLayerProps = instanceLayer?.props ?? {};
   const styles = useLayerStyles(instanceProps.layerKey);
 
+  const { manager: resultGlobalManager } = useGlobalManager(
+    instanceProps?.globalManager
+  );
   const resultProps = { ...instanceLayerProps, ...(instanceProps.props ?? {}) };
   const resultFragmentId = instanceProps?.fragmentId ?? instanceLayer?.fragment;
   const { properties: definitions, manager: innerFragmentManager } =
@@ -42,5 +46,6 @@ export const useInstance = (instanceProps: InstanceProps) => {
     parentManager,
     innerManager: innerFragmentManager,
     fragmentId: resultFragmentId,
+    globalManager: resultGlobalManager,
   };
 };
