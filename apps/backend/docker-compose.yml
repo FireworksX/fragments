@@ -7,7 +7,7 @@ services:
   nginx:
     build:
       context: nginx
-    container_name: backend-fastapi-nginx
+    container_name: backend-nginx
     ports:
       - "80:80"
     volumes:
@@ -22,7 +22,7 @@ services:
       - default
     env_file: .env
   core: &service
-    container_name: backend-fastapi-core
+    container_name: backend-core
     environment:
       - RUN_LEVEL=dev
       - MEDIA_STORAGE_PATH=${MEDIA_STORAGE_PATH}
@@ -48,7 +48,7 @@ services:
     restart: unless-stopped
     env_file: .env
   postgres:
-    container_name: backend-fastapi-postgres
+    container_name: backend-postgres
     image: library/postgres:13
     ports:
       - "5432:5432"
@@ -59,7 +59,7 @@ services:
     env_file:
       - .env
   pgadmin:
-    container_name: backend-fastapi-pgadmin
+    container_name: backend-pgadmin
     image: dpage/pgadmin4
     restart: always
     depends_on:
