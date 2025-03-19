@@ -106,6 +106,12 @@ export function makeApolloClient() {
                   }
                 })
               }
+            },
+
+            createProject: {
+              merge(_, _incoming, { cache }) {
+                cache.evict({ id: 'ROOT_QUERY', fieldName: 'project' })
+              }
             }
           }
         }

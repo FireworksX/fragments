@@ -15,6 +15,14 @@ interface LinkProps {
 export const Link: FC<LinkProps> = ({ className, children, ...inputLinkData }) => {
   const { href, isActive } = useLink(inputLinkData)
 
+  if (isActive) {
+    return (
+      <div className={cn(styles.root, className)}>
+        {typeof children === 'function' ? children({ isActive }) : children}
+      </div>
+    )
+  }
+
   return (
     <NextLink className={cn(styles.root, className)} href={href}>
       {typeof children === 'function' ? children({ isActive }) : children}

@@ -1,4 +1,4 @@
-query ProjectsList {
+query CurrentProjectsList {
     project {
         id
         name

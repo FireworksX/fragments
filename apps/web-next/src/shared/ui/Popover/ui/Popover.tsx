@@ -53,14 +53,19 @@ const Popover: FC<PopoverProps> = ({
       content={content}
       trigger={trigger === 'rightClick' ? 'manual' : trigger}
       appendTo={appendTo === 'body' && isBrowser ? document.body : appendTo}
+      offset={restProps.arrow === false ? [0, 5] : undefined}
       {...restProps}
       onCreate={onCreate}
       onShown={instance => {
         if (restProps.hideOnClick) {
           instance.popper.addEventListener('click', () => closeHandler(instance))
         }
+        restProps?.onShown?.(instance)
       }}
-      onHide={instance => instance.popper.removeEventListener('click', () => closeHandler(instance))}
+      onHide={instance => {
+        instance.popper.removeEventListener('click', () => closeHandler(instance))
+        restProps?.onHide?.(instance)
+      }}
     >
       <div ref={targetRef} onClick={event => handleClickTarget(event)}>
         {children}

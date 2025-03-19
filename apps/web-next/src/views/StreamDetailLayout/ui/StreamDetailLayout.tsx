@@ -13,6 +13,10 @@ import PlusIcon from '@/shared/icons/next/plus.svg'
 import { Chip } from '@/shared/ui/Chip'
 import { Link } from '@/shared/ui/Link'
 import { InputText } from '@/shared/ui/InputText'
+import { StreamFilterDevices } from '@/views/StreamDetailLayout/widgets/StreamFilterDevices'
+import { DeviceType } from '@/graphql/types'
+import { useState } from 'react'
+import { StreamFilterOperationals } from '@/views/StreamDetailLayout/widgets/StreamFilterOperationals'
 
 export const StreamDetailLayout = ({ children }) => {
   const {
@@ -21,11 +25,14 @@ export const StreamDetailLayout = ({ children }) => {
     loadingChangeStreamActive,
     loadingUpdateStream,
     toggleActive,
+    setIsEditMode,
     isEditMode,
     streamSlug,
     updateLocalStream,
     handleUpdateStream
   } = useStreamDetailLayout()
+
+  const [v, sv] = useState([])
 
   return (
     <div className={cn(styles.root)}>
@@ -59,14 +66,10 @@ export const StreamDetailLayout = ({ children }) => {
             <Chip prefix='Location:' onRemove={isEditMode && (() => undefined)}>
               Canada
             </Chip>
-            <Chip prefix='Device type:' onRemove={isEditMode && (() => undefined)}>
-              {' '}
-              Mobile
-            </Chip>
-            <Chip prefix='Device OS:' onRemove={isEditMode && (() => undefined)}>
-              {' '}
-              iOS
-            </Chip>
+
+            <StreamFilterDevices value={v} onChange={sv} />
+            <StreamFilterOperationals />
+
             {isEditMode && (
               <Chip>
                 <PlusIcon />
@@ -89,9 +92,9 @@ export const StreamDetailLayout = ({ children }) => {
                 <Button
                   mode='outline'
                   preventDefault
-                  // loading={loadingUpdateStream}
+                  loading={loadingUpdateStream}
                   icon={<EditIcon />}
-                  // onClick={toggleActive}
+                  onClick={() => setIsEditMode(true)}
                 >
                   Edit
                 </Button>
@@ -100,9 +103,9 @@ export const StreamDetailLayout = ({ children }) => {
               <Button
                 mode='danger-outline'
                 preventDefault
-                // loading={loadingUpdateStream}
+                loading={loadingUpdateStream}
                 icon={<DeleteIcon />}
-                // onClick={toggleActive}
+                onClick={toggleActive}
               >
                 Delete
               </Button>

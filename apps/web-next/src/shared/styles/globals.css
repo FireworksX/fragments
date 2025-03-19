@@ -149,7 +149,7 @@
 
         --border: #252525;
         --border--rgb: 37, 37, 37;
-        --border-light: rgba(218, 224, 228, .6);
+        --border-light: rgba(37, 37, 37, .6);
         --border-secondary: #FEFEFE;
         --border-accent: #DAE0E4;
     }

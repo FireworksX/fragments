@@ -17,7 +17,7 @@ interface InputTextProps extends InputHTMLAttributes<HTMLInputElement> {
   onSubmit?: () => void
 }
 
-const BaseInputText: FC<InputTextProps> = ({
+export const InputText: FC<InputTextProps> = ({
   className,
   classNameInput,
   size = 'medium',
@@ -51,9 +51,3 @@ const BaseInputText: FC<InputTextProps> = ({
     </div>
   )
 }
-
-export const InputText = forwardRef<HTMLInputElement, InputTextProps>((props, ref) => (
-  <BaseInputText {...props} inputRef={ref} />
-))
-
-export const InputTextAnimated = animated(BaseInputText)

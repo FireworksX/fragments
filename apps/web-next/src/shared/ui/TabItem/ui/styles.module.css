@@ -7,5 +7,6 @@
 
     &.active {
         border-color: var(--secondary);
+        font-weight: 500;
     }
 }

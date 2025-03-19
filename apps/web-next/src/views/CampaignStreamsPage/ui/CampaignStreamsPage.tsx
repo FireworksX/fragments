@@ -9,17 +9,20 @@ import PlusIcon from '@/shared/icons/next/plus.svg'
 import { useCampaignDetailPage } from '../hooks/useCampaignDetailPage'
 import { Chip } from '@/shared/ui/Chip/ui/Chip'
 import { Link } from '@/shared/ui/Link'
+import ConfigureStreamModal from '../../../widgets/modals/ConfigureStreamModal/ui/ConfigureStreamModal'
 
 interface CampaignStreamsPageProps {}
 
 export const CampaignStreamsPage: FC<CampaignStreamsPageProps> = () => {
-  const { streams } = useCampaignDetailPage()
+  const { streams, handleCreateStream } = useCampaignDetailPage()
 
   return (
     <div className={styles.root}>
       <div className={styles.header}>
         <InputText placeholder='Search' />
-        <Button icon={<PlusIcon />}>Create</Button>
+        <Button icon={<PlusIcon />} onClick={handleCreateStream}>
+          Create
+        </Button>
       </div>
 
       <div className={styles.body}>
@@ -29,6 +32,8 @@ export const CampaignStreamsPage: FC<CampaignStreamsPageProps> = () => {
           </Link>
         ))}
       </div>
+
+      <ConfigureStreamModal />
     </div>
   )
 }

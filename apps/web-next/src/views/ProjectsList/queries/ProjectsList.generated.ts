@@ -3,14 +3,14 @@ import * as Types from '../../../__generated__/types';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type ProjectsListQueryVariables = Types.Exact<{ [key: string]: never; }>;
+export type CurrentProjectsListQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type ProjectsListQuery = { __typename?: 'Query', project: Array<{ __typename?: 'ProjectGet', id: number, name: string }> };
+export type CurrentProjectsListQuery = { __typename?: 'Query', project: Array<{ __typename?: 'ProjectGet', id: number, name: string }> };
 
 
-export const ProjectsListDocument = gql`
-    query ProjectsList {
+export const CurrentProjectsListDocument = gql`
+    query CurrentProjectsList {
   project {
     id
     name
@@ -19,33 +19,33 @@ export const ProjectsListDocument = gql`
     `;
 
 /**
- * __useProjectsListQuery__
+ * __useCurrentProjectsListQuery__
  *
- * To run a query within a React component, call `useProjectsListQuery` and pass it any options that fit your needs.
- * When your component renders, `useProjectsListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useCurrentProjectsListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCurrentProjectsListQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useProjectsListQuery({
+ * const { data, loading, error } = useCurrentProjectsListQuery({
  *   variables: {
  *   },
  * });
  */
-export function useProjectsListQuery(baseOptions?: Apollo.QueryHookOptions<ProjectsListQuery, ProjectsListQueryVariables>) {
+export function useCurrentProjectsListQuery(baseOptions?: Apollo.QueryHookOptions<CurrentProjectsListQuery, CurrentProjectsListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ProjectsListQuery, ProjectsListQueryVariables>(ProjectsListDocument, options);
+        return Apollo.useQuery<CurrentProjectsListQuery, CurrentProjectsListQueryVariables>(CurrentProjectsListDocument, options);
       }
-export function useProjectsListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProjectsListQuery, ProjectsListQueryVariables>) {
+export function useCurrentProjectsListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CurrentProjectsListQuery, CurrentProjectsListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ProjectsListQuery, ProjectsListQueryVariables>(ProjectsListDocument, options);
+          return Apollo.useLazyQuery<CurrentProjectsListQuery, CurrentProjectsListQueryVariables>(CurrentProjectsListDocument, options);
         }
-export function useProjectsListSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ProjectsListQuery, ProjectsListQueryVariables>) {
+export function useCurrentProjectsListSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<CurrentProjectsListQuery, CurrentProjectsListQueryVariables>) {
           const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<ProjectsListQuery, ProjectsListQueryVariables>(ProjectsListDocument, options);
+          return Apollo.useSuspenseQuery<CurrentProjectsListQuery, CurrentProjectsListQueryVariables>(CurrentProjectsListDocument, options);
         }
-export type ProjectsListQueryHookResult = ReturnType<typeof useProjectsListQuery>;
-export type ProjectsListLazyQueryHookResult = ReturnType<typeof useProjectsListLazyQuery>;
-export type ProjectsListSuspenseQueryHookResult = ReturnType<typeof useProjectsListSuspenseQuery>;
-export type ProjectsListQueryResult = Apollo.QueryResult<ProjectsListQuery, ProjectsListQueryVariables>;
+export type CurrentProjectsListQueryHookResult = ReturnType<typeof useCurrentProjectsListQuery>;
+export type CurrentProjectsListLazyQueryHookResult = ReturnType<typeof useCurrentProjectsListLazyQuery>;
+export type CurrentProjectsListSuspenseQueryHookResult = ReturnType<typeof useCurrentProjectsListSuspenseQuery>;
+export type CurrentProjectsListQueryResult = Apollo.QueryResult<CurrentProjectsListQuery, CurrentProjectsListQueryVariables>;

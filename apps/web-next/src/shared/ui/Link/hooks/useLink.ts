@@ -5,10 +5,14 @@ interface UseLinkOptions extends Record<string, unknown> {
   type: LinkType
 }
 
-export const useLink = ({ type, ...inputLinkParams }: UseLinkOptions) => {
-  const routerParams = useParams()
+interface BuilderLinkOptions extends UseLinkOptions {
+  routerParams: Record<string, unknown>
+  pathname: string
+}
+
+export const buildLink = ({ type, routerParams, pathname, ...inputLinkParams }: BuilderLinkOptions) => {
   const linkEntity = linkConfig[type]
-  const linkParams = linkEntity.params.reduce((acc, param) => {
+  const linkParams = linkEntity?.params?.reduce((acc, param) => {
     let routerParam = routerParams[param]
     if (param === 'fragmentSlug' && param in routerParams) {
       routerParam = routerParams[param].at(0)
@@ -17,12 +21,18 @@ export const useLink = ({ type, ...inputLinkParams }: UseLinkOptions) => {
     return acc
   }, {})
 
-  const href = typeof linkEntity.path === 'function' ? linkEntity.path(linkParams) : linkEntity.path
-  const pathname = usePathname()
+  const href = typeof linkEntity?.path === 'function' ? linkEntity.path(linkParams) : linkEntity.path
   const isActive = pathname === href
 
   return {
     isActive,
     href
   }
+}
+
+export const useLink = (options: UseLinkOptions) => {
+  const routerParams = useParams()
+  const pathname = usePathname()
+
+  return buildLink({ ...options, pathname, routerParams })
 }

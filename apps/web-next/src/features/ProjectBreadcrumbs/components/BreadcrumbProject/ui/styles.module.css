@@ -5,4 +5,30 @@
     font-size: 14px;
     font-weight: 500;
     color: var(--text-color-accent);
+    transition: var(--animation-transition-default);
+    padding: 7px 5px;
+    border-radius: var(--radius-second);
+
+    &:hover {
+        background: var(--background-secondary);
+    }
+}
+
+
+.option {
+    width: 200px;
+}
+
+.selected {
+    background: var(--background-secondary);
+    font-weight: 500;
+}
+
+.createOption {
+    min-height: 36px;
+}
+
+.createIcon {
+    color: var(--primary);
+    margin-left: 5px;
 }

@@ -8,7 +8,6 @@ import { useDroppable } from '@dnd-kit/core'
 import { useModal } from '@/shared/hooks/useModal'
 import { modalNames } from '@/shared/data'
 import { useProjectFiles } from '@/shared/hooks/useProjectFiles'
-import CreateFragmentModal from '@/widgets/modals/CreateFragmentModal/ui/CreateFragmentModal'
 import { useGraphEffect } from '@graph-state/react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { nodes } from '@fragments/plugin-fragment'
@@ -81,7 +80,6 @@ export const FragmentsEditPlaceholder: FC<FragmentsEditPlaceholderProps> = ({ cl
           </div>
         )}
       </div>
-      <CreateFragmentModal />
     </>
   )
 }

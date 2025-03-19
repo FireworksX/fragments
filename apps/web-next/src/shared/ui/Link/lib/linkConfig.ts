@@ -21,8 +21,12 @@ export const linkConfig = {
     path: ({ projectSlug }) => `/project/${projectSlug}`,
     params: ['projectSlug']
   },
-  projectsList: {
-    path: '/project',
+  projectSetting: {
+    path: ({ projectSlug }) => `/project/${projectSlug}/settings`,
+    params: ['projectSlug']
+  },
+  projectCreate: {
+    path: '/project/create',
     params: []
   },
   createProject: {
@@ -48,17 +52,9 @@ export const linkConfig = {
     params: ['campaignSlug', 'projectSlug', 'streamSlug']
   },
 
-  fragments: {
-    path: ({ projectSlug }) => `/project/${projectSlug}/fragments`,
+  builder: {
+    path: ({ projectSlug }) => `/project/${projectSlug}/builder`,
     params: ['projectSlug']
-  },
-  fragmentPreview: {
-    path: ({ projectSlug, fragmentSlug }) => `/project/${projectSlug}/fragments/${fragmentSlug}`,
-    params: ['projectSlug', 'fragmentSlug']
-  },
-  fragmentEdit: {
-    path: ({ projectSlug, fragmentSlug }) => `/project/${projectSlug}/fragments/${fragmentSlug}/edit`,
-    params: ['projectSlug', 'fragmentSlug']
   }
 }
 

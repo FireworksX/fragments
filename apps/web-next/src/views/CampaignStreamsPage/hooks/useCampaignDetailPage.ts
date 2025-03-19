@@ -7,9 +7,11 @@ import { useGraph } from '@graph-state/react'
 import { LIST_STREAMS } from '../lib/listStreams'
 import { DEFAULT_LOCAL_STREAM } from '@/widgets/modals/ConfigureStreamModal'
 import { useListSteamsQuery } from '@/views/CampaignStreamsPage/queries/ListStreams.generated'
+import { useCreateStreamMutation } from '@/views/CampaignStreamsPage/queries/CreateStream.generated'
 
 export const useCampaignDetailPage = () => {
   const { campaignSlug, projectSlug } = useParams()
+  const [createStream] = useCreateStreamMutation()
   // const [executeCreateStream, { loading: loadingCreateStream }] = useMutation(CREATE_STREAM)
   // const [executeUpdateStream, { loading: loadingUpdateStream }] = useMutation(UPDATE_STREAM)
   // const [, updateModal] = useGraph(modalStore, modalStore.key)
@@ -19,24 +21,24 @@ export const useCampaignDetailPage = () => {
     }
   })
 
-  // const handleCreateStream = () => {
-  //   modalStore.open(modalNames.configureStream, {
-  //     isNew: true,
-  //     localStream: DEFAULT_LOCAL_STREAM,
-  //     onSubmit: async stream => {
-  //       await executeCreateStream({
-  //         variables: {
-  //           name: stream.name,
-  //           weight: stream.weight,
-  //           active: stream.active,
-  //           campaignSlug: +campaignSlug
-  //         }
-  //       })
-  //
-  //       modalStore.close()
-  //     }
-  //   })
-  // }
+  const handleCreateStream = () => {
+    modalStore.open(modalNames.configureStream, {
+      isNew: true,
+      localStream: DEFAULT_LOCAL_STREAM,
+      onSubmit: async stream => {
+        await createStream({
+          variables: {
+            name: stream.name,
+            weight: stream.weight,
+            active: stream.active,
+            campaignId: +campaignSlug
+          }
+        })
+
+        modalStore.close()
+      }
+    })
+  }
   //
   // const handleUpdateStream = stream => {
   //   modalStore.open(modalNames.configureStream, {
@@ -71,6 +73,7 @@ export const useCampaignDetailPage = () => {
   return {
     streams: listStreams?.stream ?? [],
     campaignSlug,
-    projectSlug
+    projectSlug,
+    handleCreateStream
   }
 }

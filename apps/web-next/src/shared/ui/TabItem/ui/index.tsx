@@ -4,7 +4,6 @@ import styles from './styles.module.css'
 import { Touchable, TouchableProps } from '@/shared/ui/Touchable'
 
 export interface TabItemProps extends PropsWithChildren, TouchableProps {
-  name: string
   isActive?: boolean
   className?: string
 }
