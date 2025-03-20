@@ -20,11 +20,12 @@ from .middleware import Context
 from .user import login, refresh, profile, signup, add_avatar_route
 from .fragment import create_fragment_route, fragments_in_project, fragments_by_ids, update_fragment_route, \
     add_fragment_asset_route, remove_fragment_asset_route, delete_fragment_route
-from .stream import create_stream_route, stream_by_id, streams_in_campaign, update_stream_route
+from .stream import create_stream_route, stream_by_id, streams_in_campaign, update_stream_route, delete_stream_route
 from .feedback import create_feedback
 from .project import create_project_route, project_by_id, projects, update_project_route, \
     add_user_to_project as add_user_to_project_route, change_user_role as change_user_role_route, \
-    add_project_logo_route, add_project_public_key_route, delete_project_public_key_route, change_project_private_key_route
+    add_project_logo_route, add_project_public_key_route, delete_project_public_key_route, \
+    change_project_private_key_route
 from .schemas.user import RoleGet, UserGet, AuthPayload
 from fastapi import UploadFile
 from .landing import landing_by_id, landings_in_stream, update_landing_route, create_landing_route, get_client_landing
@@ -49,20 +50,23 @@ class Query:
     #
     @strawberry.field
     async def campaign(self, info: strawberry.Info[Context], campgain_id: Optional[int] = None,
-                       project_id: Optional[int] = None, active: Optional[bool] = None, deleted: Optional[bool] = None) -> List[CampaignGet]:
+                       project_id: Optional[int] = None, active: Optional[bool] = None,
+                       deleted: Optional[bool] = None) -> List[CampaignGet]:
         if campgain_id is not None:
             return [await campaign_by_id(info, campgain_id)]
         if project_id is not None:
             return await campaigns_in_project(info, project_id, active, deleted)
 
     @strawberry.field
-    async def campaign_by_name(self, info: strawberry.Info[Context], project_id: int, name: str, limit: Optional[int] = 5, active: Optional[bool] = None, deleted: Optional[bool] = None) -> List[CampaignGet]:
+    async def campaign_by_name(self, info: strawberry.Info[Context], project_id: int, name: str,
+                               limit: Optional[int] = 5, active: Optional[bool] = None,
+                               deleted: Optional[bool] = None) -> List[CampaignGet]:
         return await campaign_by_name(info, project_id, name, limit, active, deleted)
-
 
     @strawberry.field
     async def stream(self, info: strawberry.Info[Context], stream_id: Optional[int] = None,
-                          campaign_id: Optional[int] = None, active: Optional[bool] = None, deleted: Optional[bool] = None) -> List[StreamGet]:
+                     campaign_id: Optional[int] = None, active: Optional[bool] = None,
+                     deleted: Optional[bool] = None) -> List[StreamGet]:
         if stream_id is not None:
             return [await stream_by_id(info, stream_id)]
         if campaign_id is not None:
@@ -76,14 +80,16 @@ class Query:
             return await projects(info)
 
     @strawberry.field
-    async def landing(self, info: strawberry.Info[Context], stream_id: Optional[int] = None, landing_id: Optional[int] = None) -> List[LandingGet]:
+    async def landing(self, info: strawberry.Info[Context], stream_id: Optional[int] = None,
+                      landing_id: Optional[int] = None) -> List[LandingGet]:
         if landing_id is not None:
             return [await landing_by_id(info, landing_id)]
         else:
             return await landings_in_stream(info, stream_id)
 
     @strawberry.field
-    async def filter(self, info: strawberry.Info[Context], countries: Optional[List[str]], regions: Optional[List[str]]) -> AllFiltersGet:
+    async def filter(self, info: strawberry.Info[Context], countries: Optional[List[str]] = None,
+                     regions: Optional[List[str]]= None) -> AllFiltersGet:
         return await get_all_filters(info, countries, regions)
 
     @strawberry.field
@@ -128,11 +134,13 @@ class Mutation:
         return await update_campaign_route(info, cmp)
 
     @strawberry.mutation
-    async def add_campaign_logo(self, info: strawberry.Info[Context], file: UploadFile, campaign_id: int) -> CampaignGet:
+    async def add_campaign_logo(self, info: strawberry.Info[Context], file: UploadFile,
+                                campaign_id: int) -> CampaignGet:
         return await add_campaign_logo_route(info, file, campaign_id)
 
     @strawberry.mutation
-    async def add_fragment_asset(self, info: strawberry.Info[Context], file: UploadFile, fragment_id: int) -> FragmentGet:
+    async def add_fragment_asset(self, info: strawberry.Info[Context], file: UploadFile,
+                                 fragment_id: int) -> FragmentGet:
         return await add_fragment_asset_route(info, file, fragment_id)
 
     @strawberry.mutation
@@ -145,11 +153,15 @@ class Mutation:
 
     @strawberry.mutation
     async def create_stream(self, info: strawberry.Info[Context], strm: StreamPost) -> StreamGet:
-       return await create_stream_route(info, strm)
+        return await create_stream_route(info, strm)
 
     @strawberry.mutation
     async def update_stream(self, info: strawberry.Info[Context], strm: StreamPatch) -> StreamGet:
-       return await update_stream_route(info, strm)
+        return await update_stream_route(info, strm)
+
+    @strawberry.mutation
+    async def delete_stream(self, info: strawberry.Info[Context], stream_id: int) -> None:
+        await delete_stream_route(info, stream_id)
 
     @strawberry.mutation
     async def create_project(self, info: strawberry.Info[Context], pr: ProjectPost) -> ProjectGet:
@@ -164,11 +176,13 @@ class Mutation:
         return await add_project_logo_route(info, file, project_id)
 
     @strawberry.mutation
-    async def add_fragment_asset(self, info: strawberry.Info[Context], file: UploadFile, fragment_id: int) -> FragmentGet:
+    async def add_fragment_asset(self, info: strawberry.Info[Context], file: UploadFile,
+                                 fragment_id: int) -> FragmentGet:
         return await add_fragment_asset_route(info, file, fragment_id)
 
     @strawberry.mutation
-    async def remove_fragment_asset(self, info: strawberry.Info[Context], fragment_id: int, public_path: str) -> FragmentGet:
+    async def remove_fragment_asset(self, info: strawberry.Info[Context], fragment_id: int,
+                                    public_path: str) -> FragmentGet:
         return await remove_fragment_asset_route(info, fragment_id, public_path)
 
     @strawberry.mutation

@@ -2,6 +2,14 @@ import json
 from typing import List, Optional
 
 from database import GeoLocation, Session
+import pycountry
+
+
+def get_country_name(country_code: str):
+    try:
+        return pycountry.countries.get(alpha_2=country_code.upper()).name
+    except AttributeError:
+        return "Invalid country code"
 
 
 def get_geo_locations(db: Session, countries_filter: Optional[List[str]],
@@ -14,7 +22,7 @@ def get_geo_locations(db: Session, countries_filter: Optional[List[str]],
         # Convert JSON objects to instances of GeoLocationGet
         geo_locations: List[GeoLocation] = [
             GeoLocation(
-                country=item.get("country", ""),
+                country=get_country_name(item.get("country", "")),
                 region=item.get("admin1", ""),
                 city=item.get("name", "")
             )

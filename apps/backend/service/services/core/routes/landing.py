@@ -22,7 +22,7 @@ from .utils import get_user_role_in_project
 async def landing_db_to_landing(info, landing_db: Landing) -> LandingGet:
     return LandingGet(id=landing_db.id, name=landing_db.name,
                       props=landing_db.props, weight=landing_db.weight,
-                      fragment=await fragment_by_id(info, landing_db.fragment.id), stream=landing_db.stream,
+                      fragment= None if landing_db.fragment is None else await fragment_by_id(info, landing_db.fragment.id), stream=landing_db.stream,
                       active=landing_db.active,
                       deleted=landing_db.deleted)
 
@@ -42,8 +42,10 @@ async def create_landing_route(info: strawberry.Info[Context], landing_in: Landi
     db: Session = info.context.session()
 
     stream: Stream = await get_stream_by_id_db(db, landing_in.stream_id)
-    project_id: int = stream.project_id
+    if stream is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Stream does not exist")
 
+    project_id: int = stream.project_id
     project: Project = await get_project_by_id_db(db, project_id)
     if project is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
