@@ -29,6 +29,8 @@ export const Instance: FC<InstanceProps> = (instanceProps) => {
     globalManager,
   } = useInstance(instanceProps);
 
+  fetch(`query ()`);
+
   return (
     <InstanceContext
       value={{
