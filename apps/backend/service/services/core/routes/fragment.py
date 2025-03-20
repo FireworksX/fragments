@@ -9,6 +9,7 @@ from crud.bucket import add_file, delete_file
 from crud.media import create_media_db, delete_media_by_public_path_db
 from crud.project import get_project_by_id_db
 from .schemas.fragment import FragmentPost, FragmentPatch, FragmentGet
+from .schemas.landing import ClientLanding
 from .schemas.user import RoleGet, AuthPayload
 from .middleware import Context
 from crud.fragment import create_fragment_db, Fragment, get_fragments_by_project_id_db, \
@@ -267,4 +268,18 @@ async def fragment_by_id(info: strawberry.Info[Context], fragment_id: int) -> Fr
                             detail=f'Fragment with id {fragment_id} does not exist')
     project_id: int = fragment.project_id
     await check_read_permissions(db, user.user.id, project_id)
+    return fragment_db_to_fragment(fragment)
+
+
+async def get_client_fragment(info: strawberry.Info[Context], fragment_id: int) -> FragmentGet:
+    project: Project = await info.context.project()
+    db: Session = info.context.session()
+
+    fragment: Fragment = await get_fragment_by_id_db(db, fragment_id)
+    if fragment is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f'Fragment with id {fragment_id} does not exist')
+    if fragment.project_id != project.id:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f'Fragment with id {fragment_id} is not authorized to project {project.project_id}')
     return fragment_db_to_fragment(fragment)
