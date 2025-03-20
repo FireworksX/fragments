@@ -281,5 +281,5 @@ async def get_client_fragment(info: strawberry.Info[Context], fragment_id: int) 
                             detail=f'Fragment with id {fragment_id} does not exist')
     if fragment.project_id != project.id:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f'Fragment with id {fragment_id} is not authorized to project {project.project_id}')
+                            detail=f'Fragment with id {fragment_id} is not authorized to project {project.id}')
     return fragment_db_to_fragment(fragment)
