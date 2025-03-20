@@ -1,4 +1,4 @@
-query LandingsList($streamSlug: Int!, $landingId: Int!) {
+query LandingsList($streamSlug: Int!, $landingId: Int) {
     landing(streamId: $streamSlug, landingId: $landingId) {
         id
         name

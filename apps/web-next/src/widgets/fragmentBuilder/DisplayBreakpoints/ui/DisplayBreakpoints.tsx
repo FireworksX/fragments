@@ -11,12 +11,11 @@ interface BuilderDisplayBreakpointsProps {
 }
 
 const DisplayBreakpoints: FC<BuilderDisplayBreakpointsProps> = ({ className }) => {
-  const { globalManager } = useBuilderDocument()
   const { currentFragmentId } = useBuilder()
 
   return (
     <div className={cn(styles.root, className)}>
-      <Fragment fragmentId={currentFragmentId} context={globalManager} />
+      <Fragment fragmentId={currentFragmentId} />
 
       {/*{layers.map((layerKey, index) => (*/}
       {/*  <Frame key={`${layerKey}_${index}`} layerKey={layerKey} />*/}

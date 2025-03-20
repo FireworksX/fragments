@@ -5,7 +5,7 @@ import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type LandingsListQueryVariables = Types.Exact<{
   streamSlug: Types.Scalars['Int']['input'];
-  landingId: Types.Scalars['Int']['input'];
+  landingId?: Types.InputMaybe<Types.Scalars['Int']['input']>;
 }>;
 
 
@@ -13,7 +13,7 @@ export type LandingsListQuery = { __typename?: 'Query', landing: Array<{ __typen
 
 
 export const LandingsListDocument = gql`
-    query LandingsList($streamSlug: Int!, $landingId: Int!) {
+    query LandingsList($streamSlug: Int!, $landingId: Int) {
   landing(streamId: $streamSlug, landingId: $landingId) {
     id
     name

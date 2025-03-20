@@ -245,7 +245,9 @@ export type Mutation = {
   addCampaignLogo: CampaignGet;
   addFragmentAsset: FragmentGet;
   addProjectLogo: ProjectGet;
+  addProjectPublicKey: ProjectGet;
   addUserToProject?: Maybe<Scalars['Void']['output']>;
+  changeProjectPrivateKey: ProjectGet;
   changeUserRole?: Maybe<Scalars['Void']['output']>;
   createCampaign: CampaignGet;
   createDirectory: Array<ProjectDirectoryGet>;
@@ -255,6 +257,8 @@ export type Mutation = {
   createStream: StreamGet;
   deleteDirectory?: Maybe<Scalars['Void']['output']>;
   deleteFragment?: Maybe<Scalars['Void']['output']>;
+  deleteProjectPublicKey?: Maybe<Scalars['Void']['output']>;
+  deleteStream?: Maybe<Scalars['Void']['output']>;
   feedback: FeedbackGet;
   login: AuthPayload;
   refresh: AuthPayload;
@@ -292,10 +296,20 @@ export type MutationAddProjectLogoArgs = {
 };
 
 
+export type MutationAddProjectPublicKeyArgs = {
+  projectId: Scalars['Int']['input'];
+};
+
+
 export type MutationAddUserToProjectArgs = {
   projectId: Scalars['Int']['input'];
   role: Scalars['Int']['input'];
   userId: Scalars['Int']['input'];
+};
+
+
+export type MutationChangeProjectPrivateKeyArgs = {
+  projectId: Scalars['Int']['input'];
 };
 
 
@@ -343,6 +357,17 @@ export type MutationDeleteDirectoryArgs = {
 
 export type MutationDeleteFragmentArgs = {
   fragmentId: Scalars['Int']['input'];
+};
+
+
+export type MutationDeleteProjectPublicKeyArgs = {
+  projectId: Scalars['Int']['input'];
+  publicKey: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteStreamArgs = {
+  streamId: Scalars['Int']['input'];
 };
 
 
@@ -439,6 +464,8 @@ export type ProjectGet = {
   members: Array<UserRoleGet>;
   name: Scalars['String']['output'];
   owner: UserGet;
+  privateKey?: Maybe<Scalars['String']['output']>;
+  publicKeys: Array<Scalars['String']['output']>;
   rootDirectoryId: Scalars['Int']['output'];
 };
 
@@ -456,6 +483,7 @@ export type Query = {
   __typename?: 'Query';
   campaign: Array<CampaignGet>;
   campaignByName: Array<CampaignGet>;
+  clientLanding?: Maybe<LandingGet>;
   directory: Array<ProjectDirectoryGet>;
   filter: AllFiltersGet;
   fragment: Array<FragmentGet>;

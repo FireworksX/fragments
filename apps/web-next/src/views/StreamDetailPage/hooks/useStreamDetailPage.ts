@@ -22,7 +22,7 @@ export const useStreamDetailPage = () => {
       landingId: +landingId
     }
   })
-  const landings = data?.streamFragment ?? []
+  const landings = data?.landing ?? []
 
   const handleCreateLanding = async () => {
     await executeCreateLanding({

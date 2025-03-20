@@ -1,11 +1,13 @@
 import { createState, LinkKey } from "@graph-state/core";
 import { nodes, renderTarget } from "@/definitions";
 import { createManager } from "@/shared/managers/createManager";
+import { createFetchManager } from "@/shared/managers/fetchManager/createFetchManager";
 
 export const createGlobalManager = () =>
   createState({
     _type: "GlobalManager",
     initialState: {
+      fetchManager: createFetchManager(),
       fragmentsManagers: {},
       renderTarget: renderTarget.canvas,
     },

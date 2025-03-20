@@ -1,8 +1,7 @@
-import { useMutation } from '@apollo/client'
-import { AUTH_SIGN_UP } from '@/views/AuthSignUp/lib/authSignUp'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { signIn } from 'next-auth/react'
 import { redirect, useRouter } from 'next/navigation'
+import { useAuthSignUpMutation } from '@/views/AuthSignUp/queries/AuthSignUp.generated'
 
 interface Inputs {
   firstName: string
@@ -12,7 +11,7 @@ interface Inputs {
 
 export const useAuthSignUp = () => {
   const router = useRouter()
-  const [executeSignUp, { loading }] = useMutation(AUTH_SIGN_UP)
+  const [executeSignUp, { loading }] = useAuthSignUpMutation()
   const { register, handleSubmit } = useForm<Inputs>()
 
   const onSubmit: SubmitHandler<Inputs> = async data => {
