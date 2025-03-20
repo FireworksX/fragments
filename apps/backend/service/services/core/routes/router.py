@@ -19,7 +19,7 @@ from typing import Optional, List
 from .middleware import Context
 from .user import login, refresh, profile, signup, add_avatar_route
 from .fragment import create_fragment_route, fragments_in_project, fragments_by_ids, update_fragment_route, \
-    add_fragment_asset_route, remove_fragment_asset_route, delete_fragment_route
+    add_fragment_asset_route, remove_fragment_asset_route, delete_fragment_route, get_client_fragment
 from .stream import create_stream_route, stream_by_id, streams_in_campaign, update_stream_route, delete_stream_route
 from .feedback import create_feedback
 from .project import create_project_route, project_by_id, projects, update_project_route, \
@@ -99,6 +99,10 @@ class Query:
     @strawberry.field
     async def client_landing(self, info: strawberry.Info[Context]) -> Optional[LandingGet]:
         return await get_client_landing(info)
+
+    @strawberry.field
+    async def client_fragment(self, info: strawberry.Info[Context], fragment_id: int) -> Optional[FragmentGet]:
+        return await get_client_fragment(info, fragment_id)
 
 
 @strawberry.type
