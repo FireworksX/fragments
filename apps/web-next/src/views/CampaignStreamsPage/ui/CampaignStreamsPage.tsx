@@ -6,23 +6,57 @@ import { StreamPreviewItem } from '@/widgets/campaigns/StreamPreviewItem'
 import { InputText } from '@/shared/ui/InputText'
 import { Button } from '@/shared/ui/Button'
 import PlusIcon from '@/shared/icons/next/plus.svg'
+import CheckIcon from '@/shared/icons/next/check.svg'
+import CloseIcon from '@/shared/icons/next/close.svg'
 import { useCampaignDetailPage } from '../hooks/useCampaignDetailPage'
-import { Chip } from '@/shared/ui/Chip/ui/Chip'
 import { Link } from '@/shared/ui/Link'
-import ConfigureStreamModal from '../../../widgets/modals/ConfigureStreamModal/ui/ConfigureStreamModal'
 
 interface CampaignStreamsPageProps {}
 
 export const CampaignStreamsPage: FC<CampaignStreamsPageProps> = () => {
-  const { streams, handleCreateStream } = useCampaignDetailPage()
+  const {
+    streams,
+    creatingStream,
+    creatingName,
+    setCreatingName,
+    creatingRef,
+    handleCreateStream,
+    isCreating,
+    setIsCreating
+  } = useCampaignDetailPage()
 
   return (
     <div className={styles.root}>
       <div className={styles.header}>
-        <InputText placeholder='Search' />
-        <Button icon={<PlusIcon />} onClick={handleCreateStream}>
-          Create
-        </Button>
+        {isCreating ? (
+          <>
+            <InputText
+              ref={creatingRef}
+              placeholder='Stream name'
+              value={creatingName}
+              onChangeValue={setCreatingName}
+            />
+            <Button
+              loading={creatingStream}
+              disabled={creatingName?.length <= 2}
+              mode='success'
+              icon={<CheckIcon />}
+              onClick={handleCreateStream}
+            >
+              Create
+            </Button>
+            <Button mode='secondary' icon={<CloseIcon />} onClick={() => setIsCreating(false)}>
+              Cancel
+            </Button>
+          </>
+        ) : (
+          <>
+            <InputText placeholder='Search' />
+            <Button icon={<PlusIcon />} onClick={() => setIsCreating(true)}>
+              Create
+            </Button>
+          </>
+        )}
       </div>
 
       <div className={styles.body}>
@@ -32,8 +66,6 @@ export const CampaignStreamsPage: FC<CampaignStreamsPageProps> = () => {
           </Link>
         ))}
       </div>
-
-      <ConfigureStreamModal />
     </div>
   )
 }

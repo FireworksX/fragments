@@ -25,8 +25,6 @@ export const CreateProject = () => {
 
     if (data) {
       const projectLink = buildLink({ type: 'project', projectSlug: data?.createProject?.id, pathname, routerParams })
-
-      console.log(projectLink)
       router.push(projectLink.href)
     }
   }
@@ -49,7 +47,7 @@ export const CreateProject = () => {
           </defs>
           <rect fill='url(#«r1da»)' height='100%' mask='url(#«r1da»-mask)' width='100%'></rect>
         </svg>
-        <Container>
+        <Container mode='hug'>
           <h1 className={styles.title}>Let's build something new.</h1>
 
           <form className={styles.row} onSubmit={handleCreate}>

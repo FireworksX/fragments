@@ -1,17 +1,14 @@
-import { modalStore } from '@/shared/store/modal.store'
-import { modalNames } from '@/shared/data'
-import { useMutation, useQuery } from '@apollo/client'
 import { useParams } from 'next/navigation'
-import { useEffect } from 'react'
-import { useGraph } from '@graph-state/react'
-import { LIST_STREAMS } from '../lib/listStreams'
-import { DEFAULT_LOCAL_STREAM } from '@/widgets/modals/ConfigureStreamModal'
+import { ComponentRef, useEffect, useRef, useState } from 'react'
 import { useListSteamsQuery } from '@/views/CampaignStreamsPage/queries/ListStreams.generated'
 import { useCreateStreamMutation } from '@/views/CampaignStreamsPage/queries/CreateStream.generated'
 
 export const useCampaignDetailPage = () => {
+  const creatingRef = useRef<ComponentRef<'div'>>(null)
+  const [creatingName, setCreatingName] = useState('')
+  const [isCreating, setIsCreating] = useState(false)
   const { campaignSlug, projectSlug } = useParams()
-  const [createStream] = useCreateStreamMutation()
+  const [createStream, { loading: creatingStream }] = useCreateStreamMutation()
   // const [executeCreateStream, { loading: loadingCreateStream }] = useMutation(CREATE_STREAM)
   // const [executeUpdateStream, { loading: loadingUpdateStream }] = useMutation(UPDATE_STREAM)
   // const [, updateModal] = useGraph(modalStore, modalStore.key)
@@ -21,56 +18,34 @@ export const useCampaignDetailPage = () => {
     }
   })
 
-  const handleCreateStream = () => {
-    modalStore.open(modalNames.configureStream, {
-      isNew: true,
-      localStream: DEFAULT_LOCAL_STREAM,
-      onSubmit: async stream => {
-        await createStream({
-          variables: {
-            name: stream.name,
-            weight: stream.weight,
-            active: stream.active,
-            campaignId: +campaignSlug
-          }
-        })
+  useEffect(() => {
+    if (isCreating) {
+      creatingRef?.current?.focus()
+    } else {
+      setCreatingName('')
+    }
+  }, [isCreating])
 
-        modalStore.close()
+  const handleCreateStream = async () => {
+    await createStream({
+      variables: {
+        name: creatingName,
+        active: false,
+        weight: 0,
+        campaignId: +campaignSlug
       }
     })
+
+    setIsCreating(false)
   }
-  //
-  // const handleUpdateStream = stream => {
-  //   modalStore.open(modalNames.configureStream, {
-  //     localStream: {
-  //       ...DEFAULT_LOCAL_STREAM,
-  //       ...stream
-  //     },
-  //     onSubmit: async stream => {
-  //       await executeUpdateStream({
-  //         variables: {
-  //           id: stream.id,
-  //           name: stream.name,
-  //           weight: stream.weight,
-  //           active: stream.active,
-  //           campaignSlug: +campaignSlug
-  //         }
-  //       })
-  //
-  //       modalStore.close()
-  //     }
-  //   })
-  // }
-  //
-  // useEffect(() => {
-  //   updateModal({
-  //     context: {
-  //       loading: loadingCreateStream || loadingUpdateStream
-  //     }
-  //   })
-  // }, [loadingCreateStream, loadingUpdateStream, updateModal])
 
   return {
+    creatingStream,
+    creatingName,
+    setCreatingName,
+    creatingRef,
+    isCreating,
+    setIsCreating,
     streams: listStreams?.stream ?? [],
     campaignSlug,
     projectSlug,

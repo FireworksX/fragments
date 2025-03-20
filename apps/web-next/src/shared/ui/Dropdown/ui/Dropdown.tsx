@@ -48,7 +48,7 @@ const Dropdown: FC<DropdownProps> = ({
       appendTo={appendTo}
       arrow={arrow}
       content={
-        <div>
+        <div className={styles.options}>
           {isLoading ? (
             <div className={styles.loadingContainer}>
               <Spinner size={14} color='var(--text-color-accent)' />

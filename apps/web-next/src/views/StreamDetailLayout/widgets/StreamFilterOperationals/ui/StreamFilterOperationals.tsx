@@ -13,12 +13,14 @@ import { useStreamOperationalsFilterLazyQuery } from '../queries/StreamOperation
 import { noop } from '@fragments/utils'
 
 interface StreamFilterOperationalsProps {
+  isEdit?: boolean
   value?: OsType[]
   className?: string
   onChange?: (nextValue: OsType[]) => void
 }
 
 export const StreamFilterOperationals: FC<StreamFilterOperationalsProps> = ({
+  isEdit,
   className,
   value = [],
   onChange = noop
@@ -35,6 +37,7 @@ export const StreamFilterOperationals: FC<StreamFilterOperationalsProps> = ({
   return (
     <Dropdown
       trigger='click'
+      disabled={!isEdit}
       placement='bottom-end'
       isLoading={loading}
       onShow={() => executeQuery()}
@@ -54,7 +57,7 @@ export const StreamFilterOperationals: FC<StreamFilterOperationalsProps> = ({
       }
     >
       <Chip className={className} prefix='OS type:'>
-        {(value?.length ? value : ['all']).map(t).join(', ')} <EditIcon className={styles.editIcon} />
+        {(value?.length ? value : ['Any']).map(t).join(', ')} {isEdit && <EditIcon className={styles.editIcon} />}
       </Chip>
     </Dropdown>
   )

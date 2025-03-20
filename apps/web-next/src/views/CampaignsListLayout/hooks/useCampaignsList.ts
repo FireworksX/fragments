@@ -1,17 +1,16 @@
-import { useMutation, useQuery } from '@apollo/client'
-import { CREATE_CAMPAIGN } from '../lib/createCampaign'
 import { modalStore } from '@/shared/store/modal.store'
 import { modalNames } from '@/shared/data'
 import { useGraph } from '@graph-state/react'
-import { useEffect } from 'react'
+import { ComponentRef, useEffect, useRef, useState } from 'react'
 import { useParams } from 'next/navigation'
-import { campaignsList } from '../lib/campaingsList'
 import { useCampaignsListQuery } from '@/views/CampaignsListLayout/queries/CampaingsList.generated'
 import { useCreateCampaignMutation } from '@/views/CampaignsListLayout/queries/CreateCampaign.generated'
 
 export const useCampaignsList = () => {
   const { projectSlug } = useParams()
-  const [, updateModal] = useGraph(modalStore, modalStore.key)
+  const creatingInputRef = useRef<ComponentRef<'input'>>(null)
+  const [isCreating, setIsCreating] = useState(false)
+  const [creatingName, setCreatingName] = useState('')
   const [createCampaign, { data: createdCampaign, loading: createCampaignLoading }] = useCreateCampaignMutation()
   const { data: campaignsListData } = useCampaignsListQuery({
     variables: {
@@ -19,33 +18,33 @@ export const useCampaignsList = () => {
     }
   })
 
-  const handleCreateCampaign = () => {
-    modalStore.open(modalNames.createCampaign, {
-      onCreate: async campaign => {
-        await createCampaign({
-          variables: {
-            projectId: +projectSlug,
-            name: campaign.name,
-            description: campaign.description
-          }
-        })
+  useEffect(() => {
+    if (!isCreating) {
+      setCreatingName('')
+    } else {
+      creatingInputRef?.current?.focus()
+    }
+  }, [isCreating])
 
-        modalStore.close()
+  const handleCreateCampaign = async () => {
+    await createCampaign({
+      variables: {
+        projectId: +projectSlug,
+        name: creatingName
       }
     })
+
+    setIsCreating(false)
   }
 
-  useEffect(() => {
-    updateModal({
-      context: {
-        loading: createCampaignLoading
-      }
-    })
-  }, [createCampaignLoading])
-
   return {
+    creatingInputRef,
+    creatingName,
+    setCreatingName,
+    isCreating,
     list: campaignsListData?.campaign ?? [],
     handleCreateCampaign,
-    createCampaignLoading
+    createCampaignLoading,
+    setIsCreating
   }
 }

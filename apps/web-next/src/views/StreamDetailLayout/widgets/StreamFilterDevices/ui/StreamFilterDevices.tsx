@@ -12,12 +12,18 @@ import { DeviceType } from '@/graphql/types'
 import { noop } from '@fragments/utils'
 
 interface StreamFilterDevicesProps {
+  isEdit?: boolean
   value?: DeviceType[]
   className?: string
   onChange?: (nextValue: DeviceType[]) => void
 }
 
-export const StreamFilterDevices: FC<StreamFilterDevicesProps> = ({ className, value = [], onChange = noop }) => {
+export const StreamFilterDevices: FC<StreamFilterDevicesProps> = ({
+  className,
+  isEdit,
+  value = [],
+  onChange = noop
+}) => {
   const [executeQuery, { data, loading }] = useStreamDevicesFilterLazyQuery()
   const list = data?.filter?.deviceTypes ?? []
   const t = (value: string) => capitalize(value.toLowerCase())
@@ -30,6 +36,7 @@ export const StreamFilterDevices: FC<StreamFilterDevicesProps> = ({ className, v
   return (
     <Dropdown
       trigger='click'
+      disabled={!isEdit}
       placement='bottom-end'
       isLoading={loading}
       onShow={() => executeQuery()}
@@ -49,7 +56,7 @@ export const StreamFilterDevices: FC<StreamFilterDevicesProps> = ({ className, v
       }
     >
       <Chip className={className} prefix='Device type:'>
-        {(value?.length ? value : ['all']).map(t).join(', ')} <EditIcon className={styles.editIcon} />
+        {(value?.length ? value : ['Any']).map(t).join(', ')} {isEdit && <EditIcon className={styles.editIcon} />}
       </Chip>
     </Dropdown>
   )

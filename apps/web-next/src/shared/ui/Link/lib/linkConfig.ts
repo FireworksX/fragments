@@ -33,6 +33,10 @@ export const linkConfig = {
     path: '/project/create',
     params: []
   },
+  campaignsList: {
+    path: ({ projectSlug }) => `/project/${projectSlug}/campaigns`,
+    params: ['projectSlug']
+  },
   campaign: {
     path: ({ campaignSlug, projectSlug }) => `/project/${projectSlug}/campaigns/${campaignSlug}`,
     params: ['campaignSlug', 'projectSlug']

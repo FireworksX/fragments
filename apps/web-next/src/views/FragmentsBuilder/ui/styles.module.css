@@ -9,7 +9,7 @@
     flex: 1;
     background: var(--background-light);
     /*1px - border*/
-    height: calc(100vh - var(--app-size-header) - 1px);
+    height: calc(100vh - var(--app-size-header) - var(--app-size-navigation) - 1px);
     overflow: hidden;
     position: relative;
 }

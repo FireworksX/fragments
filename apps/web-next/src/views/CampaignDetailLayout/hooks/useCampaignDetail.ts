@@ -1,8 +1,10 @@
 import { useParams } from 'next/navigation'
 import { useCampaignDetailQuery } from '@/views/CampaignDetailLayout/queries/CampaignDetail.generated'
 import { useChangeCampaignActiveMutation } from '@/views/CampaignDetailLayout/queries/ChangeCampaignActive.generated'
+import { useState } from 'react'
 
 export const useCampaignDetail = () => {
+  const [isEdit, setIsEdit] = useState(false)
   const { campaignSlug, projectSlug, streamSlug } = useParams()
 
   const [executeChangeCampaignActive, { loading: loadingChangeCampaignActive }] = useChangeCampaignActiveMutation()
@@ -21,11 +23,13 @@ export const useCampaignDetail = () => {
   }
 
   return {
+    isEdit,
     loadingChangeCampaignActive,
     campaign,
     campaignSlug,
     projectSlug,
     toggleActive,
-    isStreamRoute: !!streamSlug
+    isStreamRoute: !!streamSlug,
+    setIsEdit
   }
 }

@@ -6,20 +6,60 @@ import { InputText } from '@/shared/ui/InputText'
 import { Button } from '@/shared/ui/Button'
 import PlusIcon from '@/shared/icons/next/plus.svg'
 import { useCampaignsList } from '../hooks/useCampaignsList'
-import { CreateCampaignModal } from '@/widgets/modals/CreateCampaignModal'
+import CloseIcon from '@/shared/icons/next/close.svg'
+import CheckIcon from '@/shared/icons/next/check.svg'
 
 export const CampaignsListLayout = ({ children }) => {
-  const { handleCreateCampaign, createCampaignLoading, list } = useCampaignsList()
+  const {
+    creatingInputRef,
+    handleCreateCampaign,
+    creatingName,
+    setCreatingName,
+    createCampaignLoading,
+    list,
+    isCreating,
+    setIsCreating
+  } = useCampaignsList()
 
   return (
     <div className={styles.root}>
       <div className={styles.body}>
         <div className={styles.aside}>
           <Container className={styles.asideHeader}>
-            <InputText className={styles.searchInput} placeholder='Search' mode='secondary' />
-            <Button icon={<PlusIcon />} loading={createCampaignLoading} onClick={handleCreateCampaign}>
-              Add
-            </Button>
+            {isCreating ? (
+              <div className={styles.asideCreating}>
+                <div className={styles.row}>
+                  <Button stretched mode='secondary' icon={<CloseIcon />} onClick={() => setIsCreating(false)}>
+                    Cancel
+                  </Button>
+                  <Button
+                    stretched
+                    disabled={creatingName?.length <= 2}
+                    mode='success'
+                    icon={<CheckIcon />}
+                    loading={createCampaignLoading}
+                    onClick={handleCreateCampaign}
+                  >
+                    Create
+                  </Button>
+                </div>
+                <InputText
+                  ref={creatingInputRef}
+                  className={styles.searchInput}
+                  placeholder='Campaign name'
+                  mode='secondary'
+                  value={creatingName}
+                  onChangeValue={setCreatingName}
+                />
+              </div>
+            ) : (
+              <>
+                <InputText className={styles.searchInput} placeholder='Search' mode='secondary' />
+                <Button icon={<PlusIcon />} loading={createCampaignLoading} onClick={() => setIsCreating(true)}>
+                  Create
+                </Button>
+              </>
+            )}
           </Container>
           {list.map(campaign => (
             <CampaignPreviewItem
@@ -34,8 +74,6 @@ export const CampaignsListLayout = ({ children }) => {
 
         <div className={styles.content}>{children}</div>
       </div>
-
-      <CreateCampaignModal />
     </div>
   )
 }

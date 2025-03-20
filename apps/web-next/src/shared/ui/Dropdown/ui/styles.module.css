@@ -1,7 +1,7 @@
 .root {
     background-color: var(--background) !important;
     border-radius: var(--radius-second) !important;
-    box-shadow: 0 -7px 20px rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.1) !important;
 
     .tippy-arrow {
         color: var(--background) !important;
@@ -10,6 +10,11 @@
     .tippy-content {
         padding: 0 !important;
     }
+}
+
+.options {
+    max-height: 400px;
+    overflow: auto;
 }
 
 .loadingContainer {

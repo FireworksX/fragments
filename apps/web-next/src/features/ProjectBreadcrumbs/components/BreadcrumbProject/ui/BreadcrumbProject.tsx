@@ -20,44 +20,42 @@ export const BreadcrumbProject: FC<BreadcrumbProjectProps> = ({ className, proje
   const active = projects?.find(p => p.id === currentProject)
 
   return (
-    <Link type='project'>
-      <Dropdown
-        trigger='click'
-        placement='bottom-start'
-        arrow={false}
-        options={
-          <DropdownGroup>
-            {projects?.map(project => (
-              <Link key={project.id} type='project' projectSlug={project.id}>
-                <DropdownOption
-                  className={cn(styles.option, {
-                    [styles.selected]: project.id === currentProject
-                  })}
-                  icon={<Avatar size={24} uniqueId={project?.id?.toString() ?? ''} />}
-                  suffix={project.id === currentProject && <CheckIcon />}
-                >
-                  {project?.name}
-                </DropdownOption>
-              </Link>
-            ))}
-            <Link type='createProject'>
+    <Dropdown
+      trigger='click'
+      placement='bottom-start'
+      arrow={false}
+      options={
+        <DropdownGroup>
+          {projects?.map(project => (
+            <Link key={project.id} type='project' projectSlug={project.id}>
               <DropdownOption
-                className={cn(styles.option, styles.createOption)}
-                icon={<PlusIcon className={styles.createIcon} width={12} height={12} />}
+                className={cn(styles.option, {
+                  [styles.selected]: project.id === currentProject
+                })}
+                icon={<Avatar size={24} uniqueId={project?.id?.toString() ?? ''} />}
+                suffix={project.id === currentProject && <CheckIcon />}
               >
-                Create project
+                {project?.name}
               </DropdownOption>
             </Link>
-          </DropdownGroup>
-        }
-      >
-        {active && (
-          <Touchable className={cn(styles.root, className)}>
-            <Avatar uniqueId={active?.id?.toString()} firstName={active?.name} size={20} src={active?.logo} />
-            {active?.name}
-          </Touchable>
-        )}
-      </Dropdown>
-    </Link>
+          ))}
+          <Link type='createProject'>
+            <DropdownOption
+              className={cn(styles.option, styles.createOption)}
+              icon={<PlusIcon className={styles.createIcon} width={12} height={12} />}
+            >
+              Create project
+            </DropdownOption>
+          </Link>
+        </DropdownGroup>
+      }
+    >
+      {active && (
+        <Touchable className={cn(styles.root, className)}>
+          <Avatar uniqueId={active?.id?.toString()} firstName={active?.name} size={20} src={active?.logo} />
+          {active?.name}
+        </Touchable>
+      )}
+    </Dropdown>
   )
 }

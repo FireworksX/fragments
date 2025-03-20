@@ -10,6 +10,7 @@ import ArrowLeftIcon from '@/shared/icons/next/arrow-left.svg'
 import EditIcon from '@/shared/icons/next/pencil.svg'
 import DoneIcon from '@/shared/icons/next/check.svg'
 import PlusIcon from '@/shared/icons/next/plus.svg'
+import CloseIcon from '@/shared/icons/next/close.svg'
 import { Chip } from '@/shared/ui/Chip'
 import { Link } from '@/shared/ui/Link'
 import { InputText } from '@/shared/ui/InputText'
@@ -17,6 +18,10 @@ import { StreamFilterDevices } from '@/views/StreamDetailLayout/widgets/StreamFi
 import { DeviceType } from '@/graphql/types'
 import { useState } from 'react'
 import { StreamFilterOperationals } from '@/views/StreamDetailLayout/widgets/StreamFilterOperationals'
+import { StreamFilterLocation } from '@/views/StreamDetailLayout/widgets/StreamFilterLocation'
+import { Dropdown } from '@/shared/ui/Dropdown'
+import { DropdownGroup } from '@/shared/ui/DropdownGroup'
+import { DropdownOption } from '@/shared/ui/DropdownOption'
 
 export const StreamDetailLayout = ({ children }) => {
   const {
@@ -63,18 +68,26 @@ export const StreamDetailLayout = ({ children }) => {
           </div>
 
           <div className={styles.filters}>
-            <Chip prefix='Location:' onRemove={isEditMode && (() => undefined)}>
-              Canada
-            </Chip>
-
-            <StreamFilterDevices value={v} onChange={sv} />
-            <StreamFilterOperationals />
+            <StreamFilterLocation isEdit={isEditMode} />
+            <StreamFilterDevices isEdit={isEditMode} />
+            <StreamFilterOperationals isEdit={isEditMode} />
 
             {isEditMode && (
-              <Chip>
-                <PlusIcon />
-                Add filter
-              </Chip>
+              <Dropdown
+                trigger='click'
+                options={
+                  <DropdownGroup>
+                    <DropdownOption>Location</DropdownOption>
+                    <DropdownOption>Device type</DropdownOption>
+                    <DropdownOption>OS type</DropdownOption>
+                  </DropdownGroup>
+                }
+              >
+                <Chip>
+                  <PlusIcon />
+                  Add filter
+                </Chip>
+              </Dropdown>
             )}
           </div>
         </div>
@@ -111,15 +124,20 @@ export const StreamDetailLayout = ({ children }) => {
               </Button>
             </>
           ) : (
-            <Button
-              mode='primary'
-              preventDefault
-              loading={loadingUpdateStream}
-              icon={<DoneIcon />}
-              onClick={handleUpdateStream}
-            >
-              Done
-            </Button>
+            <>
+              <Button
+                mode='success'
+                preventDefault
+                loading={loadingUpdateStream}
+                icon={<DoneIcon />}
+                onClick={handleUpdateStream}
+              >
+                Done
+              </Button>
+              <Button mode='secondary' preventDefault icon={<CloseIcon />} onClick={() => setIsEditMode(false)}>
+                Cancel
+              </Button>
+            </>
           )}
         </div>
       </div>
