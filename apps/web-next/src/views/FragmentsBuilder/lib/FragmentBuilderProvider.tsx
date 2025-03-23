@@ -6,14 +6,9 @@ import { GlobalManager } from '@fragments/render-react'
 
 interface FragmentBuilderProviderProps extends PropsWithChildren {
   builderManager: GraphState
-  globalManager: unknown
 }
 
-export const FragmentBuilderProvider: FC<FragmentBuilderProviderProps> = ({
-  builderManager,
-  globalManager,
-  children
-}) => {
+export const FragmentBuilderProvider: FC<FragmentBuilderProviderProps> = ({ builderManager, children }) => {
   const sensors = useSensors(
     useSensor(MouseSensor, {
       activationConstraint: {
@@ -30,9 +25,7 @@ export const FragmentBuilderProvider: FC<FragmentBuilderProviderProps> = ({
       onDragEnd={builderManager.$droppable.handleDragEnd}
       onDragStart={builderManager.$droppable.handleDragStart}
     >
-      <GlobalManager value={globalManager}>
-        <BuilderContext value={{ builderManager, globalManager }}>{children}</BuilderContext>
-      </GlobalManager>
+      <BuilderContext value={{ builderManager, globalManager }}>{children}</BuilderContext>
     </DndContext>
   )
 }

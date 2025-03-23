@@ -8,14 +8,14 @@ import { nodes } from "@/definitions";
 import { GraphState } from "@graph-state/core";
 
 export const useFragment = (fragmentId: string, globalManager?: GraphState) => {
-  const manager = useFragmentManager(fragmentId, globalManager);
+  const { manager } = useFragmentManager(fragmentId, globalManager);
   const layerKey = `${nodes.Fragment}:${fragmentId}`;
   const [ref, fragmentRect] = useMeasure();
   const children = useLayerChildren(layerKey, manager);
-  const { isDocument } = useRenderTarget(globalManager);
+  const { isDocument, renderTarget } = useRenderTarget(globalManager);
 
   const resultChildren = useMemo(() => {
-    if (isDocument) {
+    if (isDocument && manager) {
       const breakpoints = children?.map(manager.resolve);
       const activeBreakpoint = findBreakpoint(breakpoints, fragmentRect.width);
 

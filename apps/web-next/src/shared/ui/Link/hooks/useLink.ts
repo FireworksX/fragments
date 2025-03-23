@@ -13,6 +13,11 @@ interface BuilderLinkOptions extends UseLinkOptions {
 
 export const buildLink = ({ type, routerParams, pathname, ...inputLinkParams }: BuilderLinkOptions) => {
   const linkEntity = linkConfig[type]
+
+  if (!linkEntity) {
+    return { isActive: false, href: null }
+  }
+
   const linkParams = linkEntity?.params?.reduce((acc, param) => {
     let routerParam = routerParams[param]
     if (param === 'fragmentSlug' && param in routerParams) {

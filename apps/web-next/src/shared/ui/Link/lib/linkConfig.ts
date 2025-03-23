@@ -54,10 +54,10 @@ export const linkConfig = {
       `/project/${projectSlug}/campaigns/${campaignSlug}/streams/${streamSlug}`,
     params: ['campaignSlug', 'projectSlug', 'streamSlug']
   },
-  editStream: {
-    path: ({ campaignSlug, projectSlug, streamSlug }) =>
-      `/project/${projectSlug}/campaigns/${campaignSlug}/streams/${streamSlug}?${routerParams.editMode}=true`,
-    params: ['campaignSlug', 'projectSlug', 'streamSlug']
+  landing: {
+    path: ({ campaignSlug, projectSlug, streamSlug, landingSlug }) =>
+      `/project/${projectSlug}/campaigns/${campaignSlug}/streams/${streamSlug}/${landingSlug}`,
+    params: ['campaignSlug', 'projectSlug', 'streamSlug', 'landingSlug']
   },
 
   builder: {

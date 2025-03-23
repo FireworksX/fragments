@@ -1,19 +1,13 @@
-'use client'
-import { useMutation, useQuery } from '@apollo/client'
-import { useParams, useSearchParams } from 'next/navigation'
-// import { STREAM_DETAIL, STREAM_FRAGMENTS, STREAM_LANDINGS } from '@/shared/api/stream/query/streamDetail'
-// import { CHANGE_STREAM_ACTIVE } from '@/shared/api/stream/mutation/changeStreamActive'
-// import { LANDINGS_LIST } from '@/shared/api/landing/query/landingsList'
-// import { CREATE_LANDING } from '@/shared/api/landing/mutation/createLanding'
-import { ElementRef, useEffect, useRef, useState } from 'react'
-import { useLandingsListQuery } from '@/views/StreamDetailPage/queries/LandingsList.generated'
-import { useCreateLandingMutation } from '@/views/StreamDetailPage/queries/CreateLanding.generated'
+import { useParams } from 'next/navigation'
+import { ComponentRef, useEffect, useRef, useState } from 'react'
+import { useCreateLandingMutation } from '../queries/CreateLanding.generated'
+import { useLandingsListQuery } from '../queries/LandingsList.generated'
 
-export const useStreamDetailPage = () => {
+export const useStreamLandings = () => {
   const { streamSlug, landingId, campaignSlug, projectSlug } = useParams()
   const [localName, setLocalName] = useState('')
   const [isNewMode, setIsNewMode] = useState(false)
-  const createLandingRef = useRef<ElementRef<'input'>>(null)
+  const createLandingRef = useRef<ComponentRef<'input'>>(null)
 
   const [executeCreateLanding, { loading: loadingCreateLanding }] = useCreateLandingMutation()
   const { data } = useLandingsListQuery({

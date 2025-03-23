@@ -1,5 +1,6 @@
 import { createState } from "@graph-state/core";
 import { FragmentQuery } from "@/shared/managers/fetchManager/queries/FragmentQuery";
+import { getEmptyFragment } from "@/shared/managers/fetchManager/emptyFragment";
 
 export const createFetchManager = () => {
   const fetcher = (query, variables) => {
@@ -22,6 +23,7 @@ export const createFetchManager = () => {
         state.cacheDocuments = new Map();
 
         state.queryFragment = async (fragmentId: number) => {
+          // TODO dedub запросов
           if (state.cacheDocuments.has(fragmentId)) {
             return state.cacheDocuments.get(fragmentId);
           }
@@ -30,7 +32,8 @@ export const createFetchManager = () => {
           const fragment = response?.data?.fragment?.[0];
 
           if (fragment) {
-            state.cacheDocuments.set(fragmentId, fragment.document);
+            // state.cacheDocuments.set(fragmentId, fragment.document);
+            state.cacheDocuments.set(fragmentId, getEmptyFragment(fragmentId));
 
             if (Array.isArray(fragment.linkedFragments)) {
               fragment.linkedFragments.forEach((linkedFragment) =>
@@ -41,7 +44,7 @@ export const createFetchManager = () => {
               );
             }
 
-            return fragment.document;
+            return state.cacheDocuments.get(fragmentId);
           }
 
           return null;

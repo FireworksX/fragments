@@ -1,1 +1,4 @@
-.root {}
+.root {
+    position: relative;
+    color: var(--text-color-accent)
+}

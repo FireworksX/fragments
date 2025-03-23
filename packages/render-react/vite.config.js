@@ -20,7 +20,13 @@ export default defineConfig({
       fileName: (format) => `index.${format}.js`,
     },
     rollupOptions: {
-      external: ["react", "react-dom", "@fragments/render", "preact"],
+      external: [
+        "react",
+        "react-dom",
+        "react/jsx-runtime",
+        "@fragments/render",
+        "preact",
+      ],
       output: {
         globals: {
           react: "React",

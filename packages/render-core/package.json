@@ -31,7 +31,6 @@
     "@graph-state/checkers": "^0.1.2",
     "@graph-state/core": "^0.10.4",
     "@graph-state/react": "^0.6.3",
-    "react": "^19.0.0",
     "react-use-measure": "^2.1.7",
     "use-sync-external-store": "^1.2.2"
   },

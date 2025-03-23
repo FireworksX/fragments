@@ -1,19 +1,12 @@
-'use client'
-import { useMutation, useQuery } from '@apollo/client'
-import { useParams, useRouter, useSearchParams } from 'next/navigation'
-import { CHANGE_STREAM_ACTIVE } from '@/shared/api/stream/mutation/changeStreamActive'
-import { UPDATE_STREAM } from '@/shared/api/stream/mutation/updateStream'
 import { useEffect, useRef, useState } from 'react'
 import { createState } from '@graph-state/core'
-import { useLink } from '@/shared/ui/Link'
 import { useGraph } from '@graph-state/react'
-import { useStreamDetailQuery } from '@/views/StreamDetailLayout/queries/StreamDetail.generated'
-import { useChangeStreamActiveMutation } from '@/views/StreamDetailLayout/queries/ChangeStreamActive.generated'
-import { useUpdateStreamMutation } from '@/views/StreamDetailLayout/queries/UpdateStream.generated'
-import { useSearchParam } from '@/shared/hooks/useSearchParams'
-import { useStreamFilters } from '@/views/StreamDetailLayout/hooks/useStreamFilters'
+import { useParams } from 'next/navigation'
+import { useChangeStreamActiveMutation } from '../queries/ChangeStreamActive.generated'
+import { useUpdateStreamMutation } from '../queries/UpdateStream.generated'
+import { useStreamDetailQuery } from '../queries/StreamDetail.generated'
 
-export const useStreamDetailLayout = () => {
+export const useStreamHeader = () => {
   const localStreamState = useRef(createState())
   const [localStream, updateLocalStream] = useGraph(localStreamState?.current, localStreamState.current?.key)
   const { streamSlug, campaignSlug, projectSlug } = useParams()

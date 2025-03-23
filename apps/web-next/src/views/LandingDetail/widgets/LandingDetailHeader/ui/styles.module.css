@@ -1,13 +1,4 @@
-.fragment {
-    padding-top: var(--gutter-default);
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    gap: var(--gutter-default);
-
-}
-
-.header {
+.root {
     display: flex;
     align-items: center;
     gap: var(--gutter-default);
@@ -42,16 +33,3 @@
     gap: var(--gutter-default);
     margin-left: auto;
 }
-
-.preview {
-    flex: 1;
-    background: var(--secondary-bg);
-    border-radius: var(--radius-main);
-    font-size: 30px;
-    font-weight: 700;
-    color: var(--secondary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-

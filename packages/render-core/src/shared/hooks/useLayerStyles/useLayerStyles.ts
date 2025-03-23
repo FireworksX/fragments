@@ -6,9 +6,14 @@ import { useLayerBackground } from "@/shared/hooks/useLayerStyles/useLayerBackgr
 import { useLayerDisplay } from "@/shared/hooks/useLayerStyles/useLayerDisplay";
 import { useLayerBorder } from "@/shared/hooks/useLayerStyles/useLayerBorder";
 import { useLayerLayout } from "@/shared/hooks/useLayerStyles/useLayerLayout";
+import { useContext } from "preact/compat";
+import { FragmentContext } from "@/components/Fragment/FragmentContext";
 
 export const useLayerStyles = (layerKey: LinkKey) => {
   try {
+    if (!layerKey) {
+      throw new Error("Empty layer key");
+    }
     // const { manager: fragmentManager } = useContext(FragmentContext);
     // const styles =
     const [opacity] = useLayerValue(layerKey, "opacity");

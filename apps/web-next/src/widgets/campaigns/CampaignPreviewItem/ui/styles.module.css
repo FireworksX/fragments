@@ -3,6 +3,15 @@
     flex-direction: column;
     gap: var(--gutter-default);
     padding-block: 10px;
+    transition: var(--animation-transition-default);
+
+    &:hover {
+        background: var(--secondary-bg);
+    }
+}
+
+.active {
+    background: var(--secondary-bg);
 }
 
 .header {
@@ -22,6 +31,7 @@
 .name {
     font-weight: 500;
     color: var(--text-color-accent);
+    flex: 1;
 }
 
 .status {

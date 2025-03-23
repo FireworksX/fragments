@@ -28,6 +28,7 @@
   "dependencies": {
     "@fragments/render-core": "workspace:*",
     "@fragments/utils": "workspace:*",
+    "@fragments/definition": "workspace:*",
     "@graph-state/checkers": "^0.1.2",
     "@graph-state/core": "^0.10.4",
     "@graph-state/react": "^0.6.3",
