@@ -51,7 +51,7 @@ export const FragmentsEdit = () => {
   const { setRenderTarget } = useRenderTarget()
   const { select } = useBuilderSelection()
 
-  useBuilderHotKeys()
+  // useBuilderHotKeys()
 
   useGraphEffect(documentManager, 'Updater:root', data => {
     console.log(data)

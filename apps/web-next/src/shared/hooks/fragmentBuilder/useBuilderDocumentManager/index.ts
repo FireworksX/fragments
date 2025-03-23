@@ -21,13 +21,13 @@ export const useBuilderDocumentManager = () => {
   const { currentFragmentId } = useBuilder()
   const fragmentKey = `Fragment:${currentFragmentId}`
 
-  const {
-    data,
-    loading: fetchingDocument,
-    refetch
-  } = useFragmentDocumentQuery({
-    skip: true
-  })
+  // const {
+  //   data,
+  //   loading: fetchingDocument,
+  //   refetch
+  // } = useFragmentDocumentQuery({
+  //   skip: true
+  // })
 
   const [updateFragment, { loading: fetchingUpdate }] = useUpdateFragmentDocumentMutation({
     variables: {
@@ -35,28 +35,25 @@ export const useBuilderDocumentManager = () => {
     }
   })
 
-  const createDocumentManager = useCallback(
-    async (fragmentSlug: number) => {
-      const fragmentDocument = await refetch({
-        fragmentSlug
-      })
+  const createDocumentManager = useCallback(async (fragmentSlug: number) => {
+    // const fragmentDocument = await refetch({
+    //   fragmentSlug
+    // })
+    //
+    // const fragment = fragmentDocument?.data?.fragment?.at(0)
+    // const document = typeof fragment?.document === 'string' ? JSON.parse(fragment.document ?? '{}') : fragment?.document
+    //
+    // const resultDocument = getEmptyFragment(fragment?.id) //Object.keys(document).length === 0 ? getEmptyFragment(fragment?.id) : document
+    //
+    // globalManager.createFragmentManager('button', getButtonFragment())
+    // return globalManager.createFragmentManager(fragment?.id, resultDocument)
+    // return builderManager.$documents.createDocumentManager(`${nodes.Fragment}:${fragment?.id}`, resultDocument)
+  }, [])
 
-      const fragment = fragmentDocument?.data?.fragment?.at(0)
-      const document =
-        typeof fragment?.document === 'string' ? JSON.parse(fragment.document ?? '{}') : fragment?.document
-
-      const resultDocument = getEmptyFragment(fragment?.id) //Object.keys(document).length === 0 ? getEmptyFragment(fragment?.id) : document
-
-      globalManager.createFragmentManager('button', getButtonFragment())
-      return globalManager.createFragmentManager(fragment?.id, resultDocument)
-      // return builderManager.$documents.createDocumentManager(`${nodes.Fragment}:${fragment?.id}`, resultDocument)
-    },
-    [refetch]
-  )
-
-  useEffect(() => {
-    createDocumentManager(currentFragmentId)
-  }, [currentFragmentId])
+  // useEffect(() => {
+  //   // createDocumentManager(currentFragmentId)
+  //   console.log(globalManager)
+  // }, [currentFragmentId])
 
   const saveFragment = async () => {
     const currentDocument = makeSnapshot(documentManager)
@@ -76,7 +73,7 @@ export const useBuilderDocumentManager = () => {
 
   return {
     fetchingUpdate,
-    fetching: fetchingDocument,
+    fetching: false,
     saveFragment,
     createDocumentManager
   }

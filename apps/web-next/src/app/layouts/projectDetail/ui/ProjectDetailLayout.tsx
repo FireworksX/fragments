@@ -11,7 +11,9 @@ export const ProjectDetailLayout: FC<PropsWithChildren> = ({ children }) => {
         <Link type='project'>{({ isActive }) => <TabItem isActive={isActive}>Overview</TabItem>}</Link>
         <Link type='builder'>{({ isActive }) => <TabItem isActive={isActive}>Builder</TabItem>}</Link>
         <Link type='campaignsList'>{({ isActive }) => <TabItem isActive={isActive}>Campaigns</TabItem>}</Link>
-        <Link type='projectSetting'>{({ isActive }) => <TabItem isActive={isActive}>Settings</TabItem>}</Link>
+        <Link partial type='projectSetting'>
+          {({ isActive }) => <TabItem isActive={isActive}>Settings</TabItem>}
+        </Link>
       </Tabs>
 
       {children}

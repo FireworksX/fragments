@@ -15,8 +15,6 @@
 .text {
     flex: 1;
     font-size: 12px;
-    font-weight: 500;
-    color: var(--text-color-accent-secondary);
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;

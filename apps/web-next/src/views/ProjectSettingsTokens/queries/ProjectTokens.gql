@@ -1,0 +1,7 @@
+query ProjectTokens($projectId: Int) {
+    project(projectId: $projectId) {
+        id
+        privateKey
+        publicKeys
+    }
+}

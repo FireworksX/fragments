@@ -17,12 +17,22 @@
 
 .cell {
     padding-inline: var(--gutter-default);
-    background: var(--secondary-bg);
     border-radius: var(--radius-small);
+    transition: var(--animation-transition-default);
+
+    &:hover {
+        background: var(--secondary-bg);
+    }
 }
 
 .asideHeader {
     display: flex;
     align-items: center;
     gap: var(--gutter-default);
+}
+
+.asideBody {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }

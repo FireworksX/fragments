@@ -100,7 +100,6 @@ export function makeApolloClient() {
                 cache.modify({
                   fields: {
                     campaign(list = []) {
-                      console.log(list, incoming, outcome)
                       return [...list, incoming]
                     }
                   }

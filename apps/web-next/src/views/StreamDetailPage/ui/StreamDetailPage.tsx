@@ -55,16 +55,18 @@ export const StreamDetailPage = () => {
         {isNewMode && (
           <InputText ref={createLandingRef} placeholder='Landing name' value={localName} onChangeValue={setLocalName} />
         )}
-        {landings.map(landing => (
-          <Cell
-            key={landing.id}
-            className={styles.cell}
-            before={<StatusDot status='success' />}
-            description={landing.weight}
-          >
-            {landing.name}
-          </Cell>
-        ))}
+        <div className={styles.asideBody}>
+          {landings.map(landing => (
+            <Cell
+              key={landing.id}
+              className={styles.cell}
+              before={<StatusDot status='success' />}
+              description={landing.weight}
+            >
+              {landing.name}
+            </Cell>
+          ))}
+        </div>
       </div>
 
       <StreamFragmentDetail />

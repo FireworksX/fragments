@@ -1,0 +1,5 @@
+#mutation CreatePublicToken($projectId: Int!) {
+#    deleteProjectPublicKey(projectId: $projectId) {
+#        publicKeys
+#    }
+#}

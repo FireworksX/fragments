@@ -483,6 +483,7 @@ export type Query = {
   __typename?: 'Query';
   campaign: Array<CampaignGet>;
   campaignByName: Array<CampaignGet>;
+  clientFragment?: Maybe<FragmentGet>;
   clientLanding?: Maybe<LandingGet>;
   directory: Array<ProjectDirectoryGet>;
   filter: AllFiltersGet;
@@ -508,6 +509,11 @@ export type QueryCampaignByNameArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   name: Scalars['String']['input'];
   projectId: Scalars['Int']['input'];
+};
+
+
+export type QueryClientFragmentArgs = {
+  fragmentId: Scalars['Int']['input'];
 };
 
 

@@ -1,0 +1,11 @@
+.root {
+    padding: 4px;
+    background: var(--secondary-bg);
+    border-radius: var(--radius-main);
+}
+
+.body {
+    background: var(--background);
+    border-radius: var(--radius-main);
+    border: 1px solid var(--border);
+}

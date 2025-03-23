@@ -9,6 +9,7 @@ import { useLink } from '@/shared/ui/Link/hooks/useLink'
 interface LinkProps {
   className?: string
   type: LinkType
+  partial?: boolean
   children: ReactNode | (({ isActive }: { isActive: boolean }) => ReactNode)
 }
 

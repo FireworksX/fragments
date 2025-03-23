@@ -1,0 +1,22 @@
+.root {
+    padding-block: 30px;
+    display: flex;
+    gap: 10px;
+}
+
+.aside {
+    width: 250px;
+}
+
+.cell {
+    padding-inline: 12px;
+    border-radius: var(--radius-small);
+}
+
+.activeCell {
+    background: var(--secondary-bg);
+}
+
+.content {
+    flex: 1;
+}

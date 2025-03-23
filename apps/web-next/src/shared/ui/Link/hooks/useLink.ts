@@ -3,6 +3,7 @@ import { linkConfig, LinkType } from '@/shared/ui/Link/lib/linkConfig'
 
 interface UseLinkOptions extends Record<string, unknown> {
   type: LinkType
+  partial?: boolean
 }
 
 interface BuilderLinkOptions extends UseLinkOptions {
@@ -22,7 +23,10 @@ export const buildLink = ({ type, routerParams, pathname, ...inputLinkParams }: 
   }, {})
 
   const href = typeof linkEntity?.path === 'function' ? linkEntity.path(linkParams) : linkEntity.path
-  const isActive = pathname === href
+  let isActive = pathname === href
+  if (inputLinkParams.partial && !isActive) {
+    isActive = pathname.startsWith(href)
+  }
 
   return {
     isActive,

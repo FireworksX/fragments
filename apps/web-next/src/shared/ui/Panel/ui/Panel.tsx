@@ -14,43 +14,41 @@ interface BuilderPanelProps extends PropsWithChildren {
   withBorderBottom?: boolean
 }
 
-const Panel: FC<BuilderPanelProps> = animated(
-  ({
-    className,
-    hasBody = true,
-    bodyClassName,
-    titleIcon,
-    children,
-    title,
-    aside,
-    withPaddingBottom,
-    withBorderBottom
-  }) => {
-    return (
-      <div
-        className={cn(styles.root, className, {
-          [styles.withBorderBottom]: withBorderBottom
-        })}
-      >
-        {title && (
-          <div className={styles.head}>
-            {titleIcon}
-            <div className={styles.title}>{title}</div>
-            {aside}
-          </div>
-        )}
-        {hasBody && (
-          <div
-            className={cn(styles.body, bodyClassName, {
-              [styles.withPaddingBottom]: withPaddingBottom
-            })}
-          >
-            {children}
-          </div>
-        )}
-      </div>
-    )
-  }
-)
+const Panel: FC<BuilderPanelProps> = ({
+  className,
+  hasBody = true,
+  bodyClassName,
+  titleIcon,
+  children,
+  title,
+  aside,
+  withPaddingBottom,
+  withBorderBottom
+}) => {
+  return (
+    <div
+      className={cn(styles.root, className, {
+        [styles.withBorderBottom]: withBorderBottom
+      })}
+    >
+      {title && (
+        <div className={styles.head}>
+          {titleIcon}
+          <div className={styles.title}>{title}</div>
+          {aside}
+        </div>
+      )}
+      {hasBody && (
+        <div
+          className={cn(styles.body, bodyClassName, {
+            [styles.withPaddingBottom]: withPaddingBottom
+          })}
+        >
+          {children}
+        </div>
+      )}
+    </div>
+  )
+}
 
 export default Panel

@@ -25,6 +25,10 @@ export const linkConfig = {
     path: ({ projectSlug }) => `/project/${projectSlug}/settings`,
     params: ['projectSlug']
   },
+  projectSettingTokens: {
+    path: ({ projectSlug }) => `/project/${projectSlug}/settings/tokens`,
+    params: ['projectSlug']
+  },
   projectCreate: {
     path: '/project/create',
     params: []
