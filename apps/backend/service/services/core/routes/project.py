@@ -1,5 +1,5 @@
 from copy import deepcopy
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from fastapi import HTTPException, status, UploadFile
 import strawberry
 
@@ -10,7 +10,7 @@ from crud.media import create_media_db, delete_media_by_id_db
 from .filesystem import get_directory
 from .schemas.campaign import CampaignGet
 from .schemas.fragment import FragmentGet
-from .schemas.project import ProjectGet, ProjectPost, ProjectPatch
+from .schemas.project import ProjectGet, ProjectPost, ProjectPatch, ProjectKeyGet
 from .schemas.user import RoleGet, AuthPayload
 from .middleware import Context
 from crud.project import create_project_db, get_project_by_id_db, get_user_project_role, get_projects_by_user_id_db, \
@@ -51,8 +51,8 @@ async def project_db_to_project(info: strawberry.Info[Context], db: Session, pro
                       owner=project.owner, root_directory_id=project.root_directory_id,
                       members=transform_project_members(project),
                       campaigns=await transform_project_campaigns(db, project),
-                      private_key=project.private_key.key if permission else None,
-                      public_keys=[] if project.public_keys is None else [public_key.key for public_key in
+                      private_key=ProjectKeyGet(value=project.private_key.key, name="private", id=project.private_key.id) if permission else None,
+                      public_keys=[] if project.public_keys is None else [ProjectKeyGet(value=public_key.key, name=public_key.name, id=public_key.id) for public_key in
                                                                           project.public_keys])
 
 
@@ -91,6 +91,11 @@ async def change_project_private_key_route(info: strawberry.Info[Context], proje
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
     permission: bool = await private_key_permission(db, user.user.id, project_id)
+
+    project: Project = await get_project_by_id_db(db, project_id)
+    if project is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
+
     if not permission:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to change private key')
@@ -99,27 +104,37 @@ async def change_project_private_key_route(info: strawberry.Info[Context], proje
     return await project_db_to_project(info, db, project)
 
 
-async def add_project_public_key_route(info: strawberry.Info[Context], project_id: int) -> ProjectGet:
+async def add_project_public_key_route(info: strawberry.Info[Context], project_id: int, public_key_name: Optional[str] = None) -> ProjectGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
+
+    project: Project = await get_project_by_id_db(db, project_id)
+    if project is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
+
     permission: bool = await write_permission(db, user.user.id, project_id)
     if not permission:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to add public keys')
 
-    project: Project = await add_project_public_api_key(db, project_id)
+    project: Project = await add_project_public_api_key(db, project_id, public_key_name)
     return await project_db_to_project(info, db, project)
 
 
-async def delete_project_public_key_route(info: strawberry.Info[Context], project_id: int, public_key: str) -> None:
+async def delete_project_public_key_route(info: strawberry.Info[Context], project_id: int, public_key_id: int) -> None:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
+
+    project: Project = await get_project_by_id_db(db, project_id)
+    if project is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
+
     permission: bool = await write_permission(db, user.user.id, project_id)
     if not permission:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to delete public keys')
     try:
-        await delete_project_public_api_key(db, project_id, public_key)
+        await delete_project_public_api_key(db, project_id, public_key_id)
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE,
                             detail=str(e))

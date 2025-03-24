@@ -230,9 +230,9 @@ class Mutation:
         return await change_project_private_key_route(info, project_id)
 
     @strawberry.mutation
-    async def add_project_public_key(self, info: strawberry.Info[Context], project_id: int) -> ProjectGet:
-        return await add_project_public_key_route(info, project_id)
+    async def add_project_public_key(self, info: strawberry.Info[Context], project_id: int, public_key_name: Optional[str] = None) -> ProjectGet:
+        return await add_project_public_key_route(info, project_id, public_key_name)
 
     @strawberry.mutation
-    async def delete_project_public_key(self, info: strawberry.Info[Context], project_id: int, public_key: str) -> None:
-        await delete_project_public_key_route(info, project_id, public_key)
+    async def delete_project_public_key(self, info: strawberry.Info[Context], project_id: int, public_key_id: int) -> None:
+        await delete_project_public_key_route(info, project_id, public_key_id)

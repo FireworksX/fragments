@@ -6,6 +6,14 @@ from services.core.routes.schemas.campaign import CampaignGet
 from services.core.routes.schemas.filesystem import ProjectDirectoryGet
 from services.core.routes.schemas.user import UserGet, UserRoleGet
 
+
+@strawberry.type
+class ProjectKeyGet:
+    id: int
+    name: Optional[str]
+    value: str
+
+
 @strawberry.type
 class ProjectGet:
     id: int
@@ -15,8 +23,8 @@ class ProjectGet:
     members: List[UserRoleGet]
     campaigns: List[CampaignGet]
     root_directory_id: int
-    private_key: Optional[str]
-    public_keys: List[str]
+    private_key: Optional[ProjectKeyGet]
+    public_keys: List[ProjectKeyGet]
 
 
 @strawberry.input
