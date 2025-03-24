@@ -50,6 +50,7 @@ class User(Base):
 class ProjectApiKey(Base):
     __tablename__ = 'project_api_key'
     id = Column('id', Integer, primary_key=True, index=True)
+    name = Column('name', String, unique=False, nullable=True)
     is_private = Column('is_private', Boolean, default=False)
     key = Column('key', String, unique=True, nullable=False)
 
