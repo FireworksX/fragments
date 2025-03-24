@@ -4,7 +4,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: apps/web-next/Dockerfile.front
+      dockerfile: Dockerfile.front
     ports:
       - "3000:3000"
     volumes:
@@ -13,3 +13,4 @@ services:
     environment:
       - NODE_ENV=development
     command: npm run dev
+    env_file: apps/web-next/.env
