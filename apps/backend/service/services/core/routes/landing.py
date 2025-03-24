@@ -113,15 +113,11 @@ async def landing_by_id(info: strawberry.Info[Context], landing_id: int) -> Land
     if landing is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Landing does not exist")
 
-    fragment: Fragment = await get_fragment_by_id_db(db, landing.fragment.id)
-    if fragment is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Fragment does not exist")
-
-    project: Project = await get_project_by_id_db(db, fragment.project_id)
+    project: Project = await get_project_by_id_db(db, landing.project_id)
     if project is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
 
-    permission: bool = await write_permission(db, user.user.id, fragment.project_id)
+    permission: bool = await write_permission(db, user.user.id, project.id)
     if not permission:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to get landings')
