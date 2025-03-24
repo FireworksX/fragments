@@ -1,6 +1,10 @@
 mutation RefreshPrivateKey($projectId: Int!) {
     changeProjectPrivateKey(projectId: $projectId) {
         id
-        privateKey
+        privateKey {
+            id
+            name
+            value
+        }
     }
 }

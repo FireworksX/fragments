@@ -46,6 +46,11 @@ export function makeApolloClient() {
                 cache.evict({ id: `ProjectDirectoryGet:${variables?.id}` })
               }
             },
+            deleteProjectPublicKey: {
+              merge(_, _incoming, { cache, variables }) {
+                cache.evict({ id: `ProjectKeyGet:${variables?.publicKeyId}` })
+              }
+            },
             createFragment: {
               merge(outcome, incoming, { cache, variables }) {
                 const parentId = variables?.parentId

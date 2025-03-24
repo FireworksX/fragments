@@ -3,13 +3,11 @@ import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDoc
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { getLayer } from './getLayer'
 
-export const useNormalizeLayer = (layerKey?: LinkKey, manager?: unknown) => {
+export const useNormalizeLayer = (layerKey: LinkKey, manager?: unknown) => {
   const { documentManager } = useBuilderDocument()
-  const { selection } = useBuilderSelection()
   const resultManager = manager ?? documentManager
-  const key = layerKey ?? selection
-  const layer = resultManager?.resolve(key)
-  const parsedLayer = getLayer(resultManager, key)
+  const layer = resultManager?.resolve(layerKey)
+  const parsedLayer = getLayer(resultManager, layerKey)
 
   return {
     rawLayer: layer,

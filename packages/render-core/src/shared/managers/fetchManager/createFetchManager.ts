@@ -28,12 +28,25 @@ export const createFetchManager = () => {
             return state.cacheDocuments.get(fragmentId);
           }
 
-          const response = await fetcher(FragmentQuery, { fragmentSlug: 1 });
+          const response = await fetcher(FragmentQuery, {
+            fragmentSlug: fragmentId,
+          });
           const fragment = response?.data?.fragment?.[0];
+          let fragmentDocument = fragment?.document;
+
+          if (typeof fragmentDocument === "string") {
+            try {
+              if (Object.keys(JSON.parse(fragmentDocument)).length === 0) {
+                fragmentDocument = getEmptyFragment(fragmentId);
+              }
+            } catch (e) {
+              console.error(e);
+            }
+          }
 
           if (fragment) {
-            // state.cacheDocuments.set(fragmentId, fragment.document);
-            state.cacheDocuments.set(fragmentId, getEmptyFragment(fragmentId));
+            state.cacheDocuments.set(fragmentId, fragmentDocument);
+            // state.cacheDocuments.set(fragmentId, getEmptyFragment(fragmentId));
 
             if (Array.isArray(fragment.linkedFragments)) {
               fragment.linkedFragments.forEach((linkedFragment) =>

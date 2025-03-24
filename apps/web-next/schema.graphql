@@ -101,7 +101,7 @@ type Mutation {
     addCampaignLogo(campaignId: Int!, file: Upload!): CampaignGet!
     addFragmentAsset(file: Upload!, fragmentId: Int!): FragmentGet!
     addProjectLogo(file: Upload!, projectId: Int!): ProjectGet!
-    addProjectPublicKey(projectId: Int!): ProjectGet!
+    addProjectPublicKey(projectId: Int!, publicKeyName: String): ProjectGet!
     addUserToProject(projectId: Int!, role: Int!, userId: Int!): Void
     changeProjectPrivateKey(projectId: Int!): ProjectGet!
     changeUserRole(projectId: Int!, role: RoleGet!, userId: Int!): Void
@@ -113,7 +113,7 @@ type Mutation {
     createStream(strm: StreamPost!): StreamGet!
     deleteDirectory(directoryId: Int!): Void
     deleteFragment(fragmentId: Int!): Void
-    deleteProjectPublicKey(projectId: Int!, publicKey: String!): Void
+    deleteProjectPublicKey(projectId: Int!, publicKeyId: Int!): Void
     deleteStream(streamId: Int!): Void
     feedback(fd: FeedbackPost!): FeedbackGet!
     login(email: String!, password: String!): AuthPayload!
@@ -145,9 +145,15 @@ type ProjectGet {
     members: [UserRoleGet!]!
     name: String!
     owner: UserGet!
-    privateKey: String
-    publicKeys: [String!]!
+    privateKey: ProjectKeyGet
+    publicKeys: [ProjectKeyGet!]!
     rootDirectoryId: Int!
+}
+
+type ProjectKeyGet {
+    id: Int!
+    name: String
+    value: String!
 }
 
 type Query {

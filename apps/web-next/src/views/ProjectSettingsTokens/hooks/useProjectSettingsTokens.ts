@@ -3,6 +3,7 @@ import { useProjectTokensQuery } from '@/views/ProjectSettingsTokens/queries/Pro
 import { useProject } from '@/shared/hooks/useProject'
 import { useCreatePublicTokenMutation } from '@/views/ProjectSettingsTokens/queries/CreatePublicToken.generated'
 import { useRefreshPrivateKeyMutation } from '@/views/ProjectSettingsTokens/queries/RefreshPrivateKey.generated'
+import { useRemovePublicTokenMutation } from '@/views/ProjectSettingsTokens/queries/RemovePublicToken.generated'
 
 export const useProjectSettingsTokens = () => {
   const { projectSlug } = useProject()
@@ -16,7 +17,8 @@ export const useProjectSettingsTokens = () => {
 
   const [handleCreatePublicToken, { loading: creatingPublicToken }] = useCreatePublicTokenMutation({
     variables: {
-      projectId: projectSlug
+      projectId: projectSlug,
+      name: creatingName
     }
   })
   const [handleRefreshPrivateToken, { loading: refreshingPrivateToken }] = useRefreshPrivateKeyMutation({
@@ -24,6 +26,17 @@ export const useProjectSettingsTokens = () => {
       projectId: projectSlug
     }
   })
+
+  const [handleRemovePublicToken] = useRemovePublicTokenMutation()
+
+  const removePublicToken = (id: number) => {
+    handleRemovePublicToken({
+      variables: {
+        projectId: +projectSlug,
+        publicKeyId: id
+      }
+    })
+  }
 
   useEffect(() => {
     if (isCreatingToken) {
@@ -48,6 +61,7 @@ export const useProjectSettingsTokens = () => {
       await handleCreatePublicToken()
       setIsCreatingToken(false)
     },
-    creatingPublicToken
+    creatingPublicToken,
+    removePublicToken
   }
 }

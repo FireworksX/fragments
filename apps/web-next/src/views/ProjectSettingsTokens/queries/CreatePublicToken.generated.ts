@@ -5,17 +5,22 @@ import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type CreatePublicTokenMutationVariables = Types.Exact<{
   projectId: Types.Scalars['Int']['input'];
+  name: Types.Scalars['String']['input'];
 }>;
 
 
-export type CreatePublicTokenMutation = { __typename?: 'Mutation', addProjectPublicKey: { __typename?: 'ProjectGet', id: number, publicKeys: Array<string> } };
+export type CreatePublicTokenMutation = { __typename?: 'Mutation', addProjectPublicKey: { __typename?: 'ProjectGet', id: number, publicKeys: Array<{ __typename?: 'ProjectKeyGet', id: number, name?: string | null, value: string }> } };
 
 
 export const CreatePublicTokenDocument = gql`
-    mutation CreatePublicToken($projectId: Int!) {
-  addProjectPublicKey(projectId: $projectId) {
+    mutation CreatePublicToken($projectId: Int!, $name: String!) {
+  addProjectPublicKey(projectId: $projectId, publicKeyName: $name) {
     id
-    publicKeys
+    publicKeys {
+      id
+      name
+      value
+    }
   }
 }
     `;
@@ -35,6 +40,7 @@ export type CreatePublicTokenMutationFn = Apollo.MutationFunction<CreatePublicTo
  * const [createPublicTokenMutation, { data, loading, error }] = useCreatePublicTokenMutation({
  *   variables: {
  *      projectId: // value for 'projectId'
+ *      name: // value for 'name'
  *   },
  * });
  */

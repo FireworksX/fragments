@@ -8,10 +8,10 @@ import { useRenderTarget } from "@/shared/hooks/useRenderTarget";
 import { positionType } from "@/definitions";
 
 export const useLayerPosition = (layerKey: LinkKey) => {
-  // const { layerKey: instanceLayerKey } = useContext(InstanceContext);
-  const instanceLayerKey = null;
+  const { layerKey: instanceLayerKey } = useContext(InstanceContext);
+  // const instanceLayerKey = null;
   const { manager: fragmentManager } = useContext(FragmentContext);
-  const { isDocument } = useRenderTarget(fragmentManager);
+  const { isDocument } = useRenderTarget();
   const isTop = isTopLevel(fragmentManager, layerKey);
   const skipPosition = (isTop && isDocument) || (!!instanceLayerKey && isTop);
 

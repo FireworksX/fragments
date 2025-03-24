@@ -8,15 +8,23 @@ export type ProjectTokensQueryVariables = Types.Exact<{
 }>;
 
 
-export type ProjectTokensQuery = { __typename?: 'Query', project: Array<{ __typename?: 'ProjectGet', id: number, privateKey?: string | null, publicKeys: Array<string> }> };
+export type ProjectTokensQuery = { __typename?: 'Query', project: Array<{ __typename?: 'ProjectGet', id: number, privateKey?: { __typename?: 'ProjectKeyGet', id: number, name?: string | null, value: string } | null, publicKeys: Array<{ __typename?: 'ProjectKeyGet', id: number, name?: string | null, value: string }> }> };
 
 
 export const ProjectTokensDocument = gql`
     query ProjectTokens($projectId: Int) {
   project(projectId: $projectId) {
     id
-    privateKey
-    publicKeys
+    privateKey {
+      id
+      name
+      value
+    }
+    publicKeys {
+      id
+      name
+      value
+    }
   }
 }
     `;

@@ -7,7 +7,7 @@ export const useFragmentManager = (
   fragmentId: string | number,
   globalContext?: GraphState
 ) => {
-  const { globalManagerGraph } = useGlobalManager(globalContext);
+  const { globalManagerGraph, manager } = useGlobalManager(globalContext);
   if (!globalManagerGraph) {
     throw new Error("Need declare global context");
   }
@@ -20,9 +20,11 @@ export const useFragmentManager = (
 
   const loadFragmentManager = async (id: string) => {
     setLoading(true);
+
     const fragmentDocument =
       await globalManagerGraph.fetchManager.queryFragment(id);
-    const res = globalManagerGraph?.createFragmentManager(id, fragmentDocument);
+    const res = manager?.createFragmentManager(id, fragmentDocument);
+
     setLoading(false);
     return res;
   };

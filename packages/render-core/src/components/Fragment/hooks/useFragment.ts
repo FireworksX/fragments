@@ -19,7 +19,7 @@ export const useFragment = (fragmentId: string, globalManager?: GraphState) => {
       const breakpoints = children?.map(manager.resolve);
       const activeBreakpoint = findBreakpoint(breakpoints, fragmentRect.width);
 
-      return [manager.keyOfEntity(activeBreakpoint)];
+      return activeBreakpoint ? [manager.keyOfEntity(activeBreakpoint)] : [];
     }
 
     return children;

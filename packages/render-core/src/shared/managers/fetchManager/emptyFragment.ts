@@ -1,6 +1,7 @@
+import { generateId } from "@fragments/utils";
+
 export const getEmptyFragment = (fragmentId: string) => {
-  const layerId = "root";
-  const nId = "123";
+  const layerId = generateId();
 
   return {
     [`Fragment:${fragmentId}`]: {
@@ -18,34 +19,13 @@ export const getEmptyFragment = (fragmentId: string) => {
       overrides: [],
       properties: ["Variable:62218c840bd111"],
     },
-    [`Instance:123`]: {
-      _type: "Instance",
-      _id: "123",
-      fragment: "button",
-      widthType: "Hug",
-      height: 50,
-      props: {
-        "62218c840bd11": 0.7,
-      },
-    },
-    [`Instance:321`]: {
-      _type: "Instance",
-      _id: "321",
-      fragment: "button",
-      widthType: "Hug",
-      height: 50,
-      top: 100,
-      props: {
-        "62218c840bd11": 0.4,
-      },
-    },
     [`Frame:${layerId}`]: {
       _type: "Frame",
       _id: layerId,
       opacity: 1,
       visible: true,
       overflow: "visible",
-      children: [`Frame:${nId}`, "Instance:123", "Instance:321"],
+      children: [],
       width: 320,
       height: 200,
       layoutSizingHorizontal: "Fixed",
@@ -56,32 +36,6 @@ export const getEmptyFragment = (fragmentId: string) => {
       name: "Frame",
       isPrimary: true,
       threshold: 320,
-    },
-    [`Frame:${nId}`]: {
-      _type: "Frame",
-      _id: nId,
-      opacity: "Variable:62218c840bd111",
-      visible: true,
-      overflow: "visible",
-      children: [],
-      width: 100,
-      height: 100,
-      layoutSizingHorizontal: "Fixed",
-      layoutSizingVertical: "Fixed",
-      fillType: "Solid",
-      positionType: "absolute",
-      solidFill: "rgba(32, 44, 255, 1)",
-      name: "Frame",
-    },
-    "Variable:62218c840bd111": {
-      _id: "62218c840bd111",
-      _type: "Variable",
-      type: "Number",
-      name: "Opacity",
-      max: 1,
-      min: 0,
-      step: 0.01,
-      displayStepper: false,
     },
   };
 };

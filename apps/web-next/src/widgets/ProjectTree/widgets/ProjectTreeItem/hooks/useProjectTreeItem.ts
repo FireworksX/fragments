@@ -13,7 +13,6 @@ import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
 export const useProjectTreeItem = (itemId: number, type: keyof typeof projectItemType, onClick) => {
   const [isLoading, toggleIsLoading] = useToggle(false)
   const { openedIds, toggleIsOpen } = use(ProjectTreeContext)
-  const { openFragment } = useBuilder()
   const { projectSlug } = useProject()
   const {
     updateProjectDirectory,

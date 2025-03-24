@@ -8,16 +8,18 @@ export type LandingDetailQueryVariables = Types.Exact<{
 }>;
 
 
-export type LandingDetailQuery = { __typename?: 'Query', landing: Array<{ __typename?: 'LandingGet', name: string, active: boolean, weight?: number | null, props?: any | null, fragment?: { __typename?: 'FragmentGet', id: number } | null }> };
+export type LandingDetailQuery = { __typename?: 'Query', landing: Array<{ __typename?: 'LandingGet', id: number, name: string, active: boolean, weight?: number | null, props?: any | null, fragment?: { __typename?: 'FragmentGet', id: number, name: string } | null }> };
 
 
 export const LandingDetailDocument = gql`
     query LandingDetail($landingId: Int!) {
   landing(landingId: $landingId) {
+    id
     name
     active
     fragment {
       id
+      name
     }
     weight
     props

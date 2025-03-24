@@ -32,7 +32,8 @@ export const ProjectSettingsTokens: FC<ProjectSettingsTokensProps> = ({ classNam
     creatingName,
     setCreatingName,
     setIsCreatingToken,
-    creatingInputRef
+    creatingInputRef,
+    removePublicToken
   } = useProjectSettingsTokens()
 
   return (
@@ -52,9 +53,9 @@ export const ProjectSettingsTokens: FC<ProjectSettingsTokensProps> = ({ classNam
         ) : (
           <>
             {publicTokens.map(token => (
-              <InfoSectionCell key={token} className={styles.tokenRow} title='default'>
-                <InputText value={token} />
-                <Button icon={<RemoveIcon />} mode='secondary'>
+              <InfoSectionCell key={token.id} className={styles.tokenRow} title={token.name ?? 'default'}>
+                <InputText value={token.value} />
+                <Button icon={<RemoveIcon />} mode='secondary' onClick={() => removePublicToken(token.id)}>
                   Remove
                 </Button>
               </InfoSectionCell>
@@ -102,7 +103,7 @@ export const ProjectSettingsTokens: FC<ProjectSettingsTokensProps> = ({ classNam
         ) : (
           <>
             <InfoSectionCell className={styles.tokenRow} title='Secret key'>
-              <InputText value={privateKey} />
+              <InputText value={privateKey?.value} />
               <Button
                 loading={refreshingPrivateToken}
                 icon={<RefreshIcon />}

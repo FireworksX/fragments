@@ -1,6 +1,10 @@
-mutation CreatePublicToken($projectId: Int!) {
-    addProjectPublicKey(projectId: $projectId) {
+mutation CreatePublicToken($projectId: Int!, $name: String!) {
+    addProjectPublicKey(projectId: $projectId, publicKeyName: $name) {
         id
-        publicKeys
+        publicKeys {
+            id
+            name
+            value
+        }
     }
 }

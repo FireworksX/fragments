@@ -63,6 +63,10 @@ export const linkConfig = {
   builder: {
     path: ({ projectSlug }) => `/project/${projectSlug}/builder`,
     params: ['projectSlug']
+  },
+  builderFragment: {
+    path: ({ projectSlug, fragmentId }) => `/project/${projectSlug}/builder?node=${fragmentId}`,
+    params: ['projectSlug', 'fragmentId']
   }
 }
 

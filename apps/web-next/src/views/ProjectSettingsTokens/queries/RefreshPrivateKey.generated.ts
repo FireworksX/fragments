@@ -8,14 +8,18 @@ export type RefreshPrivateKeyMutationVariables = Types.Exact<{
 }>;
 
 
-export type RefreshPrivateKeyMutation = { __typename?: 'Mutation', changeProjectPrivateKey: { __typename?: 'ProjectGet', id: number, privateKey?: string | null } };
+export type RefreshPrivateKeyMutation = { __typename?: 'Mutation', changeProjectPrivateKey: { __typename?: 'ProjectGet', id: number, privateKey?: { __typename?: 'ProjectKeyGet', id: number, name?: string | null, value: string } | null } };
 
 
 export const RefreshPrivateKeyDocument = gql`
     mutation RefreshPrivateKey($projectId: Int!) {
   changeProjectPrivateKey(projectId: $projectId) {
     id
-    privateKey
+    privateKey {
+      id
+      name
+      value
+    }
   }
 }
     `;

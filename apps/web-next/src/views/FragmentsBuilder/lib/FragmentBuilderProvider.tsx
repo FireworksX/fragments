@@ -25,7 +25,7 @@ export const FragmentBuilderProvider: FC<FragmentBuilderProviderProps> = ({ buil
       onDragEnd={builderManager.$droppable.handleDragEnd}
       onDragStart={builderManager.$droppable.handleDragStart}
     >
-      <BuilderContext value={{ builderManager, globalManager }}>{children}</BuilderContext>
+      <BuilderContext value={{ builderManager }}>{children}</BuilderContext>
     </DndContext>
   )
 }

@@ -2,7 +2,7 @@ import { GraphState } from "@graph-state/core";
 import { renderTarget } from "@/definitions";
 import { useGlobalManager } from "@/shared/hooks/useGlobalManager";
 
-export const useRenderTarget = (globalManager: GraphState) => {
+export const useRenderTarget = (globalManager?: GraphState) => {
   const { globalManagerGraph, setRenderTarget } =
     useGlobalManager(globalManager);
   const renderTargetValue =

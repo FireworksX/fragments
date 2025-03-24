@@ -8,6 +8,7 @@ import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { ProjectAssets } from '@/widgets/fragmentBuilder/ProjectAssets'
 import { ProjectTree } from '@/widgets/ProjectTree'
+import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
 
 interface FragmentsBuilderAsideProps {
   className?: string
@@ -22,13 +23,14 @@ const tabs: TabsSelectorItem = [
 export const FragmentsBuilderAside: FC<FragmentsBuilderAsideProps> = ({ className }) => {
   const { documentManager } = useBuilderDocument()
   const [mode, setMode] = useState('project')
+  const { openFragment } = useBuilder()
 
   return (
     <Container className={styles.root}>
       <TabsSelector className={styles.selector} items={tabs} value={mode} onChange={({ name }) => setMode(name)} />
       <div className={styles.delimiter} />
 
-      <ProjectTree className={cn({ [styles.hidden]: mode !== 'project' })} />
+      <ProjectTree className={cn({ [styles.hidden]: mode !== 'project' })} onClick={fg => openFragment(fg.id)} />
       {!!documentManager && <BuilderLayers className={cn({ [styles.hidden]: mode !== 'layers' })} />}
       <ProjectAssets className={cn({ [styles.hidden]: mode !== 'assets' })} />
     </Container>

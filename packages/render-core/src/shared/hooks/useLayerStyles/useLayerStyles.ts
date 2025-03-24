@@ -42,7 +42,7 @@ export const useLayerStyles = (layerKey: LinkKey) => {
       userSelect: "none",
     };
   } catch (e) {
-    console.error(e);
+    // console.error(e);
     return {};
   }
 };

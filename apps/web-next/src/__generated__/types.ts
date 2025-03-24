@@ -298,6 +298,7 @@ export type MutationAddProjectLogoArgs = {
 
 export type MutationAddProjectPublicKeyArgs = {
   projectId: Scalars['Int']['input'];
+  publicKeyName?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -362,7 +363,7 @@ export type MutationDeleteFragmentArgs = {
 
 export type MutationDeleteProjectPublicKeyArgs = {
   projectId: Scalars['Int']['input'];
-  publicKey: Scalars['String']['input'];
+  publicKeyId: Scalars['Int']['input'];
 };
 
 
@@ -464,9 +465,16 @@ export type ProjectGet = {
   members: Array<UserRoleGet>;
   name: Scalars['String']['output'];
   owner: UserGet;
-  privateKey?: Maybe<Scalars['String']['output']>;
-  publicKeys: Array<Scalars['String']['output']>;
+  privateKey?: Maybe<ProjectKeyGet>;
+  publicKeys: Array<ProjectKeyGet>;
   rootDirectoryId: Scalars['Int']['output'];
+};
+
+export type ProjectKeyGet = {
+  __typename?: 'ProjectKeyGet';
+  id: Scalars['Int']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  value: Scalars['String']['output'];
 };
 
 export type ProjectPatch = {

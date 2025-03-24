@@ -65,7 +65,7 @@ export const StreamLandings: FC<StreamLandingsProps> = ({ className }) => {
             {({ isActive }) => (
               <Cell
                 className={cn(styles.cell, { [styles.active]: isActive })}
-                before={<StatusDot status='success' />}
+                before={<StatusDot status={landing.active ? 'success' : 'error'} />}
                 description={landing.weight}
               >
                 {landing.name}

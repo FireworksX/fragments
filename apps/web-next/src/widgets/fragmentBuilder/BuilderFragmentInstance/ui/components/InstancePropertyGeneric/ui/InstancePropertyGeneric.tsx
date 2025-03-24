@@ -16,36 +16,48 @@ import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { useLayerVariableValue } from '@fragments/renderer-editor'
 import { useLayer } from '@fragments/renderer-editor'
 import { useInstancePropertyValue } from '@/shared/hooks/fragmentBuilder/useInstancePropertyValue'
+import { useNormalizeLayer } from '@/shared/hooks/fragmentBuilder/useNormalizeLayer'
 
 interface InstancePropertyGenericProps {
+  value: unknown
   property: LinkKey
   instanceManager: GraphState
   className?: string
   onChange(value: boolean): void
 }
 
-const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({ className, property, instanceManager }) => {
-  const { documentManager } = useBuilderDocument()
-  const { selection } = useBuilderSelection()
-  const [value, setValue, valueInfo] = useInstancePropertyValue(selection, property)
-  const propertyLayer = valueInfo?.propertyLayer ?? {}
-  const type = valueInfo?.propertyLayer?.type
+const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({
+  className,
+  manager,
+  value,
+  property,
+  instanceManager,
+  onChange
+}) => {
+  // const { documentManager } = useBuilderDocument()
+  // const { selection } = useBuilderSelection()
+  // const [value, setValue, valueInfo] = useInstancePropertyValue(selection, property)
+  // const propertyLayer = valueInfo?.propertyLayer ?? {}
+  // const type = valueInfo?.propertyLayer?.type
+  const { layer } = useNormalizeLayer(property, manager)
 
-  if (type === variableType.Number) {
+  // const [] = useGr
+
+  if (layer?.type === variableType.Number) {
     return (
       <InstancePropertyNumber
         value={value}
-        name={propertyLayer.name}
-        step={propertyLayer.step}
-        min={propertyLayer.min}
-        max={propertyLayer.max}
-        displayStepper={propertyLayer.displayStepper}
-        onChange={setValue}
+        name={layer.name}
+        step={layer.step}
+        min={layer.min}
+        max={layer.max}
+        displayStepper={layer.displayStepper}
+        onChange={onChange}
       />
     )
   }
 
-  return <h1>test</h1>
+  return null
   // const { documentManager } = useBuilderDocument()
   // const { selection } = useBuilderSelection()
   // const [instance] = useGraph(documentManager, selection)
