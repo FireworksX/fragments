@@ -1,4 +1,4 @@
-import { projectItemType } from '@/widgets/fragmentBuilder/ProjectTree/hooks/useProjectTree'
+import { projectItemType } from '../hooks/useProjectTree'
 
 export function flatten<T extends Record<string, any>>(
   items: TreeItems<T>,

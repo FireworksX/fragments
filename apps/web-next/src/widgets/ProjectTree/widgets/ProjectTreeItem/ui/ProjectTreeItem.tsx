@@ -7,19 +7,20 @@ import FragmentIcon from '@/shared/icons/next/component.svg'
 import EllipsisIcon from '@/shared/icons/next/ellipsis.svg'
 import { Touchable } from '@/shared/ui/Touchable'
 import { Dropdown } from '@/shared/ui/Dropdown'
-import { ProjectTreeItemOptions } from '@/widgets/fragmentBuilder/ProjectTree/widgets/ProjectTreeItem/components/ProjectTreeItemOptions'
+import { ProjectTreeItemOptions } from '../components/ProjectTreeItemOptions'
 import SmartCell from '@/shared/ui/SmartCell/ui/SmartCell'
-import { projectItemType } from '@/widgets/fragmentBuilder/ProjectTree/hooks/useProjectTree'
-import { useProjectTreeItem } from '@/widgets/fragmentBuilder/ProjectTree/widgets/ProjectTreeItem/hooks/useProjectTreeItem'
+import { projectItemType } from '../../../hooks/useProjectTree'
+import { useProjectTreeItem } from '../hooks/useProjectTreeItem'
 
 interface ProjectTreeItemProps {
   className?: string
   type: keyof typeof projectItemType
   id: number
+  onClick?: () => void
 }
 
-export const ProjectTreeItem: FC<ProjectTreeItemProps> = ({ className, id, type }) => {
-  const projectItem = useProjectTreeItem(id, type)
+export const ProjectTreeItem: FC<ProjectTreeItemProps> = ({ className, id, type, onClick }) => {
+  const projectItem = useProjectTreeItem(id, type, onClick)
   const hasActions = true
 
   return (

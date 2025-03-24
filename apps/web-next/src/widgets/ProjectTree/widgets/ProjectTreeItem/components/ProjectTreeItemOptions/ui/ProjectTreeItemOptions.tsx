@@ -3,8 +3,7 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import { DropdownGroup } from '@/shared/ui/DropdownGroup'
 import { DropdownOption } from '@/shared/ui/DropdownOption'
-import { FileSystemItemType } from '@/__generated__/graphql'
-import { projectItemType } from '@/widgets/fragmentBuilder/ProjectTree/hooks/useProjectTree'
+import { projectItemType } from '@/widgets/ProjectTree/hooks/useProjectTree'
 
 interface FragmentOptions {
   type: 'fragment'

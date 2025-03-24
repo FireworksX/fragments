@@ -13,7 +13,13 @@ export const popoutNames = createConstants(
 
 export const routerParams = createConstants('editMode')
 
-export const modalNames = createConstants('createProject', 'createFragment', 'createCampaign', 'configureStream')
+export const modalNames = createConstants(
+  'createProject',
+  'createFragment',
+  'createCampaign',
+  'configureStream',
+  'projectTree'
+)
 
 export const booleanTabsSelectorItems: TabsSelectorItem[] = [
   {

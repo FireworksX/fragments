@@ -2,13 +2,13 @@ import React, { createContext, FC, useRef } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { ProjectTreeItem } from '../widgets/ProjectTreeItem'
-import { useProjectTree } from '@/widgets/fragmentBuilder/ProjectTree/hooks/useProjectTree'
-import { ProjectTreeSortableItem } from '@/widgets/fragmentBuilder/ProjectTree/widgets/ProjectTreeSortableItem'
-import { DragOverlay } from '@dnd-kit/core'
+import { useProjectTree } from '../hooks/useProjectTree'
+import { ProjectTreeSortableItem } from '../widgets/ProjectTreeSortableItem'
 import { Spinner } from '@/shared/ui/Spinner'
 
 interface ProjectTreeProps {
   className?: string
+  onClick?: (item: unknown) => void
 }
 
 export const ProjectTreeContext = createContext({
@@ -16,7 +16,7 @@ export const ProjectTreeContext = createContext({
   toggleIsOpen: (id: number, flag?: boolean) => undefined
 })
 
-export const ProjectTree: FC<ProjectTreeProps> = ({ className }) => {
+export const ProjectTree: FC<ProjectTreeProps> = ({ className, onClick }) => {
   const { list, fetching, openedIds, toggleIsOpen } = useProjectTree()
   const treeRef = useRef(null)
 
@@ -35,7 +35,7 @@ export const ProjectTree: FC<ProjectTreeProps> = ({ className }) => {
             type={item.type}
             deepIndex={item.deepIndex}
           >
-            <ProjectTreeItem id={item.id} type={item.type} />
+            <ProjectTreeItem id={item.id} type={item.type} onClick={() => onClick(item)} />
           </ProjectTreeSortableItem>
         ))}
 

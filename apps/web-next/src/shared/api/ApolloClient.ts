@@ -107,6 +107,30 @@ export function makeApolloClient() {
               }
             },
 
+            createLanding: {
+              merge(outcome, incoming, { cache, variables }) {
+                cache.modify({
+                  fields: {
+                    landing(list = []) {
+                      return [...list, incoming]
+                    }
+                  }
+                })
+              }
+            },
+
+            createStream: {
+              merge(outcome, incoming, { cache, variables }) {
+                cache.modify({
+                  fields: {
+                    stream(list = []) {
+                      return [...list, incoming]
+                    }
+                  }
+                })
+              }
+            },
+
             createProject: {
               merge(_, _incoming, { cache }) {
                 cache.evict({ id: 'ROOT_QUERY', fieldName: 'project' })

@@ -1,20 +1,16 @@
 import { use, useRef, useState } from 'react'
 import { useToggle } from 'react-use'
 import { FileSystemItemType } from '@/__generated__/graphql'
-import { projectItemType } from '@/widgets/fragmentBuilder/ProjectTree/hooks/useProjectTree'
+import { projectItemType } from '../../../hooks/useProjectTree'
 import { nextTick } from '@/shared/utils/nextTick'
 import { useApolloClient, useFragment } from '@apollo/client'
 import { useProjectFiles } from '@/shared/hooks/useProjectFiles'
-import { ProjectTreeContext } from '@/widgets/fragmentBuilder/ProjectTree/ui/ProjectTree'
-import {
-  PROJECT_TREE_DIRECTORY_FRAGMENT,
-  PROJECT_TREE_FRAGMENT_FRAGMENT,
-  PROJECT_TREE_ITEM_FRAGMENT
-} from '@/widgets/fragmentBuilder/ProjectTree/widgets/ProjectTreeItem/lib/ProjectTreeItemFragment'
+import { ProjectTreeContext } from '../../../ui/ProjectTree'
+import { PROJECT_TREE_DIRECTORY_FRAGMENT, PROJECT_TREE_FRAGMENT_FRAGMENT } from '../lib/ProjectTreeItemFragment'
 import { useProject } from '@/shared/hooks/useProject'
 import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
 
-export const useProjectTreeItem = (itemId: number, type: keyof typeof projectItemType) => {
+export const useProjectTreeItem = (itemId: number, type: keyof typeof projectItemType, onClick) => {
   const [isLoading, toggleIsLoading] = useToggle(false)
   const { openedIds, toggleIsOpen } = use(ProjectTreeContext)
   const { openFragment } = useBuilder()
@@ -113,6 +109,6 @@ export const useProjectTreeItem = (itemId: number, type: keyof typeof projectIte
     rename: itemData?.parentId ? rename : null,
     edit: itemData?.parentId ? edit : null,
     delete: itemData?.parentId ? deleteItem : null,
-    handleClick: () => (type === projectItemType.fragment ? openFragment(itemId) : null)
+    handleClick: () => (type === projectItemType.fragment ? onClick?.() : null) // TODO openFragment()
   }
 }

@@ -9,13 +9,14 @@ import Logo from '@/shared/icons/next/logo.svg'
 import PlusIcon from '@/shared/icons/next/plus.svg'
 import ConnectIcon from '@/shared/icons/next/plug.svg'
 import { Button } from '@/shared/ui/Button'
+import { ProjectTreeModal } from '@/widgets/modals/ProjectTreeModal'
 
 interface LandingDetailProps {
   className?: string
 }
 
 export const LandingDetail: FC<LandingDetailProps> = ({ className }) => {
-  const { landing } = useLandingDetail()
+  const { landing, handleClickConnect } = useLandingDetail()
 
   return (
     <div className={cn(styles.root, className)}>
@@ -29,7 +30,9 @@ export const LandingDetail: FC<LandingDetailProps> = ({ className }) => {
           description='Connect exists fragment or create new'
           actions={
             <>
-              <Button icon={<ConnectIcon />}>Connect</Button>
+              <Button icon={<ConnectIcon />} onClick={handleClickConnect}>
+                Connect
+              </Button>
               <Button mode='outline' icon={<PlusIcon />}>
                 Create new
               </Button>
@@ -37,6 +40,8 @@ export const LandingDetail: FC<LandingDetailProps> = ({ className }) => {
           }
         />
       </div>
+
+      <ProjectTreeModal />
     </div>
   )
 }

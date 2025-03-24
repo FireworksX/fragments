@@ -3,7 +3,7 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import { useDraggable } from '@dnd-kit/core'
 import { FileSystemItemType } from '@/__generated__/graphql'
-import { projectItemType } from '@/widgets/fragmentBuilder/ProjectTree/hooks/useProjectTree'
+import { projectItemType } from '../../../hooks/useProjectTree'
 import { draggableTypes } from '@/shared/store/builderStore/plugins/droppablePlugin'
 
 interface ProjectTreeSortableItemProps extends PropsWithChildren {
