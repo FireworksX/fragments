@@ -158,7 +158,8 @@ async def update_landing_route(info: strawberry.Info[Context], landing_patch: La
                 raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE,
                                     detail=f'Cant validate props for landing {str(e)}')
     else:
-        if landing_patch.active is not None and landing_patch.active is True:
+        # if trying to activate and there is no fragment in the patch and in the landing, then raise
+        if landing_patch.active is not None and landing_patch.active is True and landing.fragment_id is None:
             raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE,
                                 detail=f'Cant activate landing without fragment')
 
