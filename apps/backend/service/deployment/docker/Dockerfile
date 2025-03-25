@@ -31,4 +31,4 @@ WORKDIR /opt/app
 COPY deployment/pre_start.py /opt/app/
 
 ONBUILD COPY pyproject.toml poetry.loc[k] /opt/app/
-ONBUILD RUN poetry install $(test $RUN_LEVEL == production && echo "--no-dev") --no-interaction --no-ansi
+ONBUILD RUN RUN poetry install --no-interaction --no-ansi

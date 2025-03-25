@@ -29,5 +29,6 @@ jobs:
     # Step 4: Restart the service (using systemd, for example)
     - name: Start docker-compose
       run: |
+        ssh githubuser@85.192.29.65 "cd /home/githubuser/fragments/apps/backend && docker-compose down"
         ssh githubuser@85.192.29.65 "cd /home/githubuser/fragments/apps/backend && docker-compose up --build"
         ssh githubuser@85.192.29.65 "cd /home/githubuser/fragments/apps/backend && docker exec backend-core make db_upgrade"
