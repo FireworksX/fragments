@@ -23,6 +23,8 @@ jobs:
     # Step 3: Pull changes
     - name: Pull changes
       run: |
+        cd /home/githubuser/fragments
+        ssh-keyscan -t rsa 85.192.29.65 >> ~/.ssh/known_hosts
         ssh githubuser@85.192.29.65 "cd /home/githubuser/fragments && git pull origin master"
     
     # Step 4: Restart the service (using systemd, for example)
