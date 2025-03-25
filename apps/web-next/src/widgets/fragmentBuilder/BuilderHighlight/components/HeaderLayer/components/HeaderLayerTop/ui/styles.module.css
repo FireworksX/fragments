@@ -1,0 +1,75 @@
+.root {
+    background: rgba(var(--secondary--rgb), .1);
+    backdrop-filter: blur(3px);
+    border-radius: var(--radius-second);
+    pointer-events: auto;
+    min-height: 32px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: var(--gutter-medium);
+    z-index: var(--z-index-builder-tools);
+}
+
+.selected {
+    background: rgba(var(--primary--rgb), .1);
+
+    .preview {
+        background: var(--primary);
+    }
+
+    .addButton {
+        background: rgba(var(--primary--rgb), .2);
+        color: var(--primary);
+    }
+
+    .title, .threshold {
+        color: var(--primary);
+    }
+}
+
+.main {
+    display: flex;
+    flex: 1;
+    gap: var(--gutter-medium);
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.preview {
+    min-width: 18px;
+    width: 18px;
+    height: 18px;
+    border-radius: var(--radius-small);
+    background: rgba(var(--secondary--rgb), .6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-color);
+}
+
+.title {
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(var(--secondary--rgb), .8);
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.threshold {
+    font-size: 12px;
+    color: rgba(var(--secondary--rgb), .8);
+}
+
+.addButton {
+    width: 18px;
+    height: 18px;
+    border-radius: var(--radius-small);
+    background: rgba(var(--secondary--rgb), .2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgba(var(--secondary--rgb), 1)
+}

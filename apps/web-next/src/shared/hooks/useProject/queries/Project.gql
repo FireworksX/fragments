@@ -1,0 +1,7 @@
+query Project($projectSlug: Int!) {
+    project(projectId: $projectSlug) {
+        id
+        name
+        rootDirectoryId
+    }
+}

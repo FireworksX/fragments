@@ -1,0 +1,67 @@
+.root {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--background);
+    min-height: var(--app-size-tabs-height);
+    border-bottom: 1px solid var(--border);
+    z-index: var(--z-index-navigation);
+}
+
+.beforeSlot {
+    position: relative;
+    display: flex;
+}
+
+.previewIcon {
+    color: var(--primary);
+    fill: rgba(var(--primary--rgb), .3);
+}
+
+.fragmentIcon {
+    color: var(--component);
+}
+
+.spinner {
+    position: absolute;
+    inset: 0;
+}
+
+.tab {
+    display: flex;
+    align-items: center;
+    padding: 7px 10px;
+    border-radius: var(--radius-second);
+    gap: 7px;
+    color: var(--secondary);
+    transition: var(--animation-transition-default);
+
+    &:hover {
+        background: rgba(var(--background-secondary--rgb), .4);
+    }
+
+    &.active {
+      background: var(--secondary-bg);
+      color: var(--text-color-accent);
+
+      .close {
+          color: var(--text-color-accent);
+      }
+    }
+}
+
+.close {
+    color: var(--secondary);
+    width: 15px;
+    height: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-small);
+    transition: var(--animation-transition-default);
+
+    &:hover {
+        background: var(--secondary-bg);
+    }
+}

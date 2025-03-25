@@ -2,6 +2,7 @@ var __defProp = Object.defineProperty;
 var __getOwnPropSymbols = Object.getOwnPropertySymbols;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __propIsEnum = Object.prototype.propertyIsEnumerable;
+var __pow = Math.pow;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __spreadValues = (a, b) => {
   for (var prop in b || (b = {}))
@@ -14,6 +15,15 @@ var __spreadValues = (a, b) => {
     }
   return a;
 };
+
+// src/converts.ts
+var fromPx = (val) => {
+  if (typeof val === "string") {
+    return Number(val.replace("px", ""));
+  }
+  return val || 0;
+};
+var toPx = (val) => typeof val === "string" || typeof val === "number" ? `${val}px` : "0px";
 
 // src/isObject.ts
 var isObject = (input) => {
@@ -272,6 +282,9 @@ function debounce(func, timeout = 300) {
   };
 }
 
+// src/isBrowser.ts
+var isBrowser_default = typeof window !== "undefined";
+
 // src/generateId.ts
 var generateId = () => Math.random().toString(16).slice(2);
 
@@ -321,6 +334,58 @@ var colorToObject = (color) => {
   }
   return null;
 };
+
+// src/colors/objectToColorString.ts
+var objectToColorString = (color) => {
+  if (!color || !isObject(color))
+    return color;
+  const resR = Number(color.r);
+  const resG = Number(color.g);
+  const resB = Number(color.b);
+  const resA = Number(color.a);
+  if ([resR, resG, resB].every(isFinite)) {
+    if (resA < 1) {
+      return `rgba(${resR}, ${resG}, ${resB}, ${resA})`;
+    }
+    return `rgb(${resR}, ${resG}, ${resB})`;
+  }
+  return color;
+};
+
+// src/finiiteNumber.ts
+function isFiniteNumber(value) {
+  return typeof value === "number" && isFinite(value);
+}
+function finiteNumber(value) {
+  return isFiniteNumber(value) ? value : void 0;
+}
+function positiveValue(value) {
+  if (isFiniteNumber(value) && value > 0) {
+    return value;
+  }
+  return 0;
+}
+
+// src/roundedNumber.ts
+function roundedNumber(value, decimals = 0) {
+  const d = Math.round(Math.abs(decimals));
+  const multiplier = __pow(10, d);
+  return Math.round(value * multiplier) / multiplier;
+}
+function roundedNumberString(value, decimals = 0) {
+  const result = value.toFixed(decimals);
+  return decimals === 0 ? result : `${+result}`;
+}
+function roundWithOffset(value, offset) {
+  if (offset === 0) {
+    return Math.round(value);
+  }
+  offset -= offset | 0;
+  if (offset < 0) {
+    offset = 1 - offset;
+  }
+  return Math.round(value - offset) + offset;
+}
 export {
   colorToObject,
   createConstants,
@@ -328,12 +393,16 @@ export {
   eventEmitter,
   filterDeep,
   findDeep,
+  finiteNumber,
+  fromPx,
   generateId,
   get,
   hexToRgb,
   injectLink,
   isAbsoluteUrl,
+  isBrowser_default as isBrowser,
   isEmptyValue,
+  isFiniteNumber,
   isHTMLNode,
   isObject,
   isPrimitive,
@@ -341,16 +410,22 @@ export {
   iterator,
   mergeIterator,
   noop,
+  objectToColorString,
   omit,
   pick,
+  positiveValue,
   promiseWaiter,
   replace,
   rgbStringToHex,
   rgbToHex,
   rgbToRgba,
+  roundWithOffset,
+  roundedNumber,
+  roundedNumberString,
   set,
   times,
   toKebabCase,
-  toLongHex
+  toLongHex,
+  toPx
 };
 //# sourceMappingURL=index.mjs.map

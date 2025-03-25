@@ -1,0 +1,8 @@
+mutation CreateStream($name: String!, $active: Boolean!, $weight: Float!, $campaignId: Int!) {
+    createStream(strm: {name: $name, active: $active, weight: $weight, deleted: false, campaignId: $campaignId}) {
+        id
+        name
+        weight
+        active
+    }
+}

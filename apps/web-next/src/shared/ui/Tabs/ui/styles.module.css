@@ -1,0 +1,21 @@
+.root {
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+}
+
+.switcher {
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    height: calc(100% - 6px);
+    background: var(--background-secondary);
+    border-radius: var(--radius-small);
+}
+
+.cell {
+    position: relative;
+}
+

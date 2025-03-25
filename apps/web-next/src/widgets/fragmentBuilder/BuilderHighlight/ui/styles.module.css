@@ -1,0 +1,43 @@
+.root {
+  position: absolute;
+  z-index: var(--z-index-builder-tools);
+}
+
+.highlight {
+  pointer-events: none;
+  position: fixed;
+  z-index: var(--z-index-builder-tools);
+}
+
+.mask {
+  &:after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: var(--borderWidth, 1px) var(--borderStyle, solid) var(--primary);
+  }
+}
+
+.selectedHighlight {
+  &:after {
+    border-style: solid;
+  }
+}
+
+.parentHighlight {
+  &:after {
+    border-style: dashed;
+  }
+}
+
+
+.breakpoints {
+  position: absolute;
+  z-index: var(--z-index-builder-tools);
+}
+
+.breakpointItem {
+  position: absolute;
+  left: 0;
+  top: 0;
+}

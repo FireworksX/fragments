@@ -1,0 +1,10 @@
+mutation RefreshPrivateKey($projectId: Int!) {
+    changeProjectPrivateKey(projectId: $projectId) {
+        id
+        privateKey {
+            id
+            name
+            value
+        }
+    }
+}

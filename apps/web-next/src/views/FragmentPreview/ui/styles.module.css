@@ -1,0 +1,25 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: calc(100vh - var(--app-size-header));
+    overflow: hidden;
+    position: relative;
+}
+
+.body {
+    display: flex;
+    flex: 1;
+}
+
+.aside {
+    width: 270px;
+    transform: initial !important;
+    position: static;
+}
+
+.properties {
+    position: absolute;
+    right: 30px;
+    top: 30px;
+}

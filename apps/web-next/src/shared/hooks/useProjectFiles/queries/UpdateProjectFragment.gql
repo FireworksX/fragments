@@ -1,0 +1,6 @@
+mutation UpdateProjectFragment($fragmentId: Int!, $name: String) {
+    updateFragment(fg: { id: $fragmentId, name: $name }) {
+        id
+        name
+    }
+}

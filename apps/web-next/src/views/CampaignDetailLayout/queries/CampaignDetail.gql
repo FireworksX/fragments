@@ -1,0 +1,12 @@
+query CampaignDetail($campaignSlug: Int!) {
+    campaign(campgainId: $campaignSlug) {
+        id
+        name
+        description
+        active
+        author {
+            firstName
+            lastName
+        }
+    }
+}

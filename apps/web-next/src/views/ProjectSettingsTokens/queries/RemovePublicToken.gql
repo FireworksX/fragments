@@ -1,0 +1,3 @@
+mutation RemovePublicToken($publicKeyId: Int!, $projectId: Int!) {
+    deleteProjectPublicKey(publicKeyId: $publicKeyId, projectId: $projectId)
+}

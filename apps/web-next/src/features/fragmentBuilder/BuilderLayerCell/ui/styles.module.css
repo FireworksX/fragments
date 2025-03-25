@@ -1,0 +1,172 @@
+.primaryIcon {
+    color: var(--primary);
+}
+
+.fragmentIcon {
+    color: var(--component);
+}
+
+.textIcon {
+    color: var(--secondary);
+}
+
+
+.root {
+    height: 30px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 10px 0 0;
+    color: var(--text-color-accent);
+    transition: transform var(--animation-transition-default);
+
+    &.selected {
+        color: var(--light);
+        .labelInput {
+            color: var(--light);
+        }
+        .primaryIcon, .actions, .textIcon, .fragmentIcon {
+            color: var(--light);
+        }
+        &:after {
+            background: var(--primary);
+        }
+    }
+
+    &.selectedFragment {
+        &, .titleCaret ,.labelInput, .primaryIcon, .actions, .fragmentIcon {
+            color: var(--light);
+        }
+        &:after {
+            background: var(--component);
+        }
+    }
+
+    &.fragment {
+        &, .titleCaret ,.labelInput, .primaryIcon, .actions, .fragmentIcon {
+            color: var(--component);
+        }
+        .labelInput {
+            color: var(--component);
+        }
+    }
+
+    &.partialSelected {
+        &, .titleCaret {
+            color: var(--text-color-accent);
+        }
+
+        &:after {
+            background: rgba(var(--primary--rgb), .1);
+        }
+    }
+
+    &.partialSelectedComponent {
+        color: var(--text-color);
+        &:after {
+            background: var(--component-bg);
+        }
+    }
+
+    &.borderTop {
+        &:after {
+            border-top-left-radius: var(--radius-small);
+            border-top-right-radius: var(--radius-small);
+        }
+
+    }
+
+    &.borderBottom {
+        &:after {
+            border-bottom-left-radius: var(--radius-small);
+            border-bottom-right-radius: var(--radius-small);
+        }
+
+    }
+
+    &.empty {
+        .primaryIcon, .textIcon, .titleCaret {
+            color: var(--secondary);
+        }
+    }
+
+    &.emptyPartial {
+        .primaryIcon, .textIcon, .titleCaret {
+            color: rgba(var(--secondary--rgb), .8);
+        }
+    }
+
+    &:after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+    }
+}
+
+.labelInput {
+    width: 100%;
+    font-size: 12px;
+    text-transform: capitalize;
+    border: none;
+    outline: none;
+    background: transparent;
+    pointer-events: none;
+    border-radius: 3px;
+    color: var(--text-color-accent);
+
+    &.editable {
+        padding: 3px;
+        pointer-events: auto;
+        background: var(--background);
+        color: var(--text-color-accent) !important;
+    }
+
+}
+
+.headIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+}
+
+.label {
+    flex: 1;
+    padding: 2px 2px 2px 0;
+    position: relative;
+    z-index: 2;
+}
+
+.collapse {
+    min-width: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    position: relative;
+    z-index: 2;
+}
+
+.actions {
+    font-size: 10px;
+    margin-left: auto;
+    color: var(--secondary);
+    position: relative;
+    z-index: 2;
+}
+
+.body {
+    position: relative;
+}
+
+.titleCaret {
+    transition: transform var(--animation-transition-default);
+}
+
+.open {
+    .titleCaret {
+        transform: rotate(90deg);
+    }
+}

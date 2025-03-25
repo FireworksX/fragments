@@ -1,0 +1,92 @@
+.root {
+    color: var(--text-color-accent);
+    display: flex;
+    gap: var(--gutter-small);
+    align-items: center;
+
+    &:hover {
+        .actions {
+            opacity: 1;
+        }
+    }
+}
+
+.open {
+    .caret {
+        transform: rotate(90deg);
+    }
+}
+
+.selected {
+    .labelInput {
+        font-weight: 500;
+        color: var(--text-color-accent);
+    }
+}
+
+.before {
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.beforeContent {
+    position: relative;
+}
+
+.loading {
+    position: absolute;
+    inset: 0;
+}
+
+.caret {
+    color: var(--text-color-accent);
+    width: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    transition: var(--animation-transition-default);
+}
+
+.icon {
+    color: var(--primary);
+    display: flex;
+    --fill: rgba(var(--primary--rgb), .3);
+}
+
+.actions {
+    opacity: 0;
+    transition: var(--animation-transition-default);
+    color: var(--text-color-accent);
+    width: 30px;
+    display: flex;
+    align-self: center;
+    justify-content: center;
+}
+
+.label {
+    flex: 1;
+    padding: 2px 2px 2px 0;
+}
+
+.labelInput {
+    width: 100%;
+    font-size: 12px;
+    outline: none;
+    background: transparent;
+    pointer-events: none;
+    border-radius: var(--radius-small);
+    color: var(--text-color-accent);
+    padding: 3px;
+    border: 1px solid transparent;
+
+    &.editable {
+        pointer-events: auto;
+        background: var(--background);
+        color: var(--text-color-accent) !important;
+        border-color: var(--primary);
+    }
+}
+

@@ -1,0 +1,42 @@
+{
+  "name": "@fragments/plugin-fragment-spring",
+  "private": false,
+  "version": "0.0.1",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "source": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "clear": "rm -r -f ./dist",
+    "build": "echo 'mock'",
+    "dev": "echo 'mock'",
+    "test": "vitest --run --config ./vitest.config.ts",
+    "lint": "eslint . --ext .ts,.tsx --fix",
+    "find-deadcode": "madge --circular --orphans --extensions ts,tsx src/"
+  },
+  "dependencies": {
+    "@fragments/plugin-fragment": "workspace:*",
+    "@fragments/springs-factory": "workspace:*",
+    "@fragments/utils": "workspace:*",
+    "@graph-state/checkers": "^0.1.2",
+    "@graph-state/core": "^0.9.1",
+    "@graph-state/plugin-extend": "^0.5.0",
+    "@react-spring/web": "9.7.4",
+    "madge": "^8.0.0",
+    "vitest": "^2.1.8"
+  },
+  "devDependencies": {
+    "jsdom": "^25.0.1",
+    "tsup": "^7.2.0",
+    "typescript": "^5.5.4"
+  }
+}

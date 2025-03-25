@@ -1,0 +1,35 @@
+.root {
+    display: flex;
+    align-items: center;
+    gap: var(--gutter-default);
+}
+
+.headerInfo {
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    display: flex;
+    gap: var(--gutter-medium);
+    align-items: center;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-color-accent);
+}
+
+.fragmentName {
+    color: var(--secondary);
+}
+
+.id {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--secondary);
+}
+
+.actions {
+    display: flex;
+    gap: var(--gutter-default);
+    margin-left: auto;
+}

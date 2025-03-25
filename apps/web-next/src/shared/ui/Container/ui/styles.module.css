@@ -1,0 +1,13 @@
+.root {
+    padding-inline: var(--gutter-size);
+
+    &.hug {
+        max-width: 1360px;
+        width: 100%;
+        margin: auto;
+    }
+
+    &.withVertical {
+        padding-block: var(--gutter-default);
+    }
+}

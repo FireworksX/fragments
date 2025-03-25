@@ -1,0 +1,34 @@
+{
+  "name": "@fragments/definition",
+  "private": false,
+  "version": "0.0.1",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.cjs.js",
+      "source": "./src/index.d.ts"
+    }
+  },
+  "scripts": {
+    "clear": "rm -r -f ./dist",
+    "build": "vite build",
+    "dev": "vite build -w",
+    "test": "vitest",
+    "lint": "eslint . --ext .ts,.tsx --fix"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "vite": "^6.1.0",
+    "vite-plugin-css-injected-by-js": "^3.5.2",
+    "vite-plugin-dts": "^4.5.0"
+  },
+  "dependencies": {
+    "valibot": "1.0.0-rc.3"
+  }
+}

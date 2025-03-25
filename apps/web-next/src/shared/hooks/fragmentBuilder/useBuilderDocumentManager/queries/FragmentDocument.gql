@@ -1,0 +1,11 @@
+query FragmentDocument($fragmentSlug: Int!) {
+    fragment(fragmentIds: [$fragmentSlug]) {
+        id
+        name
+        document
+        linkedFragments {
+            id
+            document
+        }
+    }
+}

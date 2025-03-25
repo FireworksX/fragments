@@ -1,0 +1,199 @@
+@layer ui {
+    .root {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: var(--radius-second);
+        outline: none !important;
+        border: none;
+        position: relative;
+        width: initial !important;
+        transition: var(--animation-transition-default);
+
+        &.primary {
+            background-color: var(--primary);
+            color: var(--light);
+
+            &:active {
+                background-color: var(--primary-active);
+            }
+
+            &:disabled {
+                background-color: var(--primary-disabled);
+            }
+        }
+
+        &.secondary {
+            background-color: var(--background-secondary);
+            color: var(--text-color-accent);
+            &:disabled {
+                color: var(--primary-disabled);
+            }
+        }
+
+        &.tertiary {
+            background-color: transparent;
+            color: var(--primary);
+            &:active {
+                background-color: transparent;
+            }
+            &:disabled {
+                color: var(--primary-disabled);
+            }
+        }
+
+        &.tertiary-secondary {
+            color: var(--text-color-accent);
+            &:hover {
+                color: var(--secondary-active);
+            }
+        }
+
+        &.outline {
+            color: var(--text-color-accent);
+            border: 1px solid var(--border);
+            &:hover {
+                background-color: var(--secondary-bg);
+            }
+        }
+
+        &.success {
+            color: var(--text-color);
+            background: var(--success);
+            &:hover {
+                background-color: var(--success);
+            }
+
+            &:disabled {
+                background-color: var(--success-bg);
+                color: var(--success);
+            }
+        }
+
+        &.success-outline {
+            color: var(--success);
+            background: var(--success-bg);
+            border: 1px solid var(--success);
+            &:hover {
+                background-color: var(--success-bg);
+            }
+        }
+
+        &.warning {
+            color: var(--text-color);
+            background: var(--warning);
+            &:hover {
+                background-color: var(--warning);
+            }
+        }
+
+        &.warning-outline {
+            color: var(--warning);
+            background: var(--warning-bg);
+            border: 1px solid var(--warning);
+            &:hover {
+                background-color: var(--warning-bg);
+            }
+        }
+
+        &.danger {
+            color: var(--text-color-accent);
+            background: var(--danger);
+            &:hover {
+                background-color: var(--danger);
+            }
+        }
+
+        &.danger-outline {
+            color: var(--danger);
+            background: var(--danger-bg);
+            border: 1px solid var(--danger);
+            &:hover {
+                background-color: var(--danger-bg);
+            }
+        }
+
+        &.small {
+            font-size: 10px;
+            padding: 4px 5px;
+            gap: 5px;
+        }
+
+        &.regular {
+            font-size: 14px;
+            padding: 3px 12px;
+        }
+
+        &.medium {
+            font-size: 12px;
+            padding: 7px 10px;
+            gap: 7px;
+
+        }
+
+        &.large {
+            font-size: 14px;
+            padding: 10px 20px;
+            gap: 10px;
+        }
+
+        &.xlarge {
+            font-size: 18px;
+            padding: 15px 25px;
+            gap: 12px;
+
+
+        }
+
+        &.stretched {
+            width: 100% !important;
+        }
+
+        &:disabled {
+            cursor: default;
+        }
+
+        &.loading {
+
+        }
+    }
+
+    .suffix {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+
+    .body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 1;
+        transition: opacity 150ms;
+        gap: var(--gutter-medium);
+        white-space: nowrap;
+    }
+
+    .loadingState {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        transition: opacity 150ms;
+        opacity: 0;
+    }
+
+
+    .loading {
+        .loadingState {
+            opacity: 1;
+        }
+
+        .body {
+            opacity: 0;
+        }
+    }
+}
+
+

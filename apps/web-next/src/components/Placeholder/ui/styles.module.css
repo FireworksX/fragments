@@ -1,0 +1,37 @@
+.root {
+    padding: 48px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+}
+
+.stretched {
+    flex: 1;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+}
+
+.titleGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.title {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.description {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-color-accent-secondary);
+}
+
+.actions{
+    display: flex;
+    gap: 8px;
+}

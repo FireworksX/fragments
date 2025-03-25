@@ -1,0 +1,3 @@
+mutation DeleteProjectFragment($id: Int!) {
+    deleteFragment(fragmentId: $id)
+}

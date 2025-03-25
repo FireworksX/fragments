@@ -1,0 +1,13 @@
+.root {
+    background: var(--background);
+    border-bottom: 1px solid var(--border);
+    z-index: var(--z-index-navigation);
+    position: relative;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: var(--app-size-header);
+}

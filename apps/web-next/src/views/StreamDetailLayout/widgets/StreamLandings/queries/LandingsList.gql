@@ -1,0 +1,8 @@
+query LandingsList($streamSlug: Int!, $landingId: Int) {
+    landing(streamId: $streamSlug, landingId: $landingId) {
+        id
+        name
+        active
+        weight
+    }
+}

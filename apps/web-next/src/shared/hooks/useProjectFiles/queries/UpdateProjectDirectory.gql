@@ -1,0 +1,6 @@
+mutation UpdateProjectDirectory($directoryId: Int!, $name: String) {
+    updateDirectory(directory: { id: $directoryId, name: $name }) {
+        id
+        name
+    }
+}

@@ -23,7 +23,7 @@
     "husky": "^8.0.2",
     "lint-staged": "^13.0.3",
     "prettier": "^2.7.1",
-    "turbo": "^2.0.9",
+    "turbo": "^2.4.4",
     "next": "14.2.3"
   },
   "dependencies": {

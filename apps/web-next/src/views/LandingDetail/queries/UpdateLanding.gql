@@ -1,0 +1,13 @@
+mutation UpdateLanding($landingId: Int!, $name: String, $active: Boolean, $weight: Float, $fragmentId: Int) {
+    updateLanding(landing: {id: $landingId, name: $name, active: $active, weight: $weight , fragmentId: $fragmentId}) {
+        id
+        name
+        active
+        fragment {
+            id
+            name
+        }
+        weight
+        props
+    }
+}

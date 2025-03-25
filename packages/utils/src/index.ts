@@ -1,3 +1,4 @@
+export * from "./converts";
 export { isObject } from "./isObject";
 export { isValue } from "./isValue";
 export { isEmptyValue } from "./isEmptyValue";
@@ -25,5 +26,13 @@ export { omit } from "./omit";
 export { times } from "./times";
 export { injectLink } from "./injectLink";
 export { debounce } from "./debounce";
+export { default as isBrowser } from "./isBrowser";
 export { generateId } from "./generateId";
 export { colorToObject } from "./colors/colorToObject";
+export { objectToColorString } from "./colors/objectToColorString";
+export * from "./finiiteNumber";
+export {
+  roundedNumber,
+  roundedNumberString,
+  roundWithOffset,
+} from "./roundedNumber";

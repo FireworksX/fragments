@@ -1,0 +1,388 @@
+# This file was generated. Do not edit manually.
+
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+union FilterOSTypeGetFilterDeviceTypeGetFilterPageGetFilterGeoLocationGetFilterTimeFrameGet = FilterDeviceTypeGet | FilterGeoLocationGet | FilterOSTypeGet | FilterPageGet | FilterTimeFrameGet
+
+type AllFiltersGet {
+    deviceTypes: [DeviceType!]!
+    geoLocations: [CountryGet!]!
+    osTypes: [OSType!]!
+}
+
+type AuthPayload {
+    accessToken: String!
+    refreshToken: String!
+    user: UserGet!
+}
+
+type CampaignGet {
+    active: Boolean!
+    author: UserGet!
+    deleted: Boolean!
+    description: String
+    id: Int!
+    logo: String
+    name: String!
+    projectId: Int!
+}
+
+type CountryGet {
+    country: String!
+    regions: [RegionGet!]!
+}
+
+type FeedbackGet {
+    content: String
+    feel: FeelLevelGet!
+    page: String!
+}
+
+type FilterDeviceTypeGet {
+    deviceType: DeviceType!
+    toggled: Boolean
+    type: FilterType!
+}
+
+type FilterGeoLocationGet {
+    city: String
+    country: String!
+    region: String
+    toggled: Boolean
+    type: FilterType!
+}
+
+type FilterOSTypeGet {
+    osType: OSType!
+    toggled: Boolean
+    type: FilterType!
+}
+
+type FilterPageGet {
+    page: String!
+    toggled: Boolean
+    type: FilterType!
+}
+
+type FilterTimeFrameGet {
+    fromTime: DateTime!
+    toTime: DateTime!
+    toggled: Boolean
+    type: FilterType!
+}
+
+type FragmentGet {
+    assets: [String!]!
+    author: UserGet!
+    directoryId: Int!
+    document: JSON!
+    id: Int!
+    linkedFragments: [FragmentGet!]
+    name: String!
+    props: JSON
+}
+
+type LandingGet {
+    active: Boolean!
+    deleted: Boolean!
+    fragment: FragmentGet
+    id: Int!
+    name: String!
+    props: JSON
+    stream: StreamGet!
+    weight: Float
+}
+
+type Mutation {
+    addAvatar(file: Upload!): UserGet!
+    addCampaignLogo(campaignId: Int!, file: Upload!): CampaignGet!
+    addFragmentAsset(file: Upload!, fragmentId: Int!): FragmentGet!
+    addProjectLogo(file: Upload!, projectId: Int!): ProjectGet!
+    addProjectPublicKey(projectId: Int!, publicKeyName: String): ProjectGet!
+    addUserToProject(projectId: Int!, role: Int!, userId: Int!): Void
+    changeProjectPrivateKey(projectId: Int!): ProjectGet!
+    changeUserRole(projectId: Int!, role: RoleGet!, userId: Int!): Void
+    createCampaign(cmp: CampaignPost!): CampaignGet!
+    createDirectory(directory: ProjectDirectory!): [ProjectDirectoryGet!]!
+    createFragment(fg: FragmentPost!): FragmentGet!
+    createLanding(landings: LandingPost!): LandingGet!
+    createProject(pr: ProjectPost!): ProjectGet!
+    createStream(strm: StreamPost!): StreamGet!
+    deleteDirectory(directoryId: Int!): Void
+    deleteFragment(fragmentId: Int!): Void
+    deleteProjectPublicKey(projectId: Int!, publicKeyId: Int!): Void
+    deleteStream(streamId: Int!): Void
+    feedback(fd: FeedbackPost!): FeedbackGet!
+    login(email: String!, password: String!): AuthPayload!
+    refresh: AuthPayload!
+    removeFragmentAsset(fragmentId: Int!, publicPath: String!): FragmentGet!
+    signup(email: String!, firstName: String!, lastName: String, password: String!): AuthPayload!
+    updateCampaign(cmp: CampaignPatch!): CampaignGet!
+    updateDirectory(directory: ProjectDirectoryPatch!): [ProjectDirectoryGet!]!
+    updateFragment(fg: FragmentPatch!): FragmentGet!
+    updateLanding(landing: LandingPatch!): LandingGet!
+    updateProject(pr: ProjectPatch!): ProjectGet!
+    updateStream(strm: StreamPatch!): StreamGet!
+}
+
+type ProjectDirectoryGet {
+    fragments: [FragmentGet!]!
+    hasFragments: Boolean!
+    hasSubdirectories: Boolean!
+    id: Int!
+    name: String!
+    parentId: Int
+    projectId: Int!
+}
+
+type ProjectGet {
+    campaigns: [CampaignGet!]!
+    id: Int!
+    logo: String
+    members: [UserRoleGet!]!
+    name: String!
+    owner: UserGet!
+    privateKey: ProjectKeyGet
+    publicKeys: [ProjectKeyGet!]!
+    rootDirectoryId: Int!
+}
+
+type ProjectKeyGet {
+    id: Int!
+    name: String
+    value: String!
+}
+
+type Query {
+    campaign(active: Boolean, campgainId: Int, deleted: Boolean, projectId: Int): [CampaignGet!]!
+    campaignByName(active: Boolean, deleted: Boolean, limit: Int = 5, name: String!, projectId: Int!): [CampaignGet!]!
+    clientFragment(fragmentId: Int!): FragmentGet
+    clientLanding: LandingGet
+    directory(directoryId: Int!): [ProjectDirectoryGet!]!
+    filter(countries: [String!], regions: [String!]): AllFiltersGet!
+    fragment(fragmentIds: [Int!], projectId: Int): [FragmentGet!]!
+    landing(landingId: Int, streamId: Int): [LandingGet!]!
+    profile: AuthPayload!
+    project(projectId: Int): [ProjectGet!]!
+    stream(active: Boolean, campaignId: Int, deleted: Boolean, streamId: Int): [StreamGet!]!
+}
+
+type RegionGet {
+    cities: [String!]!
+    region: String!
+}
+
+type StreamGet {
+    active: Boolean!
+    campaignId: Int!
+    deleted: Boolean!
+    filters: [FilterOSTypeGetFilterDeviceTypeGetFilterPageGetFilterGeoLocationGetFilterTimeFrameGet!]!
+    id: Int!
+    name: String!
+    weight: Float!
+}
+
+type UserGet {
+    email: String!
+    firstName: String!
+    id: Int!
+    lastName: String
+    logo: String
+}
+
+type UserRoleGet {
+    email: String!
+    firstName: String!
+    id: Int!
+    lastName: String
+    logo: String
+    role: RoleGet!
+}
+
+enum DeviceType {
+    DESKTOP
+    MOBILE
+    TABLET
+}
+
+enum FeelLevelGet {
+    FIVE
+    FOUR
+    ONE
+    THREE
+    TWO
+}
+
+enum FilterType {
+    DeviceType
+    GeoLocationType
+    OSType
+    PageType
+    TimeFrameType
+}
+
+enum OSType {
+    ANDROID
+    IOS
+    LINUX
+    MACOS
+    WINDOWS
+}
+
+enum RoleGet {
+    ADMIN
+    DESIGNER
+    MANAGER
+    OWNER
+}
+
+"Date with time (isoformat)"
+scalar DateTime
+
+"The `JSON` scalar type represents JSON values as specified by [ECMA-404](https://ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf)."
+scalar JSON
+
+scalar Upload
+
+"Represents NULL values"
+scalar Void
+
+input CampaignPatch {
+    active: Boolean
+    deleted: Boolean
+    description: String
+    id: Int!
+    name: String
+}
+
+input CampaignPost {
+    active: Boolean!
+    deleted: Boolean!
+    description: String
+    name: String!
+    projectId: Int!
+}
+
+input FeedbackPost {
+    content: String
+    feel: FeelLevelGet!
+    page: String!
+}
+
+input FilterDeviceTypePost {
+    deviceType: DeviceType!
+    toggled: Boolean = true
+}
+
+input FilterGeoLocationPost {
+    city: String
+    country: String!
+    region: String
+    toggled: Boolean = true
+}
+
+input FilterOSTypePost {
+    osType: OSType!
+    toggled: Boolean = true
+}
+
+input FilterPagePost {
+    page: String!
+    toggled: Boolean = true
+}
+
+input FilterTimeFramePost {
+    fromTime: DateTime!
+    toTime: DateTime!
+    toggled: Boolean = true
+}
+
+input FiltersPost {
+    deviceTypes: [FilterDeviceTypePost!]
+    geolocations: [FilterGeoLocationPost!]
+    osTypes: [FilterOSTypePost!]
+    pages: [FilterPagePost!]
+    timeFrames: [FilterTimeFramePost!]
+}
+
+input FragmentPatch {
+    directoryId: Int
+    document: JSON
+    id: Int!
+    linkedFragments: [Int!]
+    name: String
+    props: JSON
+}
+
+input FragmentPost {
+    directoryId: Int!
+    document: JSON!
+    linkedFragments: [Int!]
+    name: String!
+    projectId: Int!
+    props: JSON
+}
+
+input LandingPatch {
+    active: Boolean
+    deleted: Boolean
+    fragmentId: Int
+    id: Int!
+    name: String
+    props: JSON
+    weight: Float
+}
+
+input LandingPost {
+    active: Boolean
+    deleted: Boolean
+    fragmentId: Int
+    name: String!
+    props: JSON
+    streamId: Int!
+    weight: Float
+}
+
+input ProjectDirectory {
+    name: String!
+    parentId: Int!
+    projectId: Int!
+}
+
+input ProjectDirectoryPatch {
+    id: Int!
+    name: String
+    parentId: Int
+}
+
+input ProjectPatch {
+    id: Int!
+    name: String
+}
+
+input ProjectPost {
+    logo: String
+    name: String!
+}
+
+input StreamPatch {
+    active: Boolean
+    campaignId: Int!
+    deleted: Boolean
+    filters: FiltersPost
+    id: Int!
+    name: String
+    weight: Float
+}
+
+input StreamPost {
+    active: Boolean!
+    campaignId: Int!
+    deleted: Boolean!
+    filters: FiltersPost
+    name: String!
+    weight: Float!
+}

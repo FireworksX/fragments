@@ -1,0 +1,44 @@
+.root {
+    display: flex;
+    align-items: center;
+    background: var(--background-secondary);
+    border-radius: var(--radius-second);
+    position: relative;
+    overflow: hidden;
+}
+
+.switcher {
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    height: calc(100% - 6px);
+    background: var(--background);
+    border-radius: var(--radius-small);
+}
+
+.cell {
+    font-size: 12px;
+    color: var(--secondary);
+    display: flex;
+    font-weight: 500;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    height: 28px;
+    cursor: pointer;
+    padding-inline: 15px;
+
+    &.active {
+        color: var(--primary);
+    }
+
+    &.disabled {
+        color: var(--primary-disabled);
+    }
+}
+
+.divider {
+    width: 1px;
+    height: 14px;
+    background: var(--border);
+}

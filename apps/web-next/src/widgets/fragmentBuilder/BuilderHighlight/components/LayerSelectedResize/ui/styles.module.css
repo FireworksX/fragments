@@ -1,0 +1,106 @@
+.root {
+    position: absolute;
+    inset: 0;
+}
+
+.instance {
+    .corner {
+        border-color: var(--component);
+    }
+}
+
+.top {
+    top: calc(var(--size) / 2 * -1);
+    left: 0;
+    right: 0;
+}
+
+.bottom {
+    bottom: calc(var(--size) / 2 * -1);
+    left: 0;
+    right: 0;
+}
+
+.left {
+    top: 0;
+    bottom: 0;
+    left: calc(var(--size) / 2 * -1);
+}
+
+.right {
+    top: 0;
+    bottom: 0;
+    right: calc(var(--size) / 2 * -1);
+}
+
+.topLeft {
+    top: calc(var(--size) / 2 * -1);
+    left: calc(var(--size) / 2 * -1);
+}
+
+.topRight {
+    top: calc(var(--size) / 2 * -1);
+    right: calc(var(--size) / 2 * -1);
+}
+
+.bottomLeft {
+    bottom: calc(var(--size) / 2 * -1);
+    left: calc(var(--size) / 2 * -1);
+}
+
+.bottomRight {
+    bottom: calc(var(--size) / 2 * -1);
+    right: calc(var(--size) / 2 * -1);
+}
+
+.horizontalMiddle {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.verticalMiddle {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+
+.corner {
+    width: var(--size);
+    height: var(--size);
+    background: var(--background-secondary);
+    border-radius: var(--radius-main);
+    border: var(--borderWidth, 1px) solid var(--primary);
+    pointer-events: auto;
+    position: absolute;
+    z-index: 2;
+}
+
+.cornerHalfRight {
+    cursor: nesw-resize;
+}
+
+.cornerHalfLeft {
+    cursor: nwse-resize;
+}
+
+.cornerHorizontal {
+    cursor: ew-resize;
+}
+
+.cornerVertical {
+    cursor: ns-resize;
+}
+
+.sideVertical {
+    height: var(--size);
+    pointer-events: auto;
+    cursor: ns-resize;
+    position: absolute;
+}
+
+.sideHorizontal {
+    width: var(--size);
+    pointer-events: auto;
+    cursor: ew-resize;
+    position: absolute;
+}

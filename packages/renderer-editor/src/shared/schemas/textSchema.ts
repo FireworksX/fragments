@@ -1,0 +1,24 @@
+import { z, layerField } from "@/lib/zod.ts";
+import { graphFieldSchema } from "@/shared/schemas/graphFieldSchema.ts";
+import { overridesSchema } from "@/shared/schemas/overridesSchema.ts";
+import { textStylesSchema } from "@/shared/schemas/styles/nodes/textStylesSchema.ts";
+
+export const textSchema = z
+  .object({
+    name: layerField(z.string(), { fallback: "Text", overridable: false }),
+    content: layerField(z.string(), {
+      fallback: "",
+    }),
+    variableContent: layerField(z.string(), { fallback: null, variable: true }),
+    attributes: layerField(
+      z.object({
+        fontSize: layerField(z.string(), { fallback: "14px" }),
+        color: layerField(z.string(), { fallback: "#000" }),
+        lineHeight: layerField(z.string(), { fallback: "14px" }),
+      }),
+      { fallback: {} }
+    ),
+  })
+  .merge(graphFieldSchema)
+  .merge(textStylesSchema)
+  .merge(overridesSchema);

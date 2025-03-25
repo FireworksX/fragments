@@ -1,0 +1,16 @@
+.root {
+    position: relative;
+    flex: 1;
+    display: flex;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.actions {
+    display: flex;
+    padding: 12px;
+}

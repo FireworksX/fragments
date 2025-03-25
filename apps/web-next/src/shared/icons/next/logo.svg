@@ -1,0 +1,5 @@
+<svg width="25" height="25" viewBox="0 0 459 478" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M457.5 1L314.5 156V476L157.75 316L1 156L147 1H457.5Z" fill="currentColor"/>
+    <path d="M314.5 156L457.5 1H147M314.5 156V476M314.5 156H1M314.5 156L157.75 316M314.5 476L147 1M314.5 476L157.75 316M1 156L147 1M1 156L157.75 316"
+          stroke="var(--line)"/>
+</svg>

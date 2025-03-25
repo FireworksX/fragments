@@ -1,0 +1,19 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60px;
+}
+
+.tokenRow {
+    white-space: nowrap;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+}

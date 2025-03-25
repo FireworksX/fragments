@@ -1,0 +1,18 @@
+.root {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+    position: absolute;
+    top: -20px;
+}
+
+.dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: var(--primary);
+}

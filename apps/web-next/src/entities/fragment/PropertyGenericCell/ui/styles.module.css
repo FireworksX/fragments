@@ -1,0 +1,53 @@
+.root {
+    &:hover {
+        .aside {
+            opacity: 1;
+        }
+    }
+}
+
+.before {
+    display: flex;
+    gap: 5px;
+}
+
+.icon, .caret {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px;
+    color: var(--secondary);
+}
+
+.hideCaret {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.open {
+    .caret {
+        transform: rotate(90deg);
+    }
+}
+
+.body   {
+    color: var(--text-color-accent-secondary);
+}
+
+.aside {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--secondary);
+    opacity: 0;
+    transition: var(--animation-transition-default);
+}
+
+.creatingContainer {
+    display: flex;
+    gap: 10px;
+}
+
+.children {
+    padding-left: 10px;
+}

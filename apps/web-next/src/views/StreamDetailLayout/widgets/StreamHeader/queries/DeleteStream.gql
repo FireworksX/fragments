@@ -1,0 +1,7 @@
+#mutation DeleteStream($streamSlug: Int!, $campaignSlug: Int!, $name: String, $active: Boolean) {
+#    deleteStream(strm: { id: $streamSlug, campaignId: $campaignSlug, active: $active, name: $name }) {
+#        id
+#        active
+#        name
+#    }
+#}

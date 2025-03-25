@@ -1,0 +1,30 @@
+.head {
+    padding-block: 30px;
+    position: relative;
+}
+
+.headPattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.title {
+    font-size: 36px;
+    font-weight: 700;
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.input {
+    background: var(--background);
+    border-radius: var(--radius-second);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-secondary);
+}
+
+.row {
+    display: flex;
+    gap: 20px;
+}

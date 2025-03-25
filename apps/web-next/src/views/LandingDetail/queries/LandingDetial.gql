@@ -1,0 +1,13 @@
+query LandingDetail($landingId: Int!) {
+    landing(landingId: $landingId) {
+        id
+        name
+        active
+        fragment {
+            id
+            name
+        }
+        weight
+        props
+    }
+}
