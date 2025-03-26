@@ -14,7 +14,7 @@ COPY packages/utils/package.json packages/utils/
 COPY apps/web-next/package.json apps/web-next/
 
 # Устанавливаем зависимости (включая dev-зависимости)
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --shamefully-hoist
 
 # Шаг 2: Билд
 FROM base AS builder
@@ -37,8 +37,13 @@ ENV NODE_ENV production
 
 # Копируем только необходимые файлы из builder
 COPY --from=builder /app/apps/web-next/.next/standalone ./standalone
-COPY --from=builder /app/apps/web-next/.next/static ./.next/static
-COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/apps/web-next/.next/static ./standalone/apps/web-next/.next/static
+
+#COPY --from=builder /app/apps/web-next/.next/standalone/apps/web-next ./apps/web-next
+#COPY --from=builder /app/apps/web-next/.next/static ./.next/static
+#COPY --from=builder /app/apps/web-next/.next/server ./.next/server
+#COPY --from=builder /app/node_modules ./node_modules
+
 COPY --from=builder /app/packages/render-core/dist ./packages/render-core/dist
 COPY --from=builder /app/packages/render-react/dist ./packages/render-react/dist
 COPY --from=builder /app/packages/definition/dist ./packages/definition/dist
@@ -47,6 +52,12 @@ COPY --from=builder /app/packages/utils/dist ./packages/utils/dist
 # Порт
 EXPOSE 3000
 
+WORKDIR /app/standalone/apps/web-next
+
+CMD ["node", "server.js"]
+
+#RUN ls -la
+
 # Запуск
 #CMD ["tail", "-f", "/dev/null"]
 
@@ -54,6 +65,6 @@ EXPOSE 3000
 
 #
 ## Для standalone:
-CMD ["node", "apps/web-next/.next/standalone/apps/web-next/server.js"]
+#CMD ["node", "apps/web-next/.next/standalone/apps/web-next/server.js"]
 ## Для обычного режима:
 #CMD ["pnpm", "--filter", "@fragments/web-next", "start"]

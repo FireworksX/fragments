@@ -9,9 +9,9 @@ services:
       dockerfile: deployment/docker/Dockerfile.front
     ports:
      - "3000:3000"
-    volumes:
-      - .:/app
-      - /app/node_modules  # Prevent overwriting node_modules
+#    volumes:
+#      - .:/app
+#      - /app/node_modules  # Prevent overwriting node_modules
     environment:
       - NODE_ENV=production
     env_file: .env
@@ -64,7 +64,7 @@ services:
       - default
     restart: unless-stopped
     env_file: .env
-  
+
   postgres:
     container_name: backend-postgres
     image: library/postgres:13
