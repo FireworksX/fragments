@@ -1,68 +1,59 @@
-# Шаг 1: Базовый образ с PNPM
+# Шаг 1: Базовый образ
 FROM node:22-alpine AS base
+WORKDIR /app
 
 # Устанавливаем PNPM
 RUN corepack enable && corepack prepare pnpm@latest --activate
-WORKDIR /app
 
-# Копируем файлы для кэширования зависимостей
-COPY ./pnpm-lock.yaml ./pnpm-workspace.yaml ./package.json ./
-COPY packages/render-core/package.json ./packages/render-core/package.json
-COPY packages/render-react/package.json ./packages/render-react/package.json
-COPY packages/definition/package.json ./packages/definition/package.json
-COPY packages/utils/package.json ./packages/utils/package.json
-COPY apps/web-next/package.json ./apps/web-next/package.json
+# Копируем lock-файлы для кеширования зависимостей
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
+COPY packages/render-core/package.json packages/render-core/
+COPY packages/render-react/package.json packages/render-react/
+COPY packages/definition/package.json packages/definition/
+COPY packages/utils/package.json packages/utils/
+COPY apps/web-next/package.json apps/web-next/
 
-# Ставим зависимости (включая dev для сборки)
+# Устанавливаем зависимости (включая dev-зависимости)
 RUN pnpm install --frozen-lockfile
 
-
-# Шаг 2: Сборка всего монорепозитория
+# Шаг 2: Билд
 FROM base AS builder
 WORKDIR /app
 
-# Копируем ВЕСЬ монорепозиторий
+# Копируем весь проект
 COPY . .
 
-# Собираем весь проект (включая web-next)
+# Собираем проект
 RUN pnpm build
 
-# Шаг 3: Продакшен-образ (только Next.js из /apps/web-next)
+# Шаг 3: Запуск
 FROM node:22-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
 
-
+# Устанавливаем PNPM
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
+# Копируем только необходимые файлы из builder
+COPY --from=builder /app/apps/web-next/.next/standalone ./standalone
+COPY --from=builder /app/apps/web-next/.next/static ./.next/static
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/packages/render-core/dist ./packages/render-core/dist
+COPY --from=builder /app/packages/render-react/dist ./packages/render-react/dist
+COPY --from=builder /app/packages/definition/dist ./packages/definition/dist
+COPY --from=builder /app/packages/utils/dist ./packages/utils/dist
 
-# 1. Локальные пакеты (из их dist-папок)
-
-#
-## Вариант A: Если используется standalone-режим (output: 'standalone' в next.config.js)
-#COPY --from=builder /app/apps/web-next/.next/standalone/apps/web-next ./
-#COPY --from=builder /app/apps/web-next/.next/static ./.next/static
-#COPY --from=builder /app/node_modules ./node_modules
-#
-#COPY --from=builder /app/packages/render-core/dist ./packages/render-core/dist
-#COPY --from=builder /app/packages/render-react/dist ./packages/render-react/dist
-#COPY --from=builder /app/packages/definition/dist ./packages/definition/dist
-#COPY --from=builder /app/packages/utils/dist ./packages/utils/dist
-
-
-
-#
-## Вариант B: Если НЕ standalone
-
-#
+# Порт
 EXPOSE 3000
 
-RUN ls -la
+# Запуск
+#CMD ["tail", "-f", "/dev/null"]
+
+#CMD ["node", "standalone/server.js"]
 
 #
 ## Для standalone:
-#CMD ["tail", "-f", "/dev/null"]
-#CMD ["node", "apps/web-next/.next/standalone/apps/web-next/server.js"]
+CMD ["node", "apps/web-next/.next/standalone/apps/web-next/server.js"]
 ## Для обычного режима:
-CMD ["pnpm", "--filter", "@fragments/web-next", "start"]
+#CMD ["pnpm", "--filter", "@fragments/web-next", "start"]
