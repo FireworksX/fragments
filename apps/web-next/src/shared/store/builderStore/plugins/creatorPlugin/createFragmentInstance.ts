@@ -1,9 +1,9 @@
 import { animatableValue } from '@/shared/utils/animatableValue'
-import { layerMode, nodes, paintMode, positionType } from '@fragments/plugin-fragment'
+import { definition } from '@fragments/definition'
 import { getRandomColor } from '@/shared/utils/random'
 import { LinkKey } from '@graph-state/core'
 
-const allowTypes = [nodes.Frame]
+const allowTypes = [definition.nodes.Frame]
 
 export const createFragmentInstance = (state, parent, fragmentKey: LinkKey) => {
   const documentManager = state.$documents.getCurrentManager()
@@ -17,8 +17,8 @@ export const createFragmentInstance = (state, parent, fragmentKey: LinkKey) => {
 
   return documentManager.$fragment.createNode(
     {
-      _type: nodes.FragmentInstance,
-      positionType: parentLayerMode === layerMode.flex ? positionType.relative : null,
+      _type: definition.nodes.FragmentInstance,
+      positionType: parentLayerMode === definition.layerMode.flex ? definition.positionType.relative : null,
       fragment: fragmentKey
     },
     parent

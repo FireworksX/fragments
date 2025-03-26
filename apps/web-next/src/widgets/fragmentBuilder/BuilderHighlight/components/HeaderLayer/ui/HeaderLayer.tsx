@@ -5,7 +5,7 @@ import { LinkKey } from '@graph-state/core'
 import styles from './styles.module.css'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
-import { nodes } from '@fragments/plugin-fragment-spring'
+import { definition } from '@fragments/definition'
 import { HeaderLayerTop } from '@/widgets/fragmentBuilder/BuilderHighlight/components/HeaderLayer/components/HeaderLayerTop'
 import { SCALE } from '@/widgets/fragmentBuilder/BuilderCanvas/hooks/useCanvas'
 import { toPx } from '@/shared/utils/toPx'
@@ -25,7 +25,7 @@ interface HeaderLayerProps {
 
 const HeaderLayer: FC<HeaderLayerProps> = ({ className, layerKey }) => {
   const { layer, type, isRootLayer, isBreakpoint } = useLayerInfo(layerKey)
-  const isTopNode = !!(isRootLayer || isBreakpoint) && type === nodes.Frame
+  const isTopNode = !!(isRootLayer || isBreakpoint) && type === definition.nodes.Frame
   const { canvas } = useBuilderCanvas()
 
   const size = canvas.scale.to([SCALE.min, SCALE.max], [15, 6])

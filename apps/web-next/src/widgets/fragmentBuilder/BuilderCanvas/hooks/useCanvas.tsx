@@ -4,7 +4,7 @@ import { animated, SpringValue, useSpring } from '@react-spring/web'
 import { useGraph } from '@graph-state/react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useMeasure } from 'react-use'
-import { definitions, nodes } from '@fragments/plugin-fragment-spring'
+import { definition } from '@fragments/definition'
 import { useDragMove } from './useDragMove'
 import { useDragCollisions } from './useDragCollisions'
 import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderManager'
@@ -14,7 +14,6 @@ import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDoc
 import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
 import { useBuilderCreator } from '@/shared/hooks/fragmentBuilder/useBuilderCreator'
 import { nextTick } from '@/shared/utils/nextTick'
-import { useLayerValue$ } from '@fragments/renderer-editor'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 
@@ -75,7 +74,7 @@ export const useCanvas = () => {
       onClick: ({ event }) => {
         const layerKey = findLayerFromPointerEvent(event)
         if (createType) {
-          if (createType === nodes.Text) {
+          if (createType === definition.nodes.Text) {
             const [nextLayerKey] = createText(layerKey, { content: 'text' })
             manager.setCreatorType(null)
 
@@ -83,7 +82,7 @@ export const useCanvas = () => {
               canvasManager.setFocus(nextLayerKey)
             })
           }
-          if (createType === nodes.Frame) {
+          if (createType === definition.nodes.Frame) {
             const [nextLayerKey] = createFrame(layerKey)
             manager.setCreatorType(null)
 
@@ -94,7 +93,7 @@ export const useCanvas = () => {
             manager.createLayer(layerKey)
           }
         } else {
-          if (documentManager.entityOfKey(layerKey)?._type === nodes.FragmentInstance) {
+          if (documentManager.entityOfKey(layerKey)?._type === definition.nodes.FragmentInstance) {
             builderManager.toggleTextEditor(false)
             canvasManager.setFocus(layerKey)
             // updateParams({
@@ -104,7 +103,7 @@ export const useCanvas = () => {
             if (!isTextEditing) {
               const clickedLayerValue = documentManager.resolve(layerKey)
 
-              if (clickedLayerValue?._type === nodes.Text && event.detail === 2) {
+              if (clickedLayerValue?._type === definition.nodes.Text && event.detail === 2) {
                 // updateParams({
                 //   focus: layerKey
                 // })

@@ -18,16 +18,14 @@ import { capitalize } from '@/shared/utils/capitalize'
 import { isValue, objectToColorString, toKebabCase } from '@fragments/utils'
 import { useGraph } from '@graph-state/react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { getFieldValue, whiteSpace } from '@fragments/plugin-fragment'
+import { definition } from '@fragments/definition'
 import { getMarksInSelection } from '../lib/getMarksInSelection'
 import { getTopLevelNodeRanges } from '../lib/getTopLevelNodeRanges'
 import { wrapTextInParagraphWithAttributes } from '../lib/wrapTextInParagraphWithAttributes'
 import { isVariableLink } from '@/shared/utils/isVariableLink'
-import { getResolvedValue } from '@fragments/plugin-fragment-spring'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { useLayerVariables } from '@/shared/hooks/fragmentBuilder/useLayerVariables'
-import { useTextContent } from '@fragments/renderer-editor'
 import { useBuilderDocumentManager } from '@/shared/hooks/fragmentBuilder/useBuilderDocumentManager'
 
 const aligns: TabsSelectorItem[] = [
@@ -79,7 +77,7 @@ export const useBuilderText = () => {
 
   const [attributes, setAttributes] = useLayerValue('attributes')
   const [content, setContent, contentInfo] = useLayerValue('content')
-  const textContent = useTextContent(selection, documentManager)
+  const textContent = '' //useTextContent(selection, documentManager)
   const [opacity, setOpacity] = useLayerValue('opacity')
   const saveOpacity = useRef<number | null>(null)
   const [marks, setMarks] = useState({})
@@ -250,7 +248,7 @@ export const useBuilderText = () => {
       onChange: value => onChangeValue('letterSpacing', toPx(value))
     },
     whiteSpace: {
-      options: Object.keys(whiteSpace)
+      options: Object.keys(definition.whiteSpace)
       // ...layerInvoker('whiteSpace')
     }
   }

@@ -2,89 +2,93 @@ import { useContext, useMemo } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { LinkKey } from '@graph-state/core'
 import { popoutsStore } from '@/shared/store/popouts.store'
-import { variableTransforms, variableType } from '@fragments/plugin-fragment-spring'
+import { definition } from '@fragments/definition'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 // import { stackVariableTransformName } from '@/builder/StackCollector/components/variables/StackVariableTransform/StackVariableTransform'
 
 const computedValuesConfig = {
   convertFromBoolean: {
-    type: variableTransforms.equals,
-    key: variableTransforms.convertFromBoolean,
+    type: definition.variableTransforms.equals,
+    key: definition.variableTransforms.convertFromBoolean,
     isNegative: false,
     label: 'Convert',
-    transforms: [variableTransforms.convertFromBoolean]
+    transforms: [definition.variableTransforms.convertFromBoolean]
   },
   equals: {
-    type: variableTransforms.equals,
-    key: variableTransforms.equals,
+    type: definition.variableTransforms.equals,
+    key: definition.variableTransforms.equals,
     isNegative: false,
     label: 'Equals',
-    transforms: [variableTransforms.equals, variableTransforms.convertFromBoolean]
+    transforms: [definition.variableTransforms.equals, definition.variableTransforms.convertFromBoolean]
   },
   notEquals: {
-    type: variableTransforms.equals,
-    key: `!${variableTransforms.equals}`,
+    type: definition.variableTransforms.equals,
+    key: `!${definition.variableTransforms.equals}`,
     isNegative: true,
     label: 'Not Equals',
-    transforms: [variableTransforms.equals, variableTransforms.negative, variableTransforms.convertFromBoolean]
+    transforms: [
+      definition.variableTransforms.equals,
+      definition.variableTransforms.negative,
+      definition.variableTransforms.convertFromBoolean
+    ]
   },
   gt: {
-    type: variableTransforms.gt,
-    key: variableTransforms.gt,
+    type: definition.variableTransforms.gt,
+    key: definition.variableTransforms.gt,
     isNegative: false,
     label: 'Greater than',
-    transforms: [variableTransforms.gt, variableTransforms.convertFromBoolean]
+    transforms: [definition.variableTransforms.gt, definition.variableTransforms.convertFromBoolean]
   },
   gte: {
-    type: variableTransforms.gte,
-    key: variableTransforms.gte,
+    type: definition.variableTransforms.gte,
+    key: definition.variableTransforms.gte,
     isNegative: false,
     label: 'Greater than or Equals',
-    transforms: [variableTransforms.gte, variableTransforms.convertFromBoolean]
+    transforms: [definition.variableTransforms.gte, definition.variableTransforms.convertFromBoolean]
   },
   lt: {
-    type: variableTransforms.lt,
-    key: variableTransforms.lt,
+    type: definition.variableTransforms.lt,
+    key: definition.variableTransforms.lt,
     isNegative: false,
     label: 'Less than',
-    transforms: [variableTransforms.lt, variableTransforms.convertFromBoolean]
+    transforms: [definition.variableTransforms.lt, definition.variableTransforms.convertFromBoolean]
   },
   lte: {
-    type: variableTransforms.lte,
-    key: variableTransforms.lte,
+    type: definition.variableTransforms.lte,
+    key: definition.variableTransforms.lte,
     isNegative: false,
     label: 'Less than or Equals',
-    transforms: [variableTransforms.lte, variableTransforms.convertFromBoolean]
+    transforms: [definition.variableTransforms.lte, definition.variableTransforms.convertFromBoolean]
   }
 }
 
 const defaultValueByType = {
-  [variableType.Number]: 0,
-  [variableType.Boolean]: true
+  [definition.variableType.Number]: 0,
+  [definition.variableType.Boolean]: true
 }
 
 const computedValuesByType = {
-  [variableType.Number]: [
-    variableTransforms.equals,
-    variableTransforms.notEquals,
-    variableTransforms.gte,
-    variableTransforms.gt,
-    variableTransforms.lte,
-    variableTransforms.lt
+  [definition.variableType.Number]: [
+    definition.variableTransforms.equals,
+    definition.variableTransforms.notEquals,
+    definition.variableTransforms.gte,
+    definition.variableTransforms.gt,
+    definition.variableTransforms.lte,
+    definition.variableTransforms.lt
   ],
-  [variableType.Boolean]: [variableTransforms.equals, variableTransforms.notEquals]
+  [definition.variableType.Boolean]: [definition.variableTransforms.equals, definition.variableTransforms.notEquals]
 }
 
 interface ComputedValueEntity {
   transform: {
     label: string
-    transforms: keyof (typeof variableTransforms)[]
+    transforms: keyof (typeof definition.variableTransforms)[]
   }
   inputValue: LinkKey
   // Тип, который обслуживает переменная
-  inputType: keyof typeof variableType
+  inputType: keyof typeof definition.variableType
   // К какому типу по итогу нужно привести
-  outputType: keyof typeof variableType
+  outputType: keyof typeof definition.variableType
 }
 
 interface OpenComputedValueOptions {}

@@ -2,7 +2,7 @@ import { FC } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { SpringValue } from '@react-spring/web'
-import { variableType } from '@fragments/plugin-fragment-spring'
+import { definition } from '@fragments/definition'
 import { InputNumber } from '@/shared/ui/InputNumber'
 import { Slider } from '@/shared/ui/Slider'
 import { Stepper } from '@/shared/ui/Stepper'
@@ -15,7 +15,7 @@ interface TransformConvertFromBooleanValueProps {
   falsy: SpringValue<unknown> | unknown
   setTruthy(next: unknown): void
   setFalsy(next: unknown): void
-  outputType: keyof typeof variableType
+  outputType: keyof typeof definition.variableType
   className?: string
   valueReferenceOptions?: unknown
 }
@@ -56,8 +56,8 @@ export const TransformConvertFromBooleanValue: FC<TransformConvertFromBooleanVal
 }) => {
   const Children =
     {
-      [variableType.Number]: NumberValue,
-      [variableType.Boolean]: BooleanValue
+      [definition.variableType.Number]: NumberValue,
+      [definition.variableType.Boolean]: BooleanValue
     }[outputType] || (() => null)
 
   return (

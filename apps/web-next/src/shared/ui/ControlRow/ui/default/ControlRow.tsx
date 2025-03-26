@@ -11,7 +11,7 @@ import { isVariableLink } from '@/shared/utils/isVariableLink'
 import { isComputedValueLink } from '@/shared/utils/isComputedValueLink'
 import { Touchable } from '@/shared/ui/Touchable'
 import { InputSelectVariable } from '@/shared/ui/InputSelectVariable'
-import { nodes } from '@fragments/plugin-fragment-spring'
+import { definition } from '@fragments/definition'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 interface BuilderControlRowProps extends PropsWithChildren {
@@ -95,7 +95,7 @@ const ControlRow: FC<BuilderControlRowProps> = ({
             <ControlRowWide>
               {console.log(variableValue)}
               <InputSelectVariable
-                kind={variableValue._type === nodes.Variable ? 'variable' : 'computed'}
+                kind={variableValue._type === definition.nodes.Variable ? 'variable' : 'computed'}
                 type={variableValue.type}
                 onClick={variable?.onClick}
                 onReset={variable?.onReset}

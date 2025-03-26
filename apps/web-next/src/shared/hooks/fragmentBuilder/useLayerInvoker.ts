@@ -6,8 +6,6 @@ import { useGraph } from '@graph-state/react'
 import { GraphState, SetOptions } from '@graph-state/core'
 import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { getFieldValue } from '@fragments/plugin-fragment'
-import { getResolvedValue } from '@fragments/plugin-fragment-spring'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 // import { builderNodes } from '../data/promos/creators'
 // import { ComponentProperty } from '../types/componentProperties'
@@ -33,6 +31,8 @@ type SetterOptions = {
 type Setter = (options: SetterOptions) => void
 type Getter = (options: Omit<SetterOptions, 'options'>) => void
 export type ResultSetter = (nextValue: unknown, options: Omit<SetterOptions, 'options'>) => void
+
+const getFieldValue = () => null
 
 export const useLayerInvoker = (field: Field, setter?: Setter, getter?: Getter) => {
   const { documentManager } = useBuilderDocument()

@@ -13,7 +13,7 @@ import ImageIcon from '@/shared/icons/next/image.svg'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { LinkKey } from '@graph-state/core'
 import { useGraph } from '@graph-state/react'
-import { layerDirection, nodes } from '@fragments/plugin-fragment'
+import { definition } from '@fragments/definition'
 import { useBuilderLayerFlags } from '@/shared/hooks/fragmentBuilder/useBuilderLayerFlags'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
@@ -39,15 +39,15 @@ export const BuilderLayerTypeIcon: FC<BuilderLayerTypeIconProps> = ({
 }) => {
   const layerInfo = useLayerInfo(layerKey)
 
-  if (layerInfo.type === nodes.Text) return <TextFrame className={textIconClassName} />
-  if (layerInfo.type === nodes.Instance) return <FragmentInstanceIcon className={fragmentIconClassName} />
-  if (layerInfo.type === nodes.Fragment) return <FragmentIcon className={primaryIconClassName} />
-  if (layerInfo.type === nodes.Image) return <ImageIcon className={primaryIconClassName} />
+  if (layerInfo.type === definition.nodes.Text) return <TextFrame className={textIconClassName} />
+  if (layerInfo.type === definition.nodes.Instance) return <FragmentInstanceIcon className={fragmentIconClassName} />
+  if (layerInfo.type === definition.nodes.Fragment) return <FragmentIcon className={primaryIconClassName} />
+  if (layerInfo.type === definition.nodes.Image) return <ImageIcon className={primaryIconClassName} />
 
   if (layerInfo?.isBreakpoint) return <BreakpointIcon className={primaryIconClassName} />
 
   if (hasLayout) {
-    return layoutDirection === layerDirection.horizontal ? (
+    return layoutDirection === definition.layerDirection.horizontal ? (
       <ColumnsFrame className={primaryIconClassName} />
     ) : (
       <RowsFrame className={primaryIconClassName} />

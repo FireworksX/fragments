@@ -1,5 +1,5 @@
-import { fragmentGrowingMode } from '@fragments/plugin-fragment-spring'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
+import { definition } from '@fragments/definition'
 
 export const useBuilderFragmentGrowing = () => {
   const [horizontalGrow, setHorizontalGrow] = useLayerValue('horizontalGrow')
@@ -9,11 +9,11 @@ export const useBuilderFragmentGrowing = () => {
     options: [
       {
         label: 'Auto',
-        value: fragmentGrowingMode.auto
+        value: definition.fragmentGrowingMode.auto
       },
       {
         label: 'Fill',
-        value: fragmentGrowingMode.fill
+        value: definition.fragmentGrowingMode.fill
       }
     ],
     horizontal: {

@@ -1,6 +1,6 @@
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
-import { isRootLayer } from '@fragments/renderer-editor'
+import { isRootLayer } from '@fragments/render-core'
 
 export const useBuilderSelection = () => {
   const { documentManager } = useBuilderDocument()

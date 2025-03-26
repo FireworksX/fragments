@@ -7,7 +7,6 @@ import { Panel } from '@/shared/ui/Panel'
 import { Container } from '@/shared/ui/Container'
 import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
 import { DropdownOption } from '@/shared/ui/DropdownOption'
-import { variableType } from '@fragments/plugin-fragment-spring'
 
 interface AssetsPropertiesProps {
   propertiesTree: ReactNode

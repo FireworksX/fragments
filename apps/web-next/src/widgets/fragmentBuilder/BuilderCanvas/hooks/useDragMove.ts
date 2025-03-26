@@ -2,7 +2,6 @@ import { DragEvent, useCanvas } from './useCanvas'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { getFieldValue } from '@fragments/plugin-fragment'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
 

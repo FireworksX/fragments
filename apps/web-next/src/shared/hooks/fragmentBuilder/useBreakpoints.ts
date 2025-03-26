@@ -1,15 +1,12 @@
 import { useGraph, useGraphFields, useGraphStack } from '@graph-state/react'
 import { useContext, useMemo } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { stateAlias } from '@/views/FragmentDetail/ui/FragmentDetail'
-import { nodes } from '@fragments/plugin-fragment-spring'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { LinkKey } from '@graph-state/core'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useBuilderCreator } from '@/shared/hooks/fragmentBuilder/useBuilderCreator'
 import { useFragmentLayers } from '@/shared/hooks/fragmentBuilder/useFragmentLayers'
-import { isPartOfPrimary } from '@fragments/renderer-editor'
-import { getLayer } from '@fragments/renderer-editor'
+import { isPartOfPrimary } from '@fragments/render-core'
 
 const DEFAULT_BREAKPOINTS = [
   { name: 'Mobile', width: 375 },

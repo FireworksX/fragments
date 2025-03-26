@@ -2,9 +2,6 @@ import { LinkKey } from '@graph-state/core'
 import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
-import { isFieldOverridden } from '@fragments/plugin-fragment'
-import { isBrowser } from '@fragments/utils'
-import { isOverriddenNode, resetFieldOverride } from '@fragments/plugin-fragment-spring'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export type BuilderFieldOverrides = ReturnType<ReturnType<typeof useBuilderFieldOverrides>>

@@ -5,8 +5,7 @@ import { useGraph } from '@graph-state/react'
 import { DropdownRenderOption } from '@/shared/ui/RenderDropdown'
 import { nextTick } from '@/shared/utils/nextTick'
 import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
-import { createNode } from '@fragments/plugin-fragment-spring'
-import { nodes, variableType } from '@fragments/plugin-fragment-spring'
+import { definition } from '@fragments/definition'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { pick } from '@fragments/utils'
@@ -82,14 +81,14 @@ export const usePropertyGenericCell = (propertyLink: LinkKey) => {
   }
 
   const addObjectField = () => {
-    if ('setField' in property) {
-      const newProperty = createNode(
-        { _type: nodes.Variable, type: creatingType.current, name: creatingName },
-        documentManager
-      )
-      property.setField(creatingName, newProperty)
-      setIsOpen(true)
-    }
+    // if ('setField' in property) {
+    //   const newProperty = createNode(
+    //     { _type: nodes.Variable, type: creatingType.current, name: creatingName },
+    //     documentManager
+    //   )
+    //   property.setField(creatingName, newProperty)
+    //   setIsOpen(true)
+    // }
   }
 
   const children = useMemo(() => {
@@ -103,8 +102,8 @@ export const usePropertyGenericCell = (propertyLink: LinkKey) => {
   }, [])
 
   return {
-    type: propertyType as keyof typeof variableType,
-    withExtend: [variableType.Object, variableType.Array].includes(propertyType),
+    type: propertyType as keyof typeof definition.variableType,
+    withExtend: [definition.variableType.Object, definition.variableType.Array].includes(propertyType),
     name: name || propertyLink,
     creating,
     dropdownActions,

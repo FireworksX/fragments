@@ -1,8 +1,7 @@
 import { animatableValue } from '@/shared/utils/animatableValue'
-import { layerMode, nodes, paintMode, positionType } from '@fragments/plugin-fragment'
-import { getRandomColor } from '@/shared/utils/random'
+import { definition } from '@fragments/definition'
 
-const allowTypes = [nodes.Frame]
+const allowTypes = [definition.nodes.Frame]
 
 export const createImage = (state, parent) => {
   const documentManager = state.$documents.getCurrentManager()
@@ -16,8 +15,8 @@ export const createImage = (state, parent) => {
 
   return documentManager.$fragment.createNode(
     {
-      _type: nodes.Image,
-      positionType: parentLayerMode === layerMode.flex ? positionType.relative : null,
+      _type: definition.nodes.Image,
+      positionType: parentLayerMode === definition.layerMode.flex ? definition.positionType.relative : null,
       width: 100,
       height: 100
     },

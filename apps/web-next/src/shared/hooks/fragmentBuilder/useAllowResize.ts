@@ -1,7 +1,7 @@
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
-import { sizing } from '@fragments/plugin-fragment'
+import { definition } from '@fragments/definition'
 
-const ALLOW_TYPES = [sizing.Fixed, sizing.Relative]
+const ALLOW_TYPES = [definition.sizing.Fixed, definition.sizing.Relative]
 
 export const useAllowResize = () => {
   const [widthType] = useLayerValue('widthType')

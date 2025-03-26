@@ -1,8 +1,8 @@
-import { variableType } from '@fragments/plugin-fragment'
+import { definition } from '@fragments/definition'
 
 export const fieldsConfig = {
   opacity: {
-    type: variableType.Number,
+    type: definition.variableType.Number,
     name: 'Opacity',
     defaultValue: 1,
     step: 0.1,
@@ -11,17 +11,17 @@ export const fieldsConfig = {
     withSlider: true
   },
   visible: {
-    type: variableType.Boolean,
+    type: definition.variableType.Boolean,
     name: 'Visible',
     defaultValue: true
   },
   solidFill: {
-    type: variableType.Color,
+    type: definition.variableType.Color,
     name: 'Fill',
     defaultValue: '#fff'
   },
   content: {
-    type: variableType.String,
+    type: definition.variableType.String,
     name: 'Content'
   }
 }

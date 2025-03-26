@@ -2,7 +2,7 @@ import { FC, useContext, useEffect } from 'react'
 import { popoutsStore } from '@/shared/store/popouts.store'
 import { isObject, objectToColorString, omit } from '@fragments/utils'
 import { isLinkKey } from '@graph-state/core'
-import { borderType as defBorderType } from '@fragments/plugin-fragment-spring'
+import { definition } from '@fragments/definition'
 import { useDisplayColor } from '@/shared/hooks/fragmentBuilder/useDisplayColor'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { Panel } from '@/shared/ui/Panel'
@@ -32,8 +32,8 @@ const StackPanelBorder: FC<StackPanelBorderProps> = ({ className }) => {
   const [borderWidth, setBorderWidth] = useLayerValue('borderWidth')
 
   useEffect(() => {
-    if (borderType === defBorderType.None) {
-      setBorderType(defBorderType.Solid)
+    if (borderType === definition.borderType.None) {
+      setBorderType(definition.borderType.Solid)
     }
   }, [])
 
@@ -67,7 +67,7 @@ const StackPanelBorder: FC<StackPanelBorderProps> = ({ className }) => {
       <ControlRow title='Style'>
         <ControlRowWide>
           <Select value={borderType} onChange={type => setBorderType(type)}>
-            {Object.keys(omit(defBorderType, defBorderType.None)).map(type => (
+            {Object.keys(omit(definition.borderType, definition.borderType.None)).map(type => (
               <option key={type} value={type}>
                 {type}
               </option>

@@ -10,7 +10,6 @@ import { modalNames } from '@/shared/data'
 import { useProjectFiles } from '@/shared/hooks/useProjectFiles'
 import { useGraphEffect } from '@graph-state/react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { nodes } from '@fragments/plugin-fragment'
 import { draggableTypes } from '@/shared/store/builderStore/plugins/droppablePlugin'
 import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
 

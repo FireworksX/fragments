@@ -4,8 +4,8 @@ import { useCallback, useEffect } from 'react'
 import { useFragmentLayers } from '@/shared/hooks/fragmentBuilder/useFragmentLayers'
 import { useGraph, useGraphEffect, useGraphStack } from '@graph-state/react'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
-import { getLayer } from '@fragments/renderer-editor'
 import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
+import { getLayer } from '@/shared/hooks/fragmentBuilder/useNormalizeLayer/getLayer'
 
 export const useBuilderHighlightBreakpoints = () => {
   const { documentManager } = useBuilderDocument()

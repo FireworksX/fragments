@@ -7,9 +7,7 @@ import { BuilderSizeLocker } from '@/features/fragmentBuilder/BuilderSizeLocker'
 import { ControlRow } from '@/shared/ui/ControlRow'
 import { InputNumber } from '@/shared/ui/InputNumber'
 import { Select } from '@/shared/ui/Select'
-import { sizing } from '@fragments/plugin-fragment-spring'
-import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
-import { to } from '@fragments/springs-factory'
+import { definition } from '@fragments/definition'
 import { BuilderSizePositionControl } from '@/widgets/fragmentBuilder/BuilderSize/components/BuilderSizePositionControl'
 
 interface BuilderSizeProps {
@@ -32,14 +30,14 @@ const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
 
   const Options = (
     <>
-      <option value={sizing.Relative} disabled={!canRelativeSize}>
+      <option value={definition.sizing.Relative} disabled={!canRelativeSize}>
         Rel
       </option>
-      <option value={sizing.Fixed}>Fixed</option>
-      <option value={sizing.Hug} disabled={!hugContentEnabled}>
+      <option value={definition.sizing.Fixed}>Fixed</option>
+      <option value={definition.sizing.Hug} disabled={!hugContentEnabled}>
         Hug
       </option>
-      <option value={sizing.Fill} disabled={!fillContentEnabled}>
+      <option value={definition.sizing.Fill} disabled={!fillContentEnabled}>
         Fill
       </option>
     </>
