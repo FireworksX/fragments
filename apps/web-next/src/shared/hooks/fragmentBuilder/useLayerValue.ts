@@ -18,7 +18,7 @@ export const useLayerValue = (fieldKey: string, layerKey?: LinkKey) => {
     selector: data => (data ? pick(data, fieldKey) : data)
   })
 
-  const { layer, rawLayer } = useNormalizeLayer(layerKey)
+  const { layer, rawLayer } = useNormalizeLayer(key)
   const currentValue = layer?.[fieldKey]
   const rawValue = rawLayer?.[fieldKey]
 
