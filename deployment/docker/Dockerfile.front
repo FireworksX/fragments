@@ -33,7 +33,7 @@ WORKDIR /app
 ENV NODE_ENV production
 
 # Устанавливаем PNPM
-RUN corepack enable && corepack prepare pnpm@latest --activate
+#RUN corepack enable && corepack prepare pnpm@latest --activate
 
 # Копируем только необходимые файлы из builder
 COPY --from=builder /app/apps/web-next/.next/standalone ./standalone
