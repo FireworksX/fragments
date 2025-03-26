@@ -24,8 +24,6 @@ WORKDIR /app
 # Копируем ВЕСЬ монорепозиторий
 COPY . .
 
-
-
 # Собираем весь проект (включая web-next)
 RUN pnpm build
 
@@ -36,18 +34,21 @@ WORKDIR /app
 ENV NODE_ENV production
 
 
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+
 # 1. Локальные пакеты (из их dist-папок)
 
 #
 ## Вариант A: Если используется standalone-режим (output: 'standalone' в next.config.js)
-COPY --from=builder /app/apps/web-next/.next/standalone/apps/web-next ./
-COPY --from=builder /app/apps/web-next/.next/static ./.next/static
+#COPY --from=builder /app/apps/web-next/.next/standalone/apps/web-next ./
+#COPY --from=builder /app/apps/web-next/.next/static ./.next/static
 #COPY --from=builder /app/node_modules ./node_modules
-
-COPY --from=builder /app/packages/render-core/dist ./packages/render-core/dist
-COPY --from=builder /app/packages/render-react/dist ./packages/render-react/dist
-COPY --from=builder /app/packages/definition/dist ./packages/definition/dist
-COPY --from=builder /app/packages/utils/dist ./packages/utils/dist
+#
+#COPY --from=builder /app/packages/render-core/dist ./packages/render-core/dist
+#COPY --from=builder /app/packages/render-react/dist ./packages/render-react/dist
+#COPY --from=builder /app/packages/definition/dist ./packages/definition/dist
+#COPY --from=builder /app/packages/utils/dist ./packages/utils/dist
 
 
 
@@ -61,6 +62,7 @@ RUN ls -la
 
 #
 ## Для standalone:
-CMD ["node", "server.js"]
+#CMD ["tail", "-f", "/dev/null"]
+#CMD ["node", "apps/web-next/.next/standalone/apps/web-next/server.js"]
 ## Для обычного режима:
-#CMD ["pnpm", "--filter", "@fragments/web-next", "start"]
+CMD ["pnpm", "--filter", "@fragments/web-next", "start"]
