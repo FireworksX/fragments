@@ -1,7 +1,7 @@
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { booleanTabsSelectorItems } from '@/shared/data'
-import { linkTarget } from '@fragments/plugin-fragment'
+import { definition } from '@fragments/definition'
 
 export const useBuilderLink = () => {
   const { selection, selectionGraph } = useBuilderSelection()
@@ -32,7 +32,7 @@ export const useBuilderLink = () => {
     isNewTab: {
       ...newTabInvoker,
       items: [
-        { label: 'Yes', name: linkTarget._blank },
+        { label: 'Yes', name: definition.linkTarget._blank },
         { label: 'No', name: null }
       ]
     },

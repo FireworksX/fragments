@@ -1,5 +1,5 @@
 # Develop image
-FROM python:3.12-slim as base
+FROM python:3.12-slim AS base
 
 ARG RUN_LEVEL
 
@@ -32,7 +32,7 @@ COPY deployment/pre_start.py /opt/app/
 
 
 # Production image
-FROM base as service
+FROM base AS service
 
 COPY alembic /opt/app/alembic
 COPY conf /opt/app/conf

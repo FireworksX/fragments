@@ -5,7 +5,7 @@ import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { popoutsStore } from '@/shared/store/popouts.store'
 import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { InputSelect } from '@/shared/ui/InputSelect'
-import { borderType as defBorderType, paintMode } from '@fragments/plugin-fragment'
+import { definition } from '@fragments/definition'
 
 interface BuilderBorderControlProps {
   className?: string
@@ -33,12 +33,12 @@ export const BuilderBorderControl: FC<BuilderBorderControlProps> = memo(({ class
       <ControlRowWide>
         <InputSelect
           placeholder='Add...'
-          hasIcon={!!borderType && borderType !== defBorderType.None}
+          hasIcon={!!borderType && borderType !== definition.borderType.None}
           color={borderColor}
-          onReset={() => setBorderType(defBorderType.None)}
+          onReset={() => setBorderType(definition.borderType.None)}
           onClick={openBorder}
         >
-          {borderType !== defBorderType.None ? borderType : ''}
+          {borderType !== definition.borderType.None ? borderType : ''}
         </InputSelect>
       </ControlRowWide>
     </ControlRow>

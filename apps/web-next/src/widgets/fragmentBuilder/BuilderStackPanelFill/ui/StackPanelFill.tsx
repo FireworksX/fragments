@@ -12,9 +12,8 @@ import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSe
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { getRandomColor } from '@/shared/utils/random'
 import { SolidPaintStyles } from '@/entities/fragment/SolidPaintStyles'
-import { paintMode } from '@fragments/plugin-fragment-spring'
+import { definition } from '@fragments/definition'
 import { colorToObject, objectToColorString } from '@fragments/utils'
-import { to } from '@fragments/springs-factory'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 
 export interface StackPanelFillOptions {}
@@ -26,11 +25,11 @@ interface StackPanelFillProps {
 
 const tabs: TabsSelectorItem[] = [
   {
-    name: paintMode.Solid,
+    name: definition.paintMode.Solid,
     label: 'Solid'
   },
   {
-    name: paintMode.Image,
+    name: definition.paintMode.Image,
     label: 'Image'
   }
 ]
@@ -40,15 +39,15 @@ const StackPanelFill: FC<StackPanelFillProps> = ({ className, stackColors }) => 
   const [solidFill, setSolidFill] = useLayerValue('solidFill')
 
   useEffect(() => {
-    if (fillType === paintMode.None || !fillType) {
-      setFillType(paintMode.Solid)
+    if (fillType === definition.paintMode.None || !fillType) {
+      setFillType(definition.paintMode.Solid)
     }
   }, [])
 
   return (
     <div className={cn(styles.root, className)}>
       <TabsSelector items={tabs} value={fillType} onChange={({ name }) => setFillType(name)} />
-      {fillType === paintMode.Solid && (
+      {fillType === definition.paintMode.Solid && (
         <Panel>
           <ColorPicker
             color={solidFill}

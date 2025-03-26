@@ -11,9 +11,6 @@ import { popoutNames } from '@/shared/data'
 import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { InputText, InputTextAnimated } from '@/shared/ui/InputText'
 import { Textarea, TextareaAnimated } from '@/shared/ui/Textarea'
-import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
-import { to } from '@fragments/springs-factory'
-import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 
 interface StackStringVariableProps {

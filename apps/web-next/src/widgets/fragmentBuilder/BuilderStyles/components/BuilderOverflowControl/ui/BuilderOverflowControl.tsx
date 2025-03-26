@@ -3,13 +3,13 @@ import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { Select } from '@/shared/ui/Select'
 import { capitalize } from '@/shared/utils/capitalize'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
-import { overflow } from '@fragments/plugin-fragment'
+import { definition } from '@fragments/definition'
 
 interface BuilderOverflowControlProps {
   className?: string
 }
 
-const overflowOptions = Object.keys(overflow)
+const overflowOptions = Object.keys(definition.overflow)
 
 export const BuilderOverflowControl: FC<BuilderOverflowControlProps> = memo(({ className }) => {
   const [value, setValue, valueInfo] = useLayerValue('overflow')

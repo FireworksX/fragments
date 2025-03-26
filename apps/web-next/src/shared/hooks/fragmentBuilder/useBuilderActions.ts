@@ -2,26 +2,27 @@ import { useCallback, useContext, useMemo } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { stateAlias } from '@/views/FragmentDetail/ui/FragmentDetail'
-import { nodes } from '@fragments/plugin-fragment'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { definition } from '@fragments/definition'
 
 export const useBuilderActions = () => {
   const { documentManager } = useBuilderDocument()
   const { selection, selectionGraph } = useBuilderSelection()
   const type = selectionGraph?._type
-  const isComponentType = type === nodes.Component || type === nodes.ComponentSet
-  const isPrimary = (type === nodes.Screen || type === nodes.ComponentSet) && selectionGraph?.isPrimary
+  const isComponentType = type === definition.nodes.Component || type === definition.nodes.ComponentSet
+  const isPrimary =
+    (type === definition.nodes.Screen || type === definition.nodes.ComponentSet) && selectionGraph?.isPrimary
 
   const features = useMemo(() => {
     return {
-      canInsert: type !== nodes.Text && type !== nodes.Component,
-      canConvertToComponent: type !== nodes.Screen && !isComponentType,
-      canDuplicate: type !== nodes.Screen,
+      canInsert: type !== definition.nodes.Text && type !== definition.nodes.Component,
+      canConvertToComponent: type !== definition.nodes.Screen && !isComponentType,
+      canDuplicate: type !== definition.nodes.Screen,
       canRemove: !isPrimary,
       canHide: !isPrimary,
-      canSetPrimary: type === nodes.Screen && !isPrimary,
-      canAddFrame: type !== nodes.Screen && type !== nodes.ComponentSet,
-      canRemoveWrapper: type === nodes.Frame
+      canSetPrimary: type === definition.nodes.Screen && !isPrimary,
+      canAddFrame: type !== definition.nodes.Screen && type !== definition.nodes.ComponentSet,
+      canRemoveWrapper: type === definition.nodes.Frame
     }
   }, [isComponentType, isPrimary, type])
 
@@ -88,7 +89,7 @@ export const useBuilderActions = () => {
 
   const addBreakpoint = useCallback(() => {
     // if (selectionGraph && documentManager && features.canInsert) {
-    //   const breakpoint = documentManager[stateAlias].createNode({ _type: nodes.Breakpoint })
+    //   const breakpoint = documentManager[stateAlias].createNode({ _type: definition.nodes.Breakpoint })
     //
     //   console.log(breakpoint)
     // }
@@ -96,20 +97,20 @@ export const useBuilderActions = () => {
 
   const addFrame = useCallback(() => {
     if (selectionGraph && documentManager && features.canInsert) {
-      const frame = documentManager.$fragment.createNode({ _type: nodes.Frame }, selection)
+      const frame = documentManager.$fragment.createNode({ _type: definition.nodes.Frame }, selection)
       return frame
     }
   }, [features.canInsert, selectionGraph, documentManager])
 
   const addText = useCallback(() => {
     if (selectionGraph && documentManager && features.canInsert) {
-      const node = documentManager.$fragment.createNode({ _type: nodes.Text }, selection)
+      const node = documentManager.$fragment.createNode({ _type: definition.nodes.Text }, selection)
     }
   }, [features.canInsert, selectionGraph, documentManager])
 
   const addImage = useCallback(() => {
     if (selectionGraph && documentManager && features.canInsert) {
-      const node = documentManager.$fragment.createNode({ _type: nodes.Image }, selection)
+      const node = documentManager.$fragment.createNode({ _type: definition.nodes.Image }, selection)
     }
   }, [features.canInsert, selectionGraph, documentManager])
 

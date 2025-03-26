@@ -40,10 +40,10 @@ import React, { use, useEffect } from 'react'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useGraphEffect } from '@graph-state/react'
 import { useBuilderHotKeys } from '@/shared/hooks/hotkeys/useBuilderHotKeys'
-import { renderTarget } from '@fragments/plugin-fragment'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import StackColorProperty from '@/features/popouts/StackColorProperty/ui/StackColorProperty'
 import { useRenderTarget } from '@fragments/render-react'
+import { definition } from '@fragments/definition'
 
 export const FragmentsEdit = () => {
   const { documentManager } = useBuilderDocument()
@@ -57,7 +57,7 @@ export const FragmentsEdit = () => {
   })
 
   useEffect(() => {
-    setRenderTarget(renderTarget.canvas)
+    setRenderTarget(definition.renderTarget.canvas)
   }, [])
 
   useEffect(() => {

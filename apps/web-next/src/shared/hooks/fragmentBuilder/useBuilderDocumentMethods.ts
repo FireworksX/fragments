@@ -4,7 +4,7 @@ import { use } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { createFragmentInstance } from '@/shared/store/builderStore/plugins/creatorPlugin/createFragmentInstance'
 import { LinkKey } from '@graph-state/core'
-import { nodes } from '@fragments/plugin-fragment'
+import { definition } from '@fragments/definition'
 
 export const useBuilderDocumentMethods = () => {
   const { builderManager } = use(BuilderContext)
@@ -19,7 +19,7 @@ export const useBuilderDocumentMethods = () => {
       const instanceNode = builderManager?.$creator.createFragmentInstance(
         builderManager,
         to,
-        `${nodes.Fragment}:${fragmentSlug}`
+        `${definition.nodes.Fragment}:${fragmentSlug}`
       )
     }
   }

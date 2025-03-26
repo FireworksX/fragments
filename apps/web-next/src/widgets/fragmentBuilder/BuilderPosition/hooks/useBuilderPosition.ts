@@ -1,7 +1,8 @@
 import { useContext, useMemo } from 'react'
 import { useGraph } from '@graph-state/react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { layerMode, nodes } from '@fragments/plugin-fragment-spring'
+import { definition } from '@fragments/definition'
+
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
@@ -11,14 +12,14 @@ import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
 export const useBuilderPosition = () => {
   const { selection } = useBuilderSelection()
   const { type, parent, isRootLayer, isBreakpoint } = useLayerInfo(selection)
-  const childOfBreakpoint = parent?._type === nodes.Breakpoint
+  const childOfBreakpoint = parent?._type === definition.nodes.Breakpoint
 
   const [position, setPosition] = useLayerValue('position')
   const [top, setTop] = useLayerValue('top')
   const [left, setLeft] = useLayerValue('left')
 
   const disabledFlags = useMemo(() => {
-    const hasLayout = parent?.layerMode === layerMode.flex
+    const hasLayout = parent?.layerMode === definition.layerMode.flex
 
     return {
       absolute: parent?._type === {}.Screen,

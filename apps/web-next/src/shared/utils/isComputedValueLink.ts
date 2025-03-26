@@ -1,14 +1,14 @@
 import { Entity, isGraph, isLinkKey, LinkKey } from '@graph-state/core'
-import { nodes } from '@fragments/plugin-fragment-spring'
+import { definition } from '@fragments/definition'
 
 export const isComputedValueLink = (link: Entity) => {
   if (isLinkKey(link)) {
     const type = link.split(':').at(0)
-    return type === nodes.ComputedValue
+    return type === definition.nodes.ComputedValue
   }
 
   if (link && isGraph(link)) {
-    return link._type === nodes.ComputedValue
+    return link._type === definition.nodes.ComputedValue
   }
 
   return false

@@ -6,7 +6,7 @@ import { LinkKey } from '@graph-state/core'
 import { popoutsStore } from '@/shared/store/popouts.store'
 import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { variableType } from '@fragments/plugin-fragment-spring'
+import { definition } from '@fragments/definition'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export const useBuilderVariableCreator = () => {
@@ -32,24 +32,27 @@ export const useBuilderVariableCreator = () => {
     })
   }
 
-  const allowVariables = [variableType.Number, variableType.Boolean, variableType.String, variableType.Object].map(
-    type => ({
-      type,
-      createVariable: (variableOptions = {}) => {
-        const methodByType = {
-          [variableType.Number]: documentManager.createNumberVariable,
-          [variableType.Boolean]: documentManager.createBooleanVariable,
-          [variableType.String]: documentManager.createStringVariable,
-          [variableType.Object]: documentManager.createObjectVariable
-        }[type]
+  const allowVariables = [
+    definition.variableType.Number,
+    definition.variableType.Boolean,
+    definition.variableType.String,
+    definition.variableType.Object
+  ].map(type => ({
+    type,
+    createVariable: (variableOptions = {}) => {
+      const methodByType = {
+        [definition.variableType.Number]: documentManager.createNumberVariable,
+        [definition.variableType.Boolean]: documentManager.createBooleanVariable,
+        [definition.variableType.String]: documentManager.createStringVariable,
+        [definition.variableType.Object]: documentManager.createObjectVariable
+      }[type]
 
-        return methodByType(variableOptions)
-      },
-      openVariable: (vairableLink: LinkKey, openOptions = {}) => {
-        openVariable(vairableLink, openOptions)
-      }
-    })
-  )
+      return methodByType(variableOptions)
+    },
+    openVariable: (vairableLink: LinkKey, openOptions = {}) => {
+      openVariable(vairableLink, openOptions)
+    }
+  }))
 
   const allowVariablesMap = allowVariables.reduce((acc, el) => {
     acc[el.type] = el

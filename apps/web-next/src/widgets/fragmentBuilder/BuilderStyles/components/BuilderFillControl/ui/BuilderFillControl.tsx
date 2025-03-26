@@ -6,7 +6,7 @@ import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { TabsSelector } from '@/shared/ui/TabsSelector'
 import { booleanTabsSelectorItems } from '@/shared/data'
 import { InputSelect } from '@/shared/ui/InputSelect'
-import { paintMode } from '@fragments/plugin-fragment'
+import { definition } from '@fragments/definition'
 import { popoutsStore } from '@/shared/store/popouts.store'
 import { useLayerVariables } from '@/shared/hooks/fragmentBuilder/useLayerVariables'
 
@@ -14,7 +14,7 @@ interface BuilderFillControlProps {
   className?: string
 }
 
-const ALLOW_FILL_TYPES = [paintMode.Solid]
+const ALLOW_FILL_TYPES = [definition.paintMode.Solid]
 
 export const BuilderFillControl: FC<BuilderFillControlProps> = memo(({ className }) => {
   const [fillType, setFillType] = useLayerValue('fillType')
@@ -47,10 +47,14 @@ export const BuilderFillControl: FC<BuilderFillControlProps> = memo(({ className
         <InputSelect
           hasIcon={!!value && ALLOW_FILL_TYPES.includes(fillType)}
           color={value}
-          onReset={() => setFillType(paintMode.None)}
+          onReset={() => setFillType(definition.paintMode.None)}
           onClick={openFill}
         >
-          {fillType && ALLOW_FILL_TYPES.includes(fillType) ? value : fillType === paintMode.Image ? 'Image' : ''}
+          {fillType && ALLOW_FILL_TYPES.includes(fillType)
+            ? value
+            : fillType === definition.paintMode.Image
+            ? 'Image'
+            : ''}
         </InputSelect>
       </ControlRowWide>
     </ControlRow>

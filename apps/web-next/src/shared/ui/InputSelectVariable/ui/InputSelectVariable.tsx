@@ -6,10 +6,10 @@ import Close from '@/shared/icons/close.svg'
 import FilterFillIcon from '@/shared/icons/fills/filter-fill.svg'
 import { Touchable } from '@/shared/ui/Touchable'
 import { VariableIcon } from '@/shared/ui/VariableIcon'
-import { variableType } from '@fragments/plugin-fragment-spring'
+import { definition } from '@fragments/definition'
 
 interface InputSelectVariableProps extends PropsWithChildren {
-  type: keyof typeof variableType
+  type: keyof typeof definition.variableType
   kind: 'variable' | 'computed'
   className?: string
   bodyClassName?: string

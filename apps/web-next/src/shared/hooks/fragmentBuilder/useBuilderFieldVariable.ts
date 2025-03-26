@@ -4,8 +4,8 @@ import { ResultSetter } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { isComputedValueLink } from '@/shared/utils/isComputedValueLink'
 import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
-import { restoreField, variableType } from '@fragments/plugin-fragment-spring'
 import { DropdownRenderOption } from '@/shared/ui/RenderDropdown'
+import { definition } from '@fragments/definition'
 import { useFragmentComputedValues } from '@/shared/hooks/fragmentBuilder/useFragmentComputedValues'
 import { noop } from '@fragments/utils'
 import { popoutsStore } from '@/shared/store/popouts.store'
@@ -22,7 +22,7 @@ export type BuilderFieldVariable = ReturnType<ReturnType<typeof useBuilderFieldV
 
 const variableFields = {
   opacity: {
-    type: variableType.Number,
+    type: definition.variableType.Number,
     valueOptions: {
       name: 'Opacity',
       step: 0.1,
@@ -32,13 +32,13 @@ const variableFields = {
     }
   },
   visible: {
-    type: variableType.Boolean,
+    type: definition.variableType.Boolean,
     valueOptions: {
       name: 'Visible'
     }
   },
   content: {
-    type: variableType.String,
+    type: definition.variableType.String,
     createFormatter: value => {
       if (value) {
         return generateText(generateJSON(value, canvasEditorExtensions), canvasEditorExtensions)
@@ -63,7 +63,7 @@ export const useBuilderFieldVariable = (layer: Field) => {
   }
 
   const handleReset = (key: string) => {
-    restoreField(layer, key, documentManager)
+    // restoreField(layer, key, documentManager)
   }
 
   const openTransform = ({ key, value }) => {
@@ -165,7 +165,7 @@ export const useBuilderFieldVariable = (layer: Field) => {
 
         createdProperty.setDefaultValue(defaultValue)
 
-        if (variableField.type === variableType.Number) {
+        if (variableField.type === definition.variableType.Number) {
           if ('step' in variableValueOptions) createdProperty.setStep(variableValueOptions.step)
           if ('min' in variableValueOptions) createdProperty.setMin(variableValueOptions.min)
           if ('max' in variableValueOptions) createdProperty.setMax(variableValueOptions.max)

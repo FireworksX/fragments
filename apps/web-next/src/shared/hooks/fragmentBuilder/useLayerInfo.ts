@@ -1,9 +1,8 @@
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
 import { useGraph } from '@graph-state/react'
-import { isRootLayer } from '@fragments/renderer-editor'
 import { LinkKey } from '@graph-state/core'
-import { getParent, getAllParents } from '@fragments/renderer-editor'
+import { getAllParents, getParent, isRootLayer } from '@fragments/render-core'
 
 export const useLayerInfo = (layerKey: LinkKey) => {
   const { documentManager } = useBuilderDocument()

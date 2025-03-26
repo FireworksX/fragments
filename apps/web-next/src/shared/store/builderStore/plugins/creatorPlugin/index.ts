@@ -1,5 +1,5 @@
 import { Plugin } from '@graph-state/core'
-import { layerMode, nodes, paintMode, positionType } from '@fragments/plugin-fragment'
+import { definition } from '@fragments/definition'
 import { getRandomColor } from '@/shared/utils/random'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { createFrame } from './createFrame'
@@ -42,11 +42,11 @@ export const creatorPlugin: Plugin = state => {
     if (type) {
       let nextLayer
       if (parent) {
-        if (type === nodes.Frame) {
+        if (type === definition.nodes.Frame) {
           nextLayer = createFrame(state, parent)
-        } else if (type === nodes.Text) {
+        } else if (type === definition.nodes.Text) {
           nextLayer = createText(state, parent)
-        } else if (type === nodes.Image) {
+        } else if (type === definition.nodes.Image) {
           nextLayer = createImage(state, parent)
         }
       }
