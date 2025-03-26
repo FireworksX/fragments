@@ -1,7 +1,7 @@
 # Base image
 # Build and push to dockerhub, for other images to inherit from
 
-FROM python:3.12-slim as base
+FROM python:3.12-slim AS base
 
 ARG RUN_LEVEL
 

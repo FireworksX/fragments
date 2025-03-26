@@ -1,5 +1,5 @@
 # Develop image
-FROM python:3.12-slim as base
+FROM python:3.12-slim AS base
 
 ARG RUN_LEVEL
 
@@ -24,7 +24,7 @@ RUN mkdir /opt/app
 WORKDIR /opt/app
 
 COPY pyproject.toml poetry.loc[k] /opt/app/
-RUN poetry install $(test $RUN_LEVEL == production && echo "--no-dev") --no-interaction --no-ansi
+RUN poetry install --no-interaction --no-ansi
 
 EXPOSE 8000
 
@@ -32,7 +32,7 @@ COPY deployment/pre_start.py /opt/app/
 
 
 # Production image
-FROM base as service
+FROM base AS service
 
 COPY alembic /opt/app/alembic
 COPY conf /opt/app/conf
