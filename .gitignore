@@ -23,3 +23,6 @@ old
 *.njsproj
 *.sln
 *.sw?
+
+.env
+.docker_data
