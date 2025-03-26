@@ -11,20 +11,21 @@ export const useBuilderFieldOverrides = (layerLink: LinkKey) => {
   const [layerGraph] = useGraph(documentManager, layerLink)
 
   return (key: string) => {
-    const hasOverrideField = !isFieldOverridden(layerLink, key, documentManager)
-    const hasOverrideEntity = isOverriddenNode(layerLink, documentManager)
-    const hasOverride = !!(hasOverrideField && hasOverrideEntity)
+    // const hasOverrideField = !isFieldOverridden(layerLink, key, documentManager)
+    // const hasOverrideEntity = isOverriddenNode(layerLink, documentManager)
+    // const hasOverride = !!(hasOverrideField && hasOverrideEntity)
 
     return {
-      isOverride: hasOverride,
-      actions: hasOverride
-        ? [
-            {
-              label: 'Reset override',
-              onClick: () => resetFieldOverride(layerLink, key, documentManager)
-            }
-          ]
-        : []
+      isOverride: false, //hasOverride,
+      actions: []
+      // actions: hasOverride
+      //   ? [
+      //       {
+      //         label: 'Reset override',
+      //         onClick: () => resetFieldOverride(layerLink, key, documentManager)
+      //       }
+      //     ]
+      //   : []
     }
   }
 }

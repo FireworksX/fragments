@@ -40,16 +40,15 @@ ENV NODE_ENV production
 
 #
 ## Вариант A: Если используется standalone-режим (output: 'standalone' в next.config.js)
-COPY --from=builder /app/apps/web-next/.next ./apps/web-next/.next
-COPY --from=builder /app/apps/web-next/public ./apps/web-next/public
-COPY --from=builder /app/apps/web-next/package.json ./apps/web-next/
+COPY --from=builder /app/apps/web-next/.next/standalone/apps/web-next ./
+COPY --from=builder /app/apps/web-next/.next/static ./.next/static
+#COPY --from=builder /app/node_modules ./node_modules
 
 COPY --from=builder /app/packages/render-core/dist ./packages/render-core/dist
 COPY --from=builder /app/packages/render-react/dist ./packages/render-react/dist
 COPY --from=builder /app/packages/definition/dist ./packages/definition/dist
 COPY --from=builder /app/packages/utils/dist ./packages/utils/dist
 
-RUN corepack enable && corepack prepare pnpm@latest --activate
 
 
 #
@@ -58,8 +57,10 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 #
 EXPOSE 3000
 
+RUN ls -la
+
 #
 ## Для standalone:
-#CMD ["pnpm", "start"]
+CMD ["node", "server.js"]
 ## Для обычного режима:
-CMD ["pnpm", "--filter", "@fragments/web-next", "start"]
+#CMD ["pnpm", "--filter", "@fragments/web-next", "start"]
