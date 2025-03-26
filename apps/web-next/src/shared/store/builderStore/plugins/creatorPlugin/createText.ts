@@ -1,8 +1,8 @@
 import { animatableValue } from '@/shared/utils/animatableValue'
-import { layerMode, nodes, paintMode, positionType } from '@fragments/plugin-fragment'
+import { definition } from '@fragments/definition'
 import { getRandomColor } from '@/shared/utils/random'
 
-const allowTypes = [nodes.Frame]
+const allowTypes = [definition.nodes.Frame]
 
 export const createText = (state, parent) => {
   const documentManager = state.$documents.getCurrentManager()
@@ -16,8 +16,8 @@ export const createText = (state, parent) => {
 
   return documentManager.$fragment.createNode(
     {
-      _type: nodes.Text,
-      positionType: parentLayerMode === layerMode.flex ? positionType.relative : null,
+      _type: definition.nodes.Text,
+      positionType: parentLayerMode === definition.layerMode.flex ? definition.positionType.relative : null,
       width: 100,
       height: 100
     },

@@ -6,8 +6,8 @@ import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { popoutNames } from '@/shared/data'
 import { getRandomColor } from '@/shared/utils/random'
 import { getEntityName } from '@/shared/utils/getEntityName'
-import { nodes } from '@fragments/plugin-fragment-spring'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { definition } from '@fragments/definition'
 
 export interface BuilderAssetsColorsOptions extends Partial<OpenPopoutOptions<'colorPicker'>> {
   initialColor?: Color
@@ -34,7 +34,7 @@ export const useBuilderAssetsColors = () => {
   const createColor = ({ initialColor, onSubmit: optionsOnSubmit, ...popoutOptions }: BuilderAssetsColorsOptions) => {
     const color = initialColor ?? getRandomColor()
     const link = documentManager.createSolidPaintStyle({
-      name: getEntityName('Color variable', documentManager, nodes.SolidPaintStyle),
+      name: getEntityName('Color variable', documentManager, definition.nodes.SolidPaintStyle),
       color
     })
 

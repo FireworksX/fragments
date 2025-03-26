@@ -11,14 +11,14 @@ import { TransformConvertFromBooleanValue } from '@/features/popouts/StackVariab
 import { Panel } from '@/shared/ui/Panel'
 import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { Select } from '@/shared/ui/Select'
-import { variableTransforms, variableType } from '@fragments/plugin-fragment-spring'
+import { definition } from '@fragments/definition'
 import { TransformBooleanValue } from './components/TransformBooleanValue/TransformBooleanValue'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 interface StackTransformSectionProps {
   className?: string
   transformLink: LinkKey
-  inputType: keyof typeof variableType
+  inputType: keyof typeof definition.variableType
   isFirst?: boolean
   valueReferenceOptions: unknown
 }
@@ -34,15 +34,19 @@ export const StackTransformSection: FC<StackTransformSectionProps> = ({
   const [transform] = useGraph(documentManager, transformLink)
   const { getTransformsByType } = useFragmentComputedValues()
   const allTransforms = getTransformsByType(inputType)
-  const withoutReplace = transform.name === variableTransforms.convertFromBoolean
+  const withoutReplace = transform.name === definition.variableTransforms.convertFromBoolean
 
   const Control =
-    transform.name === variableTransforms.convertFromBoolean ? (
+    transform.name === definition.variableTransforms.convertFromBoolean ? (
       <TransformConvertFromBooleanValue {...transform} valueReferenceOptions={valueReferenceOptions} />
     ) : (
       {
-        [variableType.Number]: <TransformNumberValue value={transform.value} onChange={transform.setValue} />,
-        [variableType.Boolean]: <TransformBooleanValue value={transform.value} onChange={transform.setValue} />
+        [definition.variableType.Number]: (
+          <TransformNumberValue value={transform.value} onChange={transform.setValue} />
+        ),
+        [definition.variableType.Boolean]: (
+          <TransformBooleanValue value={transform.value} onChange={transform.setValue} />
+        )
       }[inputType]
     )
 

@@ -19,7 +19,7 @@ import { LinkKey } from '@graph-state/core'
 import { InputText } from '@/shared/ui/InputText'
 import { Select } from '@/shared/ui/Select'
 import { RenderDropdown } from '@/shared/ui/RenderDropdown'
-import { variableType } from '@fragments/plugin-fragment-spring'
+import { definition } from '@fragments/definition'
 
 interface PropertyBooleanCellProps {
   propertyLink: LinkKey
@@ -53,7 +53,7 @@ export const PropertyGenericCell: FC<PropertyBooleanCellProps> = ({ propertyLink
       Object: ObjectIcon,
       Color: ObjectIcon,
       Array: ArrayIcon
-    } as Record<keyof typeof variableType, ElementType>
+    } as Record<keyof typeof definition.variableType, ElementType>
   )[type]
 
   return (

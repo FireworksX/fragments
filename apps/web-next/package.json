@@ -1,5 +1,5 @@
 {
-  "name": "@fragments/next",
+  "name": "@fragments/web-next",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -18,12 +18,8 @@
     "@dnd-kit/sortable": "^8.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@feature-sliced/cli": "^1.0.0",
-    "@fragments/plugin-fragment": "workspace:*",
-    "@fragments/plugin-fragment-spring": "workspace:*",
     "@fragments/render-core": "workspace:*",
     "@fragments/render-react": "workspace:*",
-    "@fragments/renderer-editor": "workspace:*",
-    "@fragments/springs-factory": "workspace:*",
     "@fragments/definition": "workspace:*",
     "@fragments/utils": "workspace:*",
     "@graph-state/checkers": "^0.1.2",

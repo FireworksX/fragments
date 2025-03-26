@@ -7,8 +7,8 @@ import { LinkKey } from '@graph-state/core'
 import { Cell } from '@/shared/ui/Cell'
 import { Button } from '@/shared/ui/Button'
 import { VariableIcon } from '@/shared/ui/VariableIcon'
-import { variableType } from '@fragments/plugin-fragment-spring'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { definition } from '@fragments/definition'
 
 interface BuilderVariableCellProps {
   variableKey?: LinkKey
@@ -29,7 +29,7 @@ export const BuilderVariableCell: FC<BuilderVariableCellProps> = ({
   const Icon = <VariableIcon type={variable.type} />
 
   const description = {
-    [variableType.Object]: !!variable?.fields?.length && `Fields: ${variable?.fields?.length}`
+    [definition.variableType.Object]: !!variable?.fields?.length && `Fields: ${variable?.fields?.length}`
   }[variable?.type]
 
   return (

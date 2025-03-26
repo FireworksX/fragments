@@ -11,14 +11,7 @@ import { TabsSelectorItem } from '@/shared/ui/TabsSelector'
 import { BoxSide, BoxSizingSides } from '@/shared/ui/BoxSizingSides'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
-import {
-  layerAlign,
-  layerDirection,
-  layerDistribute as defLayerDistribute,
-  layerMode as defLayerMode,
-  parseCssSpacing
-} from '@fragments/plugin-fragment-spring'
-import { getFieldValue } from '@fragments/plugin-fragment'
+import { definition } from '@fragments/definition'
 import { fromPx } from '@/shared/utils/fromPx'
 import { useInterpolation } from '@/shared/hooks/useInterpolation'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
@@ -28,26 +21,26 @@ import { toPx } from '@/shared/utils/toPx'
 
 const directions: TabsSelectorItem[] = [
   {
-    name: layerDirection.vertical,
+    name: definition.layerDirection.vertical,
     label: <DirectionVertical width={16} height={16} />
   },
   {
-    name: layerDirection.horizontal,
+    name: definition.layerDirection.horizontal,
     label: <DirectionHorizontal width={16} height={16} />
   }
 ]
 
 const aligns: TabsSelectorItem[] = [
   {
-    name: layerAlign.start,
+    name: definition.layerAlign.start,
     label: <AlignTop width={16} height={16} />
   },
   {
-    name: layerAlign.center,
+    name: definition.layerAlign.center,
     label: <AlignHorizontal width={16} height={16} />
   },
   {
-    name: layerAlign.end,
+    name: definition.layerAlign.end,
     label: <AlignBottom width={16} height={16} />
   }
 ]
@@ -77,9 +70,9 @@ export const useBuilderLayout = () => {
     selectionGraph,
     mode: {
       value: layerMode,
-      enabled: layerMode === defLayerMode.flex,
+      enabled: layerMode === definition.layerMode.flex,
       toggle: () => {
-        setLayerMode(layerMode === defLayerMode.none ? defLayerMode.flex : defLayerMode.none)
+        setLayerMode(layerMode === definition.layerMode.none ? definition.layerMode.flex : definition.layerMode.none)
       }
     },
     direction: {
@@ -98,7 +91,7 @@ export const useBuilderLayout = () => {
       update: setLayerWrap
     },
     distribute: {
-      items: Object.keys(defLayerDistribute),
+      items: Object.keys(definition.layerDistribute),
       value: layerDistribute,
       update: setLayerDistribute
     },

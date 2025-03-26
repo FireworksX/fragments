@@ -1,21 +1,22 @@
 import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph, useGraphStack } from '@graph-state/react'
-import { nodes, variableType } from '@fragments/plugin-fragment-spring'
 import { useFragmentComputedValues } from '@/shared/hooks/fragmentBuilder/useFragmentComputedValues'
 import { useBuilderVariableCreator } from '@/shared/hooks/fragmentBuilder/useBuilderVariableCreator'
+import { definition } from '@fragments/definition'
+
 import { Entity, LinkKey } from '@graph-state/core'
 import { popoutsStore } from '@/shared/store/popouts.store'
 import { popoutNames } from '@/shared/data'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
-import { declareFragmentProperty } from '@fragments/renderer-editor'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
+import { declareFragmentProperty } from '@fragments/render-core'
 
 export const FRAGMENT_PROPERTY_TYPES = [
-  variableType.Number,
-  variableType.Boolean,
-  variableType.String,
-  variableType.Object
+  definition.variableType.Number,
+  definition.variableType.Boolean,
+  definition.variableType.String,
+  definition.variableType.Object
 ]
 
 interface EditPropertyOptions {
@@ -45,11 +46,11 @@ export const useFragmentProperties = () => {
       const type = property?.type
 
       const popoutName = {
-        [variableType.Number]: popoutNames.stackNumberProperty,
-        [variableType.Boolean]: popoutNames.stackBooleanProperty,
+        [definition.variableType.Number]: popoutNames.stackNumberProperty,
+        [definition.variableType.Boolean]: popoutNames.stackBooleanProperty,
         // [builderVariableType.Object]: stackObjectVariableName,
-        [variableType.String]: popoutNames.stackStringProperty,
-        [variableType.Color]: popoutNames.stackColorProperty
+        [definition.variableType.String]: popoutNames.stackStringProperty,
+        [definition.variableType.Color]: popoutNames.stackColorProperty
       }[type]
 
       popoutsStore.open(popoutName, {
@@ -63,8 +64,8 @@ export const useFragmentProperties = () => {
   }
 
   const getTransformsVariableByType = (
-    targetType: keyof typeof variableType,
-    variableGraph: keyof typeof variableType,
+    targetType: keyof typeof definition.variableType,
+    variableGraph: keyof typeof definition.variableType,
     onSelect
   ) => {
     const transforms = getTransformsByType(variableGraph.type)

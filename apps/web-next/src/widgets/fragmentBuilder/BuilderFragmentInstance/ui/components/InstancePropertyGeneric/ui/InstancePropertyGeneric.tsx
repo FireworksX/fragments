@@ -3,7 +3,7 @@ import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { animated } from '@react-spring/web'
 import { booleanTabsSelectorItems } from '@/shared/data'
 import { TabsSelector } from '@/shared/ui/TabsSelector'
-import { variableType } from '@fragments/plugin-fragment'
+import { definition } from '@fragments/definition'
 import { InstancePropertyNumber } from '../../InstancePropertyNumber'
 import { InstancePropertyString } from '../../InstancePropertyString'
 import { InstancePropertyBoolean } from '../../InstancePropertyBoolean'
@@ -13,8 +13,6 @@ import { useGraph } from '@graph-state/react'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { GraphState, LinkKey } from '@graph-state/core'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
-import { useLayerVariableValue } from '@fragments/renderer-editor'
-import { useLayer } from '@fragments/renderer-editor'
 import { useInstancePropertyValue } from '@/shared/hooks/fragmentBuilder/useInstancePropertyValue'
 import { useNormalizeLayer } from '@/shared/hooks/fragmentBuilder/useNormalizeLayer'
 
@@ -43,7 +41,7 @@ const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({
 
   // const [] = useGr
 
-  if (layer?.type === variableType.Number) {
+  if (layer?.type === definition.variableType.Number) {
     return (
       <InstancePropertyNumber
         value={value}

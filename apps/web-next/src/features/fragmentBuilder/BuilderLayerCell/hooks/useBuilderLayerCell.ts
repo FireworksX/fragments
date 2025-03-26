@@ -1,7 +1,7 @@
 import { useGraph } from '@graph-state/react'
 import { LinkKey } from '@graph-state/core'
+import { definition } from '@fragments/definition'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
-import { nodes } from '@fragments/plugin-fragment-spring'
 import { useBreakpoints } from '@/shared/hooks/fragmentBuilder/useBreakpoints'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
@@ -17,7 +17,7 @@ export const useBuilderLayerCell = (layerKey: LinkKey) => {
   const selected = selection === layerKey
   const partialSelected =
     selected || layerInfo.allParents.some(parent => selection === documentManager.keyOfEntity(parent))
-  const isInstance = layerInfo.type === nodes.Instance
+  const isInstance = layerInfo.type === definition.nodes.Instance
   const breakpointThreshold = useBreakpoints().getThresholdLabel((layerInfo.layer?.threshold ?? 0) + 1)
   const isPrimaryLayer = layerInfo.isPrimary
 
@@ -30,7 +30,9 @@ export const useBuilderLayerCell = (layerKey: LinkKey) => {
     isInstance,
     isPrimaryLayer,
     breakpointThreshold:
-      !isPrimaryLayer && layerInfo?.type === nodes.Frame && layerInfo?.isBreakpoint ? breakpointThreshold : null,
+      !isPrimaryLayer && layerInfo?.type === definition.nodes.Frame && layerInfo?.isBreakpoint
+        ? breakpointThreshold
+        : null,
     rename,
     duplicate: () => {
       // layerGraph.duplicate()

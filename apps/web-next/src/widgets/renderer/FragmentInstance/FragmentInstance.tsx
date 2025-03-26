@@ -1,8 +1,7 @@
 import { FC, use, useContext } from 'react'
 import { GraphState, LinkKey } from '@graph-state/core'
 import { animated } from '@react-spring/web'
-import { to } from '@fragments/springs-factory'
-import { nodes, sizing } from '@fragments/plugin-fragment-spring'
+import { definition } from '@fragments/definition'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
 import { BaseRenderNode, defaultRender, defaultRenderNode, Fragment } from '@/widgets/renderer/Fragment/Fragment'
@@ -34,7 +33,7 @@ export const FragmentInstance: FC<DocumentRenderer> = ({ layerKey, renderParents
       <InstanceProvider instanceLink={layerKey}>
         {render(
           layerKey,
-          <animated.div data-key={layerKey} data-type={nodes.FragmentInstance} style={cssStyles}>
+          <animated.div data-key={layerKey} data-type={definition.nodes.FragmentInstance} style={cssStyles}>
             {/*<Fragment layerKey={instanceFragment} renderParents={[...renderParents, layerKey]} render={render} />*/}
           </animated.div>
         )}

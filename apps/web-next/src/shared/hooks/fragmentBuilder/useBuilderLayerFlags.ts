@@ -1,9 +1,9 @@
 import { LinkKey } from '@graph-state/core'
-import { nodes, layerMode as defLayerMode } from '@fragments/plugin-fragment'
+import { definition } from '@fragments/definition'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
-import { removeChildren } from '@fragments/renderer-editor'
+import { removeChildren } from '@fragments/render-core'
 
 export const useBuilderLayerFlags = (layerKey: LinkKey) => {
   const { documentManager } = useBuilderDocument()
@@ -28,7 +28,7 @@ export const useBuilderLayerFlags = (layerKey: LinkKey) => {
 
   return {
     type: layerInfo.type,
-    isVisible: layerInfo.type !== nodes.Fragment ? visible : true,
+    isVisible: layerInfo.type !== definition.nodes.Fragment ? visible : true,
     layerDirection: '',
     layerMode: '',
     hasLayout,

@@ -14,8 +14,6 @@ import { Stepper } from '@/shared/ui/Stepper'
 import { Slider } from '@/shared/ui/Slider'
 import { Button } from '@/shared/ui/Button'
 import { popoutNames } from '@/shared/data'
-import { to } from '@fragments/springs-factory'
-import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 
 interface StackNumberVariableProps {

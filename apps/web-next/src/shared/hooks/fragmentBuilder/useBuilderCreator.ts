@@ -1,16 +1,12 @@
 import { use } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
-import { appendChildren } from '@fragments/renderer-editor'
-import { getFieldValue, layerMode, nodes, paintMode, positionType, sizing } from '@fragments/plugin-fragment'
+import { definition } from '@fragments/definition'
 import { getRandomColor } from '@/shared/utils/random'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
-import { animatableValue } from '@fragments/plugin-fragment-spring/src/shared/animatableValue'
-import { SpringValue } from '@fragments/springs-factory'
 import { useFragmentLayers } from '@/shared/hooks/fragmentBuilder/useFragmentLayers'
-import { getLayer, isPartOfPrimary } from '@fragments/renderer-editor'
-import { cloneLayer } from '@fragments/renderer-editor'
-import { threadId } from 'node:worker_threads'
+import { appendChildren, cloneLayer, isPartOfPrimary } from '@fragments/render-core'
+import { getLayer } from '@/shared/hooks/fragmentBuilder/useNormalizeLayer/getLayer'
 
 export const useBuilderCreator = () => {
   const { builderManager } = use(BuilderContext)
@@ -19,7 +15,7 @@ export const useBuilderCreator = () => {
   const { layers } = useFragmentLayers()
 
   const createFrame = (parent, externalProps = {}) => {
-    if (![nodes.Frame].includes(documentManager.entityOfKey(parent)?._type)) {
+    if (![definition.nodes.Frame].includes(documentManager.entityOfKey(parent)?._type)) {
       return
     }
 
@@ -27,10 +23,13 @@ export const useBuilderCreator = () => {
     const parentLayerMode = parentNode.layerMode
 
     return appendChildren(documentManager, documentManager.keyOfEntity(parent), {
-      _type: nodes.Frame,
+      _type: definition.nodes.Frame,
       solidFill: getRandomColor(),
-      fillType: paintMode.Solid,
-      position: parentLayerMode === layerMode.flex ? positionType.relative : positionType.absolute,
+      fillType: definition.paintMode.Solid,
+      position:
+        parentLayerMode === definition.layerMode.flex
+          ? definition.positionType.relative
+          : definition.positionType.absolute,
       width: 100,
       height: 100,
       ...externalProps
@@ -38,7 +37,7 @@ export const useBuilderCreator = () => {
   }
 
   const createText = (parent, externalProps = {}) => {
-    if (![nodes.Frame].includes(documentManager.entityOfKey(parent)?._type)) {
+    if (![definition.nodes.Frame].includes(documentManager.entityOfKey(parent)?._type)) {
       return
     }
 
@@ -46,10 +45,13 @@ export const useBuilderCreator = () => {
     const parentLayerMode = parentNode.layerMode
 
     return appendChildren(documentManager, documentManager.keyOfEntity(parent), {
-      _type: nodes.Text,
-      position: parentLayerMode === layerMode.flex ? positionType.relative : positionType.absolute,
-      widthType: sizing.Hug,
-      heightType: sizing.Hug,
+      _type: definition.nodes.Text,
+      position:
+        parentLayerMode === definition.layerMode.flex
+          ? definition.positionType.relative
+          : definition.positionType.absolute,
+      widthType: definition.sizing.Hug,
+      heightType: definition.sizing.Hug,
       ...externalProps
     })
   }

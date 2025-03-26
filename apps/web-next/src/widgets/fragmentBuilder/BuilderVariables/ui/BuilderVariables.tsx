@@ -8,13 +8,13 @@ import { DropdownOption } from '@/shared/ui/DropdownOption'
 import { PanelHeadAside } from '@/shared/ui/PanelHeadAside'
 import { BuilderVariableCell } from '@/features/fragmentBuilder/BuilderVariableCell'
 import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
-import { variableType } from '@fragments/plugin-fragment-spring'
+import { definition } from '@fragments/definition'
 
 interface BuilderVariablesProps {
   className?: string
 }
 
-const types = Object.keys(variableType)
+const types = Object.keys(definition.variableType)
 
 export const BuilderVariables: FC<BuilderVariablesProps> = ({ className }) => {
   const { propsLinks, variables, openVariable } = useFragmentProperties()

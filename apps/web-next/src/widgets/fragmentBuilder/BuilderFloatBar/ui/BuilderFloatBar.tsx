@@ -24,7 +24,7 @@ import { Link } from '@/shared/ui/Link'
 import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
 import { useBuilderCreator } from '@/shared/hooks/fragmentBuilder/useBuilderCreator'
 import cn from 'classnames'
-import { nodes } from '@fragments/plugin-fragment'
+import { definition } from '@fragments/definition'
 import { useBuilderDocumentManager } from '@/shared/hooks/fragmentBuilder/useBuilderDocumentManager'
 import { Spinner } from '@/shared/ui/Spinner'
 import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
@@ -42,28 +42,28 @@ export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
     <div className={styles.root}>
       <Touchable
         className={cn(styles.actionButton, {
-          [styles.active]: createType === nodes.Frame
+          [styles.active]: createType === definition.nodes.Frame
         })}
         TagName='button'
-        onClick={() => manager.setCreatorType(nodes.Frame)}
+        onClick={() => manager.setCreatorType(definition.nodes.Frame)}
       >
         <FrameIcon width={20} height={20} />
       </Touchable>
       <Touchable
         className={cn(styles.actionButton, {
-          [styles.active]: createType === nodes.Image
+          [styles.active]: createType === definition.nodes.Image
         })}
         TagName='button'
-        onClick={() => manager.setCreatorType(nodes.Image)}
+        onClick={() => manager.setCreatorType(definition.nodes.Image)}
       >
         <ImageIcon width={20} height={20} />
       </Touchable>
       <Touchable
         className={cn(styles.actionButton, {
-          [styles.active]: createType === nodes.Text
+          [styles.active]: createType === definition.nodes.Text
         })}
         TagName='button'
-        onClick={() => manager.setCreatorType(nodes.Text)}
+        onClick={() => manager.setCreatorType(definition.nodes.Text)}
       >
         <TextIcon width={20} height={20} />
       </Touchable>

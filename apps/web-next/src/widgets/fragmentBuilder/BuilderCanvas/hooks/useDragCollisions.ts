@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { DragEvent } from './useCanvas'
-import { definitions } from '@fragments/plugin-fragment-spring'
+import { definition } from '@fragments/definition'
 import { isPartialKey } from '@graph-state/core'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { getDomRect } from '@/shared/utils/getDomRect'
@@ -27,7 +27,7 @@ export const useDragCollisions = () => {
     const currentBreakpoint = documentManager
       .resolve(memo.targetLayerLink)
       ?.getAllParents()
-      ?.find(p => p._type === definitions.nodes.Breakpoint)
+      ?.find(p => p._type === definition.nodes.Breakpoint)
     const currentBreakpointKey = documentManager.keyOfEntity(currentBreakpoint)
 
     const allParentsOfParent = (documentManager.resolve(parentLayerKey).getAllParents() ?? []).map(
@@ -37,7 +37,7 @@ export const useDragCollisions = () => {
     const allCanvasLayersForParent =
       currentBreakpoint?.findAll(
         child =>
-          child._type === definitions.nodes.Frame &&
+          child._type === definition.nodes.Frame &&
           !isPartialKey(documentManager.keyOfEntity(child)) &&
           child._id !== parentLayerNode?._id &&
           child._id !== memo.targetLayer?._id &&

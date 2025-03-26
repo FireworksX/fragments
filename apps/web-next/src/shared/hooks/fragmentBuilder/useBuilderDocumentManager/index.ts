@@ -7,12 +7,11 @@ import { FRAGMENT_DOCUMENT } from './lib/fragmentDocument'
 import { UPDATE_FRAGMENT_DOCUMENT } from './lib/updateFragmentDocument'
 import { getEmptyFragment } from '@/shared/data/emptyFragment'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
-import { nodes } from '@fragments/plugin-fragment'
-import { makeSnapshot } from '@fragments/renderer-editor'
 import { getButtonFragment } from '@/shared/data/buttonFragment'
 import { useFragmentDocumentQuery } from '@/shared/hooks/fragmentBuilder/useBuilderDocumentManager/queries/FragmentDocument.generated'
 import { useUpdateFragmentDocumentMutation } from '@/shared/hooks/fragmentBuilder/useBuilderDocumentManager/queries/UpdateFragmentDocument.generated'
 import { useGlobalManager } from '@/shared/hooks/fragmentBuilder/useBuilderGlobalContext'
+import { makeSnapshot } from '@fragments/render-core'
 
 export const useBuilderDocumentManager = () => {
   const { documentManager } = useBuilderDocument()

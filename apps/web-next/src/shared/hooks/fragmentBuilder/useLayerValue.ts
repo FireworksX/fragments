@@ -2,12 +2,12 @@ import { useCallback } from 'react'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { GraphState, LinkKey } from '@graph-state/core'
-import { useLayerVariableValue as useLayerValueLib, isInheritField, isPartOfPrimary } from '@fragments/renderer-editor'
 import { useGraph } from '@graph-state/react'
 import { pick } from '@fragments/utils'
 import { useNormalizeLayer } from '@/shared/hooks/fragmentBuilder/useNormalizeLayer'
 import { isValidLayerField } from '@fragments/definition'
 import { isVariableLink } from '@/shared/utils/isVariableLink'
+import { isInheritField, isPartOfPrimary } from '@fragments/render-core'
 
 export const useLayerValue = (fieldKey: string, layerKey?: LinkKey) => {
   const { documentManager } = useBuilderDocument()

@@ -1,5 +1,5 @@
 'use client'
-import { FC } from 'react'
+import { FC, Suspense } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { AuthTitle } from '@/widgets/AuthTitle'
@@ -12,7 +12,7 @@ interface LoginProps {
   className?: string
 }
 
-export const Page: FC<LoginProps> = ({ className }) => {
+export const InitialPage: FC<LoginProps> = ({ className }) => {
   const { emailField, passwordField, loading, handleSubmit } = useAuthLogin()
 
   return (
@@ -44,4 +44,8 @@ export const Page: FC<LoginProps> = ({ className }) => {
   )
 }
 
-export default Page
+export const Page = () => (
+  <Suspense>
+    <InitialPage />
+  </Suspense>
+)

@@ -7,7 +7,7 @@ import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDoc
 import { BuilderPreviewContainer } from '../components/BuilderPreviewContainer'
 import { FragmentPreviewProvider } from '@/views/FragmentPreview/lib/FragmentPreviewContext'
 import { useRenderTarget } from '@/widgets/renderer/hooks/useRenderTarget'
-import { renderTarget as defRenderTarget } from '@fragments/plugin-fragment'
+import { definition } from '@fragments/definition'
 import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
 import { BuilderPreviewProperties } from '@/views/FragmentPreview/components/BuilderPreviewProperties'
 import { Instance } from '@fragments/render-react'
@@ -21,7 +21,7 @@ export const FragmentPreview: FC<FragmentPreviewProps> = ({ className }) => {
   const { currentFragmentId } = useBuilder()
 
   useEffect(() => {
-    setRenderTarget(defRenderTarget.document)
+    setRenderTarget(definition.renderTarget.document)
   }, [])
 
   return (

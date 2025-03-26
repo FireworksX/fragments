@@ -6,7 +6,7 @@ import { isValue } from '@fragments/utils'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
-import { to } from '@fragments/springs-factory'
+import { to } from '@react-spring/web'
 
 export const useBuilderCssOverride = () => {
   const { selection, selectionGraph } = useBuilderSelection()

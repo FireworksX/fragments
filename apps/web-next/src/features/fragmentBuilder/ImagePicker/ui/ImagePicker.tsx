@@ -8,14 +8,14 @@ import { Button } from '@/shared/ui/Button'
 import { LayerInvokerValue } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { Panel } from '@/shared/ui/Panel'
 import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
-import { imagePaintScaleModes } from '@fragments/plugin-fragment-spring'
+import { definition } from '@fragments/definition'
 
 export type ImagePickerValue = ImagePaint
 
 interface ImagePickerProps {
   className?: string
   urlInvoker: LayerInvokerValue<string>
-  scaleModeInvoker: LayerInvokerValue<keyof typeof imagePaintScaleModes>
+  scaleModeInvoker: LayerInvokerValue<keyof typeof definition.imagePaintScaleModes>
 }
 
 const ImagePicker: FC<ImagePickerProps> = ({ className, urlInvoker, scaleModeInvoker }) => {
@@ -41,7 +41,7 @@ const ImagePicker: FC<ImagePickerProps> = ({ className, urlInvoker, scaleModeInv
           <ControlRow title='Sizing'>
             <ControlRowWide>
               <Select value={scaleModeInvoker.value} onChange={scaleModeInvoker.onChange}>
-                {Object.keys(imagePaintScaleModes).map(mode => (
+                {Object.keys(definition.imagePaintScaleModes).map(mode => (
                   <option key={mode} value={mode}>
                     {mode}
                   </option>
