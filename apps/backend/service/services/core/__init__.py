@@ -4,6 +4,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.openapi.utils import get_openapi
 from starlette.requests import Request
 from starlette.responses import Response, StreamingResponse, JSONResponse
+from starlette.middleware.cors import CORSMiddleware
 
 from conf import APP_NAME, APP_VERSION, DEBUG
 from services.api import Error, make_app
@@ -94,13 +95,11 @@ def json_api_schema() -> Dict[Any, Any]:
 
 app.openapi = json_api_schema
 
-if DEBUG:
-    from starlette.middleware.cors import CORSMiddleware
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=['*'],
-        allow_credentials=True,
-        allow_methods=['*'],
-        allow_headers=['*'],
-        expose_headers=['*']
-    )
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*'],
+    expose_headers=['*']
+)
