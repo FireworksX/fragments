@@ -30,7 +30,8 @@ jobs:
     - name: Start docker-compose
       run: |
         ssh githubuser@85.192.29.65 "cd /home/githubuser/fragments && docker-compose down"
-        ssh githubuser@85.192.29.65 "cd /home/githubuser/fragments && docker-compose up --build -d"
+        ssh githubuser@85.192.29.65 "mkdir -p /home/githubuser/fragments/.docker_data/postgres"
+        ssh githubuser@85.192.29.65 "cd /home/githubuser/fragments && COMPOSE_BAKE=true docker-compose up --build -d"
 
     - name: Wait for services to be ready
       run: sleep 5
