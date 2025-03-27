@@ -7,11 +7,6 @@ services:
     build:
       context: .
       dockerfile: deployment/docker/Dockerfile.front
-    ports:
-     - "3000:3000"
-#    volumes:
-#      - .:/app
-#      - /app/node_modules  # Prevent overwriting node_modules
     environment:
       - NODE_ENV=production
     env_file: .env
@@ -34,7 +29,7 @@ services:
       - ./.docker_data/media/projects:${MEDIA_STORAGE_PATH}/projects
       - ./.docker_data/media/fragments:${MEDIA_STORAGE_PATH}/fragments
     depends_on:
-      - core
+      - frontend
     networks:
       - default
     env_file: .env
