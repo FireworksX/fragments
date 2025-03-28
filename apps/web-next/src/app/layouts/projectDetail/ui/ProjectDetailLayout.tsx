@@ -1,20 +1,26 @@
 'use client'
 import { Link } from '@/shared/ui/Link/ui/Link'
-import { FC, PropsWithChildren } from 'react'
+import { FC, PropsWithChildren, useEffect, useState } from 'react'
 import { Tabs } from '@/shared/ui/Tabs'
 import { TabItem } from '@/shared/ui/TabItem'
 import styles from './styles.module.css'
 import { createGlobalManager } from '@fragments/render-core'
 import { GlobalManager } from '@fragments/render-react'
 import isBrowser from '@/shared/utils/isBrowser'
-
-const globalManager = createGlobalManager()
-
-if (isBrowser) {
-  window.globalManager = globalManager
-}
+import { getSession, useSession } from 'next-auth/react'
 
 export const ProjectDetailLayout: FC<PropsWithChildren> = ({ children }) => {
+  const { data } = useSession()
+  const [globalManager, setGlobalManager] = useState()
+
+  useEffect(() => {
+    if (data) {
+      setGlobalManager(createGlobalManager({ apiToken: data.accessToken }))
+
+      window.globalManager = globalManager
+    }
+  }, [data])
+
   return (
     <main>
       <Tabs className={styles.tabs}>
@@ -30,7 +36,7 @@ export const ProjectDetailLayout: FC<PropsWithChildren> = ({ children }) => {
         </Link>
       </Tabs>
 
-      <GlobalManager value={globalManager}>{children}</GlobalManager>
+      {globalManager && <GlobalManager value={globalManager}>{children}</GlobalManager>}
     </main>
   )
 }
