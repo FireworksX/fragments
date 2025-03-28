@@ -3,11 +3,15 @@ import { nodes, renderTarget } from "@/definitions";
 import { createManager } from "@/shared/managers/createManager";
 import { createFetchManager } from "@/shared/managers/fetchManager/createFetchManager";
 
-export const createGlobalManager = () =>
+interface Options {
+  apiToken: string;
+}
+
+export const createGlobalManager = ({ apiToken }: Options = {}) =>
   createState({
     _type: "GlobalManager",
     initialState: {
-      fetchManager: createFetchManager(),
+      fetchManager: createFetchManager(apiToken),
       fragmentsManagers: {},
       renderTarget: renderTarget.canvas,
     },
