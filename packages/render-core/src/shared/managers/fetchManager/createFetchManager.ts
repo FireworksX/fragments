@@ -1,20 +1,25 @@
 import { createState } from "@graph-state/core";
 import { FragmentQuery } from "@/shared/managers/fetchManager/queries/FragmentQuery";
 import { getEmptyFragment } from "@/shared/managers/fetchManager/emptyFragment";
+import { createFetcher } from "./fetcher";
 
-export const createFetchManager = () => {
-  const fetcher = (query, variables) => {
-    return fetch(`http://localhost/graphql`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QHRlc3QudGVzdCIsImV4cCI6MTc0NjA3ODAwOH0.LmUkIlLO6c14vcEakbNRKtz5_DTIOOyDeZdFtUiSPDU",
-      },
-      body: JSON.stringify({ query, variables }),
-    }).then((res) => res.json());
-  };
+export const createFetchManager = (apiToken: string) => {
+  const fetcher = createFetcher("http://localhost/graphql", {
+    Authorization: `Bearer ${apiToken}`,
+  });
+
+  // const fetcher = (query, variables) => {
+  //   return fetch(`http://localhost/graphql`, {
+  //     method: "POST",
+  //     headers: {
+  //       Accept: "application/json",
+  //       "Content-Type": "application/json",
+  //       authorization:
+  //         "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QHRlc3QudGVzdCIsImV4cCI6MTc0NjA3ODAwOH0.LmUkIlLO6c14vcEakbNRKtz5_DTIOOyDeZdFtUiSPDU",
+  //     },
+  //     body: JSON.stringify({ query, variables }),
+  //   }).then((res) => res.json());
+  // };
 
   return createState({
     initialState: {},
@@ -23,14 +28,14 @@ export const createFetchManager = () => {
         state.cacheDocuments = new Map();
 
         state.queryFragment = async (fragmentId: number) => {
-          // TODO dedub запросов
           if (state.cacheDocuments.has(fragmentId)) {
             return state.cacheDocuments.get(fragmentId);
           }
 
-          const response = await fetcher(FragmentQuery, {
+          const response = await fetcher.query(FragmentQuery, {
             fragmentSlug: fragmentId,
           });
+
           const fragment = response?.data?.fragment?.[0];
           let fragmentDocument = fragment?.document;
 

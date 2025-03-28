@@ -1,9 +1,8 @@
 import { DragEvent, useCanvas } from './useCanvas'
 import { animatableValue } from '@/shared/utils/animatableValue'
-import { useContext } from 'react'
-import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
+import { getNormalizeLayer } from '@/shared/hooks/fragmentBuilder/useNormalizeLayer'
 
 export const useDragMove = () => {
   const { canvas } = useBuilderCanvas()
@@ -11,8 +10,8 @@ export const useDragMove = () => {
 
   return ({ memo, movement: [mx, my], first }: DragEvent) => {
     if (first) {
-      const left = animatableValue(getFieldValue(memo.targetLayer, 'left', documentManager))
-      const top = animatableValue(getFieldValue(memo.targetLayer, 'top', documentManager))
+      const left = getNormalizeLayer(memo.targetLayer, documentManager)?.layer?.left
+      const top = getNormalizeLayer(memo.targetLayer, documentManager)?.layer?.top
 
       memo.from = {
         x: left,

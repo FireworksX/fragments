@@ -8,11 +8,11 @@ import { removeChildren } from '@fragments/render-core'
 export const useBuilderLayerFlags = (layerKey: LinkKey) => {
   const { documentManager } = useBuilderDocument()
   // const layerInfo = useLayerInfo(layerKey)
-  const [visible, setVisible] = useLayerValue('visible', layerKey, null, 'flags')
+  const [visible, setVisible, layerInfo] = useLayerValue('visible', layerKey)
   // const [layerMode, setLayerMode] = useLayerValue('layerMode', layerKey)
   // const [layerDirection, setLayerDirection] = useLayerValue('layerDirection', layerKey)
 
-  const layerInfo = {}
+  // const layerInfo = {}
   // const visible = true
   const hasLayout = false //layerMode === defLayerMode?.flex
   const canRemove = false //layerInfo.type === nodes.Breakpoint ? !layerInfo?.isPrimary : true
@@ -27,8 +27,8 @@ export const useBuilderLayerFlags = (layerKey: LinkKey) => {
   const removeWrapper = () => documentManager.removeWrapper(layerKey)
 
   return {
-    type: layerInfo.type,
-    isVisible: layerInfo.type !== definition.nodes.Fragment ? visible : true,
+    type: layerInfo._type,
+    isVisible: layerInfo._type !== definition.nodes.Fragment ? visible : true,
     layerDirection: '',
     layerMode: '',
     hasLayout,

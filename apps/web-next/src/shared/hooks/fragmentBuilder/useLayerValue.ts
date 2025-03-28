@@ -63,6 +63,13 @@ export const useLayerValue = (fieldKey: string, layerKey?: LinkKey) => {
   return [
     currentValue,
     updateValue,
-    { isOverride, resetOverride, isVariable: isVariableLink(rawValue), rawValue, restore }
+    {
+      isOverride,
+      resetOverride,
+      isVariable: isVariableLink(rawValue),
+      rawValue,
+      restore,
+      ...resultManager.entityOfKey(key)
+    }
   ]
 }
