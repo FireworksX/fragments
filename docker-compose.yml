@@ -1,10 +1,17 @@
 networks:
   default:
+
 volumes:
-  postgres_data:
+  pg_data:               # Named volume for Postgres data
+  pgadmin_data:          # Named volume for pgAdmin data
+  media_data:            # Named volume for media files
+  avatars_data:          # Named volume for avatars
+  projects_data:         # Named volume for projects
+  fragments_data:        # Named volume for fragments
+  portainer_data:        # Named volume for Portainer data
 
 services:
-  #frontend
+  # frontend
   frontend:
     build:
       context: .
@@ -26,10 +33,10 @@ services:
       - "80:80"
     volumes:
       - ./deployment/docker/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./.docker_data/media:${MEDIA_STORAGE_PATH}
-      - ./.docker_data/media/avatars:${MEDIA_STORAGE_PATH}/avatars
-      - ./.docker_data/media/projects:${MEDIA_STORAGE_PATH}/projects
-      - ./.docker_data/media/fragments:${MEDIA_STORAGE_PATH}/fragments
+      - media_data:${MEDIA_STORAGE_PATH}
+      - avatars_data:${MEDIA_STORAGE_PATH}/avatars
+      - projects_data:${MEDIA_STORAGE_PATH}/projects
+      - fragments_data:${MEDIA_STORAGE_PATH}/fragments
     depends_on:
       - frontend
     networks:
@@ -54,10 +61,10 @@ services:
         RUN_LEVEL: dev
     volumes:
       - ./apps/backend/service:/opt/app
-      - ./.docker_data/media:${MEDIA_STORAGE_PATH}
-      - ./.docker_data/media/avatars:${MEDIA_STORAGE_PATH}/avatars
-      - ./.docker_data/media/projects:${MEDIA_STORAGE_PATH}/projects
-      - ./.docker_data/media/fragments:${MEDIA_STORAGE_PATH}/fragments
+      - media_data:${MEDIA_STORAGE_PATH}
+      - avatars_data:${MEDIA_STORAGE_PATH}/avatars
+      - projects_data:${MEDIA_STORAGE_PATH}/projects
+      - fragments_data:${MEDIA_STORAGE_PATH}/fragments
     networks:
       - default
     restart: unless-stopped
@@ -71,19 +78,32 @@ services:
     networks:
       - default
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - pg_data:/var/lib/postgresql/data
     env_file:
       - .env
 
-  #pgadmin:
-   # container_name: backend-pgadmin
-   # image: dpage/pgadmin4
-  #  restart: always
-  #  depends_on:
-  #    - postgres
-   # ports:
-  #    - "5050:80"
-  #  volumes:
-   #   - ./.docker_data/pg_admin:/var/lib/pgadmin
-  #  env_file:
-  #    - .env
+  pgadmin:
+    container_name: backend-pgadmin
+    image: dpage/pgadmin4
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    env_file:
+      - .env
+
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: backend-portainer
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - portainer_data:/data
+    ports:
+      - 9000:9000

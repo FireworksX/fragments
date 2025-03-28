@@ -25,4 +25,12 @@ old
 *.sw?
 
 .env
-.docker_data
+
+# docker data
+pg_data
+pgadmin_data
+media_data
+avatars_data
+projects_data
+fragments_data
+portainer_data

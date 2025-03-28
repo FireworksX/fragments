@@ -9,8 +9,8 @@ python = ">=3.9,<3.13"
 # Base
 fastapi = {extras = ["full"], version = "^0.111.1"}
 #supabase-py-async = "*"
-strawberry-graphql = "^0.237.3"
-pydantic-extra-types = "^2.9.0"
+strawberry-graphql = "^0.262.5"
+pydantic-extra-types = "^2.10.3"
 
 user-agents= "^2.2.0"
 pycountry = "^24.6.1"
