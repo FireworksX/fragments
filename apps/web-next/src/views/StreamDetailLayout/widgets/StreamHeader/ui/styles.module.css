@@ -71,28 +71,6 @@
     color: var(--secondary)
 }
 
-.liveBadge {
-    background: var(--success-bg);
-    color: var(--success);
-    border-radius: var(--radius-main);
-    padding: 3px 10px 3px 25px;
-    font-size: 10px;
-    font-weight: 400;
-    position: relative;
-    text-transform: uppercase;
-
-    &:before {
-        content: '';
-        position: absolute;
-        left: 9px;
-        top: 6px;
-        width: 7px;
-        height: 7px;
-        background: var(--success);
-        border-radius: 50%;
-    }
-}
-
 .description {
     font-size: 14px;
     color: var(--secondary);

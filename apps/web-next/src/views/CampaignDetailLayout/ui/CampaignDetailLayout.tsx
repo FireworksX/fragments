@@ -17,19 +17,21 @@ import { ToggleActiveButton } from '@/features/ToggleActiveButton/ui/ToggleActiv
 import isBrowser from '@/shared/utils/isBrowser'
 import { InputText } from '@/shared/ui/InputText'
 import { Textarea } from '@/shared/ui/Textarea'
+import { CampaignDetailName } from '@/views/CampaignDetailLayout/components/CampaignDetailName'
+import { CampaignDetailDescription } from '@/views/CampaignDetailLayout/components/CampaignDetailDescription'
 
 interface CampaignDetailPageProps {}
 
 export const CampaignDetailLayout: FC<CampaignDetailPageProps> = ({ children }) => {
   const {
     isStreamRoute,
-    isEdit,
-    setIsEdit,
+    editDescription,
     campaign,
     campaignSlug,
     projectSlug,
     loadingChangeCampaignActive,
-    toggleActive
+    toggleActive,
+    rename
   } = useCampaignDetail()
 
   return (
@@ -40,86 +42,34 @@ export const CampaignDetailLayout: FC<CampaignDetailPageProps> = ({ children }) 
             <div className={styles.logo}></div>
             <div className={styles.info}>
               <div className={styles.name}>
-                {isEdit ? (
-                  <InputText classNameInput={styles.nameInput} />
-                ) : (
-                  <>
-                    {campaign?.name}
-                    {campaign?.active && <span className={styles.liveBadge}>live</span>}
-                  </>
-                )}
+                <CampaignDetailName name={campaign?.name} isActive={campaign?.active} onRename={rename} />
               </div>
-              {!isEdit && (
-                <div className={styles.meta}>
-                  <span>Start: 12.10.2025</span>
-                  <span>End: 25.10.2025</span>
-                </div>
-              )}
+              <div className={styles.meta}>
+                <span>Start: 12.10.2025</span>
+                <span>End: 25.10.2025</span>
+              </div>
             </div>
 
             <div className={styles.headerAside}>
-              {!isEdit ? (
-                <>
-                  <ToggleActiveButton
-                    isActive={campaign?.active}
-                    loading={loadingChangeCampaignActive}
-                    onClick={toggleActive}
-                  />
+              <ToggleActiveButton
+                isActive={campaign?.active}
+                loading={loadingChangeCampaignActive}
+                onClick={toggleActive}
+              />
 
-                  <Button
-                    mode='outline'
-                    preventDefault
-                    // loading={loadingUpdateStream}
-                    icon={<EditIcon />}
-                    onClick={() => setIsEdit(true)}
-                  >
-                    Edit
-                  </Button>
-
-                  <Button
-                    mode='danger-outline'
-                    preventDefault
-                    // loading={loadingUpdateStream}
-                    icon={<DeleteIcon />}
-                    // onClick={toggleActive}
-                  >
-                    Delete
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Button
-                    mode='success'
-                    preventDefault
-                    // loading={loadingUpdateStream}
-                    icon={<CheckIcon />}
-                    onClick={() => setIsEdit(true)}
-                  >
-                    Done
-                  </Button>
-                  <Button
-                    mode='secondary'
-                    preventDefault
-                    // loading={loadingUpdateStream}
-                    icon={<CloseIcon />}
-                    onClick={() => setIsEdit(false)}
-                  >
-                    Cancel
-                  </Button>
-                </>
-              )}
+              <Button
+                mode='danger-outline'
+                preventDefault
+                // loading={loadingUpdateStream}
+                icon={<DeleteIcon />}
+                // onClick={toggleActive}
+              >
+                Delete
+              </Button>
             </div>
           </div>
 
-          <div className={styles.description}>
-            {isEdit ? (
-              <Textarea />
-            ) : (
-              `Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet corporis deserunt doloremque sunt voluptatum.
-            Asperiores cum, debitis dolor eaque eos ex facere in inventore maiores minima modi, odit, perspiciatis
-            tenetur.`
-            )}
-          </div>
+          <CampaignDetailDescription value={campaign?.description} onSubmit={editDescription} />
 
           <Tabs>
             <Link type='campaign' campaignSlug={campaignSlug} projectSlug={projectSlug}>

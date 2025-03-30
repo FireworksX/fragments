@@ -36,7 +36,7 @@ export const InitialPage: FC<LoginProps> = ({ className }) => {
           type='password'
           {...passwordField}
         />
-        <Button type='submit' loading={loading}>
+        <Button type='submit' size='large' loading={loading}>
           Continue with Email
         </Button>
       </form>

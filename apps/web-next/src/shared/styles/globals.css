@@ -81,8 +81,8 @@
     --z-index-builder-rich-text: 5;
     --z-index-builder-sidebar: 6;
 
-    --gutter-default: 15px;
-    --gutter-medium: 10px;
+    --gutter-default: 16px;
+    --gutter-medium: 8px;
     --gutter-small: 5px;
 
     --animation-transition-default: .3s;

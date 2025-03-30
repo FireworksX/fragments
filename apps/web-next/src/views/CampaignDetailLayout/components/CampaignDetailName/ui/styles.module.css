@@ -1,0 +1,14 @@
+.root {
+    font-size: 24px;
+    color: var(--text-color-accent);
+    font-weight: 700;
+    display: flex;
+    gap: var(--gutter-medium);
+    align-items: center;
+    height: 32px;
+}
+
+.nameInner {
+    padding-inline: 4px;
+}
+

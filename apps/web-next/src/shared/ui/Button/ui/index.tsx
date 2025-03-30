@@ -43,6 +43,7 @@ const Button: FC<ButtonProps> = ({
 }) => {
   const spinnerColorByMode = {
     'warning-outline': 'var(--warning)',
+    'danger-outline': 'var(--danger)',
     'success-outline': 'var(--success)'
   }[mode]
 

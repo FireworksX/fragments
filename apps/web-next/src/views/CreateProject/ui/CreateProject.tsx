@@ -7,8 +7,11 @@ import { useCreateProjectMutation } from '@/views/CreateProject/queries/CreatePr
 import { useState } from 'react'
 import { redirect, useParams, usePathname, useRouter } from 'next/navigation'
 import { buildLink } from '@/shared/ui/Link/hooks/useLink'
+import { useCurrentProjectsListSuspenseQuery } from '@/views/ProjectsList/queries/ProjectsList.generated'
 
 export const CreateProject = () => {
+  const { data } = useCurrentProjectsListSuspenseQuery()
+  const hasProjects = data?.project?.length > 0
   const pathname = usePathname()
   const routerParams = useParams()
   const router = useRouter()
@@ -48,7 +51,7 @@ export const CreateProject = () => {
           <rect fill='url(#«r1da»)' height='100%' mask='url(#«r1da»-mask)' width='100%'></rect>
         </svg>
         <Container mode='hug'>
-          <h1 className={styles.title}>Let's build something new.</h1>
+          <h1 className={styles.title}>{hasProjects ? `Let's build something new.` : 'Create you first project'}</h1>
 
           <form className={styles.row} onSubmit={handleCreate}>
             <InputText
@@ -58,7 +61,7 @@ export const CreateProject = () => {
               placeholder='Input name for your next project'
               onChangeValue={setName}
             />
-            <Button loading={loading} size='large' type='submit'>
+            <Button disabled={name?.length < 3} loading={loading} size='large' type='submit'>
               Create Project
             </Button>
           </form>

@@ -1,0 +1,6 @@
+mutation UpdateProjectInfo($projectSlug: Int!, $name: String) {
+    updateProject(pr: {id: $projectSlug, name: $name}) {
+        id
+        name
+    }
+}

@@ -21,23 +21,15 @@ import DeleteIcon from '@/shared/icons/next/trash.svg'
 import DoneIcon from '@/shared/icons/next/check.svg'
 import CloseIcon from '@/shared/icons/next/close.svg'
 import { useStreamHeader } from '@/views/StreamDetailLayout/widgets/StreamHeader/hooks/useStreamHeader'
+import { StatusBadge } from '@/shared/ui/StatusBadge'
+import { ContentEditable } from '@/shared/ui/ContentEditable'
 
 interface StreamHeaderProps {
   className?: string
 }
 
 export const StreamHeader: FC<StreamHeaderProps> = ({ className }) => {
-  const {
-    isEditMode,
-    updateLocalStream,
-    handleUpdateStream,
-    loadingUpdateStream,
-    localStream,
-    loadingChangeStreamActive,
-    setIsEditMode,
-    stream,
-    toggleActive
-  } = useStreamHeader()
+  const { handleUpdateStream, loadingDeleteStream, handleDeleteStream, stream, toggleActive } = useStreamHeader()
 
   return (
     <div className={cn(styles.root, className)}>
@@ -52,91 +44,48 @@ export const StreamHeader: FC<StreamHeaderProps> = ({ className }) => {
         <div className={styles.logo}></div>
         <div className={styles.headerData}>
           <div className={styles.name}>
-            {isEditMode ? (
-              <InputText
-                placeholder='Stream Name'
-                value={localStream?.name}
-                onChangeValue={name => updateLocalStream({ name })}
-              />
-            ) : (
-              <>
-                {stream?.name}
-                <span className={styles.id}>#{stream?.id}</span>
-                {stream?.active && <span className={styles.liveBadge}>live</span>}
-              </>
-            )}
+            <ContentEditable value={stream?.name} onSubmit={name => handleUpdateStream({ name })} />
+            <span className={styles.id}>#{stream?.id}</span>
+            <StatusBadge status={stream?.active ? 'success' : 'warning'} />
           </div>
 
           <div className={styles.filters}>
-            <StreamFilterLocation isEdit={isEditMode} />
-            <StreamFilterDevices isEdit={isEditMode} />
-            <StreamFilterOperationals isEdit={isEditMode} />
+            {/*<StreamFilterLocation isEdit={isEditMode} />*/}
+            {/*<StreamFilterDevices isEdit={isEditMode} />*/}
+            {/*<StreamFilterOperationals isEdit={isEditMode} />*/}
 
-            {isEditMode && (
-              <Dropdown
-                trigger='click'
-                options={
-                  <DropdownGroup>
-                    <DropdownOption>Location</DropdownOption>
-                    <DropdownOption>Device type</DropdownOption>
-                    <DropdownOption>OS type</DropdownOption>
-                  </DropdownGroup>
-                }
-              >
-                <Chip>
-                  <PlusIcon />
-                  Add filter
-                </Chip>
-              </Dropdown>
-            )}
+            {/*{isEditMode && (*/}
+            {/*  <Dropdown*/}
+            {/*    trigger='click'*/}
+            {/*    options={*/}
+            {/*      <DropdownGroup>*/}
+            {/*        <DropdownOption>Location</DropdownOption>*/}
+            {/*        <DropdownOption>Device type</DropdownOption>*/}
+            {/*        <DropdownOption>OS type</DropdownOption>*/}
+            {/*      </DropdownGroup>*/}
+            {/*    }*/}
+            {/*  >*/}
+            {/*    <Chip>*/}
+            {/*      <PlusIcon />*/}
+            {/*      Add filter*/}
+            {/*    </Chip>*/}
+            {/*  </Dropdown>*/}
+            {/*)}*/}
           </div>
         </div>
 
         <div className={styles.headerAside}>
-          {!isEditMode ? (
-            <>
-              <ToggleActiveButton
-                isActive={stream?.active}
-                loading={loadingChangeStreamActive}
-                onClick={toggleActive}
-              />
+          <ToggleActiveButton isActive={stream?.active} onClick={toggleActive} />
 
-              <Button
-                mode='outline'
-                preventDefault
-                loading={loadingUpdateStream}
-                icon={<EditIcon />}
-                onClick={() => setIsEditMode(true)}
-              >
-                Edit
-              </Button>
-
-              <Button
-                mode='danger-outline'
-                preventDefault
-                loading={loadingUpdateStream}
-                icon={<DeleteIcon />}
-                onClick={toggleActive}
-              >
-                Delete
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button
-                mode='success'
-                preventDefault
-                loading={loadingUpdateStream}
-                icon={<DoneIcon />}
-                onClick={handleUpdateStream}
-              >
-                Done
-              </Button>
-              <Button mode='secondary' preventDefault icon={<CloseIcon />} onClick={() => setIsEditMode(false)}>
-                Cancel
-              </Button>
-            </>
-          )}
+          <Button
+            mode='danger-outline'
+            loading={loadingDeleteStream}
+            preventDefault
+            icon={<DeleteIcon />}
+            onClick={handleDeleteStream}
+          >
+            Delete
+          </Button>
         </div>
       </div>
     </div>
