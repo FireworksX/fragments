@@ -33,7 +33,7 @@ export const CreateProject = () => {
   }
 
   return (
-    <div>
+    <div className={styles.root}>
       <div className={styles.head}>
         <svg className={styles.headPattern} height='100%' width='100%'>
           <defs>

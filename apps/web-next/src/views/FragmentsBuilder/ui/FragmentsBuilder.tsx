@@ -6,6 +6,7 @@ import { createBuilderStore } from '@/shared/store/builderStore'
 import { isBrowser } from '@fragments/utils'
 import { FragmentBuilderProvider } from '@/views/FragmentsBuilder/lib/FragmentBuilderProvider'
 import { FragmentsBuilderContent } from '@/views/FragmentsBuilder/widgets/FragmentsBuilderContent'
+import { useGlobalManager } from '@fragments/render-react'
 
 const builderManager = createBuilderStore()
 
@@ -16,6 +17,10 @@ if (isBrowser) {
 // const context = createGlobalContext()
 
 export const FragmentsBuilder = () => {
+  const globalManager = useGlobalManager()
+
+  if (!globalManager) return null
+
   return (
     <>
       <FragmentBuilderProvider builderManager={builderManager}>

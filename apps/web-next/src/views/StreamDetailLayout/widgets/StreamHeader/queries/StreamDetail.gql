@@ -4,5 +4,28 @@ query StreamDetail($streamSlug: Int!) {
         name
         active
         weight
+        filters {
+            ... on FilterDeviceTypeGet {
+                type
+                deviceType
+            }
+            ... on FilterOSTypeGet {
+                type
+                osType
+            }
+            ... on FilterGeoLocationGet {
+                type
+                city
+                country
+                region
+            }
+            ... on FilterPageGet {
+                type
+                page
+            }
+            ... on FilterTimeFrameGet {
+                type
+            }
+        }
     }
 }

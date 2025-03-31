@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { StatusDot } from '@/shared/ui/StatusDot'
@@ -14,63 +14,81 @@ import { Button } from '@/shared/ui/Button'
 import ChevronDown from '@/shared/icons/next/chevron-down.svg'
 import { useLandingDetailHeader } from '@/views/LandingDetail/widgets/LandingDetailHeader/hooks/useLandingDetailHeader'
 import { Link } from '@/shared/ui/Link'
+import { ContentEditable } from '@/shared/ui/ContentEditable'
+import { Slider } from '@/shared/ui/Slider'
 
 interface LandingDetailHeaderProps {
   className?: string
 }
 
 export const LandingDetailHeader: FC<LandingDetailHeaderProps> = ({ className }) => {
-  const { landing, setActive } = useLandingDetailHeader()
+  const { landing, updateLanding } = useLandingDetailHeader()
+  const [localWeight, setLocalWeight] = useState(0)
+
+  useEffect(() => {
+    setLocalWeight(landing?.weight ?? 0)
+  }, [landing?.weight])
 
   return (
     <div className={cn(styles.root, className)}>
       <div className={styles.headerInfo}>
         <div className={styles.title}>
           <StatusDot status={landing?.active ? 'success' : 'error'} />
-          {landing?.name} <span className={styles.id}>#{landing?.id}</span>
+          <ContentEditable className={styles.name} value={landing?.name} onSubmit={name => updateLanding({ name })} />
+          <span className={styles.id}>#{landing?.id}</span>
         </div>
-        {landing?.fragment && (
-          <div className={styles.fragmentName}>
-            Fragment:{' '}
-            <Link type='builderFragment' fragmentId={landing.fragment?.id}>
-              {landing.fragment?.name}
-            </Link>
+        <div className={styles.infoRow}>
+          {landing?.fragment && (
+            <div className={styles.infoCell}>
+              Fragment:{' '}
+              <Link type='builderFragment' fragmentId={landing.fragment?.id}>
+                {landing.fragment?.name}
+              </Link>
+            </div>
+          )}
+
+          <div className={styles.delimiter}></div>
+
+          <div className={styles.infoCell}>
+            Weight:{' '}
+            <Dropdown
+              trigger='click'
+              onHide={() => updateLanding({ weight: localWeight })}
+              options={
+                <DropdownGroup>
+                  <Slider value={localWeight} max={100} min={0} onChange={setLocalWeight} />
+                </DropdownGroup>
+              }
+            >
+              <span className={styles.weightControl}>{localWeight}%</span>
+            </Dropdown>
           </div>
-        )}
+        </div>
       </div>
 
       <div className={styles.actions}>
-        <Dropdown
-          trigger='click'
-          options={
-            <DropdownGroup>
-              {landing?.active ? (
-                <DropdownOption mode='warning' icon={<PauseIcon />} onClick={() => setActive(false)}>
-                  Pause
-                </DropdownOption>
-              ) : (
-                <DropdownOption
-                  disabled={!landing?.fragment}
-                  mode='success'
-                  icon={<RunIcon />}
-                  onClick={() => setActive(true)}
-                >
-                  Run
-                </DropdownOption>
-              )}
-
-              <DropdownOption icon={<EditIcon />}>Edit</DropdownOption>
-              <DropdownOption icon={<SettingsIcon />}>Configure Props</DropdownOption>
-              <DropdownOption mode='danger' icon={<TrashIcon />}>
-                Delete
-              </DropdownOption>
-            </DropdownGroup>
-          }
-        >
-          <Button mode='secondary' icon={<ChevronDown />}>
-            Actions
+        {landing?.active ? (
+          <Button
+            size='small'
+            icon={<PauseIcon />}
+            mode='warning-outline'
+            onClick={() => updateLanding({ active: false })}
+          >
+            Pause
           </Button>
-        </Dropdown>
+        ) : (
+          <Button
+            size='small'
+            icon={<RunIcon />}
+            mode='success-outline'
+            onClick={() => updateLanding({ active: true })}
+          >
+            Run
+          </Button>
+        )}
+        <Button icon={<TrashIcon />} size='small' mode='danger-outline'>
+          Delete
+        </Button>
       </div>
     </div>
   )

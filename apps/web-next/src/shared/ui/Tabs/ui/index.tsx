@@ -15,7 +15,9 @@ const Tabs: FC<TabsProps> = ({ className, children: inputChildren }) => {
 
   const [switcherStyles, switcherApi] = useSpring(() => ({
     width: 0,
+    height: 0,
     x: 0,
+    y: 0,
     opacity: 0
   }))
 
@@ -26,8 +28,10 @@ const Tabs: FC<TabsProps> = ({ className, children: inputChildren }) => {
       if (activeCell && activeCell instanceof HTMLElement) {
         e.cuurentTarget = activeCell
         switcherApi.start({
-          width: activeCell.getBoundingClientRect().width - 6,
+          width: activeCell.getBoundingClientRect().width,
+          height: activeCell.getBoundingClientRect().height,
           x: activeCell.offsetLeft,
+          y: activeCell.offsetTop,
           opacity: 1
         })
       }

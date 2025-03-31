@@ -5,6 +5,7 @@ import {
   useUpdateStreamMutation
 } from '@/shared/api/stream/mutation/UpdateStream.generated'
 import { useDeleteStreamMutation } from '@/shared/api/stream/mutation/DeleteStream.generated'
+import { useMemo } from 'react'
 
 export const useStreamHeader = () => {
   const { streamSlug, campaignSlug, projectSlug } = useParams()
@@ -40,6 +41,13 @@ export const useStreamHeader = () => {
     })
   }
 
+  const filters = useMemo(() => {
+    return {
+      osType: stream?.filters?.find(filter => filter.__typename === 'FilterOSTypeGet'),
+      deviceType: stream?.filters?.find(filter => filter.__typename === 'FilterDeviceTypeGet')
+    }
+  }, [stream])
+
   return {
     stream,
     loadingUpdateStream,
@@ -47,6 +55,7 @@ export const useStreamHeader = () => {
     projectSlug,
     campaignSlug,
     streamSlug,
+    filters,
     handleUpdateStream,
     handleDeleteStream,
     loadingDeleteStream

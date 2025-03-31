@@ -18,7 +18,7 @@ export const CampaignStreamsPage: FC<CampaignStreamsPageProps> = () => {
   const { creatingStream, clickCreateStream, handleCreateStream, tableRef } = useCampaignDetailPage()
 
   return (
-    <div className={styles.root}>
+    <Container className={styles.root}>
       <div className={styles.header}>
         <InputText className={styles.search} placeholder='Search' />
         <Button mode='secondary' icon={<SettingsIcon />}>
@@ -33,6 +33,6 @@ export const CampaignStreamsPage: FC<CampaignStreamsPageProps> = () => {
       </div>
 
       <StreamsTable ref={tableRef} onCreate={handleCreateStream} />
-    </div>
+    </Container>
   )
 }

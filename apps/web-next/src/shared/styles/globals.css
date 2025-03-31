@@ -48,8 +48,8 @@
 
     --background: #FEFEFE;
     --background--rgb: 254, 254, 254;
-    --background-secondary: #F3F3F3;
-    --background-secondary--rgb: 243, 243, 243;
+    --background-secondary: #f8f8f8;
+    --background-secondary--rgb: 248, 248, 248;
     --background-light: #faf9f9;
     --background-light--rgb: 250, 249, 249;
 
@@ -64,8 +64,8 @@
     --link-hover: #0363d3;
     --link-active: #004dab;
 
-    --app-size-header: 51px;
-    --app-size-navigation: 42px;
+    --app-size-header: 50px;
+    --app-size-navigation: 40px;
     --app-size-tabs-height: 40px;
     --builder-size-left-bar: 270px;
     --builder-size-right-bar: 260px;

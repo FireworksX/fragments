@@ -7,7 +7,7 @@ export const usePreviewSandboxProps = (fragmentId: number, props, onChange) => {
 
   return {
     definitions: fragmentDefinition.map(definition => {
-      const { _id, defaultValue } = fragmentManager.resolve(definition)
+      const { _id, defaultValue } = fragmentManager?.resolve?.(definition) ?? {}
 
       return {
         link: definition,

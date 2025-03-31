@@ -14,9 +14,8 @@ export const ProjectDetailLayout: FC<PropsWithChildren> = ({ children }) => {
   const [globalManager, setGlobalManager] = useState()
 
   useEffect(() => {
-    if (data) {
+    if (data && !globalManager) {
       setGlobalManager(createGlobalManager({ apiToken: data.accessToken }))
-
       window.globalManager = globalManager
     }
   }, [data])
@@ -24,19 +23,37 @@ export const ProjectDetailLayout: FC<PropsWithChildren> = ({ children }) => {
   return (
     <main>
       <Tabs className={styles.tabs}>
-        <Link type='project'>{({ isActive }) => <TabItem isActive={isActive}>Overview</TabItem>}</Link>
+        <Link type='project'>
+          {({ isActive }) => (
+            <TabItem className={styles.tab} isActive={isActive}>
+              Overview
+            </TabItem>
+          )}
+        </Link>
         <Link partial type='builder'>
-          {({ isActive }) => <TabItem isActive={isActive}>Builder</TabItem>}
+          {({ isActive }) => (
+            <TabItem className={styles.tab} isActive={isActive}>
+              Builder
+            </TabItem>
+          )}
         </Link>
         <Link partial type='campaignsList'>
-          {({ isActive }) => <TabItem isActive={isActive}>Campaigns</TabItem>}
+          {({ isActive }) => (
+            <TabItem className={styles.tab} isActive={isActive}>
+              Campaigns
+            </TabItem>
+          )}
         </Link>
         <Link partial type='projectSetting'>
-          {({ isActive }) => <TabItem isActive={isActive}>Settings</TabItem>}
+          {({ isActive }) => (
+            <TabItem className={styles.tab} isActive={isActive}>
+              Settings
+            </TabItem>
+          )}
         </Link>
       </Tabs>
 
-      {globalManager && <GlobalManager value={globalManager}>{children}</GlobalManager>}
+      <GlobalManager value={globalManager}>{children}</GlobalManager>
     </main>
   )
 }

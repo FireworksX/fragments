@@ -23,16 +23,19 @@ import CloseIcon from '@/shared/icons/next/close.svg'
 import { useStreamHeader } from '@/views/StreamDetailLayout/widgets/StreamHeader/hooks/useStreamHeader'
 import { StatusBadge } from '@/shared/ui/StatusBadge'
 import { ContentEditable } from '@/shared/ui/ContentEditable'
+import { StreamFilterWeight } from '@/views/StreamDetailLayout/widgets/StreamFilterWeight'
+import { Container } from '@/shared/ui/Container'
 
 interface StreamHeaderProps {
   className?: string
 }
 
 export const StreamHeader: FC<StreamHeaderProps> = ({ className }) => {
-  const { handleUpdateStream, loadingDeleteStream, handleDeleteStream, stream, toggleActive } = useStreamHeader()
+  const { handleUpdateStream, loadingDeleteStream, handleDeleteStream, stream, filters, toggleActive } =
+    useStreamHeader()
 
   return (
-    <div className={cn(styles.root, className)}>
+    <Container className={cn(styles.root, className)}>
       <Link type='campaignStreams'>
         <Touchable className={styles.backAction} effect='none'>
           <ArrowLeftIcon />
@@ -50,9 +53,10 @@ export const StreamHeader: FC<StreamHeaderProps> = ({ className }) => {
           </div>
 
           <div className={styles.filters}>
+            <StreamFilterWeight value={stream?.weight} onChange={weight => handleUpdateStream({ weight })} />
             {/*<StreamFilterLocation isEdit={isEditMode} />*/}
-            {/*<StreamFilterDevices isEdit={isEditMode} />*/}
-            {/*<StreamFilterOperationals isEdit={isEditMode} />*/}
+            <StreamFilterDevices value={filters.deviceType} />
+            <StreamFilterOperationals value={filters.osType} />
 
             {/*{isEditMode && (*/}
             {/*  <Dropdown*/}
@@ -88,6 +92,6 @@ export const StreamHeader: FC<StreamHeaderProps> = ({ className }) => {
           </Button>
         </div>
       </div>
-    </div>
+    </Container>
   )
 }

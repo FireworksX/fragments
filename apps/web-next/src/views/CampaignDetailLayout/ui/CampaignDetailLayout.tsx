@@ -8,6 +8,8 @@ import CloseIcon from '@/shared/icons/next/close.svg'
 import CheckIcon from '@/shared/icons/next/check.svg'
 import PauseIcon from '@/shared/icons/next/pause.svg'
 import RunIcon from '@/shared/icons/next/play.svg'
+import OverviewIcon from '@/shared/icons/next/panels-top-left.svg'
+import StreamsIcon from '@/shared/icons/next/podcast.svg'
 import DeleteIcon from '@/shared/icons/next/trash.svg'
 import { useCampaignDetail } from '@/views/CampaignDetailLayout/hooks/useCampaignDetail'
 import Tabs from '../../../shared/ui/Tabs/ui'
@@ -35,9 +37,9 @@ export const CampaignDetailLayout: FC<CampaignDetailPageProps> = ({ children }) 
   } = useCampaignDetail()
 
   return (
-    <Container className={styles.root}>
+    <div className={styles.root}>
       {!isStreamRoute && (
-        <>
+        <Container className={styles.head}>
           <div className={styles.header}>
             <div className={styles.logo}></div>
             <div className={styles.info}>
@@ -74,23 +76,23 @@ export const CampaignDetailLayout: FC<CampaignDetailPageProps> = ({ children }) 
           <Tabs>
             <Link type='campaign' campaignSlug={campaignSlug} projectSlug={projectSlug}>
               {({ isActive }) => (
-                <TabItem name='overview' isActive={isActive}>
+                <TabItem name='overview' icon={<OverviewIcon />} isActive={isActive}>
                   Overview
                 </TabItem>
               )}
             </Link>
             <Link type='campaignStreams' campaignSlug={campaignSlug} projectSlug={projectSlug}>
               {({ isActive }) => (
-                <TabItem name='overview' isActive={isActive}>
+                <TabItem name='overview' icon={<StreamsIcon />} isActive={isActive}>
                   Streams
                 </TabItem>
               )}
             </Link>
           </Tabs>
-        </>
+        </Container>
       )}
 
       {children}
-    </Container>
+    </div>
   )
 }

@@ -24,6 +24,7 @@ export const createGlobalManager = ({ apiToken }: Options = {}) =>
           const currentManager = state.resolve(state.key)?.fragmentsManagers?.[
             fragmentId
           ];
+
           if (currentManager) {
             return currentManager;
           }

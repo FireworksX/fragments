@@ -4,9 +4,27 @@
     gap: var(--gutter-default);
 }
 
+.name {
+    padding-inline: 4px;
+}
+
 .headerInfo {
     display: flex;
     flex-direction: column;
+    gap: 4px;
+}
+
+.infoRow {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.delimiter {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--border);
 }
 
 .title {
@@ -18,8 +36,16 @@
     color: var(--text-color-accent);
 }
 
-.fragmentName {
+.infoCell {
     color: var(--secondary);
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.weightControl {
+    color: var(--link);
+    cursor: pointer;
 }
 
 .id {
