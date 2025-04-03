@@ -1,7 +1,7 @@
 import { useCallback, useContext } from "preact/compat";
 import { GraphState, LinkKey } from "@graph-state/core";
 import { useGraph } from "@graph-state/react";
-import { pick } from "@fragments/utils";
+import { pick } from "@fragmentsx/utils";
 import { FragmentContext } from "@/components/Fragment/FragmentContext";
 import { getOverrider } from "@/shared/helpers";
 import { useReadVariable } from "@/shared/hooks/useReadVariable";

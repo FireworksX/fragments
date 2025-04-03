@@ -1,4 +1,4 @@
-import { createConstants } from "@fragments/utils";
+import { createConstants } from "@fragmentsx/utils";
 
 export const nodes = createConstants(
   "Fragment",

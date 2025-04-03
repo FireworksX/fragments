@@ -1,7 +1,7 @@
 import { LinkKey } from "@graph-state/core";
 import { useMemo } from "preact/compat";
 import { useLayerValue } from "@/shared/hooks/useLayerValue";
-import { toPx } from "@fragments/utils";
+import { toPx } from "@fragmentsx/utils";
 import { borderType } from "@/definitions";
 
 export const useLayerBorder = (layerKey: LinkKey) => {

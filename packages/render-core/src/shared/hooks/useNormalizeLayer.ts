@@ -1,6 +1,6 @@
 import { GraphState, LinkKey } from "@graph-state/core";
 import { getOverrider } from "@/shared/helpers";
-import { getNormalizeLayer } from "@fragments/definition";
+import { getNormalizeLayer } from "@fragmentsx/definition";
 import { useContext } from "preact/compat";
 import { FragmentContext } from "@/components/Fragment/FragmentContext";
 

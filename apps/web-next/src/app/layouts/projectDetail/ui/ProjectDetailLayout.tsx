@@ -15,7 +15,7 @@ export const ProjectDetailLayout: FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     if (data && !globalManager) {
-      setGlobalManager(createGlobalManager({ apiToken: data.accessToken }))
+      setGlobalManager(createGlobalManager({ apiToken: data.accessToken, isSelf: true }))
       window.globalManager = globalManager
     }
   }, [data])

@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { render, createElement } from "@fragments/render-core";
+import { render, createElement } from "@fragmentsx/render-core";
 import { GlobalManager } from "@/components/GlobalManager";
 
 // Обёртка для Preact-компонента

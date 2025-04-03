@@ -1,9 +1,9 @@
 import { createState } from "@graph-state/core";
-import { FragmentQuery } from "@/shared/managers/fetchManager/queries/FragmentQuery";
+import { getFragmentQuery } from "@/shared/managers/fetchManager/queries/FragmentQuery";
 import { getEmptyFragment } from "@/shared/managers/fetchManager/emptyFragment";
 import { createFetcher } from "./fetcher";
 
-export const createFetchManager = (apiToken: string) => {
+export const createFetchManager = (apiToken: string, isSelf?: boolean) => {
   const fetcher = createFetcher("http://localhost/graphql", {
     Authorization: `Bearer ${apiToken}`,
   });
@@ -28,15 +28,19 @@ export const createFetchManager = (apiToken: string) => {
         state.cacheDocuments = new Map();
 
         state.queryFragment = async (fragmentId: number) => {
+          if (!apiToken) return null;
+
           if (state.cacheDocuments.has(fragmentId)) {
             return state.cacheDocuments.get(fragmentId);
           }
 
-          const response = await fetcher.query(FragmentQuery, {
+          const response = await fetcher.query(getFragmentQuery(isSelf), {
             fragmentSlug: fragmentId,
           });
 
-          const fragment = response?.data?.fragment?.[0];
+          const fragment = isSelf
+            ? response?.data?.fragment?.[0]
+            : response?.data?.clientFragment;
           let fragmentDocument = fragment?.document;
 
           if (typeof fragmentDocument === "string") {

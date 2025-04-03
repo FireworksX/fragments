@@ -1,8 +1,3 @@
-import { useContext } from 'react'
-import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { useGraph, useGraphStack } from '@graph-state/react'
-import { useFragmentComputedValues } from '@/shared/hooks/fragmentBuilder/useFragmentComputedValues'
-import { useBuilderVariableCreator } from '@/shared/hooks/fragmentBuilder/useBuilderVariableCreator'
 import { definition } from '@fragments/definition'
 
 import { Entity, LinkKey } from '@graph-state/core'
@@ -32,7 +27,7 @@ export const useFragmentProperties = () => {
   // const { getTransformsByType, createComputedValue } = useBuilderVariableTransforms()
 
   const createProperty = (prop: { type: string }) => {
-    return declareFragmentProperty(documentManager, { _type: nodes.Variable, ...prop })
+    return declareFragmentProperty(documentManager, { _type: definition.nodes.Variable, ...prop })
   }
 
   const deleteProperty = (prop: Entity) => {

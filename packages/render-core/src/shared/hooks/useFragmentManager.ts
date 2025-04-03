@@ -23,10 +23,14 @@ export const useFragmentManager = (
 
     const fragmentDocument =
       await globalManagerGraph.fetchManager.queryFragment(id);
-    const res = manager?.createFragmentManager(id, fragmentDocument);
 
     setLoading(false);
-    return res;
+
+    if (fragmentDocument) {
+      return manager?.createFragmentManager(id, fragmentDocument);
+    }
+
+    return null;
   };
 
   useEffect(() => {

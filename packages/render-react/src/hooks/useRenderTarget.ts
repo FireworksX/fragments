@@ -1,6 +1,6 @@
 import { useGlobalManager } from "@/hooks/useGlobalManager";
 import { useGraph } from "@graph-state/react";
-import { definition } from "@fragments/definition";
+import { definition } from "@fragmentsx/definition";
 
 export const useRenderTarget = () => {
   const globalManager = useGlobalManager();

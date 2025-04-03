@@ -1,7 +1,7 @@
 import { useContext } from "preact/compat";
 import { LinkKey } from "@graph-state/core";
 import { useGraph } from "@graph-state/react";
-import { pick } from "@fragments/utils";
+import { pick } from "@fragmentsx/utils";
 import { FragmentContext } from "@/components/Fragment/FragmentContext";
 import { isVariableLink } from "@/shared/helpers/checks";
 import { InstanceContext } from "@/components/Instance";

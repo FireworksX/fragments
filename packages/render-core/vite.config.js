@@ -20,7 +20,13 @@ export default defineConfig({
       fileName: (format) => `index.${format}.js`,
     },
     rollupOptions: {
-      external: ["preact"],
+      external: [
+        "preact",
+        "preact/compat",
+        "@graph-state/core",
+        "use-sync-external-store",
+        "use-sync-external-store-shim",
+      ],
       output: {
         globals: {
           preact: "Preact",

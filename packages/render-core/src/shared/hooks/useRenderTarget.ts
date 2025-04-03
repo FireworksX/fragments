@@ -5,8 +5,9 @@ import { useGlobalManager } from "@/shared/hooks/useGlobalManager";
 export const useRenderTarget = (globalManager?: GraphState) => {
   const { globalManagerGraph, setRenderTarget } =
     useGlobalManager(globalManager);
+
   const renderTargetValue =
-    globalManagerGraph?.renderTarget ?? renderTarget.canvas;
+    globalManagerGraph?.renderTarget ?? renderTarget.document;
 
   // Subscribe to root fragment
   // useGraph(documentManager, documentManager.$fragment.root);

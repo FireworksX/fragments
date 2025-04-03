@@ -24,13 +24,15 @@ export default defineConfig({
         "react",
         "react-dom",
         "react/jsx-runtime",
-        "@fragments/render",
         "preact",
+        "@graph-state/react",
+        "@graph-state/core",
+        "@fragmentsx/render-core",
+        /^@fragmentsx\//, // Все пакеты из монорепозитория
       ],
       output: {
         globals: {
           react: "React",
-          preact: "Preact",
         },
       },
     },

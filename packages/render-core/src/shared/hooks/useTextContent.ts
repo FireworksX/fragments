@@ -1,6 +1,6 @@
 import { useMemo } from "preact/compat";
 import { GraphState, LinkKey } from "@graph-state/core";
-import { isValue } from "@fragments/utils";
+import { isValue } from "@fragmentsx/utils";
 import { useLayerValue } from "@/shared/hooks/useLayerValue";
 import { wrapTextInParagraphWithAttributes } from "@/shared/helpers/wrapTextInParagraphWithAttributes";
 

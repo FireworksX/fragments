@@ -1,7 +1,7 @@
 import {
   Fragment as BaseFragment,
   Instance as BaseInstance,
-} from "@fragments/render-core";
+} from "@fragmentsx/render-core";
 import { createReactComponent } from "@/reactAdapter";
 import { useRenderTarget } from "@/hooks/useRenderTarget";
 export { GlobalManager } from "@/components/GlobalManager";

@@ -55,6 +55,14 @@ const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({
     )
   }
 
+  if (layer?.type === definition.variableType.String) {
+    return <InstancePropertyString name={layer.name} isTextarea={layer.isTextarea} value={value} onChange={onChange} />
+  }
+
+  if (layer?.type === definition.variableType.Boolean) {
+    return <InstancePropertyBoolean name={layer.name} isTextarea={layer.isTextarea} value={value} onChange={onChange} />
+  }
+
   return null
   // const { documentManager } = useBuilderDocument()
   // const { selection } = useBuilderSelection()

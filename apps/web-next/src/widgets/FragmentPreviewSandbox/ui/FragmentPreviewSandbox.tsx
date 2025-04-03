@@ -23,8 +23,6 @@ export const FragmentPreviewSandbox: FC<FragmentPreviewSandboxProps> = ({ classN
     setRenderTarget(definition.renderTarget.document)
   }, [])
 
-  console.log(props)
-
   return (
     <div className={cn(styles.root, className)}>
       {loading ? (

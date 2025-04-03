@@ -5,15 +5,16 @@ import { createFetchManager } from "@/shared/managers/fetchManager/createFetchMa
 
 interface Options {
   apiToken: string;
+  isSelf?: boolean;
 }
 
-export const createGlobalManager = ({ apiToken }: Options = {}) =>
+export const createGlobalManager = ({ apiToken, isSelf }: Options = {}) =>
   createState({
     _type: "GlobalManager",
     initialState: {
-      fetchManager: createFetchManager(apiToken),
+      fetchManager: createFetchManager(apiToken, isSelf),
       fragmentsManagers: {},
-      renderTarget: renderTarget.canvas,
+      renderTarget: renderTarget.document,
     },
     plugins: [
       (state) => {

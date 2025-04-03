@@ -4,7 +4,7 @@ import { animated } from '@react-spring/web'
 import { InputText } from '@/shared/ui/InputText'
 import { Textarea } from '@/shared/ui/Textarea'
 
-interface InstancePropertyStringProps {
+interface InstancePropertyFillProps {
   name: string
   value: string
   isTextarea?: boolean
@@ -12,7 +12,7 @@ interface InstancePropertyStringProps {
   onChange(value: string): void
 }
 
-const InstancePropertyString: FC<InstancePropertyStringProps> = ({ className, isTextarea, name, value, onChange }) => {
+const InstancePropertyFill: FC<InstancePropertyFillProps> = ({ className, isTextarea, name, value, onChange }) => {
   return (
     <ControlRow className={className} title={name}>
       <ControlRowWide>
@@ -26,4 +26,4 @@ const InstancePropertyString: FC<InstancePropertyStringProps> = ({ className, is
   )
 }
 
-export default animated(InstancePropertyString)
+export default animated(InstancePropertyFill)

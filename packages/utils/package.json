@@ -1,7 +1,7 @@
 {
-  "name": "@fragments/utils",
-  "version": "0.0.9",
-  "private": true,
+  "name": "@fragmentsx/utils",
+  "version": "0.0.11",
+  "private": false,
   "main": "index.js",
   "license": "MIT",
   "files": [

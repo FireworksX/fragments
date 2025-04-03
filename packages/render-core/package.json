@@ -1,7 +1,7 @@
 {
-  "name": "@fragments/render-core",
+  "name": "@fragmentsx/render-core",
   "private": false,
-  "version": "0.0.1",
+  "version": "0.0.5",
   "type": "module",
   "files": [
     "dist"
@@ -26,13 +26,12 @@
     "preact": "^10.0.0"
   },
   "dependencies": {
-    "@fragments/utils": "workspace:*",
-    "@fragments/definition": "workspace:*",
+    "@fragmentsx/utils": "workspace:*",
+    "@fragmentsx/definition": "workspace:*",
     "@graph-state/checkers": "^0.1.2",
     "@graph-state/core": "^0.10.4",
     "@graph-state/react": "^0.6.3",
-    "react-use-measure": "^2.1.7",
-    "use-sync-external-store": "^1.2.2"
+    "react-use-measure": "^2.1.7"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.1",
