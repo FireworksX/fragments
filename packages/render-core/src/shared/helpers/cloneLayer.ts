@@ -12,11 +12,15 @@ export const cloneLayer = (
     const clonedChildren = (layerGraph?.children ?? []).map((child) =>
       cloneLayer(manager, child)
     );
-    const clonedLayer = createLayer({
-      _type: layerGraph._type,
-      children: clonedChildren,
-      ...externalProps,
-    });
+    const clonedLayer = createLayer(
+      {
+        _type: layerGraph._type,
+        children: clonedChildren,
+        ...externalProps,
+        ...layerGraph,
+      },
+      true
+    );
 
     const clonedKey = manager.mutate(clonedLayer);
 

@@ -5,10 +5,12 @@ import { ProjectTreeItem } from '../widgets/ProjectTreeItem'
 import { useProjectTree } from '../hooks/useProjectTree'
 import { ProjectTreeSortableItem } from '../widgets/ProjectTreeSortableItem'
 import { Spinner } from '@/shared/ui/Spinner'
+import { DragOverlay } from '@dnd-kit/core'
 
 interface ProjectTreeProps {
   className?: string
   onClick?: (item: unknown) => void
+  draggable?: boolean
 }
 
 export const ProjectTreeContext = createContext({
@@ -16,8 +18,8 @@ export const ProjectTreeContext = createContext({
   toggleIsOpen: (id: number, flag?: boolean) => undefined
 })
 
-export const ProjectTree: FC<ProjectTreeProps> = ({ className, onClick }) => {
-  const { list, fetching, openedIds, toggleIsOpen } = useProjectTree()
+export const ProjectTree: FC<ProjectTreeProps> = ({ className, draggable, onClick }) => {
+  const { list, draggableItem, fetching, openedIds, toggleIsOpen } = useProjectTree()
   const treeRef = useRef(null)
 
   return (
@@ -39,26 +41,17 @@ export const ProjectTree: FC<ProjectTreeProps> = ({ className, onClick }) => {
           </ProjectTreeSortableItem>
         ))}
 
-        {/*<DragOverlay dropAnimation={null}>*/}
-        {/*  {draggableItem ? (*/}
-        {/*    <ProjectTreeSortableItem*/}
-        {/*      id={draggableItem.id}*/}
-        {/*      type={draggableItem.type}*/}
-        {/*      deepIndex={draggableItem.deepIndex}*/}
-        {/*    >*/}
-        {/*      /!*<ProjectTreeItem*!/*/}
-        {/*      /!*  name={draggableItem?.name}*!/*/}
-        {/*      /!*  type={draggableItem?.type}*!/*/}
-        {/*      /!*  selected={draggableItem?.selected}*!/*/}
-        {/*      /!*  isLoading={draggableItem?.isLoading}*!/*/}
-        {/*      /!*  isOpen={!draggableItem.collapsed}*!/*/}
-        {/*      /!*  hasChildren={draggableItem.children.length > 0}*!/*/}
-        {/*      /!*  hasActions={false}*!/*/}
-        {/*      /*/
-        /*/}
-        {/*    </ProjectTreeSortableItem>*/}
-        {/*  ) : null}*/}
-        {/*</DragOverlay>*/}
+        <DragOverlay dropAnimation={null}>
+          {draggableItem ? (
+            <ProjectTreeSortableItem
+              id={draggableItem.id}
+              type={draggableItem.type}
+              deepIndex={draggableItem.deepIndex}
+            >
+              <ProjectTreeItem id={draggableItem.id} type={draggableItem?.type} />
+            </ProjectTreeSortableItem>
+          ) : null}
+        </DragOverlay>
       </div>
     </ProjectTreeContext>
   )

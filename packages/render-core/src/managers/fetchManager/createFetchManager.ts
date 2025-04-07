@@ -1,6 +1,6 @@
 import { createState } from "@graph-state/core";
-import { getFragmentQuery } from "@/shared/managers/fetchManager/queries/FragmentQuery";
-import { getEmptyFragment } from "@/shared/managers/fetchManager/emptyFragment";
+import { getFragmentQuery } from "./queries/FragmentQuery";
+import { getEmptyFragment } from "./emptyFragment";
 import { createFetcher } from "./fetcher";
 
 export const createFetchManager = (apiToken: string, isSelf?: boolean) => {

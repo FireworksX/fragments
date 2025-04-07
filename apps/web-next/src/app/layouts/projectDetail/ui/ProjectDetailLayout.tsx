@@ -4,8 +4,8 @@ import { FC, PropsWithChildren, useEffect, useState } from 'react'
 import { Tabs } from '@/shared/ui/Tabs'
 import { TabItem } from '@/shared/ui/TabItem'
 import styles from './styles.module.css'
-import { createGlobalManager } from '@fragments/render-core'
-import { GlobalManager } from '@fragments/render-react'
+import { createGlobalManager } from '@fragmentsx/render-core'
+import { GlobalManager } from '@fragmentsx/render-suite'
 import isBrowser from '@/shared/utils/isBrowser'
 import { getSession, useSession } from 'next-auth/react'
 
@@ -15,7 +15,7 @@ export const ProjectDetailLayout: FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     if (data && !globalManager) {
-      setGlobalManager(createGlobalManager({ apiToken: data.accessToken, isSelf: true }))
+      setGlobalManager(createGlobalManager({ apiToken: data.accessToken, isSelfHosted: true }))
       window.globalManager = globalManager
     }
   }, [data])

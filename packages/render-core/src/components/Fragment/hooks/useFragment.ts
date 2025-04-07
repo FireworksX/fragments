@@ -4,13 +4,13 @@ import { useLayerChildren } from "@/shared/hooks/useLayerChildren";
 import { useRenderTarget } from "@/shared/hooks/useRenderTarget";
 import { findBreakpoint } from "@/shared/helpers/findBreakpoint";
 import { useFragmentManager } from "@/shared/hooks/useFragmentManager";
-import { nodes } from "@/definitions";
+import { definition } from "@fragmentsx/definition";
 import { GraphState } from "@graph-state/core";
 import { useLayerStyles } from "@/shared/hooks/useLayerStyles/useLayerStyles";
 
 export const useFragment = (fragmentId: string, globalManager?: GraphState) => {
   const { manager } = useFragmentManager(fragmentId, globalManager);
-  const layerKey = `${nodes.Fragment}:${fragmentId}`;
+  const layerKey = `${definition.nodes.Fragment}:${fragmentId}`;
   const [ref, fragmentRect] = useMeasure();
   const children = useLayerChildren(layerKey, manager);
   const { isDocument, renderTarget } = useRenderTarget(globalManager);

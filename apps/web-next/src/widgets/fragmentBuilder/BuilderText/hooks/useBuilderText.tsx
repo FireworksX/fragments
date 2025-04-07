@@ -94,7 +94,6 @@ export const useBuilderText = () => {
       }
 
       const attributes = editor.getAttributes('paragraph')
-
       setAttributes(attributes)
       // console.log(attributes)
       // styleAttributesInvoker.onChange(attributes)

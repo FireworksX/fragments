@@ -2,7 +2,7 @@ import { Entity, GraphState, LinkKey } from "@graph-state/core";
 import { isPartOfPrimary } from "@/shared/helpers/isPartOfPrimary";
 import { createLayer } from "@/shared/helpers/createLayer";
 import { getOverrider } from "@/shared/helpers/getOverrider";
-import { nodes } from "@/definitions";
+import { definition } from "@fragmentsx/definition";
 
 /**
  * Метод добавляет слой в массив children. Но есть дополнительная логика.
@@ -16,7 +16,7 @@ export const appendChildren = (
   ...children: Entity[]
 ) => {
   const targetEntity = manager.entityOfKey(target);
-  if (targetEntity._type !== nodes.Frame) {
+  if (targetEntity._type !== definition.nodes.Frame) {
     manager.mutate(manager.keyOfEntity(target), {
       children,
     });

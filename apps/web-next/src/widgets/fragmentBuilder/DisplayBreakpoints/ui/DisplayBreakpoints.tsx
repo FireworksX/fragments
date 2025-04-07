@@ -4,7 +4,7 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
-import { Fragment } from '@fragments/render-react'
+import { Fragment } from '@fragmentsx/render-suite'
 
 interface BuilderDisplayBreakpointsProps {
   className?: string

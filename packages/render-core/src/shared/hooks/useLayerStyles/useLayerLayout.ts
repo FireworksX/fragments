@@ -1,6 +1,6 @@
 import { LinkKey } from "@graph-state/core";
 import { useLayerValue } from "@/shared/hooks/useLayerValue";
-import { layerDirection, layerMode } from "@/definitions";
+import { definition } from "@fragmentsx/definition";
 
 export const useLayerLayout = (layerKey: LinkKey) => {
   const [layerModeValue] = useLayerValue(layerKey, "layerMode");
@@ -11,14 +11,14 @@ export const useLayerLayout = (layerKey: LinkKey) => {
   const [layerAlign] = useLayerValue(layerKey, "layerAlign");
   const [padding] = useLayerValue(layerKey, "padding");
 
-  const isFlex = layerModeValue === layerMode.flex;
+  const isFlex = layerModeValue === definition.layerMode.flex;
 
   return {
     gap: isFlex ? layerGap : null,
     flexWrap: isFlex ? layerWrap : null,
     justifyContent: isFlex ? layerDistribute : null,
     flexDirection: isFlex
-      ? layerDirectionValue === layerDirection.vertical
+      ? layerDirectionValue === definition.layerDirection.vertical
         ? "column"
         : "row"
       : null,

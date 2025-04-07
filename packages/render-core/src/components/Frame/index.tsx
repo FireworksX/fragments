@@ -3,7 +3,7 @@ import { LinkKey } from "@graph-state/core";
 import { useFrame } from "./hooks/useFrame";
 import { Text } from "@/components/Text";
 import { Instance } from "@/components/Instance";
-import { nodes } from "@/definitions";
+import { definition } from "@fragmentsx/definition";
 
 interface FrameProps {
   layerKey: LinkKey;
@@ -12,11 +12,11 @@ interface FrameProps {
 export const Frame: FC<FrameProps> = ({ layerKey }) => {
   const { styles, children, type } = useFrame(layerKey);
 
-  if (type === nodes.Text) {
+  if (type === definition.nodes.Text) {
     return <Text layerKey={layerKey} />;
   }
 
-  if (type === nodes.Instance) {
+  if (type === definition.nodes.Instance) {
     return <Instance layerKey={layerKey} />;
   }
 

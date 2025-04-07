@@ -36,7 +36,7 @@ import StackStringProperty from '../../../features/popouts/StackStringProperty/u
 import StackNumberProperty from '../../../features/popouts/StackNumberProperty/ui/StackNumberProperty'
 import StackBooleanProperty from '../../../features/popouts/StackBooleanProperty/ui/StackBooleanProperty'
 import StackVariableTransform from '@/features/popouts/StackVariableTransform/StackVariableTransform'
-import React, { use, useEffect } from 'react'
+import React, { ComponentRef, use, useEffect, useRef } from 'react'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useGraphEffect } from '@graph-state/react'
 import { useBuilderHotKeys } from '@/shared/hooks/hotkeys/useBuilderHotKeys'
@@ -44,11 +44,18 @@ import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSe
 import StackColorProperty from '@/features/popouts/StackColorProperty/ui/StackColorProperty'
 import { useRenderTarget } from '@fragments/render-react'
 import { definition } from '@fragments/definition'
+import { useDroppable } from '@dnd-kit/core'
 
 export const FragmentsEdit = () => {
   const { documentManager } = useBuilderDocument()
   const { select } = useBuilderSelection()
   const { setRenderTarget } = useRenderTarget()
+  const viewport = useRef<ComponentRef<'div'>>(null)
+
+  const { setNodeRef, isOver, ...rest } = useDroppable({
+    id: 'builderCanvas',
+    data: { area: 'builderCanvas' }
+  })
 
   useBuilderHotKeys()
 
@@ -68,7 +75,7 @@ export const FragmentsEdit = () => {
     <CanvasTextEditorProvider>
       <div className={styles.root}>
         <div className={styles.center}>
-          <div className={styles.previewContainer}>
+          <div className={styles.previewContainer} ref={setNodeRef}>
             {/*<BuilderSidebar assetsNode={<BuilderAssets />} layersNode={<BuilderLayers />} />*/}
 
             <BuilderCanvas extendNodes={<BuilderFloatBar />}>

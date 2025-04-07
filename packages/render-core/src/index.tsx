@@ -2,7 +2,6 @@
 export * from "./components/Fragment";
 export * from "./components/Instance";
 
-export { createGlobalManager } from "@/shared/managers/createGlobalManager";
 // export { createManager } from "@/shared/managers/createManager";
 // export * from "./components/Instance";
 // export * from "./components/FragmentsGlobalContext";
@@ -20,7 +19,10 @@ export { useFragmentManager } from "@/shared/hooks/useFragmentManager";
 // export { useInstancePropertyValue } from "./shared/hooks/useInstancePropertyValue.ts";
 // export { useLayer } from "./shared/hooks/useLayer.ts";
 
-export * as definition from "./definitions";
 // export { useGlobalContext } from "./shared/hooks/useGlobalContext";
+
+export { createGlobalManager } from "@/managers/globalManager";
+
+export { wrapTextInParagraphWithAttributes } from "@/shared/helpers/wrapTextInParagraphWithAttributes";
 
 export { createElement, render } from "preact";

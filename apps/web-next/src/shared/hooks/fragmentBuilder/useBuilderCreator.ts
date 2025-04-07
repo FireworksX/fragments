@@ -1,11 +1,11 @@
 import { use } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 import { getRandomColor } from '@/shared/utils/random'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useFragmentLayers } from '@/shared/hooks/fragmentBuilder/useFragmentLayers'
-import { appendChildren, cloneLayer, isPartOfPrimary } from '@fragments/render-core'
+import { appendChildren, cloneLayer, isPartOfPrimary } from '@fragmentsx/render-core'
 import { getLayer } from '@/shared/hooks/fragmentBuilder/useNormalizeLayer/getLayer'
 
 export const useBuilderCreator = () => {

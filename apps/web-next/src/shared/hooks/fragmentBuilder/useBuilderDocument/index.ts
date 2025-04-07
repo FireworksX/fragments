@@ -1,18 +1,11 @@
+import { useFragmentManager } from '@fragmentsx/render-suite'
 import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
-import { useGlobalManager } from '@/shared/hooks/fragmentBuilder/useBuilderGlobalContext'
-import { useEffect, useRef, useState } from 'react'
 
 export const useBuilderDocument = () => {
   const { currentFragmentId } = useBuilder()
-  const { getFragmentManager, globalManager, loadFragmentManager } = useGlobalManager()
-  const manager = getFragmentManager(currentFragmentId)
-
-  useEffect(() => {
-    loadFragmentManager(currentFragmentId)
-  }, [currentFragmentId])
+  const { manager } = useFragmentManager(currentFragmentId)
 
   return {
-    documentManager: manager,
-    globalManager
+    documentManager: manager
   }
 }

@@ -1,7 +1,10 @@
 import { createState, LinkKey } from "@graph-state/core";
 import { isHtmlContent, isHTMLNode } from "@graph-state/checkers";
 
-export const createManager = (fragmentKey: LinkKey, initialDocument = {}) => {
+export const createFragmentManager = (
+  fragmentKey: LinkKey,
+  initialDocument = {}
+) => {
   const tempGraph = {
     _type: "Temp",
     _id: "root",

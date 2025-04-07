@@ -22,23 +22,23 @@ export const useBuilderHotKeys = () => {
     { scopes: [hotKeysScope.builder] }
   )
 
-  // useHotkeys(
-  //   'backspace',
-  //   () => {
-  //     if (layerFlags.canRemove) {
-  //       layerFlags.remove()
-  //     }
-  //   },
-  //   { scopes: [hotKeysScope.builder] }
-  // )
-  //
-  // useHotkeys(
-  //   'meta+;',
-  //   () => {
-  //     layerFlags.toggleVisible()
-  //   },
-  //   { scopes: [hotKeysScope.builder] }
-  // )
+  useHotkeys(
+    'backspace',
+    () => {
+      if (layerFlags.canRemove) {
+        layerFlags.remove()
+      }
+    },
+    { scopes: [hotKeysScope.builder] }
+  )
+
+  useHotkeys(
+    'meta+;',
+    () => {
+      layerFlags.toggleVisible()
+    },
+    { scopes: [hotKeysScope.builder] }
+  )
   //
   // useHotkeys(
   //   'meta+enter',

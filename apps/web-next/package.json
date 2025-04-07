@@ -21,6 +21,7 @@
     "@fragmentsx/definition": "workspace:*",
     "@fragmentsx/render-core": "workspace:*",
     "@fragmentsx/render-react": "workspace:*",
+    "@fragmentsx/render-suite": "workspace:*",
     "@fragmentsx/utils": "workspace:*",
     "@graph-state/checkers": "^0.1.2",
     "@graph-state/core": "^0.10.4",

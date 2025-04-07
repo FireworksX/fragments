@@ -1,9 +1,9 @@
 import React, { ElementRef, FC, PropsWithChildren, ReactNode, useContext, useRef } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { mergeRefs } from 'react-merge-refs'
 import { useCanvas } from '../hooks/useCanvas'
 import { useCanvasInsert } from '@/shared/hooks/fragmentBuilder/useCanvasInsert'
+import { animated } from '@react-spring/web'
 
 interface CanvasProps extends PropsWithChildren {
   className?: string
@@ -12,12 +12,12 @@ interface CanvasProps extends PropsWithChildren {
 
 const BuilderCanvas: FC<CanvasProps> = ({ className, children, extendNodes }) => {
   useCanvasInsert()
-  const { Container, viewportRef, pointerRef, containerStyles } = useCanvas()
+  const { viewportRef, pointerRef, containerStyles } = useCanvas()
 
   return (
     <div className={cn(className, styles.root)}>
       <div className={styles.cursorPointer} ref={pointerRef}>
-        <Container
+        <animated.div
           id='viewport'
           style={{
             width: 0,
@@ -29,7 +29,7 @@ const BuilderCanvas: FC<CanvasProps> = ({ className, children, extendNodes }) =>
           <div className={styles.viewport} ref={viewportRef}>
             {children}
           </div>
-        </Container>
+        </animated.div>
       </div>
 
       {extendNodes}

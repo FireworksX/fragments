@@ -5,7 +5,7 @@ import { authMiddleware } from '@/middleware/authMiddleware'
 
 export default withAuth(
   async (...args) => {
-    await authMiddleware(...args)
+    return await authMiddleware(...args)
   },
   {
     callbacks: {
@@ -16,4 +16,4 @@ export default withAuth(
   }
 )
 
-export const config = { matcher: ['/login', '/project/:path*'] }
+export const config = { matcher: ['/project/:path*'] }

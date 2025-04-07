@@ -1,5 +1,5 @@
 import { GraphState } from "@graph-state/core";
-import { renderTarget } from "@/definitions";
+import { definition } from "@fragmentsx/definition";
 import { useGlobalManager } from "@/shared/hooks/useGlobalManager";
 
 export const useRenderTarget = (globalManager?: GraphState) => {
@@ -7,15 +7,15 @@ export const useRenderTarget = (globalManager?: GraphState) => {
     useGlobalManager(globalManager);
 
   const renderTargetValue =
-    globalManagerGraph?.renderTarget ?? renderTarget.document;
+    globalManagerGraph?.renderTarget ?? definition.renderTarget.document;
 
   // Subscribe to root fragment
   // useGraph(documentManager, documentManager.$fragment.root);
 
   return {
     renderTarget: renderTargetValue,
-    isCanvas: renderTargetValue === renderTarget.canvas,
-    isDocument: renderTargetValue === renderTarget.document,
+    isCanvas: renderTargetValue === definition.renderTarget.canvas,
+    isDocument: renderTargetValue === definition.renderTarget.document,
     setRenderTarget: (target) => {
       setRenderTarget(target);
     },

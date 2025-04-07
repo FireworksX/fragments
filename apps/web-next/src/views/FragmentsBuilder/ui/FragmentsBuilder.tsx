@@ -6,7 +6,7 @@ import { createBuilderStore } from '@/shared/store/builderStore'
 import { isBrowser } from '@fragments/utils'
 import { FragmentBuilderProvider } from '@/views/FragmentsBuilder/lib/FragmentBuilderProvider'
 import { FragmentsBuilderContent } from '@/views/FragmentsBuilder/widgets/FragmentsBuilderContent'
-import { useGlobalManager } from '@fragments/render-react'
+import { useGlobalManager } from '@fragmentsx/render-suite'
 
 const builderManager = createBuilderStore()
 

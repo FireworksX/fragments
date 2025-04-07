@@ -6,17 +6,10 @@ import { getNormalizeLayer } from '@/shared/hooks/fragmentBuilder/useNormalizeLa
 
 export const useDragMove = () => {
   const { canvas } = useBuilderCanvas()
-  const { documentManager } = useBuilderDocument()
 
-  return ({ memo, movement: [mx, my], first }: DragEvent) => {
+  return ({ memo, movement: [mx, my], first }: DragEvent, from: { x: number; y: number }) => {
     if (first) {
-      const left = getNormalizeLayer(memo.targetLayer, documentManager)?.layer?.left
-      const top = getNormalizeLayer(memo.targetLayer, documentManager)?.layer?.top
-
-      memo.from = {
-        x: left,
-        y: top
-      }
+      memo.from = from
     }
 
     const scale = animatableValue(canvas?.scale)

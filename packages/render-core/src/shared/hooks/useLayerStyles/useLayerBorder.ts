@@ -2,7 +2,7 @@ import { LinkKey } from "@graph-state/core";
 import { useMemo } from "preact/compat";
 import { useLayerValue } from "@/shared/hooks/useLayerValue";
 import { toPx } from "@fragmentsx/utils";
-import { borderType } from "@/definitions";
+import { definition } from "@fragmentsx/definition";
 
 export const useLayerBorder = (layerKey: LinkKey) => {
   const [borderTypeValue] = useLayerValue(layerKey, "borderType");
@@ -13,7 +13,7 @@ export const useLayerBorder = (layerKey: LinkKey) => {
     let value = "";
     if (
       typeof borderTypeValue === "string" &&
-      borderTypeValue !== borderType.None
+      borderTypeValue !== definition.borderType.None
     ) {
       value = `${toPx(
         borderWidth

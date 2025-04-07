@@ -1,5 +1,5 @@
 import { useGraph } from '@graph-state/react'
-import { useGlobalManager as useGlobalManagerLib } from '@fragments/render-react'
+import { useGlobalManager as useGlobalManagerLib } from '@fragmentsx/render-suite'
 
 export const useGlobalManager = () => {
   const globalManager = useGlobalManagerLib()

@@ -59,10 +59,15 @@ export const useLayerVariables = (field: keyof typeof fieldsConfig) => {
     return []
   }, [documentManager, fieldType, fieldValue, properties, setFieldValue])
 
+  const restoreValue = () => {
+    const fieldEntity = fieldsConfig[field]
+    fieldInfo?.restore(fieldEntity?.defaultValue)
+  }
+
   return {
     disabled,
     createVariable,
-    resetVariable: fieldInfo?.restore,
+    resetVariable: restoreValue,
     editVariable: () => {
       fieldInfo?.isVariable && editProperty(fieldInfo?.rawValue)
     },

@@ -1,13 +1,13 @@
 import { LinkKey } from "@graph-state/core";
 import { getParent, isTopLevel } from "@/shared/helpers";
 import { useContext, useMemo } from "preact/compat";
-import { fragmentGrowingMode, sizing } from "@/definitions";
+import { definition } from "@fragmentsx/definition";
 import { FragmentContext } from "@/components/Fragment/FragmentContext";
 import { useRenderTarget } from "@/shared/hooks/useRenderTarget";
 import { useLayerValue } from "@/shared/hooks/useLayerValue";
 import { InstanceContext } from "@/components/Instance";
 
-const autoSizes = [sizing.Hug];
+const autoSizes = [definition.sizing.Hug];
 
 export const useLayerSize = (layerKey: LinkKey) => {
   const { manager: fragmentManager } = useContext(FragmentContext);
@@ -29,9 +29,9 @@ export const useLayerSize = (layerKey: LinkKey) => {
   const [heightType] = useLayerValue(layerKey, "heightType");
 
   const toValue = (
-    type: keyof typeof sizing,
+    type: keyof typeof definition.sizing,
     value: number,
-    instanceType: keyof typeof sizing
+    instanceType: keyof typeof definition.sizing
   ) => {
     if (isTop && isPartOfInstance && !autoSizes.includes(instanceType)) {
       return "100%";
@@ -40,11 +40,11 @@ export const useLayerSize = (layerKey: LinkKey) => {
       return "min-content"; //layerNode?._type === nodes.FragmentInstance ? 'auto' : 'min-content'
     }
 
-    if (type === sizing.Relative) {
+    if (type === definition.sizing.Relative) {
       return `${value}%`;
     }
 
-    if (type === sizing.Fill) {
+    if (type === definition.sizing.Fill) {
       return `100%`;
     }
 
@@ -56,13 +56,13 @@ export const useLayerSize = (layerKey: LinkKey) => {
       width:
         isTop &&
         isDocument &&
-        layerParent?.horizontalGrow === fragmentGrowingMode.fill
+        layerParent?.horizontalGrow === definition.fragmentGrowingMode.fill
           ? "100%"
           : toValue(widthType, width, instanceWidthType),
       height:
         isTop &&
         isDocument &&
-        layerParent?.horizontalGrow === fragmentGrowingMode.fill
+        layerParent?.horizontalGrow === definition.fragmentGrowingMode.fill
           ? "100%"
           : toValue(heightType, height, instanceHeightType),
     }),

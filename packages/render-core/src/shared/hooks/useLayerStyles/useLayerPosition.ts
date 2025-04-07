@@ -5,7 +5,7 @@ import { InstanceContext } from "@/components/Instance";
 import { useLayerValue } from "@/shared/hooks/useLayerValue";
 import { FragmentContext } from "@/components/Fragment/FragmentContext";
 import { useRenderTarget } from "@/shared/hooks/useRenderTarget";
-import { positionType } from "@/definitions";
+import { definition } from "@fragmentsx/definition";
 
 export const useLayerPosition = (layerKey: LinkKey) => {
   const { layerKey: instanceLayerKey } = useContext(InstanceContext);
@@ -21,9 +21,15 @@ export const useLayerPosition = (layerKey: LinkKey) => {
 
   return useMemo(
     () => ({
-      position: skipPosition ? positionType.relative : position,
-      top: position === positionType.absolute && !skipPosition ? top : null,
-      left: position === positionType.absolute && !skipPosition ? left : null,
+      position: skipPosition ? definition.positionType.relative : position,
+      top:
+        position === definition.positionType.absolute && !skipPosition
+          ? top
+          : null,
+      left:
+        position === definition.positionType.absolute && !skipPosition
+          ? left
+          : null,
     }),
     [skipPosition, position, top]
   );

@@ -1,7 +1,7 @@
 import { LinkKey } from "@graph-state/core";
 import { useMemo } from "preact/compat";
 import { useLayerValue } from "@/shared/hooks/useLayerValue";
-import { paintMode } from "@/definitions";
+import { definition } from "@fragmentsx/definition";
 
 export const useLayerBackground = (layerKey: LinkKey) => {
   const [fillType] = useLayerValue(layerKey, "fillType");
@@ -9,7 +9,8 @@ export const useLayerBackground = (layerKey: LinkKey) => {
 
   return useMemo(
     () => ({
-      background: fillType === paintMode.Solid ? solidFill : "transparent",
+      background:
+        fillType === definition.paintMode.Solid ? solidFill : "transparent",
     }),
     [fillType, solidFill]
   );

@@ -36,7 +36,7 @@ const tabs: TabsSelectorItem[] = [
 
 const StackPanelFill: FC<StackPanelFillProps> = ({ className, stackColors }) => {
   const [fillType, setFillType] = useLayerValue('fillType')
-  const [solidFill, setSolidFill] = useLayerValue('solidFill')
+  const [, setSolidFill, { resultValue: solidFillValue }] = useLayerValue('solidFill')
 
   useEffect(() => {
     if (fillType === definition.paintMode.None || !fillType) {
@@ -50,7 +50,7 @@ const StackPanelFill: FC<StackPanelFillProps> = ({ className, stackColors }) => 
       {fillType === definition.paintMode.Solid && (
         <Panel>
           <ColorPicker
-            color={solidFill}
+            color={solidFillValue}
             onChange={color => {
               if (color) {
                 setSolidFill(objectToColorString(color.rgb))

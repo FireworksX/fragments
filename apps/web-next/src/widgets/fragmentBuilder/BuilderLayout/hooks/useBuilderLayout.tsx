@@ -55,7 +55,7 @@ export const useBuilderLayout = () => {
   const [layerDirection, setLayerDirection] = useLayerValue('layerDirection')
   const [layerDistribute, setLayerDistribute] = useLayerValue('layerDistribute')
   const [layerAlign, setLayerAlign] = useLayerValue('layerAlign')
-  const [layerGap, setLayerGap] = useLayerValue('layerGap')
+  const [, setLayerGap, { value$: layerGap$ }] = useLayerValue('layerGap')
   const [layerWrap, setLayerWrap] = useLayerValue('layerWrap')
   const [padding, setPadding] = useLayerValue('padding')
   const paddingSides = padding?.split(' ')?.map(fromPx)
@@ -96,7 +96,7 @@ export const useBuilderLayout = () => {
       update: setLayerDistribute
     },
     gap: {
-      value: layerGap,
+      value: layerGap$,
       update: setLayerGap
     },
     padding: {
