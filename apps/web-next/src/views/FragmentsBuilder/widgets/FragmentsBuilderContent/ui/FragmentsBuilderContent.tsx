@@ -21,9 +21,13 @@ interface FragmentsBuilderContentProps {
 export const FragmentsBuilderContent: FC<FragmentsBuilderContentProps> = ({ className }) => {
   const { fetching } = useBuilderDocumentManager()
   const { documentManager } = useBuilderDocument()
-  const { isPreview } = useBuilder()
+  const { isPreview, currentFragmentId } = useBuilder()
 
-  if (!documentManager || fetching) {
+  useEffect(() => {
+    window.documentManager = documentManager
+  }, [documentManager])
+
+  if (!documentManager || fetching || !currentFragmentId) {
     return <FragmentsEditPlaceholder fetching={fetching} />
   }
 

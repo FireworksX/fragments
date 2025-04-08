@@ -1,4 +1,5 @@
 export { GlobalManager } from "@/providers/GlobalManager";
+export { CustomRender } from "@/providers/CustomRender";
 export { Fragment } from "@/components/Fragment";
 export { FragmentContext } from "@/components/Fragment/FragmentContext";
 export { useGlobalManager } from "@/hooks/useGlobalManager";

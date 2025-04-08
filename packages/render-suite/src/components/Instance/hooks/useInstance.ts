@@ -1,10 +1,10 @@
-import { useContext, useMemo } from "preact/compat";
-import { FragmentContext } from "@/components/Fragment/FragmentContext.tsx";
-import { useLayerStyles } from "@/shared/hooks/useLayerStyles/useLayerStyles.ts";
 import { useGraph } from "@graph-state/react";
 import { InstanceProps } from "@/components/Instance";
-import { useFragmentProperties } from "@/shared/hooks/useFragmentProperties.ts";
-import { useGlobalManager } from "@/shared/hooks/useGlobalManager";
+import { useContext } from "react";
+import { FragmentContext } from "@/components/Fragment/FragmentContext";
+import { useLayerStyles } from "@/hooks/useLayerStyles";
+import { useGlobalManager } from "@/hooks/useGlobalManager";
+import { useFragmentProperties } from "@/hooks/useFragmentProperties";
 
 /*
 Работаем по следующему принципу. Instance может рендериться внутри родителя (Fragment)

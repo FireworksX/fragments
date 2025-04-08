@@ -23,7 +23,7 @@ function watchInlineStyleChange(element: HTMLElement, callback: () => void) {
   return () => observer.disconnect()
 }
 
-export const useLayerGeometry = (layerKey: LinkKey) => {
+export const useLayerGeometry = (layerKey: LinkKey | null) => {
   const width = useSpringValue(0)
   const height = useSpringValue(0)
   const top = useSpringValue(0)

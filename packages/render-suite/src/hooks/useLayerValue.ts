@@ -28,9 +28,10 @@ export const useLayerValue = (
 
   const { layer, rawLayer } = useNormalizeLayer(key, resultManager);
   const rawValue = rawLayer?.[fieldKey];
+  const layerValue = layer?.[fieldKey];
 
-  const { value: variableValue, layer: vv } = useReadVariable(rawValue);
-  const currentValue = variableValue ?? layer?.[fieldKey];
+  const { value: variableValue, layer: vvv } = useReadVariable(layerValue);
+  const currentValue = variableValue ?? layerValue;
 
   const isInherit = isInheritField(resultManager, key, fieldKey);
   const isOverride = !isInherit && !isPartOfPrimary(resultManager, key);

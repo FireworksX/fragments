@@ -1,5 +1,6 @@
 import { Entity, GraphState } from "@graph-state/core";
 import { createLayer } from "@/shared/helpers/createLayer.ts";
+import { omit } from "@fragmentsx/utils";
 
 export const cloneLayer = (
   manager: GraphState,
@@ -12,12 +13,12 @@ export const cloneLayer = (
     const clonedChildren = (layerGraph?.children ?? []).map((child) =>
       cloneLayer(manager, child)
     );
+
     const clonedLayer = createLayer(
       {
         _type: layerGraph._type,
         children: clonedChildren,
         ...externalProps,
-        ...layerGraph,
       },
       true
     );

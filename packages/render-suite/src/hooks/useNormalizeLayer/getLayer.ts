@@ -8,5 +8,6 @@ export const getLayer = (manager: GraphState, layer: Entity) => {
   const layerKey = manager.keyOfEntity(layer);
   const layerData = manager.resolve(layerKey);
   const overrider = getOverrider(manager, layerKey);
+
   return getNormalizeLayer(layerData, overrider);
 };

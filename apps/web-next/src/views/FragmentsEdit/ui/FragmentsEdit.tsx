@@ -50,18 +50,8 @@ export const FragmentsEdit = () => {
   const { documentManager } = useBuilderDocument()
   const { select } = useBuilderSelection()
   const { setRenderTarget } = useRenderTarget()
-  const viewport = useRef<ComponentRef<'div'>>(null)
-
-  const { setNodeRef, isOver, ...rest } = useDroppable({
-    id: 'builderCanvas',
-    data: { area: 'builderCanvas' }
-  })
 
   useBuilderHotKeys()
-
-  useGraphEffect(documentManager, 'Updater:root', data => {
-    console.log(data)
-  })
 
   useEffect(() => {
     setRenderTarget(definition.renderTarget.canvas)
@@ -75,7 +65,7 @@ export const FragmentsEdit = () => {
     <CanvasTextEditorProvider>
       <div className={styles.root}>
         <div className={styles.center}>
-          <div className={styles.previewContainer} ref={setNodeRef}>
+          <div className={styles.previewContainer}>
             {/*<BuilderSidebar assetsNode={<BuilderAssets />} layersNode={<BuilderLayers />} />*/}
 
             <BuilderCanvas extendNodes={<BuilderFloatBar />}>

@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useEffect } from 'react'
+import { FC, PropsWithChildren, useEffect, useState } from 'react'
 import cn from 'classnames'
 import { animated, to, useSpringValue } from '@react-spring/web'
 import styles from './styles.module.css'
@@ -10,6 +10,10 @@ import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSe
 import { getParent } from '@fragmentsx/render-core'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
+import { useCurrentDraggable } from '@/shared/hooks/useCurrentDraggable'
+import { DragOverEvent, useDndMonitor } from '@dnd-kit/core'
+import { droppableAreas } from '@/shared/data'
+import { DragEndEvent } from '@dnd-kit/core/dist/types/events'
 
 interface BuilderLayerHighlightProps extends PropsWithChildren {
   className?: string
@@ -24,6 +28,25 @@ const BuilderHighlight: FC<BuilderLayerHighlightProps> = ({ className, children 
   const parentSelectionGeometry = useLayerGeometry(documentManager.keyOfEntity(getParent(documentManager, selection)))
   const { layers: breakpoints } = useFragmentLayers()
 
+  const [droppableLayerKey, setDroppableLayerKey] = useState(null)
+  const droppableGeometry = useLayerGeometry(droppableLayerKey)
+
+  useDndMonitor({
+    onDragOver(event: DragOverEvent) {
+      if (event?.over?.data?.current?.area === droppableAreas.builderCanvasNode) {
+        setDroppableLayerKey(event?.over?.data?.current?.layerKey)
+      } else {
+        setDroppableLayerKey(null)
+      }
+    },
+    onDragEnd() {
+      setDroppableLayerKey(null)
+    },
+    onDragCancel() {
+      setDroppableLayerKey(null)
+    }
+  })
+
   useEffect(() => {
     opacity.set(canvas?.isMoving || !selection ? 0 : 1)
   }, [canvas?.isMoving, canvas.isDragging, selection, opacity])
@@ -31,6 +54,14 @@ const BuilderHighlight: FC<BuilderLayerHighlightProps> = ({ className, children 
   return (
     <>
       <animated.div data-highlight-root className={cn(className, styles.root)}>
+        <animated.div
+          className={cn(styles.highlight, styles.mask, styles.selectedHighlight)}
+          style={{
+            ...droppableGeometry,
+            opacity: droppableLayerKey ? 1 : 0,
+            '--borderWidth': '2px'
+          }}
+        />
         <animated.div
           className={cn(styles.highlight, styles.mask, styles.selectedHighlight)}
           style={{

@@ -9,6 +9,8 @@ import { FillSchema } from "@/schemas/styles/FillSchema";
 import { BorderSchema } from "@/schemas/styles/BorderSchema";
 import { SizeSchema } from "@/schemas/styles/SizeSchema";
 import { LayerSchema } from "@/schemas/styles/LayerSchema";
+import { OverflowSchema } from "@/schemas/styles/fields/OverflowSchema";
+import { BorderRadiusSchema } from "@/schemas/styles/fields/BorderRadiusSchema";
 
 export const FrameSchema = v.pipe(
   v.object({
@@ -31,5 +33,7 @@ export const FrameSchema = v.pipe(
     ...BorderSchema.entries,
     ...SizeSchema.entries,
     ...LayerSchema.entries,
+    overflow: OverflowSchema,
+    borderRadius: BorderRadiusSchema,
   })
 );

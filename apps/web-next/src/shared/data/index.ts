@@ -1,4 +1,4 @@
-import { createConstants } from '@fragments/utils'
+import { createConstants } from '@fragmentsx/utils'
 import { TabsSelectorItem } from '@/shared/ui/TabsSelector'
 
 export const popoutNames = createConstants(
@@ -10,6 +10,12 @@ export const popoutNames = createConstants(
   'stackColorProperty',
   'stackVariableTransform'
 )
+
+export const droppableAreas = createConstants('builderPlaceholder', 'builderCanvas', 'builderCanvasNode')
+
+export const draggableAreas = createConstants('projectTree')
+
+export const draggableNodes = createConstants('fragmentProjectItem')
 
 export const routerParams = createConstants('editMode')
 

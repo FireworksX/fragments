@@ -6,28 +6,30 @@ import { useContext, useMemo } from "react";
 import { useRenderTarget } from "@/hooks/useRenderTarget";
 import { getParent, isTopLevel } from "@fragmentsx/render-core";
 import { useLayerValue } from "@/hooks/useLayerValue";
+import { InstanceContext } from "@/components/Instance";
 
 const autoSizes = [definition.sizing.Hug];
 
 export const useLayerSize = (layerKey: LinkKey) => {
   const { manager: fragmentManager } = useContext(FragmentContext);
-  // const { layerKey: instanceLayerKey, parentManager: instanceManager } =
-  //   useContext(InstanceContext);
+  const { layerKey: instanceLayerKey, parentManager: instanceManager } =
+    useContext(InstanceContext);
   const { isDocument } = useRenderTarget(fragmentManager);
   const isTop = isTopLevel(fragmentManager, layerKey);
-  const isPartOfInstance = false; //!!instanceLayerKey;
+  const isPartOfInstance = !!instanceLayerKey;
   const layerParent = getParent(fragmentManager, layerKey);
+  const layerNode = fragmentManager.resolve(layerKey);
 
   // useReadInstanceProperty()
   // layerKey,
 
   const [instanceWidthType] = useLayerValue(
-    /*instanceLayerKey*/ null,
+    instanceLayerKey,
     "widthType",
     fragmentManager
   );
   const [instanceHeightType] = useLayerValue(
-    /*instanceLayerKey*/ null,
+    instanceLayerKey,
     "heightType",
     fragmentManager
   );
@@ -53,7 +55,9 @@ export const useLayerSize = (layerKey: LinkKey) => {
       return "100%";
     }
     if (autoSizes.includes(type)) {
-      return "min-content"; //layerNode?._type === nodes.FragmentInstance ? 'auto' : 'min-content'
+      return layerNode?._type === definition.nodes.Instance
+        ? "auto"
+        : "min-content";
     }
 
     if (type === definition.sizing.Relative) {
@@ -67,23 +71,18 @@ export const useLayerSize = (layerKey: LinkKey) => {
     return value;
   };
 
-  return useMemo(
-    () => ({
-      width:
-        isTop &&
-        isDocument &&
-        layerParent?.horizontalGrow === definition.fragmentGrowingMode.fill
-          ? "100%"
-          : to(width, (value) => toValue(widthType, value, instanceWidthType)),
-      height:
-        isTop &&
-        isDocument &&
-        layerParent?.horizontalGrow === definition.fragmentGrowingMode.fill
-          ? "100%"
-          : to(height, (value) =>
-              toValue(heightType, value, instanceHeightType)
-            ),
-    }),
-    [isTop, isDocument, width, height, heightType, widthType]
-  );
+  return {
+    width:
+      isTop &&
+      isDocument &&
+      layerParent?.horizontalGrow === definition.fragmentGrowingMode.fill
+        ? "100%"
+        : to(width, (value) => toValue(widthType, value, instanceWidthType)),
+    height:
+      isTop &&
+      isDocument &&
+      layerParent?.horizontalGrow === definition.fragmentGrowingMode.fill
+        ? "100%"
+        : to(height, (value) => toValue(heightType, value, instanceHeightType)),
+  };
 };

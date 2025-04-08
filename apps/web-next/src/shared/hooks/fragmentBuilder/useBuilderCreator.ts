@@ -7,6 +7,7 @@ import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDoc
 import { useFragmentLayers } from '@/shared/hooks/fragmentBuilder/useFragmentLayers'
 import { appendChildren, cloneLayer, isPartOfPrimary } from '@fragmentsx/render-core'
 import { getLayer } from '@/shared/hooks/fragmentBuilder/useNormalizeLayer/getLayer'
+import { LinkKey } from '@graph-state/core'
 
 export const useBuilderCreator = () => {
   const { builderManager } = use(BuilderContext)
@@ -72,11 +73,20 @@ export const useBuilderCreator = () => {
     return appendChildren(documentManager, documentManager.$fragment.root, nextBreakpointLayer)
   }
 
+  const createInstance = (parent: LinkKey, options: { name: string; fragment: string }) => {
+    return appendChildren(documentManager, documentManager.keyOfEntity(parent), {
+      _type: definition.nodes.Instance,
+      name: options.name,
+      fragment: options.fragment
+    })
+  }
+
   return {
     creator,
     manager: builderManager.$creator,
     createFrame,
     createBreakpoint,
-    createText
+    createText,
+    createInstance
   }
 }

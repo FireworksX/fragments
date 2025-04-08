@@ -4,6 +4,8 @@ import styles from './styles.module.css'
 import { useCanvas } from '../hooks/useCanvas'
 import { useCanvasInsert } from '@/shared/hooks/fragmentBuilder/useCanvasInsert'
 import { animated } from '@react-spring/web'
+import { useDroppable } from '@dnd-kit/core'
+import { droppableAreas } from '@/shared/data'
 
 interface CanvasProps extends PropsWithChildren {
   className?: string
