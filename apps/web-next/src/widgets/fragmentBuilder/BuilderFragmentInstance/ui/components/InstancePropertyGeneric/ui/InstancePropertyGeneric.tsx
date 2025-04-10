@@ -19,6 +19,7 @@ import { useNormalizeLayer } from '@/shared/hooks/fragmentBuilder/useNormalizeLa
 interface InstancePropertyGenericProps {
   value: unknown
   property: LinkKey
+  manager: GraphState
   instanceManager: GraphState
   className?: string
   onChange(value: boolean): void

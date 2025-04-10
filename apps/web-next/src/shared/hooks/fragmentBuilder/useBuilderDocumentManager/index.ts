@@ -12,6 +12,9 @@ import { useFragmentDocumentQuery } from '@/shared/hooks/fragmentBuilder/useBuil
 import { useUpdateFragmentDocumentMutation } from '@/shared/hooks/fragmentBuilder/useBuilderDocumentManager/queries/UpdateFragmentDocument.generated'
 import { useGlobalManager } from '@/shared/hooks/fragmentBuilder/useBuilderGlobalContext'
 import { makeSnapshot } from '@fragments/render-core'
+import { useToast } from '@/widgets/Toast/hooks/useToast'
+import { builderToasts } from '@/shared/data'
+import { promiseWaiter } from '@fragmentsx/utils'
 
 export const useBuilderDocumentManager = () => {
   const { documentManager } = useBuilderDocument()
@@ -19,6 +22,7 @@ export const useBuilderDocumentManager = () => {
   const { globalManager } = useGlobalManager()
   const { currentFragmentId } = useBuilder()
   const fragmentKey = `Fragment:${currentFragmentId}`
+  const { open, close, setContext } = useToast()
 
   // const {
   //   data,
@@ -55,12 +59,14 @@ export const useBuilderDocumentManager = () => {
   // }, [currentFragmentId])
 
   const saveFragment = async () => {
+    open(builderToasts.saving)
     const currentDocument = makeSnapshot(documentManager)
     //
     // const linkedFragmentsIds = (documentManager.resolve(documentManager?.$fragment?.linkerGraphKey)?.fragments ?? [])
     //   .map(manager => +documentManager.entityOfKey(manager?.key)?._id)
     //   .filter(v => !isNaN(v))
 
+    await promiseWaiter(300)
     await updateFragment({
       variables: {
         fragmentSlug: +currentFragmentId,
@@ -68,6 +74,10 @@ export const useBuilderDocumentManager = () => {
         linkedFragments: [] //linkedFragmentsIds
       }
     })
+    setContext({ status: 'success' })
+    await promiseWaiter(1000)
+
+    close()
   }
 
   return {

@@ -24,5 +24,6 @@ export { useFragmentManager } from "@/shared/hooks/useFragmentManager";
 export { createGlobalManager } from "@/managers/globalManager";
 
 export { wrapTextInParagraphWithAttributes } from "@/shared/helpers/wrapTextInParagraphWithAttributes";
+export { findBreakpoint } from "@/shared/helpers/findBreakpoint";
 
 export { createElement, render } from "preact";

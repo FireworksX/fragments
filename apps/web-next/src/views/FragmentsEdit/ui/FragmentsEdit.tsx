@@ -29,7 +29,7 @@ import StackCollector from '../../../widgets/StackCollector/ui/StackCollector'
 import { StackPanelBorder } from '@/widgets/fragmentBuilder/BuilderStackPanelBorder'
 import { StackPanelFill } from '@/widgets/fragmentBuilder/BuilderStackPanelFill'
 import { StackPanelColorPicker } from '@/features/popouts/StackPanelColorPicker'
-import { popoutNames } from '@/shared/data'
+import { builderToasts, popoutNames } from '@/shared/data'
 import { StackPanelCssOverride } from '@/features/popouts/StackPanelCssOverride'
 import { StackSolidPaintStyle } from '@/features/popouts/StackSolidPaintStyle'
 import StackStringProperty from '../../../features/popouts/StackStringProperty/ui/StackStringProperty'
@@ -42,11 +42,16 @@ import { useGraphEffect } from '@graph-state/react'
 import { useBuilderHotKeys } from '@/shared/hooks/hotkeys/useBuilderHotKeys'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import StackColorProperty from '@/features/popouts/StackColorProperty/ui/StackColorProperty'
-import { useRenderTarget } from '@fragments/render-react'
-import { definition } from '@fragments/definition'
+import { useRenderTarget } from '@fragmentsx/render-suite'
+import { definition } from '@fragmentsx/definition'
 import { useDroppable } from '@dnd-kit/core'
+import { Toast } from '@/widgets/Toast'
+import { ToastProvider } from '@/widgets/Toast/providers/ToastContext'
+import cn from 'classnames'
+import { useToast } from '@/widgets/Toast/hooks/useToast'
+import { HotKeysProvider } from '@/shared/hooks/hotkeys/HotKeysProvider'
 
-export const FragmentsEdit = () => {
+const FragmentsEditInitial = () => {
   const { documentManager } = useBuilderDocument()
   const { select } = useBuilderSelection()
   const { setRenderTarget } = useRenderTarget()
@@ -68,7 +73,18 @@ export const FragmentsEdit = () => {
           <div className={styles.previewContainer}>
             {/*<BuilderSidebar assetsNode={<BuilderAssets />} layersNode={<BuilderLayers />} />*/}
 
-            <BuilderCanvas extendNodes={<BuilderFloatBar />}>
+            <BuilderCanvas
+              extendNodes={
+                <>
+                  <BuilderFloatBar />
+                  <Toast
+                    render={({ isOpen, Node }) => (
+                      <div className={cn(styles.toast, { [styles.open]: isOpen })}>{Node}</div>
+                    )}
+                  />
+                </>
+              }
+            >
               <BuilderHighlight />
               <DisplayBreakpoints />
             </BuilderCanvas>
@@ -122,3 +138,11 @@ export const FragmentsEdit = () => {
     </CanvasTextEditorProvider>
   )
 }
+
+export const FragmentsEdit = () => (
+  <HotKeysProvider>
+    <ToastProvider>
+      <FragmentsEditInitial />
+    </ToastProvider>
+  </HotKeysProvider>
+)

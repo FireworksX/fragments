@@ -35,3 +35,17 @@
     position: absolute;
     inset: 0;
 }
+
+.toast {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%) translateY(100%);
+    bottom: 0;
+    transition: var(--animation-transition-default);
+    opacity: 0;
+
+    &.open {
+        transform: translateX(-50%) translateY(-200%);
+        opacity: 1;
+    }
+}

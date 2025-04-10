@@ -19,16 +19,15 @@ interface FragmentsBuilderContentProps {
 }
 
 export const FragmentsBuilderContent: FC<FragmentsBuilderContentProps> = ({ className }) => {
-  const { fetching } = useBuilderDocumentManager()
-  const { documentManager } = useBuilderDocument()
+  const { documentManager, loading } = useBuilderDocument()
   const { isPreview, currentFragmentId } = useBuilder()
 
   useEffect(() => {
     window.documentManager = documentManager
   }, [documentManager])
 
-  if (!documentManager || fetching || !currentFragmentId) {
-    return <FragmentsEditPlaceholder fetching={fetching} />
+  if (!documentManager || loading || !currentFragmentId) {
+    return <FragmentsEditPlaceholder fetching={loading} />
   }
 
   if (isPreview) {

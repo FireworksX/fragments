@@ -6,12 +6,20 @@ import { TabItem } from '@/shared/ui/TabItem'
 import styles from './styles.module.css'
 import { createGlobalManager } from '@fragmentsx/render-core'
 import { GlobalManager } from '@fragmentsx/render-suite'
-import isBrowser from '@/shared/utils/isBrowser'
 import { getSession, useSession } from 'next-auth/react'
+import { DndContext, MouseSensor, pointerWithin, useSensor, useSensors } from '@dnd-kit/core'
 
 export const ProjectDetailLayout: FC<PropsWithChildren> = ({ children }) => {
   const { data } = useSession()
   const [globalManager, setGlobalManager] = useState()
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        delay: 200,
+        tolerance: 7
+      }
+    })
+  )
 
   useEffect(() => {
     if (data && !globalManager) {
@@ -53,7 +61,9 @@ export const ProjectDetailLayout: FC<PropsWithChildren> = ({ children }) => {
         </Link>
       </Tabs>
 
-      <GlobalManager value={globalManager}>{children}</GlobalManager>
+      <DndContext sensors={sensors} collisionDetection={pointerWithin}>
+        <GlobalManager value={globalManager}>{children}</GlobalManager>
+      </DndContext>
     </main>
   )
 }

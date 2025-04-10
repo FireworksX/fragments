@@ -10,7 +10,7 @@ export const canvasPlugin: Plugin = state => {
     y: new SpringValue(0),
     scale: new SpringValue(1),
     focusLayer: null,
-    hoverLayer: new SpringValue(''),
+    hoverLayer: null,
     draggingLayer: new SpringValue(''), // LinkKey слоя который сейчас перетаскиваем
     isDragging: false, // Перетаскиваем ли сейчас какой-нибудь элемент
     isMoving: false, // Двигаем ли сейчас canvas
@@ -40,18 +40,10 @@ export const canvasPlugin: Plugin = state => {
       })
     },
     setResizing(value: boolean) {
-      state.mutate(
-        canvasGraphKey,
-        prev => ({
-          ...prev,
-          isResizing: value
-        }),
-        { replace: true }
-      )
+      state.mutate(canvasGraphKey, { isResizing: value })
     },
     setHoverLayer(layerLink: LinkKey) {
-      const currentState = state.resolve(canvasGraphKey)
-      currentState.hoverLayer.set(layerLink)
+      // state.mutate(canvasGraphKey, { hoverLayer: layerLink })
     },
     toCenter() {
       const x$ = state.resolve(canvasGraphKey)?.x

@@ -20,7 +20,7 @@ interface BuilderStylesProps {
 }
 
 const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
-  const { zIndex, radius, fill, border } = useBuilderStyles()
+  const { zIndex, radius, fill, overflow, border } = useBuilderStyles()
 
   return (
     <Panel
@@ -42,7 +42,7 @@ const BuilderStyles: FC<BuilderStylesProps> = ({ className }) => {
       <BuilderOpacityControl />
       <BuilderVisibleControl />
       {!fill.hidden && <BuilderFillControl />}
-      {!fill.hidden && <BuilderOverflowControl />}
+      {!overflow.hidden && <BuilderOverflowControl />}
       {!radius.hidden && <BuilderRadiusControl />}
       {!border.hidden && <BuilderBorderControl />}
       {!zIndex.hidden && <BuilderZIndexControl />}

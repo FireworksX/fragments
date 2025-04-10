@@ -1,10 +1,11 @@
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
 import { isRootLayer } from '@fragments/render-core'
+import { pick } from '@fragmentsx/utils'
 
 export const useBuilderSelection = () => {
   const { documentManager } = useBuilderDocument()
-  const { canvas, manager: canvasManager } = useBuilderCanvas()
+  const { canvas, manager: canvasManager } = useBuilderCanvas(data => pick(data, 'focusLayer'))
   const selectionLayerKey = canvas.focusLayer
   const selectionGraph = documentManager?.resolve(selectionLayerKey)
 

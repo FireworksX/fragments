@@ -3,21 +3,23 @@ import { definition } from "@fragmentsx/definition";
 import { useFragmentManager } from "@/hooks/useFragmentManager";
 import { useLayerChildren } from "@/hooks/useLayerChildren";
 import { useRenderTarget } from "@/hooks/useRenderTarget";
+import useMeasure from "react-use-measure";
+import { findBreakpoint } from "@fragmentsx/render-core";
 
 export const useFragment = (fragmentId: string) => {
   const { manager } = useFragmentManager(fragmentId);
   const layerKey = `${definition.nodes.Fragment}:${fragmentId}`;
-  // const [ref, fragmentRect] = useMeasure();
+  const [ref, fragmentRect] = useMeasure();
   const children = useLayerChildren(layerKey, manager);
   const { isDocument, renderTarget } = useRenderTarget();
 
   const resultChildren = useMemo(() => {
-    // if (isDocument && manager) {
-    //   const breakpoints = children?.map(manager.resolve);
-    //   const activeBreakpoint = findBreakpoint(breakpoints, fragmentRect.width);
-    //
-    //   return activeBreakpoint ? [manager.keyOfEntity(activeBreakpoint)] : [];
-    // }
+    if (isDocument && manager) {
+      const breakpoints = children?.map(manager.resolve);
+      const activeBreakpoint = findBreakpoint(breakpoints, fragmentRect.width);
+
+      return activeBreakpoint ? [manager.keyOfEntity(activeBreakpoint)] : [];
+    }
 
     return children;
   }, [children, manager]);
@@ -25,7 +27,7 @@ export const useFragment = (fragmentId: string) => {
   return {
     isDocument,
     manager,
-    // ref,
+    ref,
     children: resultChildren,
   };
 };

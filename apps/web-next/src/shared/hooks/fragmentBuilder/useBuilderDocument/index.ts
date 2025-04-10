@@ -3,9 +3,10 @@ import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
 
 export const useBuilderDocument = () => {
   const { currentFragmentId } = useBuilder()
-  const { manager } = useFragmentManager(currentFragmentId)
+  const { manager, loading } = useFragmentManager(currentFragmentId)
 
   return {
-    documentManager: manager
+    documentManager: manager,
+    loading
   }
 }

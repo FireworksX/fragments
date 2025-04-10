@@ -39,3 +39,5 @@ export const booleanTabsSelectorItems: TabsSelectorItem[] = [
 ]
 
 export const campaignTabs = createConstants('overview', 'streams')
+
+export const builderToasts = createConstants('inserting', 'saving')

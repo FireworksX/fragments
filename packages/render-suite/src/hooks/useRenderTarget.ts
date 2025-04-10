@@ -3,8 +3,8 @@ import { useGraph } from "@graph-state/react";
 import { definition } from "@fragmentsx/definition";
 
 export const useRenderTarget = () => {
-  const globalManager = useGlobalManager();
-  const [globalManagerGraph] = useGraph(globalManager, globalManager?.key);
+  const { globalManagerGraph, setRenderTarget } = useGlobalManager();
+  // console.log("useRenderTarget");
 
   const renderTargetValue =
     globalManagerGraph?.renderTarget ?? definition.renderTarget.canvas;
@@ -16,8 +16,6 @@ export const useRenderTarget = () => {
     renderTarget: renderTargetValue,
     isCanvas: renderTargetValue === definition.renderTarget.canvas,
     isDocument: renderTargetValue === definition.renderTarget.document,
-    setRenderTarget: (target) => {
-      globalManager?.setRenderTarget(target);
-    },
+    setRenderTarget,
   };
 };

@@ -14,6 +14,7 @@ import { useCurrentDraggable } from '@/shared/hooks/useCurrentDraggable'
 import { DragOverEvent, useDndMonitor } from '@dnd-kit/core'
 import { droppableAreas } from '@/shared/data'
 import { DragEndEvent } from '@dnd-kit/core/dist/types/events'
+import { pick } from '@fragmentsx/utils'
 
 interface BuilderLayerHighlightProps extends PropsWithChildren {
   className?: string
@@ -24,6 +25,7 @@ const BuilderHighlight: FC<BuilderLayerHighlightProps> = ({ className, children 
   const { canvas } = useBuilderCanvas()
   const { documentManager } = useBuilderDocument()
   const { selection } = useBuilderSelection()
+  // const hoverLayerGeometry = useLayerGeometry(canvas.hoverLayer)
   const selectionGeometry = useLayerGeometry(selection)
   const parentSelectionGeometry = useLayerGeometry(documentManager.keyOfEntity(getParent(documentManager, selection)))
   const { layers: breakpoints } = useFragmentLayers()
@@ -62,6 +64,16 @@ const BuilderHighlight: FC<BuilderLayerHighlightProps> = ({ className, children 
             '--borderWidth': '2px'
           }}
         />
+        {/*<animated.div*/}
+        {/*  data-type='hover'*/}
+        {/*  className={cn(styles.highlight, styles.mask, styles.selectedHighlight)}*/}
+        {/*  style={{*/}
+        {/*    ...hoverLayerGeometry,*/}
+        {/*    opacity: to([hoverLayerGeometry.height, hoverLayerGeometry.width], (h, w) =>*/}
+        {/*      h !== 0 && w !== 0 && !!canvas.hoverLayer ? 1 : 0*/}
+        {/*    )*/}
+        {/*  }}*/}
+        {/*/>*/}
         <animated.div
           className={cn(styles.highlight, styles.mask, styles.selectedHighlight)}
           style={{

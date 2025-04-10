@@ -5,12 +5,12 @@ import { definition } from "@fragmentsx/definition";
 import { useRenderTarget } from "@/hooks/useRenderTarget";
 import { isTopLevel } from "@fragmentsx/render-core";
 import { useLayerValue } from "@/hooks/useLayerValue";
+import { InstanceContext } from "@/components/Instance";
 
 export const useLayerPosition = (layerKey: LinkKey) => {
-  // const { layerKey: instanceLayerKey } = useContext(InstanceContext);
-  const instanceLayerKey = null;
+  const { layerKey: instanceLayerKey } = useContext(InstanceContext);
   const { manager: fragmentManager } = useContext(FragmentContext);
-  const { isDocument } = useRenderTarget();
+  const { isDocument, renderTarget } = useRenderTarget();
   const isTop = isTopLevel(fragmentManager, layerKey);
   const skipPosition = (isTop && isDocument) || (!!instanceLayerKey && isTop);
 

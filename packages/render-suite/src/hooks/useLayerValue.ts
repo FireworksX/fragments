@@ -1,7 +1,7 @@
 import { useCallback, useContext } from "react";
 import { useGraph } from "@graph-state/react";
 import { GraphState, LinkKey } from "@graph-state/core";
-import { pick } from "@fragmentsx/utils";
+import { noop, pick } from "@fragmentsx/utils";
 import { FragmentContext } from "@/components/Fragment/FragmentContext";
 import { useNormalizeLayer } from "@/hooks/useNormalizeLayer";
 import { isInheritField, isPartOfPrimary } from "@fragmentsx/render-core";

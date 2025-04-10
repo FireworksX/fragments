@@ -9,23 +9,5 @@ interface FragmentBuilderProviderProps extends PropsWithChildren {
 }
 
 export const FragmentBuilderProvider: FC<FragmentBuilderProviderProps> = ({ builderManager, children }) => {
-  const sensors = useSensors(
-    useSensor(MouseSensor, {
-      activationConstraint: {
-        delay: 200,
-        tolerance: 7
-      }
-    })
-  )
-
-  return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={pointerWithin}
-      onDragEnd={builderManager.$droppable.handleDragEnd}
-      onDragStart={builderManager.$droppable.handleDragStart}
-    >
-      <BuilderContext value={{ builderManager }}>{children}</BuilderContext>
-    </DndContext>
-  )
+  return <BuilderContext value={{ builderManager }}>{children}</BuilderContext>
 }

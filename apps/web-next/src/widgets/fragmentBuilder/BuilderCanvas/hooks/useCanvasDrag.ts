@@ -41,7 +41,7 @@ export const useCanvasDrag = ({ viewportRef, pointerRef }: Options) => {
     {
       onMouseMove: ({ event, dragging, moving, wheeling }) => {
         if (dragging || moving || wheeling) return
-        canvasManager.setHoverLayer(findLayerFromPointerEvent(event) ?? '')
+        canvasManager.setHoverLayer(findLayerFromPointerEvent(event) ?? null)
       },
       onDrag: dragEvent => {
         if (animatableValue(canvas?.isResizing)) return

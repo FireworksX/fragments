@@ -1,6 +1,7 @@
 import { Entity, GraphState } from "@graph-state/core";
 import { createLayer } from "@/shared/helpers/createLayer.ts";
-import { omit } from "@fragmentsx/utils";
+import { omit, pick } from "@fragmentsx/utils";
+import { definition } from "@fragmentsx/definition";
 
 export const cloneLayer = (
   manager: GraphState,
@@ -18,6 +19,9 @@ export const cloneLayer = (
       {
         _type: layerGraph._type,
         children: clonedChildren,
+        ...(layerGraph?._type === definition.nodes.Instance
+          ? pick(layerGraph, "fragment")
+          : {}),
         ...externalProps,
       },
       true

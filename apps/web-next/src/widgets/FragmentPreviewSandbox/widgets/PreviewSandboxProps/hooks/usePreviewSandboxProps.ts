@@ -1,8 +1,7 @@
-import { useFragmentProperties, useFragmentManager } from '@fragments/render-react'
-import { useState } from 'react'
+import { useFragmentManager, useFragmentProperties } from '@fragmentsx/render-suite'
 
 export const usePreviewSandboxProps = (fragmentId: number, props, onChange) => {
-  const fragmentDefinition = useFragmentProperties(fragmentId)
+  const { properties: fragmentDefinition } = useFragmentProperties(fragmentId)
   const { manager: fragmentManager } = useFragmentManager(fragmentId)
 
   return {

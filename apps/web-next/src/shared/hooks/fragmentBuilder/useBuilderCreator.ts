@@ -5,15 +5,18 @@ import { definition } from '@fragmentsx/definition'
 import { getRandomColor } from '@/shared/utils/random'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useFragmentLayers } from '@/shared/hooks/fragmentBuilder/useFragmentLayers'
-import { appendChildren, cloneLayer, isPartOfPrimary } from '@fragmentsx/render-core'
+import { appendChildren, cloneLayer, isPartOfPrimary, isRootLayer } from '@fragmentsx/render-core'
 import { getLayer } from '@/shared/hooks/fragmentBuilder/useNormalizeLayer/getLayer'
 import { LinkKey } from '@graph-state/core'
+import { useFragmentManager } from '@fragmentsx/render-suite'
+import { pick } from '@fragmentsx/utils'
 
 export const useBuilderCreator = () => {
   const { builderManager } = use(BuilderContext)
   const [creator] = useGraph(builderManager, builderManager.$creator.key)
   const { documentManager } = useBuilderDocument()
   const { layers } = useFragmentLayers()
+  const { loadFragmentManager } = useFragmentManager()
 
   const createFrame = (parent, externalProps = {}) => {
     if (![definition.nodes.Frame].includes(documentManager.entityOfKey(parent)?._type)) {
@@ -73,11 +76,18 @@ export const useBuilderCreator = () => {
     return appendChildren(documentManager, documentManager.$fragment.root, nextBreakpointLayer)
   }
 
-  const createInstance = (parent: LinkKey, options: { name: string; fragment: string }) => {
+  const createInstance = async (parent: LinkKey, options: { name: string; fragment: string }) => {
+    const fragmentManager = await loadFragmentManager(options.fragment)
+    const rootLayerLink = fragmentManager
+      ?.resolve(fragmentManager?.$fragment?.root)
+      ?.children?.find(child => isRootLayer(fragmentManager, child))
+    const rootLayerNode = fragmentManager?.resolve(rootLayerLink) ?? {}
+
     return appendChildren(documentManager, documentManager.keyOfEntity(parent), {
       _type: definition.nodes.Instance,
       name: options.name,
-      fragment: options.fragment
+      fragment: options.fragment,
+      ...pick(rootLayerNode, 'width', 'height', 'widthType', 'heightType')
     })
   }
 

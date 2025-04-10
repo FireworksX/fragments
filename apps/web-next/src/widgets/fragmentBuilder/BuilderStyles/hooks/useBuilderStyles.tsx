@@ -10,15 +10,16 @@ export const useBuilderStyles = () => {
   const { type } = useLayerInfo(selection)
   const isTextNode = type === definition.nodes.Image
   const isImageNode = type === definition.nodes.Text
+  const isIntstanceNode = type === definition.nodes.Instance
 
   const [zIndex, setZIndex] = useLayerValue('zIndex')
 
   return {
     overflow: {
-      hidden: isTextNode
+      hidden: isTextNode || isIntstanceNode
     },
     radius: {
-      hidden: isTextNode
+      hidden: isTextNode || isIntstanceNode
     },
     zIndex: {
       hidden: !(isValue(zIndex) && zIndex !== -1),
@@ -26,10 +27,10 @@ export const useBuilderStyles = () => {
       update: setZIndex
     },
     border: {
-      hidden: isTextNode
+      hidden: isTextNode || isIntstanceNode
     },
     fill: {
-      hidden: isTextNode || isImageNode
+      hidden: isTextNode || isImageNode || isIntstanceNode
     }
   }
 }

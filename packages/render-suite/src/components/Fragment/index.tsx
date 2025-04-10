@@ -13,7 +13,7 @@ interface FragmentProps {
 }
 
 export const Fragment: FC<FragmentProps> = ({ fragmentId }) => {
-  const { children, manager, isDocument } = useFragment(fragmentId);
+  const { ref, children, manager, isDocument } = useFragment(fragmentId);
 
   return (
     <FragmentProvider manager={manager}>
