@@ -1,6 +1,6 @@
 import { useContext, useMemo } from "preact/compat";
 import { FragmentContext } from "@/components/Fragment/FragmentContext.tsx";
-import { useLayerStyles } from "@/shared/hooks/useLayerStyles/useLayerStyles.ts";
+import { index } from "@/shared/hooks/useLayerStyles";
 import { useGraph } from "@graph-state/react";
 import { InstanceProps } from "@/components/Instance";
 import { useFragmentProperties } from "@/shared/hooks/useFragmentProperties.ts";
@@ -22,7 +22,7 @@ export const useInstance = (instanceProps: InstanceProps) => {
   const { manager: parentManager } = useContext(FragmentContext);
   const [instanceLayer] = useGraph(parentManager, instanceProps.layerKey);
   const instanceLayerProps = instanceLayer?.props ?? {};
-  const styles = useLayerStyles(instanceProps.layerKey);
+  const styles = index(instanceProps.layerKey);
 
   const { manager: resultGlobalManager } = useGlobalManager(
     instanceProps?.globalManager

@@ -1,7 +1,6 @@
 import { FC } from "react";
 import { definition } from "@fragmentsx/definition";
 import { LinkKey } from "@graph-state/core";
-import { useGlobalManager } from "@/hooks/useGlobalManager";
 import { useFragment } from "./hooks/useFragment";
 import { FragmentProvider } from "./FragmentContext";
 import styles from "./styles.module.css";

@@ -1,15 +1,30 @@
 import { LinkKey } from "@graph-state/core";
 import { useLayerValue } from "@/shared/hooks/useLayerValue";
 import { definition } from "@fragmentsx/definition";
+import { useContext } from "preact/compat";
+import { FragmentContext } from "@/components/Fragment/FragmentContext";
 
 export const useLayerLayout = (layerKey: LinkKey) => {
-  const [layerModeValue] = useLayerValue(layerKey, "layerMode");
-  const [layerGap] = useLayerValue(layerKey, "layerGap");
-  const [layerWrap] = useLayerValue(layerKey, "layerWrap");
-  const [layerDistribute] = useLayerValue(layerKey, "layerDistribute");
-  const [layerDirectionValue] = useLayerValue(layerKey, "layerDirection");
-  const [layerAlign] = useLayerValue(layerKey, "layerAlign");
-  const [padding] = useLayerValue(layerKey, "padding");
+  const { manager: fragmentManager } = useContext(FragmentContext);
+  const [layerModeValue] = useLayerValue(
+    layerKey,
+    "layerMode",
+    fragmentManager
+  );
+  const [layerGap] = useLayerValue(layerKey, "layerGap", fragmentManager);
+  const [layerWrap] = useLayerValue(layerKey, "layerWrap", fragmentManager);
+  const [layerDistribute] = useLayerValue(
+    layerKey,
+    "layerDistribute",
+    fragmentManager
+  );
+  const [layerDirectionValue] = useLayerValue(
+    layerKey,
+    "layerDirection",
+    fragmentManager
+  );
+  const [layerAlign] = useLayerValue(layerKey, "layerAlign", fragmentManager);
+  const [padding] = useLayerValue(layerKey, "padding", fragmentManager);
 
   const isFlex = layerModeValue === definition.layerMode.flex;
 

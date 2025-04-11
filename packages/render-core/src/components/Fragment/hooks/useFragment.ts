@@ -6,7 +6,7 @@ import { findBreakpoint } from "@/shared/helpers/findBreakpoint";
 import { useFragmentManager } from "@/shared/hooks/useFragmentManager";
 import { definition } from "@fragmentsx/definition";
 import { GraphState } from "@graph-state/core";
-import { useLayerStyles } from "@/shared/hooks/useLayerStyles/useLayerStyles";
+import { index } from "@/shared/hooks/useLayerStyles";
 
 export const useFragment = (fragmentId: string, globalManager?: GraphState) => {
   const { manager } = useFragmentManager(fragmentId, globalManager);

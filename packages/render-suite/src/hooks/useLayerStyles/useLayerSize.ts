@@ -1,12 +1,15 @@
 import { LinkKey } from "@graph-state/core";
 import { definition } from "@fragmentsx/definition";
-import { FragmentContext } from "@/components/Fragment/FragmentContext";
 import { to } from "@react-spring/web";
 import { useContext, useMemo } from "react";
-import { useRenderTarget } from "@/hooks/useRenderTarget";
-import { getParent, isTopLevel } from "@fragmentsx/render-core";
+import {
+  useRenderTarget,
+  getParent,
+  isTopLevel,
+  FragmentContext,
+  InstanceContext,
+} from "@fragmentsx/render-core";
 import { useLayerValue } from "@/hooks/useLayerValue";
-import { InstanceContext } from "@/components/Instance";
 
 const autoSizes = [definition.sizing.Hug];
 

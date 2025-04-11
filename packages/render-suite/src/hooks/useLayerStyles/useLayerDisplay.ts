@@ -2,7 +2,7 @@ import { LinkKey } from "@graph-state/core";
 import { definition } from "@fragmentsx/definition";
 import { useContext, useMemo } from "react";
 import { useLayerValue } from "@/hooks/useLayerValue";
-import { FragmentContext } from "@/components/Fragment/FragmentContext";
+import { FragmentContext } from "@fragmentsx/render-core";
 
 export const useLayerDisplay = (layerKey: LinkKey) => {
   const { manager } = useContext(FragmentContext);

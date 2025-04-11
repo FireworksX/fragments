@@ -1,10 +1,12 @@
+import { useContext } from "react";
 import { useGraph } from "@graph-state/react";
 import { InstanceProps } from "@/components/Instance";
-import { useContext } from "react";
-import { FragmentContext } from "@/components/Fragment/FragmentContext";
 import { useLayerStyles } from "@/hooks/useLayerStyles";
-import { useGlobalManager } from "@/hooks/useGlobalManager";
-import { useFragmentProperties } from "@/hooks/useFragmentProperties";
+import {
+  useGlobalManager,
+  useFragmentProperties,
+  FragmentContext,
+} from "@fragmentsx/render-core";
 
 /*
 Работаем по следующему принципу. Instance может рендериться внутри родителя (Fragment)

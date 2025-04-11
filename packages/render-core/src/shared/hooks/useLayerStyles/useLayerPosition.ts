@@ -15,9 +15,9 @@ export const useLayerPosition = (layerKey: LinkKey) => {
   const isTop = isTopLevel(fragmentManager, layerKey);
   const skipPosition = (isTop && isDocument) || (!!instanceLayerKey && isTop);
 
-  const [position] = useLayerValue(layerKey, "position");
-  const [top] = useLayerValue(layerKey, "top");
-  const [left] = useLayerValue(layerKey, "left");
+  const [position] = useLayerValue(layerKey, "position", fragmentManager);
+  const [top] = useLayerValue(layerKey, "top", fragmentManager);
+  const [left] = useLayerValue(layerKey, "left", fragmentManager);
 
   return useMemo(
     () => ({

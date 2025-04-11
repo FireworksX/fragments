@@ -14,7 +14,6 @@ export * from "./shared/helpers";
 // export { useLayerVariableValue } from "./shared/hooks/useLayerVariableValue.ts";
 // export { useRenderTarget } from "./shared/hooks/useRenderTarget.ts";
 // export { useTextContent } from "./shared/hooks/useTextContent.ts";
-export { useFragmentManager } from "@/shared/hooks/useFragmentManager";
 // export { useInstanceDefinition } from "./shared/hooks/useInstanceDefinition.ts";
 // export { useInstancePropertyValue } from "./shared/hooks/useInstancePropertyValue.ts";
 // export { useLayer } from "./shared/hooks/useLayer.ts";
@@ -25,5 +24,18 @@ export { createGlobalManager } from "@/managers/globalManager";
 
 export { wrapTextInParagraphWithAttributes } from "@/shared/helpers/wrapTextInParagraphWithAttributes";
 export { findBreakpoint } from "@/shared/helpers/findBreakpoint";
+
+export { useRenderTarget } from "@/shared/hooks/useRenderTarget";
+export { useGlobalManager } from "@/shared/hooks/useGlobalManager";
+export { useFragmentManager } from "@/shared/hooks/useFragmentManager";
+export { useFragmentProperties } from "@/shared/hooks/useFragmentProperties";
+export { useReadVariable } from "@/shared/hooks/useReadVariable";
+export { useLayerChildren } from "@/shared/hooks/useLayerChildren";
+export { useNormalizeLayer } from "@/shared/hooks/useNormalizeLayer";
+export { useLayerValue } from "@/shared/hooks/useLayerValue";
+export { useTextContent } from "@/shared/hooks/useTextContent";
+export { GlobalManager } from "@/providers/GlobalManager";
+export { InstanceContext } from "@/components/Instance";
+export { FragmentContext } from "@/components/Fragment/FragmentContext";
 
 export { createElement, render } from "preact";

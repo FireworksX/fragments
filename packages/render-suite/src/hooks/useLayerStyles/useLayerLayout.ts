@@ -1,7 +1,7 @@
 import { LinkKey } from "@graph-state/core";
 import { definition } from "@fragmentsx/definition";
 import { useContext } from "react";
-import { FragmentContext } from "@/components/Fragment/FragmentContext";
+import { FragmentContext } from "@fragmentsx/render-core";
 import { useLayerValue } from "@/hooks/useLayerValue";
 
 export const useLayerLayout = (layerKey: LinkKey) => {

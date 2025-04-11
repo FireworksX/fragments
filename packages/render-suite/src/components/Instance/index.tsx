@@ -3,6 +3,7 @@ import { Fragment } from "@/components/Fragment";
 import { useInstance } from "./hooks/useInstance";
 import { createContext, FC } from "react";
 import { animated } from "@react-spring/web";
+import { InstanceContext } from "@fragmentsx/render-core";
 
 export interface InstanceProps {
   layerKey?: LinkKey;
@@ -10,14 +11,6 @@ export interface InstanceProps {
   props?: Record<string, unknown>;
   globalManager?: unknown;
 }
-
-export const InstanceContext = createContext({
-  layerKey: null,
-  parentManager: null,
-  innerManager: null,
-  props: {},
-  definitions: [],
-});
 
 export const Instance: FC<InstanceProps> = (instanceProps) => {
   const {
@@ -31,7 +24,7 @@ export const Instance: FC<InstanceProps> = (instanceProps) => {
   } = useInstance(instanceProps);
 
   return (
-    <InstanceContext
+    <InstanceContext.Provider
       value={{
         layerKey: instanceProps.layerKey,
         definitions,
@@ -47,6 +40,6 @@ export const Instance: FC<InstanceProps> = (instanceProps) => {
       ) : (
         <Fragment fragmentId={fragmentId} globalManager={globalManager} />
       )}
-    </InstanceContext>
+    </InstanceContext.Provider>
   );
 };

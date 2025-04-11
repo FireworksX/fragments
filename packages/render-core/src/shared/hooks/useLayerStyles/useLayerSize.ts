@@ -21,12 +21,20 @@ export const useLayerSize = (layerKey: LinkKey) => {
   // useReadInstanceProperty()
   // layerKey,
 
-  const [instanceWidthType] = useLayerValue(instanceLayerKey, "widthType");
-  const [instanceHeightType] = useLayerValue(instanceLayerKey, "heightType");
-  const [width] = useLayerValue(layerKey, "width");
-  const [height] = useLayerValue(layerKey, "height");
-  const [widthType] = useLayerValue(layerKey, "widthType");
-  const [heightType] = useLayerValue(layerKey, "heightType");
+  const [instanceWidthType] = useLayerValue(
+    instanceLayerKey,
+    "widthType",
+    fragmentManager
+  );
+  const [instanceHeightType] = useLayerValue(
+    instanceLayerKey,
+    "heightType",
+    fragmentManager
+  );
+  const [width] = useLayerValue(layerKey, "width", fragmentManager);
+  const [height] = useLayerValue(layerKey, "height", fragmentManager);
+  const [widthType] = useLayerValue(layerKey, "widthType", fragmentManager);
+  const [heightType] = useLayerValue(layerKey, "heightType", fragmentManager);
 
   const toValue = (
     type: keyof typeof definition.sizing,

@@ -24,14 +24,12 @@ function App() {
         onChange={(e) => setValue(e.target.value)}
       />
       <div style={{ display: "flex", gap: 15 }}>
-        {[0, 1, 2, 3, 4, 5, 6].map((i) => (
-          <Instance
-            fragmentId={4}
-            props={{
-              "74be4fd880a76": value,
-            }}
-          />
-        ))}
+        <Instance
+          fragmentId={4}
+          props={{
+            "74be4fd880a76": value,
+          }}
+        />
       </div>
 
       <div>

@@ -1,13 +1,19 @@
 import { LinkKey } from "@graph-state/core";
-import { useMemo } from "preact/compat";
+import { useContext, useMemo } from "preact/compat";
 import { useLayerValue } from "@/shared/hooks/useLayerValue";
 import { toPx } from "@fragmentsx/utils";
 import { definition } from "@fragmentsx/definition";
+import { FragmentContext } from "@/components/Fragment/FragmentContext";
 
 export const useLayerBorder = (layerKey: LinkKey) => {
-  const [borderTypeValue] = useLayerValue(layerKey, "borderType");
-  const [borderWidth] = useLayerValue(layerKey, "borderWidth");
-  const [borderColor] = useLayerValue(layerKey, "borderColor");
+  const { manager: fragmentManager } = useContext(FragmentContext);
+  const [borderTypeValue] = useLayerValue(
+    layerKey,
+    "borderType",
+    fragmentManager
+  );
+  const [borderWidth] = useLayerValue(layerKey, "borderWidth", fragmentManager);
+  const [borderColor] = useLayerValue(layerKey, "borderColor", fragmentManager);
 
   return useMemo(() => {
     let value = "";

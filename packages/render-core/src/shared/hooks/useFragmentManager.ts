@@ -1,17 +1,8 @@
-import { useGlobalManager } from "@/shared/hooks/useGlobalManager";
-import { GraphState } from "@graph-state/core";
-import { useGraph } from "@graph-state/react";
 import { useEffect, useState } from "preact/compat";
+import { useGlobalManager } from "@/shared/hooks/useGlobalManager";
 
-export const useFragmentManager = (
-  fragmentId: string | number,
-  globalContext?: GraphState
-) => {
-  const { globalManagerGraph, manager } = useGlobalManager(globalContext);
-  if (!globalManagerGraph) {
-    throw new Error("Need declare global context");
-  }
-
+export const useFragmentManager = (fragmentId?: unknown) => {
+  const { globalManagerGraph, manager: globalManager } = useGlobalManager();
   const [loading, setLoading] = useState(false);
 
   const getFragmentManager = (id: string) => {
@@ -19,26 +10,25 @@ export const useFragmentManager = (
   };
 
   const loadFragmentManager = async (id: string) => {
-    setLoading(true);
-
     const fragmentDocument =
       await globalManagerGraph.fetchManager.queryFragment(id);
 
-    setLoading(false);
-
-    if (fragmentDocument) {
-      return manager?.createFragmentManager(id, fragmentDocument);
-    }
-
-    return null;
+    return globalManager?.createFragmentManager(id, fragmentDocument);
   };
 
   useEffect(() => {
-    loadFragmentManager(fragmentId);
-  }, [fragmentId]);
+    (async () => {
+      if (globalManagerGraph && !getFragmentManager(fragmentId)) {
+        setLoading(true);
+        await loadFragmentManager(fragmentId);
+        setLoading(false);
+      }
+    })();
+  }, [fragmentId, globalManagerGraph]);
 
   return {
     loading,
     manager: getFragmentManager(fragmentId),
+    loadFragmentManager,
   };
 };

@@ -1,7 +1,7 @@
+import { useContext } from "preact/compat";
 import { useGraph } from "@graph-state/react";
 import { GraphState } from "@graph-state/core";
-import { useContext } from "preact/compat";
-import { GlobalManager } from "@/components/GlobalManager";
+import { GlobalManager } from "@/providers/GlobalManager";
 
 export const useGlobalManager = (globalManager?: GraphState) => {
   const currentGlobalManager = useContext(GlobalManager);

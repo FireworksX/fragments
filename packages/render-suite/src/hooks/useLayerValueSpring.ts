@@ -1,8 +1,7 @@
 import { GraphState, LinkKey } from "@graph-state/core";
 import { SpringValue } from "@react-spring/web";
-import { useNormalizeLayer } from "@/hooks/useNormalizeLayer";
-import { useCallback, useMemo, useRef } from "react";
-import { debounce, isBrowser, noop } from "@fragmentsx/utils";
+import { useCallback, useMemo } from "react";
+import { debounce, noop } from "@fragmentsx/utils";
 import { isVariableLink } from "@fragmentsx/definition";
 import { getOverrider, isInheritField } from "@fragmentsx/render-core";
 

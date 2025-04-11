@@ -3,7 +3,6 @@ import {
   Instance as BaseInstance,
 } from "@fragmentsx/render-core";
 import { createReactComponent } from "@/reactAdapter";
-import { useRenderTarget } from "@/hooks/useRenderTarget";
 export { GlobalManager } from "@/components/GlobalManager";
 export { useGlobalManager } from "@/hooks/useGlobalManager";
 export { useFragmentManager } from "@/hooks/useFragmentManager";

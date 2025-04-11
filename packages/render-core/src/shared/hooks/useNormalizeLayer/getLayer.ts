@@ -1,6 +1,6 @@
 import { Entity, GraphState } from "@graph-state/core";
-import { getOverrider } from "@fragmentsx/render-core";
 import { getNormalizeLayer } from "@fragmentsx/definition";
+import { getOverrider } from "@/shared/helpers";
 
 export const getLayer = (manager: GraphState, layer: Entity) => {
   if (!manager || !layer) return null;

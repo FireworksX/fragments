@@ -1,8 +1,4 @@
-import { createContext } from "react";
-
-export const FragmentContext = createContext({
-  manager: null,
-});
+import { FragmentContext } from "@fragmentsx/render-core";
 
 export const FragmentProvider = ({ children, manager }) => {
   return (

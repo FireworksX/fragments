@@ -3,7 +3,7 @@ import { toPx } from "@fragmentsx/utils";
 import { definition } from "@fragmentsx/definition";
 import { useLayerValue } from "@/hooks/useLayerValue";
 import { useContext, useMemo } from "react";
-import { FragmentContext } from "@/components/Fragment/FragmentContext";
+import { FragmentContext } from "@fragmentsx/render-core";
 
 export const useLayerBorder = (layerKey: LinkKey) => {
   const { manager } = useContext(FragmentContext);

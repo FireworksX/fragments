@@ -9,6 +9,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "preact/compat": "react",
     },
   },
   build: {
@@ -26,8 +27,7 @@ export default defineConfig({
         "react/jsx-runtime",
         "@graph-state/react",
         "@graph-state/core",
-        "@fragmentsx/render-core",
-        /^@fragmentsx\//, // Все пакеты из монорепозитория
+        /^@fragmentsx\/(?!render-core$).*/, // Все пакеты из монорепозитория
       ],
       output: {
         globals: {

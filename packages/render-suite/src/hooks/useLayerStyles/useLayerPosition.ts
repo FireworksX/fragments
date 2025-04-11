@@ -1,11 +1,13 @@
 import { useContext, useMemo } from "react";
 import { LinkKey } from "@graph-state/core";
-import { FragmentContext } from "@/components/Fragment/FragmentContext";
 import { definition } from "@fragmentsx/definition";
-import { useRenderTarget } from "@/hooks/useRenderTarget";
-import { isTopLevel } from "@fragmentsx/render-core";
+import {
+  useRenderTarget,
+  isTopLevel,
+  FragmentContext,
+  InstanceContext,
+} from "@fragmentsx/render-core";
 import { useLayerValue } from "@/hooks/useLayerValue";
-import { InstanceContext } from "@/components/Instance";
 
 export const useLayerPosition = (layerKey: LinkKey) => {
   const { layerKey: instanceLayerKey } = useContext(InstanceContext);

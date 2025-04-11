@@ -5,7 +5,7 @@ import { LinkKey } from "@graph-state/core";
 import { useLayerPosition } from "./useLayerPosition";
 import { useLayerSize } from "./useLayerSize";
 import { useLayerValue } from "@/hooks/useLayerValue";
-import { FragmentContext } from "@/components/Fragment/FragmentContext";
+import { FragmentContext } from "@fragmentsx/render-core";
 import { useLayerBackground } from "@/hooks/useLayerStyles/useLayerBackground";
 import { useLayerDisplay } from "@/hooks/useLayerStyles/useLayerDisplay";
 import { useLayerBorder } from "@/hooks/useLayerStyles/useLayerBorder";
