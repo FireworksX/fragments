@@ -20,10 +20,6 @@ export const FrameSchema = v.pipe(
       overridable: false,
     }),
     isPrimary: layerField(v.boolean(), { fallback: false, overridable: false }),
-    threshold: layerField(v.pipe(v.number(), v.minValue(0)), {
-      fallback: 320,
-      overridable: false,
-    }),
     ...ChildrenSchema.entries,
     ...GraphFieldSchema.entries,
     ...OverridesSchema.entries,

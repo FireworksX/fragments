@@ -9,7 +9,7 @@ export const useTextContent = (layerKey: LinkKey, manager: GraphState) => {
   const [attributes] = useLayerValue(layerKey, "attributes", manager);
 
   return useMemo(() => {
-    if (contentInfo.isVariable && isValue(attributes)) {
+    if (isValue(attributes)) {
       return wrapTextInParagraphWithAttributes(content, attributes);
     }
 

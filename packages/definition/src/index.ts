@@ -1,5 +1,5 @@
 export { getNormalizeLayer } from "./helpers/getNormalizeLayer";
-export { isValidLayerField } from "./helpers/isValidLayerField";
+export { parseLayerField } from "./helpers/parseLayerField";
 export { isVariableLink, isLink } from "./helpers/layerField";
 
 export * as definition from "./constants/index";

@@ -19,7 +19,7 @@ export const useBreakpoints = (customFragment?: LinkKey) => {
   const { documentManager } = useBuilderDocument()
   const { layers } = useFragmentLayers()
   const childrenValues = useGraphStack(documentManager, layers ?? [], {
-    selector: data => (data ? { threshold: data.threshold, width: data.width } : data)
+    selector: data => (data ? { width: data.width } : data)
   })
 
   const primaryLayer = childrenValues.find(child => isPartOfPrimary(documentManager, child))
@@ -33,7 +33,7 @@ export const useBreakpoints = (customFragment?: LinkKey) => {
   const thresholds = useMemo(() => {
     const values = childrenValues.map(breakpoint => ({
       link: documentManager.keyOfEntity(breakpoint),
-      threshold: breakpoint.threshold
+      width: breakpoint.width
     }))
 
     if (values.length === 0) {
@@ -54,14 +54,14 @@ export const useBreakpoints = (customFragment?: LinkKey) => {
 
     // Добавляем диапазоны
     for (let i = 0; i < sortedBreakpoints.length; i++) {
-      const from = i === 0 ? 0 : sortedBreakpoints[i - 1].threshold + 1
-      const to = sortedBreakpoints[i].threshold
+      const from = i === 0 ? 0 : sortedBreakpoints[i - 1].width + 1
+      const to = sortedBreakpoints[i].width
       ranges.push({ from, to, link: i === 0 ? documentManager.keyOfEntity(primaryLayer) : sortedBreakpoints[i].link })
     }
 
     // Добавляем последний диапазон до бесконечности
     ranges.push({
-      from: sortedBreakpoints.at(-1)?.threshold + 1,
+      from: sortedBreakpoints.at(-1)?.width + 1,
       to: Infinity,
       link: sortedBreakpoints.at(-1)?.link
     })

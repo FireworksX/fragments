@@ -6,6 +6,7 @@ import { useBuilderLayerFlags } from '@/shared/hooks/fragmentBuilder/useBuilderL
 import { hotKeysScope } from '@/shared/hooks/hotkeys/HotKeysProvider'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useBuilderDocumentManager } from '@/shared/hooks/fragmentBuilder/useBuilderDocumentManager'
+import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
 
 export const useBuilderHotKeys = () => {
   const { selection } = useBuilderSelection()
@@ -18,6 +19,18 @@ export const useBuilderHotKeys = () => {
       keyboardEvent.preventDefault()
 
       saveFragment()
+    },
+    { scopes: [hotKeysScope.builder] }
+  )
+
+  useHotkeys(
+    'meta+d',
+    keyboardEvent => {
+      keyboardEvent.preventDefault()
+
+      if (layerFlags.canDuplicate) {
+        layerFlags.duplicate()
+      }
     },
     { scopes: [hotKeysScope.builder] }
   )

@@ -3,7 +3,7 @@ import { definition } from '@fragmentsx/definition'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
-import { removeChildren } from '@fragmentsx/render-core'
+import { removeChildren, duplicateLayer } from '@fragmentsx/render-core'
 
 export const useBuilderLayerFlags = (layerKey: LinkKey) => {
   const { documentManager } = useBuilderDocument()
@@ -16,12 +16,16 @@ export const useBuilderLayerFlags = (layerKey: LinkKey) => {
   // const visible = true
   const hasLayout = layerMode === definition.layerMode?.flex
   const canRemove = !layerInfo.isBreakpoint ? !layerInfo?.isPrimary : true
-  const canWrap = layerInfo.type !== definition.nodes.Breakpoint
-  const canDuplicate = layerInfo.type !== definition.nodes.Fragment
-  const canRemoveWrapper = layerInfo.type === definition.nodes.Frame && layerInfo.layer?.children?.length > 0
+  const canWrap = layerInfo.type !== definition.nodes.Fragment && !layerInfo.isBreakpoint && !layerInfo.isRootLayer
+  const canDuplicate = layerInfo.type !== definition.nodes.Fragment && !layerInfo.isBreakpoint && !layerInfo.isRootLayer
+  const canRemoveWrapper =
+    layerInfo.type === definition.nodes.Frame &&
+    layerInfo.layer?.children?.length > 0 &&
+    layerInfo.isBreakpoint &&
+    !layerInfo.isRootLayer
 
   const remove = () => removeChildren(documentManager, layerKey)
-
+  const duplicate = () => duplicateLayer(documentManager, layerKey)
   const toggleVisible = () => setVisible(!visible)
   const wrapFrame = () => documentManager.createWrapper(layerKey)
   const removeWrapper = () => documentManager.removeWrapper(layerKey)
@@ -38,6 +42,7 @@ export const useBuilderLayerFlags = (layerKey: LinkKey) => {
     wrapFrame,
     canWrap,
     removeWrapper,
+    duplicate,
     canRemoveWrapper,
     canDuplicate
   }

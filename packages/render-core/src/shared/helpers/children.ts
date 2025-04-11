@@ -66,7 +66,32 @@ export const appendChildren = (
   return resolveChildren.map(manager.keyOfEntity);
 };
 
-export const insertChildren = (manager: GraphState) => {};
+export const insertChildren = (
+  manager: GraphState,
+  target: LinkKey,
+  index: number,
+  ...layerKeys: Entity[]
+) => {
+  appendChildren(manager, target, ...layerKeys);
+  const targetLayer = manager.resolve(target);
+  const overrideLayers = (targetLayer?.overrides ?? []).map(manager.resolve);
+
+  [targetLayer, ...overrideLayers].forEach((layer) => {
+    const children = layer?.children ?? [];
+    const appendedLayers = children.slice(layerKeys.length * -1);
+    const nextChildren = children.slice(0, layerKeys.length * -1);
+    nextChildren.splice(index, 0, ...appendedLayers);
+
+    manager.mutate(
+      manager.keyOfEntity(layer),
+      (prev) => ({
+        ...prev,
+        children: nextChildren,
+      }),
+      { replace: true }
+    );
+  });
+};
 
 export const removeChildren = (manager: GraphState, ...layerKeys: Entity[]) => {
   layerKeys.map(manager.resolve).forEach((layer) => {

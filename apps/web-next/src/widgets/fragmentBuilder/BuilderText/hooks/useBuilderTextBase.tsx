@@ -67,86 +67,14 @@ const weights = [
 ]
 const transforms: TextTransform[] = ['none', 'uppercase', 'lowercase', 'capitalize']
 
-export const useBuilderText = () => {
-  const { builderManager } = use(BuilderContext)
-  const { documentManager } = useBuilderDocument()
+export const useBuilderTextBase = () => {
   const editor = use(CanvasTextEditorContext)
-  const { selection } = useBuilderSelection()
-  const { isTextEditing } = useBuilderManager()
-  const [{ showTextEditor }] = useGraph(builderManager, builderManager.key)
-  const lastSelectionRef = useRef<any | null>(null)
-
   const [attributes, setAttributes] = useLayerValue('attributes')
   const [content, setContent, contentInfo] = useLayerValue('content')
-  const textContent = '' //useTextContent(selection, documentManager)
-  const [opacity, setOpacity] = useLayerValue('opacity')
-  const saveOpacity = useRef<number | null>(null)
-  const [marks, setMarks] = useState({})
   const contentVariable = useLayerVariables('content')
 
-  useEffect(() => {
-    const selectionHandler = ({ editor }) => {
-      // setMarks(getMarksInSelection(editor))
-    }
-    const updateHandler = ({ editor }) => {
-      const contentHtml = generateHTML(editor.getJSON(), canvasEditorExtensions)
-      if (!contentInfo.isVariable) {
-        setContent(contentHtml)
-      }
-
-      const attributes = editor.getAttributes('paragraph')
-      setAttributes(pick(attributes, 'fontSize', 'color', 'lineHeight'))
-      // console.log(attributes)
-      // styleAttributesInvoker.onChange(attributes)
-    }
-
-    if (editor) {
-      editor.on('update', updateHandler)
-
-      if (isTextEditing) {
-        editor.on('selectionUpdate', selectionHandler)
-      }
-    }
-
-    return () => {
-      if (editor) {
-        editor.off('selectionUpdate', selectionHandler)
-        editor.off('update', updateHandler)
-      }
-    }
-  }, [selection, isTextEditing, editor, contentInfo])
-
-  useEffect(() => {
-    setMarks(getMarksInSelection(editor))
-  }, [selection, editor])
-
-  useEffect(() => {
-    if (!isTextEditing && editor) {
-      // if (isVariableLink(contentInvoker.value)) {
-      //   content = selectionGraph?.getContent?.()
-      // }
-      editor.commands.setContent(textContent)
-    }
-  }, [isTextEditing, textContent, editor])
-
-  useEffect(() => {
-    if (isTextEditing) {
-      saveOpacity.current = opacity
-      setOpacity(0)
-    } else if (saveOpacity.current) {
-      setOpacity(saveOpacity.current)
-    }
-
-    return () => {
-      if (saveOpacity.current) {
-        setOpacity(saveOpacity.current)
-      }
-    }
-  }, [isTextEditing])
-
   const openColor = () => {
-    const currentColor = marks.color || '#000'
-    lastSelectionRef.current = editor.state.selection
+    const currentColor = attributes.color || '#000'
 
     popoutsStore.open('colorPicker', {
       position: 'right',
@@ -173,35 +101,10 @@ export const useBuilderText = () => {
   }
 
   const onChangeValue = (key, value) => {
-    const methodName = `set${capitalize(key)}`
-
-    if (methodName in editor.chain()) {
-      if (showTextEditor) {
-        if (lastSelectionRef.current) {
-          editor
-            .chain()
-            .focus()
-            .setTextSelection({ from: lastSelectionRef.current.from, to: lastSelectionRef.current.to })
-            [methodName](value)
-            .run()
-        } else {
-          editor.chain().focus()[methodName](value).run()
-        }
-      } else {
-        getTopLevelNodeRanges(editor).forEach(range => {
-          editor.chain().focus().setTextSelection({ from: range.from, to: range.to })[methodName](value).run()
-        })
-      }
-    }
-
-    setMarks(p => ({
-      ...p,
-      [key]: value
-    }))
+    setAttributes({ [key]: value })
   }
 
   return {
-    isTextEditing,
     content: {
       ...contentVariable,
       value: content,
@@ -215,38 +118,38 @@ export const useBuilderText = () => {
     },
     weight: {
       items: weights,
-      value: marks['fontWeight'],
+      value: attributes['fontWeight'],
       onChange: value => onChangeValue('fontWeight', value)
     },
     color: {
-      value: marks['color'] ?? '#000',
+      value: attributes['color'] ?? '#000',
       onClick: openColor
     },
     align: {
       items: aligns,
-      value: marks['textAlign'] ?? 'left',
+      value: attributes['textAlign'] ?? 'left',
       onChange: value => onChangeValue('textAlign', value)
     },
     fontSize: {
-      value: 'fontSize' in marks ? fromPx(marks['fontSize']) : 14,
+      value: 'fontSize' in attributes ? fromPx(attributes['fontSize']) : 14,
       onChange: value => onChangeValue('fontSize', toPx(value))
     },
     decoration: {
       items: decorations,
-      value: marks['textDecoration'] ?? 'none',
+      value: attributes['textDecoration'] ?? 'none',
       onChange: value => onChangeValue('textDecoration', value)
     },
     transform: {
       items: transforms,
-      value: marks['textTransform'] ?? 'none',
+      value: attributes['textTransform'] ?? 'none',
       onChange: value => onChangeValue('textTransform', value)
     },
     lineHeight: {
-      value: marks['lineHeight'] ?? 1,
+      value: attributes['lineHeight'] ?? 1,
       onChange: value => onChangeValue('lineHeight', value)
     },
     letterSpacing: {
-      value: fromPx(marks['letterSpacing']) ?? 0,
+      value: fromPx(attributes['letterSpacing']) ?? 0,
       onChange: value => onChangeValue('letterSpacing', toPx(value))
     },
     whiteSpace: {

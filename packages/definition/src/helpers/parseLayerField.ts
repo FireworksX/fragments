@@ -1,16 +1,16 @@
 import * as v from "valibot";
 import { getLayerSchema } from "@/helpers/getLayerSchema";
 
-export const isValidLayerField = (
+export const parseLayerField = (
   layer: unknown,
   field: string,
   value: unknown
 ) => {
   const schema = getLayerSchema(layer);
+
   if (schema && schema?.entries?.[field]) {
-    const { success } = v.safeParse(schema.entries?.[field], value);
-    return success;
+    return v.safeParse(schema.entries?.[field], value);
   }
 
-  return false;
+  return { success: false, output: value };
 };

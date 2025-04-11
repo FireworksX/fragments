@@ -5,7 +5,7 @@ import { noop, pick } from "@fragmentsx/utils";
 import { FragmentContext } from "@/components/Fragment/FragmentContext";
 import { useNormalizeLayer } from "@/hooks/useNormalizeLayer";
 import { isInheritField, isPartOfPrimary } from "@fragmentsx/render-core";
-import { isValidLayerField, isVariableLink } from "@fragmentsx/definition";
+import { parseLayerField, isVariableLink } from "@fragmentsx/definition";
 import { useLayerValueSpring } from "@/hooks/useLayerValueSpring";
 import { useReadVariable } from "@/hooks/useReadVariable";
 
@@ -50,9 +50,9 @@ export const useLayerValue = (
 
   const updateValue = useCallback(
     (value: unknown) => {
-      const isValid = isValidLayerField(layer, fieldKey, value);
+      const { success, output } = parseLayerField(layer, fieldKey, value);
 
-      if (isValid) {
+      if (success) {
         if (isVariableLink(value)) {
           /*
           Если меняем значение на переменную, то сохраняем значение, чтобы
@@ -68,7 +68,7 @@ export const useLayerValue = (
           resultManager.resolve(resultManager?.$fragment?.temp);
         }
 
-        updateLayerData({ [fieldKey]: value });
+        updateLayerData({ [fieldKey]: output });
       }
     },
     [layer, fieldKey, updateLayerData, resultManager, layerKey, currentValue]
