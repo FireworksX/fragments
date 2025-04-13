@@ -16,7 +16,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    border: var(--borderWidth, 1px) var(--borderStyle, solid) var(--primary);
+    border: var(--borderWidth, 1px) var(--borderStyle, solid) var(--color, var(--primary));
   }
 }
 

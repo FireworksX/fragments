@@ -1,7 +1,7 @@
 import { LinkKey } from "@graph-state/core";
 import { Fragment } from "@/components/Fragment";
 import { useInstance } from "./hooks/useInstance";
-import { createContext, FC } from "react";
+import { createContext, FC, memo } from "react";
 import { animated } from "@react-spring/web";
 import { InstanceContext } from "@fragmentsx/render-core";
 
@@ -12,34 +12,35 @@ export interface InstanceProps {
   globalManager?: unknown;
 }
 
-export const Instance: FC<InstanceProps> = (instanceProps) => {
-  const {
-    styles,
-    fragmentId,
-    parentManager,
-    props,
-    innerManager,
-    definitions,
-    globalManager,
-  } = useInstance(instanceProps);
-
+const Inner = memo((allProps) => {
   return (
     <InstanceContext.Provider
       value={{
-        layerKey: instanceProps.layerKey,
-        definitions,
-        innerManager,
-        parentManager,
-        props,
+        layerKey: allProps.layerKey,
+        definitions: allProps.definitions,
+        innerManager: allProps.innerManager,
+        parentManager: allProps.parentManager,
+        props: allProps.props,
       }}
     >
-      {parentManager ? (
-        <animated.div data-key={instanceProps.layerKey} style={styles}>
-          <Fragment fragmentId={fragmentId} globalManager={globalManager} />
-        </animated.div>
-      ) : (
-        <Fragment fragmentId={fragmentId} globalManager={globalManager} />
-      )}
+      <Fragment
+        fragmentId={allProps.fragmentId}
+        globalManager={allProps.globalManager}
+      />
     </InstanceContext.Provider>
   );
+});
+
+export const Instance: FC<InstanceProps> = (instanceProps) => {
+  const { styles, ...allProps } = useInstance(instanceProps);
+
+  if (allProps.parentManager) {
+    return (
+      <animated.div data-key={instanceProps.layerKey} style={styles}>
+        <Inner {...allProps} />
+      </animated.div>
+    );
+  }
+
+  return <Inner {...allProps} />;
 };

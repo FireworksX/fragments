@@ -65,7 +65,7 @@ export const useBuilderCreator = () => {
     const lastLayer = getLayer(documentManager, layers.at(-1))
     const nextBreakpointLayer = cloneLayer(documentManager, primaryLayer, {
       name: options.name,
-      threshold: options.threshold,
+      threshold: options.threshold, // @deprecated
       top: lastLayer.top,
       left: lastLayer.left + lastLayer.width + 50,
       width: options.threshold,

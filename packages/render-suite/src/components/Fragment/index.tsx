@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect, useRef } from "react";
 import { definition } from "@fragmentsx/definition";
 import { LinkKey } from "@graph-state/core";
 import { useFragment } from "./hooks/useFragment";
@@ -12,12 +12,25 @@ interface FragmentProps {
 }
 
 export const Fragment: FC<FragmentProps> = ({ fragmentId }) => {
-  const { ref, children, manager, isDocument } = useFragment(fragmentId);
+  const { setRef, children, manager, isDocument } = useFragment(fragmentId);
+
+  // const testRef = useRef();
+  //
+  // useEffect(() => {
+  //   console.log(testRef.current);
+  //
+  //   if (testRef.current) {
+  //     const ob = new ResizeObserver((entries) => {
+  //       console.log(entries);
+  //     });
+  //     ob.observe(testRef.current);
+  //   }
+  // }, []);
 
   return (
     <FragmentProvider manager={manager}>
       <div
-        // ref={ref}
+        ref={setRef}
         data-key={`${definition.nodes.Fragment}:${fragmentId}`}
         className={isDocument ? styles.fragmentDocument : styles.fragment}
         style={styles}

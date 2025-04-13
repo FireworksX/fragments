@@ -1,5 +1,6 @@
 import { FC, PropsWithChildren, useEffect, useState } from 'react'
 import cn from 'classnames'
+import { definition } from '@fragmentsx/definition'
 import { animated, to, useSpringValue } from '@react-spring/web'
 import styles from './styles.module.css'
 import { LayerSelectedResize } from '@/widgets/fragmentBuilder/BuilderHighlight/components/LayerSelectedResize'
@@ -15,6 +16,7 @@ import { DragOverEvent, useDndMonitor } from '@dnd-kit/core'
 import { droppableAreas } from '@/shared/data'
 import { DragEndEvent } from '@dnd-kit/core/dist/types/events'
 import { pick } from '@fragmentsx/utils'
+import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
 
 interface BuilderLayerHighlightProps extends PropsWithChildren {
   className?: string
@@ -24,7 +26,8 @@ const BuilderHighlight: FC<BuilderLayerHighlightProps> = ({ className, children 
   const opacity = useSpringValue(0)
   const { canvas } = useBuilderCanvas()
   const { documentManager } = useBuilderDocument()
-  const { selection } = useBuilderSelection()
+  const { selection, selectionGraph } = useBuilderSelection()
+  const isInstanceSelection = selectionGraph?._type === definition.nodes.Instance
   // const hoverLayerGeometry = useLayerGeometry(canvas.hoverLayer)
   const selectionGeometry = useLayerGeometry(selection)
   const parentSelectionGeometry = useLayerGeometry(documentManager.keyOfEntity(getParent(documentManager, selection)))
@@ -75,16 +78,19 @@ const BuilderHighlight: FC<BuilderLayerHighlightProps> = ({ className, children 
         {/*  }}*/}
         {/*/>*/}
         <animated.div
+          data-highlight='selection'
           className={cn(styles.highlight, styles.mask, styles.selectedHighlight)}
           style={{
             ...selectionGeometry,
-            opacity
+            opacity,
+            '--color': isInstanceSelection ? 'var(--component)' : 'var(--primary)'
           }}
         >
           <LayerSelectedResize />
           {/*{isTextEditing && <BuilderCanvasTextEditor />}*/}
         </animated.div>
         <animated.div
+          data-highlight='parent'
           className={cn(styles.highlight, styles.mask, styles.parentHighlight)}
           style={{
             '--style': to(canvas.isDragging, isDragging => (isDragging ? 'solid' : 'dashed')),

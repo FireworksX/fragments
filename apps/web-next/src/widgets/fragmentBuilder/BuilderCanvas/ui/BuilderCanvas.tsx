@@ -1,4 +1,4 @@
-import React, { ElementRef, FC, PropsWithChildren, ReactNode, useContext, useRef } from 'react'
+import React, { ElementRef, FC, memo, PropsWithChildren, ReactNode, useContext, useRef } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { useCanvas } from '../hooks/useCanvas'
@@ -12,7 +12,7 @@ interface CanvasProps extends PropsWithChildren {
   extendNodes?: ReactNode | ReactNode[]
 }
 
-const BuilderCanvas: FC<CanvasProps> = ({ className, children, extendNodes }) => {
+const BuilderCanvas: FC<CanvasProps> = memo(({ className, children, extendNodes }) => {
   useCanvasInsert()
   const { viewportRef, pointerRef, containerStyles } = useCanvas()
 
@@ -37,6 +37,6 @@ const BuilderCanvas: FC<CanvasProps> = ({ className, children, extendNodes }) =>
       {extendNodes}
     </div>
   )
-}
+})
 
 export default BuilderCanvas

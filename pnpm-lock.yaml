@@ -343,6 +343,9 @@ importers:
         specifier: ^2.1.7
         version: 2.1.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
     devDependencies:
+      '@graph-state/plugin-logger':
+        specifier: ^0.3.0
+        version: 0.3.0
       '@preact/preset-vite':
         specifier: ^2.10.1
         version: 2.10.1(@babel/core@7.26.8)(preact@10.26.4)(vite@6.1.0(@types/node@20.13.0)(jiti@2.3.3)(yaml@2.4.2))
@@ -1932,6 +1935,9 @@ packages:
 
   '@graph-state/plugin-logger@0.2.2':
     resolution: {integrity: sha512-3iO9Zzam7DdrLzxgic66po/VZvM3RCaRrqayzqJN4jnWdDjTj0E1V5CZkWV8bQ8W0KHNPFpI3uNdzzTRrNHp6w==}
+
+  '@graph-state/plugin-logger@0.3.0':
+    resolution: {integrity: sha512-oxEyaYV66J39DdLjcj0lSt8gPe2JTOfcLjooOQe8HC+CIcR/bz2zrn6rLstZiMvG2xXB3XjbgcsjEOevqgVY4A==}
 
   '@graph-state/react@0.6.3':
     resolution: {integrity: sha512-K2psZgk+yXrf3ILADfmWBJYuPWs6R7B1yrUHOOVoHk4KicZDGl6nJgwR6aQrFbWxEZQ7lZszMeOOXUFwjCqjqQ==}
@@ -8860,6 +8866,10 @@ snapshots:
       '@graph-state/core': 0.11.1
 
   '@graph-state/plugin-logger@0.2.2':
+    dependencies:
+      '@graph-state/core': 0.11.1
+
+  '@graph-state/plugin-logger@0.3.0':
     dependencies:
       '@graph-state/core': 0.11.1
 

@@ -7,6 +7,7 @@ import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDoc
 import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderManager'
 import { ComponentRef, RefObject } from 'react'
 import { useGesture } from '@use-gesture/react'
+import { getAllParents } from '@fragmentsx/render-core'
 
 export const useCanvasClick = (targetRef: RefObject<ComponentRef<'div'>>) => {
   const { documentManager } = useBuilderDocument()
@@ -36,9 +37,14 @@ export const useCanvasClick = (targetRef: RefObject<ComponentRef<'div'>>) => {
             })
           }
         } else {
-          if (documentManager.entityOfKey(layerKey)?._type === definition.nodes.FragmentInstance) {
+          if (documentManager.entityOfKey(layerKey)?._type === definition.nodes.Instance) {
+            // const isTopInstance = getAllParents(documentManager, layerKey)?.at(-1)?._type === definition.nodes.Fragment
+            // console.log(isTopInstance)
             builderManager.toggleTextEditor(false)
+
+            // if (isTopInstance) {
             canvasManager.setFocus(layerKey)
+            // }
           } else if (layerKey) {
             if (!isTextEditing) {
               const clickedLayerValue = documentManager.resolve(layerKey)

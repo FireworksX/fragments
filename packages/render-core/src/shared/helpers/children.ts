@@ -82,6 +82,8 @@ export const insertChildren = (
     const nextChildren = children.slice(0, layerKeys.length * -1);
     nextChildren.splice(index, 0, ...appendedLayers);
 
+    console.log(layer, nextChildren, appendedLayers);
+
     manager.mutate(
       manager.keyOfEntity(layer),
       (prev) => ({

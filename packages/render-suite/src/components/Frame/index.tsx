@@ -1,4 +1,4 @@
-import { FC, useContext } from "react";
+import { FC, memo, useContext } from "react";
 import { LinkKey } from "@graph-state/core";
 import { animated } from "@react-spring/web";
 import { useFrame } from "./hooks/useFrame";
@@ -11,7 +11,7 @@ interface FrameProps {
   layerKey: LinkKey;
 }
 
-export const Frame: FC<FrameProps> = ({ layerKey, ref }) => {
+export const Frame: FC<FrameProps> = memo(({ layerKey, ref }) => {
   const customRender = useContext(CustomRender);
   const { styles, children, type } = useFrame(layerKey);
 
@@ -31,4 +31,4 @@ export const Frame: FC<FrameProps> = ({ layerKey, ref }) => {
       ))}
     </animated.div>
   );
-};
+});

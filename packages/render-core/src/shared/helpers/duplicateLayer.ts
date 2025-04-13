@@ -18,8 +18,8 @@ export const duplicateLayer = (
     const duplicatedLayer = createLayer(
       {
         _type: layerGraph._type,
-        children: clonedChildren,
         ...layerGraph,
+        children: clonedChildren,
       },
       true
     );
@@ -35,10 +35,12 @@ export const duplicateLayer = (
             (child) => child === manager.keyOfEntity(layer)
           );
 
-        insertChildren(manager, parent, layerIndex, duplicatedKey);
+        insertChildren(manager, parent, layerIndex + 1, duplicatedKey);
         // manager.mutate(manager.keyOfEntity(parent), {
-        //   children: [duplicatedLayer],
+        //   children: [duplicatedKey],
         // });
+
+        console.log(manager.resolve(manager.keyOfEntity(parent)));
       }
     }
 

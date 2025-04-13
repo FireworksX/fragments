@@ -1,14 +1,12 @@
 export const findBreakpoint = (
-  breakpoints: { threshold: number }[] = [],
+  breakpoints: { width: number }[] = [],
   width: number
 ) => {
   if (!breakpoints?.length) return null;
 
-  const sortBreakpoints = breakpoints.toSorted(
-    (a, b) => a.threshold - b.threshold
-  );
+  const sortBreakpoints = breakpoints.toSorted((a, b) => a.width - b.width);
 
   return sortBreakpoints.reduce((prev, curr) =>
-    width >= curr.threshold ? curr : prev
+    width >= curr.width ? curr : prev
   );
 };

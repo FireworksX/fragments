@@ -2,6 +2,7 @@ import { createConstants } from '@fragmentsx/utils'
 import { TabsSelectorItem } from '@/shared/ui/TabsSelector'
 
 export const popoutNames = createConstants(
+  'customBreakpoint',
   'stackSolidPaintStyle',
   'colorPicker',
   'stackStringProperty',
@@ -24,7 +25,8 @@ export const modalNames = createConstants(
   'createFragment',
   'createCampaign',
   'configureStream',
-  'projectTree'
+  'projectTree',
+  'createCustomBreakpoint'
 )
 
 export const booleanTabsSelectorItems: TabsSelectorItem[] = [

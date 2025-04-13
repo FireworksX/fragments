@@ -37,6 +37,7 @@
     "@preact/preset-vite": "^2.10.1",
     "typescript": "^5.5.4",
     "vite": "^6.1.0",
+    "@graph-state/plugin-logger": "^0.3.0",
     "vite-plugin-css-injected-by-js": "^3.5.2",
     "vite-plugin-dts": "^4.5.0"
   }

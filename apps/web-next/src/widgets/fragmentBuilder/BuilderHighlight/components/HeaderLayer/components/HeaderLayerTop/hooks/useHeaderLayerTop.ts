@@ -4,20 +4,33 @@ import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSe
 import { useBreakpoints } from '@/shared/hooks/fragmentBuilder/useBreakpoints'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { pick } from '@fragmentsx/utils'
+import { useModal } from '@/shared/hooks/useModal'
+import { modalNames } from '@/shared/data'
 
 export const useHeaderLayerTop = (layerKey: LinkKey) => {
+  const { openModal, closeModal } = useModal()
   const { documentManager } = useBuilderDocument()
   const [layerGraph] = useGraph(documentManager, layerKey, {
-    selector: data => (data ? pick(data, 'name', '_id', 'threshold') : data)
+    selector: data => (data ? pick(data, 'name', '_id', 'width') : data)
   })
   const { selection } = useBuilderSelection()
-  const { allowedBreakpoints, addBreakpoint, getThresholdLabel, thresholds } = useBreakpoints()
+  const { allowedBreakpoints, addBreakpoint, getBreakpointRangeLabel } = useBreakpoints()
+
+  const handleCreateCustomBreakpoint = () => {
+    openModal(modalNames.createCustomBreakpoint, {
+      onAdd: (name, width) => {
+        addBreakpoint(name, width)
+        closeModal()
+      }
+    })
+  }
 
   return {
     name: layerGraph?.name ?? layerGraph?._id,
     selected: selection === layerKey,
     allowedBreakpoints,
     addBreakpoint,
-    thresholdLabel: getThresholdLabel(layerGraph?.threshold)
+    thresholdLabel: getBreakpointRangeLabel(layerKey),
+    handleCreateCustomBreakpoint
   }
 }

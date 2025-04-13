@@ -1,0 +1,27 @@
+import { FC, memo, PropsWithChildren } from 'react'
+import { HotKeysProvider } from '@/shared/hooks/hotkeys/HotKeysProvider'
+import { useBuilderHotKeys } from '@/shared/hooks/hotkeys/useBuilderHotKeys'
+import { CanvasTextEditorProvider } from '@/widgets/fragmentBuilder/BuilderHighlight'
+import { ToastProvider } from '@/widgets/Toast/providers/ToastContext'
+
+const MemoBuilder = memo(({ children }) => {
+  return children
+})
+
+const BuilderProviderInitial: FC<PropsWithChildren> = ({ children }) => {
+  useBuilderHotKeys()
+
+  return <MemoBuilder>{children}</MemoBuilder>
+}
+
+export const BuilderProvider: FC<PropsWithChildren> = ({ children }) => {
+  return (
+    <ToastProvider>
+      <HotKeysProvider>
+        <CanvasTextEditorProvider>
+          <BuilderProviderInitial>{children}</BuilderProviderInitial>
+        </CanvasTextEditorProvider>
+      </HotKeysProvider>
+    </ToastProvider>
+  )
+}

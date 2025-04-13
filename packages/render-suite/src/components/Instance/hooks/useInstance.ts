@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useMemo } from "react";
 import { useGraph } from "@graph-state/react";
 import { InstanceProps } from "@/components/Instance";
 import { useLayerStyles } from "@/hooks/useLayerStyles";
@@ -7,6 +7,7 @@ import {
   useFragmentProperties,
   FragmentContext,
 } from "@fragmentsx/render-core";
+import { pick } from "@fragmentsx/utils";
 
 /*
 Работаем по следующему принципу. Instance может рендериться внутри родителя (Fragment)
@@ -22,14 +23,22 @@ import {
  */
 export const useInstance = (instanceProps: InstanceProps) => {
   const { manager: parentManager } = useContext(FragmentContext);
-  const [instanceLayer] = useGraph(parentManager, instanceProps.layerKey);
-  const instanceLayerProps = instanceLayer?.props ?? {};
+  const [instanceLayer] = useGraph(parentManager, instanceProps.layerKey, {
+    selector: (data) => pick(data, "props", "fragment"),
+  });
   const styles = useLayerStyles(instanceProps.layerKey);
 
   const { manager: resultGlobalManager } = useGlobalManager(
     instanceProps?.globalManager
   );
-  const resultProps = { ...instanceLayerProps, ...(instanceProps.props ?? {}) };
+
+  const resultProps = useMemo(
+    () => ({ ...(instanceLayer?.props ?? {}), ...(instanceProps.props ?? {}) }),
+    // [instanceLayer, instanceProps]
+    // Какой-то из этих пропсов меняется и вызывает перерендер всего дерева внутри Инстанса
+    [instanceLayer]
+  );
+
   const resultFragmentId = instanceProps?.fragmentId ?? instanceLayer?.fragment;
   const { properties: definitions, manager: innerFragmentManager } =
     useFragmentProperties(resultFragmentId);
@@ -42,6 +51,7 @@ export const useInstance = (instanceProps: InstanceProps) => {
   // };
 
   return {
+    layerKey: instanceProps.layerKey,
     styles,
     definitions,
     props: resultProps,

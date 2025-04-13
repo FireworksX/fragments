@@ -34,6 +34,7 @@ export { useLayerChildren } from "@/shared/hooks/useLayerChildren";
 export { useNormalizeLayer } from "@/shared/hooks/useNormalizeLayer";
 export { useLayerValue } from "@/shared/hooks/useLayerValue";
 export { useTextContent } from "@/shared/hooks/useTextContent";
+export { useFragmentChildren } from "@/shared/hooks/useFragmentChildren";
 export { GlobalManager } from "@/providers/GlobalManager";
 export { InstanceContext } from "@/components/Instance";
 export { FragmentContext } from "@/components/Fragment/FragmentContext";

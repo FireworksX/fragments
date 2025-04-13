@@ -15,6 +15,7 @@ interface ProjectTreeSortableItemProps extends PropsWithChildren {
   selected?: boolean
   deepIndex?: number
   indentationWidth?: number
+  ghost?: boolean
 }
 
 export const ProjectTreeSortableItem: FC<ProjectTreeSortableItemProps> = ({
@@ -22,12 +23,12 @@ export const ProjectTreeSortableItem: FC<ProjectTreeSortableItemProps> = ({
   type,
   className,
   deepIndex = 0,
-  selected,
   indentationWidth = 20,
-  children
+  children,
+  ghost
 }) => {
   const [{ [BUILDER_NODE_KEY]: currentFragment }] = useSearchParam([BUILDER_NODE_KEY])
-  const isActive = currentFragment == id
+  const isActive = type === projectItemType.fragment && currentFragment == id
   const { attributes, listeners, setNodeRef } = useDraggable({
     id,
     disabled: type !== projectItemType.fragment,
@@ -42,7 +43,8 @@ export const ProjectTreeSortableItem: FC<ProjectTreeSortableItemProps> = ({
     <div
       ref={setNodeRef}
       className={cn(styles.root, className, {
-        [styles.selected]: isActive
+        [styles.selected]: isActive,
+        [styles.ghost]: ghost
       })}
       data-testid='BuilderLayerSortingCell'
       style={{
