@@ -38,12 +38,12 @@ export const useLayerValueSpring = <T>({
   const cache = manager?.springsCache;
 
   const getCacheKey = (layerKey, fieldKey) => `${layerKey}_${fieldKey}`;
-  const isInherit = isInheritField(manager, layerKey, fieldKey);
-  const overrider = getOverrider(manager, layerKey);
   const cacheKey = getCacheKey(layerKey, fieldKey);
   const springable = springFields.includes(fieldKey);
+  const isInherit = isInheritField(manager, layerKey, fieldKey);
 
   const value$ = useMemo(() => {
+    const overrider = getOverrider(manager, layerKey);
     /**
      * Смотрим, перезаписывается ли сейчас значение, если да,
      * то возвращаем SpringValue от того слоя, кто перезаписывает.

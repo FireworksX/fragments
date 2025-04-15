@@ -15,7 +15,7 @@ export const BuilderHighlightBreakpoint: FC<BuilderHighlightBreakpointProps> = (
   const { top, left, width } = useLayerGeometry(layerKey)
 
   return (
-    <animated.div style={{ position: 'absolute', x: left, y: top.to(v => v - 40), width }}>
+    <animated.div data-highlight='breakpoint' style={{ position: 'absolute', x: left, y: top.to(v => v - 40), width }}>
       <HeaderLayer layerKey={layerKey} />
     </animated.div>
   )

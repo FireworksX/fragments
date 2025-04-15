@@ -20,6 +20,7 @@ export const FrameSchema = v.pipe(
       overridable: false,
     }),
     isPrimary: layerField(v.boolean(), { fallback: false, overridable: false }),
+    parent: layerField(v.nullable(v.string()), { overridable: false }),
     ...ChildrenSchema.entries,
     ...GraphFieldSchema.entries,
     ...OverridesSchema.entries,

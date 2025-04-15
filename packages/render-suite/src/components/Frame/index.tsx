@@ -1,4 +1,4 @@
-import { FC, memo, useContext } from "react";
+import { FC, memo, Profiler, useContext, useEffect } from "react";
 import { LinkKey } from "@graph-state/core";
 import { animated } from "@react-spring/web";
 import { useFrame } from "./hooks/useFrame";
@@ -11,8 +11,8 @@ interface FrameProps {
   layerKey: LinkKey;
 }
 
-export const Frame: FC<FrameProps> = memo(({ layerKey, ref }) => {
-  const customRender = useContext(CustomRender);
+export const Frame: FC<FrameProps> = memo(({ layerKey }) => {
+  // const customRender = useContext(CustomRender);
   const { styles, children, type } = useFrame(layerKey);
 
   if (type === definition.nodes.Text) {
@@ -23,12 +23,20 @@ export const Frame: FC<FrameProps> = memo(({ layerKey, ref }) => {
     return <Instance layerKey={layerKey} />;
   }
 
-  return customRender(
-    layerKey,
-    <animated.div ref={ref} style={styles} data-key={layerKey}>
-      {children.map((childLink) => (
-        <Frame key={childLink} layerKey={childLink} />
-      ))}
-    </animated.div>
+  return (
+    <Profiler
+      id={layerKey}
+      onRender={(id, phase, actualDuration) => {
+        if (layerKey === "Frame:10f6ca50888e5") {
+          console.log("phase", id, `in: ${actualDuration}ms`);
+        }
+      }}
+    >
+      <animated.div style={styles} data-key={layerKey}>
+        {children.map((childLink) => (
+          <Frame key={childLink} layerKey={childLink} />
+        ))}
+      </animated.div>
+    </Profiler>
   );
 });

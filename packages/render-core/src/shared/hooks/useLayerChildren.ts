@@ -1,4 +1,4 @@
-import { useContext } from "preact/compat";
+import { useContext, useEffect } from "preact/compat";
 import { GraphState, LinkKey } from "@graph-state/core";
 import { useGraph } from "@graph-state/react";
 import { FragmentContext } from "@/components/Fragment/FragmentContext";

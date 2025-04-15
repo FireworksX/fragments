@@ -4,7 +4,7 @@ import { useGraph, useGraphEffect } from '@graph-state/react'
 
 export const useBuilderCanvas = (selector?: () => Record<unknown, unknown>) => {
   const { builderManager } = use(BuilderContext)
-  const [canvas] = useGraph(builderManager, builderManager.$canvas.key, { selector })
+  const [canvas] = useGraph(builderManager, builderManager.$canvas.key, { selector: selector ?? (v => v) })
 
   return { canvas, manager: builderManager.$canvas }
 }

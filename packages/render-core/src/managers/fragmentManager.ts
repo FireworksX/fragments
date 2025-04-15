@@ -1,5 +1,6 @@
 import { createState, LinkKey } from "@graph-state/core";
 import { isHtmlContent, isHTMLNode } from "@graph-state/checkers";
+import { isKey } from "@/shared/helpers/keys";
 
 export const createFragmentManager = (
   fragmentKey: LinkKey,
@@ -26,7 +27,7 @@ export const createFragmentManager = (
         };
       },
     ],
-    skip: [isHtmlContent, isHTMLNode],
+    skip: [isHtmlContent, isHTMLNode, isKey],
   });
 
   manager.mutate(tempGraph);

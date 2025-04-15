@@ -1,8 +1,10 @@
-import { useCallback } from 'react'
+import { use, useCallback } from 'react'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
 import { isRootLayer } from '@fragmentsx/render-core'
 import { pick } from '@fragmentsx/utils'
+import { useGraphEffect } from '@graph-state/react'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
 
 export const useBuilderSelection = () => {
   const { documentManager } = useBuilderDocument()

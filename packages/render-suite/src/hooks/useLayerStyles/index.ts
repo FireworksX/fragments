@@ -16,6 +16,7 @@ export const useLayerStyles = (layerKey: LinkKey) => {
     if (!layerKey) {
       throw new Error("Empty layer key");
     }
+
     const { manager: fragmentManager } = useContext(FragmentContext);
     // const styles =
     const [, , { resultValue: opacity }] = useLayerValue(
@@ -23,6 +24,7 @@ export const useLayerStyles = (layerKey: LinkKey) => {
       "opacity",
       fragmentManager
     );
+
     const [overflow] = useLayerValue(layerKey, "overflow", fragmentManager);
     const { width, height } = useLayerSize(layerKey);
     const { position, top, left } = useLayerPosition(layerKey);

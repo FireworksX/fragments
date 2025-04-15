@@ -1,24 +1,27 @@
 import { Entity, GraphState } from "@graph-state/core";
 import { createLayer } from "@/shared/helpers/createLayer.ts";
-import { omit, pick } from "@fragmentsx/utils";
+import { isBrowser, omit, pick } from "@fragmentsx/utils";
 import { definition } from "@fragmentsx/definition";
+import { setKey } from "@/shared/helpers/keys";
+import { getParent } from "@/shared/helpers/getParent";
 
 export const cloneLayer = (
   manager: GraphState,
   layer: Entity,
-  externalProps = {}
+  externalProps = {},
+  _parent
 ) => {
   const layerGraph = manager.resolve(layer);
+  const layerKey = manager.keyOfEntity(layer);
+  const layerParent =
+    _parent ?? manager.keyOfEntity(getParent(manager, layerKey));
 
   if (layerGraph) {
-    const clonedChildren = (layerGraph?.children ?? []).map((child) =>
-      cloneLayer(manager, child)
-    );
-
     const clonedLayer = createLayer(
       {
         _type: layerGraph._type,
-        children: clonedChildren,
+        overrideFrom: setKey(layerKey),
+        parent: setKey(layerParent),
         ...(layerGraph?._type === definition.nodes.Instance
           ? pick(layerGraph, "fragment")
           : {}),
@@ -27,9 +30,16 @@ export const cloneLayer = (
       true
     );
 
-    const clonedKey = manager.mutate(clonedLayer);
+    const clonedChildren = (layerGraph?.children ?? []).map((child) =>
+      cloneLayer(manager, child, {}, manager.keyOfEntity(clonedLayer))
+    );
 
-    manager.mutate(manager.keyOfEntity(layerGraph), {
+    const clonedKey = manager.mutate({
+      ...clonedLayer,
+      children: clonedChildren,
+    });
+
+    manager.mutate(layerKey, {
       overrides: [clonedKey],
     });
 

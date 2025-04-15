@@ -12,6 +12,7 @@ export const TextSchema = v.object({
     fallback: "",
   }),
   variableContent: layerField(v.string(), { fallback: null, variable: true }),
+  parent: layerField(v.nullable(v.string()), { overridable: false }),
   attributes: layerField(
     v.object({
       fontSize: layerField(v.string(), { fallback: "14px" }),

@@ -24,11 +24,11 @@ interface BuilderLayerHighlightProps extends PropsWithChildren {
 
 const BuilderHighlight: FC<BuilderLayerHighlightProps> = ({ className, children }) => {
   const opacity = useSpringValue(0)
-  const { canvas } = useBuilderCanvas()
+  const { canvas } = useBuilderCanvas(data => pick(data, 'hoverLayer'))
   const { documentManager } = useBuilderDocument()
   const { selection, selectionGraph } = useBuilderSelection()
   const isInstanceSelection = selectionGraph?._type === definition.nodes.Instance
-  // const hoverLayerGeometry = useLayerGeometry(canvas.hoverLayer)
+  const hoverLayerGeometry = useLayerGeometry(canvas.hoverLayer)
   const selectionGeometry = useLayerGeometry(selection)
   const parentSelectionGeometry = useLayerGeometry(documentManager.keyOfEntity(getParent(documentManager, selection)))
   const { layers: breakpoints } = useFragmentLayers()
@@ -67,16 +67,16 @@ const BuilderHighlight: FC<BuilderLayerHighlightProps> = ({ className, children 
             '--borderWidth': '2px'
           }}
         />
-        {/*<animated.div*/}
-        {/*  data-type='hover'*/}
-        {/*  className={cn(styles.highlight, styles.mask, styles.selectedHighlight)}*/}
-        {/*  style={{*/}
-        {/*    ...hoverLayerGeometry,*/}
-        {/*    opacity: to([hoverLayerGeometry.height, hoverLayerGeometry.width], (h, w) =>*/}
-        {/*      h !== 0 && w !== 0 && !!canvas.hoverLayer ? 1 : 0*/}
-        {/*    )*/}
-        {/*  }}*/}
-        {/*/>*/}
+        <animated.div
+          data-type='hover'
+          className={cn(styles.highlight, styles.mask, styles.selectedHighlight)}
+          style={{
+            ...hoverLayerGeometry,
+            opacity: to([hoverLayerGeometry.height, hoverLayerGeometry.width], (h, w) =>
+              h !== 0 && w !== 0 && !!canvas.hoverLayer ? 1 : 0
+            )
+          }}
+        />
         <animated.div
           data-highlight='selection'
           className={cn(styles.highlight, styles.mask, styles.selectedHighlight)}
