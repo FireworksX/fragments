@@ -26,7 +26,7 @@ export const useLayerStyles = (layerKey: LinkKey) => {
     );
 
     const [overflow] = useLayerValue(layerKey, "overflow", fragmentManager);
-    const { width, height } = useLayerSize(layerKey);
+    const { width, height, ...optionalSizes } = useLayerSize(layerKey);
     const { position, top, left } = useLayerPosition(layerKey);
     const display = useLayerDisplay(layerKey);
     const { background } = useLayerBackground(layerKey);
@@ -53,6 +53,7 @@ export const useLayerStyles = (layerKey: LinkKey) => {
       borderRadius,
       zIndex: zIndex !== -1 ? zIndex : null,
       ...layout,
+      ...optionalSizes,
       userSelect: "none",
     };
   } catch (e) {

@@ -10,6 +10,7 @@ import {
   InstanceContext,
 } from "@fragmentsx/render-core";
 import { useLayerValue } from "@/hooks/useLayerValue";
+import { useOptionalSize } from "@/hooks/useLayerStyles/useOptionalSize";
 
 const autoSizes = [definition.sizing.Hug];
 
@@ -22,6 +23,10 @@ export const useLayerSize = (layerKey: LinkKey) => {
   const isPartOfInstance = !!instanceLayerKey;
   const layerParent = getParent(fragmentManager, layerKey);
   const layerNode = fragmentManager.resolve(layerKey);
+  const minWidth = useOptionalSize("minWidth", layerKey);
+  const minHeight = useOptionalSize("minHeight", layerKey);
+  const maxWidth = useOptionalSize("maxWidth", layerKey);
+  const maxHeight = useOptionalSize("maxHeight", layerKey);
 
   // useReadInstanceProperty()
   // layerKey,
@@ -74,18 +79,41 @@ export const useLayerSize = (layerKey: LinkKey) => {
     return value;
   };
 
-  return {
-    width:
-      isTop &&
-      isDocument &&
-      layerParent?.horizontalGrow === definition.fragmentGrowingMode.fill
-        ? "100%"
-        : to(width, (value) => toValue(widthType, value, instanceWidthType)),
-    height:
-      isTop &&
-      isDocument &&
-      layerParent?.horizontalGrow === definition.fragmentGrowingMode.fill
-        ? "100%"
-        : to(height, (value) => toValue(heightType, value, instanceHeightType)),
-  };
+  return useMemo(
+    () => ({
+      width:
+        isTop &&
+        isDocument &&
+        layerParent?.horizontalGrow === definition.fragmentGrowingMode.fill
+          ? "100%"
+          : to(width, (value) => toValue(widthType, value, instanceWidthType)),
+      height:
+        isTop &&
+        isDocument &&
+        layerParent?.horizontalGrow === definition.fragmentGrowingMode.fill
+          ? "100%"
+          : to(height, (value) =>
+              toValue(heightType, value, instanceHeightType)
+            ),
+      minWidth,
+      minHeight,
+      maxWidth,
+      maxHeight,
+    }),
+    [
+      minWidth,
+      minHeight,
+      maxWidth,
+      maxHeight,
+      isTop,
+      isDocument,
+      width,
+      widthType,
+      instanceWidthType,
+      layerParent,
+      height,
+      heightType,
+      instanceHeightType,
+    ]
+  );
 };

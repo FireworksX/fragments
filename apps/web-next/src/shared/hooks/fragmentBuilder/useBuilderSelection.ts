@@ -1,10 +1,11 @@
-import { use, useCallback } from 'react'
+import { use, useCallback, useEffect } from 'react'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
 import { isRootLayer } from '@fragmentsx/render-core'
 import { pick } from '@fragmentsx/utils'
 import { useGraphEffect } from '@graph-state/react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
+import { useUpdateEffect } from 'react-use'
 
 export const useBuilderSelection = () => {
   const { documentManager } = useBuilderDocument()
@@ -19,6 +20,12 @@ export const useBuilderSelection = () => {
     },
     [canvasManager, documentManager]
   )
+
+  useUpdateEffect(() => {
+    if (!selectionGraph) {
+      select(null)
+    }
+  }, [selectionGraph])
 
   return {
     selection: selectionLayerKey,

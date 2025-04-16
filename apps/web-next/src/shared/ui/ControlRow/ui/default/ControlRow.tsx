@@ -48,10 +48,10 @@ const ControlRow: FC<BuilderControlRowProps> = ({
   const { documentManager } = useBuilderDocument()
 
   const resultActions = useMemo<DropdownRenderOption[][]>(() => {
-    const actions = []
+    const resultActions = []
 
     if (override?.isOverride) {
-      actions.push([
+      resultActions.push([
         [
           {
             label: 'Reset override',
@@ -62,11 +62,15 @@ const ControlRow: FC<BuilderControlRowProps> = ({
     }
 
     if (variable?.actions) {
-      actions.push(variable.actions)
+      resultActions.push(variable.actions)
     }
 
-    return actions
-  }, [override, variable])
+    if (actions) {
+      resultActions.push(...actions)
+    }
+
+    return resultActions
+  }, [actions, override?.isOverride, override?.onRestOverride, variable?.actions])
 
   const hasActions = resultActions.some(action => action.length > 0)
   const isHighlightResult = isHighlight || override?.isOverride

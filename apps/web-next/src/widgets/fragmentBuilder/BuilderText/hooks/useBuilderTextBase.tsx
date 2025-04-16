@@ -69,9 +69,10 @@ const transforms: TextTransform[] = ['none', 'uppercase', 'lowercase', 'capitali
 
 export const useBuilderTextBase = () => {
   const editor = use(CanvasTextEditorContext)
-  const [attributes, setAttributes] = useLayerValue('attributes')
+  const [attributesValue, setAttributes] = useLayerValue('attributes')
   const [content, setContent, contentInfo] = useLayerValue('content')
   const contentVariable = useLayerVariables('content')
+  const attributes = attributesValue ?? {}
 
   const openColor = () => {
     const currentColor = attributes.color || '#000'

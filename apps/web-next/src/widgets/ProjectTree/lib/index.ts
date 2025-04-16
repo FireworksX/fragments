@@ -59,7 +59,7 @@ export function buildFolderStructure(folders: Folder[], opened: string[]): (Fold
     if (opened.includes(folder.id)) {
       // Добавляем фрагменты после папки
       folder.fragments?.forEach(file =>
-        result.push({ id: file.id, deepIndex: deepIndex + 1, type: projectItemType.fragment })
+        result.push({ id: file.id, deepIndex: deepIndex + 1, type: projectItemType.fragment, parentId: folder.id })
       )
 
       // Добавляем вложенные папки

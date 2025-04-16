@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 import HashTagFillIcon from '@/shared/icons/fills/hashtag-fill.svg'
 import ToggleFillIcon from '@/shared/icons/fills/toggle-fill.svg'
 import BarHorizontalIcon from '@/shared/icons/bar-horizontal.svg'

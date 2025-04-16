@@ -1,4 +1,5 @@
 import { generateId } from "@fragmentsx/utils";
+import { setKey } from "@/shared/helpers/keys";
 
 export const getEmptyFragment = (fragmentId: string) => {
   const layerId = generateId();
@@ -23,6 +24,7 @@ export const getEmptyFragment = (fragmentId: string) => {
       _type: "Frame",
       _id: layerId,
       opacity: 1,
+      parent: setKey(`Fragment:${fragmentId}`),
       visible: true,
       overflow: "visible",
       children: [],

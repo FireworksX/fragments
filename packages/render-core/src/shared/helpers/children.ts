@@ -19,7 +19,7 @@ export const appendChildren = (
   const targetEntity = manager.entityOfKey(target);
   const parseChildren = children.map((child) => ({
     ...(manager.entityOfKey(child) ?? child),
-    parent: setKey(target),
+    parent: setKey(manager.keyOfEntity(target)),
   }));
 
   if (targetEntity._type !== definition.nodes.Frame) {
@@ -55,7 +55,6 @@ export const appendChildren = (
       }
     });
 
-    console.log(override, overridesChildren);
     manager.mutate(manager.keyOfEntity(override), {
       children: overridesChildren,
     });

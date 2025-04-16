@@ -22,6 +22,10 @@ const springFields = [
   "height",
   "solidFill",
   "layerGap",
+  "minWidth",
+  "minHeight",
+  "maxWidth",
+  "maxHeight",
 ];
 
 export const useLayerValueSpring = <T>({

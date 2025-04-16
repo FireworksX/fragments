@@ -96,7 +96,12 @@ interface InjectLinkOptions {
 }
 declare const injectLink: (options: InjectLinkOptions) => void;
 
-declare function debounce(this: any, func: (this: any, ...args: any) => any, timeout?: number): (...args: any) => void;
+type DebouncedFunction<T extends (...args: any[]) => any> = {
+    (...args: Parameters<T>): ReturnType<T> | undefined;
+    cancel: () => void;
+    flush: () => ReturnType<T> | undefined;
+};
+declare function debounce<T extends (...args: any[]) => any>(func: T, wait: number, immediate?: boolean): DebouncedFunction<T>;
 
 declare const _default: boolean;
 

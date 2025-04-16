@@ -37,7 +37,7 @@ export const ProjectTree: FC<ProjectTreeProps> = ({ className, draggable, onClic
             type={item.type}
             deepIndex={item.deepIndex}
           >
-            <ProjectTreeItem id={item.id} type={item.type} onClick={() => onClick(item)} />
+            <ProjectTreeItem id={item.id} type={item.type} parentId={item.parentId} onClick={() => onClick(item)} />
           </ProjectTreeSortableItem>
         ))}
 

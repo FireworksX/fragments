@@ -60,25 +60,27 @@ export const useBuilderTabs = () => {
   }, [tabsKeys.length])
 
   const tabs =
-    resultTabsNodes?.map((tabNode, index) => {
-      const fragment = apolloClient.readFragment({
-        id: `FragmentGet:${tabNode.id}`,
-        fragment: gql`
-          fragment _ on FragmentGet {
-            name
-          }
-        `
-      })
+    resultTabsNodes
+      ?.map((tabNode, index) => {
+        const fragment = apolloClient.readFragment({
+          id: `FragmentGet:${tabNode.id}`,
+          fragment: gql`
+            fragment _ on FragmentGet {
+              name
+            }
+          `
+        })
 
-      return {
-        id: tabNode.id,
-        key: tabsKeys[index],
-        name: fragment?.name,
-        preview: tabNode.preview,
-        isActive: +tabNode.id === currentFragmentId && tabNode.preview === isPreview,
-        fetching: +tabNode.id === currentFragmentId && fetchingUpdate
-      }
-    }) ?? []
+        return {
+          id: tabNode.id,
+          key: tabsKeys[index],
+          name: fragment?.name,
+          preview: tabNode.preview,
+          isActive: +tabNode.id === currentFragmentId && tabNode.preview === isPreview,
+          fetching: +tabNode.id === currentFragmentId && fetchingUpdate
+        }
+      })
+      .filter(tab => !!tab.name) ?? []
 
   return {
     tabs,

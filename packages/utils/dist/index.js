@@ -331,17 +331,59 @@ var injectLink = (options) => {
 };
 
 // src/debounce.ts
-function debounce(func, timeout = 300) {
-  let timer;
-  return (...args) => {
-    if (!timer) {
-      func.apply(this, args);
+function debounce(func, wait, immediate = false) {
+  let timeoutId = null;
+  let lastArgs = null;
+  let lastThis;
+  let result;
+  let lastCallTime = null;
+  const later = () => {
+    const timeSinceLastCall = Date.now() - (lastCallTime || 0);
+    if (timeSinceLastCall < wait && timeSinceLastCall >= 0) {
+      timeoutId = setTimeout(later, wait - timeSinceLastCall);
+    } else {
+      if (!immediate) {
+        result = func.apply(lastThis, lastArgs);
+      }
+      timeoutId = null;
+      lastArgs = null;
+      lastThis = null;
     }
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      timer = void 0;
-    }, timeout);
   };
+  const debounced = function(...args) {
+    lastCallTime = Date.now();
+    lastArgs = args;
+    lastThis = this;
+    const callNow = immediate && !timeoutId;
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    timeoutId = setTimeout(later, wait);
+    if (callNow) {
+      result = func.apply(lastThis, lastArgs);
+    }
+    return result;
+  };
+  debounced.cancel = () => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    timeoutId = null;
+    lastArgs = null;
+    lastThis = null;
+  };
+  debounced.flush = () => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+      timeoutId = null;
+      const res = func.apply(lastThis, lastArgs);
+      lastArgs = null;
+      lastThis = null;
+      return res;
+    }
+    return result;
+  };
+  return debounced;
 }
 
 // src/isBrowser.ts

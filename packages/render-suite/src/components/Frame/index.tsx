@@ -12,7 +12,7 @@ interface FrameProps {
 }
 
 export const Frame: FC<FrameProps> = memo(({ layerKey }) => {
-  // const customRender = useContext(CustomRender);
+  const customRender = useContext(CustomRender);
   const { styles, children, type } = useFrame(layerKey);
 
   if (type === definition.nodes.Text) {
@@ -23,20 +23,12 @@ export const Frame: FC<FrameProps> = memo(({ layerKey }) => {
     return <Instance layerKey={layerKey} />;
   }
 
-  return (
-    <Profiler
-      id={layerKey}
-      onRender={(id, phase, actualDuration) => {
-        if (layerKey === "Frame:10f6ca50888e5") {
-          console.log("phase", id, `in: ${actualDuration}ms`);
-        }
-      }}
-    >
-      <animated.div style={styles} data-key={layerKey}>
-        {children.map((childLink) => (
-          <Frame key={childLink} layerKey={childLink} />
-        ))}
-      </animated.div>
-    </Profiler>
+  return customRender(
+    layerKey,
+    <animated.div style={styles} data-key={layerKey}>
+      {children.map((childLink) => (
+        <Frame key={childLink} layerKey={childLink} />
+      ))}
+    </animated.div>
   );
 });

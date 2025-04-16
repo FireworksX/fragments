@@ -27,9 +27,6 @@ export const ProjectTreeItemOptions: FC<ProjectTreeItemOptionsProps> = props => 
     return (
       <>
         <DropdownGroup>
-          <DropdownOption onClick={props.onInsert}>Insert</DropdownOption>
-        </DropdownGroup>
-        <DropdownGroup>
           <DropdownOption onClick={props.onRename}>Rename</DropdownOption>
           <DropdownOption mode='danger' onClick={props.onDelete}>
             Delete

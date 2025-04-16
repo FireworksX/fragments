@@ -26,7 +26,7 @@ export const useInstance = (instanceProps: InstanceProps) => {
   const [instanceLayer] = useGraph(parentManager, instanceProps.layerKey, {
     selector: (data) => pick(data, "props", "fragment"),
   });
-  const styles = {}; //useLayerStyles(instanceProps.layerKey);
+  const styles = useLayerStyles(instanceProps.layerKey);
 
   const { manager: resultGlobalManager } = useGlobalManager(
     instanceProps?.globalManager

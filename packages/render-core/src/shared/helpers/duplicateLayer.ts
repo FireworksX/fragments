@@ -29,18 +29,14 @@ export const duplicateLayer = (
     if (!_deep) {
       const parent = getParent(manager, layer);
       if (parent) {
-        const layerIndex = manager
-          .resolve(parent)
-          ?.children?.findIndex(
-            (child) => child === manager.keyOfEntity(layer)
-          );
+        const layerIndex = parent?.children?.findIndex(
+          (child) => child === manager.keyOfEntity(layer)
+        );
 
         insertChildren(manager, parent, layerIndex + 1, duplicatedKey);
         // manager.mutate(manager.keyOfEntity(parent), {
         //   children: [duplicatedKey],
         // });
-
-        console.log(manager.resolve(manager.keyOfEntity(parent)));
       }
     }
 
