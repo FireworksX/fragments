@@ -1,7 +1,7 @@
 import { LinkKey } from "@graph-state/core";
 import { Fragment } from "@/components/Fragment";
 import { useInstance } from "./hooks/useInstance";
-import { createContext, FC, memo } from "react";
+import { createContext, FC, memo, Profiler } from "react";
 import { animated } from "@react-spring/web";
 import { InstanceContext } from "@fragmentsx/render-core";
 
@@ -13,6 +13,8 @@ export interface InstanceProps {
 }
 
 const Inner = memo((allProps) => {
+  if (!allProps.innerManager) return null;
+
   return (
     <InstanceContext.Provider
       value={{

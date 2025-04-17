@@ -7,29 +7,18 @@ import { useFragmentManager } from "@/shared/hooks/useFragmentManager";
 import { definition } from "@fragmentsx/definition";
 import { GraphState } from "@graph-state/core";
 import { index } from "@/shared/hooks/useLayerStyles";
+import { useFragmentChildren } from "@/shared/hooks/useFragmentChildren";
 
 export const useFragment = (fragmentId: string, globalManager?: GraphState) => {
   const { manager } = useFragmentManager(fragmentId, globalManager);
   const layerKey = `${definition.nodes.Fragment}:${fragmentId}`;
-  const [ref, fragmentRect] = useMeasure();
-  const children = useLayerChildren(layerKey, manager);
-  const { isDocument, renderTarget } = useRenderTarget(globalManager);
-
-  const resultChildren = useMemo(() => {
-    if (isDocument && manager) {
-      const breakpoints = children?.map(manager.resolve);
-      const activeBreakpoint = findBreakpoint(breakpoints, fragmentRect.width);
-
-      return activeBreakpoint ? [manager.keyOfEntity(activeBreakpoint)] : [];
-    }
-
-    return children;
-  }, [children, manager, fragmentRect.width]);
+  const { isDocument } = useRenderTarget(globalManager);
+  const { setRef, children } = useFragmentChildren(fragmentId);
 
   return {
     isDocument,
     manager,
-    ref,
-    children: resultChildren,
+    setRef,
+    children,
   };
 };

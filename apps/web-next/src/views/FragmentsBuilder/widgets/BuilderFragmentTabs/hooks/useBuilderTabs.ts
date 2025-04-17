@@ -2,20 +2,16 @@ import { use, useEffect } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph, useGraphStack } from '@graph-state/react'
 import { useLocalStorageArray } from '@/shared/hooks/useLocalStorageArray'
-import { useLocalStorageValue } from '@/shared/hooks/useLocalStorageValue'
-import { useParams } from 'next/navigation'
 import { useSearchParam } from '@/shared/hooks/useSearchParams'
 import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
 import { gql, useApolloClient, useQuery } from '@apollo/client'
 import { useProject } from '@/shared/hooks/useProject'
-import { useBuilderDocumentManager } from '@/shared/hooks/fragmentBuilder/useBuilderDocumentManager'
 import { usePrevious } from 'react-use'
 import { useFragmentsNamesQuery } from '@/views/FragmentsBuilder/widgets/BuilderFragmentTabs/queries/FragmentsNames.generated'
 
 export const useBuilderTabs = () => {
   const { projectSlug } = useProject()
   const { currentFragmentId, isPreview, isValidId, openFragment } = useBuilder()
-  const { fetchingUpdate } = useBuilderDocumentManager()
   const { value: tabsNodes, push, splice } = useLocalStorageArray<string>('tabs', [], { sync: true })
   const resultTabsNodes = tabsNodes.filter(tab => isValidId(tab?.id))
   const builderTabKey = tab => `${tab?.id}_${tab?.preview}`
@@ -77,7 +73,7 @@ export const useBuilderTabs = () => {
           name: fragment?.name,
           preview: tabNode.preview,
           isActive: +tabNode.id === currentFragmentId && tabNode.preview === isPreview,
-          fetching: +tabNode.id === currentFragmentId && fetchingUpdate
+          fetching: false //+tabNode.id === currentFragmentId //&& fetchingUpdate
         }
       })
       .filter(tab => !!tab.name) ?? []

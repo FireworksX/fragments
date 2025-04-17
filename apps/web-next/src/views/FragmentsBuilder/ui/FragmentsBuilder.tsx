@@ -28,7 +28,6 @@ export const FragmentsBuilder = () => {
           <div className={styles.container}>
             <FragmentsBuilderAside />
             <div className={styles.content}>
-              <BuilderFragmentTabs />
               <FragmentsBuilderContent />
             </div>
           </div>

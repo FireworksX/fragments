@@ -77,7 +77,7 @@ const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
           isOverride: height.info.isOverride || heightType.info.isOverride,
           onRestOverride: () => {
             height.info.resetOverride()
-            heightType.info.resetOverride
+            heightType.info.resetOverride()
           }
         }}
       >

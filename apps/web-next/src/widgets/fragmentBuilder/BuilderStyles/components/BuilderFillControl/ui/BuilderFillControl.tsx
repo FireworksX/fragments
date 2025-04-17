@@ -10,7 +10,7 @@ interface BuilderFillControlProps {
   className?: string
 }
 
-const ALLOW_FILL_TYPES = [definition.paintMode.Solid]
+export const ALLOW_FILL_TYPES = [definition.paintMode.Solid]
 
 export const BuilderFillControl: FC<BuilderFillControlProps> = memo(({ className }) => {
   const [fillType, setFillType] = useLayerValue('fillType')

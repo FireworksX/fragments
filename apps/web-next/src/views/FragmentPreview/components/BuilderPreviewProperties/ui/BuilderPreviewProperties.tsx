@@ -1,7 +1,6 @@
 import { FC } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { useBuilderDocumentManager } from '@/shared/hooks/fragmentBuilder/useBuilderDocumentManager'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
 import { InstancePropertyGeneric } from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/components/InstancePropertyGeneric'

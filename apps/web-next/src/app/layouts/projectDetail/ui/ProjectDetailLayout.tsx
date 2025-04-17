@@ -8,9 +8,12 @@ import { createGlobalManager } from '@fragmentsx/render-core'
 import { GlobalManager } from '@fragmentsx/render-suite'
 import { getSession, useSession } from 'next-auth/react'
 import { DndContext, MouseSensor, pointerWithin, useSensor, useSensors } from '@dnd-kit/core'
+import { useProject } from '@/shared/hooks/useProject'
+import { useProjectSettingsTokens } from '@/views/ProjectSettingsTokens/hooks/useProjectSettingsTokens'
 
 export const ProjectDetailLayout: FC<PropsWithChildren> = ({ children }) => {
   const { data } = useSession()
+  // const { privateKey } = useProjectSettingsTokens()
   const [globalManager, setGlobalManager] = useState()
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -23,7 +26,8 @@ export const ProjectDetailLayout: FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     if (data && !globalManager) {
-      setGlobalManager(createGlobalManager({ apiToken: data.accessToken, isSelfHosted: true }))
+      const globalManager = createGlobalManager({ apiToken: data.accessToken, isSelfHosted: true })
+      setGlobalManager(globalManager)
       window.globalManager = globalManager
     }
   }, [data])

@@ -4,30 +4,16 @@ import { useLayerValue } from "@/shared/hooks/useLayerValue";
 import { toPx } from "@fragmentsx/utils";
 import { definition } from "@fragmentsx/definition";
 import { FragmentContext } from "@/components/Fragment/FragmentContext";
+import { useCalcLayerBorder } from "@/shared/hooks/useLayerStyles/useCalcLayerBorder";
 
 export const useLayerBorder = (layerKey: LinkKey) => {
   const { manager: fragmentManager } = useContext(FragmentContext);
-  const [borderTypeValue] = useLayerValue(
-    layerKey,
-    "borderType",
-    fragmentManager
-  );
   const [borderWidth] = useLayerValue(layerKey, "borderWidth", fragmentManager);
   const [borderColor] = useLayerValue(layerKey, "borderColor", fragmentManager);
+  const calcBorder = useCalcLayerBorder(layerKey);
 
-  return useMemo(() => {
-    let value = "";
-    if (
-      typeof borderTypeValue === "string" &&
-      borderTypeValue !== definition.borderType.None
-    ) {
-      value = `${toPx(
-        borderWidth
-      )} ${borderTypeValue.toLowerCase()} ${borderColor}`;
-    }
-
-    return {
-      border: value,
-    };
-  }, [borderTypeValue, borderWidth, borderColor]);
+  return useMemo(
+    () => ({ border: calcBorder(borderWidth, borderColor) }),
+    [borderWidth, borderColor]
+  );
 };

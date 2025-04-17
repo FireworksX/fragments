@@ -7,11 +7,7 @@ import { FragmentContext } from "@fragmentsx/render-core";
 export const useLayerBackground = (layerKey: LinkKey) => {
   const { manager: fragmentManager } = useContext(FragmentContext);
 
-  const [, , { resultValue: fillType }] = useLayerValue(
-    layerKey,
-    "fillType",
-    fragmentManager
-  );
+  const [fillType] = useLayerValue(layerKey, "fillType", fragmentManager);
   const [, , { resultValue: solidFill }] = useLayerValue(
     layerKey,
     "solidFill",

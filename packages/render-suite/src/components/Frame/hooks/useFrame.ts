@@ -5,7 +5,7 @@ import { useLayerStyles } from "@/hooks/useLayerStyles";
 
 export const useFrame = (layerKey: LinkKey) => {
   const { manager: fragmentManager } = useContext(FragmentContext);
-  const layer = fragmentManager.entityOfKey(layerKey);
+  const layer = fragmentManager?.entityOfKey(layerKey);
   const styles = useLayerStyles(layerKey);
   const children = useLayerChildren(layerKey);
 

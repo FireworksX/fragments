@@ -25,10 +25,19 @@ export const Frame: FC<FrameProps> = memo(({ layerKey }) => {
 
   return customRender(
     layerKey,
+    // <Profiler
+    //   id={layerKey}
+    //   onRender={(id, phase, actualDuration) => {
+    //     // if (id === "Instance:94de72bbc2561") {
+    //     //   console.log(phase, actualDuration);
+    //     // }
+    //   }}
+    // >
     <animated.div style={styles} data-key={layerKey}>
       {children.map((childLink) => (
         <Frame key={childLink} layerKey={childLink} />
       ))}
     </animated.div>
+    // </Profiler>
   );
 });

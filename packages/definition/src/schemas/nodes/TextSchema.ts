@@ -5,11 +5,15 @@ import { OverridesSchema } from "@/schemas/OverridesSchema";
 import { PositionSchema } from "@/schemas/styles/PositionSchema";
 import { SceneSchema } from "@/schemas/styles/SceneSchema";
 import { SizeSchema } from "@/schemas/styles/SizeSchema";
+import { whiteSpace } from "@/constants";
 
 export const TextSchema = v.object({
   name: layerField(v.string(), { fallback: "Text", overridable: false }),
   content: layerField(v.string(), {
     fallback: "",
+  }),
+  whiteSpace: layerField(v.enum(Object.keys(whiteSpace)), {
+    fallback: whiteSpace.pre,
   }),
   variableContent: layerField(v.string(), { fallback: null, variable: true }),
   parent: layerField(v.nullable(v.string()), { overridable: false }),

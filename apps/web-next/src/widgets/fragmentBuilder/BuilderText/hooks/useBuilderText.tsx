@@ -26,7 +26,6 @@ import { isVariableLink } from '@/shared/utils/isVariableLink'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { useLayerVariables } from '@/shared/hooks/fragmentBuilder/useLayerVariables'
-import { useBuilderDocumentManager } from '@/shared/hooks/fragmentBuilder/useBuilderDocumentManager'
 import { pick } from '@fragmentsx/utils'
 
 const aligns: TabsSelectorItem[] = [

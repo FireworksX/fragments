@@ -16,7 +16,7 @@ interface FragmentProps {
 
 export const Fragment: FC<FragmentProps> = ({ fragmentId, globalManager }) => {
   const { manager: resultGlobalManager } = useGlobalManager(globalManager);
-  const { ref, children, manager, isDocument } = useFragment(
+  const { setRef, children, manager, isDocument } = useFragment(
     fragmentId,
     globalManager
   );
@@ -25,9 +25,10 @@ export const Fragment: FC<FragmentProps> = ({ fragmentId, globalManager }) => {
     <GlobalManager value={resultGlobalManager}>
       <FragmentProvider manager={manager}>
         <div
-          ref={ref}
+          ref={setRef}
           data-key={`${definition.nodes.Fragment}:${fragmentId}`}
-          className={isDocument ? styles.fragmentDocument : styles.fragment}
+          // className={isDocument ? styles.fragmentDocument : styles.fragment}
+          className={styles.fragment}
           style={styles}
         >
           {children.map((childLink) => (

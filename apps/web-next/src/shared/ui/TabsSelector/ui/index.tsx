@@ -33,7 +33,7 @@ const TabsSelector: FC<TabsSelectorProps> = animated(({ className, cellClassName
 
     if (activeCell && activeCell instanceof HTMLElement) {
       switcherApi.start({
-        width: activeCell.getBoundingClientRect().width - 3,
+        width: activeCell.offsetWidth,
         x: activeCell.offsetLeft
       })
     }

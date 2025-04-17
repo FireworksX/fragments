@@ -1,26 +1,28 @@
-.root {
-    background-color: var(--background) !important;
-    border-radius: var(--radius-second) !important;
-    box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.1) !important;
+@layer ui {
+    .root {
+        background-color: var(--background);
+        border-radius: var(--radius-second);
+        box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.1);
 
-    .tippy-arrow {
-        color: var(--background) !important;
+        .tippy-arrow {
+            color: var(--background) !important;
+        }
+
+        .tippy-content {
+            padding: 0 !important;
+        }
     }
 
-    .tippy-content {
-        padding: 0 !important;
+    .options {
+        max-height: 400px;
+        overflow: auto;
     }
-}
 
-.options {
-    max-height: 400px;
-    overflow: auto;
-}
-
-.loadingContainer {
-    width: 120px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    .loadingContainer {
+        width: 120px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }

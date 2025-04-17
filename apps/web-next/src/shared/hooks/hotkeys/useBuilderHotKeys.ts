@@ -1,17 +1,13 @@
 import { useHotkeys } from 'react-hotkeys-hook'
-import { useContext } from 'react'
-import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useBuilderLayerFlags } from '@/shared/hooks/fragmentBuilder/useBuilderLayerFlags'
 import { hotKeysScope } from '@/shared/hooks/hotkeys/HotKeysProvider'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
-import { useBuilderDocumentManager } from '@/shared/hooks/fragmentBuilder/useBuilderDocumentManager'
-import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
 
 export const useBuilderHotKeys = () => {
   const { selection } = useBuilderSelection()
   const layerFlags = useBuilderLayerFlags(selection)
-  const { saveFragment } = useBuilderDocumentManager()
+  const { saveFragment } = useBuilderDocument()
 
   useHotkeys(
     'meta+s',

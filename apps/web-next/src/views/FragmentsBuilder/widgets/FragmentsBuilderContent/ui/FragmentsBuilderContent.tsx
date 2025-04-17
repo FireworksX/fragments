@@ -11,7 +11,6 @@ import { ProjectAssets } from '@/widgets/fragmentBuilder/ProjectAssets'
 import { FragmentsEditPlaceholder } from '@/views/FragmentsBuilder/widgets/FragmentsBuilderContent/components/FragmentsEditPlaceholder'
 import { FragmentsEdit } from '@/views/FragmentsEdit'
 import { FragmentPreview } from '@/views/FragmentPreview'
-import { useBuilderDocumentManager } from '@/shared/hooks/fragmentBuilder/useBuilderDocumentManager'
 import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
 
 interface FragmentsBuilderContentProps {

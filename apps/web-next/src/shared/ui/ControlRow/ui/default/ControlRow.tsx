@@ -52,12 +52,11 @@ const ControlRow: FC<BuilderControlRowProps> = ({
 
     if (override?.isOverride) {
       resultActions.push([
-        [
-          {
-            label: 'Reset override',
-            onClick: override?.onRestOverride
-          }
-        ]
+        {
+          name: 'resetOverride',
+          label: 'Reset override',
+          onClick: override?.onRestOverride
+        }
       ])
     }
 

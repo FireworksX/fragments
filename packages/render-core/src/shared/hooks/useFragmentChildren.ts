@@ -38,6 +38,7 @@ export const useFragmentChildren = (fragmentId: number) => {
               ? [manager.keyOfEntity(activeBreakpoint)]
               : [];
 
+            // console.log(children, layerKey, manager);
             if (activeBreakpoint) {
               setResizeChildren(manager.keyOfEntity(activeBreakpoint));
             }
@@ -52,7 +53,7 @@ export const useFragmentChildren = (fragmentId: number) => {
         }
       }
     },
-    [isDocument, instanceLayerKey, manager]
+    [isDocument, instanceLayerKey, manager, children]
   );
 
   // const resultChildren = useMemo(() => {

@@ -1,7 +1,7 @@
 import { LinkKey } from "@graph-state/core";
 import { useLayerValue } from "@/shared/hooks/useLayerValue";
 import { definition } from "@fragmentsx/definition";
-import { useContext } from "preact/compat";
+import { useContext, useMemo } from "preact/compat";
 import { FragmentContext } from "@/components/Fragment/FragmentContext";
 
 export const useLayerLayout = (layerKey: LinkKey) => {
@@ -11,7 +11,6 @@ export const useLayerLayout = (layerKey: LinkKey) => {
     "layerMode",
     fragmentManager
   );
-  const [layerGap] = useLayerValue(layerKey, "layerGap", fragmentManager);
   const [layerWrap] = useLayerValue(layerKey, "layerWrap", fragmentManager);
   const [layerDistribute] = useLayerValue(
     layerKey,
@@ -28,16 +27,26 @@ export const useLayerLayout = (layerKey: LinkKey) => {
 
   const isFlex = layerModeValue === definition.layerMode.flex;
 
-  return {
-    gap: isFlex ? layerGap : null,
-    flexWrap: isFlex ? layerWrap : null,
-    justifyContent: isFlex ? layerDistribute : null,
-    flexDirection: isFlex
-      ? layerDirectionValue === definition.layerDirection.vertical
-        ? "column"
-        : "row"
-      : null,
-    alignItems: isFlex ? layerAlign : null,
-    padding: isFlex ? padding : null,
-  };
+  return useMemo(
+    () => ({
+      isFlex,
+      flexWrap: isFlex ? layerWrap : null,
+      justifyContent: isFlex ? layerDistribute : null,
+      flexDirection: isFlex
+        ? layerDirectionValue === definition.layerDirection.vertical
+          ? "column"
+          : "row"
+        : null,
+      alignItems: isFlex ? layerAlign : null,
+      padding: isFlex ? padding : null,
+    }),
+    [
+      isFlex,
+      layerWrap,
+      layerDistribute,
+      layerDirectionValue,
+      layerAlign,
+      padding,
+    ]
+  );
 };

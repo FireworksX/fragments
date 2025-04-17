@@ -1,7 +1,6 @@
 import { createState, GraphState } from "@graph-state/core";
 import { definition } from "@fragmentsx/definition";
-
-import { createFetchManager } from "./fetchManager/createFetchManager";
+import { plugin as fetchPlugin } from "@/managers/fetchPlugin/plugin";
 import { createFragmentManager } from "@/managers/fragmentManager";
 
 interface Options {
@@ -10,10 +9,10 @@ interface Options {
 }
 
 export const createGlobalManager = ({ apiToken, isSelfHosted }: Options) => {
-  const fetchManager = createFetchManager(apiToken, isSelfHosted);
-
   const plugin = (state: GraphState) => {
     state.createFragmentManager = (fragmentId: string, document: unknown) => {
+      if (!fragmentId || !document) return null;
+
       const currentManager = state.resolve(state.key)?.fragmentsManagers?.[
         fragmentId
       ];
@@ -22,10 +21,7 @@ export const createGlobalManager = ({ apiToken, isSelfHosted }: Options) => {
         return currentManager;
       }
 
-      const manager = createFragmentManager(
-        `${definition.nodes.Fragment}:${fragmentId}`,
-        document
-      );
+      const manager = createFragmentManager(fragmentId, document);
 
       state.mutate(state.key, {
         fragmentsManagers: {
@@ -46,10 +42,9 @@ export const createGlobalManager = ({ apiToken, isSelfHosted }: Options) => {
   return createState({
     _type: "GlobalManager",
     initialState: {
-      fetchManager,
       fragmentsManagers: {},
       renderTarget: definition.renderTarget.document,
     },
-    plugins: [plugin],
+    plugins: [plugin, fetchPlugin(apiToken, isSelfHosted)],
   });
 };

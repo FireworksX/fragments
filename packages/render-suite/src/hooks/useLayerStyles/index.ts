@@ -5,19 +5,19 @@ import { LinkKey } from "@graph-state/core";
 import { useLayerPosition } from "./useLayerPosition";
 import { useLayerSize } from "./useLayerSize";
 import { useLayerValue } from "@/hooks/useLayerValue";
-import { FragmentContext } from "@fragmentsx/render-core";
+import { FragmentContext, useLayerDisplay } from "@fragmentsx/render-core";
 import { useLayerBackground } from "@/hooks/useLayerStyles/useLayerBackground";
-import { useLayerDisplay } from "@/hooks/useLayerStyles/useLayerDisplay";
 import { useLayerBorder } from "@/hooks/useLayerStyles/useLayerBorder";
 import { useLayerLayout } from "@/hooks/useLayerStyles/useLayerLayout";
 
 export const useLayerStyles = (layerKey: LinkKey) => {
   try {
-    if (!layerKey) {
+    const { manager: fragmentManager } = useContext(FragmentContext);
+
+    if (!layerKey || !fragmentManager) {
       throw new Error("Empty layer key");
     }
 
-    const { manager: fragmentManager } = useContext(FragmentContext);
     // const styles =
     const [, , { resultValue: opacity }] = useLayerValue(
       layerKey,
@@ -33,6 +33,7 @@ export const useLayerStyles = (layerKey: LinkKey) => {
     const { border } = useLayerBorder(layerKey);
     const layout = useLayerLayout(layerKey);
     const [zIndex] = useLayerValue(layerKey, "zIndex", fragmentManager);
+    const [whiteSpace] = useLayerValue(layerKey, "whiteSpace", fragmentManager);
     const [borderRadius] = useLayerValue(
       layerKey,
       "borderRadius",
@@ -54,6 +55,7 @@ export const useLayerStyles = (layerKey: LinkKey) => {
       zIndex: zIndex !== -1 ? zIndex : null,
       ...layout,
       ...optionalSizes,
+      whiteSpace,
       userSelect: "none",
     };
   } catch (e) {

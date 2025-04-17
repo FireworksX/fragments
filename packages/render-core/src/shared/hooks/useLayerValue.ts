@@ -1,7 +1,7 @@
 import { useCallback } from "preact/compat";
 import { useGraph } from "@graph-state/react";
 import { GraphState, LinkKey } from "@graph-state/core";
-import { pick } from "@fragmentsx/utils";
+import { omit, pick } from "@fragmentsx/utils";
 import { parseLayerField, isVariableLink } from "@fragmentsx/definition";
 import { useNormalizeLayer } from "@/shared/hooks/useNormalizeLayer";
 import { useReadVariable } from "@/shared/hooks/useReadVariable";
@@ -28,7 +28,21 @@ export const useLayerValue = (
 
   const isInherit = isInheritField(resultManager, key, fieldKey);
   const isOverride = !isInherit && !isPartOfPrimary(resultManager, key);
-  const resetOverride = useCallback(() => updateLayerData(null), []);
+
+  const resetOverride = useCallback(() => {
+    // TODO Добавить в updateLayerData возможность передать replace: true
+    // TODO Сейчас если удалить свойство из объекта, не будет реакции, нужно править selector
+    resultManager.mutate(
+      layerKey,
+      (prev) => {
+        const r = omit(prev, fieldKey);
+        console.log(prev, r);
+
+        return r;
+      },
+      { replace: true }
+    );
+  }, [updateLayerData]);
 
   const restore = useCallback(
     (fallbackValue: unknown) => {
@@ -73,7 +87,7 @@ export const useLayerValue = (
     {
       isOverride,
       resetOverride,
-      isVariable: isVariableLink(rawValue),
+      isVariable: isVariableLink(rawValue ?? layerValue),
       rawValue,
       restore,
       ...resultManager.entityOfKey(key),

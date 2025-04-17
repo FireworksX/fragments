@@ -10,8 +10,7 @@ export const useFragmentManager = (fragmentId?: unknown) => {
   };
 
   const loadFragmentManager = async (id: string) => {
-    const fragmentDocument =
-      await globalManagerGraph.fetchManager.queryFragment(id);
+    const fragmentDocument = await globalManager.queryFragment(id);
 
     return globalManager?.createFragmentManager(id, fragmentDocument);
   };

@@ -1,9 +1,10 @@
 import { createState, LinkKey } from "@graph-state/core";
 import { isHtmlContent, isHTMLNode } from "@graph-state/checkers";
+import { definition } from "@fragmentsx/definition";
 import { isKey } from "@/shared/helpers/keys";
 
 export const createFragmentManager = (
-  fragmentKey: LinkKey,
+  fragmentId: string,
   initialDocument = {}
 ) => {
   const tempGraph = {
@@ -18,11 +19,12 @@ export const createFragmentManager = (
 
   const manager = createState({
     _type: "FragmentManager",
+    _id: fragmentId,
     initialState: initialDocument,
     plugins: [
       (state) => {
         state.$fragment = {
-          root: fragmentKey,
+          root: `${definition.nodes.Fragment}:${fragmentId}`,
           temp: "Temp:root",
         };
       },

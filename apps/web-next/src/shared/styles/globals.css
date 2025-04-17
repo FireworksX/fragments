@@ -1,4 +1,5 @@
 @import "./reboot.css";
+@layer lib, reset, ui;
 
 :root {
     --light: #F6F6F6;

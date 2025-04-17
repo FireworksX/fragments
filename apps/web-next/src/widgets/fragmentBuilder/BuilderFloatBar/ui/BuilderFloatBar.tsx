@@ -25,9 +25,9 @@ import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanva
 import { useBuilderCreator } from '@/shared/hooks/fragmentBuilder/useBuilderCreator'
 import cn from 'classnames'
 import { definition } from '@fragments/definition'
-import { useBuilderDocumentManager } from '@/shared/hooks/fragmentBuilder/useBuilderDocumentManager'
 import { Spinner } from '@/shared/ui/Spinner'
 import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
+import { BuilderFragmentPublish } from '@/widgets/fragmentBuilder/BuilderFragmentPublish'
 
 interface BuilderFloatBarProps {
   className?: string
@@ -70,7 +70,9 @@ export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
 
       <div className={styles.delimiter} />
 
-      <Button onClick={() => openPreview()}>Preview</Button>
+      <Dropdown className={styles.publishDropdown} trigger='click' options={<BuilderFragmentPublish />}>
+        <Button glowing>Publish</Button>
+      </Dropdown>
     </div>
   )
 }

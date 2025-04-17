@@ -32,3 +32,7 @@
     min-width: 16px;
     height: 16px;
 }
+
+.publishDropdown {
+    border-radius: 15px !important;
+}

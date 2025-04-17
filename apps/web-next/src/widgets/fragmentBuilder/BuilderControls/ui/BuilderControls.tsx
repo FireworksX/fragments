@@ -18,6 +18,7 @@ interface ControlsProps extends AsideBarProps {
   textNode?: ReactNode
   imageNode?: ReactNode
   attributesNode?: ReactNode
+  fragmentGeneral?: ReactNode
   cssNode?: ReactNode
   instancePropsNode?: ReactNode
   fragmentGrowingNode?: ReactNode
@@ -31,6 +32,7 @@ const BuilderControls: FC<ControlsProps> = ({
   sizeNode,
   layoutNode,
   stylesNode,
+  fragmentGeneral,
   textNode,
   imageNode,
   cssNode,
@@ -72,6 +74,7 @@ const BuilderControls: FC<ControlsProps> = ({
 
   return (
     <Container className={cn(className, styles.root)}>
+      {fragmentGeneral}
       {selection && (
         <>
           {/*<BuilderLink />*/}

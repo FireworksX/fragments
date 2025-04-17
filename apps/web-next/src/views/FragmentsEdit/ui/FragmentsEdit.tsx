@@ -1,7 +1,4 @@
 import styles from './styles.module.css'
-import { BuilderSidebar } from '@/widgets/fragmentBuilder/BuilderSidebar'
-import { BuilderAssets } from '@/widgets/fragmentBuilder/BuilderAssets'
-import { BuilderLayers } from '@/widgets/fragmentBuilder/BuilderLayers'
 import { BuilderCanvas } from '@/widgets/fragmentBuilder/BuilderCanvas'
 import {
   BuilderHighlight,
@@ -51,6 +48,7 @@ import cn from 'classnames'
 import { useToast } from '@/widgets/Toast/hooks/useToast'
 import { HotKeysProvider } from '@/shared/hooks/hotkeys/HotKeysProvider'
 import { BuilderProvider } from '@/shared/providers/BuilderProvider'
+import { BuilderFragmentTabs } from '@/views/FragmentsBuilder/widgets/BuilderFragmentTabs'
 
 const FragmentsEditInitial = () => {
   const { setRenderTarget } = useRenderTarget()
@@ -64,6 +62,7 @@ const FragmentsEditInitial = () => {
   return (
     <div className={styles.root}>
       <div className={styles.center}>
+        <BuilderFragmentTabs />
         <div className={styles.previewContainer}>
           {/*<BuilderSidebar assetsNode={<BuilderAssets />} layersNode={<BuilderLayers />} />*/}
 

@@ -16,7 +16,7 @@ export const index = (layerKey: LinkKey) => {
     }
     const { manager: fragmentManager } = useContext(FragmentContext);
     const [opacity] = useLayerValue(layerKey, "opacity", fragmentManager);
-    const { width, height } = useLayerSize(layerKey);
+    const layerSize = useLayerSize(layerKey);
     const { position, top, left } = useLayerPosition(layerKey);
     const display = useLayerDisplay(layerKey);
     const { background } = useLayerBackground(layerKey);
@@ -28,6 +28,7 @@ export const index = (layerKey: LinkKey) => {
       "borderRadius",
       fragmentManager
     );
+    const [whiteSpace] = useLayerValue(layerKey, "whiteSpace", fragmentManager);
 
     return {
       display,
@@ -36,12 +37,12 @@ export const index = (layerKey: LinkKey) => {
       position,
       top,
       left,
-      width,
-      height,
       opacity,
       borderRadius,
+      whiteSpace,
       zIndex: zIndex !== -1 ? zIndex : null,
       ...layout,
+      ...layerSize,
       userSelect: "none",
     };
   } catch (e) {

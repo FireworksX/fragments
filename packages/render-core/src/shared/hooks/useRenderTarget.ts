@@ -2,9 +2,8 @@ import { GraphState } from "@graph-state/core";
 import { definition } from "@fragmentsx/definition";
 import { useGlobalManager } from "@/shared/hooks/useGlobalManager";
 
-export const useRenderTarget = (globalManager?: GraphState) => {
-  const { globalManagerGraph, setRenderTarget } =
-    useGlobalManager(globalManager);
+export const useRenderTarget = () => {
+  const { globalManagerGraph, manager, setRenderTarget } = useGlobalManager();
 
   const renderTargetValue =
     globalManagerGraph?.renderTarget ?? definition.renderTarget.document;

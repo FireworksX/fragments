@@ -7,6 +7,8 @@ import { InstancePropertyNumber } from './components/InstancePropertyNumber'
 import { InstancePropertyString } from './components/InstancePropertyString'
 import { InstancePropertyBoolean } from './components/InstancePropertyBoolean'
 import { InstancePropertyGeneric } from './components/InstancePropertyGeneric'
+import { Button } from '@/shared/ui/Button'
+import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
 
 interface BuilderSizeProps {
   className?: string
@@ -20,7 +22,8 @@ interface BuilderSizeProps {
 // }
 
 const BuilderFragmentInstance: FC<BuilderSizeProps> = ({ className }) => {
-  const { name, definition, instanceManager } = useBuilderFragmentInstance()
+  const { name, definition, instanceManager, instanceFragmentId } = useBuilderFragmentInstance()
+  const { openFragment } = useBuilder()
 
   return (
     <Panel className={cn(styles.root, className)} title={name} aside={<div className={styles.aside}>Fragment</div>}>
@@ -33,6 +36,10 @@ const BuilderFragmentInstance: FC<BuilderSizeProps> = ({ className }) => {
           onChange={property.setValue}
         />
       ))}
+
+      <Button className={styles.edit} mode='secondary' stretched onClick={() => openFragment(instanceFragmentId)}>
+        Edit Fragment
+      </Button>
     </Panel>
   )
 }

@@ -14,12 +14,13 @@ export const useBuilderFragmentInstance = () => {
   // const [fragment] = useGraph(documentManager, fragmentInstance?.fragment)
   // const fragmentProperties = useGraphStack(documentManager, fragment?.properties ?? [])
   const { properties, manager } = useInstanceDefinition(documentManager, selection)
-  const [instanceProps, setInstanceProps] = useGraph(documentManager, selection, {
-    selector: data => pick(data, 'props')
+  const [instance, setInstanceProps] = useGraph(documentManager, selection, {
+    selector: data => pick(data, 'props', 'fragment')
   })
-  const props = instanceProps?.props ?? {}
+  const props = instance?.props ?? {}
 
   return {
+    instanceFragmentId: instance?.fragment,
     definition: properties.map(prop => {
       const { _id, defaultValue } = manager?.resolve?.(prop) ?? {}
 
