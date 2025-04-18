@@ -12,9 +12,17 @@ const url = new URL(window.location.href);
 const nodeId = url.searchParams.get("node");
 
 function App() {
+  // const manager = useMa(nodeId);
+  // manager.props.count; // 230
+
   return (
     <GlobalManager value={globalManager}>
-      <Instance fragmentId={+nodeId} />
+      <Instance
+        fragmentId={+nodeId}
+        // props={{
+        //   onClick,
+        // }}
+      />
     </GlobalManager>
   );
 }
