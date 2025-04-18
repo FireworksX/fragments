@@ -30,13 +30,17 @@ class FragmentPatch:
 
 
 @strawberry.type
+class FragmentMediaGet:
+    id: int
+    public_path: str
+@strawberry.type
 class FragmentGet:
     id: int
     name: str
     author: UserGet
     document: strawberry.scalars.JSON
     props: Optional[strawberry.scalars.JSON] = None
-    assets: List[str]
+    assets: List[FragmentMediaGet]
 
     linked_fragments: Optional[List["FragmentGet"]] = None  # flat list of fragments
 

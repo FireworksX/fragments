@@ -1,6 +1,8 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, Boolean, DateTime, JSON, Table, orm, func
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, Boolean, DateTime, JSON, Table, orm, func, \
+    LargeBinary
 from sqlalchemy.orm import relationship
 
+from conf import service_settings
 from database import Base
 
 
@@ -110,6 +112,13 @@ class FilesystemDirectory(Base):
     # Relationship to fragments in this directory
     fragments = relationship(
         "Fragment",
+        back_populates="directory",
+        cascade="all, delete-orphan"
+    )
+
+    # Relationship to medias in this directory
+    medias = relationship(
+        "Media",
         back_populates="directory",
         cascade="all, delete-orphan"
     )
@@ -316,7 +325,21 @@ class Landing(Base):
 class Media(Base):
     __tablename__ = 'media'
     id = Column('id', Integer, primary_key=True, index=True)
-    name = Column('name', String)
-    path = Column('path', String)
-    ext = Column('ext', String)
-    public_path = Column('public_path', String)
+
+    # file data
+    filename = Column(String, nullable=False)
+    content_type = Column(String, nullable=False)
+    data = Column(LargeBinary, nullable=False) # File content in DB
+
+    # for static serving
+    path = Column('path', String, nullable=False) # File saved path on disk
+
+    directory_id = Column('directory_id', Integer, ForeignKey('filesystem_directory.id'), nullable=True)
+    directory = relationship(
+        "FilesystemDirectory",
+        back_populates="medias"
+    )
+
+    @property
+    def public_path(self):
+        return f'{service_settings.STATIC_SERVER_URL}/{self.filename}'
