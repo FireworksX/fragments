@@ -1,13 +1,14 @@
 from starlette import status
 
 from .campaign import campaign_by_id, create_campaign_route, update_campaign_route, campaigns_in_project, \
-    add_campaign_logo_route, campaign_by_name
+    add_campaign_logo_route, campaign_by_name, delete_campaign_logo_route
 from .filesystem import create_directory_route, get_directory, \
     delete_directory_route, update_directory_route
 from .filter import get_all_filters
 from .schemas import AllFiltersGet
 from .schemas.feedback import FeedbackPost, FeedbackGet
 from .schemas.filesystem import ProjectDirectory, ProjectDirectoryGet, ProjectDirectoryPatch
+from .schemas.media import MediaPost, MediaType, MediaDelete
 from .schemas.stream import StreamGet, StreamPost, StreamPatch
 from .schemas.landing import LandingGet, LandingPost, LandingPatch, ClientLanding
 from .schemas.campaign import CampaignGet, CampaignPost, CampaignPatch
@@ -17,15 +18,15 @@ from .schemas.project import ProjectGet, ProjectPost, ProjectPatch
 import strawberry
 from typing import Optional, List
 from .middleware import Context
-from .user import login, refresh, profile, signup, add_avatar_route
+from .user import login, refresh, profile, signup, add_avatar_route, delete_avatar_route
 from .fragment import create_fragment_route, fragments_in_project, fragments_by_ids, update_fragment_route, \
-    add_fragment_asset_route, remove_fragment_asset_route, delete_fragment_route, get_client_fragment
+    add_fragment_asset_route, delete_fragment_asset_route, delete_fragment_route, get_client_fragment
 from .stream import create_stream_route, stream_by_id, streams_in_campaign, update_stream_route, delete_stream_route
 from .feedback import create_feedback
 from .project import create_project_route, project_by_id, projects, update_project_route, \
     add_user_to_project as add_user_to_project_route, change_user_role as change_user_role_route, \
     add_project_logo_route, add_project_public_key_route, delete_project_public_key_route, \
-    change_project_private_key_route
+    change_project_private_key_route, delete_project_logo_route
 from .schemas.user import RoleGet, UserGet, AuthPayload
 from fastapi import UploadFile
 from .landing import landing_by_id, landings_in_stream, update_landing_route, create_landing_route, get_client_landing
@@ -138,20 +139,6 @@ class Mutation:
         return await update_campaign_route(info, cmp)
 
     @strawberry.mutation
-    async def add_campaign_logo(self, info: strawberry.Info[Context], file: UploadFile,
-                                campaign_id: int) -> CampaignGet:
-        return await add_campaign_logo_route(info, file, campaign_id)
-
-    @strawberry.mutation
-    async def add_fragment_asset(self, info: strawberry.Info[Context], file: UploadFile,
-                                 fragment_id: int) -> FragmentGet:
-        return await add_fragment_asset_route(info, file, fragment_id)
-
-    @strawberry.mutation
-    async def add_avatar(self, info: strawberry.Info[Context], file: UploadFile) -> UserGet:
-        return await add_avatar_route(info, file)
-
-    @strawberry.mutation
     async def feedback(self, info: strawberry.Info[Context], fd: FeedbackPost) -> FeedbackGet:
         return await create_feedback(info, fd)
 
@@ -174,20 +161,6 @@ class Mutation:
     @strawberry.mutation
     async def update_project(self, info: strawberry.Info[Context], pr: ProjectPatch) -> ProjectGet:
         return await update_project_route(info, pr)
-
-    @strawberry.mutation
-    async def add_project_logo(self, info: strawberry.Info[Context], file: UploadFile, project_id: int) -> ProjectGet:
-        return await add_project_logo_route(info, file, project_id)
-
-    @strawberry.mutation
-    async def add_fragment_asset(self, info: strawberry.Info[Context], file: UploadFile,
-                                 fragment_id: int) -> FragmentGet:
-        return await add_fragment_asset_route(info, file, fragment_id)
-
-    @strawberry.mutation
-    async def remove_fragment_asset(self, info: strawberry.Info[Context], fragment_id: int,
-                                    public_path: str) -> FragmentGet:
-        return await remove_fragment_asset_route(info, fragment_id, public_path)
 
     @strawberry.mutation
     async def add_user_to_project(self, info: strawberry.Info[Context], user_id: int, project_id: int,
@@ -236,3 +209,29 @@ class Mutation:
     @strawberry.mutation
     async def delete_project_public_key(self, info: strawberry.Info[Context], project_id: int, public_key_id: int) -> None:
         await delete_project_public_key_route(info, project_id, public_key_id)
+
+
+    # logos
+
+    @strawberry.mutation
+    async def upload_asset(self, info: strawberry.Info[Context], media: MediaPost, file: UploadFile) -> ProjectGet | FragmentGet | CampaignGet | UserGet:
+        if media.media_type == MediaType.PROJECT_LOGO:
+            return await add_project_logo_route(info, file, media.target_id)
+        elif media.media_type == MediaType.FRAGMENT_ASSET:
+            return await add_fragment_asset_route(info, file, media.target_id, media.directory_id)
+        elif media.media_type == MediaType.CAMPAIGN_LOGO:
+            return await add_campaign_logo_route(info, file, media.target_id)
+        elif media.media_type == MediaType.USER_LOGO:
+            return await add_avatar_route(info, file)
+
+
+    @strawberry.mutation
+    async def delete_asset(self, info: strawberry.Info[Context], media: MediaDelete) -> ProjectGet | FragmentGet | CampaignGet | UserGet:
+        if media.media_type == MediaType.PROJECT_LOGO:
+            return await delete_project_logo_route(info, media.target_id)
+        elif media.media_type == MediaType.FRAGMENT_ASSET:
+            return await delete_fragment_asset_route(info, media.target_id, media.media_id)
+        elif media.media_type == MediaType.CAMPAIGN_LOGO:
+            return await delete_campaign_logo_route(info, media.target_id)
+        elif media.media_type == MediaType.USER_LOGO:
+            return await delete_avatar_route(info)

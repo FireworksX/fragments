@@ -1,15 +1,11 @@
-import uuid
-from typing import List, Optional
+from typing import List
 import strawberry
 from fastapi import HTTPException, UploadFile
 from starlette import status
 
-from conf import service_settings
-from crud.bucket import add_file, delete_file
-from crud.media import create_media_db, delete_media_by_public_path_db
+from crud.media import create_media_db, delete_media_by_id_db
 from crud.project import get_project_by_id_db
-from .schemas.fragment import FragmentPost, FragmentPatch, FragmentGet
-from .schemas.landing import ClientLanding
+from .schemas.fragment import FragmentPost, FragmentPatch, FragmentGet, FragmentMediaGet
 from .schemas.user import RoleGet, AuthPayload
 from .middleware import Context
 from crud.fragment import create_fragment_db, Fragment, get_fragments_by_project_id_db, \
@@ -72,7 +68,7 @@ def fragment_db_to_fragment(fragment: Fragment) -> FragmentGet:
         document=fragment.document,
         props=fragment.props,
         assets=[] if not fragment.assets else [
-            relation.media.public_path for relation in fragment.assets
+            FragmentMediaGet(relation.media.id, relation.media.public_path) for relation in fragment.assets
         ],
         linked_fragments=[]  # We'll fill this below
     )
@@ -90,7 +86,7 @@ def fragment_db_to_fragment(fragment: Fragment) -> FragmentGet:
             author=f.author,
             document=f.document,
             props=f.props,
-            assets=[] if not f.assets else [r.media.public_path for r in f.assets],
+            assets=[] if not f.assets else [FragmentMediaGet(relation.media.id, relation.media.public_path) for relation in f.assets],
             # no recursion on 'linked_fragments' here, because we already flattened them
             linked_fragments=[]
         )
@@ -156,7 +152,7 @@ async def fragments_by_ids(info: strawberry.Info[Context], fragment_ids: List[in
     return out
 
 
-async def add_fragment_asset_route(info: strawberry.Info[Context], file: UploadFile, fragment_id: int) -> FragmentGet:
+async def add_fragment_asset_route(info: strawberry.Info[Context], file: UploadFile, fragment_id: int, directory_id: int) -> FragmentGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
     fragment: Fragment = await get_fragment_by_id_db(db, fragment_id)
@@ -173,15 +169,7 @@ async def add_fragment_asset_route(info: strawberry.Info[Context], file: UploadF
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to view fragments')
 
-    unique_id = uuid.uuid4()
-    filePath = f'{service_settings.MEDIA_STORAGE_PATH}/fragments/{project.id}-{fragment.id}-{unique_id}-{file.filename}'
-
-    add_file(filePath, file.file.read())
-
-    public_url = f'{service_settings.STATIC_SERVER_URL}/fragments/{project.id}-{fragment.id}-{unique_id}-{file.filename}'
-    ext: str = file.filename.split('.')[-1]
-
-    media: Media = await create_media_db(db, "fragment_asset", filePath, ext, public_url)
+    media: Media = await create_media_db(db, file, directory_id)
     if media is None:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail='Failed to create media file')
@@ -189,8 +177,7 @@ async def add_fragment_asset_route(info: strawberry.Info[Context], file: UploadF
     return fragment_db_to_fragment(fragment)
 
 
-async def remove_fragment_asset_route(info: strawberry.Info[Context], fragment_id: int,
-                                      public_path: str) -> FragmentGet:
+async def delete_fragment_asset_route(info: strawberry.Info[Context], fragment_id: int, asset_id: int) -> FragmentGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
     fragment: Fragment = await get_fragment_by_id_db(db, fragment_id)
@@ -206,13 +193,8 @@ async def remove_fragment_asset_route(info: strawberry.Info[Context], fragment_i
     if not permission:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to view fragments')
-    try:
-        await delete_media_by_public_path_db(db, fragment_id, public_path)
-        filePath = f'{service_settings.MEDIA_STORAGE_PATH}/fragments/{public_path.split(f'{service_settings.STATIC_SERVER_URL}/fragments/')[1]}'
-        delete_file(filePath)
-    except:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f'Media not found')
+
+    await delete_media_by_id_db(db, asset_id)
     return fragment_db_to_fragment(fragment)
 
 
