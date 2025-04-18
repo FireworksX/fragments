@@ -1,5 +1,8 @@
+import os
 from copy import deepcopy
 from typing import List, Dict, Any, Optional
+from uuid import uuid4
+
 from fastapi import HTTPException, status, UploadFile
 import strawberry
 
@@ -51,9 +54,11 @@ async def project_db_to_project(info: strawberry.Info[Context], db: Session, pro
                       owner=project.owner, root_directory_id=project.root_directory_id,
                       members=transform_project_members(project),
                       campaigns=await transform_project_campaigns(db, project),
-                      private_key=ProjectKeyGet(value=project.private_key.key, name="private", id=project.private_key.id) if permission else None,
-                      public_keys=[] if project.public_keys is None else [ProjectKeyGet(value=public_key.key, name=public_key.name, id=public_key.id) for public_key in
-                                                                          project.public_keys])
+                      private_key=ProjectKeyGet(value=project.private_key.key, name="private",
+                                                id=project.private_key.id) if permission else None,
+                      public_keys=[] if project.public_keys is None else [
+                          ProjectKeyGet(value=public_key.key, name=public_key.name, id=public_key.id) for public_key in
+                          project.public_keys])
 
 
 async def projects(info: strawberry.Info[Context]) -> List[ProjectGet]:
@@ -104,7 +109,8 @@ async def change_project_private_key_route(info: strawberry.Info[Context], proje
     return await project_db_to_project(info, db, project)
 
 
-async def add_project_public_key_route(info: strawberry.Info[Context], project_id: int, public_key_name: Optional[str] = None) -> ProjectGet:
+async def add_project_public_key_route(info: strawberry.Info[Context], project_id: int,
+                                       public_key_name: Optional[str] = None) -> ProjectGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
@@ -206,26 +212,31 @@ async def add_project_logo_route(info: strawberry.Info[Context], file: UploadFil
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to add users')
 
-    old_logo: Media | None = None
-    if project.logo_id is not None:
-        old_logo = deepcopy(project.logo)
-
-    filePath = f'{service_settings.MEDIA_STORAGE_PATH}/projects/{project.id}-{file.filename}'
-
-    add_file(filePath, file.file.read())
-
-    public_url = f'{service_settings.STATIC_SERVER_URL}/projects/{project.id}-{file.filename}'
-    ext: str = file.filename.split('.')[-1]
-
-    media: Media = await create_media_db(db, "logo", filePath, ext, public_url)
+    media: Media = await create_media_db(db, file)
     if media is None:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail='Failed to create media file')
+
     project.logo_id = media.id
     db.commit()
 
-    if old_logo is not None and old_logo.path != project.logo.path:
-        delete_file(old_logo.path)
-        await delete_media_by_id_db(db, old_logo.id)
+    return await project_db_to_project(info, db, project)
 
+
+async def delete_project_logo_route(info: strawberry.Info[Context], project_id: int) -> ProjectGet:
+    user: AuthPayload = await info.context.user()
+    db: Session = info.context.session()
+
+    project: Project = await get_project_by_id_db(db, project_id)
+    if project is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
+
+    permission: bool = await read_permission(db, user.user.id, project_id)
+    if not permission:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=f'User is not allowed to view fragments')
+
+    await delete_media_by_id_db(db, project.logo_id)
+    project.logo_id = None
+    db.commit()
     return await project_db_to_project(info, db, project)
