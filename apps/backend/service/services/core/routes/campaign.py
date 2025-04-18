@@ -127,28 +127,35 @@ async def add_campaign_logo_route(info: strawberry.Info[Context], file: UploadFi
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to change campaign')
 
-    old_logo: Media | None = None
-    if project.logo_id is not None:
-        old_logo = deepcopy(campaign.logo)
-
-    filePath = f'{service_settings.MEDIA_STORAGE_PATH}/projects/{project.id}-{campaign.id}-{file.filename}'
-
-    add_file(filePath, file.file.read())
-
-    public_url = f'{service_settings.STATIC_SERVER_URL}/projects/{project.id}-{campaign.id}-{file.filename}'
-    ext: str = file.filename.split('.')[-1]
-
-    media: Media = await create_media_db(db, "campaign_logo", filePath, ext, public_url)
+    media: Media = await create_media_db(db, file)
     if media is None:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail='Failed to create media file')
-    project.logo_id = media.id
+    campaign.logo_id = media.id
     db.commit()
 
-    if old_logo is not None and old_logo.path != campaign.logo.path:
-        delete_file(old_logo.path)
-        await delete_media_by_id_db(db, old_logo.id)
+    return campaign_db_to_campaign(campaign)
 
+async def delete_campaign_logo_route(info: strawberry.Info[Context], campaign_id: int) -> CampaignGet:
+    user: AuthPayload = await info.context.user()
+    db: Session = info.context.session()
+
+    campaign: Campaign = await get_campaign_by_id_db(db, campaign_id)
+    if not campaign:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Campaign does not exist")
+
+    project: Project = await get_project_by_id_db(db, campaign.project_id)
+    if project is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
+
+    permission: bool = await write_permission(db, user.user.id, project.id)
+    if not permission:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=f'User is not allowed to change campaign')
+
+    await delete_media_by_id_db(db, campaign.logo_id)
+    campaign.logo_id = None
+    db.commit()
     return campaign_db_to_campaign(campaign)
 
 async def campaign_by_name(info: strawberry.Info[Context], project_id: int, name: str, limit: Optional[int] = 5, active: Optional[bool] = None, deleted: Optional[bool] = None) -> list[CampaignGet]:
