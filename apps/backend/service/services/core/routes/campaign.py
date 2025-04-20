@@ -11,6 +11,7 @@ from crud.media import create_media_db, delete_media_by_id_db
 from crud.project import get_project_by_id_db
 from database import Session, Project, Campaign, Media
 from .schemas.campaign import CampaignGet, CampaignPost, CampaignPatch
+from .schemas.media import MediaGet, MediaType
 from .schemas.user import RoleGet, AuthPayload
 from .middleware import Context
 from .utils import get_user_role_in_project
@@ -129,7 +130,7 @@ async def delete_campaign_route(info: strawberry.Info[Context], campaign_id: int
     await delete_campaign_by_id_db(db, campaign_id)
 
 
-async def add_campaign_logo_route(info: strawberry.Info[Context], file: UploadFile, campaign_id: int) -> CampaignGet:
+async def add_campaign_logo_route(info: strawberry.Info[Context], file: UploadFile, campaign_id: int) -> MediaGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
@@ -153,7 +154,7 @@ async def add_campaign_logo_route(info: strawberry.Info[Context], file: UploadFi
     campaign.logo_id = media.id
     db.commit()
 
-    return campaign_db_to_campaign(campaign)
+    return MediaGet(id=media.id, media_type=MediaType.CAMPAIGN_LOGO, public_path=media.public_path)
 
 async def delete_campaign_logo_route(info: strawberry.Info[Context], campaign_id: int) -> CampaignGet:
     user: AuthPayload = await info.context.user()

@@ -13,6 +13,7 @@ from crud.media import create_media_db, delete_media_by_id_db
 from .filesystem import get_directory
 from .schemas.campaign import CampaignGet
 from .schemas.fragment import FragmentGet
+from .schemas.media import MediaGet, MediaType
 from .schemas.project import ProjectGet, ProjectPost, ProjectPatch, ProjectKeyGet
 from .schemas.user import RoleGet, AuthPayload
 from .middleware import Context
@@ -211,7 +212,7 @@ async def delete_project_route(info: strawberry.Info[Context], project_id: int) 
                             detail=f'User is not allowed to obtain project')
     await delete_project_by_id_db(db, project_id)
 
-async def add_project_logo_route(info: strawberry.Info[Context], file: UploadFile, project_id: int) -> ProjectGet:
+async def add_project_logo_route(info: strawberry.Info[Context], file: UploadFile, project_id: int) -> MediaGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
@@ -232,7 +233,7 @@ async def add_project_logo_route(info: strawberry.Info[Context], file: UploadFil
     project.logo_id = media.id
     db.commit()
 
-    return await project_db_to_project(info, db, project)
+    return MediaGet(id=media.id, media_type=MediaType.PROJECT_LOGO, public_path=media.public_path)
 
 
 async def delete_project_logo_route(info: strawberry.Info[Context], project_id: int) -> ProjectGet:

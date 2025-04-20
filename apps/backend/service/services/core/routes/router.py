@@ -8,7 +8,7 @@ from .filter import get_all_filters
 from .schemas import AllFiltersGet
 from .schemas.feedback import FeedbackPost, FeedbackGet
 from .schemas.filesystem import ProjectDirectory, ProjectDirectoryGet, ProjectDirectoryPatch
-from .schemas.media import MediaPost, MediaType, MediaDelete
+from .schemas.media import MediaPost, MediaType, MediaDelete, MediaGet
 from .schemas.stream import StreamGet, StreamPost, StreamPatch
 from .schemas.landing import LandingGet, LandingPost, LandingPatch, ClientLanding
 from .schemas.campaign import CampaignGet, CampaignPost, CampaignPatch
@@ -42,14 +42,8 @@ class Query:
     @strawberry.field
     async def fragment(self, info: strawberry.Info[Context], fragment_ids: Optional[List[int]] = None,
                        project_id: Optional[int] = None) -> List[FragmentGet]:
-        if fragment_ids is not None:
-            return await fragments_by_ids(info, fragment_ids)
-        if project_id is not None:
-            return await fragments_in_project(info, project_id)
-        else:
-            return []
+        return await fragments_by_ids(info, fragment_ids, project_id)
 
-    #
     @strawberry.field
     async def campaign(self, info: strawberry.Info[Context], campgain_id: Optional[int] = None,
                        project_id: Optional[int] = None, active: Optional[bool] = None,
@@ -245,9 +239,8 @@ class Mutation:
 
     #### logos ####
 
-    # return MedaGet, not the whole models
     @strawberry.mutation
-    async def upload_asset(self, info: strawberry.Info[Context], media: MediaPost, file: UploadFile) -> ProjectGet | FragmentGet | CampaignGet | UserGet:
+    async def upload_asset(self, info: strawberry.Info[Context], media: MediaPost, file: UploadFile) -> MediaGet:
         if media.media_type == MediaType.PROJECT_LOGO:
             return await add_project_logo_route(info, file, media.target_id)
         elif media.media_type == MediaType.FRAGMENT_ASSET:
@@ -257,15 +250,13 @@ class Mutation:
         elif media.media_type == MediaType.USER_LOGO:
             return await add_avatar_route(info, file)
 
-
-    # consistent delete model
     @strawberry.mutation
-    async def delete_asset(self, info: strawberry.Info[Context], media: MediaDelete) -> ProjectGet | FragmentGet | CampaignGet | UserGet:
+    async def delete_asset(self, info: strawberry.Info[Context], media: MediaDelete) -> None:
         if media.media_type == MediaType.PROJECT_LOGO:
-            return await delete_project_logo_route(info, media.target_id)
+            await delete_project_logo_route(info, media.target_id)
         elif media.media_type == MediaType.FRAGMENT_ASSET:
-            return await delete_fragment_asset_route(info, media.target_id, media.media_id)
+            await delete_fragment_asset_route(info, media.target_id, media.media_id)
         elif media.media_type == MediaType.CAMPAIGN_LOGO:
-            return await delete_campaign_logo_route(info, media.target_id)
+            await delete_campaign_logo_route(info, media.target_id)
         elif media.media_type == MediaType.USER_LOGO:
-            return await delete_avatar_route(info)
+            await delete_avatar_route(info)
