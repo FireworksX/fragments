@@ -79,7 +79,7 @@ async def get_stream_by_id_db(db: Session, stream_id: int) -> Optional[Stream]:
 
 
 async def delete_stream_by_id_db(db: Session, stream_id: int) -> None:
-    db.delete(get_stream_by_id_db(db, stream_id))
+    db.query(Stream).filter(Stream.id == stream_id).delete()
 
 
 async def get_streams_by_campaign_id_db(db: Session, campaign_id: int, active: Optional[bool] = None,
