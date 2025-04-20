@@ -6,7 +6,7 @@ import strawberry
 from conf import service_settings
 from crud.bucket import add_file, delete_file
 from crud.campaign import create_campaign_db, get_campaign_by_id_db, get_campaigns_by_project_id_db, \
-    update_campaign_by_id_db, get_campaign_by_name_and_project_id_db
+    update_campaign_by_id_db, get_campaign_by_name_and_project_id_db, delete_campaign_by_id_db
 from crud.media import create_media_db, delete_media_by_id_db
 from crud.project import get_project_by_id_db
 from database import Session, Project, Campaign, Media
@@ -108,6 +108,25 @@ async def update_campaign_route(info: strawberry.Info[Context], cmp: CampaignPat
     campaign: Campaign = await update_campaign_by_id_db(db, values=cmp.__dict__)
 
     return campaign_db_to_campaign(campaign)
+
+async def delete_campaign_route(info: strawberry.Info[Context], campaign_id: int) -> None:
+    user: AuthPayload = await info.context.user()
+    db: Session = info.context.session()
+
+    campaign: Campaign = await get_campaign_by_id_db(db, campaign_id)
+    if not campaign:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Campaign does not exist")
+
+    project: Project = await get_project_by_id_db(db, campaign.project_id)
+    if project is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
+
+    permission: bool = await write_permission(db, user.user.id, project.id)
+    if not permission:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=f'User is not allowed to change campaign')
+
+    await delete_campaign_by_id_db(db, campaign_id)
 
 
 async def add_campaign_logo_route(info: strawberry.Info[Context], file: UploadFile, campaign_id: int) -> CampaignGet:

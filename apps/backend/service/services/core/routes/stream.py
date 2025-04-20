@@ -108,20 +108,20 @@ async def create_stream_route(info: strawberry.Info[Context], strm: StreamPost) 
     return stream_db_to_stream(stream)
 
 
-async def update_stream_route(info: strawberry.Info[Context], strm: StreamPatch) -> StreamGet:
+async def update_stream_route(info: strawberry.Info[Context], stream_patch: StreamPatch) -> StreamGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    campaign: Campaign = await get_campaign_by_id_db(db, strm.campaign_id)
-    if campaign is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Campaign does not exist")
+    stream: Stream = await get_stream_by_id_db(db, stream_patch.id)
+    if stream is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Stream does not exist")
 
-    permission: bool = await write_permission(db, user.user.id, campaign.project_id)
+    permission: bool = await write_permission(db, user.user.id, stream.project_id)
     if not permission:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f'User is not allowed to update streams')
 
-    stream: Stream = await update_stream_by_id_db(db, strm.__dict__, strm.filters)
+    stream: Stream = await update_stream_by_id_db(db, stream_patch.__dict__, stream_patch.filters)
     return stream_db_to_stream(stream)
 
 

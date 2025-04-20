@@ -9,7 +9,7 @@ import json
 from crud.project import get_project_by_id_db
 from crud.stream import get_stream_by_id_db
 from crud.landing import create_landing_db, get_landings_by_stream_id_db, \
-    get_landing_by_id_db, update_landing_by_id_db, get_best_landing
+    get_landing_by_id_db, update_landing_by_id_db, get_best_landing, delete_landing_by_id_db
 from .fragment import fragment_by_id
 from .schemas.landing import LandingGet, LandingPost, LandingPatch, ClientLanding
 from .schemas.user import RoleGet, AuthPayload
@@ -22,7 +22,9 @@ from .utils import get_user_role_in_project
 async def landing_db_to_landing(info, landing_db: Landing) -> LandingGet:
     return LandingGet(id=landing_db.id, name=landing_db.name,
                       props=landing_db.props, weight=landing_db.weight,
-                      fragment= None if landing_db.fragment is None else await fragment_by_id(info, landing_db.fragment.id), stream=landing_db.stream,
+                      fragment=None if landing_db.fragment is None else await fragment_by_id(info,
+                                                                                             landing_db.fragment.id),
+                      stream=landing_db.stream,
                       active=landing_db.active,
                       deleted=landing_db.deleted)
 
@@ -103,6 +105,26 @@ async def landings_in_stream(info: strawberry.Info[Context], stream_id: int) -> 
     for landing in landings:
         out.append(await landing_db_to_landing(info, landing))
     return out
+
+
+async def delete_landing_route(info: strawberry.Info[Context], landing_id: int) -> None:
+    user: AuthPayload = await info.context.user()
+    db: Session = info.context.session()
+
+    landing: Landing = await get_landing_by_id_db(db, landing_id)
+    if landing is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Landing does not exist")
+
+    project: Project = await get_project_by_id_db(db, landing.project_id)
+    if project is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
+
+    permission: bool = await write_permission(db, user.user.id, project.id)
+    if not permission:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=f'User is not allowed to get landings')
+
+    await delete_landing_by_id_db(db, landing_id)
 
 
 async def landing_by_id(info: strawberry.Info[Context], landing_id: int) -> LandingGet:

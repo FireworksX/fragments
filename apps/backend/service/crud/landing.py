@@ -23,6 +23,10 @@ async def get_landing_by_id_db(db: Session, landing_id: int) -> Optional[Landing
     return db.query(Landing).filter(Landing.id == landing_id).first()
 
 
+async def delete_landing_by_id_db(db: Session, landing_id: int) -> None:
+    db.query(Landing).filter(Landing.id == landing_id).delete()
+
+
 async def get_landings_by_stream_id_db(db: Session, stream_id: int) -> List[Landing]:
     return db.query(Landing).filter(Landing.stream_id == stream_id).all()
 

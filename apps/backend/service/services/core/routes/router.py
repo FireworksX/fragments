@@ -1,7 +1,7 @@
 from starlette import status
 
 from .campaign import campaign_by_id, create_campaign_route, update_campaign_route, campaigns_in_project, \
-    add_campaign_logo_route, campaign_by_name, delete_campaign_logo_route
+    add_campaign_logo_route, campaign_by_name, delete_campaign_logo_route, delete_campaign_route
 from .filesystem import create_directory_route, get_directory, \
     delete_directory_route, update_directory_route
 from .filter import get_all_filters
@@ -26,10 +26,11 @@ from .feedback import create_feedback
 from .project import create_project_route, project_by_id, projects, update_project_route, \
     add_user_to_project as add_user_to_project_route, change_user_role as change_user_role_route, \
     add_project_logo_route, add_project_public_key_route, delete_project_public_key_route, \
-    change_project_private_key_route, delete_project_logo_route
+    change_project_private_key_route, delete_project_logo_route, delete_project_route
 from .schemas.user import RoleGet, UserGet, AuthPayload
 from fastapi import UploadFile
-from .landing import landing_by_id, landings_in_stream, update_landing_route, create_landing_route, get_client_landing
+from .landing import landing_by_id, landings_in_stream, update_landing_route, create_landing_route, get_client_landing, \
+    delete_landing_route
 
 
 @strawberry.type
@@ -123,12 +124,25 @@ class Mutation:
         return await refresh(info)
 
     @strawberry.mutation
+    async def feedback(self, info: strawberry.Info[Context], fd: FeedbackPost) -> FeedbackGet:
+        return await create_feedback(info, fd)
+
+    #### fragments ####
+    @strawberry.mutation
     async def create_fragment(self, info: strawberry.Info[Context], fg: FragmentPost) -> FragmentGet:
         return await create_fragment_route(info, fg)
 
     @strawberry.mutation
     async def update_fragment(self, info: strawberry.Info[Context], fg: FragmentPatch) -> FragmentGet:
         return await update_fragment_route(info, fg)
+
+    @strawberry.mutation
+    async def delete_fragment(self, info: strawberry.Info[Context], fragment_id: int) -> None:
+        await delete_fragment_route(info, fragment_id)
+
+    #### fragments ####
+
+    #### campaign ####
 
     @strawberry.mutation
     async def create_campaign(self, info: strawberry.Info[Context], cmp: CampaignPost) -> CampaignGet:
@@ -139,21 +153,12 @@ class Mutation:
         return await update_campaign_route(info, cmp)
 
     @strawberry.mutation
-    async def feedback(self, info: strawberry.Info[Context], fd: FeedbackPost) -> FeedbackGet:
-        return await create_feedback(info, fd)
+    async def delete_campaign(self, info: strawberry.Info[Context], campaign_id: int) -> None:
+        return await delete_campaign_route(info, campaign_id)
 
-    @strawberry.mutation
-    async def create_stream(self, info: strawberry.Info[Context], strm: StreamPost) -> StreamGet:
-        return await create_stream_route(info, strm)
+    #### campaign ####
 
-    @strawberry.mutation
-    async def update_stream(self, info: strawberry.Info[Context], strm: StreamPatch) -> StreamGet:
-        return await update_stream_route(info, strm)
-
-    @strawberry.mutation
-    async def delete_stream(self, info: strawberry.Info[Context], stream_id: int) -> None:
-        await delete_stream_route(info, stream_id)
-
+    #### project ####
     @strawberry.mutation
     async def create_project(self, info: strawberry.Info[Context], pr: ProjectPost) -> ProjectGet:
         return await create_project_route(info, pr)
@@ -161,6 +166,10 @@ class Mutation:
     @strawberry.mutation
     async def update_project(self, info: strawberry.Info[Context], pr: ProjectPatch) -> ProjectGet:
         return await update_project_route(info, pr)
+
+    @strawberry.mutation
+    async def delete_project(self, info: strawberry.Info[Context], project_id: int) -> None:
+        return await delete_project_route(info, project_id)
 
     @strawberry.mutation
     async def add_user_to_project(self, info: strawberry.Info[Context], user_id: int, project_id: int,
@@ -173,12 +182,50 @@ class Mutation:
         await change_user_role_route(info, user_id, project_id, role)
 
     @strawberry.mutation
+    async def change_project_private_key(self, info: strawberry.Info[Context], project_id: int) -> ProjectGet:
+        return await change_project_private_key_route(info, project_id)
+
+    @strawberry.mutation
+    async def add_project_public_key(self, info: strawberry.Info[Context], project_id: int, public_key_name: Optional[str] = None) -> ProjectGet:
+        return await add_project_public_key_route(info, project_id, public_key_name)
+
+    @strawberry.mutation
+    async def delete_project_public_key(self, info: strawberry.Info[Context], project_id: int, public_key_id: int) -> None:
+        await delete_project_public_key_route(info, project_id, public_key_id)
+
+    #### project ####
+
+    #### stream ###
+    @strawberry.mutation
+    async def create_stream(self, info: strawberry.Info[Context], stream: StreamPost) -> StreamGet:
+        return await create_stream_route(info, stream)
+
+    @strawberry.mutation
+    async def update_stream(self, info: strawberry.Info[Context], stream: StreamPatch) -> StreamGet:
+        return await update_stream_route(info, stream)
+
+    @strawberry.mutation
+    async def delete_stream(self, info: strawberry.Info[Context], stream_id: int) -> None:
+        await delete_stream_route(info, stream_id)
+
+    #### stream ###
+
+    #### landing ####
+    @strawberry.mutation
     async def create_landing(self, info: strawberry.Info[Context], landings: LandingPost) -> LandingGet:
         return await create_landing_route(info, landings)
 
     @strawberry.mutation
     async def update_landing(self, info: strawberry.Info[Context], landing: LandingPatch) -> LandingGet:
         return await update_landing_route(info, landing)
+
+    @strawberry.mutation
+    async def delete_landing(self, info: strawberry.Info[Context], landing_id: int) -> None:
+        return await delete_landing_route(info, landing_id)
+
+    #### landing ####
+
+    #### directory ####
 
     @strawberry.mutation
     async def create_directory(self, info: strawberry.Info[Context], directory: ProjectDirectory) -> list[
@@ -194,25 +241,11 @@ class Mutation:
         ProjectDirectoryGet]:
         return await update_directory_route(info, directory)
 
-    @strawberry.mutation
-    async def delete_fragment(self, info: strawberry.Info[Context], fragment_id: int) -> None:
-        await delete_fragment_route(info, fragment_id)
+    #### directory ####
 
-    @strawberry.mutation
-    async def change_project_private_key(self, info: strawberry.Info[Context], project_id: int) -> ProjectGet:
-        return await change_project_private_key_route(info, project_id)
+    #### logos ####
 
-    @strawberry.mutation
-    async def add_project_public_key(self, info: strawberry.Info[Context], project_id: int, public_key_name: Optional[str] = None) -> ProjectGet:
-        return await add_project_public_key_route(info, project_id, public_key_name)
-
-    @strawberry.mutation
-    async def delete_project_public_key(self, info: strawberry.Info[Context], project_id: int, public_key_id: int) -> None:
-        await delete_project_public_key_route(info, project_id, public_key_id)
-
-
-    # logos
-
+    # return MedaGet, not the whole models
     @strawberry.mutation
     async def upload_asset(self, info: strawberry.Info[Context], media: MediaPost, file: UploadFile) -> ProjectGet | FragmentGet | CampaignGet | UserGet:
         if media.media_type == MediaType.PROJECT_LOGO:
@@ -225,6 +258,7 @@ class Mutation:
             return await add_avatar_route(info, file)
 
 
+    # consistent delete model
     @strawberry.mutation
     async def delete_asset(self, info: strawberry.Info[Context], media: MediaDelete) -> ProjectGet | FragmentGet | CampaignGet | UserGet:
         if media.media_type == MediaType.PROJECT_LOGO:
