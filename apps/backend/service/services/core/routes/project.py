@@ -13,12 +13,13 @@ from crud.media import create_media_db, delete_media_by_id_db
 from .filesystem import get_directory
 from .schemas.campaign import CampaignGet
 from .schemas.fragment import FragmentGet
+from .schemas.media import MediaGet, MediaType
 from .schemas.project import ProjectGet, ProjectPost, ProjectPatch, ProjectKeyGet
 from .schemas.user import RoleGet, AuthPayload
 from .middleware import Context
 from crud.project import create_project_db, get_project_by_id_db, get_user_project_role, get_projects_by_user_id_db, \
     update_project_by_id_db, add_user_to_project_db, change_user_role_db, add_project_public_api_key, \
-    delete_project_public_api_key, change_project_private_api_key
+    delete_project_public_api_key, change_project_private_api_key, delete_project_by_id_db
 from crud.user import get_user_by_id_db
 from database import Session, Media
 from database.models import Project, User, ProjectMemberRole
@@ -198,8 +199,20 @@ async def update_project_route(info: strawberry.Info[Context], pr: ProjectPatch)
     project: Project = await update_project_by_id_db(db, values=pr.__dict__)
     return await project_db_to_project(info, db, project)
 
+async def delete_project_route(info: strawberry.Info[Context], project_id: int) -> None:
+    user: AuthPayload = await info.context.user()
+    db: Session = info.context.session()
+    project: Project = await get_project_by_id_db(db, project_id)
+    if project is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
 
-async def add_project_logo_route(info: strawberry.Info[Context], file: UploadFile, project_id: int) -> ProjectGet:
+    permission: bool = await read_permission(db, user.user.id, project_id)
+    if not permission:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=f'User is not allowed to obtain project')
+    await delete_project_by_id_db(db, project_id)
+
+async def add_project_logo_route(info: strawberry.Info[Context], file: UploadFile, project_id: int) -> MediaGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
@@ -220,7 +233,7 @@ async def add_project_logo_route(info: strawberry.Info[Context], file: UploadFil
     project.logo_id = media.id
     db.commit()
 
-    return await project_db_to_project(info, db, project)
+    return MediaGet(id=media.id, media_type=MediaType.PROJECT_LOGO, public_path=media.public_path)
 
 
 async def delete_project_logo_route(info: strawberry.Info[Context], project_id: int) -> ProjectGet:

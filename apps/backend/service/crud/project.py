@@ -150,6 +150,9 @@ async def get_project_by_id_db(db: Session, project_id: int) -> Project:
     return db.query(Project).filter(Project.id == project_id).first()
 
 
+async def delete_project_by_id_db(db: Session, project_id: int) -> None:
+    db.query(Project).filter(Project.id == project_id).delete()
+
 async def get_projects_by_user_id_db(db: Session, user_id: int) -> List[Project]:
     return db.query(Project).filter(Project.owner_id == user_id).all()
 

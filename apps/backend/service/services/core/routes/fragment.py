@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 import strawberry
 from fastapi import HTTPException, UploadFile
 from starlette import status
@@ -6,10 +6,11 @@ from starlette import status
 from crud.media import create_media_db, delete_media_by_id_db
 from crud.project import get_project_by_id_db
 from .schemas.fragment import FragmentPost, FragmentPatch, FragmentGet, FragmentMediaGet
+from .schemas.media import MediaGet, MediaType
 from .schemas.user import RoleGet, AuthPayload
 from .middleware import Context
 from crud.fragment import create_fragment_db, Fragment, get_fragments_by_project_id_db, \
-    update_fragment_by_id_db, add_fragment_media, delete_fragment_by_id_db, get_fragments_by_ids_db, \
+    update_fragment_by_id_db, add_fragment_media_db, delete_fragment_by_id_db, get_fragments_by_ids_db, \
     get_fragment_by_id_db
 from database import Session, Project, Media
 from .utils import get_user_role_in_project
@@ -137,14 +138,10 @@ async def fragments_in_project(info: strawberry.Info[Context], project_id: int) 
     return out
 
 
-async def fragments_by_ids(info: strawberry.Info[Context], fragment_ids: List[int]) -> List[FragmentGet]:
+async def fragments_by_ids(info: strawberry.Info[Context], fragment_ids: Optional[List[int]], project_id: Optional[int]) -> List[FragmentGet]:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
-    fragments: List[Fragment] = await get_fragments_by_ids_db(db, fragment_ids)
-    if len(fragments) == 0:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f'Fragments with ids {fragment_ids} does not exist')
-
+    fragments: List[Fragment] = await get_fragments_by_ids_db(db, fragment_ids, project_id)
     out: List[FragmentGet] = []
     for fragment in fragments:
         await check_read_permissions(db, user.user.id, fragment.project_id)
@@ -152,7 +149,7 @@ async def fragments_by_ids(info: strawberry.Info[Context], fragment_ids: List[in
     return out
 
 
-async def add_fragment_asset_route(info: strawberry.Info[Context], file: UploadFile, fragment_id: int, directory_id: int) -> FragmentGet:
+async def add_fragment_asset_route(info: strawberry.Info[Context], file: UploadFile, fragment_id: int, directory_id: int) -> MediaGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
     fragment: Fragment = await get_fragment_by_id_db(db, fragment_id)
@@ -173,8 +170,8 @@ async def add_fragment_asset_route(info: strawberry.Info[Context], file: UploadF
     if media is None:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail='Failed to create media file')
-    fragment: Fragment = await add_fragment_media(db, media.id, fragment_id)
-    return fragment_db_to_fragment(fragment)
+    await add_fragment_media_db(db, media.id, fragment_id)
+    return MediaGet(id=media.id, media_type=MediaType.FRAGMENT_ASSET, public_path=media.public_path)
 
 
 async def delete_fragment_asset_route(info: strawberry.Info[Context], fragment_id: int, asset_id: int) -> FragmentGet:

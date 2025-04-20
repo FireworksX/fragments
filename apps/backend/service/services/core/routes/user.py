@@ -5,6 +5,7 @@ from fastapi import HTTPException, status, UploadFile
 
 from crud.media import create_media_db, delete_media_by_id_db
 from .middleware import Context
+from .schemas.media import MediaGet, MediaType
 from .schemas.user import UserGet, AuthPayload
 from typing import Optional
 from crud.user import get_user_by_email_db, create_user_db
@@ -57,7 +58,7 @@ async def signup(info: strawberry.Info[Context], email: str, first_name: str, la
     )
 
 
-async def add_avatar_route(info: strawberry.Info[Context], file: UploadFile) -> UserGet:
+async def add_avatar_route(info: strawberry.Info[Context], file: UploadFile) -> MediaGet:
     auth: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
@@ -72,8 +73,7 @@ async def add_avatar_route(info: strawberry.Info[Context], file: UploadFile) -> 
     user.avatar_id = media.id
     db.commit()
 
-    return UserGet(id=user.id, email=user.email, first_name=user.first_name, last_name=user.last_name,
-                   logo=user.avatar.public_path)
+    return MediaGet(id=media.id, media_type=MediaType.USER_LOGO, public_path=media.public_path)
 
 
 async def delete_avatar_route(info: strawberry.Info[Context]) -> UserGet:

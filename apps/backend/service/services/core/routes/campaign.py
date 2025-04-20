@@ -6,11 +6,12 @@ import strawberry
 from conf import service_settings
 from crud.bucket import add_file, delete_file
 from crud.campaign import create_campaign_db, get_campaign_by_id_db, get_campaigns_by_project_id_db, \
-    update_campaign_by_id_db, get_campaign_by_name_and_project_id_db
+    update_campaign_by_id_db, get_campaign_by_name_and_project_id_db, delete_campaign_by_id_db
 from crud.media import create_media_db, delete_media_by_id_db
 from crud.project import get_project_by_id_db
 from database import Session, Project, Campaign, Media
 from .schemas.campaign import CampaignGet, CampaignPost, CampaignPatch
+from .schemas.media import MediaGet, MediaType
 from .schemas.user import RoleGet, AuthPayload
 from .middleware import Context
 from .utils import get_user_role_in_project
@@ -109,8 +110,27 @@ async def update_campaign_route(info: strawberry.Info[Context], cmp: CampaignPat
 
     return campaign_db_to_campaign(campaign)
 
+async def delete_campaign_route(info: strawberry.Info[Context], campaign_id: int) -> None:
+    user: AuthPayload = await info.context.user()
+    db: Session = info.context.session()
 
-async def add_campaign_logo_route(info: strawberry.Info[Context], file: UploadFile, campaign_id: int) -> CampaignGet:
+    campaign: Campaign = await get_campaign_by_id_db(db, campaign_id)
+    if not campaign:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Campaign does not exist")
+
+    project: Project = await get_project_by_id_db(db, campaign.project_id)
+    if project is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
+
+    permission: bool = await write_permission(db, user.user.id, project.id)
+    if not permission:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=f'User is not allowed to change campaign')
+
+    await delete_campaign_by_id_db(db, campaign_id)
+
+
+async def add_campaign_logo_route(info: strawberry.Info[Context], file: UploadFile, campaign_id: int) -> MediaGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
@@ -134,7 +154,7 @@ async def add_campaign_logo_route(info: strawberry.Info[Context], file: UploadFi
     campaign.logo_id = media.id
     db.commit()
 
-    return campaign_db_to_campaign(campaign)
+    return MediaGet(id=media.id, media_type=MediaType.CAMPAIGN_LOGO, public_path=media.public_path)
 
 async def delete_campaign_logo_route(info: strawberry.Info[Context], campaign_id: int) -> CampaignGet:
     user: AuthPayload = await info.context.user()

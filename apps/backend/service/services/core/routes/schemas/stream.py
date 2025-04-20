@@ -39,7 +39,6 @@ class StreamPost:
 @strawberry.input
 class StreamPatch:
     id: int
-    campaign_id: int
     active: Optional[bool] = None
     deleted: Optional[bool] = None
     name: Optional[str] = None

@@ -24,11 +24,20 @@ async def create_fragment_db(db: Session, name: str, author_id: int, project_id:
     return fragment
 
 
-async def get_fragments_by_ids_db(db: Session, fragment_ids: List[int]) -> List[Fragment]:
-    if not fragment_ids:
-        return []
+async def get_fragments_by_ids_db(
+        db: Session,
+        fragment_ids: Optional[List[int]] = None,
+        project_id: Optional[int] = None
+) -> List[Fragment]:
+    query = db.query(Fragment)
 
-    return db.query(Fragment).filter(Fragment.id.in_(fragment_ids)).all()
+    if fragment_ids:
+        query = query.filter(Fragment.id.in_(fragment_ids))
+
+    if project_id:
+        query = query.filter(Fragment.project_id == project_id)
+
+    return query.all()
 
 
 async def get_fragment_by_id_db(db: Session, fragment_id: int) -> Fragment:
@@ -63,7 +72,7 @@ async def update_fragment_by_id_db(db: Session, values: dict, linked_fragments: 
     return fragment
 
 
-async def add_fragment_media(db, media_id: int, fragment_id: int) -> Fragment:
+async def add_fragment_media_db(db, media_id: int, fragment_id: int) -> Fragment:
     fragment_media: FragmentMedia = FragmentMedia(media_id=media_id, fragment_id=fragment_id)
     fragment: Fragment = await get_fragment_by_id_db(db, fragment_id)
     fragment_media.media = await get_media_by_id_db(db, media_id)

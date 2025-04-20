@@ -22,3 +22,9 @@ class MediaDelete:
     media_type: MediaType
     media_id: Optional[int] = None
     target_id: Optional[int] = None
+
+@strawberry.type
+class MediaGet:
+    media_type: MediaType
+    media_id: int
+    public_path: str
