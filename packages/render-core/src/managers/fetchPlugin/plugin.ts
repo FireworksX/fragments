@@ -59,7 +59,10 @@ export const plugin =
           );
         }
 
-        return state.cacheDocuments.get(fragmentId);
+        return {
+          document: state.cacheDocuments.get(fragmentId),
+          linkedFragments: fragment.linkedFragments ?? [],
+        };
       }
 
       return null;

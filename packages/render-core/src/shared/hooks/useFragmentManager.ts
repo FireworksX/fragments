@@ -1,5 +1,6 @@
 import { useEffect, useState } from "preact/compat";
 import { useGlobalManager } from "@/shared/hooks/useGlobalManager";
+import { isObject } from "@fragmentsx/utils";
 
 export const useFragmentManager = (fragmentId?: unknown) => {
   const { globalManagerGraph, manager: globalManager } = useGlobalManager();
@@ -10,9 +11,15 @@ export const useFragmentManager = (fragmentId?: unknown) => {
   };
 
   const loadFragmentManager = async (id: string) => {
-    const fragmentDocument = await globalManager.queryFragment(id);
+    const { document, linkedFragments } = await globalManager.queryFragment(id);
 
-    return globalManager?.createFragmentManager(id, fragmentDocument);
+    if (linkedFragments) {
+      linkedFragments.forEach(({ id, document }) => {
+        globalManager?.createFragmentManager(id, document);
+      });
+    }
+
+    return globalManager?.createFragmentManager(id, document);
   };
 
   useEffect(() => {

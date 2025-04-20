@@ -23,8 +23,8 @@
     "lint": "eslint . --ext .ts,.tsx --fix"
   },
   "peerDependencies": {
-    "react": "^17.0.2",
-    "@fragmentsx/render-core": "workspace:*"
+    "@fragmentsx/render-core": "workspace:*",
+    "react": "^17.0.2"
   },
   "dependencies": {
     "@fragmentsx/definition": "workspace:*",

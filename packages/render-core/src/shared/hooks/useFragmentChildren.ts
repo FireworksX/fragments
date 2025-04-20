@@ -12,6 +12,7 @@ import { useLayerChildren } from "@/shared/hooks/useLayerChildren";
 import { useRenderTarget } from "@/shared/hooks/useRenderTarget";
 import { findBreakpoint } from "@/shared/helpers/findBreakpoint";
 import { LinkKey } from "@graph-state/core";
+import { useGlobalManager } from "@/shared/hooks/useGlobalManager";
 
 export const useFragmentChildren = (fragmentId: number) => {
   const { layerKey: instanceLayerKey } = useContext(InstanceContext);

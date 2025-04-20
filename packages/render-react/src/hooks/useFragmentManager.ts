@@ -2,7 +2,7 @@ import { useGlobalManager } from "@/hooks/useGlobalManager";
 import { useEffect, useState } from "react";
 import { useGraph } from "@graph-state/react";
 
-export const useFragmentManager = (fragmentId: unknown) => {
+export const useFragmentManager = (fragmentId?: unknown) => {
   const globalManager = useGlobalManager();
   const [globalGraph] = useGraph(globalManager, globalManager?.key);
   const [loading, setLoading] = useState(false);
@@ -26,5 +26,6 @@ export const useFragmentManager = (fragmentId: unknown) => {
   return {
     loading,
     manager: getFragmentManager(fragmentId),
+    loadFragmentManager,
   };
 };

@@ -31,7 +31,8 @@
     "@graph-state/checkers": "^0.1.2",
     "@graph-state/core": "^0.11.1",
     "@graph-state/react": "^0.6.3",
-    "react-use-measure": "^2.1.7"
+    "react-use-measure": "^2.1.7",
+    "preact-render-to-string": "^6.5.13"
   },
   "devDependencies": {
     "@graph-state/plugin-logger": "^0.3.0",

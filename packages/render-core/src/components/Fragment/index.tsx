@@ -29,7 +29,6 @@ export const Fragment: FC<FragmentProps> = ({ fragmentId, globalManager }) => {
           data-key={`${definition.nodes.Fragment}:${fragmentId}`}
           // className={isDocument ? styles.fragmentDocument : styles.fragment}
           className={styles.fragment}
-          style={styles}
         >
           {children.map((childLink) => (
             <Frame key={childLink} layerKey={childLink} />

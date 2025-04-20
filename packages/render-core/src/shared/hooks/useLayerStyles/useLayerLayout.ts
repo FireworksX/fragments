@@ -24,11 +24,13 @@ export const useLayerLayout = (layerKey: LinkKey) => {
   );
   const [layerAlign] = useLayerValue(layerKey, "layerAlign", fragmentManager);
   const [padding] = useLayerValue(layerKey, "padding", fragmentManager);
+  const [gap] = useLayerValue(layerKey, "layerGap", fragmentManager);
 
   const isFlex = layerModeValue === definition.layerMode.flex;
 
   return useMemo(
     () => ({
+      gap,
       isFlex,
       flexWrap: isFlex ? layerWrap : null,
       justifyContent: isFlex ? layerDistribute : null,

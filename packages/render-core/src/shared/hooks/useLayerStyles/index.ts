@@ -46,7 +46,7 @@ export const index = (layerKey: LinkKey) => {
       userSelect: "none",
     };
   } catch (e) {
-    console.error(e);
+    console.debug(e);
     return {};
   }
 };

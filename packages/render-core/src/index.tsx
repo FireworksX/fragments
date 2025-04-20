@@ -48,4 +48,5 @@ export { GlobalManager } from "@/providers/GlobalManager";
 export { InstanceContext } from "@/components/Instance";
 export { FragmentContext } from "@/components/Fragment/FragmentContext";
 
-export { createElement, render } from "preact";
+export { createElement, render, hydrate } from "preact";
+export { renderToString } from "preact-render-to-string";
