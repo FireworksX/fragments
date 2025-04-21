@@ -73,14 +73,6 @@ export const GlobalManager: FC<GlobalManagerProps> = ({ value, children }) => {
   return (
     <GlobalManagerContext.Provider value={value}>
       {children}
-
-      {!isBrowser && (
-        <div
-          dangerouslySetInnerHTML={{
-            __html: serializeData(data),
-          }}
-        ></div>
-      )}
     </GlobalManagerContext.Provider>
   );
 };

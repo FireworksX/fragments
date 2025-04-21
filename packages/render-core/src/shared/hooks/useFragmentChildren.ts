@@ -71,6 +71,9 @@ export const useFragmentChildren = (fragmentId: number) => {
   // }, [children, manager, resizeChildren]);
 
   return {
+    primary: children?.find(
+      (breakpoint) => manager.resolve(breakpoint).isPrimary
+    ),
     children: useMemo(
       () => (resizeChildren ? [resizeChildren] : children),
       [resizeChildren, children]

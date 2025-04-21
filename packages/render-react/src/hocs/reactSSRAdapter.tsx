@@ -49,7 +49,7 @@ export function reactSSRAdapter(PreactComponent: any) {
       () => loadFragmentManager(globalManager, props.fragmentId)
     );
 
-    resource.read(); // Suspense ждёт
+    const documentManager = resource.read(); // Suspense ждёт
 
     const html = renderToString(
       createElement(PreactComponent, {

@@ -7,7 +7,11 @@ import { FragmentContext } from "@/components/Fragment/FragmentContext";
 export const useLayerBackground = (layerKey: LinkKey) => {
   const { manager: fragmentManager } = useContext(FragmentContext);
   const [fillType] = useLayerValue(layerKey, "fillType", fragmentManager);
-  const [solidFill] = useLayerValue(layerKey, "solidFill", fragmentManager);
+  const [solidFill, , { isVariable }] = useLayerValue(
+    layerKey,
+    "solidFill",
+    fragmentManager
+  );
 
   return useMemo(
     () => ({

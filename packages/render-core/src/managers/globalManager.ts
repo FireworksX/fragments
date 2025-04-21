@@ -37,6 +37,14 @@ export const createGlobalManager = ({ apiToken, isSelfHosted }: Options) => {
         renderTarget: value,
       });
     };
+
+    state.extractStyleTags = () => {
+      const allFragments = state.resolve(state.key).fragmentsManagers;
+
+      return Object.entries(allFragments)
+        .filter(([, value]) => !!value?.resolve)
+        .map(([, manager]) => manager.generateCss());
+    };
   };
 
   return createState({

@@ -9,7 +9,7 @@ import { useLayerBorder } from "@/shared/hooks/useLayerStyles/useLayerBorder";
 import { useLayerLayout } from "@/shared/hooks/useLayerStyles/useLayerLayout";
 import { FragmentContext } from "@/components/Fragment/FragmentContext";
 
-export const index = (layerKey: LinkKey) => {
+export const useLayerStyles = (layerKey: LinkKey) => {
   try {
     if (!layerKey) {
       throw new Error("Empty layer key");

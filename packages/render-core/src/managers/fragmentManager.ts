@@ -2,6 +2,7 @@ import { createState, LinkKey } from "@graph-state/core";
 import { isHtmlContent, isHTMLNode } from "@graph-state/checkers";
 import { definition } from "@fragmentsx/definition";
 import { isKey } from "@/shared/helpers/keys";
+import { cssPlugin } from "@/managers/cssPlugin";
 
 export const createFragmentManager = (
   fragmentId: string,
@@ -28,6 +29,7 @@ export const createFragmentManager = (
           temp: "Temp:root",
         };
       },
+      cssPlugin,
     ],
     skip: [isHtmlContent, isHTMLNode, isKey],
   });

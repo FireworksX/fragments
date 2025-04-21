@@ -26,6 +26,7 @@ const InstanceInitial: FC<InstanceProps> = (instanceProps) => {
     fragmentId,
     parentManager,
     props,
+    hash,
     innerManager,
     definitions,
     globalManager,
@@ -42,7 +43,7 @@ const InstanceInitial: FC<InstanceProps> = (instanceProps) => {
       }}
     >
       {parentManager ? (
-        <div data-key={instanceProps.layerKey} style={styles}>
+        <div className={hash} data-key={instanceProps.layerKey}>
           <Fragment fragmentId={fragmentId} globalManager={globalManager} />
         </div>
       ) : (
