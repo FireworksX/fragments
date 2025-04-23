@@ -1,8 +1,8 @@
 from functools import partial
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
-from fastapi import APIRouter, FastAPI, HTTPException
 import ujson
+from fastapi import APIRouter, FastAPI, HTTPException
 from starlette.responses import JSONResponse
 
 from conf import DEBUG

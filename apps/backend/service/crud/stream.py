@@ -1,19 +1,20 @@
+from typing import List, Optional
+
+from sqlalchemy.orm import Session
+
 from database.models import (
     Stream,
-    StreamOSTypeFilter,
     StreamDeviceTypeFilter,
-    StreamTimeFrameFilter,
     StreamGeoLocationFilter,
+    StreamOSTypeFilter,
     StreamPageFilter,
+    StreamTimeFrameFilter,
 )
-from sqlalchemy.orm import Session
-from typing import Optional, List
-
 from services.core.routes.schemas.filter import (
-    FilterTimeFramePost,
-    FilterGeoLocationPost,
-    OSType,
     DeviceType,
+    FilterGeoLocationPost,
+    FilterTimeFramePost,
+    OSType,
 )
 from services.core.routes.schemas.stream import FiltersPost
 

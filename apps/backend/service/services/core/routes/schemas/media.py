@@ -1,7 +1,7 @@
+from enum import Enum
 from typing import Optional
 
 import strawberry
-from enum import Enum
 
 
 @strawberry.enum

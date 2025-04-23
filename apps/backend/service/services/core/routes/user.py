@@ -1,22 +1,23 @@
 from copy import copy, deepcopy
+from typing import Optional
 
 import strawberry
-from fastapi import HTTPException, status, UploadFile
+from fastapi import HTTPException, UploadFile, status
 
 from crud.media import create_media_db, delete_media_by_id_db
-from .middleware import Context
-from .schemas.media import MediaGet, MediaType
-from .schemas.user import UserGet, AuthPayload
-from typing import Optional
-from crud.user import get_user_by_email_db, create_user_db
+from crud.user import create_user_db, get_user_by_email_db
+from database import Media, Session
+from database.models import User
 from services.core.utils import (
     create_access_token,
     create_refresh_token,
     get_password_hash,
     verify_password,
 )
-from database import Session, Media
-from database.models import User
+
+from .middleware import Context
+from .schemas.media import MediaGet, MediaType
+from .schemas.user import AuthPayload, UserGet
 
 
 async def login(info: strawberry.Info[Context], email: str, password: str) -> AuthPayload:

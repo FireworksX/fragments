@@ -1,12 +1,13 @@
-from typing import List, Dict, Optional
+from typing import Dict, List, Optional
 
 import strawberry
 
-from database import Session
-from .schemas.filter import OSType, DeviceType, AllFiltersGet, RegionGet, CountryGet
-from services.core.routes.middleware import Context
-from .schemas.user import AuthPayload
 from crud.geolocation import get_geo_locations
+from database import Session
+from services.core.routes.middleware import Context
+
+from .schemas.filter import AllFiltersGet, CountryGet, DeviceType, OSType, RegionGet
+from .schemas.user import AuthPayload
 
 
 async def get_all_filters(

@@ -1,39 +1,40 @@
 import os
 from copy import deepcopy
-from typing import List, Dict, Any, Optional
+from typing import Any, Dict, List, Optional
 from uuid import uuid4
 
-from fastapi import HTTPException, status, UploadFile
 import strawberry
+from fastapi import HTTPException, UploadFile, status
 
 from conf import service_settings
 from crud.bucket import add_file, delete_file
 from crud.campaign import get_campaign_by_id_db
 from crud.media import create_media_db, delete_media_by_id_db
+from crud.project import (
+    add_project_public_api_key,
+    add_user_to_project_db,
+    change_project_private_api_key,
+    change_user_role_db,
+    create_project_db,
+    delete_project_by_id_db,
+    delete_project_public_api_key,
+    get_project_by_id_db,
+    get_projects_by_user_id_db,
+    get_user_project_role,
+    update_project_by_id_db,
+)
+from crud.user import get_user_by_id_db
+from database import Media, Session
+from database.models import Project, ProjectMemberRole, User
+
 from .filesystem import get_directory
+from .middleware import Context
 from .schemas.campaign import CampaignGet
 from .schemas.fragment import FragmentGet
 from .schemas.media import MediaGet, MediaType
-from .schemas.project import ProjectGet, ProjectPost, ProjectPatch, ProjectKeyGet
-from .schemas.user import RoleGet, AuthPayload
-from .middleware import Context
-from crud.project import (
-    create_project_db,
-    get_project_by_id_db,
-    get_user_project_role,
-    get_projects_by_user_id_db,
-    update_project_by_id_db,
-    add_user_to_project_db,
-    change_user_role_db,
-    add_project_public_api_key,
-    delete_project_public_api_key,
-    change_project_private_api_key,
-    delete_project_by_id_db,
-)
-from crud.user import get_user_by_id_db
-from database import Session, Media
-from database.models import Project, User, ProjectMemberRole
-from .utils import transform_project_members, get_user_role_in_project
+from .schemas.project import ProjectGet, ProjectKeyGet, ProjectPatch, ProjectPost
+from .schemas.user import AuthPayload, RoleGet
+from .utils import get_user_role_in_project, transform_project_members
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:

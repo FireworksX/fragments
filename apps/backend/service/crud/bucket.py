@@ -1,5 +1,5 @@
-from typing import AnyStr
 import os
+from typing import AnyStr
 
 
 def add_file(filepath: str, content: AnyStr):

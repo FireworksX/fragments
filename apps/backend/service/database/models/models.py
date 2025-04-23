@@ -1,16 +1,16 @@
 from sqlalchemy import (
+    JSON,
+    Boolean,
     Column,
-    Integer,
-    String,
+    DateTime,
     Float,
     ForeignKey,
-    Boolean,
-    DateTime,
-    JSON,
-    Table,
-    orm,
-    func,
+    Integer,
     LargeBinary,
+    String,
+    Table,
+    func,
+    orm,
 )
 from sqlalchemy.orm import relationship
 

@@ -1,12 +1,12 @@
 import os
+from typing import Optional
 from uuid import uuid4
 
 from fastapi import UploadFile
+from sqlalchemy.orm import Session
 
 from conf import service_settings
 from database import Media
-from sqlalchemy.orm import Session
-from typing import Optional
 
 
 async def create_media_db(

@@ -1,22 +1,23 @@
 from datetime import datetime, timezone
 from typing import Optional
 
+import jwt
+from fastapi import HTTPException, status
+from jwt.exceptions import InvalidTokenError
+from strawberry.fastapi import BaseContext
+from user_agents import parse as user_agent_parser
+
+from conf.settings import service_settings
 from crud.project import get_project_by_id_db, validate_project_public_api_key
+from crud.user import get_user_by_email_db
+from database import Session
+from database.models import Project, User
+from services.core.utils import create_access_token, create_refresh_token
+from services.dependencies import get_db
+
+from .schemas.filter import DeviceType, OSType
 from .schemas.landing import ClientLanding
 from .schemas.user import AuthPayload
-from strawberry.fastapi import BaseContext
-from database import Session
-from database.models import User, Project
-from services.dependencies import get_db
-from crud.user import get_user_by_email_db
-from conf.settings import service_settings
-from services.core.utils import create_access_token, create_refresh_token
-import jwt
-from jwt.exceptions import InvalidTokenError
-from fastapi import HTTPException, status
-from .schemas.filter import DeviceType, OSType
-
-from user_agents import parse as user_agent_parser
 
 credentials_exception = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,

@@ -1,7 +1,9 @@
 from datetime import datetime, timedelta
+
 import jwt
-from conf.settings import service_settings
 from passlib.context import CryptContext
+
+from conf.settings import service_settings
 
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 

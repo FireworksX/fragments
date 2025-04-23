@@ -1,26 +1,28 @@
 from typing import List, Optional, Union
-from fastapi import HTTPException, status
-import strawberry
 
+import strawberry
+from fastapi import HTTPException, status
+
+from crud.campaign import get_campaign_by_id_db
 from crud.stream import (
     create_stream_db,
-    update_stream_by_id_db,
-    get_streams_by_campaign_id_db,
-    get_stream_by_id_db,
     delete_stream_by_id_db,
+    get_stream_by_id_db,
+    get_streams_by_campaign_id_db,
+    update_stream_by_id_db,
 )
-from crud.campaign import get_campaign_by_id_db
-from database import Session, Stream, Campaign
+from database import Campaign, Session, Stream
+
+from .middleware import Context
 from .schemas.filter import (
-    FilterOSTypeGet,
     FilterDeviceTypeGet,
     FilterGeoLocationsGet,
-    FilterTimeFrameGet,
+    FilterOSTypeGet,
     FilterPageGet,
+    FilterTimeFrameGet,
 )
-from .schemas.stream import StreamGet, StreamPost, StreamPatch
-from .schemas.user import RoleGet, AuthPayload
-from .middleware import Context
+from .schemas.stream import StreamGet, StreamPatch, StreamPost
+from .schemas.user import AuthPayload, RoleGet
 from .utils import get_user_role_in_project
 
 

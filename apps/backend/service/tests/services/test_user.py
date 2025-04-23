@@ -1,24 +1,16 @@
 import os
+from unittest.mock import AsyncMock, MagicMock, Mock, patch
 
 import pytest
 import strawberry
+from fastapi import HTTPException, UploadFile
+from sqlalchemy.orm import Session
 
 from database import Media
 from services.core.routes.middleware import Context
-
-from unittest.mock import patch, AsyncMock, MagicMock
-from sqlalchemy.orm import Session
-
 from services.core.routes.schemas.user import UserGet
-from services.core.routes.user import User, AuthPayload, add_avatar_route
-from services.core.routes.user import signup, login
-from fastapi import HTTPException, UploadFile
-
-from services.core.routes.middleware import Context
+from services.core.routes.user import AuthPayload, User, add_avatar_route, login, signup
 from services.dependencies import get_db
-
-from unittest.mock import Mock
-import strawberry
 
 
 def mock_info():

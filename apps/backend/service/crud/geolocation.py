@@ -1,8 +1,9 @@
 import json
 from typing import List, Optional
 
-from database import GeoLocation, Session
 import pycountry
+
+from database import GeoLocation, Session
 
 
 def get_country_name(country_code: str):

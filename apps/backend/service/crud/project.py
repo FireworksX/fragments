@@ -1,13 +1,14 @@
 import hashlib
 import hmac
 import secrets
+from typing import List, Optional
 
+from sqlalchemy.orm import Session
+
+from conf.settings import service_settings
 from crud.filesystem import create_directory_db
 from database import FilesystemDirectory
-from database.models import Project, User, ProjectMemberRole, ProjectApiKey
-from sqlalchemy.orm import Session
-from typing import Optional, List
-from conf.settings import service_settings
+from database.models import Project, ProjectApiKey, ProjectMemberRole, User
 
 
 def generate_api_key(project_id: int) -> str:

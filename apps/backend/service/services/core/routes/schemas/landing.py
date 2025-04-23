@@ -3,9 +3,9 @@ from typing import Optional
 
 import strawberry
 
-from services.core.routes.schemas.stream import StreamGet
+from services.core.routes.schemas.filter import DeviceType, OSType
 from services.core.routes.schemas.fragment import FragmentGet
-from services.core.routes.schemas.filter import OSType, DeviceType
+from services.core.routes.schemas.stream import StreamGet
 
 
 @strawberry.type

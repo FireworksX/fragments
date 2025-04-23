@@ -1,8 +1,10 @@
+from typing import List, Optional
+
+from sqlalchemy.orm import Session
+
 from crud.media import get_media_by_id_db
 from database import FragmentMedia
 from database.models import Fragment
-from sqlalchemy.orm import Session
-from typing import Optional, List
 
 
 async def create_fragment_db(

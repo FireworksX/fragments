@@ -1,6 +1,8 @@
-from database.models import User
-from sqlalchemy.orm import Session
 from typing import Optional
+
+from sqlalchemy.orm import Session
+
+from database.models import User
 
 
 async def create_user_db(

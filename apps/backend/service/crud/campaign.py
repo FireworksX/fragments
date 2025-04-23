@@ -1,6 +1,8 @@
-from database.models import Campaign, Project, ProjectCampaign
+from typing import List, Optional
+
 from sqlalchemy.orm import Session
-from typing import Optional, List
+
+from database.models import Campaign, Project, ProjectCampaign
 
 
 async def create_campaign_db(

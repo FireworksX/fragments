@@ -3,15 +3,15 @@ from typing import List, Optional, Union
 import strawberry
 
 from services.core.routes.schemas.filter import (
-    FilterPageGet,
-    FilterOSTypeGet,
+    DeviceType,
     FilterDeviceTypeGet,
+    FilterGeoLocationPost,
     FilterGeoLocationsGet,
+    FilterOSTypeGet,
+    FilterPageGet,
+    FilterTimeFramePost,
     FilterTimeFramesGet,
     OSType,
-    DeviceType,
-    FilterGeoLocationPost,
-    FilterTimeFramePost,
 )
 
 

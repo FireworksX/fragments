@@ -1,14 +1,14 @@
 from typing import Any, Callable, Dict, List
 
+import ujson
 from fastapi.exceptions import RequestValidationError
 from fastapi.openapi.utils import get_openapi
-from starlette.requests import Request
-from starlette.responses import Response, StreamingResponse, JSONResponse
 from starlette.middleware.cors import CORSMiddleware
+from starlette.requests import Request
+from starlette.responses import JSONResponse, Response, StreamingResponse
 
 from conf import APP_NAME, APP_VERSION, DEBUG
 from services.api import Error, make_app
-import ujson
 
 app = make_app()
 

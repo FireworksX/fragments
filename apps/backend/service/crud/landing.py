@@ -1,10 +1,12 @@
+from typing import List, Optional
+
+from sqlalchemy.orm import Session
+
 from database import Stream
 from database.models import Landing
-from sqlalchemy.orm import Session
-from typing import Optional, List
-
 from services.core.routes.schemas.landing import ClientLanding
-from .ipgetter import get_location_by_ip, GeoLocation
+
+from .ipgetter import GeoLocation, get_location_by_ip
 
 
 async def create_landing_db(

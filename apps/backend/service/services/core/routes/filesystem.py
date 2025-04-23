@@ -1,21 +1,22 @@
 from typing import List, Tuple
-from fastapi import HTTPException, status
+
 import strawberry
+from fastapi import HTTPException, status
 
 from crud.filesystem import (
     create_directory_db,
-    get_directory_by_id_db,
     delete_directory_db,
+    get_directory_by_id_db,
     update_directory_db,
 )
 from crud.project import get_project_by_id_db
-from database import Session, Project, FilesystemDirectory, Fragment
-from .schemas.filesystem import ProjectDirectory, ProjectDirectoryGet, ProjectDirectoryPatch
-from .schemas.user import RoleGet, AuthPayload
-from .middleware import Context
-from .utils import get_user_role_in_project
+from database import FilesystemDirectory, Fragment, Project, Session
 
 from .fragment import fragment_db_to_fragment
+from .middleware import Context
+from .schemas.filesystem import ProjectDirectory, ProjectDirectoryGet, ProjectDirectoryPatch
+from .schemas.user import AuthPayload, RoleGet
+from .utils import get_user_role_in_project
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
