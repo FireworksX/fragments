@@ -1,16 +1,34 @@
-from database.models import Campaign, Project, ProjectCampaign
-from sqlalchemy.orm import Session
-from typing import Optional, List
+from typing import List, Optional
 
-async def create_campaign_db(db: Session, name: str, project_id: int, description: str,
-                             active: bool, deleted: bool, author_id: int) -> Campaign:
-    campaign: Campaign = Campaign(name=name, project_id=project_id, description=description, active=active,
-                                  deleted=deleted, author_id=author_id)
+from sqlalchemy.orm import Session
+
+from database.models import Campaign, Project, ProjectCampaign
+
+
+async def create_campaign_db(
+    db: Session,
+    name: str,
+    project_id: int,
+    description: str,
+    active: bool,
+    deleted: bool,
+    author_id: int,
+) -> Campaign:
+    campaign: Campaign = Campaign(
+        name=name,
+        project_id=project_id,
+        description=description,
+        active=active,
+        deleted=deleted,
+        author_id=author_id,
+    )
     db.add(campaign)
     db.commit()
     db.refresh(campaign)
     project: Project = db.query(Project).filter(Project.id == project_id).first()
-    relation: ProjectCampaign = ProjectCampaign(campaign_id=campaign.id, project_id=campaign.project_id)
+    relation: ProjectCampaign = ProjectCampaign(
+        campaign_id=campaign.id, project_id=campaign.project_id
+    )
     relation.project = project
     relation.campaign = campaign
     project.campaigns.append(relation)
@@ -25,10 +43,21 @@ async def get_campaign_by_id_db(db: Session, campaign_id: int) -> Optional[Campa
 async def delete_campaign_by_id_db(db: Session, campaign_id: int) -> None:
     db.query(Campaign).filter(Campaign.id == campaign_id).delete()
 
-async def get_campaign_by_name_and_project_id_db(db: Session, project_id: int, name: str) -> Optional[Campaign]:
-    return db.query(Campaign).filter(Campaign.project_id == project_id).filter(Campaign.name == name).first()
 
-async def get_campaigns_by_project_id_db(db: Session, project_id: int, active: Optional[bool] = None, deleted: Optional[bool] = None) -> List[Campaign]:
+async def get_campaign_by_name_and_project_id_db(
+    db: Session, project_id: int, name: str
+) -> Optional[Campaign]:
+    return (
+        db.query(Campaign)
+        .filter(Campaign.project_id == project_id)
+        .filter(Campaign.name == name)
+        .first()
+    )
+
+
+async def get_campaigns_by_project_id_db(
+    db: Session, project_id: int, active: Optional[bool] = None, deleted: Optional[bool] = None
+) -> List[Campaign]:
     query = db.query(Campaign).filter(Campaign.project_id == project_id)
     if active is not None:
         query = query.filter(Campaign.active == active)

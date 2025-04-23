@@ -1,13 +1,14 @@
 import hashlib
 import hmac
 import secrets
+from typing import List, Optional
 
+from sqlalchemy.orm import Session
+
+from conf.settings import service_settings
 from crud.filesystem import create_directory_db
 from database import FilesystemDirectory
-from database.models import Project, User, ProjectMemberRole, ProjectApiKey
-from sqlalchemy.orm import Session
-from typing import Optional, List
-from conf.settings import service_settings
+from database.models import Project, ProjectApiKey, ProjectMemberRole, User
 
 
 def generate_api_key(project_id: int) -> str:
@@ -34,10 +35,10 @@ def generate_api_key(project_id: int) -> str:
     random_hex = secrets.token_hex(16)
 
     # Create a message that includes the project_id and the random part.
-    message = f"{project_id}:{random_hex}".encode("utf-8")
+    message = f"{project_id}:{random_hex}".encode('utf-8')
 
     # Compute the HMAC-SHA256 signature of the message using the secret key.
-    signature = hmac.new(secret_key.encode("utf-8"), message, hashlib.sha256).hexdigest()
+    signature = hmac.new(secret_key.encode('utf-8'), message, hashlib.sha256).hexdigest()
 
     # Combine all parts into the final API key.
     api_key = f"{project_id}-{random_hex}-{signature}"
@@ -84,7 +85,9 @@ async def change_project_private_api_key(db: Session, project_id: int) -> Projec
     return project
 
 
-async def add_project_public_api_key(db: Session, project_id: int, key_name: Optional[str] = None) -> Project:
+async def add_project_public_api_key(
+    db: Session, project_id: int, key_name: Optional[str] = None
+) -> Project:
     project: Project = await get_project_by_id_db(db, project_id)
     api_key: ProjectApiKey = await generate_project_public_api_key(project.id)
     api_key.name = key_name
@@ -96,9 +99,11 @@ async def add_project_public_api_key(db: Session, project_id: int, key_name: Opt
 
 
 async def delete_project_public_api_key(db: Session, project_id: int, public_key_id: int) -> None:
-    public_api_key: ProjectApiKey = db.query(ProjectApiKey).filter(ProjectApiKey.id == public_key_id).first()
+    public_api_key: ProjectApiKey = (
+        db.query(ProjectApiKey).filter(ProjectApiKey.id == public_key_id).first()
+    )
     if public_api_key is None:
-        raise ValueError("Key does not exist")
+        raise ValueError('Key does not exist')
     if public_api_key.project_id != project_id:
         raise ValueError("Can't remove unrelated key")
     if public_api_key.is_private:
@@ -109,9 +114,11 @@ async def delete_project_public_api_key(db: Session, project_id: int, public_key
 
 
 async def validate_project_public_api_key(db: Session, public_api_key: str) -> Project:
-    public_api_key: ProjectApiKey = db.query(ProjectApiKey).filter(ProjectApiKey.key == public_api_key).first()
+    public_api_key: ProjectApiKey = (
+        db.query(ProjectApiKey).filter(ProjectApiKey.key == public_api_key).first()
+    )
     if public_api_key is None:
-        raise ValueError("Invalid public key")
+        raise ValueError('Invalid public key')
     return public_api_key.project
 
 
@@ -128,8 +135,9 @@ async def create_project_db(db: Session, name: str, user_id: int) -> Project:
     project.private_key_id = api_key.id
 
     await add_user_to_project_db(db, user_id, project.id, 1)  # 1 = owner
-    root_directory: FilesystemDirectory = await create_directory_db(db=db, parent_id=None, name=name,
-                                                                    project_id=project.id)
+    root_directory: FilesystemDirectory = await create_directory_db(
+        db=db, parent_id=None, name=name, project_id=project.id
+    )
     project.root_directory = root_directory
 
     db.add(project)
@@ -152,6 +160,7 @@ async def get_project_by_id_db(db: Session, project_id: int) -> Project:
 
 async def delete_project_by_id_db(db: Session, project_id: int) -> None:
     db.query(Project).filter(Project.id == project_id).delete()
+
 
 async def get_projects_by_user_id_db(db: Session, user_id: int) -> List[Project]:
     return db.query(Project).filter(Project.owner_id == user_id).all()

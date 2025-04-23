@@ -19,12 +19,10 @@ def upsert(db: Session, model: Base, **values):
     db.connection().execute(stmt)
 
 
-def bulk_upsert_mappings(db: Session, model: Base, values, pk="id", del_not_included=False):
+def bulk_upsert_mappings(db: Session, model: Base, values, pk='id', del_not_included=False):
     entries_to_update = []
     values_ids = list(values.keys())
-    for each in (
-        db.query(getattr(model, pk)).filter(getattr(model, pk).in_(values_ids)).all()
-    ):
+    for each in db.query(getattr(model, pk)).filter(getattr(model, pk).in_(values_ids)).all():
         entry = values.pop(getattr(each, pk), None)
         if entry:
             entries_to_update.append(entry)
@@ -39,9 +37,9 @@ def bulk_upsert_mappings(db: Session, model: Base, values, pk="id", del_not_incl
     db.commit()
 
 
-def delete_not_included(db: Session, model: Base, values_ids, pk="id"):
+def delete_not_included(db: Session, model: Base, values_ids, pk='id'):
     db.query(model).filter(getattr(model, pk).not_in(values_ids)).delete()
 
 
-def delete_by_pks(db: Session, model, values_ids, pk="id"):
+def delete_by_pks(db: Session, model, values_ids, pk='id'):
     db.query(model).filter(getattr(model, pk).in_(values_ids)).delete()

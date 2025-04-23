@@ -1,17 +1,35 @@
+from typing import List, Optional
+
+from sqlalchemy.orm import Session
+
 from database import Stream
 from database.models import Landing
-from sqlalchemy.orm import Session
-from typing import Optional, List
-
 from services.core.routes.schemas.landing import ClientLanding
-from .ipgetter import get_location_by_ip, GeoLocation
+
+from .ipgetter import GeoLocation, get_location_by_ip
 
 
-async def create_landing_db(db: Session, name: str, project_id: int, stream_id: int, fragment_id: Optional[int] = None,
-                            props: Optional[str] = None, weight: Optional[float] = None, active: Optional[bool] = True,
-                            deleted: Optional[bool] = False) -> Landing:
-    landing: Landing = Landing(name=name, project_id=project_id, stream_id=stream_id,
-                               fragment_id=fragment_id, props=props, weight=weight, active=active, deleted=deleted)
+async def create_landing_db(
+    db: Session,
+    name: str,
+    project_id: int,
+    stream_id: int,
+    fragment_id: Optional[int] = None,
+    props: Optional[str] = None,
+    weight: Optional[float] = None,
+    active: Optional[bool] = True,
+    deleted: Optional[bool] = False,
+) -> Landing:
+    landing: Landing = Landing(
+        name=name,
+        project_id=project_id,
+        stream_id=stream_id,
+        fragment_id=fragment_id,
+        props=props,
+        weight=weight,
+        active=active,
+        deleted=deleted,
+    )
 
     db.add(landing)
     db.commit()
@@ -54,59 +72,62 @@ async def update_landing_by_id_db(db: Session, values: dict) -> Landing:
 async def stream_matches_client(stream: Stream, client: ClientLanding) -> bool:
     client_location: GeoLocation = get_location_by_ip(client.ip_address)
     if stream.pages_filter:
-        toggled_pages = [pf for pf in stream.pages_filter if pf.toggled]
-        if toggled_pages and not any(client.page == pf.page for pf in toggled_pages):
+        if not any(client.page == pf.pages for pf in stream.pages_filter):
             return False
 
     if stream.device_types_filter:
-        toggled_devices = [df for df in stream.device_types_filter if df.toggled]
-        if toggled_devices and not any(client.device_type.value == df.device_type for df in toggled_devices):
+        if not any(
+            client.device_type.value == df.device_types for df in stream.device_types_filter
+        ):
             # Assuming client.device_type is an enum and stored value is comparable
             return False
 
     if stream.os_types_filter:
-        toggled_os = [osf for osf in stream.os_types_filter if osf.toggled]
-        if toggled_os and not any(client.os_type.value == osf.os_type for osf in toggled_os):
+        if not any(client.os_type.value == osf.os_types for osf in stream.os_types_filter):
             return False
 
     if stream.time_frames_filter:
-        toggled_time_frames = [tf for tf in stream.time_frames_filter if tf.toggled]
-        if toggled_time_frames and not any(
-                tf.from_time <= client.time_frame <= tf.to_time for tf in toggled_time_frames):
+        if not any(
+            tf.from_time <= client.time_frame <= tf.to_time for tf in stream.time_frames_filter
+        ):
             return False
 
     if stream.geo_locations_filter:
-        toggled_geo_filters = [gf for gf in stream.geo_locations_filter if gf.toggled]
-        if toggled_geo_filters:
-            match_found = any(
-                client_location.country == gf.country and
-                (gf.region is None or client_location.region == gf.region) and
-                (gf.city is None or client_location.city == gf.city)
-                for gf in toggled_geo_filters
-            )
-            if not match_found:
-                return False
+        match_found = any(
+            client_location.country == gf.country
+            and (gf.region is None or client_location.region == gf.region)
+            and (gf.city is None or client_location.city == gf.city)
+            for gf in stream.geo_locations_filter
+        )
+        if not match_found:
+            return False
     return True
 
 
-async def get_best_landing(db: Session, client: ClientLanding, project_id: int) -> Optional[Landing]:
-    streams = db.query(Stream).filter(
-        Stream.project_id == project_id,
-        Stream.active == True,
-        Stream.deleted == False
-    ).all()
+async def get_best_landing(
+    db: Session, client: ClientLanding, project_id: int
+) -> Optional[Landing]:
+    streams = (
+        db.query(Stream)
+        .filter(Stream.project_id == project_id, Stream.active == True, Stream.deleted == False)
+        .all()
+    )
 
     candidate_landings = []
     for stream in streams:
         if not stream_matches_client(stream, client):
             continue
 
-        landings = db.query(Landing).filter(
-            Landing.project_id == project_id,
-            Landing.stream_id == stream.id,
-            Landing.active == True,
-            Landing.deleted == False
-        ).all()
+        landings = (
+            db.query(Landing)
+            .filter(
+                Landing.project_id == project_id,
+                Landing.stream_id == stream.id,
+                Landing.active == True,
+                Landing.deleted == False,
+            )
+            .all()
+        )
 
         if not landings:
             continue
