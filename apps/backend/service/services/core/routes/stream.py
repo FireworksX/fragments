@@ -19,7 +19,7 @@ from .schemas.filter import (
     FilterGeoLocationsGet,
     FilterOSTypeGet,
     FilterPageGet,
-    FilterTimeFrameGet,
+    FilterTimeFrameGet, FilterGeoLocationGet, FilterTimeFramesGet,
 )
 from .schemas.stream import StreamGet, StreamPatch, StreamPost
 from .schemas.user import AuthPayload, RoleGet
@@ -43,24 +43,18 @@ def stream_db_to_stream(stream: Stream) -> StreamGet:
             | FilterDeviceTypeGet
             | FilterPageGet
             | FilterGeoLocationsGet
-            | FilterTimeFrameGet
+            | FilterTimeFramesGet
         ]
-    ] = []
-    for os_type_filter in stream.os_types_filter:
-        filters.append(FilterOSTypeGet(os_type=os_type_filter.os_types))
-    for device_type_filter in stream.device_types_filter:
-        filters.append(FilterDeviceTypeGet(device_type=device_type_filter.device_types))
-    for page in stream.pages_filter:
-        filters.append(FilterPageGet(page=page.pages))
-    for geo_location in stream.geo_locations_filter:
-        filters.append(
-            FilterGeoLocationsGet(
-                country=geo_location.country, region=geo_location.region, city=geo_location.city
-            )
-        )
-    for frame in stream.time_frames_filter:
-        filters.append(FilterTimeFrameGet(from_time=frame.from_time, to_time=frame.to_time))
+    ] = [FilterOSTypeGet(os_types=[os_type_filter.os_type for os_type_filter in stream.os_types_filter]),
+         FilterDeviceTypeGet(
+             device_types=[device_type_filter.device_type for device_type_filter in stream.device_types_filter]),
+         FilterPageGet(pages=[page.page for page in stream.pages_filter]), FilterGeoLocationsGet(geo_locations=[
+            FilterGeoLocationGet(country=geo_location.country, region=geo_location.region, city=geo_location.city) for
+            geo_location in stream.geo_locations_filter]
 
+                                                                                                 ), FilterTimeFramesGet(
+            time_frames=[FilterTimeFrameGet(from_time=frame.from_time, to_time=frame.to_time) for frame in
+                         stream.time_frames_filter])]
     return StreamGet(
         id=stream.id,
         name=stream.name,
