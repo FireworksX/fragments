@@ -15,8 +15,9 @@ app = make_app()
 
 class UJSONResponse(JSONResponse):
     def render(self, content: Any) -> bytes:
-        assert ujson is not None, "ujson must be installed to use UJSONResponse"
-        return ujson.dumps(content, ensure_ascii=False).encode("utf-8")
+        assert ujson is not None, 'ujson must be installed to use UJSONResponse'
+        return ujson.dumps(content, ensure_ascii=False).encode('utf-8')
+
 
 @app.exception_handler(RequestValidationError)
 def type_error_handler(request: Request, exc: RequestValidationError) -> UJSONResponse:
@@ -101,5 +102,5 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=['*'],
     allow_headers=['*'],
-    expose_headers=['*']
+    expose_headers=['*'],
 )

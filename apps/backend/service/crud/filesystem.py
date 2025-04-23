@@ -2,7 +2,9 @@ from typing import List, Optional, Union, Tuple
 from database import Session, FilesystemDirectory, Fragment
 
 
-async def create_directory_db(db: Session, parent_id: Optional[int], name: str, project_id: int) -> FilesystemDirectory:
+async def create_directory_db(
+    db: Session, parent_id: Optional[int], name: str, project_id: int
+) -> FilesystemDirectory:
     root_dir = FilesystemDirectory(parent_id=parent_id, project_id=project_id, name=name)
     db.add(root_dir)
     db.commit()
@@ -15,9 +17,10 @@ async def get_directory_by_id_db(db: Session, directory_id: int) -> Optional[Fil
 
 
 async def update_directory_db(db: Session, values: dict) -> FilesystemDirectory:
-    directory_id = values.get("id")
-    directory: FilesystemDirectory = db.query(FilesystemDirectory).filter(
-        FilesystemDirectory.id == directory_id).first()
+    directory_id = values.get('id')
+    directory: FilesystemDirectory = (
+        db.query(FilesystemDirectory).filter(FilesystemDirectory.id == directory_id).first()
+    )
 
     if values.get('name') is not None:
         directory.name = values['name']
@@ -54,8 +57,7 @@ async def delete_directory_db(db: Session, directory_id: int) -> None:
         # Exclude the same fragments themselves (to skip self-linking or the ones in this dir)
         .filter(~Fragment.id.in_(frag_ids_in_this_dir))
         # Check if they link to ANY fragment in this directory:
-        .filter(Fragment.linked_fragments.any(Fragment.id.in_(frag_ids_in_this_dir)))
-        .all()
+        .filter(Fragment.linked_fragments.any(Fragment.id.in_(frag_ids_in_this_dir))).all()
     )
 
     if referencing_fragments:
@@ -72,4 +74,3 @@ async def delete_directory_db(db: Session, directory_id: int) -> None:
     db.delete(directory)
     db.commit()
     print(f"Deleted directory {directory_id}. No fragments in it were referenced by others.")
-

@@ -3,7 +3,7 @@ import os
 
 
 def add_file(filepath: str, content: AnyStr):
-    with open(filepath, mode="wb") as file:
+    with open(filepath, mode='wb') as file:
         file.write(content)
 
 

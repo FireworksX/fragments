@@ -9,17 +9,24 @@ from sqlalchemy.orm import Session
 from typing import Optional
 
 
-async def create_media_db(db: Session, file: UploadFile,
-                          directory_id: Optional[int] = None) -> Media:
+async def create_media_db(
+    db: Session, file: UploadFile, directory_id: Optional[int] = None
+) -> Media:
     content = await file.read()
     unique_name = f"{uuid4()}_{file.filename}"
     path = os.path.join(service_settings.MEDIA_STORAGE_PATH, unique_name)
 
     # Save file to disk
-    with open(path, "wb") as f:
+    with open(path, 'wb') as f:
         f.write(content)
 
-    media: Media = Media(filename=unique_name, content_type=file.content_type, data=content, path=path, directory_id=directory_id)
+    media: Media = Media(
+        filename=unique_name,
+        content_type=file.content_type,
+        data=content,
+        path=path,
+        directory_id=directory_id,
+    )
     db.add(media)
     db.commit()
     db.refresh(media)

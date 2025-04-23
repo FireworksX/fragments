@@ -17,4 +17,4 @@ import strawberry
 schema = strawberry.Schema(query=Query, mutation=Mutation, scalar_overrides={UploadFile: Upload})
 graphql_app = GraphQLRouter(schema, context_getter=get_context)
 
-api.include_router(graphql_app, prefix="/graphql")
+api.include_router(graphql_app, prefix='/graphql')

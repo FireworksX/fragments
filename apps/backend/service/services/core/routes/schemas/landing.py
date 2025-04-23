@@ -5,9 +5,7 @@ import strawberry
 
 from services.core.routes.schemas.stream import StreamGet
 from services.core.routes.schemas.fragment import FragmentGet
-from services.core.routes.schemas.filter import FilterOSTypePost, FilterPagePost, FilterPageGet, FilterTimeFrameGet, \
-    FilterTimeFramePost, FilterDeviceTypePost, FilterOSTypeGet, FilterDeviceTypeGet, FilterGeoLocationGet, \
-    FilterGeoLocationPost, OSType, DeviceType
+from services.core.routes.schemas.filter import OSType, DeviceType
 
 
 @strawberry.type
@@ -29,8 +27,8 @@ class LandingPost:
     props: Optional[strawberry.scalars.JSON] = None
     weight: Optional[float] = None
     name: str
-    active:  Optional[bool] = None
-    deleted:  Optional[bool] = None
+    active: Optional[bool] = None
+    deleted: Optional[bool] = None
 
 
 @strawberry.input
@@ -42,6 +40,7 @@ class LandingPatch:
     name: Optional[str] = None
     active: Optional[bool] = None
     deleted: Optional[bool] = None
+
 
 @strawberry.input
 class ClientLanding:

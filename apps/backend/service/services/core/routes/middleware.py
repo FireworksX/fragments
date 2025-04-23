@@ -20,8 +20,8 @@ from user_agents import parse as user_agent_parser
 
 credentials_exception = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
-    detail="Could not validate credentials",
-    headers={"Authorization": "token"},
+    detail='Could not validate credentials',
+    headers={'Authorization': 'token'},
 )
 
 
@@ -61,17 +61,20 @@ class Context(BaseContext):
         if not self.request:
             return None
 
-        authorization = self.request.headers.get("Authorization", None)
-        refresh = self.request.headers.get("Refresh", None)
+        authorization = self.request.headers.get('Authorization', None)
+        refresh = self.request.headers.get('Refresh', None)
 
         if authorization is None:
             raise credentials_exception
 
         try:
             authorization = authorization.split(' ')[1]  # format is 'Bearer token'
-            payload = jwt.decode(authorization, service_settings.ACCESS_TOKEN_SECRET_KEY,
-                                 algorithms=[service_settings.ALGORITHM])
-            email: str = payload.get("sub")
+            payload = jwt.decode(
+                authorization,
+                service_settings.ACCESS_TOKEN_SECRET_KEY,
+                algorithms=[service_settings.ALGORITHM],
+            )
+            email: str = payload.get('sub')
             if email is None:
                 raise credentials_exception
         except InvalidTokenError:
@@ -82,18 +85,14 @@ class Context(BaseContext):
         if user is None:
             raise credentials_exception
         if refresh is None:
-            refresh = create_refresh_token(data={"sub": user.email})
-        return AuthPayload(
-            user=user,
-            access_token=authorization,
-            refresh_token=refresh
-        )
+            refresh = create_refresh_token(data={'sub': user.email})
+        return AuthPayload(user=user, access_token=authorization, refresh_token=refresh)
 
     async def project(self) -> Project | None:
         if not self.request:
             return None
 
-        authorization = self.request.headers.get("Authorization", None)
+        authorization = self.request.headers.get('Authorization', None)
         if authorization is None:
             raise credentials_exception
 
@@ -110,28 +109,38 @@ class Context(BaseContext):
             return project
 
     async def client_landing(self) -> ClientLanding:
-        agent_header = self.request.headers.get("User-Agent", None)
+        agent_header = self.request.headers.get('User-Agent', None)
         user_agent: UserAgentInfo = UserAgentInfo(agent_header)
 
         user_ip: Optional[str] = self.request.headers.get('X-User-Ip', None)
         if user_ip is None:
-            user_ip = self.request.headers.get("X-Forwarded-For", self.request.client.host)
+            user_ip = self.request.headers.get('X-Forwarded-For', self.request.client.host)
         page: Optional[str] = self.request.headers.get('Referrer', None)
         gmt_time = datetime.now(timezone.utc)
 
-        print(f'os_type={user_agent.os_type}, device_type={user_agent.device_type}, time_frame={gmt_time}, page={page}, ip_address={user_ip}')
-        return ClientLanding(os_type=user_agent.os_type, device_type=user_agent, time_frame=gmt_time, page=page,
-                             ip_address=user_ip)
+        print(
+            f'os_type={user_agent.os_type}, device_type={user_agent.device_type}, time_frame={gmt_time}, page={page}, ip_address={user_ip}'
+        )
+        return ClientLanding(
+            os_type=user_agent.os_type,
+            device_type=user_agent,
+            time_frame=gmt_time,
+            page=page,
+            ip_address=user_ip,
+        )
 
     async def refresh_user(self) -> AuthPayload | None:
         if not self.request:
             return None
 
-        refresh = self.request.headers.get("Refresh", None)
+        refresh = self.request.headers.get('Refresh', None)
         try:
-            payload = jwt.decode(refresh, service_settings.REFRESH_TOKEN_SECRET_KEY,
-                                 algorithms=[service_settings.ALGORITHM])
-            email: str = payload.get("sub")
+            payload = jwt.decode(
+                refresh,
+                service_settings.REFRESH_TOKEN_SECRET_KEY,
+                algorithms=[service_settings.ALGORITHM],
+            )
+            email: str = payload.get('sub')
             if email is None:
                 raise credentials_exception
         except InvalidTokenError:
@@ -141,8 +150,8 @@ class Context(BaseContext):
             raise credentials_exception
         return AuthPayload(
             user=user,
-            access_token=create_access_token(data={"sub": user.email}),
-            refresh_token=refresh
+            access_token=create_access_token(data={'sub': user.email}),
+            refresh_token=refresh,
         )
 
     def session(self) -> Session:

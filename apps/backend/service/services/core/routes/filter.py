@@ -1,17 +1,19 @@
-from typing import List, Union, Dict, Optional
+from typing import List, Dict, Optional
 
 import strawberry
 
 from database import Session
-from .schemas.filter import FilterOSTypeGet, FilterDeviceTypeGet, OSType, FilterType, DeviceType, FilterGeoLocationGet, \
-    AllFiltersGet, RegionGet, CountryGet
+from .schemas.filter import OSType, DeviceType, AllFiltersGet, RegionGet, CountryGet
 from services.core.routes.middleware import Context
 from .schemas.user import AuthPayload
 from crud.geolocation import get_geo_locations
 
 
-async def get_all_filters(info: strawberry.Info[Context], countries_filter: Optional[List[str]] = None,
-                          regions_filter: Optional[List[str]] = None) -> AllFiltersGet:
+async def get_all_filters(
+    info: strawberry.Info[Context],
+    countries_filter: Optional[List[str]] = None,
+    regions_filter: Optional[List[str]] = None,
+) -> AllFiltersGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
     os_types: List[OSType] = [v for v in OSType]

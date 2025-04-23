@@ -33,6 +33,8 @@ class FragmentPatch:
 class FragmentMediaGet:
     id: int
     public_path: str
+
+
 @strawberry.type
 class FragmentGet:
     id: int
@@ -42,6 +44,6 @@ class FragmentGet:
     props: Optional[strawberry.scalars.JSON] = None
     assets: List[FragmentMediaGet]
 
-    linked_fragments: Optional[List["FragmentGet"]] = None  # flat list of fragments
+    linked_fragments: Optional[List['FragmentGet']] = None  # flat list of fragments
 
     directory_id: int

@@ -40,7 +40,7 @@ lint:
 	mypy $(PACKAGES)
 
 format:
-	isort --apply --recursive $(CODE)
+	#isort --apply --recursive $(CODE)
 	black --line-length=100 --skip-string-normalization $(CODE)
 	unify --in-place --recursive $(CODE)
 
