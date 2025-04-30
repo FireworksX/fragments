@@ -1,9 +1,9 @@
-from typing import AnyStr
 import os
+from typing import AnyStr
 
 
 def add_file(filepath: str, content: AnyStr):
-    with open(filepath, mode="wb") as file:
+    with open(filepath, mode='wb') as file:
         file.write(content)
 
 

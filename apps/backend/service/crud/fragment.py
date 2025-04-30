@@ -1,20 +1,36 @@
+from typing import List, Optional
+
+from sqlalchemy.orm import Session
+
 from crud.media import get_media_by_id_db
 from database import FragmentMedia
-from database.models import Project, Fragment, Fragment
-from sqlalchemy.orm import Session
-from typing import Optional, List
-import uuid
-from sqlalchemy import desc, and_, func
+from database.models import Fragment
 
 
-async def create_fragment_db(db: Session, name: str, author_id: int, project_id: int, document: str,
-                             props: str, linked_fragments: Optional[List[int]], directory_id: int) -> Fragment:
-    fragment: Fragment = Fragment(project_id=project_id, name=name, author_id=author_id, document=document, props=props,
-                                  directory_id=directory_id)
+async def create_fragment_db(
+    db: Session,
+    name: str,
+    author_id: int,
+    project_id: int,
+    document: str,
+    props: str,
+    linked_fragments: Optional[List[int]],
+    directory_id: int,
+) -> Fragment:
+    fragment: Fragment = Fragment(
+        project_id=project_id,
+        name=name,
+        author_id=author_id,
+        document=document,
+        props=props,
+        directory_id=directory_id,
+    )
     if linked_fragments is not None:
         db.add(fragment)
         db.commit()
-        fragments: List[Fragment] = db.query(Fragment).filter(Fragment.id.in_(linked_fragments)).all()
+        fragments: List[Fragment] = (
+            db.query(Fragment).filter(Fragment.id.in_(linked_fragments)).all()
+        )
         for fr in fragments:
             fragment.linked_fragments.append(fr)
     else:
@@ -24,11 +40,18 @@ async def create_fragment_db(db: Session, name: str, author_id: int, project_id:
     return fragment
 
 
-async def get_fragments_by_ids_db(db: Session, fragment_ids: List[int]) -> List[Fragment]:
-    if not fragment_ids:
-        return []
+async def get_fragments_by_ids_db(
+    db: Session, fragment_ids: Optional[List[int]] = None, project_id: Optional[int] = None
+) -> List[Fragment]:
+    query = db.query(Fragment)
 
-    return db.query(Fragment).filter(Fragment.id.in_(fragment_ids)).all()
+    if fragment_ids:
+        query = query.filter(Fragment.id.in_(fragment_ids))
+
+    if project_id:
+        query = query.filter(Fragment.project_id == project_id)
+
+    return query.all()
 
 
 async def get_fragment_by_id_db(db: Session, fragment_id: int) -> Fragment:
@@ -39,13 +62,17 @@ async def get_fragments_by_project_id_db(db: Session, project_id: int) -> List[F
     return db.query(Fragment).filter(Fragment.project_id == project_id).all()
 
 
-async def update_fragment_by_id_db(db: Session, values: dict, linked_fragments: List[int]) -> Fragment:
+async def update_fragment_by_id_db(
+    db: Session, values: dict, linked_fragments: List[int]
+) -> Fragment:
     fragment_id: int = values['id']
     fragment: Fragment = db.query(Fragment).filter(Fragment.id == fragment_id).first()
 
     if linked_fragments is not None and len(linked_fragments) > 0:
         fragment.linked_fragments.clear()
-        fragments: List[Fragment] = db.query(Fragment).filter(Fragment.id.in_(linked_fragments)).all()
+        fragments: List[Fragment] = (
+            db.query(Fragment).filter(Fragment.id.in_(linked_fragments)).all()
+        )
         for fr in fragments:
             fragment.linked_fragments.append(fr)
         db.commit()
@@ -63,7 +90,7 @@ async def update_fragment_by_id_db(db: Session, values: dict, linked_fragments: 
     return fragment
 
 
-async def add_fragment_media(db, media_id: int, fragment_id: int) -> Fragment:
+async def add_fragment_media_db(db, media_id: int, fragment_id: int) -> Fragment:
     fragment_media: FragmentMedia = FragmentMedia(media_id=media_id, fragment_id=fragment_id)
     fragment: Fragment = await get_fragment_by_id_db(db, fragment_id)
     fragment_media.media = await get_media_by_id_db(db, media_id)
@@ -98,9 +125,7 @@ async def delete_fragment_by_id_db(db: Session, fragment_id: int) -> None:
     if referencing_fragments:
         # At least one fragment references this fragment
         referencing_info = [(f.id, f.name) for f in referencing_fragments]
-        msg = (
-            f"Cannot delete fragment {fragment_id} because it is still linked by other fragments: {referencing_info}."
-        )
+        msg = f"Cannot delete fragment {fragment_id} because it is still linked by other fragments: {referencing_info}."
         raise ValueError(msg)
 
     # 3) Otherwise, it's safe to delete

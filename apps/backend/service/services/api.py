@@ -1,17 +1,18 @@
 from functools import partial
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
-from fastapi import APIRouter, FastAPI, HTTPException
 import ujson
+from fastapi import APIRouter, FastAPI, HTTPException
 from starlette.responses import JSONResponse
 
 from conf import DEBUG
 from services.schemas import ErrorResponse
 
+
 class UJSONResponse(JSONResponse):
     def render(self, content: Any) -> bytes:
-        assert ujson is not None, "ujson must be installed to use UJSONResponse"
-        return ujson.dumps(content, ensure_ascii=False).encode("utf-8")
+        assert ujson is not None, 'ujson must be installed to use UJSONResponse'
+        return ujson.dumps(content, ensure_ascii=False).encode('utf-8')
 
 
 def make_app(*args: Any, **kwargs: Any) -> FastAPI:

@@ -1,22 +1,23 @@
 from typing import Any, Callable, Dict, List
 
+import ujson
 from fastapi.exceptions import RequestValidationError
 from fastapi.openapi.utils import get_openapi
-from starlette.requests import Request
-from starlette.responses import Response, StreamingResponse, JSONResponse
 from starlette.middleware.cors import CORSMiddleware
+from starlette.requests import Request
+from starlette.responses import JSONResponse, Response, StreamingResponse
 
 from conf import APP_NAME, APP_VERSION, DEBUG
 from services.api import Error, make_app
-import ujson
 
 app = make_app()
 
 
 class UJSONResponse(JSONResponse):
     def render(self, content: Any) -> bytes:
-        assert ujson is not None, "ujson must be installed to use UJSONResponse"
-        return ujson.dumps(content, ensure_ascii=False).encode("utf-8")
+        assert ujson is not None, 'ujson must be installed to use UJSONResponse'
+        return ujson.dumps(content, ensure_ascii=False).encode('utf-8')
+
 
 @app.exception_handler(RequestValidationError)
 def type_error_handler(request: Request, exc: RequestValidationError) -> UJSONResponse:
@@ -101,5 +102,5 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=['*'],
     allow_headers=['*'],
-    expose_headers=['*']
+    expose_headers=['*'],
 )

@@ -1,6 +1,8 @@
-from database.models import Feedback
-from sqlalchemy.orm import Session
 from typing import Optional
+
+from sqlalchemy.orm import Session
+
+from database.models import Feedback
 
 
 async def create_feedback_db(db: Session, feel: int, page: str, content: Optional[str]) -> Feedback:

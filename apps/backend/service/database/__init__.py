@@ -9,7 +9,9 @@ from sqlalchemy.orm import sessionmaker
 from conf import PG_URI
 
 SQLALCHEMY_DATABASE_URL = PG_URI
-engine = create_engine(SQLALCHEMY_DATABASE_URL, pool_size=100, max_overflow=0, connect_args={'connect_timeout': 300})
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL, pool_size=100, max_overflow=0, connect_args={'connect_timeout': 300}
+)
 Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base: Any = declarative_base()
 

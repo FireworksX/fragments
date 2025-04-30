@@ -1,11 +1,16 @@
-from database.models import User
-from sqlalchemy.orm import Session
 from typing import Optional
 
+from sqlalchemy.orm import Session
 
-async def create_user_db(db: Session, email: str, first_name: str, last_name: Optional[str],
-                         hashed_password: str) -> User:
-    user: User = User(email=email, first_name=first_name, last_name=last_name, hashed_password=hashed_password)
+from database.models import User
+
+
+async def create_user_db(
+    db: Session, email: str, first_name: str, last_name: Optional[str], hashed_password: str
+) -> User:
+    user: User = User(
+        email=email, first_name=first_name, last_name=last_name, hashed_password=hashed_password
+    )
     db.add(user)
     db.commit()
     db.refresh(user)
