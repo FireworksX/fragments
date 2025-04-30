@@ -1,9 +1,12 @@
 import { useEffect, useState } from "preact/compat";
 import { useGlobalManager } from "@/shared/hooks/useGlobalManager";
-import { isObject } from "@fragmentsx/utils";
 
-export const useFragmentManager = (fragmentId?: unknown) => {
-  const { globalManagerGraph, manager: globalManager } = useGlobalManager();
+export const useFragmentManager = (
+  fragmentId?: unknown,
+  inputGlobalManager
+) => {
+  const { globalManagerGraph, manager: globalManager } =
+    useGlobalManager(inputGlobalManager);
   const [loading, setLoading] = useState(false);
 
   const getFragmentManager = (id: string) => {

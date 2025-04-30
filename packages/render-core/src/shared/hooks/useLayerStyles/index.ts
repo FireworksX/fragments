@@ -8,6 +8,7 @@ import { useLayerDisplay } from "@/shared/hooks/useLayerStyles/useLayerDisplay";
 import { useLayerBorder } from "@/shared/hooks/useLayerStyles/useLayerBorder";
 import { useLayerLayout } from "@/shared/hooks/useLayerStyles/useLayerLayout";
 import { FragmentContext } from "@/components/Fragment/FragmentContext";
+import { toPx } from "@fragmentsx/utils";
 
 export const useLayerStyles = (layerKey: LinkKey) => {
   try {
@@ -38,12 +39,12 @@ export const useLayerStyles = (layerKey: LinkKey) => {
       top,
       left,
       opacity,
-      borderRadius,
-      whiteSpace,
-      zIndex: zIndex !== -1 ? zIndex : null,
+      "border-radius": borderRadius,
+      "white-space": whiteSpace,
+      "z-index": zIndex !== -1 ? zIndex : null,
       ...layout,
       ...layerSize,
-      userSelect: "none",
+      "user-select": "none",
     };
   } catch (e) {
     console.debug(e);

@@ -21,7 +21,7 @@ export const createGlobalManager = ({ apiToken, isSelfHosted }: Options) => {
         return currentManager;
       }
 
-      const manager = createFragmentManager(fragmentId, document);
+      const manager = createFragmentManager(state)(fragmentId, document);
 
       state.mutate(state.key, {
         fragmentsManagers: {
@@ -38,12 +38,23 @@ export const createGlobalManager = ({ apiToken, isSelfHosted }: Options) => {
       });
     };
 
-    state.extractStyleTags = () => {
+    state.extractStyleTags = async () => {
       const allFragments = state.resolve(state.key).fragmentsManagers;
-
-      return Object.entries(allFragments)
+      const extractors = Object.entries(allFragments)
         .filter(([, value]) => !!value?.resolve)
-        .map(([, manager]) => manager.generateCss());
+        .map(([, manager]) => manager.extractStyleTags());
+
+      const extractedStyles = await Promise.all(extractors);
+
+      return Object.values(
+        extractedStyles.reduce((acc, extrected) => {
+          Object.entries(extrected).forEach(([key, styleTag]) => {
+            acc[key] = styleTag;
+          });
+
+          return acc;
+        }, {})
+      );
     };
   };
 

@@ -2,7 +2,11 @@
 import { useLayerDisplay } from "@/shared/hooks/useLayerStyles/useLayerDisplay";
 
 export * from "./components/Fragment";
-export * from "./components/Instance";
+export { useInstance } from "./components/Instance/hooks/useInstance";
+export { useFrame } from "./components/Frame/hooks/useFrame";
+export { useFragment } from "./components/Fragment/hooks/useFragment";
+export * from "./components/Fragment/FragmentContext";
+export { useTextAttributes } from "./components/Text/hooks/useTextAttributes";
 
 // export { createManager } from "@/shared/managers/createManager";
 // export * from "./components/Instance";
@@ -45,8 +49,12 @@ export { useLayerLayout } from "@/shared/hooks/useLayerStyles/useLayerLayout";
 export { useCalcLayerBorder } from "@/shared/hooks/useLayerStyles/useCalcLayerBorder";
 
 export { GlobalManager } from "@/providers/GlobalManager";
+export {
+  StyleSheetProvider,
+  StyleSheetContext,
+} from "@/providers/StyleSheetProvider";
 export { InstanceContext } from "@/components/Instance";
 export { FragmentContext } from "@/components/Fragment/FragmentContext";
 
-export { createElement, render, hydrate } from "preact";
-export { renderToString } from "preact-render-to-string";
+// export { createElement, render, hydrate } from "preact";
+// export { renderToString } from "preact-render-to-string";

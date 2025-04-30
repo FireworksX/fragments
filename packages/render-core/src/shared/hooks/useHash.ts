@@ -10,6 +10,6 @@ export const useHash = (layerKey: LinkKey) => {
   if (!layerKey || !manager) return null;
 
   const layer = manager.resolve(layerKey);
-  const overrideFrom = getKey(layer.overrideFrom);
+  const overrideFrom = getKey(layer?.overrideFrom);
   return hashGenerator(overrideFrom ?? layerKey);
 };

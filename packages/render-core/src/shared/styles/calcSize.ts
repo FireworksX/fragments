@@ -7,6 +7,7 @@ import { useRenderTarget } from "@/shared/hooks/useRenderTarget";
 import { getParent, isTopLevel } from "@/shared/helpers";
 import { useLayerValue } from "@/shared/hooks/useLayerValue";
 import { isValue, toPx } from "@fragmentsx/utils";
+import { getNormalizeLayer } from "@/shared/hooks/useNormalizeLayer";
 
 interface CalcSizeOptions {
   sizeType: "width" | "height";
@@ -26,7 +27,8 @@ export const calcSize = (
   layerKey: LinkKey,
   sizeType: "width" | "height"
 ) => {
-  const layer = manager.resolve(layerKey);
+  const { layer } = getNormalizeLayer(layerKey, manager);
+  // const layer = manager.resolve(layerKey);
   const value = layer[sizeType];
   const valueType = layer[`${sizeType}Type`];
 

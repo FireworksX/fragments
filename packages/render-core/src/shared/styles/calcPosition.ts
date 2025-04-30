@@ -2,6 +2,7 @@ import { definition } from "@fragmentsx/definition";
 import { GraphState, LinkKey } from "@graph-state/core";
 import { isTopLevel } from "@/shared/helpers";
 import { toPx } from "@fragmentsx/utils";
+import { getNormalizeLayer } from "@/shared/hooks/useNormalizeLayer";
 
 interface CalcPositionOptions {
   isTop: boolean;
@@ -11,7 +12,8 @@ interface CalcPositionOptions {
 }
 
 export const calcPosition = (manager: GraphState, layerKey: LinkKey) => {
-  const layer = manager.resolve(layerKey);
+  const { layer } = getNormalizeLayer(layerKey, manager);
+  // const layer = manager.resolve(layerKey);
   const isTop = isTopLevel(manager, layerKey);
 
   return {

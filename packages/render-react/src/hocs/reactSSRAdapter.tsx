@@ -1,9 +1,9 @@
 import React, { Suspense, useContext, useMemo } from "react";
-import { renderToString, createElement } from "@fragmentsx/render-core";
+// import { renderToString, createElement } from "@fragmentsx/render-core";
 import { GlobalManagerContext } from "@/components/GlobalManager";
 import { loadFragmentManager } from "@/helpers/loadFragmentManager";
 
-function createResource(
+export function createResource(
   resourceCache,
   key: string,
   fetcher: () => Promise<any>
@@ -51,18 +51,15 @@ export function reactSSRAdapter(PreactComponent: any) {
 
     const documentManager = resource.read(); // Suspense ждёт
 
-    const html = renderToString(
-      createElement(PreactComponent, {
-        ...props,
-        globalManager: props?.globalManager ?? globalManager,
-      })
-    );
+    // const html = renderToString(
+    //   createElement(PreactComponent, {
+    //     ...props,
+    //     globalManager: props?.globalManager ?? globalManager,
+    //   })
+    // );
 
     return (
-      <div
-        suppressHydrationWarning
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
+      <div suppressHydrationWarning dangerouslySetInnerHTML={{ __html: "" }} />
     );
   };
 

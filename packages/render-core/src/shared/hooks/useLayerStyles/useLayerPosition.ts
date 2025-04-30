@@ -6,6 +6,7 @@ import { useLayerValue } from "@/shared/hooks/useLayerValue";
 import { FragmentContext } from "@/components/Fragment/FragmentContext";
 import { useRenderTarget } from "@/shared/hooks/useRenderTarget";
 import { definition } from "@fragmentsx/definition";
+import { toPx } from "@fragmentsx/utils";
 
 export const useLayerPosition = (layerKey: LinkKey) => {
   const { layerKey: instanceLayerKey } = useContext(InstanceContext);
@@ -24,11 +25,11 @@ export const useLayerPosition = (layerKey: LinkKey) => {
       position: skipPosition ? definition.positionType.relative : position,
       top:
         position === definition.positionType.absolute && !skipPosition
-          ? top
+          ? toPx(top)
           : null,
       left:
         position === definition.positionType.absolute && !skipPosition
-          ? left
+          ? toPx(left)
           : null,
     }),
     [skipPosition, position, top]

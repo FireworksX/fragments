@@ -3,6 +3,7 @@ import { useLayerValue } from "@/shared/hooks/useLayerValue";
 import { definition } from "@fragmentsx/definition";
 import { useContext, useMemo } from "preact/compat";
 import { FragmentContext } from "@/components/Fragment/FragmentContext";
+import { toPx } from "@fragmentsx/utils";
 
 export const useLayerLayout = (layerKey: LinkKey) => {
   const { manager: fragmentManager } = useContext(FragmentContext);
@@ -30,16 +31,15 @@ export const useLayerLayout = (layerKey: LinkKey) => {
 
   return useMemo(
     () => ({
-      gap,
-      isFlex,
-      flexWrap: isFlex ? layerWrap : null,
-      justifyContent: isFlex ? layerDistribute : null,
-      flexDirection: isFlex
+      gap: toPx(gap),
+      "flex-wrap": isFlex ? (layerWrap ? "wrap" : null) : null,
+      "justify-content": isFlex ? layerDistribute : null,
+      "flex-direction": isFlex
         ? layerDirectionValue === definition.layerDirection.vertical
           ? "column"
           : "row"
         : null,
-      alignItems: isFlex ? layerAlign : null,
+      "align-items": isFlex ? layerAlign : null,
       padding: isFlex ? padding : null,
     }),
     [

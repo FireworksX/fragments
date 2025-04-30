@@ -1,6 +1,7 @@
 import { LinkKey, Plugin } from "@graph-state/core";
 import { generateCss } from "@/managers/cssPlugin/generateCss";
 import { hashGenerator } from "@/managers/cssPlugin/hashGenerator";
+import { diffCss } from "@/managers/cssPlugin/diffCss";
 
 const toCSS = (styles: Record<string, string>) =>
   Object.entries(styles)
@@ -13,6 +14,8 @@ export const cssPlugin: Plugin = (state) => {
     const rootLayer = state.resolve(state.$fragment.root);
     const rootHash = hashGenerator(state.$fragment.root);
     const breakpoints = (rootLayer?.children ?? []).map(state.resolve);
+
+    rules.push(`.${rootHash} { container-type: inline-size; }`);
 
     const primaryBreakpoint = breakpoints.find(
       (breakpoint) => breakpoint.isPrimary
@@ -27,7 +30,9 @@ export const cssPlugin: Plugin = (state) => {
       .sort((a, b) => a.width - b.width);
 
     const primaryCss = generateCss(state, state.keyOfEntity(primaryBreakpoint));
+    const primaryCssBlocks = {};
     primaryCss.forEach((block) => {
+      primaryCssBlocks[block.hash] = block.css;
       rules.push(`.${block.hash} {${toCSS(block.css)}}`);
     });
 
@@ -42,7 +47,8 @@ export const cssPlugin: Plugin = (state) => {
       if (frameCss.length === 0) continue;
 
       const blocks = frameCss.reduce((acc, block) => {
-        acc += `.${block.hash} {${toCSS(block.css)}}`;
+        const primaryBlock = primaryCssBlocks[block.hash];
+        acc += `.${block.hash} {${toCSS(diffCss(primaryBlock, block.css))}}`;
         return acc;
       }, "");
 
@@ -62,7 +68,15 @@ export const cssPlugin: Plugin = (state) => {
         : `@container (min-width: ${min}px)`;
 
       const blocks = frameCss.reduce((acc, block) => {
-        acc += `.${block.hash} {${toCSS(block.css)}}`;
+        const primaryBlock = primaryCssBlocks[block.hash];
+
+        console.log(
+          block.hash,
+          block.css,
+          primaryBlock,
+          diffCss(block.css, primaryBlock)
+        );
+        acc += `.${block.hash} {${toCSS(diffCss(primaryBlock, block.css))}}`;
         return acc;
       }, "");
 

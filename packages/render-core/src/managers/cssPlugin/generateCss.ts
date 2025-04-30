@@ -15,9 +15,11 @@ export const generateCss = (
   deep = true
 ) => {
   layerKey = manager.keyOfEntity(layerKey);
-  const { rawLayer } = getNormalizeLayer(layerKey, manager);
+  const { rawLayer, layer } = getNormalizeLayer(layerKey, manager);
   const overrideFrom = getKey(rawLayer.overrideFrom);
   const hash = hashGenerator(overrideFrom ?? layerKey);
+
+  console.log(layerKey, layer);
 
   const children = deep
     ? rawLayer?.children
@@ -31,12 +33,10 @@ export const generateCss = (
       width: calcSize(manager, layerKey, "width"),
       height: calcSize(manager, layerKey, "height"),
       ...calcBackground(manager, layerKey),
-      ...calcDisplay(manager, layerKey),
       ...calcLayout(manager, layerKey),
+      ...calcDisplay(manager, layerKey),
     }).filter(([, value]) => isValue(value))
   );
-
-  console.log(layerKey, hash, calcDisplay(manager, layerKey));
 
   return [
     {

@@ -6,6 +6,7 @@ import { getParent, isTopLevel } from "@/shared/helpers";
 import { useLayerValue } from "@/shared/hooks/useLayerValue";
 import { LinkKey } from "@graph-state/core";
 import { definition } from "@fragmentsx/definition";
+import { toPx } from "@fragmentsx/utils";
 
 const autoSizes = [definition.sizing.Hug];
 
@@ -40,7 +41,7 @@ export const useLayerSizeValue = (
         isDocument &&
         layerParent?.[growType] === definition.fragmentGrowingMode.fill
       ) {
-        return "99%";
+        return "100%";
       }
 
       if (isTop && isPartOfInstance && !autoSizes.includes(instanceType)) {
@@ -60,7 +61,7 @@ export const useLayerSizeValue = (
         return `100%`;
       }
 
-      return value;
+      return toPx(value);
     },
     [
       isTop,

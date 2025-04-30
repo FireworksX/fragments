@@ -1,9 +1,12 @@
 import { definition } from "@fragmentsx/definition";
 import { GraphState, LinkKey } from "@graph-state/core";
 import { isValue, toPx } from "@fragmentsx/utils";
+import { getNormalizeLayer } from "@/shared/hooks/useNormalizeLayer";
 
 export const calcLayout = (manager: GraphState, layerKey: LinkKey) => {
-  const layer = manager.resolve(layerKey);
+  const { layer } = getNormalizeLayer(layerKey, manager);
+
+  // const layer = manager.resolve(layerKey);
   const isFlex = layer.layerMode === definition.layerMode.flex;
 
   const result = {

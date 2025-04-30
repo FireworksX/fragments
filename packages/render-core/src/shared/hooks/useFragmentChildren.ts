@@ -13,10 +13,13 @@ import { useRenderTarget } from "@/shared/hooks/useRenderTarget";
 import { findBreakpoint } from "@/shared/helpers/findBreakpoint";
 import { LinkKey } from "@graph-state/core";
 import { useGlobalManager } from "@/shared/hooks/useGlobalManager";
+import { useStyleSheet } from "@/shared/hooks/useStyleSheet";
+import { isBrowser } from "@fragmentsx/utils";
 
 export const useFragmentChildren = (fragmentId: number) => {
   const { layerKey: instanceLayerKey } = useContext(InstanceContext);
   const { manager } = useFragmentManager(fragmentId);
+  const { isStyleSheetRender } = useStyleSheet();
   const layerKey = `${definition.nodes.Fragment}:${fragmentId}`;
   const children = useLayerChildren(layerKey, manager);
   const { isDocument, renderTarget } = useRenderTarget();
@@ -43,7 +46,7 @@ export const useFragmentChildren = (fragmentId: number) => {
             if (activeBreakpoint) {
               setResizeChildren(manager.keyOfEntity(activeBreakpoint));
             }
-            // setResizeChildren(resizeChildren);
+            setResizeChildren(resizeChildren);
           });
 
           observer.observe(node);
@@ -55,6 +58,10 @@ export const useFragmentChildren = (fragmentId: number) => {
       }
     },
     [isDocument, instanceLayerKey, manager, children]
+  );
+
+  const primary = children?.find(
+    (breakpoint) => manager.resolve(breakpoint).isPrimary
   );
 
   // const resultChildren = useMemo(() => {
@@ -71,13 +78,9 @@ export const useFragmentChildren = (fragmentId: number) => {
   // }, [children, manager, resizeChildren]);
 
   return {
-    primary: children?.find(
-      (breakpoint) => manager.resolve(breakpoint).isPrimary
-    ),
-    children: useMemo(
-      () => (resizeChildren ? [resizeChildren] : children),
-      [resizeChildren, children]
-    ),
+    primary,
+    children: isBrowser && resizeChildren ? resizeChildren : children, //isStyleSheetRender ? children ?? [] : primary ? [primary] : [],
+    isResize: isBrowser && resizeChildren,
     setRef,
   };
 };
