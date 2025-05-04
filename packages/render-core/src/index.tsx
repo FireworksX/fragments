@@ -41,6 +41,8 @@ export { useNormalizeLayer } from "@/shared/hooks/useNormalizeLayer";
 export { useLayerValue } from "@/shared/hooks/useLayerValue";
 export { useTextContent } from "@/shared/hooks/useTextContent";
 export { useFragmentChildren } from "@/shared/hooks/useFragmentChildren";
+export { useInjectedStyle } from "@/shared/hooks/useInjectedStyle";
+export { useMounted } from "@/shared/hooks/useMounted";
 
 export { processOptionalSize } from "@/shared/hooks/useLayerStyles/useOptionalSize";
 export { useLayerSizeValue } from "@/shared/hooks/useLayerStyles/useLayerSizeValue";

@@ -1,5 +1,6 @@
 .root {
     width: var(--builder-size-left-bar);
+    min-width: var(--builder-size-left-bar);
     background: var(--background);
     display: flex;
     flex-direction: column;

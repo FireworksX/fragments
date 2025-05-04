@@ -17,7 +17,7 @@ export const useLayerLayout = (layerKey: LinkKey) => {
   const layout = useLayerLayoutCore(layerKey);
 
   return useMemo(
-    () => ({ ...layout, gap: layout.isFlex ? layerGap : null }),
+    () => ({ ...layout, gap: layout.display === "flex" ? layerGap : null }),
     [layout, layerGap]
   );
 };

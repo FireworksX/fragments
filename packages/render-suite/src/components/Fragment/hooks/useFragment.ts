@@ -1,19 +1,15 @@
 import {
-  useRenderTarget,
-  useFragmentManager,
-  useFragmentChildren,
+  InstanceContext,
+  useFragment as useFragmentCore,
 } from "@fragmentsx/render-core";
+import { useContext } from "react";
 
 export const useFragment = (fragmentId: string) => {
-  const { manager } = useFragmentManager(fragmentId);
-  const { isDocument } = useRenderTarget();
-
-  const { setRef, children } = useFragmentChildren(fragmentId);
+  const { layerKey } = useContext(InstanceContext);
+  const coreProps = useFragmentCore(fragmentId);
 
   return {
-    setRef,
-    isDocument,
-    manager,
-    children,
+    ...coreProps,
+    isTopFragment: !layerKey,
   };
 };

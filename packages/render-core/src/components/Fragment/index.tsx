@@ -49,8 +49,8 @@ export const Fragment = (props) => {
   const { manager } = useFragmentManager(props.fragmentId, resultGlobalManager);
 
   return (
-    <StyleSheetProvider value={manager.styleSheetCache}>
-      <FragmentInternal {...props} />
-    </StyleSheetProvider>
+    // <StyleSheetProvider value={manager.styleSheetCache}>
+    <FragmentInternal {...props} />
+    // </StyleSheetProvider>
   );
 };

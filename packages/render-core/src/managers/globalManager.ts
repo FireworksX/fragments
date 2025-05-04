@@ -2,6 +2,7 @@ import { createState, GraphState } from "@graph-state/core";
 import { definition } from "@fragmentsx/definition";
 import { plugin as fetchPlugin } from "@/managers/fetchPlugin/plugin";
 import { createFragmentManager } from "@/managers/fragmentManager";
+import { styleSheetPlugin } from "@/managers/styleSheetPlugin";
 
 interface Options {
   apiToken: string;

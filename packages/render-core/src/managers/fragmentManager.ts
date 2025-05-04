@@ -30,7 +30,7 @@ export const createFragmentManager =
           };
         },
         cssPlugin,
-        styleSheetPlugin(globalManager),
+        styleSheetPlugin,
       ],
       skip: [isHtmlContent, isHTMLNode, isKey],
     });

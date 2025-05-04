@@ -1,4 +1,5 @@
 import { useContext } from "preact/compat";
+import { definition } from "@fragmentsx/definition";
 import { LinkKey } from "@graph-state/core";
 import { useLayerValue } from "@/shared/hooks/useLayerValue";
 import { useLayerSize } from "@/shared/hooks/useLayerStyles/useLayerSize";
@@ -8,7 +9,13 @@ import { useLayerDisplay } from "@/shared/hooks/useLayerStyles/useLayerDisplay";
 import { useLayerBorder } from "@/shared/hooks/useLayerStyles/useLayerBorder";
 import { useLayerLayout } from "@/shared/hooks/useLayerStyles/useLayerLayout";
 import { FragmentContext } from "@/components/Fragment/FragmentContext";
-import { toPx } from "@fragmentsx/utils";
+import { omit, pick, toPx } from "@fragmentsx/utils";
+import { useInstanceDefinition } from "@/shared/hooks/useInstanceDefinition";
+import {
+  useReadVariable,
+  useReadVariables,
+} from "@/shared/hooks/useReadVariables";
+import { useGraph } from "@graph-state/react";
 
 export const useLayerStyles = (layerKey: LinkKey) => {
   try {
@@ -20,7 +27,7 @@ export const useLayerStyles = (layerKey: LinkKey) => {
     const layerSize = useLayerSize(layerKey);
     const { position, top, left } = useLayerPosition(layerKey);
     const display = useLayerDisplay(layerKey);
-    const { background } = useLayerBackground(layerKey);
+    const background = useLayerBackground(layerKey);
     const { border } = useLayerBorder(layerKey);
     const layout = useLayerLayout(layerKey);
     const [zIndex] = useLayerValue(layerKey, "zIndex", fragmentManager);
@@ -31,10 +38,39 @@ export const useLayerStyles = (layerKey: LinkKey) => {
     );
     const [whiteSpace] = useLayerValue(layerKey, "whiteSpace", fragmentManager);
 
+    // const [{ props, _type }] = useGraph(fragmentManager, layerKey, {
+    //   selector: (graph) => pick(graph, "props", "_type"),
+    // });
+    //
+    // console.log(layerKey, fragmentManager.resolve(layerKey)?.props);
+    //
+    // const resolvedProps = useReadVariables(
+    //   _type === definition.nodes.Instance
+    //     ? Object.keys(omit(props ?? {}, "_id", "_type")).map(
+    //         (variableKey) => `${definition.nodes.Variable}:${variableKey}`
+    //       )
+    //     : []
+    // );
+
+    let props = {};
+    const { _type } = fragmentManager.entityOfKey(layerKey) ?? {};
+    if (_type === definition.nodes.Instance) {
+      const instanceProps = omit(
+        fragmentManager?.resolve(layerKey)?.props,
+        "_id",
+        "_type"
+      );
+      props = Object.entries(instanceProps).reduce((acc, [key, value]) => {
+        acc[`--${key}`] = value;
+        return acc;
+      }, {});
+    }
+
     return {
+      ...(props ?? {}),
       display,
       border,
-      background,
+      ...background,
       position,
       top,
       left,

@@ -6,14 +6,21 @@ import { definition } from "@fragmentsx/definition";
 import { Text } from "../Text";
 import { CustomRender } from "@/providers/CustomRender";
 import { Instance } from "@/components/Instance";
+import { useMounted } from "@fragmentsx/render-core";
 
 interface FrameProps {
+  hidden?: boolean;
   layerKey: LinkKey;
 }
 
-export const Frame: FC<FrameProps> = memo(({ layerKey }) => {
+export const Frame: FC<FrameProps> = memo(({ layerKey, hidden }) => {
   const customRender = useContext(CustomRender);
-  const { styles, children, type } = useFrame(layerKey);
+  const { styles, children, type, hash } = useFrame(layerKey);
+  const isMounted = useMounted();
+
+  if (hidden && isMounted) {
+    return null;
+  }
 
   if (type === definition.nodes.Text) {
     return <Text layerKey={layerKey} />;
@@ -33,7 +40,11 @@ export const Frame: FC<FrameProps> = memo(({ layerKey }) => {
     //     // }
     //   }}
     // >
-    <animated.div style={styles} data-key={layerKey}>
+    <animated.div
+      className={hash}
+      data-key={layerKey}
+      style={{ ...styles, display: hidden ? "none" : styles.display }}
+    >
       {children.map((childLink) => (
         <Frame key={childLink} layerKey={childLink} />
       ))}

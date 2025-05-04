@@ -15,4 +15,4 @@ import { createReactComponent } from "@/reactAdapter";
 export { collectStyles } from "@/helpers/collectStyles";
 export { Instance } from "@/components/Instance";
 
-export { GlobalManager } from "@fragmentsx/render-core";
+export { GlobalManager } from "@/components/GlobalManager";

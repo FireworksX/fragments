@@ -14,15 +14,20 @@ export const useFragmentManager = (
   };
 
   const loadFragmentManager = async (id: string) => {
-    const { document, linkedFragments } = await globalManager.queryFragment(id);
+    if (id) {
+      const queryResult = await globalManager.queryFragment(id);
+      const { document, linkedFragments } = queryResult;
 
-    if (linkedFragments) {
-      linkedFragments.forEach(({ id, document }) => {
-        globalManager?.createFragmentManager(id, document);
-      });
+      if (queryResult) {
+        if (linkedFragments) {
+          linkedFragments.forEach(({ id, document }) => {
+            globalManager?.createFragmentManager(id, document);
+          });
+        }
+      }
+
+      return globalManager?.createFragmentManager(id, document);
     }
-
-    return globalManager?.createFragmentManager(id, document);
   };
 
   useEffect(() => {

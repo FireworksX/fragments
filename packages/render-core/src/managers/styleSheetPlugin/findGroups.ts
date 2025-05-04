@@ -7,7 +7,7 @@ export const findGroups = (state: GraphState) => {
   const cache = state.styleSheetCache;
   const fragments =
     Array.from(cache.keys()).filter((key) =>
-      key.includes(definition.nodes.Fragment)
+      key?.includes(definition.nodes.Fragment)
     ) ?? [];
 
   // fragments;

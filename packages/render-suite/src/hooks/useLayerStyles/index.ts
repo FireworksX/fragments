@@ -41,7 +41,6 @@ export const useLayerStyles = (layerKey: LinkKey) => {
     );
 
     return {
-      display,
       border,
       background,
       position,
@@ -56,6 +55,7 @@ export const useLayerStyles = (layerKey: LinkKey) => {
       ...layout,
       ...optionalSizes,
       whiteSpace,
+      display,
       userSelect: "none",
     };
   } catch (e) {

@@ -6,6 +6,7 @@ import { parseLayerField, isVariableLink } from "@fragmentsx/definition";
 import { useNormalizeLayer } from "@/shared/hooks/useNormalizeLayer";
 import { useReadVariable } from "@/shared/hooks/useReadVariable";
 import { isInheritField, isPartOfPrimary } from "@/shared/helpers";
+import { useLayerCssVariable } from "@/shared/hooks/useLayerCssVariable";
 
 export const useLayerValue = (
   layerKey: LinkKey,
@@ -81,6 +82,8 @@ export const useLayerValue = (
     [layer, fieldKey, updateLayerData, resultManager, layerKey, currentValue]
   );
 
+  const { value: cssValue } = useLayerCssVariable(rawValue);
+
   return [
     currentValue,
     updateValue,
@@ -88,6 +91,7 @@ export const useLayerValue = (
       isOverride,
       resetOverride,
       isVariable: isVariableLink(rawValue ?? layerValue),
+      cssVariableValue: cssValue ?? currentValue,
       rawValue,
       restore,
       ...resultManager.entityOfKey(key),

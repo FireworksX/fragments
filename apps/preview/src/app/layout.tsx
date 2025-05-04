@@ -1,11 +1,19 @@
 "use client";
-import { createContext, ReactNode, useContext, useEffect, useRef } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+} from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { Metadata } from "next";
 import "./global.css";
 import { createGlobalManager } from "@fragmentsx/render-core";
 import { useSearchParams, useServerInsertedHTML } from "next/navigation";
 import { collectStyles, GlobalManager } from "@fragmentsx/render-react";
+import { isBrowser } from "@fragmentsx/utils";
 
 // export const metadata: Metadata = {
 //   title: "Create Next App",
@@ -33,6 +41,8 @@ const WWW = ({ children }) => {
     if (!isServerInserted.current) {
       isServerInserted.current = true;
 
+      const styles = collectStyles(globalManager);
+
       // collectStyles(globalManager, renderToStaticMarkup);
       // const tags = await globalManager.extractStyleTags();
 
@@ -40,7 +50,7 @@ const WWW = ({ children }) => {
       //   globalManager.resolve(globalManager.key).fragmentsManagers["16"]
       // );
 
-      const styles = collectStyles(globalManager);
+      // const styles = collectStyles(globalManager);
 
       return (
         <>
@@ -53,6 +63,11 @@ const WWW = ({ children }) => {
       );
     }
   });
+
+  // useMemo(() => {
+  //   collectStyles(globalManager);
+  // }, []);
+
   return <GlobalManager value={globalManager}>{children}</GlobalManager>;
 };
 

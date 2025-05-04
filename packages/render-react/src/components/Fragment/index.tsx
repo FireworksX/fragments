@@ -1,4 +1,10 @@
-import { FC, isValidElement, useContext } from "react";
+import {
+  FC,
+  isValidElement,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+} from "react";
 import { LinkKey } from "@graph-state/core";
 import { Frame } from "@/components/Frame";
 import { definition } from "@fragmentsx/definition";
@@ -63,27 +69,25 @@ const FragmentInternal: FC<FragmentProps> = ({ fragmentId, globalManager }) => {
   if (!manager) return null;
 
   return (
-    <FragmentContext.Provider value={{ manager }}>
-      <div
-        ref={setRef}
-        data-key={`${definition.nodes.Fragment}:${fragmentId}`}
-        className={hash}
-      >
-        {children.map((childLink) => {
-          const childLayer = manager?.resolve(childLink);
-          const isPrimary = childLayer?.isPrimary ?? false;
+    <div
+      // ref={setRef}
+      data-key={`${definition.nodes.Fragment}:${fragmentId}`}
+      className={hash}
+    >
+      {children.map((childLink) => {
+        const childLayer = manager?.resolve(childLink);
+        const isPrimary = childLayer?.isPrimary ?? false;
 
-          return (
-            <Frame
-              key={childLink}
-              layerKey={childLink}
-              hidden={!isResize && !isPrimary}
-              // style={{ display: isPrimary ? null : "none" }}
-            />
-          );
-        })}
-      </div>
-    </FragmentContext.Provider>
+        return (
+          <Frame
+            key={childLink}
+            layerKey={childLink}
+            hidden={!isResize && !isPrimary}
+            // style={{ display: isPrimary ? null : "none" }}
+          />
+        );
+      })}
+    </div>
   );
 };
 
@@ -92,8 +96,10 @@ export const Fragment = (props) => {
   const { manager } = useFragmentManager(props.fragmentId, resultGlobalManager);
 
   return (
-    <StyleSheetProvider value={manager?.styleSheetCache}>
+    <FragmentContext.Provider value={{ manager }}>
+      {/*<StyleSheetProvider value={manager?.styleSheetCache}>*/}
       <FragmentInternal {...props} />
-    </StyleSheetProvider>
+      {/*</StyleSheetProvider>*/}
+    </FragmentContext.Provider>
   );
 };

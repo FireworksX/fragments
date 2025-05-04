@@ -2,10 +2,18 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { GraphState } from "@graph-state/core";
 import { GlobalManager, StyleSheetProvider } from "@fragmentsx/render-core";
 import { Fragment } from "@/components/Fragment";
-import React, { createContext, useContext } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 export const collectStyles = (globalManager: GraphState) => {
   if (!globalManager) return null;
+
+  // renderToStaticMarkup(
+  //   <GlobalManager value={globalManager}>
+  //     <StyleSheetProvider value={globalManager?.styleSheetCache}>
+  //       {App}
+  //     </StyleSheetProvider>
+  //   </GlobalManager>
+  // );
 
   const allFragments = globalManager.resolve(
     globalManager.key
@@ -15,14 +23,15 @@ export const collectStyles = (globalManager: GraphState) => {
     .filter(([, value]) => !!value?.resolve)
     .map(([fragmentId, manager]) => {
       // renderToStaticMarkup(
-      //   // <GlobalManager value={globalManager}>
-      //   //   <StyleSheetProvider value={manager?.styleSheetCache}>
-      //   <Aomp />
-      //   // </StyleSheetProvider>
-      //   // </GlobalManager>
+      //   <GlobalManager value={globalManager}>
+      //     <StyleSheetProvider value={manager?.styleSheetCache}>
+      //       {App}
+      //     </StyleSheetProvider>
+      //   </GlobalManager>
       // );
 
-      return manager.extractStyleSheet()?.at(0);
+      const a = manager.extractStyleSheet()?.at(0);
+      return a;
     });
 
   return extractors.map((extractor) => (

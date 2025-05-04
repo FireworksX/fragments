@@ -19,7 +19,6 @@ import { isBrowser } from "@fragmentsx/utils";
 export const useFragmentChildren = (fragmentId: number) => {
   const { layerKey: instanceLayerKey } = useContext(InstanceContext);
   const { manager } = useFragmentManager(fragmentId);
-  const { isStyleSheetRender } = useStyleSheet();
   const layerKey = `${definition.nodes.Fragment}:${fragmentId}`;
   const children = useLayerChildren(layerKey, manager);
   const { isDocument, renderTarget } = useRenderTarget();
@@ -29,33 +28,33 @@ export const useFragmentChildren = (fragmentId: number) => {
 
   const setRef = useCallback(
     (node: HTMLElement) => {
-      if ((isDocument || instanceLayerKey) && manager) {
-        if (node) {
-          const observer = new ResizeObserver(([entity]) => {
-            const breakpoints = children?.map(manager.resolve);
-            const activeBreakpoint = findBreakpoint(
-              breakpoints,
-              entity.contentRect.width
-            );
-
-            const resizeChildren = activeBreakpoint
-              ? [manager.keyOfEntity(activeBreakpoint)]
-              : [];
-
-            // console.log(children, layerKey, manager);
-            if (activeBreakpoint) {
-              setResizeChildren(manager.keyOfEntity(activeBreakpoint));
-            }
-            setResizeChildren(resizeChildren);
-          });
-
-          observer.observe(node);
-          observerRef.current = observer;
-        } else {
-          observerRef.current?.disconnect();
-          setResizeChildren(null);
-        }
-      }
+      // if ((isDocument || instanceLayerKey) && manager) {
+      //   if (node) {
+      //     const observer = new ResizeObserver(([entity]) => {
+      //       const breakpoints = children?.map(manager.resolve);
+      //       const activeBreakpoint = findBreakpoint(
+      //         breakpoints,
+      //         entity.contentRect.width
+      //       );
+      //
+      //       const resizeChildren = activeBreakpoint
+      //         ? [manager.keyOfEntity(activeBreakpoint)]
+      //         : [];
+      //
+      //       // console.log(children, layerKey, manager);
+      //       if (activeBreakpoint) {
+      //         setResizeChildren(manager.keyOfEntity(activeBreakpoint));
+      //       }
+      //       setResizeChildren(resizeChildren);
+      //     });
+      //
+      //     observer.observe(node);
+      //     observerRef.current = observer;
+      //   } else {
+      //     observerRef.current?.disconnect();
+      //     setResizeChildren(null);
+      //   }
+      // }
     },
     [isDocument, instanceLayerKey, manager, children]
   );
@@ -79,7 +78,7 @@ export const useFragmentChildren = (fragmentId: number) => {
 
   return {
     primary,
-    children: isBrowser && resizeChildren ? resizeChildren : children, //isStyleSheetRender ? children ?? [] : primary ? [primary] : [],
+    children: children, //isBrowser && resizeChildren ? resizeChildren : children, //isStyleSheetRender ? children ?? [] : primary ? [primary] : [],
     isResize: isBrowser && resizeChildren,
     setRef,
   };

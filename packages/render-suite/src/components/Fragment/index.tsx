@@ -3,16 +3,22 @@ import { definition } from "@fragmentsx/definition";
 import { LinkKey } from "@graph-state/core";
 import { useFragment } from "./hooks/useFragment";
 import { FragmentProvider } from "./FragmentContext";
-import styles from "./styles.module.css";
 import { Frame } from "@/components/Frame";
+import {
+  FragmentContext,
+  StyleSheetProvider,
+  useFragmentManager,
+  useGlobalManager,
+} from "@fragmentsx/render-core";
 
 interface FragmentProps {
   fragmentId: string;
   startLayer?: LinkKey;
 }
 
-export const Fragment: FC<FragmentProps> = ({ fragmentId }) => {
-  const { setRef, children, manager, isDocument } = useFragment(fragmentId);
+const FragmentInternal: FC<FragmentProps> = ({ fragmentId }) => {
+  const { children, hash, isTopFragment, manager, isResize } =
+    useFragment(fragmentId);
 
   // const testRef = useRef();
   //
@@ -28,17 +34,39 @@ export const Fragment: FC<FragmentProps> = ({ fragmentId }) => {
   // }, []);
 
   return (
-    <FragmentProvider manager={manager}>
-      <div
-        ref={setRef}
-        data-key={`${definition.nodes.Fragment}:${fragmentId}`}
-        className={isDocument ? styles.fragmentDocument : styles.fragment}
-        style={styles}
-      >
-        {children.map((childLink) => (
-          <Frame key={childLink} layerKey={childLink} />
-        ))}
-      </div>
-    </FragmentProvider>
+    // <StyleSheetProvider value={manager?.styleSheetCache}>
+    // <FragmentContext.Provider value={{ manager }}>
+    <div
+      // ref={setRef}
+      data-key={`${definition.nodes.Fragment}:${fragmentId}`}
+      className={hash}
+    >
+      {children.map((childLink) => {
+        const childLayer = manager?.resolve(childLink);
+        const isPrimary = childLayer?.isPrimary ?? false;
+        return (
+          <Frame
+            key={childLink}
+            layerKey={childLink}
+            hidden={!isResize && !isPrimary && !isTopFragment}
+          />
+        );
+      })}
+    </div>
+    // </FragmentContext.Provider>
+    // </StyleSheetProvider>
+  );
+};
+
+export const Fragment = (props) => {
+  const { manager: resultGlobalManager } = useGlobalManager();
+  const { manager } = useFragmentManager(props.fragmentId, resultGlobalManager);
+
+  return (
+    <FragmentContext.Provider value={{ manager }}>
+      {/*<StyleSheetProvider value={manager?.styleSheetCache}>*/}
+      <FragmentInternal {...props} />
+      {/*</StyleSheetProvider>*/}
+    </FragmentContext.Provider>
   );
 };

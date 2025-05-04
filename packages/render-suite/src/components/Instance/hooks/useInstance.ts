@@ -5,9 +5,11 @@ import { useLayerStyles } from "@/hooks/useLayerStyles";
 import {
   useGlobalManager,
   useFragmentProperties,
+  useInstance as useInstanceCore,
   FragmentContext,
+  InstanceContext,
 } from "@fragmentsx/render-core";
-import { pick } from "@fragmentsx/utils";
+import { omit, pick } from "@fragmentsx/utils";
 
 /*
 Работаем по следующему принципу. Instance может рендериться внутри родителя (Fragment)
@@ -22,6 +24,9 @@ import { pick } from "@fragmentsx/utils";
 1. Пропсы мы получаем снаружи
  */
 export const useInstance = (instanceProps: InstanceProps) => {
+  const { layerKey } = useContext(InstanceContext);
+  const instanceCore = useInstanceCore(instanceProps);
+
   const { manager: parentManager } = useContext(FragmentContext);
   const [instanceLayer] = useGraph(parentManager, instanceProps.layerKey, {
     selector: (data) => pick(data, "props", "fragment"),
@@ -50,14 +55,18 @@ export const useInstance = (instanceProps: InstanceProps) => {
   //   fragmentId: instanceLayer?.fragment,
   // };
 
+  const propsVars = Object.entries(
+    omit(instanceCore.props, "_type", "_id") ?? {}
+  ).reduce((acc, [key, value]) => {
+    acc[`--${key}`] = value;
+    return acc;
+  }, {});
+
   return {
-    layerKey: instanceProps.layerKey,
+    ...instanceCore,
+    propsVars,
     styles,
-    definitions,
-    props: resultProps,
-    parentManager,
-    innerManager: innerFragmentManager,
-    fragmentId: resultFragmentId,
-    globalManager: resultGlobalManager,
+    isDeepInstance: !!layerKey,
+    layerKey: instanceProps.layerKey,
   };
 };

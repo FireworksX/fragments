@@ -1,21 +1,32 @@
 import { useCallback, useContext } from "preact/compat";
 import { StyleSheetContext } from "@/providers/StyleSheetProvider";
 import { isBrowser } from "@fragmentsx/utils";
+import { useInjectedStyle } from "@/shared/hooks/useInjectedStyle";
+import { FragmentContext } from "@/components/Fragment/FragmentContext";
 
-export const useStyleSheet = (fallbackCache?: Map<any, any>) => {
-  const styleSheetCache = useContext(StyleSheetContext) ?? fallbackCache;
+export const useStyleSheet = () => {
+  const { manager } = useContext(FragmentContext);
+  const { injectStyle } = useInjectedStyle();
 
-  const addLayerStyle = useCallback((layerKey, styles, layer) => {
-    if (!isBrowser && styleSheetCache && "set" in styleSheetCache) {
-      styleSheetCache?.set(layerKey, {
-        styles,
-        layer,
-      });
-    }
-  }, []);
+  const addLayerStyle = useCallback(
+    (layerKey, styles, layer) => {
+      const styleSheetCache = manager?.styleSheetCache;
+
+      if (styleSheetCache && "set" in styleSheetCache) {
+        styleSheetCache?.set(layerKey, {
+          styles,
+          layer,
+        });
+
+        if (isBrowser) {
+          injectStyle();
+        }
+      }
+    },
+    [manager]
+  );
 
   return {
-    isStyleSheetRender: !!styleSheetCache,
     addLayerStyle,
   };
 };

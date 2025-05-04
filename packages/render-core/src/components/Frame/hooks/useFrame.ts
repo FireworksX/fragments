@@ -25,7 +25,7 @@ export const useFrame = (layerKey: LinkKey) => {
   return {
     type: layer?._type,
     hash,
-    styles: isBrowser ? pick(styles, "background") : {},
+    styles: {}, //isBrowser ? pick(styles, "background") : {},
     children,
   };
 };

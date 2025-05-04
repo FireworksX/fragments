@@ -31,15 +31,16 @@ export const useLayerLayout = (layerKey: LinkKey) => {
 
   return useMemo(
     () => ({
+      display: isFlex ? "flex" : null,
       gap: toPx(gap),
-      "flex-wrap": isFlex ? (layerWrap ? "wrap" : null) : null,
-      "justify-content": isFlex ? layerDistribute : null,
-      "flex-direction": isFlex
+      flexWrap: isFlex ? (layerWrap ? "wrap" : null) : null,
+      justifyContent: isFlex ? layerDistribute : null,
+      flexDirection: isFlex
         ? layerDirectionValue === definition.layerDirection.vertical
           ? "column"
           : "row"
         : null,
-      "align-items": isFlex ? layerAlign : null,
+      alignItems: isFlex ? layerAlign : null,
       padding: isFlex ? padding : null,
     }),
     [

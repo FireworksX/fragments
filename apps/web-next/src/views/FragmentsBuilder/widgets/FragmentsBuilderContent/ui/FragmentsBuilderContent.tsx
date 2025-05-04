@@ -26,7 +26,7 @@ export const FragmentsBuilderContent: FC<FragmentsBuilderContentProps> = ({ clas
   }, [documentManager])
 
   if (!documentManager || loading || !currentFragmentId) {
-    return <FragmentsEditPlaceholder fetching={loading} />
+    return <FragmentsEditPlaceholder fetching={loading && !!currentFragmentId} />
   }
 
   if (isPreview) {
