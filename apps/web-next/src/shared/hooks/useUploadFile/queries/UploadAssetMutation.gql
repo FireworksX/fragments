@@ -1,0 +1,5 @@
+mutation UploadAsset($type: MediaType!, $file: Upload!) {
+    uploadAsset(media: {mediaType: $type}, file: $file) {
+        url: publicPath
+    }
+}

@@ -7,16 +7,38 @@ import { FragmentContext } from "@/components/Fragment/FragmentContext";
 export const useLayerBackground = (layerKey: LinkKey) => {
   const { manager: fragmentManager } = useContext(FragmentContext);
   const [fillType] = useLayerValue(layerKey, "fillType", fragmentManager);
-  const [solidFill, , { isVariable, rawValue, cssVariableValue }] =
-    useLayerValue(layerKey, "solidFill", fragmentManager);
+  const [, , { cssVariableValue: cssSolidFill }] = useLayerValue(
+    layerKey,
+    "solidFill",
+    fragmentManager
+  );
+  const [, , { cssVariableValue: cssImageFill }] = useLayerValue(
+    layerKey,
+    "imageFill",
+    fragmentManager
+  );
 
   return useMemo(() => {
-    let base = {
-      background:
-        fillType === definition.paintMode.Solid
-          ? cssVariableValue
-          : "transparent",
+    if (fillType === definition.paintMode.Solid) {
+      return {
+        background: cssSolidFill,
+      };
+    }
+    if (fillType === definition.paintMode.Image) {
+      return {
+        background: `url(${cssImageFill})`,
+      };
+    }
+
+    return {
+      background: "transparent",
     };
+    // let base = {
+    //   background:
+    //     fillType === definition.paintMode.Solid
+    //       ? cssVariableValue
+    //       : "transparent",
+    // };
 
     // if (isVariable) {
     //   const { _id } = fragmentManager?.entityOfKey(rawValue);
@@ -27,7 +49,5 @@ export const useLayerBackground = (layerKey: LinkKey) => {
     //     background: `var(--${_id}, ${defaultValue})`,
     //   };
     // }
-
-    return base;
-  }, [fillType, solidFill]);
+  }, [fillType, cssImageFill, cssSolidFill]);
 };

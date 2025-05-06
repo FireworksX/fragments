@@ -1,5 +1,5 @@
-mutation UpdateStream($streamId: Int!, $name: String, $active: Boolean, $weight: Float, $campaignId: Int!) {
-    updateStream(strm: { id:$streamId, name: $name, active: $active, weight: $weight, deleted: false, campaignId: $campaignId}) {
+mutation UpdateStream($streamId: Int!, $name: String, $active: Boolean, $weight: Float) {
+    updateStream(stream: { id:$streamId, name: $name, active: $active, weight: $weight, deleted: false}) {
         id
         name
         weight

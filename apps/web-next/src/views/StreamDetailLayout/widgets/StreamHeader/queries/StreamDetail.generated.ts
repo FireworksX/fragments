@@ -8,7 +8,7 @@ export type StreamDetailQueryVariables = Types.Exact<{
 }>;
 
 
-export type StreamDetailQuery = { __typename?: 'Query', stream: Array<{ __typename?: 'StreamGet', id: number, name: string, active: boolean, weight: number, filters: Array<{ __typename?: 'FilterDeviceTypeGet', type: Types.FilterType, deviceType: Types.DeviceType } | { __typename?: 'FilterGeoLocationGet', type: Types.FilterType, city?: string | null, country: string, region?: string | null } | { __typename?: 'FilterOSTypeGet', type: Types.FilterType, osType: Types.OsType } | { __typename?: 'FilterPageGet', type: Types.FilterType, page: string } | { __typename?: 'FilterTimeFrameGet', type: Types.FilterType }> }> };
+export type StreamDetailQuery = { __typename?: 'Query', stream: Array<{ __typename?: 'StreamGet', id: number, name: string, active: boolean, weight: number, filters: Array<{ __typename?: 'FilterDeviceTypeGet', deviceTypes: Array<Types.DeviceType> } | { __typename?: 'FilterGeoLocationsGet', geoLocations: Array<{ __typename?: 'FilterGeoLocationGet', city?: string | null, country: string, region?: string | null }> } | { __typename?: 'FilterOSTypeGet', osTypes: Array<Types.OsType> } | { __typename?: 'FilterPageGet', pages: Array<string> } | { __typename?: 'FilterTimeFramesGet', timeFrames: Array<{ __typename?: 'FilterTimeFrameGet', fromTime: any, toTime: any }> }> }> };
 
 
 export const StreamDetailDocument = gql`
@@ -20,25 +20,26 @@ export const StreamDetailDocument = gql`
     weight
     filters {
       ... on FilterDeviceTypeGet {
-        type
-        deviceType
+        deviceTypes
       }
       ... on FilterOSTypeGet {
-        type
-        osType
+        osTypes
       }
-      ... on FilterGeoLocationGet {
-        type
-        city
-        country
-        region
+      ... on FilterGeoLocationsGet {
+        geoLocations {
+          city
+          country
+          region
+        }
       }
       ... on FilterPageGet {
-        type
-        page
+        pages
       }
-      ... on FilterTimeFrameGet {
-        type
+      ... on FilterTimeFramesGet {
+        timeFrames {
+          fromTime
+          toTime
+        }
       }
     }
   }

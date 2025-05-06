@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react'
-import useSWRMutation from 'swr/mutation'
 import { axios } from '@/shared/api/axios'
 import { requestType } from '@/shared/hooks/requests/requestConfig'
-import { usePathByType } from '@/shared/hooks/requests/usePathByType'
+import { useUploadAssetMutation } from '@/shared/hooks/useUploadFile/queries/UploadAssetMutation.generated'
+import { MediaType } from '@/__generated__/types'
 
 type UploadFileType = 'projectLogo' | 'projectAssets'
 
@@ -29,23 +29,33 @@ const fetchTypeMap = {
 }
 
 export const useUploadFile = (type: UploadFileType = 'projectAssets') => {
-  const apiPath = usePathByType(fetchTypeMap[type])
   const [progress, setProgress] = useState(0)
-  const { trigger, data, isMutating } = useSWRMutation(apiPath, uploadMethod)
+  const [mockData, setMockData] = useState('')
+  const [uploadAsset, { data, loading }] = useUploadAssetMutation()
 
   const onUpload = useCallback(
-    (file: File) =>
-      trigger({
-        file,
-        onUpdateProgress: setProgress
-      }),
-    [trigger]
+    async (file: File) => {
+      // const res = await uploadAsset({
+      //   variables: {
+      //     file,
+      //     type: MediaType.FragmentAsset
+      //   }
+      // })
+
+      setMockData('https://cdn.scores24.live/upload/team/w60-h60/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png')
+      // console.log(res)
+    },
+    // trigger({
+    //   file,
+    //   onUpdateProgress: setProgress
+    // })
+    [uploadAsset]
   )
 
   return {
     progress,
-    fetching: isMutating,
+    loading,
     onUpload,
-    data
+    data: mockData
   }
 }

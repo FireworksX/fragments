@@ -95,14 +95,7 @@ export enum FeelLevelGet {
 
 export type FilterDeviceTypeGet = {
   __typename?: 'FilterDeviceTypeGet';
-  deviceType: DeviceType;
-  toggled?: Maybe<Scalars['Boolean']['output']>;
-  type: FilterType;
-};
-
-export type FilterDeviceTypePost = {
-  deviceType: DeviceType;
-  toggled?: InputMaybe<Scalars['Boolean']['input']>;
+  deviceTypes: Array<DeviceType>;
 };
 
 export type FilterGeoLocationGet = {
@@ -110,76 +103,58 @@ export type FilterGeoLocationGet = {
   city?: Maybe<Scalars['String']['output']>;
   country: Scalars['String']['output'];
   region?: Maybe<Scalars['String']['output']>;
-  toggled?: Maybe<Scalars['Boolean']['output']>;
-  type: FilterType;
 };
 
 export type FilterGeoLocationPost = {
   city?: InputMaybe<Scalars['String']['input']>;
   country: Scalars['String']['input'];
   region?: InputMaybe<Scalars['String']['input']>;
-  toggled?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type FilterGeoLocationsGet = {
+  __typename?: 'FilterGeoLocationsGet';
+  geoLocations: Array<FilterGeoLocationGet>;
 };
 
 export type FilterOsTypeGet = {
   __typename?: 'FilterOSTypeGet';
-  osType: OsType;
-  toggled?: Maybe<Scalars['Boolean']['output']>;
-  type: FilterType;
+  osTypes: Array<OsType>;
 };
 
-export type FilterOsTypeGetFilterDeviceTypeGetFilterPageGetFilterGeoLocationGetFilterTimeFrameGet = FilterDeviceTypeGet | FilterGeoLocationGet | FilterOsTypeGet | FilterPageGet | FilterTimeFrameGet;
-
-export type FilterOsTypePost = {
-  osType: OsType;
-  toggled?: InputMaybe<Scalars['Boolean']['input']>;
-};
+export type FilterOsTypeGetFilterDeviceTypeGetFilterPageGetFilterGeoLocationsGetFilterTimeFramesGet = FilterDeviceTypeGet | FilterGeoLocationsGet | FilterOsTypeGet | FilterPageGet | FilterTimeFramesGet;
 
 export type FilterPageGet = {
   __typename?: 'FilterPageGet';
-  page: Scalars['String']['output'];
-  toggled?: Maybe<Scalars['Boolean']['output']>;
-  type: FilterType;
-};
-
-export type FilterPagePost = {
-  page: Scalars['String']['input'];
-  toggled?: InputMaybe<Scalars['Boolean']['input']>;
+  pages: Array<Scalars['String']['output']>;
 };
 
 export type FilterTimeFrameGet = {
   __typename?: 'FilterTimeFrameGet';
   fromTime: Scalars['DateTime']['output'];
   toTime: Scalars['DateTime']['output'];
-  toggled?: Maybe<Scalars['Boolean']['output']>;
-  type: FilterType;
 };
 
 export type FilterTimeFramePost = {
   fromTime: Scalars['DateTime']['input'];
   toTime: Scalars['DateTime']['input'];
-  toggled?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-export enum FilterType {
-  DeviceType = 'DeviceType',
-  GeoLocationType = 'GeoLocationType',
-  OsType = 'OSType',
-  PageType = 'PageType',
-  TimeFrameType = 'TimeFrameType'
-}
+export type FilterTimeFramesGet = {
+  __typename?: 'FilterTimeFramesGet';
+  timeFrames: Array<FilterTimeFrameGet>;
+};
 
 export type FiltersPost = {
-  deviceTypes?: InputMaybe<Array<FilterDeviceTypePost>>;
-  geolocations?: InputMaybe<Array<FilterGeoLocationPost>>;
-  osTypes?: InputMaybe<Array<FilterOsTypePost>>;
-  pages?: InputMaybe<Array<FilterPagePost>>;
-  timeFrames?: InputMaybe<Array<FilterTimeFramePost>>;
+  deviceTypes: Array<DeviceType>;
+  geolocations: Array<FilterGeoLocationPost>;
+  osTypes: Array<OsType>;
+  pages: Array<Scalars['String']['input']>;
+  timeFrames: Array<FilterTimeFramePost>;
 };
 
 export type FragmentGet = {
   __typename?: 'FragmentGet';
-  assets: Array<Scalars['String']['output']>;
+  assets: Array<FragmentMediaGet>;
   author: UserGet;
   directoryId: Scalars['Int']['output'];
   document: Scalars['JSON']['output'];
@@ -187,6 +162,12 @@ export type FragmentGet = {
   linkedFragments?: Maybe<Array<FragmentGet>>;
   name: Scalars['String']['output'];
   props?: Maybe<Scalars['JSON']['output']>;
+};
+
+export type FragmentMediaGet = {
+  __typename?: 'FragmentMediaGet';
+  id: Scalars['Int']['output'];
+  publicPath: Scalars['String']['output'];
 };
 
 export type FragmentPatch = {
@@ -239,12 +220,34 @@ export type LandingPost = {
   weight?: InputMaybe<Scalars['Float']['input']>;
 };
 
+export type MediaDelete = {
+  mediaId?: InputMaybe<Scalars['Int']['input']>;
+  mediaType: MediaType;
+  targetId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type MediaGet = {
+  __typename?: 'MediaGet';
+  mediaId: Scalars['Int']['output'];
+  mediaType: MediaType;
+  publicPath: Scalars['String']['output'];
+};
+
+export type MediaPost = {
+  directoryId?: InputMaybe<Scalars['Int']['input']>;
+  mediaType: MediaType;
+  targetId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export enum MediaType {
+  CampaignLogo = 'CAMPAIGN_LOGO',
+  FragmentAsset = 'FRAGMENT_ASSET',
+  ProjectLogo = 'PROJECT_LOGO',
+  UserLogo = 'USER_LOGO'
+}
+
 export type Mutation = {
   __typename?: 'Mutation';
-  addAvatar: UserGet;
-  addCampaignLogo: CampaignGet;
-  addFragmentAsset: FragmentGet;
-  addProjectLogo: ProjectGet;
   addProjectPublicKey: ProjectGet;
   addUserToProject?: Maybe<Scalars['Void']['output']>;
   changeProjectPrivateKey: ProjectGet;
@@ -255,14 +258,17 @@ export type Mutation = {
   createLanding: LandingGet;
   createProject: ProjectGet;
   createStream: StreamGet;
+  deleteAsset?: Maybe<Scalars['Void']['output']>;
+  deleteCampaign?: Maybe<Scalars['Void']['output']>;
   deleteDirectory?: Maybe<Scalars['Void']['output']>;
   deleteFragment?: Maybe<Scalars['Void']['output']>;
+  deleteLanding?: Maybe<Scalars['Void']['output']>;
+  deleteProject?: Maybe<Scalars['Void']['output']>;
   deleteProjectPublicKey?: Maybe<Scalars['Void']['output']>;
   deleteStream?: Maybe<Scalars['Void']['output']>;
   feedback: FeedbackGet;
   login: AuthPayload;
   refresh: AuthPayload;
-  removeFragmentAsset: FragmentGet;
   signup: AuthPayload;
   updateCampaign: CampaignGet;
   updateDirectory: Array<ProjectDirectoryGet>;
@@ -270,29 +276,7 @@ export type Mutation = {
   updateLanding: LandingGet;
   updateProject: ProjectGet;
   updateStream: StreamGet;
-};
-
-
-export type MutationAddAvatarArgs = {
-  file: Scalars['Upload']['input'];
-};
-
-
-export type MutationAddCampaignLogoArgs = {
-  campaignId: Scalars['Int']['input'];
-  file: Scalars['Upload']['input'];
-};
-
-
-export type MutationAddFragmentAssetArgs = {
-  file: Scalars['Upload']['input'];
-  fragmentId: Scalars['Int']['input'];
-};
-
-
-export type MutationAddProjectLogoArgs = {
-  file: Scalars['Upload']['input'];
-  projectId: Scalars['Int']['input'];
+  uploadAsset: MediaGet;
 };
 
 
@@ -347,7 +331,17 @@ export type MutationCreateProjectArgs = {
 
 
 export type MutationCreateStreamArgs = {
-  strm: StreamPost;
+  stream: StreamPost;
+};
+
+
+export type MutationDeleteAssetArgs = {
+  media: MediaDelete;
+};
+
+
+export type MutationDeleteCampaignArgs = {
+  campaignId: Scalars['Int']['input'];
 };
 
 
@@ -358,6 +352,16 @@ export type MutationDeleteDirectoryArgs = {
 
 export type MutationDeleteFragmentArgs = {
   fragmentId: Scalars['Int']['input'];
+};
+
+
+export type MutationDeleteLandingArgs = {
+  landingId: Scalars['Int']['input'];
+};
+
+
+export type MutationDeleteProjectArgs = {
+  projectId: Scalars['Int']['input'];
 };
 
 
@@ -380,12 +384,6 @@ export type MutationFeedbackArgs = {
 export type MutationLoginArgs = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
-};
-
-
-export type MutationRemoveFragmentAssetArgs = {
-  fragmentId: Scalars['Int']['input'];
-  publicPath: Scalars['String']['input'];
 };
 
 
@@ -423,7 +421,13 @@ export type MutationUpdateProjectArgs = {
 
 
 export type MutationUpdateStreamArgs = {
-  strm: StreamPatch;
+  stream: StreamPatch;
+};
+
+
+export type MutationUploadAssetArgs = {
+  file: Scalars['Upload']['input'];
+  media: MediaPost;
 };
 
 export enum OsType {
@@ -578,7 +582,7 @@ export type StreamGet = {
   active: Scalars['Boolean']['output'];
   campaignId: Scalars['Int']['output'];
   deleted: Scalars['Boolean']['output'];
-  filters: Array<FilterOsTypeGetFilterDeviceTypeGetFilterPageGetFilterGeoLocationGetFilterTimeFrameGet>;
+  filters: Array<FilterOsTypeGetFilterDeviceTypeGetFilterPageGetFilterGeoLocationsGetFilterTimeFramesGet>;
   id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   weight: Scalars['Float']['output'];
@@ -586,7 +590,6 @@ export type StreamGet = {
 
 export type StreamPatch = {
   active?: InputMaybe<Scalars['Boolean']['input']>;
-  campaignId: Scalars['Int']['input'];
   deleted?: InputMaybe<Scalars['Boolean']['input']>;
   filters?: InputMaybe<FiltersPost>;
   id: Scalars['Int']['input'];

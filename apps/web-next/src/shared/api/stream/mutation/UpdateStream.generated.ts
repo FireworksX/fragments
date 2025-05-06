@@ -8,7 +8,6 @@ export type UpdateStreamMutationVariables = Types.Exact<{
   name?: Types.InputMaybe<Types.Scalars['String']['input']>;
   active?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
   weight?: Types.InputMaybe<Types.Scalars['Float']['input']>;
-  campaignId: Types.Scalars['Int']['input'];
 }>;
 
 
@@ -16,9 +15,9 @@ export type UpdateStreamMutation = { __typename?: 'Mutation', updateStream: { __
 
 
 export const UpdateStreamDocument = gql`
-    mutation UpdateStream($streamId: Int!, $name: String, $active: Boolean, $weight: Float, $campaignId: Int!) {
+    mutation UpdateStream($streamId: Int!, $name: String, $active: Boolean, $weight: Float) {
   updateStream(
-    strm: {id: $streamId, name: $name, active: $active, weight: $weight, deleted: false, campaignId: $campaignId}
+    stream: {id: $streamId, name: $name, active: $active, weight: $weight, deleted: false}
   ) {
     id
     name
@@ -46,7 +45,6 @@ export type UpdateStreamMutationFn = Apollo.MutationFunction<UpdateStreamMutatio
  *      name: // value for 'name'
  *      active: // value for 'active'
  *      weight: // value for 'weight'
- *      campaignId: // value for 'campaignId'
  *   },
  * });
  */

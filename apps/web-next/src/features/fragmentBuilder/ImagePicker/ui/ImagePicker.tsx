@@ -19,22 +19,22 @@ interface ImagePickerProps {
 }
 
 const ImagePicker: FC<ImagePickerProps> = ({ className, urlInvoker, scaleModeInvoker }) => {
-  const { data, progress, fetching, onUpload } = useUploadFile('projectAssets')
+  const { data, progress, loading, onUpload } = useUploadFile('projectAssets')
 
   useEffect(() => {
-    if (data?.url && data?.url !== urlInvoker.value) {
-      urlInvoker.onChange(data.url)
+    if (data && data !== urlInvoker.value) {
+      urlInvoker.onChange(data)
     }
-  }, [data])
+  }, [data, urlInvoker])
 
   return (
     <div className={cn(styles.root, className)}>
       <ImageSelector
-        value={urlInvoker.value}
+        value={urlInvoker?.value}
         progress={progress}
-        isUploading={fetching}
+        isUploading={loading}
         onChange={onUpload}
-        onReset={() => urlInvoker.onChange('')}
+        onReset={() => urlInvoker?.onChange('')}
       />
       <Panel>
         {scaleModeInvoker && (

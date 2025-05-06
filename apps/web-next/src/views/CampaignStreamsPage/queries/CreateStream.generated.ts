@@ -17,7 +17,7 @@ export type CreateStreamMutation = { __typename?: 'Mutation', createStream: { __
 export const CreateStreamDocument = gql`
     mutation CreateStream($name: String!, $active: Boolean!, $weight: Float!, $campaignId: Int!) {
   createStream(
-    strm: {name: $name, active: $active, weight: $weight, deleted: false, campaignId: $campaignId}
+    stream: {name: $name, active: $active, weight: $weight, deleted: false, campaignId: $campaignId}
   ) {
     id
     name

@@ -60,7 +60,7 @@ export const useFragmentChildren = (fragmentId: number) => {
   );
 
   const primary = children?.find(
-    (breakpoint) => manager.resolve(breakpoint).isPrimary
+    (breakpoint) => manager.resolve(breakpoint)?.isPrimary
   );
 
   // const resultChildren = useMemo(() => {

@@ -6,25 +6,26 @@ query StreamDetail($streamSlug: Int!) {
         weight
         filters {
             ... on FilterDeviceTypeGet {
-                type
-                deviceType
+                deviceTypes
             }
             ... on FilterOSTypeGet {
-                type
-                osType
+                osTypes
             }
-            ... on FilterGeoLocationGet {
-                type
-                city
-                country
-                region
+            ... on FilterGeoLocationsGet {
+                geoLocations {
+                    city
+                    country
+                    region
+                }
             }
             ... on FilterPageGet {
-                type
-                page
+                pages
             }
-            ... on FilterTimeFrameGet {
-                type
+            ... on FilterTimeFramesGet {
+                timeFrames {
+                    fromTime
+                    toTime
+                }
             }
         }
     }

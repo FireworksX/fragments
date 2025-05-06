@@ -14,11 +14,26 @@ export const useLayerBackground = (layerKey: LinkKey) => {
     fragmentManager
   );
 
-  return useMemo(
-    () => ({
-      background:
-        fillType === definition.paintMode.Solid ? solidFill : "transparent",
-    }),
-    [fillType, solidFill]
+  const [, , { resultValue: imageFill }] = useLayerValue(
+    layerKey,
+    "imageFill",
+    fragmentManager
   );
+
+  return useMemo(() => {
+    if (fillType === definition.paintMode.Solid) {
+      return {
+        background: solidFill,
+      };
+    }
+    if (fillType === definition.paintMode.Image) {
+      return {
+        background: `url(${imageFill})`,
+      };
+    }
+
+    return {
+      background: "transparent",
+    };
+  }, [fillType, solidFill, imageFill]);
 };
