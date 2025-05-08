@@ -1,7 +1,6 @@
 import { definition, isVariableLink } from "@fragmentsx/definition";
 import { GraphState, LinkKey } from "@graph-state/core";
 import { getNormalizeLayer } from "@/shared/hooks/useNormalizeLayer";
-import { hashGenerator } from "@/managers/cssPlugin/hashGenerator";
 
 export const calcBackground = (manager: GraphState, layerKey: LinkKey) => {
   const rawLayer = manager.resolve(layerKey);
@@ -11,10 +10,8 @@ export const calcBackground = (manager: GraphState, layerKey: LinkKey) => {
     return null;
   }
 
-  console.log(layerKey, layer.solidFill);
   const isVariable = isVariableLink(layer.solidFill);
   if (isVariable) {
-    const variableHash = isVariable ? hashGenerator(layer.solidFill) : null;
     const { _id } = manager.entityOfKey(layer.solidFill);
     return {
       background:

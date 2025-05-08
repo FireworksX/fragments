@@ -20,15 +20,27 @@ export const useLayerBackground = (layerKey: LinkKey) => {
     fragmentManager
   );
 
+  const [, , { resultValue: imageSize }] = useLayerValue(
+    layerKey,
+    "imageSize",
+    fragmentManager
+  );
+
   return useMemo(() => {
+    const sizeMap = {
+      [definition.imagePaintScaleModes.Fill]: "cover",
+      [definition.imagePaintScaleModes.Fit]: "contain",
+    };
+
     if (fillType === definition.paintMode.Solid) {
       return {
         background: solidFill,
       };
     }
-    if (fillType === definition.paintMode.Image) {
+    if (fillType === definition.paintMode.Image && imageFill) {
       return {
         background: `url(${imageFill})`,
+        backgroundSize: sizeMap[imageSize],
       };
     }
 

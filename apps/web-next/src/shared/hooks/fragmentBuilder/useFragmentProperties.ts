@@ -8,6 +8,7 @@ import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { declareFragmentProperty } from '@fragments/render-core'
 
 export const FRAGMENT_PROPERTY_TYPES = [
+  definition.variableType.Event,
   definition.variableType.Number,
   definition.variableType.Boolean,
   definition.variableType.String,
@@ -46,6 +47,7 @@ export const useFragmentProperties = () => {
         // [builderVariableType.Object]: stackObjectVariableName,
         [definition.variableType.String]: popoutNames.stackStringProperty,
         [definition.variableType.Color]: popoutNames.stackColorProperty
+        // [definition.variableType.Event]: popoutNames.stackEvent
       }[type]
 
       popoutsStore.open(popoutName, {

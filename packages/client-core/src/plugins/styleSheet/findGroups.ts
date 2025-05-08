@@ -1,10 +1,8 @@
 import { GraphState, LinkKey } from "@graph-state/core";
 import { definition } from "@fragmentsx/definition";
-import { generateCss } from "@/managers/cssPlugin/generateCss";
-import { diffCss } from "@/managers/cssPlugin/diffCss";
 
 export const findGroups = (state: GraphState) => {
-  const cache = state.styleSheetCache;
+  const cache = state.$styleSheet?.cache;
   const fragments =
     Array.from(cache.keys()).filter((key) =>
       key?.includes(definition.nodes.Fragment)

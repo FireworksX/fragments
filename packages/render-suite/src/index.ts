@@ -14,4 +14,6 @@ export {
   useFragmentProperties,
   useReadVariable,
   useLayerChildren,
+  RenderTargetProvider,
+  RenderTargetContext,
 } from "@fragmentsx/render-core";

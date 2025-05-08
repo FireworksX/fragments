@@ -1,6 +1,6 @@
 import { useCallback } from "preact/compat";
 import { useGraph } from "@graph-state/react";
-import { GraphState, LinkKey } from "@graph-state/core";
+import { GraphState, LinkKey, MutateOptions } from "@graph-state/core";
 import { omit, pick } from "@fragmentsx/utils";
 import { parseLayerField, isVariableLink } from "@fragmentsx/definition";
 import { useNormalizeLayer } from "@/shared/hooks/useNormalizeLayer";
@@ -37,7 +37,6 @@ export const useLayerValue = (
       layerKey,
       (prev) => {
         const r = omit(prev, fieldKey);
-        console.log(prev, r);
 
         return r;
       },
@@ -57,7 +56,7 @@ export const useLayerValue = (
   );
 
   const updateValue = useCallback(
-    (value: unknown) => {
+    (value: unknown, options?: MutateOptions) => {
       const { success, output } = parseLayerField(layer, fieldKey, value);
 
       if (success) {
@@ -76,7 +75,7 @@ export const useLayerValue = (
           resultManager.resolve(resultManager?.$fragment?.temp);
         }
 
-        updateLayerData({ [fieldKey]: output });
+        updateLayerData({ [fieldKey]: output }, options);
       }
     },
     [layer, fieldKey, updateLayerData, resultManager, layerKey, currentValue]

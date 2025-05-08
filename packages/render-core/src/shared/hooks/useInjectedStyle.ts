@@ -9,7 +9,7 @@ export function useInjectedStyle() {
   const { manager } = useContext(FragmentContext);
 
   const injectStyle = () => {
-    const styles = manager?.extractStyleSheet()?.at(0)?.styles;
+    const styles = manager?.$styleSheet.extract()?.at(0)?.styles;
 
     if (isBrowser && styles) {
       const stylesheetKey = getStylesheetKey(manager?.key);

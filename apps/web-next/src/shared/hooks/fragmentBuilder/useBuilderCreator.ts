@@ -16,7 +16,7 @@ export const useBuilderCreator = () => {
   const [creator] = useGraph(builderManager, builderManager.$creator.key)
   const { documentManager } = useBuilderDocument()
   const { layers } = useFragmentLayers()
-  const { loadFragmentManager } = useFragmentManager()
+  const { queryFragmentManager } = useFragmentManager()
 
   const createFrame = (parent, externalProps = {}) => {
     if (![definition.nodes.Frame].includes(documentManager.entityOfKey(parent)?._type)) {
@@ -77,7 +77,7 @@ export const useBuilderCreator = () => {
   }
 
   const createInstance = async (parent: LinkKey, options: { name: string; fragment: string }) => {
-    const fragmentManager = await loadFragmentManager(options.fragment)
+    const fragmentManager = await queryFragmentManager(options.fragment)
     const rootLayerLink = fragmentManager
       ?.resolve(fragmentManager?.$fragment?.root)
       ?.children?.find(child => isRootLayer(fragmentManager, child))

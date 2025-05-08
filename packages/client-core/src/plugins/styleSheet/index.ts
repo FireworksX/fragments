@@ -1,30 +1,11 @@
-import { GraphState, Plugin } from "@graph-state/core";
-import ssrPrepass from "preact-ssr-prepass";
-import { Fragment } from "@/components/Fragment";
-import { GlobalManager } from "@/providers/GlobalManager";
-import { StyleSheetProvider } from "@/providers/StyleSheetProvider";
-import { findGroups } from "@/managers/styleSheetPlugin/findGroups";
-import { makeCss } from "@/managers/styleSheetPlugin/makeCss";
-import { getAllChildren } from "@/managers/styleSheetPlugin/getAllChildren";
-import { generateCss } from "@/managers/cssPlugin/generateCss";
-import { diffCss } from "@/managers/cssPlugin/diffCss";
-import { buildCssBlock } from "@/managers/styleSheetPlugin/buildCssBlock";
+import { LinkKey, Plugin } from "@graph-state/core";
+import { findGroups } from "./findGroups";
+import { makeCss } from "./makeCss";
+import { getAllChildren } from "./getAllChildren";
+import { buildCssBlock } from "./buildCssBlock";
 
-export const styleSheetPlugin = (state) => {
-  state.styleSheetCache = new Map();
-
-  state.extractStyleSheet = () => {
-    // state.styleSheetCache.clear();
-    const rootLayer = state.resolve(state.$fragment.root);
-
-    // await ssrPrepass(
-    //   <GlobalManager.Provider value={globalManager}>
-    //     <StyleSheetProvider value={state.styleSheetCache}>
-    //       <Fragment fragmentId={rootLayer._id} />
-    //     </StyleSheetProvider>
-    //   </GlobalManager.Provider>
-    // );
-
+export const styleSheetPlugin: Plugin = (state) => {
+  const extractStyleSheet = () => {
     const fragments = findGroups(state);
     const cssMaker = makeCss(state);
 
@@ -78,5 +59,12 @@ export const styleSheetPlugin = (state) => {
     });
 
     return fragmentsStyle;
+  };
+
+  state.$styleSheet = {
+    cache: new Map(),
+    addStyle: (layerKey: LinkKey, styles, layer) =>
+      state.$styleSheet?.cache?.set(layerKey, { styles, layer }),
+    extract: extractStyleSheet,
   };
 };

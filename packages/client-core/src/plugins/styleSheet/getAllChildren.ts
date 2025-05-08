@@ -1,7 +1,7 @@
 import { Entity } from "@graph-state/core";
 
 export const getAllChildren = (state, start: Entity, acc: string[] = []) => {
-  const cache = state.styleSheetCache;
+  const cache = state.$styleSheet?.cache;
   const layerKey = state.keyOfEntity(start);
   const { layer } = cache.get(layerKey) ?? {};
 

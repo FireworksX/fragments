@@ -23,5 +23,9 @@ export const fieldsConfig = {
   content: {
     type: definition.variableType.String,
     name: 'Content'
+  },
+  event: {
+    type: definition.variableType.Event,
+    name: 'Event'
   }
 }

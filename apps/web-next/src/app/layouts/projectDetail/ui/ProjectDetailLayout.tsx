@@ -5,6 +5,7 @@ import { Tabs } from '@/shared/ui/Tabs'
 import { TabItem } from '@/shared/ui/TabItem'
 import styles from './styles.module.css'
 import { createGlobalManager } from '@fragmentsx/render-core'
+import { createFragmentsClient } from '@fragmentsx/client-core'
 import { GlobalManager } from '@fragmentsx/render-suite'
 import { getSession, useSession } from 'next-auth/react'
 import { DndContext, MouseSensor, pointerWithin, useSensor, useSensors } from '@dnd-kit/core'
@@ -26,7 +27,7 @@ export const ProjectDetailLayout: FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     if (data && !globalManager) {
-      const globalManager = createGlobalManager({ apiToken: data.accessToken, isSelfHosted: true })
+      const globalManager = createFragmentsClient({ apiToken: data.accessToken, isSelf: true })
       setGlobalManager(globalManager)
       window.globalManager = globalManager
     }

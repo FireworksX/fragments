@@ -26,8 +26,6 @@ export * from "./shared/helpers";
 
 // export { useGlobalContext } from "./shared/hooks/useGlobalContext";
 
-export { createGlobalManager } from "@/managers/globalManager";
-
 export { wrapTextInParagraphWithAttributes } from "@/shared/helpers/wrapTextInParagraphWithAttributes";
 export { findBreakpoint } from "@/shared/helpers/findBreakpoint";
 
@@ -51,10 +49,8 @@ export { useLayerLayout } from "@/shared/hooks/useLayerStyles/useLayerLayout";
 export { useCalcLayerBorder } from "@/shared/hooks/useLayerStyles/useCalcLayerBorder";
 
 export { GlobalManager } from "@/providers/GlobalManager";
-export {
-  StyleSheetProvider,
-  StyleSheetContext,
-} from "@/providers/StyleSheetProvider";
+export * from "@/providers/StyleSheetProvider";
+export * from "@/providers/RenderTargetProvider";
 export { InstanceContext } from "@/components/Instance";
 export { FragmentContext } from "@/components/Fragment/FragmentContext";
 

@@ -127,8 +127,14 @@ declare function isFiniteNumber(value: unknown): value is number;
 declare function finiteNumber(value: unknown): number | undefined;
 declare function positiveValue<T = unknown>(value: T): number;
 
+declare const setKey: (v: string) => string;
+declare const getKey: (v: string) => string | null;
+declare const isKey: (v: string) => boolean;
+
+declare function hashGenerator(layerKey: string): string;
+
 declare function roundedNumber(value: number, decimals?: number): number;
 declare function roundedNumberString(value: number, decimals?: number): string;
 declare function roundWithOffset(value: number, offset: number): number;
 
-export { colorToObject, createConstants, debounce, eventEmitter, filterDeep, findDeep, finiteNumber, fromPx, generateId, get, hexToRgb, injectLink, isAbsoluteUrl, _default as isBrowser, isEmptyValue, isFiniteNumber, isHTMLNode, isObject, isPrimitive, isValue, iterator, mergeIterator, noop, objectToColorString, omit, pick, positiveValue, promiseWaiter, replace, rgbStringToHex, rgbToHex, rgbToRgba, roundWithOffset, roundedNumber, roundedNumberString, set, times, toKebabCase, toLongHex, toPx };
+export { colorToObject, createConstants, debounce, eventEmitter, filterDeep, findDeep, finiteNumber, fromPx, generateId, get, getKey, hashGenerator, hexToRgb, injectLink, isAbsoluteUrl, _default as isBrowser, isEmptyValue, isFiniteNumber, isHTMLNode, isKey, isObject, isPrimitive, isValue, iterator, mergeIterator, noop, objectToColorString, omit, pick, positiveValue, promiseWaiter, replace, rgbStringToHex, rgbToHex, rgbToRgba, roundWithOffset, roundedNumber, roundedNumberString, set, setKey, times, toKebabCase, toLongHex, toPx };

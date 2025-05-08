@@ -31,6 +31,8 @@ export { generateId } from "./generateId";
 export { colorToObject } from "./colors/colorToObject";
 export { objectToColorString } from "./colors/objectToColorString";
 export * from "./finiiteNumber";
+export * from "./keys";
+export * from "./hashGenerator";
 export {
   roundedNumber,
   roundedNumberString,

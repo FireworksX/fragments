@@ -49,15 +49,17 @@ import { useToast } from '@/widgets/Toast/hooks/useToast'
 import { HotKeysProvider } from '@/shared/hooks/hotkeys/HotKeysProvider'
 import { BuilderProvider } from '@/shared/providers/BuilderProvider'
 import { BuilderFragmentTabs } from '@/views/FragmentsBuilder/widgets/BuilderFragmentTabs'
+import BuilderInteractions from '@/widgets/fragmentBuilder/BuilderInteractions/ui/BuilderInteractions'
+import BuilderStackPanelEvent from '../../../widgets/fragmentBuilder/BuilderStackPanelEvent/ui/BuilderStackPanelEvent'
 
 const FragmentsEditInitial = () => {
-  const { setRenderTarget } = useRenderTarget()
+  // const { setRenderTarget } = useRenderTarget()
 
   // useBuilderHotKeys()
 
-  useEffect(() => {
-    setRenderTarget(definition.renderTarget.canvas)
-  }, [])
+  // useEffect(() => {
+  //   setRenderTarget(definition.renderTarget.canvas)
+  // }, [])
 
   return (
     <div className={styles.root}>
@@ -97,6 +99,7 @@ const FragmentsEditInitial = () => {
                   <StackNumberProperty name={popoutNames.stackNumberProperty} title='Number Property' />
                   <StackBooleanProperty name={popoutNames.stackBooleanProperty} title='Boolean Property' />
                   <StackColorProperty name={popoutNames.stackColorProperty} title='Color Property' />
+                  <BuilderStackPanelEvent name={popoutNames.stackEvent} title='Event' />
                   {/*<StackPanelCssOverrideList name='cssOverrideList' title='CSS overrides' />*/}
                   {/*<StackLoopEffect name='loopEffect' title='Loop Effect' />*/}
 
@@ -122,6 +125,7 @@ const FragmentsEditInitial = () => {
         stylesNode={<BuilderStyles />}
         linkNode={<BuilderLink />}
         textNode={<BuilderText />}
+        interactionsNode={<BuilderInteractions />}
         imageNode={<BuilderImage />}
         attributesNode={<BuilderAttributes />}
         // cssNode={<BuilderCssOverride />}

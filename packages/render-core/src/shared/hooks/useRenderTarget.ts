@@ -1,22 +1,13 @@
-import { GraphState } from "@graph-state/core";
 import { definition } from "@fragmentsx/definition";
-import { useGlobalManager } from "@/shared/hooks/useGlobalManager";
+import { useContext } from "preact/compat";
+import { RenderTargetContext } from "@/providers/RenderTargetProvider";
 
 export const useRenderTarget = () => {
-  const { globalManagerGraph, manager, setRenderTarget } = useGlobalManager();
-
-  const renderTargetValue =
-    globalManagerGraph?.renderTarget ?? definition.renderTarget.document;
-
-  // Subscribe to root fragment
-  // useGraph(documentManager, documentManager.$fragment.root);
+  const renderTarget = useContext(RenderTargetContext);
 
   return {
-    renderTarget: renderTargetValue,
-    isCanvas: renderTargetValue === definition.renderTarget.canvas,
-    isDocument: renderTargetValue === definition.renderTarget.document,
-    setRenderTarget: (target) => {
-      setRenderTarget(target);
-    },
+    renderTarget,
+    isCanvas: renderTarget === definition.renderTarget.canvas,
+    isDocument: renderTarget === definition.renderTarget.document,
   };
 };

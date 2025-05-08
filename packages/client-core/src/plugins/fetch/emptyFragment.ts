@@ -1,5 +1,4 @@
-import { generateId } from "@fragmentsx/utils";
-import { setKey } from "@/shared/helpers/keys";
+import { generateId, setKey } from "@fragmentsx/utils";
 
 export const getEmptyFragment = (fragmentId: string) => {
   const layerId = generateId();

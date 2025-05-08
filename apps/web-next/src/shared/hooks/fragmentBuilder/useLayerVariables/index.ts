@@ -6,7 +6,11 @@ import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDoc
 import { pick } from '@fragments/utils'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 
-export const useLayerVariables = (field: keyof typeof fieldsConfig) => {
+interface Options {
+  onSetValue?: (value: unknown) => void
+}
+
+export const useLayerVariables = (field: keyof typeof fieldsConfig, options?: Options) => {
   const { documentManager } = useBuilderDocument()
   const [fieldValue, setFieldValue, fieldInfo] = useLayerValue(field)
   const { properties: propertiesLinks, createProperty, editProperty } = useFragmentProperties()
@@ -15,6 +19,17 @@ export const useLayerVariables = (field: keyof typeof fieldsConfig) => {
   })
   const disabled = !(field in fieldsConfig)
   const fieldType = fieldsConfig?.[field]?.type
+
+  const proxySetFieldValue = useCallback(
+    (value: unknown) => {
+      if (options?.onSetValue) {
+        options?.onSetValue?.(value)
+      } else {
+        setFieldValue()
+      }
+    },
+    [options, setFieldValue]
+  )
 
   const getVariableName = (preferredName: string) => {
     const countOfSameNames = properties.filter(prop => prop?.name?.startsWith?.(preferredName)).length
@@ -29,9 +44,9 @@ export const useLayerVariables = (field: keyof typeof fieldsConfig) => {
       name: preferredName,
       defaultValue: fieldValue ?? fieldEntity?.defaultValue
     })
-    setFieldValue?.(property)
+    proxySetFieldValue?.(property)
     editProperty(property)
-  }, [createProperty, editProperty, field, fieldValue, getVariableName, setFieldValue])
+  }, [createProperty, editProperty, field, fieldValue, getVariableName, proxySetFieldValue])
 
   const allowVariables = useMemo(() => {
     const allowProps = properties.filter(
@@ -48,7 +63,7 @@ export const useLayerVariables = (field: keyof typeof fieldsConfig) => {
               label: prop?.name,
               name: prop?.name,
               onClick: () => {
-                setFieldValue?.(documentManager.keyOfEntity(prop))
+                proxySetFieldValue?.(documentManager.keyOfEntity(prop))
               }
             }))
           ]
@@ -57,7 +72,7 @@ export const useLayerVariables = (field: keyof typeof fieldsConfig) => {
     }
 
     return []
-  }, [documentManager, fieldType, fieldValue, properties, setFieldValue])
+  }, [documentManager, fieldType, fieldValue, properties, proxySetFieldValue])
 
   const restoreValue = () => {
     const fieldEntity = fieldsConfig[field]
@@ -80,6 +95,7 @@ export const useLayerVariables = (field: keyof typeof fieldsConfig) => {
             onClick: () => createVariable()
           }
         ].concat(allowVariables)
-      : []
+      : [],
+    allowVariables
   }
 }

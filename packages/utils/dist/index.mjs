@@ -408,6 +408,22 @@ function positiveValue(value) {
   return 0;
 }
 
+// src/keys.ts
+var setKey = (v) => `$${v}`;
+var getKey = (v) => isKey(v) ? v.slice(1) : null;
+var isKey = (v) => typeof v === "string" && v.startsWith("$");
+
+// src/hashGenerator.ts
+function hashGenerator(layerKey) {
+  let hash = 0;
+  for (let i = 0; i < layerKey.length; i++) {
+    hash = (hash << 5) - hash + layerKey.charCodeAt(i);
+    hash |= 0;
+  }
+  const raw = Math.abs(hash).toString(36);
+  return /^[0-9]/.test(raw) ? `h${raw}` : raw;
+}
+
 // src/roundedNumber.ts
 function roundedNumber(value, decimals = 0) {
   const d = Math.round(Math.abs(decimals));
@@ -439,6 +455,8 @@ export {
   fromPx,
   generateId,
   get,
+  getKey,
+  hashGenerator,
   hexToRgb,
   injectLink,
   isAbsoluteUrl,
@@ -446,6 +464,7 @@ export {
   isEmptyValue,
   isFiniteNumber,
   isHTMLNode,
+  isKey,
   isObject,
   isPrimitive,
   isValue,
@@ -465,6 +484,7 @@ export {
   roundedNumber,
   roundedNumberString,
   set,
+  setKey,
   times,
   toKebabCase,
   toLongHex,

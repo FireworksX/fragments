@@ -7,6 +7,7 @@ import BuilderFragmentInstance from '@/widgets/fragmentBuilder/BuilderFragmentIn
 import { Container } from '@/shared/ui/Container'
 import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
 import { definition } from '@fragments/definition'
+import BuilderInteractions from '@/widgets/fragmentBuilder/BuilderInteractions/ui/BuilderInteractions'
 
 interface ControlsProps extends AsideBarProps {
   className?: string
@@ -16,6 +17,7 @@ interface ControlsProps extends AsideBarProps {
   layoutNode?: ReactNode
   stylesNode?: ReactNode
   textNode?: ReactNode
+  interactionsNode?: ReactNode
   imageNode?: ReactNode
   attributesNode?: ReactNode
   fragmentGeneral?: ReactNode
@@ -31,6 +33,7 @@ const BuilderControls: FC<ControlsProps> = ({
   linkNode,
   sizeNode,
   layoutNode,
+  interactionsNode,
   stylesNode,
   fragmentGeneral,
   textNode,
@@ -71,6 +74,7 @@ const BuilderControls: FC<ControlsProps> = ({
   const hasImage = [definition.nodes.Image].some(type => layerInfo.type === type)
   const hasCssOverride = [definition.nodes.Frame, definition.nodes.Breakpoint].some(type => layerInfo.type === type)
   const hasInstanceProps = [definition.nodes.Instance].some(type => layerInfo.type === type)
+  const hasInteractions = [definition.nodes.Frame].some(type => layerInfo.type === type)
 
   return (
     <Container className={cn(className, styles.root)}>
@@ -79,6 +83,7 @@ const BuilderControls: FC<ControlsProps> = ({
         <>
           {/*<BuilderLink />*/}
           {linkNode}
+          {hasInteractions && interactionsNode}
           {hasGrowing && fragmentGrowingNode}
           {hasFragmentProps && fragmentPropsNode}
           {hasPosition && positionNode}
