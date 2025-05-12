@@ -274,6 +274,4 @@ async def get_client_landing(info: strawberry.Info[Context]) -> Optional[Landing
     if landing is None:
         return None
 
-    
-
     return None if landing is None else await landing_db_to_landing(info, landing)

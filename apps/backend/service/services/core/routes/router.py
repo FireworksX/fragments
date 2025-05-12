@@ -72,7 +72,8 @@ from .stream import (
     update_stream_route,
 )
 from .user import add_avatar_route, delete_avatar_route, login, profile, refresh, signup
-
+from .metric import get_landing_metrics
+from .schemas.metric import LandingMetricGet
 
 @strawberry.type
 class Query:
@@ -89,6 +90,14 @@ class Query:
     ) -> List[FragmentGet]:
         return await fragments_by_ids(info, fragment_ids, project_id)
 
+    @strawberry.field
+    async def landing_metric(
+        self,
+        info: strawberry.Info[Context],
+        landing_id: Optional[int] = None,
+    ) -> List[LandingMetricGet]:
+        return await get_landing_metrics(info, landing_id)
+    
     @strawberry.field
     async def campaign(
         self,

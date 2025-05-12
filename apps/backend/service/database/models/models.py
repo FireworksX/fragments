@@ -16,7 +16,7 @@ from sqlalchemy.orm import relationship
 
 from conf import service_settings
 from database import Base
-
+import datetime
 
 class ProjectMemberRole(Base):
     __tablename__ = 'project_members_role'
@@ -396,6 +396,9 @@ class LandingMetric(Base):
     country = Column('country', String)
     region = Column('region', String)
     city = Column('city', String)
+    
+    # Timestamps
+    created_at = Column('created_at', DateTime, default=datetime.datetime.now(datetime.UTC))
     
     # Relationships
     landing = relationship('Landing')

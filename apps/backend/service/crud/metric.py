@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from database.models.models import LandingMetric
 
 
-def create_landing_metric(
+async def create_landing_metric(
     db: Session,
     landing_id: Optional[int] = None,
     campaign_id: Optional[int] = None,
@@ -48,15 +48,15 @@ def create_landing_metric(
     return db_metric
 
 
-def get_landing_metric(db: Session, metric_id: int) -> Optional[LandingMetric]:
+async def get_landing_metric_by_id_db(db: Session, metric_id: int) -> Optional[LandingMetric]:
     return db.query(LandingMetric).filter(LandingMetric.id == metric_id).first()
 
 
-def get_landing_metrics(db: Session, skip: int = 0, limit: int = 100) -> List[LandingMetric]:
+async def get_landing_metrics_db(db: Session, skip: int = 0, limit: int = 100) -> List[LandingMetric]:
     return db.query(LandingMetric).offset(skip).limit(limit).all()
 
 
-def get_landing_metrics_by_landing(
+async def get_landing_metrics_by_landing_db(
     db: Session, landing_id: int, skip: int = 0, limit: int = 100
 ) -> List[LandingMetric]:
     return (
@@ -68,7 +68,7 @@ def get_landing_metrics_by_landing(
     )
 
 
-def get_landing_metrics_by_campaign(
+async def get_landing_metrics_by_campaign(
     db: Session, campaign_id: int, skip: int = 0, limit: int = 100
 ) -> List[LandingMetric]:
     return (
@@ -80,7 +80,7 @@ def get_landing_metrics_by_campaign(
     )
 
 
-def delete_landing_metric(db: Session, metric_id: int) -> bool:
+async def delete_landing_metric(db: Session, metric_id: int) -> bool:
     metric = db.query(LandingMetric).filter(LandingMetric.id == metric_id).first()
     if metric:
         db.delete(metric)
