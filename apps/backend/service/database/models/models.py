@@ -16,7 +16,7 @@ from sqlalchemy.orm import relationship
 
 from conf import service_settings
 from database import Base
-
+import datetime
 
 class ProjectMemberRole(Base):
     __tablename__ = 'project_members_role'
@@ -368,3 +368,42 @@ class Media(Base):
     @property
     def public_path(self):
         return f'{service_settings.STATIC_SERVER_URL}/{self.filename}'
+
+class LandingMetric(Base):
+    __tablename__ = 'landing_metric'
+    id = Column('id', Integer, primary_key=True, index=True)
+    
+    # Foreign keys
+    landing_id = Column('landing_id', Integer, ForeignKey('landing.id'))
+    campaign_id = Column('campaign_id', Integer, ForeignKey('campaign.id'))
+    
+    # Page info
+    url = Column('url', String)
+    referrer = Column('referrer', String)
+    domain = Column('domain', String)
+    subdomain = Column('subdomain', String)
+    page_load_time = Column('page_load_time', Float)  # in milliseconds
+    
+    # Device info
+    device_type = Column('device_type', Integer)
+    os_type = Column('os_type', Integer)
+    browser = Column('browser', String)
+    language = Column('language', String)
+    screen_width = Column('screen_width', Integer)
+    screen_height = Column('screen_height', Integer)
+    
+    # Geolocation
+    country = Column('country', String)
+    region = Column('region', String)
+    city = Column('city', String)
+    
+    # Timestamps
+    created_at = Column('created_at', DateTime, default=datetime.datetime.now(datetime.UTC))
+    
+    # Relationships
+    landing = relationship('Landing')
+    campaign = relationship('Campaign')
+
+    # Custom event
+    event = Column('event', String)
+

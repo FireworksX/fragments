@@ -124,7 +124,7 @@ class Context(BaseContext):
         )
         return ClientLanding(
             os_type=user_agent.os_type,
-            device_type=user_agent,
+            device_type=user_agent.device_type,
             time_frame=gmt_time,
             page=page,
             ip_address=user_ip,

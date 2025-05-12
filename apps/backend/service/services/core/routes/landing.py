@@ -16,6 +16,7 @@ from crud.landing import (
     get_landings_by_stream_id_db,
     update_landing_by_id_db,
 )
+from crud.metric import create_landing_metric_db
 from crud.project import get_project_by_id_db
 from crud.stream import get_stream_by_id_db
 from database import Landing, Project, Session, Stream
@@ -25,6 +26,8 @@ from .middleware import Context
 from .schemas.landing import ClientLanding, LandingGet, LandingPatch, LandingPost
 from .schemas.user import AuthPayload, RoleGet
 from .utils import get_user_role_in_project
+
+from crud.ipgetter import GeoLocation, get_location_by_ip
 
 
 async def landing_db_to_landing(info, landing_db: Landing) -> LandingGet:
@@ -251,5 +254,25 @@ async def get_client_landing(info: strawberry.Info[Context]) -> Optional[Landing
     project: Project = await info.context.project()
     db: Session = info.context.session()
 
+    location=get_location_by_ip(client_landing.ip_address)
     landing = await get_best_landing(db, client_landing, project.id)
+
+    # Create landing metric from available client landing data
+    await create_landing_metric_db(
+        db=db,
+        landing_id=landing.id if landing else None,
+        campaign_id=landing.stream.campaign_id if landing else None,
+        url="",
+        domain="",
+        device_type=client_landing.device_type.value if client_landing.device_type else None,
+        os_type=client_landing.os_type.value if client_landing.os_type else None,
+        country=location.country,
+        region=location.region,
+        city=location.city,
+        event="client_landing"
+    )
+    
+    if landing is None:
+        return None
+
     return None if landing is None else await landing_db_to_landing(info, landing)
