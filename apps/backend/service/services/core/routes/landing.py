@@ -16,7 +16,7 @@ from crud.landing import (
     get_landings_by_stream_id_db,
     update_landing_by_id_db,
 )
-from crud.metric import create_landing_metric
+from crud.metric import create_landing_metric_db
 from crud.project import get_project_by_id_db
 from crud.stream import get_stream_by_id_db
 from database import Landing, Project, Session, Stream
@@ -258,7 +258,7 @@ async def get_client_landing(info: strawberry.Info[Context]) -> Optional[Landing
     landing = await get_best_landing(db, client_landing, project.id)
 
     # Create landing metric from available client landing data
-    await create_landing_metric(
+    await create_landing_metric_db(
         db=db,
         landing_id=landing.id if landing else None,
         campaign_id=landing.stream.campaign_id if landing else None,
@@ -268,7 +268,8 @@ async def get_client_landing(info: strawberry.Info[Context]) -> Optional[Landing
         os_type=client_landing.os_type.value if client_landing.os_type else None,
         country=location.country,
         region=location.region,
-        city=location.city
+        city=location.city,
+        event="client_landing"
     )
     
     if landing is None:

@@ -25,3 +25,19 @@ class LandingMetricGet:
     region: Optional[str]
     city: Optional[str]
     created_at: datetime.datetime
+    event: Optional[str]
+
+@strawberry.input
+class LandingMetricPost:
+    landing_id: Optional[int] = None
+    campaign_id: Optional[int] = None
+    url: Optional[str] = None
+    referrer: Optional[str] = None
+    domain: Optional[str] = None
+    subdomain: Optional[str] = None
+    page_load_time: Optional[float] = None
+    browser: Optional[str] = None
+    language: Optional[str] = None
+    screen_width: Optional[int] = None
+    screen_height: Optional[int] = None
+    event: Optional[str] = None

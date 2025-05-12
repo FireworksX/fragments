@@ -72,8 +72,8 @@ from .stream import (
     update_stream_route,
 )
 from .user import add_avatar_route, delete_avatar_route, login, profile, refresh, signup
-from .metric import get_landing_metrics
-from .schemas.metric import LandingMetricGet
+from .metric import create_landing_metric, get_landing_metrics
+from .schemas.metric import LandingMetricGet, LandingMetricPost
 
 @strawberry.type
 class Query:
@@ -374,3 +374,10 @@ class Mutation:
             await delete_campaign_logo_route(info, media.target_id)
         elif media.media_type == MediaType.USER_LOGO:
             await delete_avatar_route(info)
+
+    #### metric ####
+    @strawberry.mutation
+    async def create_landing_metric(self, info: strawberry.Info[Context], metric: LandingMetricPost) -> LandingMetricGet:
+        return await create_landing_metric(info, metric)
+
+    #### metric ####

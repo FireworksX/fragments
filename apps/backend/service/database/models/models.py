@@ -404,3 +404,6 @@ class LandingMetric(Base):
     landing = relationship('Landing')
     campaign = relationship('Campaign')
 
+    # Custom event
+    event = Column('event', String)
+

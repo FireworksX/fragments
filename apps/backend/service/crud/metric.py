@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from database.models.models import LandingMetric
 
 
-async def create_landing_metric(
+async def create_landing_metric_db(
     db: Session,
     landing_id: Optional[int] = None,
     campaign_id: Optional[int] = None,
@@ -23,6 +23,7 @@ async def create_landing_metric(
     country: Optional[str] = None,
     region: Optional[str] = None,
     city: Optional[str] = None,
+    event: Optional[str] = None,
 ) -> LandingMetric:
     db_metric = LandingMetric(
         landing_id=landing_id,
@@ -41,6 +42,7 @@ async def create_landing_metric(
         country=country,
         region=region,
         city=city,
+        event=event,
     )
     db.add(db_metric)
     db.commit()
