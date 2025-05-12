@@ -193,7 +193,7 @@ async def add_campaign_logo_route(
     campaign.logo_id = media.id
     db.commit()
 
-    return MediaGet(id=media.id, media_type=MediaType.CAMPAIGN_LOGO, public_path=media.public_path)
+    return MediaGet(media_id=media.id, media_type=MediaType.CAMPAIGN_LOGO, public_path=media.public_path)
 
 
 async def delete_campaign_logo_route(
