@@ -286,7 +286,7 @@ async def add_project_logo_route(
     project.logo_id = media.id
     db.commit()
 
-    return MediaGet(id=media.id, media_type=MediaType.PROJECT_LOGO, public_path=media.public_path)
+    return MediaGet(media_id=media.id, media_type=MediaType.PROJECT_LOGO, public_path=media.public_path)
 
 
 async def delete_project_logo_route(info: strawberry.Info[Context], project_id: int) -> ProjectGet:

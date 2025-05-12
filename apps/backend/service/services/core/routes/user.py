@@ -78,7 +78,7 @@ async def add_avatar_route(info: strawberry.Info[Context], file: UploadFile) -> 
     user.avatar_id = media.id
     db.commit()
 
-    return MediaGet(id=media.id, media_type=MediaType.USER_LOGO, public_path=media.public_path)
+    return MediaGet(media_id=media.id, media_type=MediaType.USER_LOGO, public_path=media.public_path)
 
 
 async def delete_avatar_route(info: strawberry.Info[Context]) -> UserGet:

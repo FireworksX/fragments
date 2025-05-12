@@ -8,8 +8,7 @@ authors = ["Vasily Kovalev <minskij10@gmail.com>"]
 python = ">=3.9,<3.13"
 # Base
 fastapi = {extras = ["full"], version = "^0.111.1"}
-#supabase-py-async = "*"
-strawberry-graphql = "^0.262.5"
+strawberry-graphql = { version = "^0.262.5", extras = ["fastapi"] } 
 pydantic-extra-types = "^2.10.3"
 
 user-agents= "^2.2.0"

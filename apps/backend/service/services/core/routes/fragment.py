@@ -214,7 +214,7 @@ async def add_fragment_asset_route(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='Failed to create media file'
         )
     await add_fragment_media_db(db, media.id, fragment_id)
-    return MediaGet(id=media.id, media_type=MediaType.FRAGMENT_ASSET, public_path=media.public_path)
+    return MediaGet(media_id=media.id, media_type=MediaType.FRAGMENT_ASSET, public_path=media.public_path)
 
 
 async def delete_fragment_asset_route(
