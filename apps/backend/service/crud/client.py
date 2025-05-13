@@ -19,7 +19,7 @@ async def get_client_by_id_db(db: Session, client_id: int) -> Optional[Client]:
 async def update_client_last_visited_db(db: Session, client_id: int) -> Client:
     client = await get_client_by_id_db(db, client_id)
     if client:
-        client.last_visited = datetime.now(UTC)
+        client.last_visited_at = datetime.now(UTC)
         db.commit()
         db.refresh(client)
     return client
@@ -63,6 +63,7 @@ async def create_client_history_db(
     db.add(history)
     db.commit()
     db.refresh(history)
+    await update_client_last_visited_db(db, client_id)
     return history
 
 

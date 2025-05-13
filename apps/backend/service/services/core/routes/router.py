@@ -77,7 +77,7 @@ from .stream import (
 from .user import add_avatar_route, delete_avatar_route, login, profile, refresh, signup
 from .metric import create_landing_metric, get_landing_metrics
 from .schemas.metric import LandingMetricGet, LandingMetricPost
-from .client import create_client_route, get_client_route, update_client_last_visited_route, create_client_history_route, get_client_history_route, init_client_session
+from .client import create_client_route, get_client_route, update_client_last_visited_route, get_client_history_route, init_client_session
 from .schemas.client import ClientGet, ClientHistoryGet, ClientHistoryInput
 
 @strawberry.type

@@ -423,7 +423,7 @@ class Client(Base):
     id = Column('id', Integer, primary_key=True, index=True)
     created_at = Column('created_at', DateTime, default=datetime.datetime.now(datetime.UTC))
     updated_at = Column('updated_at', DateTime, default=datetime.datetime.now(datetime.UTC), onupdate=datetime.datetime.now(datetime.UTC))
-    last_visited = Column('last_visited', DateTime, nullable=True)
+    last_visited_at = Column('last_visited_at', DateTime, nullable=True)
 
     # Relationships
     history = relationship('ClientHistory', back_populates='client')

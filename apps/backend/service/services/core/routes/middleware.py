@@ -148,6 +148,7 @@ class Context(BaseContext):
         user_id: Optional[str] = None
         if self.request.cookies:
             user_id = self.request.cookies.get('user_id')
+            print(f'user_id={user_id}')
             
         if user_id is None:
             return await create_client_db(self.session())
