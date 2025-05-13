@@ -12,6 +12,7 @@ import { LayerSchema } from "@/schemas/styles/LayerSchema";
 import { OverflowSchema } from "@/schemas/styles/fields/OverflowSchema";
 import { BorderRadiusSchema } from "@/schemas/styles/fields/BorderRadiusSchema";
 import { InteractionsSchema } from "@/schemas/InteractionsSchema";
+import { CssOverrideSchema } from "@/schemas/CssOverrideSchema";
 
 export const FrameSchema = v.pipe(
   v.object({
@@ -32,6 +33,7 @@ export const FrameSchema = v.pipe(
     ...SizeSchema.entries,
     ...LayerSchema.entries,
     ...InteractionsSchema.entries,
+    ...CssOverrideSchema.entries,
     overflow: OverflowSchema,
     borderRadius: BorderRadiusSchema,
   })

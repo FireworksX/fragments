@@ -72,7 +72,7 @@ const BuilderControls: FC<ControlsProps> = ({
   ].some(type => layerInfo.type === type)
   const hasText = [definition.nodes.Text].some(type => layerInfo.type === type)
   const hasImage = [definition.nodes.Image].some(type => layerInfo.type === type)
-  const hasCssOverride = [definition.nodes.Frame, definition.nodes.Breakpoint].some(type => layerInfo.type === type)
+  const hasCssOverride = [definition.nodes.Frame, definition.nodes.Text].some(type => layerInfo.type === type)
   const hasInstanceProps = [definition.nodes.Instance].some(type => layerInfo.type === type)
   const hasInteractions = [definition.nodes.Frame].some(type => layerInfo.type === type)
 

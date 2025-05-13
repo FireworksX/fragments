@@ -51,6 +51,7 @@ import { BuilderProvider } from '@/shared/providers/BuilderProvider'
 import { BuilderFragmentTabs } from '@/views/FragmentsBuilder/widgets/BuilderFragmentTabs'
 import BuilderInteractions from '@/widgets/fragmentBuilder/BuilderInteractions/ui/BuilderInteractions'
 import BuilderStackPanelEvent from '../../../widgets/fragmentBuilder/BuilderStackPanelEvent/ui/BuilderStackPanelEvent'
+import { BuilderCssOverride } from '@/widgets/fragmentBuilder/BuilderCssOverride'
 
 const FragmentsEditInitial = () => {
   // const { setRenderTarget } = useRenderTarget()
@@ -128,7 +129,7 @@ const FragmentsEditInitial = () => {
         interactionsNode={<BuilderInteractions />}
         imageNode={<BuilderImage />}
         attributesNode={<BuilderAttributes />}
-        // cssNode={<BuilderCssOverride />}
+        cssNode={<BuilderCssOverride />}
         instancePropsNode={<BuilderFragmentInstance />}
       />
     </div>
