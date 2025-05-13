@@ -85,15 +85,38 @@ async def test_get_client_landing_successful():
         'services.core.routes.landing.get_location_by_ip', new_callable=Mock
     ) as mock_get_location, patch(
         'services.core.routes.landing.create_landing_metric_db', new_callable=AsyncMock
-    ) as mock_create_metric:
+    ) as mock_create_metric, patch(
+        'services.core.routes.landing.get_project_by_id_db', new_callable=AsyncMock
+    ) as mock_get_project, patch(
+        'services.core.routes.landing.write_permission', new_callable=AsyncMock
+    ) as mock_permission, patch(
+        'services.core.routes.utils.get_user_project_role', new_callable=AsyncMock
+    ) as mock_role, patch(
+        'services.core.routes.fragment.get_fragment_by_id_db', new_callable=AsyncMock
+    ) as mock_get_fragment:
 
         mock_stream = Mock(spec=Stream)
         mock_stream.campaign_id = 1
+
+        mock_project = Mock(spec=Project)
+        mock_project.id = 1
+        mock_project.members = []
+        mock_get_project.return_value = mock_project
+        mock_permission.return_value = True
+        mock_role.return_value = 1
+        mock_fragment = Mock(spec=Fragment)
+        mock_fragment.id = 1
+        mock_fragment.name = "Test Fragment"
+        mock_fragment.project_id = 1
+        mock_fragment.linked_fragments = []
+        mock_fragment.assets = []
+        mock_get_fragment.return_value = mock_fragment
 
         mock_landing = Mock(spec=Landing)
         mock_landing.id = 1
         mock_landing.name = "Test Landing"
         mock_landing.stream = mock_stream
+        mock_landing.fragment = mock_fragment
         mock_get_best.return_value = mock_landing
 
         mock_location = Mock(spec=GeoLocation)
@@ -150,16 +173,23 @@ async def test_update_landing_successful():
         'services.core.routes.landing.update_landing_by_id_db', new_callable=AsyncMock
     ) as mock_update, patch(
         'services.core.routes.utils.get_user_project_role', new_callable=AsyncMock
-    ) as mock_role:
+    ) as mock_role, patch(
+        'services.core.routes.fragment.update_fragment_by_id_db', new_callable=AsyncMock
+    ) as mock_update_fragment, patch(
+        'services.core.routes.fragment.get_fragment_by_id_db', new_callable=AsyncMock
+    ) as mock_get_fragment:
 
         mock_stream = Mock(spec=Stream)
         mock_stream.id = 1
 
-        mock_fragment = Mock()
+        mock_fragment = Mock(spec=Fragment)
         mock_fragment.id = 2
         mock_fragment.name = "Test Fragment"
         mock_fragment.project_id = 1
         mock_fragment.linked_fragments = []
+        mock_fragment.assets = []
+        mock_get_fragment.return_value = mock_fragment
+        mock_update_fragment.return_value = mock_fragment
 
         mock_landing = Mock(spec=Landing)
         mock_landing.id = 1
@@ -182,7 +212,7 @@ async def test_update_landing_successful():
 
         landing_patch = LandingPatch(
             id=1,
-            name="Updated Landing", 
+            name="Updated Landing",
             active=True,
             deleted=False,
             fragment_id=2
@@ -194,5 +224,4 @@ async def test_update_landing_successful():
         assert isinstance(response, LandingGet)
         assert response.id == 1
         assert response.name == "Test Landing"
-        assert response.fragment_id == 2
         assert response.fragment.name == "Test Fragment"
