@@ -1,11 +1,11 @@
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 
 import { Entity, LinkKey } from '@graph-state/core'
 import { popoutsStore } from '@/shared/store/popouts.store'
 import { popoutNames } from '@/shared/data'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
-import { declareFragmentProperty } from '@fragments/render-core'
+import { declareFragmentProperty } from '@fragmentsx/render-core'
 
 export const FRAGMENT_PROPERTY_TYPES = [
   definition.variableType.Event,

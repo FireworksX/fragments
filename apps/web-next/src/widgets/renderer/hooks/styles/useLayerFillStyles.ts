@@ -1,7 +1,7 @@
 import { use, useMemo } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
-import { getFieldValue, getFieldValueMap, imagePaintScaleModes, paintMode } from '@fragments/plugin-fragment'
+import { getFieldValue, getFieldValueMap, imagePaintScaleModes, paintMode } from '@fragmentsx/plugin-fragment'
 import { LinkKey } from '@graph-state/core'
 import { to } from '@react-spring/web'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'

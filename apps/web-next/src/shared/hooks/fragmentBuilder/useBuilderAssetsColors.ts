@@ -7,7 +7,7 @@ import { popoutNames } from '@/shared/data'
 import { getRandomColor } from '@/shared/utils/random'
 import { getEntityName } from '@/shared/utils/getEntityName'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 
 export interface BuilderAssetsColorsOptions extends Partial<OpenPopoutOptions<'colorPicker'>> {
   initialColor?: Color

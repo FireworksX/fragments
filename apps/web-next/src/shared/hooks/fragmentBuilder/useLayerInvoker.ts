@@ -1,7 +1,7 @@
 import { SceneNode } from '../types'
 import { BuilderFieldOverrides, useBuilderFieldOverrides } from './useBuilderFieldOverrides'
 import { BuilderFieldVariable, useBuilderFieldVariable } from './useBuilderFieldVariable'
-import { isBrowser, omit } from '@fragments/utils'
+import { isBrowser, omit } from '@fragmentsx/utils'
 import { useGraph } from '@graph-state/react'
 import { GraphState, SetOptions } from '@graph-state/core'
 import { useContext } from 'react'

@@ -3,7 +3,7 @@ import { useCallback, useMemo } from 'react'
 import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
 import { useGraphStack } from '@graph-state/react'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
-import { pick } from '@fragments/utils'
+import { pick } from '@fragmentsx/utils'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 
 interface Options {

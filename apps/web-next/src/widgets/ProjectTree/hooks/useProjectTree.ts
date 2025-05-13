@@ -1,7 +1,7 @@
 import { createContext, use, useContext, useMemo, useState } from 'react'
 import { LinkKey } from '@graph-state/core'
 import { buildFolderStructure } from '../lib'
-import { createConstants } from '@fragments/utils'
+import { createConstants } from '@fragmentsx/utils'
 import { useProjectFiles } from '@/shared/hooks/useProjectFiles'
 import { useGraph } from '@graph-state/react'
 import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderManager'

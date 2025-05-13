@@ -4,7 +4,7 @@ import styles from './styles.module.css'
 import Checkerboard from '@/shared/icons/checkerboard.svg'
 import Close from '@/shared/icons/close.svg'
 import { animated, Interpolation } from '@react-spring/web'
-import { objectToColorString, rgbToHex } from '@fragments/utils'
+import { objectToColorString, rgbToHex } from '@fragmentsx/utils'
 import { Touchable } from '@/shared/ui/Touchable'
 import { useInterpolation } from '@/shared/hooks/useInterpolation'
 

@@ -1,5 +1,5 @@
 import { animatableValue } from '@/shared/utils/animatableValue'
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 
 const allowTypes = [definition.nodes.Frame]
 

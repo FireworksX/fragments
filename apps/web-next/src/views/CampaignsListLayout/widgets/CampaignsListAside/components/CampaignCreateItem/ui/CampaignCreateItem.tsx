@@ -4,7 +4,7 @@ import styles from './styles.module.css'
 import PlusIcon from '@/shared/icons/next/plus.svg'
 import { Touchable } from '@/shared/ui/Touchable'
 import { InputText } from '@/shared/ui/InputText'
-import { noop } from '@fragments/utils'
+import { noop } from '@fragmentsx/utils'
 import { Button } from '@/shared/ui/Button'
 import useClickOutside from '@/shared/hooks/useClickOutside'
 

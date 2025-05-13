@@ -1,6 +1,6 @@
 import { FC, PropsWithChildren } from 'react'
 import { HotkeysProvider } from 'react-hotkeys-hook'
-import { createConstants } from '@fragments/utils'
+import { createConstants } from '@fragmentsx/utils'
 
 export const hotKeysScope = createConstants('builder')
 

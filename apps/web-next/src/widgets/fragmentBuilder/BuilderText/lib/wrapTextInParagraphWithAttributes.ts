@@ -1,4 +1,4 @@
-import { isValue, toKebabCase } from '@fragments/utils'
+import { isValue, toKebabCase } from '@fragmentsx/utils'
 
 const allowAttributes = [
   'fontSize',

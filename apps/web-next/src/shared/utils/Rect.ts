@@ -1,4 +1,4 @@
-import { roundedNumber } from '@fragments/utils'
+import { roundedNumber } from '@fragmentsx/utils'
 
 export class Rect {
   static minX(rect: RectType) {

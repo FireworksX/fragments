@@ -1,8 +1,8 @@
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { useAllowResize } from '@/shared/hooks/fragmentBuilder/useAllowResize'
-import { isValue } from '@fragments/utils'
+import { isValue } from '@fragmentsx/utils'
 import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
 
 const DISABLE_UTILS: (keyof typeof definition.sizing)[] = [definition.sizing.Fill, definition.sizing.Hug]

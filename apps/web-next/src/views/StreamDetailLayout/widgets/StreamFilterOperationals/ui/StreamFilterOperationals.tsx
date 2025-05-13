@@ -10,7 +10,7 @@ import { DropdownOption } from '@/shared/ui/DropdownOption'
 import { Chip } from '@/shared/ui/Chip'
 import EditIcon from '@/shared/icons/next/pencil.svg'
 import { useStreamOperationalsFilterLazyQuery } from '../queries/StreamOperationalsFilter.generated'
-import { noop } from '@fragments/utils'
+import { noop } from '@fragmentsx/utils'
 
 interface StreamFilterOperationalsProps {
   value?: OsType[]

@@ -19,6 +19,9 @@ RUN pnpm install --frozen-lockfile --shamefully-hoist
 # Шаг 2: Билд
 FROM base AS builder
 WORKDIR /app
+ENV NODE_OPTIONS="--max-old-space-size=8192"
+
+RUN node -e "console.log('V8 memory limit:', require('v8').getHeapStatistics().heap_size_limit / 1024 / 1024 + 'MB')"
 
 # Копируем весь проект
 COPY . .
@@ -67,4 +70,4 @@ CMD ["node", "server.js"]
 ## Для standalone:
 #CMD ["node", "apps/web-next/.next/standalone/apps/web-next/server.js"]
 ## Для обычного режима:
-#CMD ["pnpm", "--filter", "@fragments/web-next", "start"]
+#CMD ["pnpm", "--filter", "@fragmentsx/web-next", "start"]

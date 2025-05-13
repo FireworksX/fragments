@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { DragEvent } from './useCanvas'
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 import { isPartialKey } from '@graph-state/core'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { getDomRect } from '@/shared/utils/getDomRect'

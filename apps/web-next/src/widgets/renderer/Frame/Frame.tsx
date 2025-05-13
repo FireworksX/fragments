@@ -2,7 +2,7 @@ import React, { CSSProperties, FC, memo, ReactNode, useCallback, useContext, use
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { animated, Interpolation, SpringValue, to, useSpring } from '@react-spring/web'
 import { Text } from '@/widgets/renderer/Text/Text'
-import { nodes } from '@fragments/plugin-fragment-spring'
+import { nodes } from '@fragmentsx/plugin-fragment-spring'
 import { LinkKey } from '@graph-state/core'
 import { FragmentInstance } from '@/widgets/renderer/FragmentInstance/FragmentInstance'
 import { useExtendStyle } from '@/widgets/renderer/hooks/useExtendStyle'

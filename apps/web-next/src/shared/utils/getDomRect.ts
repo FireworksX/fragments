@@ -1,5 +1,5 @@
 import { LinkKey } from '@graph-state/core'
-import { isBrowser } from '@fragments/utils'
+import { isBrowser } from '@fragmentsx/utils'
 
 export const getDomRect = (graphKey?: LinkKey) => {
   if (isBrowser) {

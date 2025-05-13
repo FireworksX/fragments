@@ -1,4 +1,4 @@
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 
 export const fieldsConfig = {
   opacity: {

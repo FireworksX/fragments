@@ -15,7 +15,7 @@ import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { InputSelect } from '@/shared/ui/InputSelect'
-import { objectToColorString } from '@fragments/utils'
+import { objectToColorString } from '@fragmentsx/utils'
 
 interface StackColorPropertyProps {
   className?: string

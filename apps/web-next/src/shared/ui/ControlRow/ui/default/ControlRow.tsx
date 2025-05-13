@@ -11,7 +11,7 @@ import { isVariableLink } from '@/shared/utils/isVariableLink'
 import { isComputedValueLink } from '@/shared/utils/isComputedValueLink'
 import { Touchable } from '@/shared/ui/Touchable'
 import { InputSelectVariable } from '@/shared/ui/InputSelectVariable'
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 interface BuilderControlRowProps extends PropsWithChildren {

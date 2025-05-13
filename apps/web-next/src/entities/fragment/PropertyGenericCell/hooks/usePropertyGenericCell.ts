@@ -5,10 +5,10 @@ import { useGraph } from '@graph-state/react'
 import { DropdownRenderOption } from '@/shared/ui/RenderDropdown'
 import { nextTick } from '@/shared/utils/nextTick'
 import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
-import { pick } from '@fragments/utils'
+import { pick } from '@fragmentsx/utils'
 
 export const usePropertyGenericCell = (propertyLink: LinkKey) => {
   const { createProperty, editProperty, deleteProperty } = useFragmentProperties()

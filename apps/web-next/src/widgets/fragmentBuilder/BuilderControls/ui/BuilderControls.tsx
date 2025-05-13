@@ -6,7 +6,7 @@ import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSe
 import BuilderFragmentInstance from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/BuilderFragmentInstance'
 import { Container } from '@/shared/ui/Container'
 import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 import BuilderInteractions from '@/widgets/fragmentBuilder/BuilderInteractions/ui/BuilderInteractions'
 
 interface ControlsProps extends AsideBarProps {

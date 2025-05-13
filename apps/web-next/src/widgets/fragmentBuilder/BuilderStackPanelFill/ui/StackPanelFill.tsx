@@ -12,8 +12,8 @@ import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSe
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { getRandomColor } from '@/shared/utils/random'
 import { SolidPaintStyles } from '@/entities/fragment/SolidPaintStyles'
-import { definition } from '@fragments/definition'
-import { colorToObject, objectToColorString } from '@fragments/utils'
+import { definition } from '@fragmentsx/definition'
+import { colorToObject, objectToColorString } from '@fragmentsx/utils'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 
 export interface StackPanelFillOptions {}
