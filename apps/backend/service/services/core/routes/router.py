@@ -62,7 +62,7 @@ from .schemas.campaign import CampaignGet, CampaignPatch, CampaignPost
 from .schemas.feedback import FeedbackGet, FeedbackPost
 from .schemas.filesystem import ProjectDirectory, ProjectDirectoryGet, ProjectDirectoryPatch
 from .schemas.fragment import FragmentGet, FragmentPatch, FragmentPost
-from .schemas.landing import ClientLanding, LandingGet, LandingPatch, LandingPost
+from .schemas.landing import ClientInfo, LandingGet, LandingPatch, LandingPost
 from .schemas.media import MediaDelete, MediaGet, MediaPost, MediaType
 from .schemas.project import ProjectGet, ProjectPatch, ProjectPost, ProjectGoalGet, ProjectGoalPost, ProjectGoalPatch
 from .schemas.stream import StreamGet, StreamPatch, StreamPost
@@ -77,6 +77,8 @@ from .stream import (
 from .user import add_avatar_route, delete_avatar_route, login, profile, refresh, signup
 from .metric import create_landing_metric, get_landing_metrics
 from .schemas.metric import LandingMetricGet, LandingMetricPost
+from .client import create_client_route, get_client_route, update_client_last_visited_route, create_client_history_route, get_client_history_route, init_client_session
+from .schemas.client import ClientGet, ClientHistoryGet, ClientHistoryInput
 
 @strawberry.type
 class Query:
@@ -396,3 +398,30 @@ class Mutation:
         return await create_landing_metric(info, metric)
 
     #### metric ####
+
+    #### client ####
+    # @strawberry.mutation
+    # async def create_client(self, info: strawberry.Info[Context]) -> ClientGet:
+    #     return await create_client_route(info)
+
+    # @strawberry.mutation
+    # async def get_client(self, info: strawberry.Info[Context], client_id: int) -> ClientGet:
+    #     return await get_client_route(info, client_id)
+
+    # @strawberry.mutation
+    # async def update_client_last_visited(self, info: strawberry.Info[Context], client_id: int) -> ClientGet:
+    #     return await update_client_last_visited_route(info, client_id)
+
+    # @strawberry.mutation
+    # async def create_client_history(self, info: strawberry.Info[Context], history: ClientHistoryInput) -> ClientHistoryGet:
+    #     return await create_client_history_route(info, history)
+
+    # @strawberry.mutation
+    # async def get_client_history(self, info: strawberry.Info[Context], client_id: int) -> List[ClientHistoryGet]:
+    #     return await get_client_history_route(info, client_id)
+    
+    @strawberry.field
+    async def init_client_session(self, info: strawberry.Info[Context]) -> None:
+        return await init_client_session(info)
+
+    #### client ####

@@ -11,13 +11,14 @@ from conf.settings import service_settings
 from crud.project import get_project_by_id_db, validate_project_public_api_key
 from crud.user import get_user_by_email_db
 from database import Session
-from database.models import Project, User
+from database.models import Project, User, Client
 from services.core.utils import create_access_token, create_refresh_token
 from services.dependencies import get_db
-
+from crud.client import get_client_by_id_db, create_client_db
 from .schemas.filter import DeviceType, OSType
-from .schemas.landing import ClientLanding
+from .schemas.landing import ClientInfo
 from .schemas.user import AuthPayload
+
 
 credentials_exception = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
@@ -109,7 +110,7 @@ class Context(BaseContext):
         else:
             return project
 
-    async def client_landing(self) -> ClientLanding:
+    async def client_info(self) -> ClientInfo:
         agent_header = self.request.headers.get('User-Agent', None)
         user_agent: UserAgentInfo = UserAgentInfo(agent_header)
 
@@ -122,13 +123,42 @@ class Context(BaseContext):
         print(
             f'os_type={user_agent.os_type}, device_type={user_agent.device_type}, time_frame={gmt_time}, page={page}, ip_address={user_ip}'
         )
-        return ClientLanding(
+        return ClientInfo(
             os_type=user_agent.os_type,
             device_type=user_agent.device_type,
             time_frame=gmt_time,
             page=page,
             ip_address=user_ip,
         )
+    
+    async def client(self) -> Client:
+        agent_header = self.request.headers.get('User-Agent', None)
+        user_agent: UserAgentInfo = UserAgentInfo(agent_header)
+        
+        user_ip: Optional[str] = self.request.headers.get('X-User-Ip', None)
+        if user_ip is None:
+            user_ip = self.request.headers.get('X-Forwarded-For', self.request.client.host)
+        
+        page: Optional[str] = self.request.headers.get('Referrer', None)
+        
+        print(
+            f'os_type={user_agent.os_type}, device_type={user_agent.device_type}, page={page}, ip_address={user_ip}'
+        )
+
+        user_id: Optional[str] = None
+        if self.request.cookies:
+            user_id = self.request.cookies.get('user_id')
+            
+        if user_id is None:
+            return await create_client_db(self.session())
+        else:
+            try:
+                return await get_client_by_id_db(self.session(), int(user_id))
+            except:
+                raise HTTPException(status_code=400, detail="Invalid user_id format")
+        
+        
+        
 
     async def refresh_user(self) -> AuthPayload | None:
         if not self.request:

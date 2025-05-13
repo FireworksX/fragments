@@ -10,7 +10,7 @@ from services.core.routes.landing import (
     update_landing_route,
     get_client_landing
 )
-from services.core.routes.schemas.landing import LandingGet, LandingPatch, LandingPost, ClientLanding
+from services.core.routes.schemas.landing import LandingGet, LandingPatch, LandingPost, ClientInfo
 from database import Landing, Stream, Project, Fragment
 from crud.ipgetter import GeoLocation
 

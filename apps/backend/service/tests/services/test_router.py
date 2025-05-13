@@ -211,7 +211,7 @@ async def test_query_client_landing():
         
         query = Query()
         info = mock_info()
-        result = await query.client_landing(info)
+        result = await query.client_info(info)
         
         assert result == mock_land
         mock_landing.assert_called_once_with(info)
