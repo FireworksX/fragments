@@ -2,9 +2,17 @@ from typing import List, Optional, Union
 
 import strawberry
 
-from services.core.routes.schemas.filter import FilterOSTypePost, FilterPagePost, FilterPageGet, FilterTimeFrameGet, \
-    FilterTimeFramePost, FilterDeviceTypePost, FilterOSTypeGet, FilterDeviceTypeGet, FilterGeoLocationGet, \
-    FilterGeoLocationPost
+from services.core.routes.schemas.filter import (
+    DeviceType,
+    FilterDeviceTypeGet,
+    FilterGeoLocationPost,
+    FilterGeoLocationsGet,
+    FilterOSTypeGet,
+    FilterPageGet,
+    FilterTimeFramePost,
+    FilterTimeFramesGet,
+    OSType,
+)
 
 
 @strawberry.type
@@ -15,16 +23,25 @@ class StreamGet:
     deleted: bool
     name: str
     filters: List[
-        Union[FilterOSTypeGet | FilterDeviceTypeGet | FilterPageGet | FilterGeoLocationGet | FilterTimeFrameGet]]
+        Union[
+            FilterOSTypeGet
+            | FilterDeviceTypeGet
+            | FilterPageGet
+            | FilterGeoLocationsGet
+            | FilterTimeFramesGet
+        ]
+    ]
     weight: float
+
 
 @strawberry.input
 class FiltersPost:
-    os_types: Optional[List[FilterOSTypePost]] = None
-    device_types: Optional[List[FilterDeviceTypePost]] = None
-    geolocations: Optional[List[FilterGeoLocationPost]] = None
-    time_frames: Optional[List[FilterTimeFramePost]] = None
-    pages: Optional[List[FilterPagePost]] = None
+    os_types: List[OSType]
+    device_types: List[DeviceType]
+    geolocations: List[FilterGeoLocationPost]
+    time_frames: List[FilterTimeFramePost]
+    pages: List[str]
+
 
 @strawberry.input
 class StreamPost:
@@ -39,7 +56,6 @@ class StreamPost:
 @strawberry.input
 class StreamPatch:
     id: int
-    campaign_id: int
     active: Optional[bool] = None
     deleted: Optional[bool] = None
     name: Optional[str] = None

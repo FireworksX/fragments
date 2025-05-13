@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import List, Optional
 
 import strawberry
 
@@ -25,7 +25,7 @@ class ProjectDirectoryGet:
     name: str
     parent_id: Optional[int] = None
     project_id: int
-    fragments: List[FragmentGet] # flat list of all fragments
+    fragments: List[FragmentGet]  # flat list of all fragments
 
     has_subdirectories: bool = False
     has_fragments: bool = False

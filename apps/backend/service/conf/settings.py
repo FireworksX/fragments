@@ -25,16 +25,23 @@ if RUN_LEVEL == Level.DEV:
 
 class ServiceSettings(BaseSettings):
     MAX_LIMIT: int = 20
-    TELEGRAM_BOT_TOKEN: str = Field(default_factory=lambda: os.getenv("TELEGRAM_BOT_TOKEN"))
-    TELEGRAM_CHAT_ID: str = Field(default_factory=lambda: os.getenv("TELEGRAM_CHAT_ID"))
-    ACCESS_TOKEN_EXPIRE_TIME_MINUTES: float = Field(default_factory=lambda: os.getenv("ACCESS_TOKEN_EXPIRE_TIME_MINUTES"))
-    ACCESS_TOKEN_SECRET_KEY: str = Field(default_factory=lambda: os.getenv("ACCESS_TOKEN_SECRET_KEY"))
-    ALGORITHM: str = Field(default_factory=lambda: os.getenv("ALGORITHM"))
+    TELEGRAM_BOT_TOKEN: str = Field(default_factory=lambda: os.getenv('TELEGRAM_BOT_TOKEN'))
+    TELEGRAM_CHAT_ID: str = Field(default_factory=lambda: os.getenv('TELEGRAM_CHAT_ID'))
+    ACCESS_TOKEN_EXPIRE_TIME_MINUTES: float = Field(
+        default_factory=lambda: os.getenv('ACCESS_TOKEN_EXPIRE_TIME_MINUTES')
+    )
+    ACCESS_TOKEN_SECRET_KEY: str = Field(
+        default_factory=lambda: os.getenv('ACCESS_TOKEN_SECRET_KEY')
+    )
+    ALGORITHM: str = Field(default_factory=lambda: os.getenv('ALGORITHM'))
     REFRESH_TOKEN_EXPIRE_TIME_MINUTES: float = Field(
-        default_factory=lambda: os.getenv("REFRESH_TOKEN_EXPIRE_TIME_MINUTES"))
-    REFRESH_TOKEN_SECRET_KEY: str = Field(default_factory=lambda: os.getenv("REFRESH_TOKEN_SECRET_KEY"))
-    MEDIA_STORAGE_PATH: str = Field(default_factory=lambda: os.getenv("MEDIA_STORAGE_PATH"))
-    STATIC_SERVER_URL: str = Field(default_factory=lambda: os.getenv("STATIC_SERVER_URL"))
+        default_factory=lambda: os.getenv('REFRESH_TOKEN_EXPIRE_TIME_MINUTES')
+    )
+    REFRESH_TOKEN_SECRET_KEY: str = Field(
+        default_factory=lambda: os.getenv('REFRESH_TOKEN_SECRET_KEY')
+    )
+    MEDIA_STORAGE_PATH: str = Field(default_factory=lambda: os.getenv('MEDIA_STORAGE_PATH'))
+    STATIC_SERVER_URL: str = Field(default_factory=lambda: os.getenv('STATIC_SERVER_URL'))
 
 
 service_settings = ServiceSettings()
@@ -56,11 +63,11 @@ pg_settings = PostgresSettings()
 
 def uri_maker(conf_object, driver):
     def make_uri(
-            user: Optional[str] = conf_object.USER,
-            password: Optional[str] = conf_object.PASSWORD,
-            host: str = conf_object.HOST,
-            port: str = conf_object.PORT,
-            db: Optional[str] = getattr(conf_object, 'NAME', None),
+        user: Optional[str] = conf_object.USER,
+        password: Optional[str] = conf_object.PASSWORD,
+        host: str = conf_object.HOST,
+        port: str = conf_object.PORT,
+        db: Optional[str] = getattr(conf_object, 'NAME', None),
     ) -> str:
         if user:
             if password:

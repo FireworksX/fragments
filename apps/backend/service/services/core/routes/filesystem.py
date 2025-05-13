@@ -1,17 +1,22 @@
 from typing import List, Tuple
-from fastapi import HTTPException, status
-import strawberry
 
-from crud.filesystem import create_directory_db, get_directory_by_id_db, \
-    delete_directory_db, update_directory_db
+import strawberry
+from fastapi import HTTPException, status
+
+from crud.filesystem import (
+    create_directory_db,
+    delete_directory_db,
+    get_directory_by_id_db,
+    update_directory_db,
+)
 from crud.project import get_project_by_id_db
-from database import Session, Project, FilesystemDirectory, Fragment
-from .schemas.filesystem import ProjectDirectory, ProjectDirectoryGet, ProjectDirectoryPatch
-from .schemas.user import RoleGet, AuthPayload
-from .middleware import Context
-from .utils import get_user_role_in_project
+from database import FilesystemDirectory, Fragment, Project, Session
 
 from .fragment import fragment_db_to_fragment
+from .middleware import Context
+from .schemas.filesystem import ProjectDirectory, ProjectDirectoryGet, ProjectDirectoryPatch
+from .schemas.user import AuthPayload, RoleGet
+from .utils import get_user_role_in_project
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
@@ -33,7 +38,7 @@ def gather_all_subdirectories(directory: FilesystemDirectory) -> List[Filesystem
 
 
 def directory_db_to_directory_flat(
-        directory: FilesystemDirectory,
+    directory: FilesystemDirectory,
 ) -> List[ProjectDirectoryGet]:
     directories = []
     # Convert the root directory:
@@ -44,7 +49,7 @@ def directory_db_to_directory_flat(
         project_id=directory.project_id,
         fragments=[fragment_db_to_fragment(frag) for frag in directory.fragments],
         has_subdirectories=bool(directory.subdirectories),
-        has_fragments=bool(directory.fragments)
+        has_fragments=bool(directory.fragments),
     )
     directories.append(root_directory)
 
@@ -60,49 +65,59 @@ def directory_db_to_directory_flat(
             project_id=subdir.project_id,
             fragments=[fragment_db_to_fragment(frag) for frag in subdir.fragments],
             has_subdirectories=bool(subdir.subdirectories),
-            has_fragments=bool(subdir.fragments)
+            has_fragments=bool(subdir.fragments),
         )
         directories.append(subdir_get)
 
     return directories
 
 
-async def create_directory_route(info: strawberry.Info[Context], directory: ProjectDirectory) -> list[
-    ProjectDirectoryGet]:
+async def create_directory_route(
+    info: strawberry.Info[Context], directory: ProjectDirectory
+) -> list[ProjectDirectoryGet]:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
     project: Project = await get_project_by_id_db(db, directory.project_id)
     if project is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
 
     permission: bool = await write_permission(db, user.user.id, directory.project_id)
     if not permission:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail=f'User is not allowed to create directories')
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f'User is not allowed to create directories',
+        )
 
-    directory_db: FilesystemDirectory = await create_directory_db(db, directory.parent_id, directory.name,
-                                                                  directory.project_id)
+    directory_db: FilesystemDirectory = await create_directory_db(
+        db, directory.parent_id, directory.name, directory.project_id
+    )
 
     return directory_db_to_directory_flat(directory_db)
 
 
-async def get_directory(info: strawberry.Info[Context], directory_id: int) -> list[ProjectDirectoryGet]:
+async def get_directory(
+    info: strawberry.Info[Context], directory_id: int
+) -> list[ProjectDirectoryGet]:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
     directory_db: FilesystemDirectory = await get_directory_by_id_db(db, directory_id)
     if directory_db is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Directory does not exist")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail='Directory does not exist'
+        )
 
     project: Project = await get_project_by_id_db(db, directory_db.project_id)
     if project is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
 
     permission: bool = await write_permission(db, user.user.id, directory_db.project_id)
     if not permission:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail=f'User is not allowed to observe directories')
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f'User is not allowed to observe directories',
+        )
 
     return directory_db_to_directory_flat(directory_db)
 
@@ -114,18 +129,24 @@ async def delete_directory_route(info: strawberry.Info[Context], directory_id: i
 
     directory: FilesystemDirectory = await get_directory_by_id_db(db, directory_id)
     if directory is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Directory does not exist")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail='Directory does not exist'
+        )
 
     project: Project = await get_project_by_id_db(db, directory.project_id)
     if project is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
 
     permission: bool = await write_permission(db, user.user.id, directory.project_id)
     if not permission:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail=f'User is not allowed to delete directories')
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f'User is not allowed to delete directories',
+        )
     if directory_id == project.root_directory_id:
-        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail="Could not delete root directory")
+        raise HTTPException(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE, detail='Could not delete root directory'
+        )
 
     try:
         await delete_directory_db(db, directory_id)
@@ -133,23 +154,28 @@ async def delete_directory_route(info: strawberry.Info[Context], directory_id: i
         raise HTTPException(status_code=409, detail=str(e))
 
 
-async def update_directory_route(info: strawberry.Info[Context],
-                                 directory: ProjectDirectoryPatch) -> list[ProjectDirectoryGet]:
+async def update_directory_route(
+    info: strawberry.Info[Context], directory: ProjectDirectoryPatch
+) -> list[ProjectDirectoryGet]:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
     directory_db: FilesystemDirectory = await get_directory_by_id_db(db, directory.id)
     if directory_db is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Directory does not exist")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail='Directory does not exist'
+        )
 
     project: Project = await get_project_by_id_db(db, directory_db.project_id)
     if project is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project does not exist")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
 
     permission: bool = await write_permission(db, user.user.id, directory_db.project_id)
     if not permission:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail=f'User is not allowed to update directories')
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f'User is not allowed to update directories',
+        )
 
     directory_db: FilesystemDirectory = await update_directory_db(db, directory.__dict__)
     return directory_db_to_directory_flat(directory_db)

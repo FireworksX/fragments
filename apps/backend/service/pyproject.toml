@@ -8,8 +8,7 @@ authors = ["Vasily Kovalev <minskij10@gmail.com>"]
 python = ">=3.9,<3.13"
 # Base
 fastapi = {extras = ["full"], version = "^0.111.1"}
-#supabase-py-async = "*"
-strawberry-graphql = "^0.262.5"
+strawberry-graphql = { version = "^0.262.5", extras = ["fastapi"] } 
 pydantic-extra-types = "^2.10.3"
 
 user-agents= "^2.2.0"
@@ -43,12 +42,12 @@ kagglehub = "0.3.4"
 
 [tool.poetry.dev-dependencies]
 # Lint
-black = {version = "^19.10b0", allow-prereleases = true}
-pylint = "^2.3"
+black = "25.1.0"
+pylint = "^3.3.6"
 isort = "^4.3"
 unify = "^0.5.0"
 # Typings
-mypy = "1.11.0"
+mypy = "1.15.0"
 # Test
 pytest-mock = "^1.13"
 

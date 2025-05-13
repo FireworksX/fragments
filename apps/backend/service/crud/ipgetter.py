@@ -9,6 +9,25 @@ class GeoLocation:
 
 
 def get_location_by_ip(ip_address: str) -> GeoLocation:
-    response = requests.get(f'http://ip-api.com/json/{ip_address}')
-    data = response.json()
-    return GeoLocation(city=data['city'], region=data['regionName'], country=data['country'])
+    try:
+        response = requests.get(f'http://ip-api.com/json/{ip_address}')
+        response.raise_for_status()  # Raises an HTTPError for bad responses
+        data = response.json()
+        
+        # Check if required fields exist in response
+        if not all(key in data for key in ['city', 'regionName', 'country']):
+            raise KeyError("Missing required location data fields")
+            
+        return GeoLocation(
+            city=data['city'],
+            region=data['regionName'], 
+            country=data['country']
+        )
+    except requests.RequestException as e:
+        # Handle network/HTTP errors
+        print(f"Error making request to IP API: {str(e)}")
+        return GeoLocation(city="", region="", country="")
+    except (KeyError, ValueError) as e:
+        # Handle JSON parsing or missing data errors
+        print(f"Error parsing location data: {str(e)}")
+        return GeoLocation(city="", region="", country="")
