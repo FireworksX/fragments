@@ -344,11 +344,11 @@ async def update_project_goal_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    goal: ProjectGoal = await get_project_goal_by_id_db(db, goal.id)
-    if goal is None:
+    goal_db: ProjectGoal = await get_project_goal_by_id_db(db, goal.id)
+    if goal_db is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Goal does not exist')
 
-    permission: bool = await write_permission(db, user.user.id, goal.project_id)
+    permission: bool = await write_permission(db, user.user.id, goal_db.project_id)
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

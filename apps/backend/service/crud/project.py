@@ -200,6 +200,7 @@ async def get_project_goals_db(db: Session, project_id: int) -> List[ProjectGoal
 async def update_project_goal_db(
     db: Session, goal_id: int, name: Optional[str] = None, target_action: Optional[str] = None
 ) -> ProjectGoal:
+    print(f"Updating goal {goal_id} with name {name} and target_action {target_action}")
     goal = await get_project_goal_by_id_db(db, goal_id)
     if name is not None:
         goal.name = name
