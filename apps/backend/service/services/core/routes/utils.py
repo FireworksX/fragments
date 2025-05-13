@@ -19,7 +19,6 @@ def transform_project_members(project: Project) -> List[UserRoleGet]:
     res: List[UserRoleGet] = []
     for member in project.members:
         data = member.user.__dict__
-        print(data)
         data['role'] = RoleGet(member.role)
         res.append(UserRoleGet(**data))
     return res
@@ -27,5 +26,4 @@ def transform_project_members(project: Project) -> List[UserRoleGet]:
 
 def transform_project_owner(project: Project) -> UserGet:
     data = project.owner.__dict__
-    print(data)
     return UserGet(**data)
