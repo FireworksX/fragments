@@ -7,7 +7,6 @@ import strawberry
 from fastapi import HTTPException, UploadFile, status
 
 from conf import service_settings
-from crud.bucket import add_file, delete_file
 from crud.campaign import get_campaign_by_id_db
 from crud.media import create_media_db, delete_media_by_id_db
 from crud.project import (

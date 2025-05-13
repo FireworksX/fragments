@@ -6,7 +6,6 @@ from fastapi import HTTPException, UploadFile, status
 from thefuzz import fuzz, process
 
 from conf import service_settings
-from crud.bucket import add_file, delete_file
 from crud.campaign import (
     create_campaign_db,
     delete_campaign_by_id_db,
