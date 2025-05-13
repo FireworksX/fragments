@@ -5,18 +5,29 @@ import { OverridesSchema } from "@/schemas/OverridesSchema";
 import { PositionSchema } from "@/schemas/styles/PositionSchema";
 import { SceneSchema } from "@/schemas/styles/SceneSchema";
 import { SizeSchema } from "@/schemas/styles/SizeSchema";
+import { whiteSpace } from "@/constants";
 
 export const TextSchema = v.object({
   name: layerField(v.string(), { fallback: "Text", overridable: false }),
   content: layerField(v.string(), {
     fallback: "",
   }),
+  whiteSpace: layerField(v.enum(Object.keys(whiteSpace)), {
+    fallback: whiteSpace.pre,
+  }),
   variableContent: layerField(v.string(), { fallback: null, variable: true }),
+  parent: layerField(v.nullable(v.string()), { overridable: false }),
   attributes: layerField(
     v.object({
       fontSize: layerField(v.string(), { fallback: "14px" }),
       color: layerField(v.string(), { fallback: "#000" }),
       lineHeight: layerField(v.string(), { fallback: "14px" }),
+      fontWeight: layerField(v.string(), { fallback: "normal" }),
+      letterSpacing: layerField(v.string(), { fallback: "0px" }),
+      textTransform: layerField(v.string(), { fallback: "none" }),
+      textDecoration: layerField(v.string(), { fallback: "none" }),
+      whiteSpace: layerField(v.string(), { fallback: "pre" }),
+      textAlign: layerField(v.string(), { fallback: "left" }),
     }),
     { fallback: {} }
   ),

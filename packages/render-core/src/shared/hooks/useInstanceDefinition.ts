@@ -6,10 +6,10 @@ export const useInstanceDefinition = (
   manager: GraphState,
   layerKey: LinkKey
 ) => {
-  const { getFragmentManager } = useGlobalManager();
+  const { queryFragmentManager } = useGlobalManager();
   const instanceLayer = manager.resolve(layerKey);
   const instanceFragmentId = instanceLayer?.fragment;
-  const instanceFragmentManager = getFragmentManager(instanceFragmentId);
+  const instanceFragmentManager = queryFragmentManager(instanceFragmentId);
   const [instanceFragment] = useGraph(
     instanceFragmentManager,
     instanceFragmentManager?.$fragment?.root

@@ -28,7 +28,7 @@ const StackPanelColorPicker: FC<StackPanelColorPickerProps> = ({ className }) =>
   const { documentManager } = useBuilderDocument()
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.colorPicker}`)
   const context = popout.context ?? {}
-  const { getColor } = useDisplayColor(documentManager)
+  // const { getColor } = useDisplayColor(documentManager)
   const [color] = useGraph(documentManager, context?.value)
   const resColor = color ?? context?.value
 
@@ -44,7 +44,7 @@ const StackPanelColorPicker: FC<StackPanelColorPickerProps> = ({ className }) =>
     <div className={cn(styles.root, className)}>
       <Panel>
         <ColorPicker
-          color={getColor(resColor)}
+          color={resColor}
           onChange={color => {
             if (color && context?.onChange) {
               updateColor(color.rgb)

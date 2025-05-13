@@ -1,12 +1,13 @@
 .root {
     width: var(--builder-size-left-bar);
+    min-width: var(--builder-size-left-bar);
     background: var(--background);
     display: flex;
     flex-direction: column;
     gap: var(--gutter-medium);
     padding-block: var(--gutter-default);
     border-right: 1px solid var(--border);
-    z-index: var(--z-index-navigation);
+    z-index: var(--z-index-builder-sidebar);
 }
 
 

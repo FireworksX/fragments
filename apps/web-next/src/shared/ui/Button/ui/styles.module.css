@@ -12,6 +12,7 @@
 
         &.primary {
             background-color: var(--primary);
+            --glow-color: var(--primary);
             color: var(--light);
 
             &:active {
@@ -156,6 +157,12 @@
         &.loading {
 
         }
+
+        &.glowing {
+            box-shadow: 0 0 3px 0 var(--glow-color);
+
+            /*animation: glowing 5s infinite linear;*/
+        }
     }
 
     .suffix {
@@ -192,6 +199,24 @@
 
         .body {
             opacity: 0;
+        }
+    }
+
+    @keyframes glowing {
+        0% {
+            box-shadow: 2px 0 3px 0 var(--glow-color);
+        }
+        25% {
+            box-shadow: 0 2px 3px 0 var(--glow-color);
+        }
+        50% {
+            box-shadow: -2px 0 3px 0 var(--glow-color);
+        }
+        75% {
+            box-shadow: 0 -2px 3px 0 var(--glow-color);
+        }
+        100% {
+            box-shadow: 2px 0 3px 0 var(--glow-color);
         }
     }
 }

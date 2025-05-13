@@ -1,6 +1,6 @@
 import { Entity, GraphState } from "@graph-state/core";
 import { getOverrider } from "@/shared/helpers/getOverrider.ts";
-import { isValue } from "@fragments/utils";
+import { isValue } from "@fragmentsx/utils";
 
 export const isInheritField = (
   manager: GraphState,

@@ -8,8 +8,8 @@ interface BuilderSizePositionControlProps {
 }
 
 export const BuilderSizePositionControl: FC<BuilderSizePositionControlProps> = ({ className }) => {
-  const [top, setTop, topInfo] = useLayerValue('top')
-  const [left, setLeft, leftInfo] = useLayerValue('left')
+  const [_top, setTop, topInfo] = useLayerValue('top')
+  const [_left, setLeft, leftInfo] = useLayerValue('left')
 
   return (
     <ControlRow
@@ -23,8 +23,8 @@ export const BuilderSizePositionControl: FC<BuilderSizePositionControlProps> = (
         }
       }}
     >
-      <InputNumber suffix='x' value={left} min={Infinity} max={Infinity} onChange={setLeft} />
-      <InputNumber suffix='y' value={top} min={Infinity} max={Infinity} onChange={setTop} />
+      <InputNumber suffix='x' value={leftInfo.value$} min={Infinity} max={Infinity} onChange={setLeft} />
+      <InputNumber suffix='y' value={topInfo.value$} min={Infinity} max={Infinity} onChange={setTop} />
     </ControlRow>
   )
 }

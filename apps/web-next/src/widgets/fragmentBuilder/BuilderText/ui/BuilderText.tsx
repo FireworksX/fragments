@@ -13,26 +13,18 @@ import { Stepper } from '@/shared/ui/Stepper'
 import { TabsSelector } from '@/shared/ui/TabsSelector'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { InputText } from '@/shared/ui/InputText'
+import { useBuilderTextBase } from '@/widgets/fragmentBuilder/BuilderText/hooks/useBuilderTextBase'
 
 interface BuilderTextProps {
   className?: string
 }
 
 const BuilderText: FC<BuilderTextProps> = ({ className }) => {
-  const {
-    isTextEditing,
-    weight,
-    content,
-    color,
-    align,
-    fontSize,
-    whiteSpace,
-    lineHeight,
-    letterSpacing,
-    transform,
-    decoration
-  } = useBuilderText()
+  const { weight, content, color, align, fontSize, whiteSpace, lineHeight, letterSpacing, transform, decoration } =
+    useBuilderTextBase()
   const { getColor, getNameColor } = useDisplayColor()
+
+  console.log(whiteSpace)
 
   return (
     <Panel className={className} title='Text'>
@@ -42,22 +34,20 @@ const BuilderText: FC<BuilderTextProps> = ({ className }) => {
       {/*  </BuilderControlRowWide>*/}
       {/*</BuilderControlRow>*/}
 
-      {!isTextEditing && (
-        <ControlRow
-          title='Content'
-          hasConnector={!content.disabled}
-          value={content.value}
-          variable={{
-            link: content.variableLink,
-            actions: content.actions,
-            onReset: content.resetVariable
-          }}
-        >
-          <ControlRowWide>
-            <InputText value={content.textContent} onChangeValue={content.update} />
-          </ControlRowWide>
-        </ControlRow>
-      )}
+      <ControlRow
+        title='Content'
+        hasConnector={!content.disabled}
+        value={content.value}
+        variable={{
+          link: content.variableLink,
+          actions: content.actions,
+          onReset: content.resetVariable
+        }}
+      >
+        <ControlRowWide>
+          <InputText value={content.value} onChangeValue={content.update} />
+        </ControlRowWide>
+      </ControlRow>
 
       {/*<BuilderControlRow title='Font'>*/}
       {/*  <BuilderControlRowWide>*/}

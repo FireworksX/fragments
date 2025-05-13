@@ -269,17 +269,59 @@ var injectLink = (options) => {
 };
 
 // src/debounce.ts
-function debounce(func, timeout = 300) {
-  let timer;
-  return (...args) => {
-    if (!timer) {
-      func.apply(this, args);
+function debounce(func, wait, immediate = false) {
+  let timeoutId = null;
+  let lastArgs = null;
+  let lastThis;
+  let result;
+  let lastCallTime = null;
+  const later = () => {
+    const timeSinceLastCall = Date.now() - (lastCallTime || 0);
+    if (timeSinceLastCall < wait && timeSinceLastCall >= 0) {
+      timeoutId = setTimeout(later, wait - timeSinceLastCall);
+    } else {
+      if (!immediate) {
+        result = func.apply(lastThis, lastArgs);
+      }
+      timeoutId = null;
+      lastArgs = null;
+      lastThis = null;
     }
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      timer = void 0;
-    }, timeout);
   };
+  const debounced = function(...args) {
+    lastCallTime = Date.now();
+    lastArgs = args;
+    lastThis = this;
+    const callNow = immediate && !timeoutId;
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    timeoutId = setTimeout(later, wait);
+    if (callNow) {
+      result = func.apply(lastThis, lastArgs);
+    }
+    return result;
+  };
+  debounced.cancel = () => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    timeoutId = null;
+    lastArgs = null;
+    lastThis = null;
+  };
+  debounced.flush = () => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+      timeoutId = null;
+      const res = func.apply(lastThis, lastArgs);
+      lastArgs = null;
+      lastThis = null;
+      return res;
+    }
+    return result;
+  };
+  return debounced;
 }
 
 // src/isBrowser.ts
@@ -366,6 +408,22 @@ function positiveValue(value) {
   return 0;
 }
 
+// src/keys.ts
+var setKey = (v) => `$${v}`;
+var getKey = (v) => isKey(v) ? v.slice(1) : null;
+var isKey = (v) => typeof v === "string" && v.startsWith("$");
+
+// src/hashGenerator.ts
+function hashGenerator(layerKey) {
+  let hash = 0;
+  for (let i = 0; i < layerKey.length; i++) {
+    hash = (hash << 5) - hash + layerKey.charCodeAt(i);
+    hash |= 0;
+  }
+  const raw = Math.abs(hash).toString(36);
+  return /^[0-9]/.test(raw) ? `h${raw}` : raw;
+}
+
 // src/roundedNumber.ts
 function roundedNumber(value, decimals = 0) {
   const d = Math.round(Math.abs(decimals));
@@ -397,6 +455,8 @@ export {
   fromPx,
   generateId,
   get,
+  getKey,
+  hashGenerator,
   hexToRgb,
   injectLink,
   isAbsoluteUrl,
@@ -404,6 +464,7 @@ export {
   isEmptyValue,
   isFiniteNumber,
   isHTMLNode,
+  isKey,
   isObject,
   isPrimitive,
   isValue,
@@ -423,6 +484,7 @@ export {
   roundedNumber,
   roundedNumberString,
   set,
+  setKey,
   times,
   toKebabCase,
   toLongHex,

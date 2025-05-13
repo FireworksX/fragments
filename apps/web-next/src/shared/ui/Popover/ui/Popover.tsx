@@ -1,8 +1,8 @@
 'use client'
-import { ComponentRef, ElementRef, FC, PropsWithChildren, ReactNode, useRef } from 'react'
+import { ComponentRef, FC, PropsWithChildren, ReactNode, useRef } from 'react'
 import Tippy, { TippyProps } from '@tippyjs/react'
-import 'tippy.js/dist/tippy.css'
-import { isBrowser } from '@fragments/utils'
+import { isBrowser } from '@fragmentsx/utils'
+import './styles.css'
 
 export interface PopoverProps extends TippyProps, PropsWithChildren {
   appendTo?: TippyProps['appendTo'] | 'body'

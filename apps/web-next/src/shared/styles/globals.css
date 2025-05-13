@@ -1,4 +1,5 @@
 @import "./reboot.css";
+@layer lib, reset, ui;
 
 :root {
     --light: #F6F6F6;
@@ -48,8 +49,8 @@
 
     --background: #FEFEFE;
     --background--rgb: 254, 254, 254;
-    --background-secondary: #F3F3F3;
-    --background-secondary--rgb: 243, 243, 243;
+    --background-secondary: #f8f8f8;
+    --background-secondary--rgb: 248, 248, 248;
     --background-light: #faf9f9;
     --background-light--rgb: 250, 249, 249;
 
@@ -64,8 +65,8 @@
     --link-hover: #0363d3;
     --link-active: #004dab;
 
-    --app-size-header: 51px;
-    --app-size-navigation: 42px;
+    --app-size-header: 50px;
+    --app-size-navigation: 40px;
     --app-size-tabs-height: 40px;
     --builder-size-left-bar: 270px;
     --builder-size-right-bar: 260px;
@@ -80,9 +81,10 @@
     --z-index-builder-tools: 5;
     --z-index-builder-rich-text: 5;
     --z-index-builder-sidebar: 6;
+    --z-index-builder-tabs: 6;
 
-    --gutter-default: 15px;
-    --gutter-medium: 10px;
+    --gutter-default: 16px;
+    --gutter-medium: 8px;
     --gutter-small: 5px;
 
     --animation-transition-default: .3s;

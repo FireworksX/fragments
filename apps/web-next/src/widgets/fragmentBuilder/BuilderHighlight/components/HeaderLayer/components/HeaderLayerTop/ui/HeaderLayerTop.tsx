@@ -15,7 +15,8 @@ interface HeaderLayerTopProps {
 }
 
 export const HeaderLayerTop: FC<HeaderLayerTopProps> = memo(({ layerKey }) => {
-  const { name, selected, allowedBreakpoints, thresholdLabel, addBreakpoint } = useHeaderLayerTop(layerKey)
+  const { name, selected, handleCreateCustomBreakpoint, allowedBreakpoints, thresholdLabel, addBreakpoint } =
+    useHeaderLayerTop(layerKey)
 
   return (
     <div
@@ -47,7 +48,7 @@ export const HeaderLayerTop: FC<HeaderLayerTopProps> = memo(({ layerKey }) => {
               ))}
             </DropdownGroup>
             <DropdownGroup>
-              <DropdownOption>Custom</DropdownOption>
+              <DropdownOption onClick={handleCreateCustomBreakpoint}>Custom</DropdownOption>
             </DropdownGroup>
           </>
         }

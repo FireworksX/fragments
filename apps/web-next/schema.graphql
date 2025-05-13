@@ -5,7 +5,7 @@ schema {
     mutation: Mutation
 }
 
-union FilterOSTypeGetFilterDeviceTypeGetFilterPageGetFilterGeoLocationGetFilterTimeFrameGet = FilterDeviceTypeGet | FilterGeoLocationGet | FilterOSTypeGet | FilterPageGet | FilterTimeFrameGet
+union FilterOSTypeGetFilterDeviceTypeGetFilterPageGetFilterGeoLocationsGetFilterTimeFramesGet = FilterDeviceTypeGet | FilterGeoLocationsGet | FilterOSTypeGet | FilterPageGet | FilterTimeFramesGet
 
 type AllFiltersGet {
     deviceTypes: [DeviceType!]!
@@ -42,40 +42,38 @@ type FeedbackGet {
 }
 
 type FilterDeviceTypeGet {
-    deviceType: DeviceType!
-    toggled: Boolean
-    type: FilterType!
+    deviceTypes: [DeviceType!]!
 }
 
 type FilterGeoLocationGet {
     city: String
     country: String!
     region: String
-    toggled: Boolean
-    type: FilterType!
+}
+
+type FilterGeoLocationsGet {
+    geoLocations: [FilterGeoLocationGet!]!
 }
 
 type FilterOSTypeGet {
-    osType: OSType!
-    toggled: Boolean
-    type: FilterType!
+    osTypes: [OSType!]!
 }
 
 type FilterPageGet {
-    page: String!
-    toggled: Boolean
-    type: FilterType!
+    pages: [String!]!
 }
 
 type FilterTimeFrameGet {
     fromTime: DateTime!
     toTime: DateTime!
-    toggled: Boolean
-    type: FilterType!
+}
+
+type FilterTimeFramesGet {
+    timeFrames: [FilterTimeFrameGet!]!
 }
 
 type FragmentGet {
-    assets: [String!]!
+    assets: [FragmentMediaGet!]!
     author: UserGet!
     directoryId: Int!
     document: JSON!
@@ -83,6 +81,11 @@ type FragmentGet {
     linkedFragments: [FragmentGet!]
     name: String!
     props: JSON
+}
+
+type FragmentMediaGet {
+    id: Int!
+    publicPath: String!
 }
 
 type LandingGet {
@@ -96,11 +99,13 @@ type LandingGet {
     weight: Float
 }
 
+type MediaGet {
+    mediaId: Int!
+    mediaType: MediaType!
+    publicPath: String!
+}
+
 type Mutation {
-    addAvatar(file: Upload!): UserGet!
-    addCampaignLogo(campaignId: Int!, file: Upload!): CampaignGet!
-    addFragmentAsset(file: Upload!, fragmentId: Int!): FragmentGet!
-    addProjectLogo(file: Upload!, projectId: Int!): ProjectGet!
     addProjectPublicKey(projectId: Int!, publicKeyName: String): ProjectGet!
     addUserToProject(projectId: Int!, role: Int!, userId: Int!): Void
     changeProjectPrivateKey(projectId: Int!): ProjectGet!
@@ -110,22 +115,26 @@ type Mutation {
     createFragment(fg: FragmentPost!): FragmentGet!
     createLanding(landings: LandingPost!): LandingGet!
     createProject(pr: ProjectPost!): ProjectGet!
-    createStream(strm: StreamPost!): StreamGet!
+    createStream(stream: StreamPost!): StreamGet!
+    deleteAsset(media: MediaDelete!): Void
+    deleteCampaign(campaignId: Int!): Void
     deleteDirectory(directoryId: Int!): Void
     deleteFragment(fragmentId: Int!): Void
+    deleteLanding(landingId: Int!): Void
+    deleteProject(projectId: Int!): Void
     deleteProjectPublicKey(projectId: Int!, publicKeyId: Int!): Void
     deleteStream(streamId: Int!): Void
     feedback(fd: FeedbackPost!): FeedbackGet!
     login(email: String!, password: String!): AuthPayload!
     refresh: AuthPayload!
-    removeFragmentAsset(fragmentId: Int!, publicPath: String!): FragmentGet!
     signup(email: String!, firstName: String!, lastName: String, password: String!): AuthPayload!
     updateCampaign(cmp: CampaignPatch!): CampaignGet!
     updateDirectory(directory: ProjectDirectoryPatch!): [ProjectDirectoryGet!]!
     updateFragment(fg: FragmentPatch!): FragmentGet!
     updateLanding(landing: LandingPatch!): LandingGet!
     updateProject(pr: ProjectPatch!): ProjectGet!
-    updateStream(strm: StreamPatch!): StreamGet!
+    updateStream(stream: StreamPatch!): StreamGet!
+    uploadAsset(file: Upload!, media: MediaPost!): MediaGet!
 }
 
 type ProjectDirectoryGet {
@@ -179,7 +188,7 @@ type StreamGet {
     active: Boolean!
     campaignId: Int!
     deleted: Boolean!
-    filters: [FilterOSTypeGetFilterDeviceTypeGetFilterPageGetFilterGeoLocationGetFilterTimeFrameGet!]!
+    filters: [FilterOSTypeGetFilterDeviceTypeGetFilterPageGetFilterGeoLocationsGetFilterTimeFramesGet!]!
     id: Int!
     name: String!
     weight: Float!
@@ -216,12 +225,11 @@ enum FeelLevelGet {
     TWO
 }
 
-enum FilterType {
-    DeviceType
-    GeoLocationType
-    OSType
-    PageType
-    TimeFrameType
+enum MediaType {
+    CAMPAIGN_LOGO
+    FRAGMENT_ASSET
+    PROJECT_LOGO
+    USER_LOGO
 }
 
 enum OSType {
@@ -272,40 +280,23 @@ input FeedbackPost {
     page: String!
 }
 
-input FilterDeviceTypePost {
-    deviceType: DeviceType!
-    toggled: Boolean = true
-}
-
 input FilterGeoLocationPost {
     city: String
     country: String!
     region: String
-    toggled: Boolean = true
-}
-
-input FilterOSTypePost {
-    osType: OSType!
-    toggled: Boolean = true
-}
-
-input FilterPagePost {
-    page: String!
-    toggled: Boolean = true
 }
 
 input FilterTimeFramePost {
     fromTime: DateTime!
     toTime: DateTime!
-    toggled: Boolean = true
 }
 
 input FiltersPost {
-    deviceTypes: [FilterDeviceTypePost!]
-    geolocations: [FilterGeoLocationPost!]
-    osTypes: [FilterOSTypePost!]
-    pages: [FilterPagePost!]
-    timeFrames: [FilterTimeFramePost!]
+    deviceTypes: [DeviceType!]!
+    geolocations: [FilterGeoLocationPost!]!
+    osTypes: [OSType!]!
+    pages: [String!]!
+    timeFrames: [FilterTimeFramePost!]!
 }
 
 input FragmentPatch {
@@ -346,6 +337,18 @@ input LandingPost {
     weight: Float
 }
 
+input MediaDelete {
+    mediaId: Int
+    mediaType: MediaType!
+    targetId: Int
+}
+
+input MediaPost {
+    directoryId: Int
+    mediaType: MediaType!
+    targetId: Int
+}
+
 input ProjectDirectory {
     name: String!
     parentId: Int!
@@ -370,7 +373,6 @@ input ProjectPost {
 
 input StreamPatch {
     active: Boolean
-    campaignId: Int!
     deleted: Boolean
     filters: FiltersPost
     id: Int!

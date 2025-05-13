@@ -16,43 +16,19 @@ interface BuilderCssOverrideProps {
 }
 
 const BuilderCssOverride: FC<BuilderCssOverrideProps> = ({ className }) => {
-  const { documentManager } = useBuilderDocument()
-  const { selectionGraph, hasCssOverride, cssOverride, variables, selectCss, onClick, removeVariable } =
-    useBuilderCssOverride(documentManager)
+  const { cssOverride, setCssOverride, onClickHeader } = useBuilderCssOverride()
 
   return (
     <Panel
       className={className}
       title='CSS Override'
-      aside={<PanelHeadAside isOpen={hasCssOverride} onClick={onClick} />}
+      aside={<PanelHeadAside isOpen={!!cssOverride} onClick={onClickHeader} />}
     >
-      <AnimatedVisible visible={hasCssOverride}>
-        <div className={styles.wrapper}>
-          <ControlRow title='Variables'>
-            <ControlRowWide>
-              <InputSelect hasIcon={false} placeholder='Select...' onClick={selectCss} />
-              {variables.value?.map(variableKey => (
-                <GraphValue graphState={documentManager} field={variableKey}>
-                  {variable => (
-                    <InputSelect
-                      key={variable?.name}
-                      hasIcon={false}
-                      onClick={selectCss}
-                      onReset={() => removeVariable(variableKey)}
-                    >
-                      {variable?.name}
-                    </InputSelect>
-                  )}
-                </GraphValue>
-              ))}
-            </ControlRowWide>
-          </ControlRow>
-        </div>
-
+      {!!cssOverride && (
         <Panel>
-          <Textarea {...cssOverride} />
+          <Textarea value={cssOverride} onChangeValue={setCssOverride} />
         </Panel>
-      </AnimatedVisible>
+      )}
     </Panel>
   )
 }

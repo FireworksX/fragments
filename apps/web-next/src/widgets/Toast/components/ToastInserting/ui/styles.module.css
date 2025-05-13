@@ -1,0 +1,10 @@
+.root {
+    padding: 12px 18px;
+    border-radius: var(--radius-second);
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    background: var(--dark);
+    color: var(--text-color);
+    font-size: 12px;
+}

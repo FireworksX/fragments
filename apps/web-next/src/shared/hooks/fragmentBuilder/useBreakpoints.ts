@@ -7,6 +7,7 @@ import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDoc
 import { useBuilderCreator } from '@/shared/hooks/fragmentBuilder/useBuilderCreator'
 import { useFragmentLayers } from '@/shared/hooks/fragmentBuilder/useFragmentLayers'
 import { isPartOfPrimary } from '@fragments/render-core'
+import { pick } from '@fragmentsx/utils'
 
 const DEFAULT_BREAKPOINTS = [
   { name: 'Mobile', width: 375 },
@@ -15,74 +16,78 @@ const DEFAULT_BREAKPOINTS = [
   { name: 'Desktop', width: 1920 }
 ]
 
-export const useBreakpoints = (customFragment?: LinkKey) => {
+function getFrameRange(frames, targetLink) {
+  // 1. Сортируем фреймы по ширине (от меньшего к большему)
+  const sortedFrames = [...frames].sort((a, b) => a.width - b.width)
+
+  // 2. Находим индекс целевого фрейма
+  const targetIndex = sortedFrames.findIndex(frame => frame.link === targetLink)
+
+  if (targetIndex === -1) {
+    return { from: null, to: null }
+  }
+
+  // 3. Определяем диапазон
+  const currentFrame = sortedFrames[targetIndex]
+  let from, to
+
+  if (targetIndex === 0) {
+    // Первый фрейм → from: null, to: (следующий фрейм - 1)
+    from = null
+    to = sortedFrames.length > 1 ? sortedFrames[targetIndex + 1].width - 1 : null
+  } else if (targetIndex === sortedFrames.length - 1) {
+    // Последний фрейм → from: текущий width, to: null
+    from = currentFrame.width
+    to = null
+  } else {
+    // Средний фрейм → from: текущий width, to: (следующий фрейм - 1)
+    from = currentFrame.width
+    to = sortedFrames[targetIndex + 1].width - 1
+  }
+
+  return { from, to }
+}
+
+export const useBreakpoints = () => {
   const { documentManager } = useBuilderDocument()
   const { layers } = useFragmentLayers()
   const childrenValues = useGraphStack(documentManager, layers ?? [], {
-    selector: data => (data ? { threshold: data.threshold, width: data.width } : data)
+    selector: data => (data ? pick(data, 'width', '_type', '_id') : data)
   })
 
   const primaryLayer = childrenValues.find(child => isPartOfPrimary(documentManager, child))
   const breakpointKeys = childrenValues.map(documentManager.keyOfEntity)
   const { createBreakpoint } = useBuilderCreator()
 
+  const breakpointLayers = childrenValues.map(breakpoint => ({
+    link: documentManager.keyOfEntity(breakpoint),
+    width: breakpoint?.width
+  }))
+
   const addBreakpoint = (name: string, width: number) => {
     createBreakpoint({ name, threshold: width })
   }
 
-  const thresholds = useMemo(() => {
-    const values = childrenValues.map(breakpoint => ({
-      link: documentManager.keyOfEntity(breakpoint),
-      threshold: breakpoint.threshold
-    }))
+  const getBreakpointRange = (breakpointLink: LinkKey) => getFrameRange(breakpointLayers, breakpointLink)
 
-    if (values.length === 0) {
-      return [
-        {
-          from: 0,
-          to: Infinity,
-          link: documentManager.keyOfEntity(primaryLayer)
-        }
-      ]
+  const getBreakpointRangeLabel = (breakpointLink: LinkKey) => {
+    const range = getBreakpointRange(breakpointLink)
+    if (!range.from && !range.to) return ''
+
+    if (range.from === null) {
+      return `0-${range.to}`
     }
 
-    // Сначала сортируем брейкпоинты по возрастанию
-    const sortedBreakpoints = [...values].sort((a, b) => a.threshold - b.threshold)
-
-    // Создаем массив диапазонов
-    const ranges: { from: number; to: number; link: LinkKey }[] = []
-
-    // Добавляем диапазоны
-    for (let i = 0; i < sortedBreakpoints.length; i++) {
-      const from = i === 0 ? 0 : sortedBreakpoints[i - 1].threshold + 1
-      const to = sortedBreakpoints[i].threshold
-      ranges.push({ from, to, link: i === 0 ? documentManager.keyOfEntity(primaryLayer) : sortedBreakpoints[i].link })
+    if (range.to === null) {
+      return `${range.from}+`
     }
 
-    // Добавляем последний диапазон до бесконечности
-    ranges.push({
-      from: sortedBreakpoints.at(-1)?.threshold + 1,
-      to: Infinity,
-      link: sortedBreakpoints.at(-1)?.link
-    })
-
-    return ranges
-  }, [childrenValues, documentManager, primaryLayer])
-
-  const getThreshold = (width: number) => thresholds.find(threshold => threshold.from <= width && threshold.to >= width)
-
-  const getThresholdLabel = (width: number) => {
-    const threshold = getThreshold(width)
-
-    if (!threshold) {
-      return null
-    }
-    return `${threshold.from}-${threshold.to === Infinity ? '∞' : threshold.to}`
+    return `${range.from} - ${range.to}`
   }
 
   const allowedBreakpoints = useMemo(() => {
     const breakpoints = DEFAULT_BREAKPOINTS.filter(
-      breakpoint => !childrenValues.find(v => v.threshold === breakpoint.width)
+      breakpoint => !childrenValues.find(v => v?.width === breakpoint.width)
     )
 
     return breakpoints
@@ -92,10 +97,9 @@ export const useBreakpoints = (customFragment?: LinkKey) => {
     primaryLayer,
     childrenValues,
     breakpointKeys,
-    getThreshold,
+    getBreakpointRange,
     addBreakpoint,
-    thresholds,
-    getThresholdLabel,
+    getBreakpointRangeLabel,
     allowedBreakpoints
   }
 }

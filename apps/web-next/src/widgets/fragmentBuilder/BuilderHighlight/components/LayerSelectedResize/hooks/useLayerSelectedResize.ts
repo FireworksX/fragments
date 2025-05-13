@@ -8,7 +8,6 @@ import { createConstants } from '@fragments/utils'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { to } from '@react-spring/web'
 import { getDomRect } from '@/shared/utils/getDomRect'
-import { SCALE } from '@/widgets/fragmentBuilder/BuilderCanvas/hooks/useCanvas'
 import { toPx } from '@/shared/utils/toPx'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
@@ -16,6 +15,7 @@ import { useAllowResize } from '@/shared/hooks/fragmentBuilder/useAllowResize'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
 import { getParent } from '@fragments/render-core'
+import { SCALE } from '@/widgets/fragmentBuilder/BuilderCanvas/hooks/useCanvasDrag'
 
 export const SELECTION_SIDES = createConstants('topLeft', 'top', 'right', 'bottom', 'left')
 
@@ -25,10 +25,10 @@ export const useLayerSelectedResize = () => {
   const { selection } = useBuilderSelection()
   const { type } = useLayerInfo(selection)
   const { width: isAllowResizeWidth, height: isAllowResizeHeight } = useAllowResize()
-  const [top, setTop] = useLayerValue('top')
-  const [left, setLeft] = useLayerValue('left')
-  const [width, setWidth] = useLayerValue('width')
-  const [height, setHeight] = useLayerValue('height')
+  const [, setTop, { value$: top$ }] = useLayerValue('top')
+  const [, setLeft, { value$: left$ }] = useLayerValue('left')
+  const [, setWidth, { value$: width$ }] = useLayerValue('width')
+  const [, setHeight, { value$: height$ }] = useLayerValue('height')
   const [widthType] = useLayerValue('widthType')
   const [heightType] = useLayerValue('heightType')
 
@@ -38,8 +38,8 @@ export const useLayerSelectedResize = () => {
     if (first) {
       const targetWidthType = widthType
       const targetHeightType = heightType
-      const targetLeft = left
-      const targetTop = top
+      const targetLeft = animatableValue(left$)
+      const targetTop = animatableValue(top$)
       const targetRect = getDomRect(selection)
       const parentRect = getDomRect(documentManager.keyOfEntity(getParent(documentManager, selection)))
 
@@ -58,8 +58,8 @@ export const useLayerSelectedResize = () => {
         },
         getLeft: move => move / scale + (targetLeft ?? 0),
         getTop: move => move / scale + (targetTop ?? 0),
-        width,
-        height
+        width: animatableValue(width$),
+        height: animatableValue(height$)
       }
     }
 

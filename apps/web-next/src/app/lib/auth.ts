@@ -10,6 +10,9 @@ import { AuthSignInDocument } from '@/app/lib/queries/AuthSignIn.generated'
 // import { saltAndHashPassword } from "@/utils/password"
 
 export const authOptions: NextAuthOptions = {
+  pages: {
+    signIn: '/login'
+  },
   session: {
     strategy: 'jwt',
     maxAge: parseInt(process.env.NEXTAUTH_JWT_AGE!) || 1209600
@@ -71,6 +74,7 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       // console.log(session, token)
+
       if (token.error) {
         throw new Error('Refresh token has expired')
       }

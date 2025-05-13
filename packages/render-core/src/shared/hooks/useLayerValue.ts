@@ -1,47 +1,99 @@
-import { useCallback, useContext } from "preact/compat";
-import { GraphState, LinkKey } from "@graph-state/core";
+import { useCallback } from "preact/compat";
 import { useGraph } from "@graph-state/react";
-import { pick } from "@fragments/utils";
-import { FragmentContext } from "@/components/Fragment/FragmentContext";
-import { getOverrider } from "@/shared/helpers";
-import { useReadVariable } from "@/shared/hooks/useReadVariable";
+import { GraphState, LinkKey, MutateOptions } from "@graph-state/core";
+import { omit, pick } from "@fragmentsx/utils";
+import { parseLayerField, isVariableLink } from "@fragmentsx/definition";
 import { useNormalizeLayer } from "@/shared/hooks/useNormalizeLayer";
+import { useReadVariable } from "@/shared/hooks/useReadVariable";
+import { isInheritField, isPartOfPrimary } from "@/shared/helpers";
+import { useLayerCssVariable } from "@/shared/hooks/useLayerCssVariable";
 
-/**
- * Этот хук обслуживает логику получения и изменения значения.
- * Принимает слой и его поле с которым будем работать.
- * При изменении значения валидирует поле, если пытаемся установить
- * не валидные данные, то обновление будет пропущено.
- */
-
-export const useLayerValue = (layerKey: LinkKey, fieldKey: string) => {
-  const { manager: fragmentManager } = useContext(FragmentContext);
-  const resultManager = fragmentManager;
-  const { layer: normalizeLayer } = useNormalizeLayer(layerKey);
-
-  const [layerData, updateLayerData] = useGraph(resultManager, layerKey, {
+export const useLayerValue = (
+  layerKey: LinkKey,
+  fieldKey: string,
+  manager: GraphState
+) => {
+  // const { manager: resultManager } = useContext(FragmentContext);
+  const resultManager = manager;
+  const key = layerKey;
+  const [, updateLayerData] = useGraph(resultManager, key, {
     selector: (data) => (data ? pick(data, fieldKey) : data),
   });
 
-  let currentValue = normalizeLayer?.[fieldKey];
-  const rawValue = layerData?.[fieldKey];
+  const { layer, rawLayer } = useNormalizeLayer(key, resultManager);
+  const rawValue = rawLayer?.[fieldKey];
+  const layerValue = layer?.[fieldKey];
 
-  const { value: variableValue } = useReadVariable(rawValue);
+  const { value: variableValue } = useReadVariable(layerValue);
+  const currentValue = variableValue ?? layerValue;
 
-  const updateValue = useCallback(
-    (value: unknown) => {
-      updateLayerData({ [fieldKey]: value });
+  const isInherit = isInheritField(resultManager, key, fieldKey);
+  const isOverride = !isInherit && !isPartOfPrimary(resultManager, key);
+
+  const resetOverride = useCallback(() => {
+    // TODO Добавить в updateLayerData возможность передать replace: true
+    // TODO Сейчас если удалить свойство из объекта, не будет реакции, нужно править selector
+    resultManager.mutate(
+      layerKey,
+      (prev) => {
+        const r = omit(prev, fieldKey);
+
+        return r;
+      },
+      { replace: true }
+    );
+  }, [updateLayerData]);
+
+  const restore = useCallback(
+    (fallbackValue: unknown) => {
+      const tempValue = resultManager.resolve(resultManager?.$fragment?.temp)?.[
+        layerKey
+      ]?.[fieldKey];
+
+      updateLayerData({ [fieldKey]: tempValue ?? fallbackValue });
     },
-    [updateLayerData, fieldKey, currentValue]
+    [updateLayerData, resultManager]
   );
 
-  currentValue = variableValue ?? currentValue;
+  const updateValue = useCallback(
+    (value: unknown, options?: MutateOptions) => {
+      const { success, output } = parseLayerField(layer, fieldKey, value);
+
+      if (success) {
+        if (isVariableLink(value)) {
+          /*
+          Если меняем значение на переменную, то сохраняем значение, чтобы
+          можно было вызвать restore и восстановить значение, которое
+          было до установки переменной
+           */
+          resultManager.mutate(resultManager?.$fragment?.temp, {
+            [layerKey]: {
+              [fieldKey]: currentValue,
+            },
+          });
+
+          resultManager.resolve(resultManager?.$fragment?.temp);
+        }
+
+        updateLayerData({ [fieldKey]: output }, options);
+      }
+    },
+    [layer, fieldKey, updateLayerData, resultManager, layerKey, currentValue]
+  );
+
+  const { value: cssValue } = useLayerCssVariable(rawValue);
 
   return [
     currentValue,
     updateValue,
     {
-      isVariable: false,
+      isOverride,
+      resetOverride,
+      isVariable: isVariableLink(rawValue ?? layerValue),
+      cssVariableValue: cssValue ?? currentValue,
+      rawValue,
+      restore,
+      ...resultManager.entityOfKey(key),
     },
   ];
 };

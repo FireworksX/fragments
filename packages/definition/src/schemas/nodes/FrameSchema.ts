@@ -9,6 +9,10 @@ import { FillSchema } from "@/schemas/styles/FillSchema";
 import { BorderSchema } from "@/schemas/styles/BorderSchema";
 import { SizeSchema } from "@/schemas/styles/SizeSchema";
 import { LayerSchema } from "@/schemas/styles/LayerSchema";
+import { OverflowSchema } from "@/schemas/styles/fields/OverflowSchema";
+import { BorderRadiusSchema } from "@/schemas/styles/fields/BorderRadiusSchema";
+import { InteractionsSchema } from "@/schemas/InteractionsSchema";
+import { CssOverrideSchema } from "@/schemas/CssOverrideSchema";
 
 export const FrameSchema = v.pipe(
   v.object({
@@ -18,10 +22,7 @@ export const FrameSchema = v.pipe(
       overridable: false,
     }),
     isPrimary: layerField(v.boolean(), { fallback: false, overridable: false }),
-    threshold: layerField(v.pipe(v.number(), v.minValue(0)), {
-      fallback: 320,
-      overridable: false,
-    }),
+    parent: layerField(v.nullable(v.string()), { overridable: false }),
     ...ChildrenSchema.entries,
     ...GraphFieldSchema.entries,
     ...OverridesSchema.entries,
@@ -31,5 +32,9 @@ export const FrameSchema = v.pipe(
     ...BorderSchema.entries,
     ...SizeSchema.entries,
     ...LayerSchema.entries,
+    ...InteractionsSchema.entries,
+    ...CssOverrideSchema.entries,
+    overflow: OverflowSchema,
+    borderRadius: BorderRadiusSchema,
   })
 );

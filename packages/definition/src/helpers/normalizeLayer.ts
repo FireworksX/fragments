@@ -30,7 +30,8 @@ export const normalizeLayer = (
             ? overrideTarget?.[key]
             : null;
 
-        return [key, parsedLayer[key] ?? overrideValue ?? fallback];
+        const resultValue = parsedLayer[key] ?? overrideValue ?? fallback;
+        return [key, resultValue];
       })
     );
   } catch (e) {

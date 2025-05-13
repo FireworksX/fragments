@@ -7,6 +7,7 @@ import StringIcon from '@/shared/icons/next/type.svg'
 import ToggleIcon from '@/shared/icons/next/toggle-left.svg'
 import ObjectIcon from '@/shared/icons/next/braces.svg'
 import ArrayIcon from '@/shared/icons/next/brackets.svg'
+import EventIcon from '@/shared/icons/next/zap.svg'
 import MoreIcon from '@/shared/icons/next/ellipsis.svg'
 import { Cell } from '@/shared/ui/Cell'
 import { Touchable, TouchableProps } from '@/shared/ui/Touchable'
@@ -47,6 +48,7 @@ export const PropertyGenericCell: FC<PropertyBooleanCellProps> = ({ propertyLink
 
   const Icon = (
     {
+      Event: EventIcon,
       Number: NumberIcon,
       String: StringIcon,
       Boolean: ToggleIcon,

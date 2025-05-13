@@ -10,7 +10,14 @@ import { PROJECT_TREE_DIRECTORY_FRAGMENT, PROJECT_TREE_FRAGMENT_FRAGMENT } from 
 import { useProject } from '@/shared/hooks/useProject'
 import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
 
-export const useProjectTreeItem = (itemId: number, type: keyof typeof projectItemType, onClick) => {
+interface Options {
+  itemId: number
+  parentId: number
+  type: keyof typeof projectItemType
+  onClick?: () => void
+}
+
+export const useProjectTreeItem = ({ itemId, type, parentId, onClick }: Options) => {
   const [isLoading, toggleIsLoading] = useToggle(false)
   const { openedIds, toggleIsOpen } = use(ProjectTreeContext)
   const { projectSlug } = useProject()
@@ -32,6 +39,7 @@ export const useProjectTreeItem = (itemId: number, type: keyof typeof projectIte
   })
   const isOpen = openedIds?.includes(itemId)
   const hasChildren = type === projectItemType.directory && (itemData.hasSubdirectories || itemData.hasFragments)
+  const resultParentId = parentId ?? itemData?.parentId
 
   const edit = () => {
     cellRef?.current?.edit()
@@ -105,9 +113,10 @@ export const useProjectTreeItem = (itemId: number, type: keyof typeof projectIte
     toggleIsOpen: hasChildren ? () => toggleIsOpen(itemId, !isOpen) : null,
     handleCreateNew,
     handleFinishCreateNew,
-    rename: itemData?.parentId ? rename : null,
-    edit: itemData?.parentId ? edit : null,
-    delete: itemData?.parentId ? deleteItem : null,
+    cancelCreatingNew: () => setCreatingNew(null),
+    rename: resultParentId ? rename : null,
+    edit: resultParentId ? edit : null,
+    delete: resultParentId ? deleteItem : null,
     handleClick: () => (type === projectItemType.fragment ? onClick?.() : null) // TODO openFragment()
   }
 }

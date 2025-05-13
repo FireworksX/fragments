@@ -1,16 +1,64 @@
 import { LinkKey } from "@graph-state/core";
-import { useMemo } from "preact/compat";
+import { useContext, useMemo } from "preact/compat";
 import { useLayerValue } from "@/shared/hooks/useLayerValue";
-import { paintMode } from "@/definitions";
+import { definition } from "@fragmentsx/definition";
+import { FragmentContext } from "@/components/Fragment/FragmentContext";
 
 export const useLayerBackground = (layerKey: LinkKey) => {
-  const [fillType] = useLayerValue(layerKey, "fillType");
-  const [solidFill] = useLayerValue(layerKey, "solidFill");
-
-  return useMemo(
-    () => ({
-      background: fillType === paintMode.Solid ? solidFill : "transparent",
-    }),
-    [fillType, solidFill]
+  const { manager: fragmentManager } = useContext(FragmentContext);
+  const [fillType] = useLayerValue(layerKey, "fillType", fragmentManager);
+  const [, , { cssVariableValue: cssSolidFill }] = useLayerValue(
+    layerKey,
+    "solidFill",
+    fragmentManager
   );
+  const [, , { cssVariableValue: cssImageFill }] = useLayerValue(
+    layerKey,
+    "imageFill",
+    fragmentManager
+  );
+  const [, , { cssVariableValue: cssImageSize }] = useLayerValue(
+    layerKey,
+    "imageSize",
+    fragmentManager
+  );
+
+  return useMemo(() => {
+    if (fillType === definition.paintMode.Solid) {
+      return {
+        background: cssSolidFill,
+      };
+    }
+    if (fillType === definition.paintMode.Image && cssImageFill) {
+      const sizeMap = {
+        [definition.imagePaintScaleModes.Fill]: "cover",
+        [definition.imagePaintScaleModes.Fit]: "contain",
+      };
+
+      return {
+        background: `url(${cssImageFill})`,
+        backgroundSize: sizeMap[cssImageSize],
+      };
+    }
+
+    return {
+      background: "transparent",
+    };
+    // let base = {
+    //   background:
+    //     fillType === definition.paintMode.Solid
+    //       ? cssVariableValue
+    //       : "transparent",
+    // };
+
+    // if (isVariable) {
+    //   const { _id } = fragmentManager?.entityOfKey(rawValue);
+    //   const defaultValue = fragmentManager?.resolve(rawValue)?.defaultValue;
+    //
+    //   base = {
+    //     // [`--${_id}`]: solidFill,
+    //     background: `var(--${_id}, ${defaultValue})`,
+    //   };
+    // }
+  }, [fillType, cssImageFill, cssSolidFill]);
 };

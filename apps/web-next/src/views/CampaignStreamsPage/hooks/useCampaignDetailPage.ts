@@ -4,51 +4,34 @@ import { useListSteamsQuery } from '@/views/CampaignStreamsPage/queries/ListStre
 import { useCreateStreamMutation } from '@/views/CampaignStreamsPage/queries/CreateStream.generated'
 
 export const useCampaignDetailPage = () => {
-  const creatingRef = useRef<ComponentRef<'div'>>(null)
-  const [creatingName, setCreatingName] = useState('')
-  const [isCreating, setIsCreating] = useState(false)
+  const tableRef = useRef(null)
   const { campaignSlug, projectSlug } = useParams()
   const [createStream, { loading: creatingStream }] = useCreateStreamMutation()
   // const [executeCreateStream, { loading: loadingCreateStream }] = useMutation(CREATE_STREAM)
   // const [executeUpdateStream, { loading: loadingUpdateStream }] = useMutation(UPDATE_STREAM)
   // const [, updateModal] = useGraph(modalStore, modalStore.key)
-  const { data: listStreams } = useListSteamsQuery({
-    variables: {
-      campaignSlug: +campaignSlug
-    }
-  })
 
-  useEffect(() => {
-    if (isCreating) {
-      creatingRef?.current?.focus()
-    } else {
-      setCreatingName('')
-    }
-  }, [isCreating])
-
-  const handleCreateStream = async () => {
+  const handleCreateStream = async name => {
     await createStream({
       variables: {
-        name: creatingName,
+        name,
         active: false,
         weight: 0,
         campaignId: +campaignSlug
       }
     })
+  }
 
-    setIsCreating(false)
+  const clickCreateStream = () => {
+    tableRef?.current?.createNew?.()
   }
 
   return {
+    tableRef,
     creatingStream,
-    creatingName,
-    setCreatingName,
-    creatingRef,
-    isCreating,
-    setIsCreating,
-    streams: listStreams?.stream ?? [],
     campaignSlug,
     projectSlug,
-    handleCreateStream
+    handleCreateStream,
+    clickCreateStream
   }
 }

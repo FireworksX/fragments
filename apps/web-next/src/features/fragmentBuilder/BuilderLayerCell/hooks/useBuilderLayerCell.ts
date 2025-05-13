@@ -18,7 +18,7 @@ export const useBuilderLayerCell = (layerKey: LinkKey) => {
   const partialSelected =
     selected || layerInfo.allParents.some(parent => selection === documentManager.keyOfEntity(parent))
   const isInstance = layerInfo.type === definition.nodes.Instance
-  const breakpointThreshold = useBreakpoints().getThresholdLabel((layerInfo.layer?.threshold ?? 0) + 1)
+  const breakpointThreshold = useBreakpoints().getBreakpointRangeLabel(layerKey)
   const isPrimaryLayer = layerInfo.isPrimary
 
   return {

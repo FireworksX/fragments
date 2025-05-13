@@ -4,7 +4,9 @@ import styles from './styles.module.css'
 import { useDraggable } from '@dnd-kit/core'
 import { FileSystemItemType } from '@/__generated__/graphql'
 import { projectItemType } from '../../../hooks/useProjectTree'
-import { draggableTypes } from '@/shared/store/builderStore/plugins/droppablePlugin'
+import { useSearchParam } from '@/shared/hooks/useSearchParams'
+import { BUILDER_NODE_KEY } from '@/shared/ui/Link/lib/linkConfig'
+import { draggableAreas, draggableNodes } from '@/shared/data'
 
 interface ProjectTreeSortableItemProps extends PropsWithChildren {
   id: string
@@ -13,6 +15,7 @@ interface ProjectTreeSortableItemProps extends PropsWithChildren {
   selected?: boolean
   deepIndex?: number
   indentationWidth?: number
+  ghost?: boolean
 }
 
 export const ProjectTreeSortableItem: FC<ProjectTreeSortableItemProps> = ({
@@ -20,17 +23,19 @@ export const ProjectTreeSortableItem: FC<ProjectTreeSortableItemProps> = ({
   type,
   className,
   deepIndex = 0,
-  selected,
   indentationWidth = 20,
-  children
+  children,
+  ghost
 }) => {
+  const [{ [BUILDER_NODE_KEY]: currentFragment }] = useSearchParam([BUILDER_NODE_KEY])
+  const isActive = type === projectItemType.fragment && currentFragment == id
   const { attributes, listeners, setNodeRef } = useDraggable({
     id,
     disabled: type !== projectItemType.fragment,
     data: {
       id,
-      type: draggableTypes.fragmentProjectItem,
-      area: 'projectTree'
+      type: draggableNodes.fragmentProjectItem,
+      area: draggableAreas.projectTree
     }
   })
 
@@ -38,7 +43,8 @@ export const ProjectTreeSortableItem: FC<ProjectTreeSortableItemProps> = ({
     <div
       ref={setNodeRef}
       className={cn(styles.root, className, {
-        [styles.selected]: selected
+        [styles.selected]: isActive,
+        [styles.ghost]: ghost
       })}
       data-testid='BuilderLayerSortingCell'
       style={{

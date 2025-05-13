@@ -12,7 +12,7 @@ interface BuilderOpacityControlProps {
 }
 
 export const BuilderOpacityControl: FC<BuilderOpacityControlProps> = memo(({ className }) => {
-  const [opacity, setOpacity, opacityInfo] = useLayerValue('opacity')
+  const [, setOpacity, opacityInfo] = useLayerValue('opacity')
   const { disabled, actions, variableLink, resetVariable, editVariable } = useLayerVariables('opacity')
 
   return (
@@ -31,8 +31,8 @@ export const BuilderOpacityControl: FC<BuilderOpacityControlProps> = memo(({ cla
         onReset: resetVariable
       }}
     >
-      <InputNumber value={opacity} step={0.1} max={1} min={0} onChange={setOpacity} />
-      <Slider value={opacity} step={0.1} max={1} min={0} onChange={setOpacity} />
+      <InputNumber value={opacityInfo.value$} step={0.1} max={1} min={0} onChange={setOpacity} />
+      <Slider value={opacityInfo.value$} step={0.1} max={1} min={0} onChange={setOpacity} />
     </ControlRow>
   )
 })

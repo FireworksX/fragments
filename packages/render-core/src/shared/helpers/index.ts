@@ -8,4 +8,5 @@ export { makeSnapshot } from "./makeSnapshot";
 export { isInheritField } from "./isInheritField";
 export { getOverrider } from "./getOverrider";
 export { declareFragmentProperty } from "./declareFragmentProperty";
+export { duplicateLayer } from "./duplicateLayer";
 export * from "./children";

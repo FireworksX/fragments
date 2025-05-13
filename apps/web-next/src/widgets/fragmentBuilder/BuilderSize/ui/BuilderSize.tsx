@@ -4,11 +4,13 @@ import styles from './styles.module.css'
 import { useBuilderSize } from '../hooks/useBuilderSize'
 import { Panel } from '@/shared/ui/Panel'
 import { BuilderSizeLocker } from '@/features/fragmentBuilder/BuilderSizeLocker'
-import { ControlRow } from '@/shared/ui/ControlRow'
+import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { InputNumber } from '@/shared/ui/InputNumber'
 import { Select } from '@/shared/ui/Select'
 import { definition } from '@fragments/definition'
 import { BuilderSizePositionControl } from '@/widgets/fragmentBuilder/BuilderSize/components/BuilderSizePositionControl'
+import { InputSelect } from '@/shared/ui/InputSelect'
+import { BuilderSizeMinMax } from '@/widgets/fragmentBuilder/BuilderSize/components/BuilderSizeMinMax'
 
 interface BuilderSizeProps {
   className?: string
@@ -45,13 +47,15 @@ const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
 
   return (
     <Panel className={cn(styles.root, className)} title={canRelativeSize ? 'Size' : 'Size & Position'}>
+      {!canRelativeSize && <BuilderSizePositionControl />}
+
       {!aspectRatio.disabled && (
-        <div className={styles.lockerWrapper}>
-          <BuilderSizeLocker isLocked={aspectRatio.isActive} onClick={aspectRatio.toggle} />
+        <div className={styles.lockerBody}>
+          <div className={styles.lockerWrapper}>
+            <BuilderSizeLocker isLocked={aspectRatio.isActive} onClick={aspectRatio.toggle} />
+          </div>
         </div>
       )}
-
-      {!canRelativeSize && <BuilderSizePositionControl />}
       <ControlRow
         title='Width'
         override={{
@@ -73,7 +77,7 @@ const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
           isOverride: height.info.isOverride || heightType.info.isOverride,
           onRestOverride: () => {
             height.info.resetOverride()
-            heightType.info.resetOverride
+            heightType.info.resetOverride()
           }
         }}
       >
@@ -82,6 +86,8 @@ const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
           {Options}
         </Select>
       </ControlRow>
+
+      <BuilderSizeMinMax />
     </Panel>
   )
 }

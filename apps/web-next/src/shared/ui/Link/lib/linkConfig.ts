@@ -1,5 +1,7 @@
 import { routerParams } from '@/shared/data'
 
+export const BUILDER_NODE_KEY = 'node'
+
 export const linkConfig = {
   home: {
     path: '/',
@@ -65,7 +67,7 @@ export const linkConfig = {
     params: ['projectSlug']
   },
   builderFragment: {
-    path: ({ projectSlug, fragmentId }) => `/project/${projectSlug}/builder?node=${fragmentId}`,
+    path: ({ projectSlug, fragmentId }) => `/project/${projectSlug}/builder?${BUILDER_NODE_KEY}=${fragmentId}`,
     params: ['projectSlug', 'fragmentId']
   }
 }

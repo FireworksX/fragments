@@ -18,6 +18,7 @@ import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { booleanTabsSelectorItems } from '@/shared/data'
 import { CornerSides } from '@/shared/ui/CornerSides'
 import { toPx } from '@/shared/utils/toPx'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 const directions: TabsSelectorItem[] = [
   {
@@ -46,8 +47,11 @@ const aligns: TabsSelectorItem[] = [
 ]
 
 export const useBuilderLayout = () => {
+  const { documentManager } = useBuilderDocument()
   const { selection, selectionGraph } = useBuilderSelection()
-  const [paddingMode, setPaddingMode] = useState('plain')
+  const [padding, setPadding] = useLayerValue('padding')
+  const paddingSides = padding?.split(' ')?.map(fromPx)
+  const [paddingMode, setPaddingMode] = useState(() => (paddingSides?.length > 1 ? 'sides' : 'plain'))
   const [paddingSide, setPaddingSide] = useState<number | undefined>()
   // const paddingInvoker = layerInvoker('padding')
 
@@ -55,10 +59,8 @@ export const useBuilderLayout = () => {
   const [layerDirection, setLayerDirection] = useLayerValue('layerDirection')
   const [layerDistribute, setLayerDistribute] = useLayerValue('layerDistribute')
   const [layerAlign, setLayerAlign] = useLayerValue('layerAlign')
-  const [layerGap, setLayerGap] = useLayerValue('layerGap')
+  const [, setLayerGap, { value$: layerGap$ }] = useLayerValue('layerGap')
   const [layerWrap, setLayerWrap] = useLayerValue('layerWrap')
-  const [padding, setPadding] = useLayerValue('padding')
-  const paddingSides = padding?.split(' ')?.map(fromPx)
   const paddingSideByIndex = useMemo(() => {
     if (paddingSide === 0) return 'top'
     if (paddingSide === 1) return 'right'
@@ -66,14 +68,25 @@ export const useBuilderLayout = () => {
     if (paddingSide === 3) return 'left'
   }, [paddingSide])
 
+  const toggleLayerMode = () => {
+    const nextMode = layerMode === definition.layerMode.none ? definition.layerMode.flex : definition.layerMode.none
+    setLayerMode(nextMode)
+
+    const layerChildren = documentManager.resolve(selection)?.children ?? []
+    layerChildren.forEach(child => {
+      documentManager.mutate(child, {
+        position:
+          nextMode === definition.layerMode.flex ? definition.positionType.relative : definition.positionType.absolute
+      })
+    })
+  }
+
   return {
     selectionGraph,
     mode: {
       value: layerMode,
       enabled: layerMode === definition.layerMode.flex,
-      toggle: () => {
-        setLayerMode(layerMode === definition.layerMode.none ? definition.layerMode.flex : definition.layerMode.none)
-      }
+      toggle: toggleLayerMode
     },
     direction: {
       items: directions,
@@ -96,7 +109,7 @@ export const useBuilderLayout = () => {
       update: setLayerDistribute
     },
     gap: {
-      value: layerGap,
+      value: layerGap$,
       update: setLayerGap
     },
     padding: {

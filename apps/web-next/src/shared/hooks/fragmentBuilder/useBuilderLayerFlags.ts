@@ -1,34 +1,38 @@
 import { LinkKey } from '@graph-state/core'
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
-import { removeChildren } from '@fragments/render-core'
+import { removeChildren, duplicateLayer } from '@fragmentsx/render-core'
 
 export const useBuilderLayerFlags = (layerKey: LinkKey) => {
   const { documentManager } = useBuilderDocument()
-  // const layerInfo = useLayerInfo(layerKey)
-  const [visible, setVisible, layerInfo] = useLayerValue('visible', layerKey)
-  // const [layerMode, setLayerMode] = useLayerValue('layerMode', layerKey)
+  const layerInfo = useLayerInfo(layerKey)
+  const [visible, setVisible] = useLayerValue('visible', layerKey)
+  const [layerMode, setLayerMode] = useLayerValue('layerMode', layerKey)
   // const [layerDirection, setLayerDirection] = useLayerValue('layerDirection', layerKey)
 
   // const layerInfo = {}
   // const visible = true
-  const hasLayout = false //layerMode === defLayerMode?.flex
-  const canRemove = false //layerInfo.type === nodes.Breakpoint ? !layerInfo?.isPrimary : true
-  const canWrap = false //layerInfo.type !== nodes.Breakpoint
-  const canDuplicate = false //layerInfo.type !== nodes.Fragment
-  const canRemoveWrapper = false //layerInfo.type === nodes.Frame && layerInfo.layer?.children?.length > 0
+  const hasLayout = layerMode === definition.layerMode?.flex
+  const canRemove = !layerInfo.isBreakpoint ? !layerInfo?.isPrimary : true
+  const canWrap = layerInfo.type !== definition.nodes.Fragment && !layerInfo.isBreakpoint && !layerInfo.isRootLayer
+  const canDuplicate = layerInfo.type !== definition.nodes.Fragment && !layerInfo.isBreakpoint && !layerInfo.isRootLayer
+  const canRemoveWrapper =
+    layerInfo.type === definition.nodes.Frame &&
+    layerInfo.layer?.children?.length > 0 &&
+    layerInfo.isBreakpoint &&
+    !layerInfo.isRootLayer
 
   const remove = () => removeChildren(documentManager, layerKey)
-
+  const duplicate = () => duplicateLayer(documentManager, layerKey)
   const toggleVisible = () => setVisible(!visible)
   const wrapFrame = () => documentManager.createWrapper(layerKey)
   const removeWrapper = () => documentManager.removeWrapper(layerKey)
 
   return {
-    type: layerInfo._type,
-    isVisible: layerInfo._type !== definition.nodes.Fragment ? visible : true,
+    type: layerInfo.type,
+    isVisible: layerInfo.type !== definition.nodes.Fragment ? visible : true,
     layerDirection: '',
     layerMode: '',
     hasLayout,
@@ -38,6 +42,7 @@ export const useBuilderLayerFlags = (layerKey: LinkKey) => {
     wrapFrame,
     canWrap,
     removeWrapper,
+    duplicate,
     canRemoveWrapper,
     canDuplicate
   }

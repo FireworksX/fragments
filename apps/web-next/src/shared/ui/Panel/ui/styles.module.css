@@ -14,7 +14,7 @@
 }
 
 .body {
-    padding-bottom: 15px;
+    padding-bottom: 12px;
 
     &:empty {
         padding-bottom: 0;

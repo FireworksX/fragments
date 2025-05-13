@@ -7,6 +7,7 @@ import { definition } from '@fragments/definition'
 import { InstancePropertyNumber } from '../../InstancePropertyNumber'
 import { InstancePropertyString } from '../../InstancePropertyString'
 import { InstancePropertyBoolean } from '../../InstancePropertyBoolean'
+import { InstancePropertyColor } from '../../InstancePropertyColor'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useGraph } from '@graph-state/react'
@@ -19,6 +20,7 @@ import { useNormalizeLayer } from '@/shared/hooks/fragmentBuilder/useNormalizeLa
 interface InstancePropertyGenericProps {
   value: unknown
   property: LinkKey
+  manager: GraphState
   instanceManager: GraphState
   className?: string
   onChange(value: boolean): void
@@ -53,6 +55,18 @@ const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({
         onChange={onChange}
       />
     )
+  }
+
+  if (layer?.type === definition.variableType.String) {
+    return <InstancePropertyString name={layer.name} isTextarea={layer.isTextarea} value={value} onChange={onChange} />
+  }
+
+  if (layer?.type === definition.variableType.Boolean) {
+    return <InstancePropertyBoolean name={layer.name} isTextarea={layer.isTextarea} value={value} onChange={onChange} />
+  }
+
+  if (layer?.type === definition.variableType.Color) {
+    return <InstancePropertyColor name={layer.name} value={value} onChange={onChange} />
   }
 
   return null

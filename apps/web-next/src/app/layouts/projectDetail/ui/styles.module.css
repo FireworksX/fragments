@@ -1,3 +1,10 @@
 .tabs {
     height: var(--app-size-navigation);
+    background: var(--background);
+    border-bottom-right-radius: var(--radius-second);
+    border-bottom-left-radius: var(--radius-second);
+}
+
+.tab {
+    padding: 7px 15px !important;
 }

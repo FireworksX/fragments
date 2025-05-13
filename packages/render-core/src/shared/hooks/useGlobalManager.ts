@@ -1,17 +1,28 @@
+import { useContext } from "preact/compat";
 import { useGraph } from "@graph-state/react";
 import { GraphState } from "@graph-state/core";
-import { useContext } from "preact/compat";
-import { GlobalManager } from "@/components/GlobalManager";
+import { GlobalManager } from "@/providers/GlobalManager";
+import { noop } from "@fragmentsx/utils";
 
 export const useGlobalManager = (globalManager?: GraphState) => {
   const currentGlobalManager = useContext(GlobalManager);
   const resultManager = globalManager ?? currentGlobalManager;
-  const [globalManagerGraph] = useGraph(resultManager, resultManager?.key);
+  const [fragmentsGraph] = useGraph(
+    resultManager,
+    resultManager?.$fragments?.key
+  );
 
-  const getFragmentManager = async (id: string) => {
-    const fragmentDocument =
-      await globalManagerGraph.fetchManager.queryFragment(id);
-    return resultManager.createFragmentManager(id, fragmentDocument);
+  const queryFragmentManager = async (id: string) => {
+    const queryResult = await resultManager?.$fetch?.queryFragment(id);
+    const { document, linkedFragments } = queryResult ?? {};
+
+    if (linkedFragments) {
+      linkedFragments.forEach(({ id, document }) => {
+        resultManager.$fragments.createFragmentManager(id, document);
+      });
+    }
+
+    return resultManager.$fragments.createFragmentManager(id, document);
   };
 
   const setRenderTarget = (value) => {
@@ -19,9 +30,10 @@ export const useGlobalManager = (globalManager?: GraphState) => {
   };
 
   return {
-    globalManagerGraph,
+    fragmentsGraph,
     manager: resultManager,
-    getFragmentManager,
+    queryFragmentManager,
+    getFragmentManager: resultManager?.$fragments?.getManager ?? noop,
     setRenderTarget,
   };
 };

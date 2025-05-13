@@ -1,0 +1,67 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gutter-default);
+    position: relative;
+    transition: var(--animation-transition-default);
+    padding: 4px 8px;
+    border-radius: var(--radius-small);
+
+    &:hover {
+        background: var(--background-secondary);
+    }
+}
+
+.active {
+    background: var(--background-secondary);
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: var(--gutter-medium);
+}
+
+.logo {
+    width: 24px;
+    height: 24px;
+    background: var(--secondary-bg);
+    border-radius: var(--radius-small);
+    border: 1px solid var(--border);
+}
+
+.name {
+    font-weight: 500;
+    color: var(--text-color-accent);
+    flex: 1;
+}
+
+.status {
+    display: flex;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    left: 28px;
+
+    &.status_active {
+        background: var(--success);
+        color: var(--success);
+    }
+
+    &.status_stop {
+        background: var(--danger);
+    }
+}
+
+.stats {
+    display: flex;
+    gap: var(--gutter-default);
+    color: var(--text-color-accent);
+}
+
+.statsTitle {
+    font-size: 12px;
+    color: var(--text-color-accent-secondary)
+}

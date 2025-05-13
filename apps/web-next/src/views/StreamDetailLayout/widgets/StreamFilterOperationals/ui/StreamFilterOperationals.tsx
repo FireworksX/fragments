@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { capitalize } from '@/shared/utils/capitalize'
@@ -13,39 +13,38 @@ import { useStreamOperationalsFilterLazyQuery } from '../queries/StreamOperation
 import { noop } from '@fragments/utils'
 
 interface StreamFilterOperationalsProps {
-  isEdit?: boolean
   value?: OsType[]
   className?: string
   onChange?: (nextValue: OsType[]) => void
 }
 
 export const StreamFilterOperationals: FC<StreamFilterOperationalsProps> = ({
-  isEdit,
   className,
   value = [],
   onChange = noop
 }) => {
+  const [local, setLocal] = useState(value)
   const [executeQuery, { data, loading }] = useStreamOperationalsFilterLazyQuery()
   const list = data?.filter?.osTypes ?? []
   const t = (value: string) => capitalize(value.toLowerCase())
 
   const toggleValue = (valueType: OsType) => {
-    const nextValue = value.includes(valueType) ? value.filter(v => v !== valueType) : [...value, valueType]
-    onChange?.(nextValue)
+    const nextValue = local.includes(valueType) ? local.filter(v => v !== valueType) : [...local, valueType]
+    setLocal(nextValue)
   }
 
   return (
     <Dropdown
       trigger='click'
-      disabled={!isEdit}
       placement='bottom-end'
       isLoading={loading}
       onShow={() => executeQuery()}
+      onHide={() => onChange(local)}
       options={
         <>
           <DropdownGroup>
             {list.map(type => (
-              <DropdownOptionSelect key={type} isActive={value.includes(type)} onClick={() => toggleValue(type)}>
+              <DropdownOptionSelect key={type} isActive={local.includes(type)} onClick={() => toggleValue(type)}>
                 {t(type)}
               </DropdownOptionSelect>
             ))}
@@ -57,7 +56,7 @@ export const StreamFilterOperationals: FC<StreamFilterOperationalsProps> = ({
       }
     >
       <Chip className={className} prefix='OS type:'>
-        {(value?.length ? value : ['Any']).map(t).join(', ')} {isEdit && <EditIcon className={styles.editIcon} />}
+        {(local?.length ? local : ['Any']).map(t).join(', ')}
       </Chip>
     </Dropdown>
   )

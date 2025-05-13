@@ -1,13 +1,12 @@
 import { FC, useEffect } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { Instance, useFragmentManager, useFragmentProperties } from '@fragments/render-react'
-import { useRenderTarget } from '@fragments/render-react'
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 import { Spinner } from '@/shared/ui/Spinner'
 import { PreviewSandboxResize } from '../components/PreviewSandboxResize'
 import { PreviewSandboxProps } from '../widgets/PreviewSandboxProps'
 import { useFragmentPreviewSandbox } from '@/widgets/FragmentPreviewSandbox/hooks/useFragmentPreviewSandbox'
+import { Instance, useFragmentManager, useRenderTarget } from '@fragmentsx/render-suite'
 
 interface FragmentPreviewSandboxProps {
   fragmentId: unknown
@@ -22,8 +21,6 @@ export const FragmentPreviewSandbox: FC<FragmentPreviewSandboxProps> = ({ classN
   useEffect(() => {
     setRenderTarget(definition.renderTarget.document)
   }, [])
-
-  console.log(props)
 
   return (
     <div className={cn(styles.root, className)}>

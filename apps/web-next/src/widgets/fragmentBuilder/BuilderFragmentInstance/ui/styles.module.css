@@ -5,3 +5,7 @@
 .aside {
     color: var(--secondary);
 }
+
+.edit {
+    margin-top: 4px;
+}

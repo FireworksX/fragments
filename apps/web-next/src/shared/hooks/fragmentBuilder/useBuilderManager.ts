@@ -47,6 +47,7 @@ export const useBuilderManager = () => {
   }
 
   return {
+    manager: builderManager,
     mode: resolvedMode,
     isEdit: resolvedMode === builderViews.edit,
     focus: searchParams.get(builderOptions.focus),

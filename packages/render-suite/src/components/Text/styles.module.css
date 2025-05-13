@@ -1,0 +1,7 @@
+.text {
+    /*white-space: pre;*/
+
+    :where(p) {
+        margin: 0;
+    }
+}

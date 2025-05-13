@@ -6,6 +6,7 @@ import { fragmentGrowingMode } from "@/constants";
 
 export const FragmentSchema = v.object({
   name: layerField(v.string(), { fallback: "Fragment", overridable: false }),
+  parent: layerField(v.nullable(v.string()), { overridable: false }),
   horizontalGrow: layerField(v.enum(Object.keys(fragmentGrowingMode)), {
     fallback: fragmentGrowingMode.auto,
     overridable: false,

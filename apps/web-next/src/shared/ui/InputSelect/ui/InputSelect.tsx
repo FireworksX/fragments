@@ -15,12 +15,24 @@ export interface InputSelectProps extends PropsWithChildren {
   className?: string
   bodyClassName?: string
   hasIcon?: Interpolation<boolean> | boolean
+  forceReset?: boolean
   onReset?: () => void
   onClick?: () => void
 }
 
 const InputSelect: FC<InputSelectProps> = animated(
-  ({ className, bodyClassName, children, placeholder = 'Add...', icon, hasIcon = true, color, onReset, onClick }) => {
+  ({
+    className,
+    bodyClassName,
+    forceReset,
+    children,
+    placeholder = 'Add...',
+    icon,
+    hasIcon = true,
+    color,
+    onReset,
+    onClick
+  }) => {
     return (
       <Touchable
         className={cn(styles.root, className)}
@@ -48,7 +60,7 @@ const InputSelect: FC<InputSelectProps> = animated(
           {children ? children : <span className={styles.placeholder}>{placeholder}</span>}
         </animated.div>
 
-        {children && onReset && (
+        {(children || forceReset) && onReset && (
           <Touchable
             className={styles.reset}
             onClick={e => {
