@@ -48,25 +48,28 @@ const ControlRow: FC<BuilderControlRowProps> = ({
   const { documentManager } = useBuilderDocument()
 
   const resultActions = useMemo<DropdownRenderOption[][]>(() => {
-    const actions = []
+    const resultActions = []
 
     if (override?.isOverride) {
-      actions.push([
-        [
-          {
-            label: 'Reset override',
-            onClick: override?.onRestOverride
-          }
-        ]
+      resultActions.push([
+        {
+          name: 'resetOverride',
+          label: 'Reset override',
+          onClick: override?.onRestOverride
+        }
       ])
     }
 
     if (variable?.actions) {
-      actions.push(variable.actions)
+      resultActions.push(variable.actions)
     }
 
-    return actions
-  }, [override, variable])
+    if (actions) {
+      resultActions.push(...actions)
+    }
+
+    return resultActions
+  }, [actions, override?.isOverride, override?.onRestOverride, variable?.actions])
 
   const hasActions = resultActions.some(action => action.length > 0)
   const isHighlightResult = isHighlight || override?.isOverride
@@ -93,7 +96,6 @@ const ControlRow: FC<BuilderControlRowProps> = ({
         <GraphValue graphState={documentManager} field={variable.link}>
           {variableValue => (
             <ControlRowWide>
-              {console.log(variableValue)}
               <InputSelectVariable
                 kind={variableValue._type === definition.nodes.Variable ? 'variable' : 'computed'}
                 type={variableValue.type}

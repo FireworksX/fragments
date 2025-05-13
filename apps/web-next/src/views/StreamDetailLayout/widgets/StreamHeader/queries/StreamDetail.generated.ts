@@ -8,7 +8,7 @@ export type StreamDetailQueryVariables = Types.Exact<{
 }>;
 
 
-export type StreamDetailQuery = { __typename?: 'Query', stream: Array<{ __typename?: 'StreamGet', id: number, name: string, active: boolean, weight: number }> };
+export type StreamDetailQuery = { __typename?: 'Query', stream: Array<{ __typename?: 'StreamGet', id: number, name: string, active: boolean, weight: number, filters: Array<{ __typename?: 'FilterDeviceTypeGet', deviceTypes: Array<Types.DeviceType> } | { __typename?: 'FilterGeoLocationsGet', geoLocations: Array<{ __typename?: 'FilterGeoLocationGet', city?: string | null, country: string, region?: string | null }> } | { __typename?: 'FilterOSTypeGet', osTypes: Array<Types.OsType> } | { __typename?: 'FilterPageGet', pages: Array<string> } | { __typename?: 'FilterTimeFramesGet', timeFrames: Array<{ __typename?: 'FilterTimeFrameGet', fromTime: any, toTime: any }> }> }> };
 
 
 export const StreamDetailDocument = gql`
@@ -18,6 +18,30 @@ export const StreamDetailDocument = gql`
     name
     active
     weight
+    filters {
+      ... on FilterDeviceTypeGet {
+        deviceTypes
+      }
+      ... on FilterOSTypeGet {
+        osTypes
+      }
+      ... on FilterGeoLocationsGet {
+        geoLocations {
+          city
+          country
+          region
+        }
+      }
+      ... on FilterPageGet {
+        pages
+      }
+      ... on FilterTimeFramesGet {
+        timeFrames {
+          fromTime
+          toTime
+        }
+      }
+    }
   }
 }
     `;

@@ -1,6 +1,4 @@
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
-import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
-import { useGraph } from '@graph-state/react'
 import { LinkKey } from '@graph-state/core'
 import { getAllParents, getParent, isRootLayer } from '@fragments/render-core'
 

@@ -9,8 +9,4 @@ export const SceneSchema = v.object({
   }),
   visible: layerField(v.boolean(), { fallback: true, variable: true }),
   zIndex: layerField(v.number(), { fallback: -1 }),
-  borderRadius: layerField(v.string(), { fallback: "0px" }),
-  overflow: layerField(v.picklist(Object.keys(overflow)), {
-    fallback: overflow.hidden,
-  }),
 });

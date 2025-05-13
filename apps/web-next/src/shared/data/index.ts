@@ -1,15 +1,23 @@
-import { createConstants } from '@fragments/utils'
+import { createConstants } from '@fragmentsx/utils'
 import { TabsSelectorItem } from '@/shared/ui/TabsSelector'
 
 export const popoutNames = createConstants(
+  'customBreakpoint',
   'stackSolidPaintStyle',
   'colorPicker',
   'stackStringProperty',
   'stackNumberProperty',
   'stackBooleanProperty',
   'stackColorProperty',
-  'stackVariableTransform'
+  'stackVariableTransform',
+  'stackEvent'
 )
+
+export const droppableAreas = createConstants('builderPlaceholder', 'builderCanvas', 'builderCanvasNode')
+
+export const draggableAreas = createConstants('projectTree')
+
+export const draggableNodes = createConstants('fragmentProjectItem')
 
 export const routerParams = createConstants('editMode')
 
@@ -18,7 +26,8 @@ export const modalNames = createConstants(
   'createFragment',
   'createCampaign',
   'configureStream',
-  'projectTree'
+  'projectTree',
+  'createCustomBreakpoint'
 )
 
 export const booleanTabsSelectorItems: TabsSelectorItem[] = [
@@ -33,3 +42,5 @@ export const booleanTabsSelectorItems: TabsSelectorItem[] = [
 ]
 
 export const campaignTabs = createConstants('overview', 'streams')
+
+export const builderToasts = createConstants('inserting', 'saving')

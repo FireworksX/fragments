@@ -26,11 +26,16 @@ export const layerField = <T>(
     fallback: T;
     overridable?: boolean;
     variable?: boolean;
+    transform?: <TInput>(value: TInput) => TInput;
   }
 ) => {
   const modifiedSchema = meta?.variable
     ? v.union([schema, v.pipe(v.string(), linkValidator)])
     : schema;
 
-  return v.pipe(v.optional(modifiedSchema), v.metadata(meta ?? {}));
+  return v.pipe(
+    v.optional(modifiedSchema),
+    v.transform(meta?.transform ?? ((v) => v)),
+    v.metadata(meta ?? {})
+  );
 };

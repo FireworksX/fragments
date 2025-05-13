@@ -36,7 +36,9 @@ const tabs: TabsSelectorItem[] = [
 
 const StackPanelFill: FC<StackPanelFillProps> = ({ className, stackColors }) => {
   const [fillType, setFillType] = useLayerValue('fillType')
-  const [solidFill, setSolidFill] = useLayerValue('solidFill')
+  const [, setSolidFill, { resultValue: solidFillValue }] = useLayerValue('solidFill')
+  const [, setImageFill, { resultValue: imageFillValue }] = useLayerValue('imageFill')
+  const [, setImageSize, { resultValue: imageSizeValue }] = useLayerValue('imageSize')
 
   useEffect(() => {
     if (fillType === definition.paintMode.None || !fillType) {
@@ -50,7 +52,7 @@ const StackPanelFill: FC<StackPanelFillProps> = ({ className, stackColors }) => 
       {fillType === definition.paintMode.Solid && (
         <Panel>
           <ColorPicker
-            color={solidFill}
+            color={solidFillValue}
             onChange={color => {
               if (color) {
                 setSolidFill(objectToColorString(color.rgb))
@@ -66,9 +68,18 @@ const StackPanelFill: FC<StackPanelFillProps> = ({ className, stackColors }) => 
       {/*  onCreate={popoutsStore.goPrev}*/}
       {/*/>*/}
 
-      {/*<AnimatedVisible visible={to(type, t => t === paintMode.Image)}>*/}
-      {/*  <ImagePicker urlInvoker={layerInvoker('imageFill')} scaleModeInvoker={layerInvoker('imageFillScaleMode')} />*/}
-      {/*</AnimatedVisible>*/}
+      {fillType === definition.paintMode.Image && (
+        <ImagePicker
+          urlInvoker={{
+            value: imageFillValue ?? '',
+            onChange: setImageFill
+          }}
+          scaleModeInvoker={{
+            value: imageSizeValue,
+            onChange: setImageSize
+          }}
+        />
+      )}
     </div>
   )
 }

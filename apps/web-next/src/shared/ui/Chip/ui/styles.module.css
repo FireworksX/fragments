@@ -1,12 +1,12 @@
 @layer ui {
     .root {
         padding: 5px 10px;
-        background: var(--background-secondary);
-        border-radius: var(--radius-small);
+        background: rgba(var(--background-secondary--rgb), .7);
+        border-radius: var(--radius-main);
         color: var(--text-color-accent);
         font-size: 12px;
         font-weight: 500;
-        display: flex;
+        display: inline-flex;
         align-items: center;
         gap: 5px;
     }

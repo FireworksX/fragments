@@ -1,27 +1,19 @@
 import { LinkKey } from "@graph-state/core";
-import { useMemo } from "preact/compat";
+import { useContext, useMemo } from "preact/compat";
 import { useLayerValue } from "@/shared/hooks/useLayerValue";
-import { toPx } from "@fragments/utils";
-import { borderType } from "@/definitions";
+import { toPx } from "@fragmentsx/utils";
+import { definition } from "@fragmentsx/definition";
+import { FragmentContext } from "@/components/Fragment/FragmentContext";
+import { useCalcLayerBorder } from "@/shared/hooks/useLayerStyles/useCalcLayerBorder";
 
 export const useLayerBorder = (layerKey: LinkKey) => {
-  const [borderTypeValue] = useLayerValue(layerKey, "borderType");
-  const [borderWidth] = useLayerValue(layerKey, "borderWidth");
-  const [borderColor] = useLayerValue(layerKey, "borderColor");
+  const { manager: fragmentManager } = useContext(FragmentContext);
+  const [borderWidth] = useLayerValue(layerKey, "borderWidth", fragmentManager);
+  const [borderColor] = useLayerValue(layerKey, "borderColor", fragmentManager);
+  const calcBorder = useCalcLayerBorder(layerKey);
 
-  return useMemo(() => {
-    let value = "";
-    if (
-      typeof borderTypeValue === "string" &&
-      borderTypeValue !== borderType.None
-    ) {
-      value = `${toPx(
-        borderWidth
-      )} ${borderTypeValue.toLowerCase()} ${borderColor}`;
-    }
-
-    return {
-      border: value,
-    };
-  }, [borderTypeValue, borderWidth, borderColor]);
+  return useMemo(
+    () => ({ border: calcBorder(borderWidth, borderColor) }),
+    [borderWidth, borderColor]
+  );
 };

@@ -35,12 +35,12 @@ export const useBuilderSize = () => {
       }
     },
     width: {
-      value: width,
+      value: widthInfo.value$,
       info: widthInfo,
       update: setWidth
     },
     height: {
-      value: height,
+      value: heightInfo.value$,
       info: heightInfo,
       update: setHeight
     },

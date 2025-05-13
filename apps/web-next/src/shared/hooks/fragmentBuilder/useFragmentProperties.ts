@@ -1,8 +1,3 @@
-import { useContext } from 'react'
-import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { useGraph, useGraphStack } from '@graph-state/react'
-import { useFragmentComputedValues } from '@/shared/hooks/fragmentBuilder/useFragmentComputedValues'
-import { useBuilderVariableCreator } from '@/shared/hooks/fragmentBuilder/useBuilderVariableCreator'
 import { definition } from '@fragments/definition'
 
 import { Entity, LinkKey } from '@graph-state/core'
@@ -13,6 +8,7 @@ import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { declareFragmentProperty } from '@fragments/render-core'
 
 export const FRAGMENT_PROPERTY_TYPES = [
+  definition.variableType.Event,
   definition.variableType.Number,
   definition.variableType.Boolean,
   definition.variableType.String,
@@ -32,7 +28,7 @@ export const useFragmentProperties = () => {
   // const { getTransformsByType, createComputedValue } = useBuilderVariableTransforms()
 
   const createProperty = (prop: { type: string }) => {
-    return declareFragmentProperty(documentManager, { _type: nodes.Variable, ...prop })
+    return declareFragmentProperty(documentManager, { _type: definition.nodes.Variable, ...prop })
   }
 
   const deleteProperty = (prop: Entity) => {
@@ -51,6 +47,7 @@ export const useFragmentProperties = () => {
         // [builderVariableType.Object]: stackObjectVariableName,
         [definition.variableType.String]: popoutNames.stackStringProperty,
         [definition.variableType.Color]: popoutNames.stackColorProperty
+        // [definition.variableType.Event]: popoutNames.stackEvent
       }[type]
 
       popoutsStore.open(popoutName, {

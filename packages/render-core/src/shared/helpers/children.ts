@@ -2,7 +2,8 @@ import { Entity, GraphState, LinkKey } from "@graph-state/core";
 import { isPartOfPrimary } from "@/shared/helpers/isPartOfPrimary";
 import { createLayer } from "@/shared/helpers/createLayer";
 import { getOverrider } from "@/shared/helpers/getOverrider";
-import { nodes } from "@/definitions";
+import { definition } from "@fragmentsx/definition";
+import { setKey } from "@/shared/helpers/keys";
 
 /**
  * Метод добавляет слой в массив children. Но есть дополнительная логика.
@@ -16,7 +17,12 @@ export const appendChildren = (
   ...children: Entity[]
 ) => {
   const targetEntity = manager.entityOfKey(target);
-  if (targetEntity._type !== nodes.Frame) {
+  const parseChildren = children.map((child) => ({
+    ...(manager.entityOfKey(child) ?? child),
+    parent: setKey(manager.keyOfEntity(target)),
+  }));
+
+  if (targetEntity._type !== definition.nodes.Frame) {
     manager.mutate(manager.keyOfEntity(target), {
       children,
     });
@@ -25,9 +31,7 @@ export const appendChildren = (
 
   const primaryTarget = getOverrider(manager, target);
   const isPrimaryTarget = isPartOfPrimary(manager, target);
-  const resolveChildren = children
-    .map((child) => createLayer(manager.entityOfKey(child) ?? child))
-    .filter(Boolean);
+  const resolveChildren = parseChildren.map(createLayer).filter(Boolean);
 
   (primaryTarget?.overrides ?? []).forEach((override) => {
     const overridesChildren = resolveChildren
@@ -66,7 +70,32 @@ export const appendChildren = (
   return resolveChildren.map(manager.keyOfEntity);
 };
 
-export const insertChildren = (manager: GraphState) => {};
+export const insertChildren = (
+  manager: GraphState,
+  target: LinkKey,
+  index: number,
+  ...layerKeys: Entity[]
+) => {
+  appendChildren(manager, target, ...layerKeys);
+  const targetLayer = manager.resolve(target);
+  const overrideLayers = (targetLayer?.overrides ?? []).map(manager.resolve);
+
+  [targetLayer, ...overrideLayers].forEach((layer) => {
+    const children = layer?.children ?? [];
+    const appendedLayers = children.slice(layerKeys.length * -1);
+    const nextChildren = children.slice(0, layerKeys.length * -1);
+    nextChildren.splice(index, 0, ...appendedLayers);
+
+    manager.mutate(
+      manager.keyOfEntity(layer),
+      (prev) => ({
+        ...prev,
+        children: nextChildren,
+      }),
+      { replace: true }
+    );
+  });
+};
 
 export const removeChildren = (manager: GraphState, ...layerKeys: Entity[]) => {
   layerKeys.map(manager.resolve).forEach((layer) => {

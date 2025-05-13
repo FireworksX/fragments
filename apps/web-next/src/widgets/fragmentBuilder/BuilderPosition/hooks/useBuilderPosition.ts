@@ -15,7 +15,7 @@ export const useBuilderPosition = () => {
   const childOfBreakpoint = parent?._type === definition.nodes.Breakpoint
 
   const [position, setPosition] = useLayerValue('position')
-  const [top, setTop] = useLayerValue('top')
+  const [top, setTop, { value$: top$ }] = useLayerValue('top')
   const [left, setLeft] = useLayerValue('left')
 
   const disabledFlags = useMemo(() => {
@@ -49,7 +49,7 @@ export const useBuilderPosition = () => {
       update: setLeft
     },
     top: {
-      value: top,
+      value: top$,
       update: setTop
     },
     hasPosition: !childOfBreakpoint && !isRootLayer && !isBreakpoint

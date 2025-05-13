@@ -16,11 +16,17 @@ interface ProjectTreeItemProps {
   className?: string
   type: keyof typeof projectItemType
   id: number
+  parentId: number
   onClick?: () => void
 }
 
-export const ProjectTreeItem: FC<ProjectTreeItemProps> = ({ className, id, type, onClick }) => {
-  const projectItem = useProjectTreeItem(id, type, onClick)
+export const ProjectTreeItem: FC<ProjectTreeItemProps> = ({ className, id, parentId, type, onClick }) => {
+  const projectItem = useProjectTreeItem({
+    itemId: id,
+    parentId,
+    type,
+    onClick
+  })
   const hasActions = true
 
   return (
@@ -97,6 +103,7 @@ export const ProjectTreeItem: FC<ProjectTreeItemProps> = ({ className, id, type,
             </>
           }
           onEdit={projectItem.handleFinishCreateNew}
+          onCancelEdit={projectItem.cancelCreatingNew}
         >
           {''}
         </SmartCell>

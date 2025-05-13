@@ -1,8 +1,14 @@
-import { createContext, useContext, useMemo, useState } from 'react'
+import { createContext, use, useContext, useMemo, useState } from 'react'
 import { LinkKey } from '@graph-state/core'
 import { buildFolderStructure } from '../lib'
 import { createConstants } from '@fragments/utils'
 import { useProjectFiles } from '@/shared/hooks/useProjectFiles'
+import { useGraph } from '@graph-state/react'
+import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderManager'
+import { BuilderContext } from '@/shared/providers/BuilderContext'
+import { useDndMonitor } from '@dnd-kit/core'
+import { DragStartEvent } from '@dnd-kit/core/dist/types'
+import { useCurrentDraggable } from '@/shared/hooks/useCurrentDraggable'
 
 const findIndexOfNode = (items: unknown[], linkNode: LinkKey) => {
   const index = items.findIndex(item => item.id === linkNode)
@@ -23,6 +29,11 @@ export const useProjectTree = () => {
   const [openedIds, setOpenedIds] = useState<string[]>([])
   const { directories, fetchingProjectDirectory } = useProjectFiles()
 
+  // console.log(droppableGraph)
+
+  const draggable = useCurrentDraggable('projectTree')
+  const draggableId = draggable?.active.data?.current?.id
+
   const directoriesList = useMemo(() => {
     return buildFolderStructure(directories, openedIds)
   }, [directories, openedIds])
@@ -34,11 +45,9 @@ export const useProjectTree = () => {
     openedIds,
     toggleIsOpen,
     fetching: fetchingProjectDirectory,
-    list: directoriesList
-    // draggableItem: droppableGraph.activeDraggable
-    //   ? flatProjectTree.find(
-    //       item => item.type === projectItemType.fragment && item.id === droppableGraph.activeDraggable.id
-    //     )
-    //   : null
+    list: directoriesList,
+    draggableItem: draggableId
+      ? directoriesList.find(item => item.type === projectItemType.fragment && item.id === draggableId)
+      : null
   }
 }

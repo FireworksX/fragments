@@ -1,10 +1,11 @@
 import { useContext, useMemo } from "preact/compat";
 import { FragmentContext } from "@/components/Fragment/FragmentContext.tsx";
-import { useLayerStyles } from "@/shared/hooks/useLayerStyles/useLayerStyles.ts";
+import { useLayerStyles } from "@/shared/hooks/useLayerStyles";
 import { useGraph } from "@graph-state/react";
 import { InstanceProps } from "@/components/Instance";
 import { useFragmentProperties } from "@/shared/hooks/useFragmentProperties.ts";
 import { useGlobalManager } from "@/shared/hooks/useGlobalManager";
+import { useHash } from "@/shared/hooks/useHash";
 
 /*
 Работаем по следующему принципу. Instance может рендериться внутри родителя (Fragment)
@@ -39,7 +40,10 @@ export const useInstance = (instanceProps: InstanceProps) => {
   //   fragmentId: instanceLayer?.fragment,
   // };
 
+  const hash = useHash(instanceProps.layerKey);
+
   return {
+    hash,
     styles,
     definitions,
     props: resultProps,

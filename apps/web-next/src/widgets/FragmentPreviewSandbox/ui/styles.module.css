@@ -2,6 +2,10 @@
     position: relative;
     flex: 1;
     display: flex;
+    background:
+            radial-gradient(circle at 5px 5px, var(--border-light) 1px, transparent 1px),
+            transparent;
+    background-size: 10px 10px;
 }
 
 .content {

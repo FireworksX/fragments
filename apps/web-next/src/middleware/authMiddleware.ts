@@ -15,7 +15,8 @@ export async function authMiddleware(request) {
   if (!token && (isAuthRoute || isVerifyRoute)) {
     const redirectUrl = new URL('/login', request.url)
     redirectUrl.searchParams.set('callbackUrl', request.nextUrl.href)
-    return NextResponse.redirect(redirectUrl)
+
+    return NextResponse.redirect(redirectUrl.toString())
   }
 
   if (token) {
@@ -27,4 +28,6 @@ export async function authMiddleware(request) {
       return NextResponse.redirect(new URL('/project', request.url))
     }
   }
+
+  return NextResponse.next()
 }

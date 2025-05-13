@@ -2,12 +2,16 @@ import { useParams } from 'next/navigation'
 import { ComponentRef, useEffect, useRef, useState } from 'react'
 import { useCreateLandingMutation } from '../queries/CreateLanding.generated'
 import { useLandingsListQuery } from '../queries/LandingsList.generated'
+import useClickOutside from '@/shared/hooks/useClickOutside'
 
 export const useStreamLandings = () => {
   const { streamSlug, landingId, campaignSlug, projectSlug } = useParams()
-  const [localName, setLocalName] = useState('')
-  const [isNewMode, setIsNewMode] = useState(false)
-  const createLandingRef = useRef<ComponentRef<'input'>>(null)
+  const [localName, setLocalName] = useState<null | string>(null)
+  const createInputRef = useRef<ComponentRef<'input'>>(null)
+  const creatingRef = useRef(null)
+  const isCreating = typeof localName === 'string'
+
+  useClickOutside({ ref: creatingRef, onClickOutside: () => setLocalName(null) })
 
   const [executeCreateLanding, { loading: loadingCreateLanding }] = useCreateLandingMutation()
   const { data } = useLandingsListQuery({
@@ -18,7 +22,9 @@ export const useStreamLandings = () => {
   })
   const landings = data?.landing ?? []
 
-  const handleCreateLanding = async () => {
+  const handleCreateLanding = async e => {
+    e.preventDefault()
+    e.stopPropagation()
     await executeCreateLanding({
       variables: {
         streamSlug: +streamSlug,
@@ -26,17 +32,18 @@ export const useStreamLandings = () => {
       }
     })
 
-    setLocalName('')
-    setIsNewMode(false)
+    setLocalName(null)
   }
 
   useEffect(() => {
-    if (isNewMode) {
-      createLandingRef?.current?.focus()
+    if (isCreating) {
+      createInputRef?.current?.focus()
     }
-  }, [isNewMode])
+  }, [isCreating])
 
   return {
+    creatingRef,
+    isCreating,
     landings,
     loadingCreateLanding,
     // toggleActive,
@@ -44,11 +51,9 @@ export const useStreamLandings = () => {
     projectSlug,
     campaignSlug,
     streamSlug,
-    isNewMode,
-    setIsNewMode,
     handleCreateLanding,
     localName,
     setLocalName,
-    createLandingRef
+    createInputRef
   }
 }

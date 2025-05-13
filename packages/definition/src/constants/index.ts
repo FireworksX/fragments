@@ -70,6 +70,7 @@ export const effectName = createConstants(
   "increase"
 );
 export const variableType = createConstants(
+  "Event",
   "String",
   "Boolean",
   "Array",
@@ -115,3 +116,5 @@ export const variableTransforms = createConstants(
 export const renderTarget = createConstants("canvas", "document");
 
 export const renderMode = createConstants("viewport", "parent", "fixed");
+
+export const interactions = createConstants("click", "mouseover");

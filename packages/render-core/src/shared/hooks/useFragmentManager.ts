@@ -1,40 +1,49 @@
-import { useGlobalManager } from "@/shared/hooks/useGlobalManager";
-import { GraphState } from "@graph-state/core";
-import { useGraph } from "@graph-state/react";
 import { useEffect, useState } from "preact/compat";
+import { useGlobalManager } from "@/shared/hooks/useGlobalManager";
 
 export const useFragmentManager = (
-  fragmentId: string | number,
-  globalContext?: GraphState
+  fragmentId?: unknown,
+  inputGlobalManager
 ) => {
-  const { globalManagerGraph, manager } = useGlobalManager(globalContext);
-  if (!globalManagerGraph) {
-    throw new Error("Need declare global context");
-  }
-
+  const {
+    fragmentsGraph,
+    manager: globalManager,
+    getFragmentManager,
+    queryFragmentManager,
+  } = useGlobalManager(inputGlobalManager);
   const [loading, setLoading] = useState(false);
 
-  const getFragmentManager = (id: string) => {
-    return globalManagerGraph?.fragmentsManagers?.[id];
-  };
-
-  const loadFragmentManager = async (id: string) => {
-    setLoading(true);
-
-    const fragmentDocument =
-      await globalManagerGraph.fetchManager.queryFragment(id);
-    const res = manager?.createFragmentManager(id, fragmentDocument);
-
-    setLoading(false);
-    return res;
-  };
+  // const loadFragmentManager = async (id: string) => {
+  //   if (id) {
+  //     const queryResult = await queryFragmentManager(id);
+  //     const { document, linkedFragments } = queryResult;
+  //
+  //     if (queryResult) {
+  //       if (linkedFragments) {
+  //         linkedFragments.forEach(({ id, document }) => {
+  //           globalManager?.createFragmentManager(id, document);
+  //         });
+  //       }
+  //     }
+  //
+  //     return globalManager?.createFragmentManager(id, document);
+  //   }
+  // };
 
   useEffect(() => {
-    loadFragmentManager(fragmentId);
-  }, [fragmentId]);
+    (async () => {
+      if (fragmentsGraph && !getFragmentManager(fragmentId)) {
+        setLoading(true);
+        await queryFragmentManager(fragmentId);
+        setLoading(false);
+      }
+    })();
+  }, [fragmentId, fragmentsGraph]);
 
   return {
     loading,
     manager: getFragmentManager(fragmentId),
+    queryFragmentManager,
+    // loadFragmentManager,
   };
 };

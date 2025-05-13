@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { AlphaPicker, CustomPicker } from 'react-color'
-import { Saturation, Hue } from 'react-color/lib/components/common'
+import { Saturation, Hue, EditableInput } from 'react-color/lib/components/common'
 import { animated } from '@react-spring/web'
 import cn from 'classnames'
 import styles from './styles.module.css'
@@ -15,6 +15,21 @@ interface ColorPickerProps {
 const alphaStyles = {
   gradient: {
     borderRadius: '8px'
+  }
+}
+
+const inputStyles = {
+  input: {
+    width: '100%',
+    border: 'none',
+    transition: 'var(--animation-transition-default)',
+    background: ' var(--background-secondary)',
+    borderRadius: 'var(--radius-second)',
+    outline: 'none',
+    height: 30,
+    fontSize: 12,
+    fontWeight: 500,
+    paddingLeft: 7
   }
 }
 
@@ -46,7 +61,11 @@ const ColorPicker: FC<ColorPickerProps> = ({ className, rgb, hex, hsl, hsv, onCh
             />
           </div>
         </div>
-        <InputText value={displayColor(rgb?.a < 1 ? rgb : hex)} />
+        <EditableInput
+          style={inputStyles}
+          value={displayColor(rgb?.a < 1 ? rgb : hex)}
+          onChange={value => onChange(value)}
+        />
       </div>
     </div>
   )

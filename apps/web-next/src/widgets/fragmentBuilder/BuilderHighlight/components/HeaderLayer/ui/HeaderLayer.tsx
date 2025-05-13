@@ -7,11 +7,11 @@ import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
 import { definition } from '@fragments/definition'
 import { HeaderLayerTop } from '@/widgets/fragmentBuilder/BuilderHighlight/components/HeaderLayer/components/HeaderLayerTop'
-import { SCALE } from '@/widgets/fragmentBuilder/BuilderCanvas/hooks/useCanvas'
 import { toPx } from '@/shared/utils/toPx'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
 import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
+import { SCALE } from '@/widgets/fragmentBuilder/BuilderCanvas/hooks/useCanvasDrag'
 
 interface HeaderLayerProps {
   className?: string

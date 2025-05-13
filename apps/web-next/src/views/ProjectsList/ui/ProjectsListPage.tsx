@@ -1,6 +1,8 @@
 import { redirect } from 'next/navigation'
 import { useLink } from '@/shared/ui/Link'
 import { useCurrentProjectsListSuspenseQuery } from '@/views/ProjectsList/queries/ProjectsList.generated'
+import { useCurrentUser } from '@/shared/hooks/useCurrentUser'
+import { useCurrentUserSuspenseQuery } from '@/shared/hooks/useCurrentUser/queries/CurrentUser.generated'
 
 export const ProjectsListPage = () => {
   const { data } = useCurrentProjectsListSuspenseQuery()

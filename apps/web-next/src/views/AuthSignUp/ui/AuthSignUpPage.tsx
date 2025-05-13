@@ -25,7 +25,9 @@ export const Page: FC<SignUpProps> = ({ className }) => {
         <InputText placeholder='Your Name' mode='secondary' size='large' type='text' {...firstNameField} />
         <InputText placeholder='Email Address' mode='secondary' size='large' type='email' {...emailField} />
         <InputText placeholder='Password' mode='secondary' size='large' type='password' {...passwordField} />
-        <Button loading={loading}>Sign Up</Button>
+        <Button size='large' loading={loading}>
+          Sign Up
+        </Button>
       </form>
     </div>
   )

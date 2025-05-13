@@ -1,0 +1,24 @@
+.root {
+    height: 38px;
+    display: flex;
+    align-items: center;
+    gap: var(--gutter-medium);
+    font-weight: 500;
+    transition: var(--animation-transition-default);
+    padding: 4px 8px;
+    border-radius: var(--radius-small);
+
+
+}
+
+.before {
+    min-width: 24px;
+    height: 24px;
+    background: var(--secondary-bg);
+    border-radius: var(--radius-small);
+    border: 1px solid var(--border);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--secondary);
+}

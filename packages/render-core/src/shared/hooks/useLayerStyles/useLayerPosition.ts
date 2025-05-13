@@ -5,7 +5,8 @@ import { InstanceContext } from "@/components/Instance";
 import { useLayerValue } from "@/shared/hooks/useLayerValue";
 import { FragmentContext } from "@/components/Fragment/FragmentContext";
 import { useRenderTarget } from "@/shared/hooks/useRenderTarget";
-import { positionType } from "@/definitions";
+import { definition } from "@fragmentsx/definition";
+import { toPx } from "@fragmentsx/utils";
 
 export const useLayerPosition = (layerKey: LinkKey) => {
   const { layerKey: instanceLayerKey } = useContext(InstanceContext);
@@ -15,15 +16,21 @@ export const useLayerPosition = (layerKey: LinkKey) => {
   const isTop = isTopLevel(fragmentManager, layerKey);
   const skipPosition = (isTop && isDocument) || (!!instanceLayerKey && isTop);
 
-  const [position] = useLayerValue(layerKey, "position");
-  const [top] = useLayerValue(layerKey, "top");
-  const [left] = useLayerValue(layerKey, "left");
+  const [position] = useLayerValue(layerKey, "position", fragmentManager);
+  const [top] = useLayerValue(layerKey, "top", fragmentManager);
+  const [left] = useLayerValue(layerKey, "left", fragmentManager);
 
   return useMemo(
     () => ({
-      position: skipPosition ? positionType.relative : position,
-      top: position === positionType.absolute && !skipPosition ? top : null,
-      left: position === positionType.absolute && !skipPosition ? left : null,
+      position: skipPosition ? definition.positionType.relative : position,
+      top:
+        position === definition.positionType.absolute && !skipPosition
+          ? toPx(top)
+          : null,
+      left:
+        position === definition.positionType.absolute && !skipPosition
+          ? toPx(left)
+          : null,
     }),
     [skipPosition, position, top]
   );

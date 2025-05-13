@@ -30,6 +30,7 @@ interface SmartCellProps {
   selected?: boolean
   isLoading?: boolean
   onEdit?(value: string): void
+  onCancelEdit?(): void
   onToggleCollapse?(): void
   onClick?(event): void
 }
@@ -44,6 +45,7 @@ const SmartCell: FC<SmartCellProps> = ({
   isLoading,
   onToggleCollapse,
   onEdit,
+  onCancelEdit,
   onClick
 }) => {
   const [localName, setLocalName] = useState<string | null>(null)
@@ -60,6 +62,7 @@ const SmartCell: FC<SmartCellProps> = ({
 
   const cancelEdit = () => {
     setLocalName(null)
+    onCancelEdit?.()
   }
 
   const handlerEdit = () => {

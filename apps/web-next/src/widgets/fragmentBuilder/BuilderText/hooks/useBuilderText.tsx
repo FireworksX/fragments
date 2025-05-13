@@ -26,7 +26,7 @@ import { isVariableLink } from '@/shared/utils/isVariableLink'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { useLayerVariables } from '@/shared/hooks/fragmentBuilder/useLayerVariables'
-import { useBuilderDocumentManager } from '@/shared/hooks/fragmentBuilder/useBuilderDocumentManager'
+import { pick } from '@fragmentsx/utils'
 
 const aligns: TabsSelectorItem[] = [
   {
@@ -94,8 +94,7 @@ export const useBuilderText = () => {
       }
 
       const attributes = editor.getAttributes('paragraph')
-
-      setAttributes(attributes)
+      setAttributes(pick(attributes, 'fontSize', 'color', 'lineHeight'))
       // console.log(attributes)
       // styleAttributesInvoker.onChange(attributes)
     }
@@ -153,7 +152,9 @@ export const useBuilderText = () => {
       context: {
         value: currentColor,
         onChange: newColor => {
-          onChangeValue('color', objectToColorString(newColor))
+          const color = objectToColorString(newColor)
+          onChangeValue('color', color)
+          setAttributes({ color })
         }
       },
       initial: true

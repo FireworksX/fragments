@@ -1,33 +1,42 @@
-import { useMemo } from "preact/compat";
-import useMeasure from "react-use-measure";
-import { useLayerChildren } from "@/shared/hooks/useLayerChildren";
 import { useRenderTarget } from "@/shared/hooks/useRenderTarget";
-import { findBreakpoint } from "@/shared/helpers/findBreakpoint";
 import { useFragmentManager } from "@/shared/hooks/useFragmentManager";
-import { nodes } from "@/definitions";
+import { definition } from "@fragmentsx/definition";
 import { GraphState } from "@graph-state/core";
+import { useFragmentChildren } from "@/shared/hooks/useFragmentChildren";
+import { useHash } from "@/shared/hooks/useHash";
+import { useStyleSheet } from "@/shared/hooks/useStyleSheet";
+import { useContext } from "preact/compat";
+import { FragmentContext } from "@/components/Fragment/FragmentContext";
 
 export const useFragment = (fragmentId: string, globalManager?: GraphState) => {
-  const { manager } = useFragmentManager(fragmentId, globalManager);
-  const layerKey = `${nodes.Fragment}:${fragmentId}`;
-  const [ref, fragmentRect] = useMeasure();
-  const children = useLayerChildren(layerKey, manager);
-  const { isDocument, renderTarget } = useRenderTarget(globalManager);
+  const layerKey = `${definition.nodes.Fragment}:${fragmentId}`;
+  const { manager } = useContext(FragmentContext);
+  const { isDocument } = useRenderTarget(globalManager);
+  const { setRef, children, isResize, primary } =
+    useFragmentChildren(fragmentId);
+  const hash = useHash(layerKey);
 
-  const resultChildren = useMemo(() => {
-    if (isDocument && manager) {
-      const breakpoints = children?.map(manager.resolve);
-      const activeBreakpoint = findBreakpoint(breakpoints, fragmentRect.width);
+  const { addLayerStyle } = useStyleSheet();
 
-      return activeBreakpoint ? [manager.keyOfEntity(activeBreakpoint)] : [];
-    }
-
-    return children;
-  }, [children, manager, fragmentRect.width]);
+  if (manager) {
+    addLayerStyle(
+      layerKey,
+      {
+        width: "100%",
+        height: "100%",
+        "container-type": "inline-size",
+      },
+      manager?.resolve(layerKey),
+      manager?.key
+    );
+  }
 
   return {
+    hash,
+    isDocument,
     manager,
-    ref,
-    children: resultChildren,
+    setRef,
+    children,
+    isResize,
   };
 };

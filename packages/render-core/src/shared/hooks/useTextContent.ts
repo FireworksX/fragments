@@ -1,15 +1,21 @@
-import { useMemo } from "preact/compat";
+import { useContext, useMemo } from "preact/compat";
 import { GraphState, LinkKey } from "@graph-state/core";
-import { isValue } from "@fragments/utils";
+import { isValue } from "@fragmentsx/utils";
 import { useLayerValue } from "@/shared/hooks/useLayerValue";
 import { wrapTextInParagraphWithAttributes } from "@/shared/helpers/wrapTextInParagraphWithAttributes";
+import { FragmentContext } from "@/components/Fragment/FragmentContext";
 
-export const useTextContent = (layerKey: LinkKey, manager?: GraphState) => {
-  const [content, _, contentInfo] = useLayerValue(layerKey, "content", manager);
-  const [attributes] = useLayerValue(layerKey, "attributes", manager);
+export const useTextContent = (layerKey: LinkKey, manager: GraphState) => {
+  const { manager: fragmentManager } = useContext(FragmentContext);
+  const [content, , contentInfo] = useLayerValue(
+    layerKey,
+    "content",
+    fragmentManager
+  );
+  const [attributes] = useLayerValue(layerKey, "attributes", fragmentManager);
 
   return useMemo(() => {
-    if (contentInfo.isVariable && isValue(attributes)) {
+    if (typeof content === "string" && isValue(attributes)) {
       return wrapTextInParagraphWithAttributes(content, attributes);
     }
 

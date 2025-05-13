@@ -1,16 +1,19 @@
 import { useLandingDetail } from '@/views/LandingDetail/hooks/useLandingDetail'
-import { useUpdateLandingMutation } from '@/views/LandingDetail/queries/UpdateLanding.generated'
+import {
+  UpdateLandingMutationVariables,
+  useUpdateLandingMutation
+} from '@/views/LandingDetail/queries/UpdateLanding.generated'
 
 export const useLandingDetailHeader = () => {
   const { landing } = useLandingDetail()
   const [handleUpdateLanding] = useUpdateLandingMutation()
 
-  const setActive = (value: boolean) => {
+  const updateLanding = (variables: Omit<UpdateLandingMutationVariables, 'landingId'>) => {
     if (landing) {
       handleUpdateLanding({
         variables: {
-          landingId: landing?.id,
-          active: value
+          ...variables,
+          landingId: landing?.id
         }
       })
     }
@@ -18,6 +21,6 @@ export const useLandingDetailHeader = () => {
 
   return {
     landing,
-    setActive
+    updateLanding
   }
 }

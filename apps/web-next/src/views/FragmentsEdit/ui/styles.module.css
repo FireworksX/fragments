@@ -7,7 +7,8 @@
     display: flex;
     flex: 1;
     background: var(--background-light);
-    max-height: calc(100vh - var(--app-size-header) -  var(--app-size-tabs-height));
+    max-height: calc(100vh - var(--app-size-header) - var(--app-size-navigation));
+    min-height: calc(100vh - var(--app-size-header) - var(--app-size-navigation));
     overflow: hidden;
     position: relative;
 }
@@ -34,4 +35,19 @@
 .popoutsOverlay {
     position: absolute;
     inset: 0;
+}
+
+.toast {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%) translateY(100%);
+    bottom: 0;
+    transition: var(--animation-transition-default);
+    opacity: 0;
+    z-index: var(--z-index-builder-tools);
+
+    &.open {
+        transform: translateX(-50%) translateY(-200%);
+        opacity: 1;
+    }
 }

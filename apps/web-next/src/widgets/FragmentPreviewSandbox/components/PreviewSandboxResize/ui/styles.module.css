@@ -8,8 +8,6 @@
 
 .inner {
     overflow: hidden;
-    border: 2px solid var(--border);
-    background: var(--background);
     position: relative;
 }
 

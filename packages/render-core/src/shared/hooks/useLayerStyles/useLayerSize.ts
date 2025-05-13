@@ -1,71 +1,28 @@
 import { LinkKey } from "@graph-state/core";
-import { getParent, isTopLevel } from "@/shared/helpers";
-import { useContext, useMemo } from "preact/compat";
-import { fragmentGrowingMode, sizing } from "@/definitions";
+import { useContext } from "preact/compat";
 import { FragmentContext } from "@/components/Fragment/FragmentContext";
-import { useRenderTarget } from "@/shared/hooks/useRenderTarget";
 import { useLayerValue } from "@/shared/hooks/useLayerValue";
-import { InstanceContext } from "@/components/Instance";
-
-const autoSizes = [sizing.Hug];
+import { useLayerSizeValue } from "@/shared/hooks/useLayerStyles/useLayerSizeValue";
+import { useOptionalSize } from "@/shared/hooks/useLayerStyles/useOptionalSize";
 
 export const useLayerSize = (layerKey: LinkKey) => {
-  const { manager: fragmentManager } = useContext(FragmentContext);
-  const { layerKey: instanceLayerKey, parentManager: instanceManager } =
-    useContext(InstanceContext);
-  const { isDocument } = useRenderTarget(fragmentManager);
-  const isTop = isTopLevel(fragmentManager, layerKey);
-  const isPartOfInstance = false; //!!instanceLayerKey;
-  const layerParent = getParent(fragmentManager, layerKey);
+  const { manager } = useContext(FragmentContext);
+  const [widthValue] = useLayerValue(layerKey, "width", manager);
+  const [heightValue] = useLayerValue(layerKey, "height", manager);
 
-  // useReadInstanceProperty()
-  // layerKey,
+  const widthCalc = useLayerSizeValue(layerKey, "width");
+  const heightCalc = useLayerSizeValue(layerKey, "height");
+  const minWidth = useOptionalSize("minWidth", layerKey);
+  const minHeight = useOptionalSize("minHeight", layerKey);
+  const maxWidth = useOptionalSize("maxWidth", layerKey);
+  const maxHeight = useOptionalSize("maxHeight", layerKey);
 
-  const [instanceWidthType] = useLayerValue(instanceLayerKey, "widthType");
-  const [instanceHeightType] = useLayerValue(instanceLayerKey, "heightType");
-  const [width] = useLayerValue(layerKey, "width");
-  const [height] = useLayerValue(layerKey, "height");
-  const [widthType] = useLayerValue(layerKey, "widthType");
-  const [heightType] = useLayerValue(layerKey, "heightType");
-
-  const toValue = (
-    type: keyof typeof sizing,
-    value: number,
-    instanceType: keyof typeof sizing
-  ) => {
-    if (isTop && isPartOfInstance && !autoSizes.includes(instanceType)) {
-      return "100%";
-    }
-    if (autoSizes.includes(type)) {
-      return "min-content"; //layerNode?._type === nodes.FragmentInstance ? 'auto' : 'min-content'
-    }
-
-    if (type === sizing.Relative) {
-      return `${value}%`;
-    }
-
-    if (type === sizing.Fill) {
-      return `100%`;
-    }
-
-    return value;
+  return {
+    width: widthCalc(widthValue),
+    height: heightCalc(heightValue),
+    minWidth,
+    minHeight,
+    maxWidth,
+    maxHeight,
   };
-
-  return useMemo(
-    () => ({
-      width:
-        isTop &&
-        isDocument &&
-        layerParent?.horizontalGrow === fragmentGrowingMode.fill
-          ? "100%"
-          : toValue(widthType, width, instanceWidthType),
-      height:
-        isTop &&
-        isDocument &&
-        layerParent?.horizontalGrow === fragmentGrowingMode.fill
-          ? "100%"
-          : toValue(heightType, height, instanceHeightType),
-    }),
-    [isTop, isDocument, width, height, heightType, heightType]
-  );
 };

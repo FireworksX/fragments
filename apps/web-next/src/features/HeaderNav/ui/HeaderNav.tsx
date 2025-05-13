@@ -20,13 +20,13 @@ export const HeaderNav: FC<HeaderNavProps> = ({ className, currentUserNode, feed
           </Button>
         </Dropdown>
 
-        <Button className={styles.button} size='medium' mode='tertiary-secondary'>
+        <Button className={styles.button} mode='tertiary-secondary'>
           Changelog
         </Button>
-        <Button className={styles.button} size='medium' mode='tertiary-secondary'>
+        <Button className={styles.button} mode='tertiary-secondary'>
           Help
         </Button>
-        <Button className={styles.button} size='medium' mode='tertiary-secondary'>
+        <Button className={styles.button} mode='tertiary-secondary'>
           Docs
         </Button>
       </div>

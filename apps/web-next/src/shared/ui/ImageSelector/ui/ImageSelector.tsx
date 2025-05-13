@@ -50,7 +50,7 @@ const ImageSelector: FC<ImageSelectorProps> = ({
       ) : (
         <div>
           <div className={styles.title}>Browse one file</div>
-          <div className={styles.description}>jpg, .png or .gif</div>
+          <div className={styles.description}>.svg, .jpg, .png or .gif</div>
         </div>
       )}
     </label>

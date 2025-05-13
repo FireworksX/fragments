@@ -11,7 +11,6 @@ import { ProjectAssets } from '@/widgets/fragmentBuilder/ProjectAssets'
 import { FragmentsEditPlaceholder } from '@/views/FragmentsBuilder/widgets/FragmentsBuilderContent/components/FragmentsEditPlaceholder'
 import { FragmentsEdit } from '@/views/FragmentsEdit'
 import { FragmentPreview } from '@/views/FragmentPreview'
-import { useBuilderDocumentManager } from '@/shared/hooks/fragmentBuilder/useBuilderDocumentManager'
 import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
 
 interface FragmentsBuilderContentProps {
@@ -19,12 +18,15 @@ interface FragmentsBuilderContentProps {
 }
 
 export const FragmentsBuilderContent: FC<FragmentsBuilderContentProps> = ({ className }) => {
-  const { fetching } = useBuilderDocumentManager()
-  const { documentManager } = useBuilderDocument()
-  const { isPreview } = useBuilder()
+  const { documentManager, loading } = useBuilderDocument()
+  const { isPreview, currentFragmentId } = useBuilder()
 
-  if (!documentManager || fetching) {
-    return <FragmentsEditPlaceholder fetching={fetching} />
+  useEffect(() => {
+    window.documentManager = documentManager
+  }, [documentManager])
+
+  if (!documentManager || loading || !currentFragmentId) {
+    return <FragmentsEditPlaceholder fetching={loading && !!currentFragmentId} />
   }
 
   if (isPreview) {

@@ -22,7 +22,7 @@ export const usePropertyGenericCell = (propertyLink: LinkKey) => {
   const creatingButtonRef = useRef<ElementRef<'button'>>(null)
   const [creatingName, setCreatingName] = useState('')
   const creatingType = useRef<any>()
-  const [isOpen, setIsOpen] = useState(propertyType !== variableType.Object)
+  const [isOpen, setIsOpen] = useState(propertyType !== definition.variableType.Object)
 
   const handleShowNameSection = type => {
     creatingType.current = type

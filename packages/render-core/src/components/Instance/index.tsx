@@ -2,6 +2,8 @@ import { createContext, FC } from "preact/compat";
 import { LinkKey } from "@graph-state/core";
 import { Fragment } from "@/components/Fragment";
 import { useInstance } from "./hooks/useInstance";
+import { GlobalManager } from "@/providers/GlobalManager";
+import { useGlobalManager } from "@/shared/hooks/useGlobalManager";
 
 export interface InstanceProps {
   layerKey?: LinkKey;
@@ -18,19 +20,20 @@ export const InstanceContext = createContext({
   definitions: [],
 });
 
-export const Instance: FC<InstanceProps> = (instanceProps) => {
+const InstanceInitial: FC<InstanceProps> = (instanceProps) => {
   const {
     styles,
     fragmentId,
     parentManager,
     props,
+    hash,
     innerManager,
     definitions,
     globalManager,
   } = useInstance(instanceProps);
 
   return (
-    <InstanceContext
+    <InstanceContext.Provider
       value={{
         layerKey: instanceProps.layerKey,
         definitions,
@@ -40,12 +43,22 @@ export const Instance: FC<InstanceProps> = (instanceProps) => {
       }}
     >
       {parentManager ? (
-        <div data-key={instanceProps.layerKey} style={styles}>
+        <div className={hash} data-key={instanceProps.layerKey}>
           <Fragment fragmentId={fragmentId} globalManager={globalManager} />
         </div>
       ) : (
         <Fragment fragmentId={fragmentId} globalManager={globalManager} />
       )}
-    </InstanceContext>
+    </InstanceContext.Provider>
+  );
+};
+
+export const Instance = (props) => {
+  return "globalManager" in props ? (
+    <GlobalManager value={props.globalManager}>
+      <InstanceInitial {...props} />
+    </GlobalManager>
+  ) : (
+    <InstanceInitial {...props} />
   );
 };

@@ -1,30 +1,20 @@
 .root {
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: var(--gutter-default);
-    container-type: inline-size;
+    background: var(--background);
+    padding-block: var(--gutter-default);
+    border-radius: var(--radius-main);
 }
 
 .header {
     display: flex;
-    gap: var(--gutter-default);
+    gap: var(--gutter-medium);
     align-items: center;
+    justify-content: flex-end;
 }
 
-.body {
-    display: grid;
-    gap: var(--gutter-default);
-    grid-template-columns: repeat(1, 1fr);
-}
-
-@container (inline-size > 768px) {
-    .body {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@container (inline-size > 1200px) {
-    .body {
-        grid-template-columns: repeat(3, 1fr);
-    }
+.search {
+    flex-basis: 30%;
 }

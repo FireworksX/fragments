@@ -1,0 +1,13 @@
+.root {
+    outline: none;
+    transition: var(--animation-transition-default);
+    border-radius: var(--radius-small);
+
+    &:focus {
+        background: var(--background-secondary);
+    }
+
+    &:hover {
+        background: var(--background-secondary);
+    }
+}

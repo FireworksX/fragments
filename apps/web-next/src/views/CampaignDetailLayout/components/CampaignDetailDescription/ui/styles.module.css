@@ -1,0 +1,17 @@
+.root {
+    font-size: 14px;
+    color: var(--secondary);
+}
+
+.content {
+    padding: var(--gutter-small);
+}
+
+.empty {
+    padding: var(--gutter-small);
+    transition: var(--animation-transition-default);
+
+    &:hover {
+        color: var(--text-color-accent);
+    }
+}

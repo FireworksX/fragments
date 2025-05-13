@@ -1,12 +1,23 @@
 .root {
     display: flex;
+    gap: var(--gutter-medium);
+    align-items: center;
     font-size: 14px;
     color: var(--text-color-accent);
     padding: 10px 15px;
-    border-bottom: 2px solid transparent;
+    border-radius: var(--radius-second);
 
     &.active {
-        border-color: var(--secondary);
+        background: rgba(var(--secondary-bg-rgb), .7);
         font-weight: 500;
+    }
+}
+
+.icon {
+    display: flex;
+    color: var(--secondary);
+
+    &:empty {
+        display: none;
     }
 }

@@ -2,9 +2,13 @@
     position: relative;
 }
 
+.lockerBody {
+    position: relative;
+}
+
 .lockerWrapper {
     position: absolute;
+    top: 5px;
     right: 140px;
-    bottom: 20px;
     z-index: 2;
 }

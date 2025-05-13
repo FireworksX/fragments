@@ -22,6 +22,7 @@ export interface ButtonProps extends TouchableProps, PropsWithChildren {
   stretched?: boolean
   disabled?: boolean
   loading?: boolean
+  glowing?: boolean
   className?: string
   icon?: ReactNode
   suffix?: ReactNode
@@ -35,6 +36,7 @@ const Button: FC<ButtonProps> = ({
   disabled,
   stretched,
   loading,
+  glowing,
   children,
   suffix,
   icon,
@@ -43,6 +45,7 @@ const Button: FC<ButtonProps> = ({
 }) => {
   const spinnerColorByMode = {
     'warning-outline': 'var(--warning)',
+    'danger-outline': 'var(--danger)',
     'success-outline': 'var(--success)'
   }[mode]
 
@@ -52,7 +55,8 @@ const Button: FC<ButtonProps> = ({
       disabled={disabled}
       className={cn(styles.root, className, styles[mode], styles[size], {
         [styles.stretched]: stretched,
-        [styles.loading]: loading
+        [styles.loading]: loading,
+        [styles.glowing]: glowing
       })}
       TagName='button'
       {...touchProps}

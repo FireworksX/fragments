@@ -1,0 +1,26 @@
+.root {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: var(--radius-main);
+    padding: 3px 10px;
+    font-size: 10px;
+    font-weight: 400;
+    position: relative;
+    text-transform: uppercase;
+
+    &.success {
+        background: var(--success-bg);
+        color: var(--success);
+    }
+
+    &.warning {
+        color: var(--warning);
+        background: var(--warning-bg);
+    }
+
+    &.error {
+        color: var(--danger);
+        background: var(--danger-bg);
+    }
+}
