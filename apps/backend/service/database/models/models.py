@@ -18,6 +18,16 @@ from conf import service_settings
 from database import Base
 import datetime
 
+class ProjectGoal(Base):
+    __tablename__ = 'project_goal'
+    id = Column('id', Integer, primary_key=True, index=True)
+    created_at = Column('created_at', DateTime, default=datetime.datetime.now(datetime.UTC))
+    name = Column('name', String, nullable=False)
+    target_action = Column('target_action', String, nullable=False)
+    
+    project_id = Column('project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False)
+    project = relationship('Project', back_populates='goals')
+
 class ProjectMemberRole(Base):
     __tablename__ = 'project_members_role'
     user_id = Column(ForeignKey('user.id'), primary_key=True)
@@ -85,6 +95,7 @@ class Project(Base):
     owner = relationship('User')
     members = relationship('ProjectMemberRole', back_populates='project')
     campaigns = relationship('ProjectCampaign', back_populates='project')
+    goals = relationship('ProjectGoal', back_populates='project', cascade='all, delete-orphan')
 
     root_directory_id = Column('directory_id', Integer, ForeignKey('filesystem_directory.id'))
     root_directory = relationship('FilesystemDirectory', foreign_keys=[root_directory_id])

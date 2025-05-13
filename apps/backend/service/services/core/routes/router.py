@@ -46,6 +46,9 @@ from .project import add_user_to_project as add_user_to_project_route
 from .project import change_project_private_key_route
 from .project import change_user_role as change_user_role_route
 from .project import (
+    create_project_goal_route,
+    delete_project_goal_route,
+    update_project_goal_route,
     create_project_route,
     delete_project_logo_route,
     delete_project_public_key_route,
@@ -61,7 +64,7 @@ from .schemas.filesystem import ProjectDirectory, ProjectDirectoryGet, ProjectDi
 from .schemas.fragment import FragmentGet, FragmentPatch, FragmentPost
 from .schemas.landing import ClientLanding, LandingGet, LandingPatch, LandingPost
 from .schemas.media import MediaDelete, MediaGet, MediaPost, MediaType
-from .schemas.project import ProjectGet, ProjectPatch, ProjectPost
+from .schemas.project import ProjectGet, ProjectPatch, ProjectPost, ProjectGoalGet, ProjectGoalPost, ProjectGoalPatch
 from .schemas.stream import StreamGet, StreamPatch, StreamPost
 from .schemas.user import AuthPayload, RoleGet, UserGet
 from .stream import (
@@ -292,6 +295,18 @@ class Mutation:
         self, info: strawberry.Info[Context], project_id: int, public_key_id: int
     ) -> None:
         await delete_project_public_key_route(info, project_id, public_key_id)
+
+    @strawberry.mutation
+    async def create_project_goal(self, info: strawberry.Info[Context], goal: ProjectGoalPost) -> ProjectGoalGet:
+        return await create_project_goal_route(info, goal)
+    
+    @strawberry.mutation
+    async def update_project_goal(self, info: strawberry.Info[Context], goal: ProjectGoalPatch) -> ProjectGoalGet:
+        return await update_project_goal_route(info, goal)
+    
+    @strawberry.mutation
+    async def delete_project_goal(self, info: strawberry.Info[Context], goal_id: int) -> None:
+        await delete_project_goal_route(info, goal_id)
 
     #### project ####
 

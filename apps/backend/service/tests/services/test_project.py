@@ -1,16 +1,15 @@
-import os
-from unittest.mock import AsyncMock, MagicMock, Mock, patch
+from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
 import strawberry
 from fastapi import HTTPException, UploadFile
 from sqlalchemy.orm import Session
 
-from database import Media, Project
+from database import Media, Project, ProjectGoal
 from services.core.routes.middleware import Context
 from services.core.routes.user import AuthPayload, User
 from services.core.routes.schemas.media import MediaGet, MediaType
-from services.core.routes.schemas.project import ProjectGet, ProjectPost, UserRoleGet
+from services.core.routes.schemas.project import ProjectGet, ProjectPost, ProjectGoalGet, ProjectGoalPost, ProjectGoalPatch
 from services.core.routes.project import (
     project_by_id,
     projects,
@@ -23,7 +22,10 @@ from services.core.routes.project import (
     change_user_role,
     add_project_public_key_route,
     delete_project_public_key_route,
-    change_project_private_key_route
+    change_project_private_key_route,
+    create_project_goal_route,
+    update_project_goal_route,
+    delete_project_goal_route
 )
 
 
@@ -62,6 +64,7 @@ async def test_project_by_id_successful():
         mock_project.owner = Mock()
         mock_project.campaigns = []
         mock_project.logo = None
+        mock_project.goals = []
         mock_project.root_directory_id = 1
         mock_project.private_key = Mock(key="private_key", id=1)
         mock_project.public_keys = []
@@ -142,6 +145,7 @@ async def test_create_project_successful():
         mock_project.owner = Mock()
         mock_project.campaigns = []
         mock_project.logo = None
+        mock_project.goals = []
         mock_project.root_directory_id = 1
         mock_project.private_key = Mock(key="private_key", id=1)
         mock_project.public_keys = []
@@ -226,6 +230,7 @@ async def test_delete_project_logo_successful():
         mock_project.members = []
         mock_project.owner = Mock()
         mock_project.campaigns = []
+        mock_project.goals = []
         mock_project.root_directory_id = 1
         mock_project.private_key = Mock(key="private_key", id=1)
         mock_project.public_keys = []
@@ -240,3 +245,85 @@ async def test_delete_project_logo_successful():
         assert isinstance(response, ProjectGet)
         assert response.id == 1
         mock_delete_media.assert_called_once_with(info.context.session(), 1)
+
+
+@pytest.mark.asyncio
+async def test_create_project_goal_successful():
+    with patch(
+        'services.core.routes.project.get_project_by_id_db', new_callable=AsyncMock
+    ) as mock_get, patch(
+        'services.core.routes.project.write_permission', new_callable=AsyncMock
+    ) as mock_permission, patch(
+        'services.core.routes.project.create_project_goal_db', new_callable=AsyncMock
+    ) as mock_create_goal:
+
+        mock_project = Mock(spec=Project)
+        mock_project.id = 1
+        mock_get.return_value = mock_project
+        mock_permission.return_value = True
+
+        mock_goal = Mock(spec=ProjectGoal)
+        mock_goal.id = 1
+        mock_goal.name = "Test Goal"
+        mock_goal.target_action = "test_action"
+        mock_create_goal.return_value = mock_goal
+
+        info = mock_info()
+        goal_post = ProjectGoalPost(project_id=1, name="Test Goal", target_action="test_action")
+        response = await create_project_goal_route(info, goal_post)
+
+        assert isinstance(response, ProjectGoalGet)
+        assert response.id == 1
+        assert response.name == "Test Goal"
+        assert response.target_action == "test_action"
+        mock_create_goal.assert_called_once_with(info.context.session(), 1, "Test Goal", "test_action")
+
+@pytest.mark.asyncio
+async def test_update_project_goal_successful():
+    with patch(
+        'services.core.routes.project.get_project_goal_by_id_db', new_callable=AsyncMock
+    ) as mock_get, patch(
+        'services.core.routes.project.write_permission', new_callable=AsyncMock
+    ) as mock_permission, patch(
+        'services.core.routes.project.update_project_goal_db', new_callable=AsyncMock
+    ) as mock_update_goal:
+
+        mock_goal = Mock(spec=ProjectGoal)
+        mock_goal.id = 1
+        mock_goal.project_id = 1
+        mock_goal.name = "Updated Goal"
+        mock_goal.target_action = "updated_action"
+        mock_get.return_value = mock_goal
+        mock_permission.return_value = True
+        mock_update_goal.return_value = mock_goal
+
+        info = mock_info()
+        goal_patch = ProjectGoalPatch(id=1, name="Updated Goal", target_action="updated_action")
+        response = await update_project_goal_route(info, goal_patch)
+
+        assert isinstance(response, ProjectGoalGet)
+        assert response.id == 1
+        assert response.name == "Updated Goal"
+        assert response.target_action == "updated_action"
+        mock_update_goal.assert_called_once_with(info.context.session(), 1, "Updated Goal", "updated_action")
+
+@pytest.mark.asyncio
+async def test_delete_project_goal_successful():
+    with patch(
+        'services.core.routes.project.get_project_goal_by_id_db', new_callable=AsyncMock
+    ) as mock_get, patch(
+        'services.core.routes.project.write_permission', new_callable=AsyncMock
+    ) as mock_permission, patch(
+        'services.core.routes.project.delete_project_goal_db', new_callable=AsyncMock
+    ) as mock_delete_goal:
+
+        mock_goal = Mock(spec=ProjectGoal)
+        mock_goal.id = 1
+        mock_goal.project_id = 1
+        mock_get.return_value = mock_goal
+        mock_permission.return_value = True
+
+        info = mock_info()
+        await delete_project_goal_route(info, 1)
+
+        mock_delete_goal.assert_called_once_with(info.context.session(), 1)
