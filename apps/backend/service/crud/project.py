@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from conf.settings import service_settings
 from crud.filesystem import create_directory_db
 from database import FilesystemDirectory
-from database.models import Project, ProjectApiKey, ProjectMemberRole, User
+from database.models import Project, ProjectApiKey, ProjectGoal, ProjectMemberRole, User
 
 
 def generate_api_key(project_id: int) -> str:
@@ -174,3 +174,43 @@ async def update_project_by_id_db(db: Session, values: dict) -> Project:
     db.commit()
     db.refresh(project)
     return project
+
+async def create_project_goal_db(
+    db: Session, project_id: int, name: str, target_action: str
+) -> ProjectGoal:
+    goal = ProjectGoal(
+        project_id=project_id,
+        name=name,
+        target_action=target_action
+    )
+    db.add(goal)
+    db.commit()
+    db.refresh(goal)
+    return goal
+
+
+async def get_project_goal_by_id_db(db: Session, goal_id: int) -> Optional[ProjectGoal]:
+    return db.query(ProjectGoal).filter(ProjectGoal.id == goal_id).first()
+
+
+async def get_project_goals_db(db: Session, project_id: int) -> List[ProjectGoal]:
+    return db.query(ProjectGoal).filter(ProjectGoal.project_id == project_id).all()
+
+
+async def update_project_goal_db(
+    db: Session, goal_id: int, name: Optional[str] = None, target_action: Optional[str] = None
+) -> ProjectGoal:
+    goal = await get_project_goal_by_id_db(db, goal_id)
+    if name is not None:
+        goal.name = name
+    if target_action is not None:
+        goal.target_action = target_action
+    db.merge(goal)
+    db.commit()
+    db.refresh(goal)
+    return goal
+
+
+async def delete_project_goal_db(db: Session, goal_id: int) -> None:
+    db.query(ProjectGoal).filter(ProjectGoal.id == goal_id).delete()
+    db.commit()

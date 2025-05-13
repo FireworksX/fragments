@@ -9,7 +9,7 @@ from services.core.routes.schemas.user import AuthPayload
 from services.core.routes.schemas.fragment import FragmentGet
 from services.core.routes.schemas.campaign import CampaignGet
 from services.core.routes.schemas.stream import StreamGet
-from services.core.routes.schemas.project import ProjectGet
+from services.core.routes.schemas.project import ProjectGet, ProjectGoalGet, ProjectGoalPost, ProjectGoalPatch
 from services.core.routes.schemas.landing import LandingGet
 from services.core.routes.schemas.filter import AllFiltersGet
 from services.core.routes.schemas.filesystem import ProjectDirectoryGet
@@ -228,3 +228,38 @@ async def test_query_client_fragment():
         
         assert result == mock_frag
         mock_fragment.assert_called_once_with(info, 1)
+
+@pytest.mark.asyncio
+async def test_create_project_goal():
+    with patch('services.core.routes.router.create_project_goal_route', new_callable=AsyncMock) as mock_create_goal:
+        mock_goal = Mock(spec=ProjectGoalGet)
+        mock_create_goal.return_value = mock_goal
+        
+        mutation = Mutation()
+        info = mock_info()
+        result = await mutation.create_project_goal(info, goal=ProjectGoalPost(project_id=1, name="Test Goal", target_action="click"))
+        
+        assert result == mock_goal
+        mock_create_goal.assert_called_once_with(info, ProjectGoalPost(project_id=1, name="Test Goal", target_action="click"))
+
+@pytest.mark.asyncio
+async def test_update_project_goal():
+    with patch('services.core.routes.router.update_project_goal_route', new_callable=AsyncMock) as mock_update_goal:
+        mock_goal = Mock(spec=ProjectGoalGet)
+        mock_update_goal.return_value = mock_goal
+        
+        mutation = Mutation()
+        info = mock_info()
+        result = await mutation.update_project_goal(info, goal=ProjectGoalPatch(id=1, name="Updated Goal", target_action="submit"))
+        
+        assert result == mock_goal
+        mock_update_goal.assert_called_once_with(info, ProjectGoalPatch(id=1, name="Updated Goal", target_action="submit"))
+
+@pytest.mark.asyncio
+async def test_delete_project_goal():
+    with patch('services.core.routes.router.delete_project_goal_route', new_callable=AsyncMock) as mock_delete_goal:
+        mutation = Mutation()
+        info = mock_info()
+        await mutation.delete_project_goal(info, goal_id=1)
+        
+        mock_delete_goal.assert_called_once_with(info, 1)
