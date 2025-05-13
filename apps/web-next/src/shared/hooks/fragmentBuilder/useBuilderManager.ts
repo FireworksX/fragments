@@ -1,5 +1,5 @@
 import { usePathname, useSearchParams, useRouter, useParams } from 'next/navigation'
-import { createConstants } from '@fragments/utils'
+import { createConstants } from '@fragmentsx/utils'
 import { LinkKey } from '@graph-state/core'
 import { useGraph } from '@graph-state/react'
 import { useContext } from 'react'

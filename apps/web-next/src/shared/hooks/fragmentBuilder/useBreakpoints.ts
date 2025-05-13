@@ -6,7 +6,7 @@ import { LinkKey } from '@graph-state/core'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useBuilderCreator } from '@/shared/hooks/fragmentBuilder/useBuilderCreator'
 import { useFragmentLayers } from '@/shared/hooks/fragmentBuilder/useFragmentLayers'
-import { isPartOfPrimary } from '@fragments/render-core'
+import { isPartOfPrimary } from '@fragmentsx/render-core'
 import { pick } from '@fragmentsx/utils'
 
 const DEFAULT_BREAKPOINTS = [

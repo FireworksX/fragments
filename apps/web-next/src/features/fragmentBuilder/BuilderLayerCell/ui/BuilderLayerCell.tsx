@@ -1,7 +1,7 @@
 import { ComponentRef, ElementRef, FC, useEffect, useMemo, useRef, useState } from 'react'
 import cn from 'classnames'
 import { LinkKey } from '@graph-state/core'
-import { isValue } from '@fragments/utils'
+import { isValue } from '@fragmentsx/utils'
 import { animated } from '@react-spring/web'
 import styles from './styles.module.css'
 import CaretRight from '@/shared/icons/next/chevrone-right.svg'

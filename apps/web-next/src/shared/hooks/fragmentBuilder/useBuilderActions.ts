@@ -3,7 +3,7 @@ import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { stateAlias } from '@/views/FragmentDetail/ui/FragmentDetail'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 
 export const useBuilderActions = () => {
   const { documentManager } = useBuilderDocument()

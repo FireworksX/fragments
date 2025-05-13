@@ -1,5 +1,5 @@
 import { FC, useState } from 'react'
-import { isValue } from '@fragments/utils'
+import { isValue } from '@fragmentsx/utils'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { useGraph } from '@graph-state/react'

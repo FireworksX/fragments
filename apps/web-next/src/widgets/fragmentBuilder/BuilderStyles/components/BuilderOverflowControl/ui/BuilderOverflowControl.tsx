@@ -3,7 +3,7 @@ import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { Select } from '@/shared/ui/Select'
 import { capitalize } from '@/shared/utils/capitalize'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 
 interface BuilderOverflowControlProps {
   className?: string

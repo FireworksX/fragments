@@ -8,7 +8,7 @@ import { DropdownOption } from '@/shared/ui/DropdownOption'
 import { PanelHeadAside } from '@/shared/ui/PanelHeadAside'
 import { BuilderVariableCell } from '@/features/fragmentBuilder/BuilderVariableCell'
 import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 
 interface BuilderVariablesProps {
   className?: string

@@ -1,6 +1,6 @@
 import { use, useMemo } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { borderType as borderTypeDef } from '@fragments/plugin-fragment'
+import { borderType as borderTypeDef } from '@fragmentsx/plugin-fragment'
 import { LinkKey } from '@graph-state/core'
 import { to } from '@react-spring/web'
 import { useFieldValue } from '@/shared/hooks/fragmentBuilder/useFieldValue'

@@ -5,7 +5,7 @@ import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { popoutsStore } from '@/shared/store/popouts.store'
 import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { InputSelect } from '@/shared/ui/InputSelect'
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 
 interface BuilderBorderControlProps {
   className?: string

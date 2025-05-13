@@ -3,7 +3,7 @@ import { LinkKey } from '@graph-state/core'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph, useGraphStack } from '@graph-state/react'
 import { useInstanceProp } from '@/widgets/renderer/hooks/useInstanceProp'
-import { getFieldValue } from '@fragments/plugin-fragment'
+import { getFieldValue } from '@fragmentsx/plugin-fragment'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export const useFieldValue = (layerKey: LinkKey, field: string) => {

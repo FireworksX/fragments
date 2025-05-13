@@ -1,10 +1,10 @@
 import { useDrag } from '@use-gesture/react'
 import { animatableValue } from '@/shared/utils/animatableValue'
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 import { useGraph } from '@graph-state/react'
 import { useContext, useMemo } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { createConstants } from '@fragments/utils'
+import { createConstants } from '@fragmentsx/utils'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { to } from '@react-spring/web'
 import { getDomRect } from '@/shared/utils/getDomRect'
@@ -14,7 +14,7 @@ import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanva
 import { useAllowResize } from '@/shared/hooks/fragmentBuilder/useAllowResize'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
-import { getParent } from '@fragments/render-core'
+import { getParent } from '@fragmentsx/render-core'
 import { SCALE } from '@/widgets/fragmentBuilder/BuilderCanvas/hooks/useCanvasDrag'
 
 export const SELECTION_SIDES = createConstants('topLeft', 'top', 'right', 'bottom', 'left')

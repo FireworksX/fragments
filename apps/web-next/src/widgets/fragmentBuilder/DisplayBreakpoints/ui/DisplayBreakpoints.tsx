@@ -1,5 +1,5 @@
 import React, { cloneElement, FC, PropsWithChildren, ReactNode, useContext } from 'react'
-// import { Fragment } from '@fragments/render'
+// import { Fragment } from '@fragmentsx/render'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'

@@ -1,5 +1,5 @@
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 
 export const useBuilderFragmentGrowing = () => {
   const [horizontalGrow, setHorizontalGrow] = useLayerValue('horizontalGrow')

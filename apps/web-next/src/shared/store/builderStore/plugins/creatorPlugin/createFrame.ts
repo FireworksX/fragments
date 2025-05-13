@@ -1,7 +1,7 @@
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 import { getRandomColor } from '@/shared/utils/random'
-import { generateId } from '@fragments/utils'
-import { appendChildren } from '@fragments/render-core'
+import { generateId } from '@fragmentsx/utils'
+import { appendChildren } from '@fragmentsx/render-core'
 
 const allowTypes = [definition.nodes.Frame]
 

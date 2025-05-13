@@ -7,10 +7,10 @@ import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDoc
 import { BuilderPreviewContainer } from '../components/BuilderPreviewContainer'
 import { FragmentPreviewProvider } from '@/views/FragmentPreview/lib/FragmentPreviewContext'
 import { useRenderTarget } from '@/widgets/renderer/hooks/useRenderTarget'
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
 import { BuilderPreviewProperties } from '@/views/FragmentPreview/components/BuilderPreviewProperties'
-import { Instance } from '@fragments/render-react'
+import { Instance } from '@fragmentsx/render-react'
 
 interface FragmentPreviewProps {
   className?: string

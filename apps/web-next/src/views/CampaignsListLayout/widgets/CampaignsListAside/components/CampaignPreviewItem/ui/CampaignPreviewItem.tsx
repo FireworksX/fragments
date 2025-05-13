@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { isValue } from '@fragments/utils'
+import { isValue } from '@fragmentsx/utils'
 import { StatusDot } from '@/shared/ui/StatusDot'
 import CheckIcon from '@/shared/icons/next/check.svg'
 import { Link } from '@/shared/ui/Link'

@@ -1,4 +1,4 @@
-import { builderEffectType } from '@fragments/fragments-plugin'
+import { builderEffectType } from '@fragmentsx/fragments-plugin'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 

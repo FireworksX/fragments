@@ -1,4 +1,4 @@
-import { generateId } from '@fragments/utils'
+import { generateId } from '@fragmentsx/utils'
 
 export const getEmptyFragment = (fragmentId: string) => {
   const layerId = generateId()

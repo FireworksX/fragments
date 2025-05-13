@@ -1,5 +1,5 @@
 import { Plugin } from '@graph-state/core'
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 import { getRandomColor } from '@/shared/utils/random'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { createFrame } from './createFrame'

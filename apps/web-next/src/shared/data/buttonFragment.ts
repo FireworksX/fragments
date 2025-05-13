@@ -1,4 +1,4 @@
-import { generateId } from '@fragments/utils'
+import { generateId } from '@fragmentsx/utils'
 
 export const getButtonFragment = () => {
   return {

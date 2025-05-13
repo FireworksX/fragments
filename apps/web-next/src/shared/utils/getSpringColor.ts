@@ -1,5 +1,5 @@
 import { SpringValue } from '@react-spring/web'
-import { colorToObject, hexToRgb, rgbToRgba } from '@fragments/utils'
+import { colorToObject, hexToRgb, rgbToRgba } from '@fragmentsx/utils'
 
 interface ReturnColor {
   r: SpringValue<number>

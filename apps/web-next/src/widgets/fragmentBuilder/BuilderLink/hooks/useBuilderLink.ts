@@ -1,7 +1,7 @@
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { booleanTabsSelectorItems } from '@/shared/data'
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 
 export const useBuilderLink = () => {
   const { selection, selectionGraph } = useBuilderSelection()

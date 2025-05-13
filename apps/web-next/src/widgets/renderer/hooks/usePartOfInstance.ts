@@ -1,4 +1,4 @@
-import { nodes, renderTarget } from '@fragments/plugin-fragment-spring'
+import { nodes, renderTarget } from '@fragmentsx/plugin-fragment-spring'
 import { LinkKey } from '@graph-state/core'
 import { use } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
