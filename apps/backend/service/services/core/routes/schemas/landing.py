@@ -43,7 +43,7 @@ class LandingPatch:
 
 
 @strawberry.input
-class ClientLanding:
+class ClientInfo:
     os_type: Optional[OSType]
     device_type: Optional[DeviceType]
     time_frame: Optional[datetime]

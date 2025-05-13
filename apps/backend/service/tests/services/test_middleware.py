@@ -6,7 +6,7 @@ from jwt.exceptions import InvalidTokenError
 
 from services.core.routes.middleware import Context, UserAgentInfo, get_context
 from services.core.routes.schemas.filter import DeviceType, OSType
-from services.core.routes.schemas.landing import ClientLanding
+from services.core.routes.schemas.landing import ClientInfo
 from services.core.routes.schemas.user import AuthPayload
 from database.models import User, Project
 
@@ -92,9 +92,9 @@ async def test_client_landing():
         }
     )
 
-    result = await context.client_landing()
+    result = await context.client_info()
     
-    assert isinstance(result, ClientLanding)
+    assert isinstance(result, ClientInfo)
     assert isinstance(result.time_frame, datetime)
     assert result.ip_address == '192.168.1.1'
     assert result.page == 'https://example.com'

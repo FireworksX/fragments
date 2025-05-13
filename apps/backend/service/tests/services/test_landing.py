@@ -10,7 +10,7 @@ from services.core.routes.landing import (
     update_landing_route,
     get_client_landing
 )
-from services.core.routes.schemas.landing import LandingGet, LandingPatch, LandingPost, ClientLanding
+from services.core.routes.schemas.landing import LandingGet, LandingPatch, LandingPost, ClientInfo
 from database import Landing, Stream, Project, Fragment
 from crud.ipgetter import GeoLocation
 
@@ -19,7 +19,8 @@ def mock_info():
     info.context = Mock()
     info.context.user = AsyncMock(return_value=Mock(user=Mock(id=123)))
     info.context.session = Mock(return_value=Mock())
-    info.context.client_landing = AsyncMock(return_value=Mock(ip_address="1.2.3.4"))
+    info.context.client_info = AsyncMock(return_value=Mock(ip_address="1.2.3.4"))
+    info.context.client = AsyncMock(return_value=Mock(id=1))
     info.context.project = AsyncMock(return_value=Mock(id=1))
     return info
 

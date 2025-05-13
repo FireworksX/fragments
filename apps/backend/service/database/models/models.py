@@ -418,3 +418,42 @@ class LandingMetric(Base):
     # Custom event
     event = Column('event', String)
 
+class Client(Base):
+    __tablename__ = 'client'
+    id = Column('id', Integer, primary_key=True, index=True)
+    created_at = Column('created_at', DateTime, default=datetime.datetime.now(datetime.UTC))
+    updated_at = Column('updated_at', DateTime, default=datetime.datetime.now(datetime.UTC), onupdate=datetime.datetime.now(datetime.UTC))
+    last_visited_at = Column('last_visited_at', DateTime, nullable=True)
+
+    # Relationships
+    history = relationship('ClientHistory', back_populates='client')
+
+
+class ClientHistory(Base):
+    __tablename__ = 'client_history'
+    id = Column('id', Integer, primary_key=True, index=True)
+    client_id = Column('client_id', Integer, ForeignKey('client.id'))
+    created_at = Column('created_at', DateTime, default=datetime.datetime.now(datetime.UTC))
+    
+    # Device info
+    device_type = Column('device_type', Integer)
+    os_type = Column('os_type', Integer)
+    browser = Column('browser', String)
+    language = Column('language', String)
+    screen_width = Column('screen_width', Integer)
+    screen_height = Column('screen_height', Integer)
+
+    # Page info
+    url = Column('url', String)
+    referrer = Column('referrer', String)
+    domain = Column('domain', String)
+    subdomain = Column('subdomain', String)
+    page_load_time = Column('page_load_time', Float)  # in milliseconds
+    
+    # Geolocation
+    country = Column('country', String)
+    region = Column('region', String)
+    city = Column('city', String)
+
+    # Relationships
+    client = relationship('Client', back_populates='history')

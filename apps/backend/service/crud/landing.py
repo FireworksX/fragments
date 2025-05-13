@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from database import Stream
 from database.models import Landing
-from services.core.routes.schemas.landing import ClientLanding
+from services.core.routes.schemas.landing import ClientInfo
 
 from .ipgetter import GeoLocation, get_location_by_ip
 
@@ -69,7 +69,7 @@ async def update_landing_by_id_db(db: Session, values: dict) -> Landing:
     return landing
 
 
-async def stream_matches_client(stream: Stream, client: ClientLanding) -> bool:
+async def stream_matches_client(stream: Stream, client: ClientInfo) -> bool:
     client_location: GeoLocation = get_location_by_ip(client.ip_address)
     if stream.pages_filter:
         if not any(client.page == pf.pages for pf in stream.pages_filter):
@@ -105,7 +105,7 @@ async def stream_matches_client(stream: Stream, client: ClientLanding) -> bool:
 
 
 async def get_best_landing(
-    db: Session, client: ClientLanding, project_id: int
+    db: Session, client: ClientInfo, project_id: int
 ) -> Optional[Landing]:
     streams = (
         db.query(Stream)
