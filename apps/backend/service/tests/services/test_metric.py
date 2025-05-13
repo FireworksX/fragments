@@ -15,11 +15,12 @@ def mock_info():
     info.context = Mock()
     info.context.project = AsyncMock(return_value=Mock())
     info.context.session = Mock(return_value=Mock())
-    info.context.client_landing = AsyncMock(return_value=Mock(
+    info.context.client_info = AsyncMock(return_value=Mock(
         ip_address="127.0.0.1",
         device_type=None,
         os_type=None
     ))
+    info.context.client = AsyncMock(return_value=Mock(id=1))
     return info
 
 @pytest.mark.asyncio

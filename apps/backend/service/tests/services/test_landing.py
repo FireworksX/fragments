@@ -19,7 +19,8 @@ def mock_info():
     info.context = Mock()
     info.context.user = AsyncMock(return_value=Mock(user=Mock(id=123)))
     info.context.session = Mock(return_value=Mock())
-    info.context.client_landing = AsyncMock(return_value=Mock(ip_address="1.2.3.4"))
+    info.context.client_info = AsyncMock(return_value=Mock(ip_address="1.2.3.4"))
+    info.context.client = AsyncMock(return_value=Mock(id=1))
     info.context.project = AsyncMock(return_value=Mock(id=1))
     return info
 
