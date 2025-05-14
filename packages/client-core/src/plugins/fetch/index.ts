@@ -9,7 +9,7 @@ const BASE_ENV = {
 };
 
 export const fetchPlugin: Plugin = (state) => {
-  const url = state?.env?.url ?? "http://localhost/graphql";
+  const url = state?.env?.url ?? "/graphql";
   const isSelf = state?.env?.isSelf ?? false;
   const apiToken = state?.env?.apiToken;
 
