@@ -11,3 +11,22 @@ async def create_feedback_db(db: Session, feel: int, page: str, content: Optiona
     db.commit()
     db.refresh(feedback)
     return feedback
+
+async def get_feedback_by_id_db(db: Session, feedback_id: int) -> Optional[Feedback]:
+    return db.query(Feedback).filter(Feedback.id == feedback_id).first()
+
+async def update_feedback_db(db: Session, feedback_id: int, feel: int, page: str, content: Optional[str]) -> Optional[Feedback]:
+    feedback = await get_feedback_by_id_db(db, feedback_id)
+    if feedback:
+        feedback.feel = feel
+        feedback.page = page
+        feedback.content = content
+        db.commit()
+        db.refresh(feedback)
+    return feedback
+
+async def delete_feedback_db(db: Session, feedback_id: int) -> None:
+    feedback = await get_feedback_by_id_db(db, feedback_id)
+    if feedback:
+        db.delete(feedback)
+        db.commit()
