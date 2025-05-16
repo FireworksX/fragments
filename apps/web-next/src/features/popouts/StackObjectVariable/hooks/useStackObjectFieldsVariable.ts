@@ -1,6 +1,6 @@
 import { useContext, useRef } from 'react'
 import { Instance } from '@/app/components/Popover/Popover'
-import { builderVariableType } from '@fragments/fragments-plugin'
+import { builderVariableType } from '@fragmentsx/fragments-plugin'
 import { LinkKey } from '@graph-state/core'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'

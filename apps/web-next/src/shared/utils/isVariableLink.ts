@@ -1,5 +1,5 @@
 import { Entity, isGraph, isLinkKey, LinkKey } from '@graph-state/core'
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 
 export const isVariableLink = (link: Entity) => {
   if (isLinkKey(link)) {

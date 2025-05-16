@@ -6,7 +6,7 @@ import { LinkKey } from '@graph-state/core'
 import { popoutsStore } from '@/shared/store/popouts.store'
 import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export const useBuilderVariableCreator = () => {

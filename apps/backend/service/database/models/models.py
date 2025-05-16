@@ -18,6 +18,16 @@ from conf import service_settings
 from database import Base
 import datetime
 
+class ProjectGoal(Base):
+    __tablename__ = 'project_goal'
+    id = Column('id', Integer, primary_key=True, index=True)
+    created_at = Column('created_at', DateTime, default=datetime.datetime.now(datetime.UTC))
+    name = Column('name', String, nullable=False)
+    target_action = Column('target_action', String, nullable=False)
+    
+    project_id = Column('project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False)
+    project = relationship('Project', back_populates='goals')
+
 class ProjectMemberRole(Base):
     __tablename__ = 'project_members_role'
     user_id = Column(ForeignKey('user.id'), primary_key=True)
@@ -85,6 +95,7 @@ class Project(Base):
     owner = relationship('User')
     members = relationship('ProjectMemberRole', back_populates='project')
     campaigns = relationship('ProjectCampaign', back_populates='project')
+    goals = relationship('ProjectGoal', back_populates='project', cascade='all, delete-orphan')
 
     root_directory_id = Column('directory_id', Integer, ForeignKey('filesystem_directory.id'))
     root_directory = relationship('FilesystemDirectory', foreign_keys=[root_directory_id])
@@ -407,3 +418,42 @@ class LandingMetric(Base):
     # Custom event
     event = Column('event', String)
 
+class Client(Base):
+    __tablename__ = 'client'
+    id = Column('id', Integer, primary_key=True, index=True)
+    created_at = Column('created_at', DateTime, default=datetime.datetime.now(datetime.UTC))
+    updated_at = Column('updated_at', DateTime, default=datetime.datetime.now(datetime.UTC), onupdate=datetime.datetime.now(datetime.UTC))
+    last_visited_at = Column('last_visited_at', DateTime, nullable=True)
+
+    # Relationships
+    history = relationship('ClientHistory', back_populates='client')
+
+
+class ClientHistory(Base):
+    __tablename__ = 'client_history'
+    id = Column('id', Integer, primary_key=True, index=True)
+    client_id = Column('client_id', Integer, ForeignKey('client.id'))
+    created_at = Column('created_at', DateTime, default=datetime.datetime.now(datetime.UTC))
+    
+    # Device info
+    device_type = Column('device_type', Integer)
+    os_type = Column('os_type', Integer)
+    browser = Column('browser', String)
+    language = Column('language', String)
+    screen_width = Column('screen_width', Integer)
+    screen_height = Column('screen_height', Integer)
+
+    # Page info
+    url = Column('url', String)
+    referrer = Column('referrer', String)
+    domain = Column('domain', String)
+    subdomain = Column('subdomain', String)
+    page_load_time = Column('page_load_time', Float)  # in milliseconds
+    
+    # Geolocation
+    country = Column('country', String)
+    region = Column('region', String)
+    city = Column('city', String)
+
+    # Relationships
+    client = relationship('Client', back_populates='history')

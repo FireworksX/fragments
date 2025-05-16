@@ -1,6 +1,6 @@
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
-import { isValue } from '@fragments/utils'
-import { definition } from '@fragments/definition'
+import { isValue } from '@fragmentsx/utils'
+import { definition } from '@fragmentsx/definition'
 import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { useEffect } from 'react'

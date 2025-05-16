@@ -3,7 +3,7 @@ import { SpringValue } from '@react-spring/web'
 import { findRefNode } from '@/shared/utils/findRefNode'
 import type { DragStartEvent } from '@dnd-kit/core/dist/types'
 import { DragEndEvent } from '@dnd-kit/core/dist/types/events'
-import { createConstants } from '@fragments/utils'
+import { createConstants } from '@fragmentsx/utils'
 
 export const draggableTypes = createConstants('fragmentProjectItem')
 

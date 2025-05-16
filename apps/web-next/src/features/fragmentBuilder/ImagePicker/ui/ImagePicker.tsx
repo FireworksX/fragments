@@ -8,7 +8,7 @@ import { Button } from '@/shared/ui/Button'
 import { LayerInvokerValue } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { Panel } from '@/shared/ui/Panel'
 import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 
 export type ImagePickerValue = ImagePaint
 

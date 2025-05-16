@@ -11,7 +11,7 @@ from .middleware import Context
 from .schemas.filter import DeviceType, OSType
 from .schemas.metric import LandingMetricGet, LandingMetricPost
 from crud.project import Project
-from .schemas.landing import ClientLanding
+from .schemas.landing import ClientInfo
 from crud.ipgetter import get_location_by_ip
 
 async def landing_metric_db_to_landing_metric(metric: LandingMetric) -> LandingMetricGet:
@@ -66,7 +66,7 @@ async def get_landing_metric(
 async def create_landing_metric(
     info: strawberry.Info[Context], metric: LandingMetricPost
 ) -> LandingMetricGet:
-    client_landing: ClientLanding = await info.context.client_landing()
+    client_landing: ClientInfo = await info.context.client_info()
     project: Project = await info.context.project()
     db: Session = info.context.session()
     location=get_location_by_ip(client_landing.ip_address)

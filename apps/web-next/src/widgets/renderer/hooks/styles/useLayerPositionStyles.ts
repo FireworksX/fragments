@@ -4,7 +4,7 @@ import {
   nodes,
   positionType as defPositionType,
   renderTarget
-} from '@fragments/plugin-fragment'
+} from '@fragmentsx/plugin-fragment'
 import { to } from '@react-spring/web'
 import { use, useMemo } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'

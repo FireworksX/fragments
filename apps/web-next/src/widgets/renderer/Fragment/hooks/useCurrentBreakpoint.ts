@@ -1,5 +1,5 @@
 import { useGraph } from '@graph-state/react'
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 import { useContext } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { LinkKey } from '@graph-state/core'

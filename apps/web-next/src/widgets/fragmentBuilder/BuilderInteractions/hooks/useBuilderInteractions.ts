@@ -1,4 +1,4 @@
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { useLayerVariables } from '@/shared/hooks/fragmentBuilder/useLayerVariables'
 import { LinkKey } from '@graph-state/core'

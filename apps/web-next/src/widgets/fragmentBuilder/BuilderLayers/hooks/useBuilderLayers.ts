@@ -6,8 +6,8 @@ import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSe
 import { all } from 'axios'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { stateAlias } from '@/views/FragmentDetail/ui/FragmentDetail'
-import { definition } from '@fragments/definition'
-import { getAllParents } from '@fragments/render-core'
+import { definition } from '@fragmentsx/definition'
+import { getAllParents } from '@fragmentsx/render-core'
 
 const findIndexOfNode = (items: unknown[], linkNode: LinkKey) => {
   const index = items.findIndex(item => item.id === linkNode)

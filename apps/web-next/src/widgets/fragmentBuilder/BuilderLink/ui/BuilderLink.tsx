@@ -12,7 +12,7 @@ import { SelectMimicry } from '@/shared/ui/SelectMimicry'
 import { TabsSelector } from '@/shared/ui/TabsSelector'
 import PanelHeadAside from '@/shared/ui/PanelHeadAside/ui/PanelHeadAside'
 import { InputText } from '@/shared/ui/InputText'
-import { isValue } from '@fragments/utils'
+import { isValue } from '@fragmentsx/utils'
 
 interface BuilderLinkProps {
   className?: string

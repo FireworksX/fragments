@@ -7,7 +7,7 @@ import {
   imagePaintScaleModes,
   layerDirection as defLayerDirection,
   paintMode
-} from '@fragments/plugin-fragment'
+} from '@fragmentsx/plugin-fragment'
 import { LinkKey } from '@graph-state/core'
 import { to } from '@react-spring/web'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'

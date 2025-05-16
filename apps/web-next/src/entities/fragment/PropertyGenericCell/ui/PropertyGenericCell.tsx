@@ -20,7 +20,7 @@ import { LinkKey } from '@graph-state/core'
 import { InputText } from '@/shared/ui/InputText'
 import { Select } from '@/shared/ui/Select'
 import { RenderDropdown } from '@/shared/ui/RenderDropdown'
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 
 interface PropertyBooleanCellProps {
   propertyLink: LinkKey

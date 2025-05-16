@@ -3,8 +3,8 @@ import { useGraph } from '@graph-state/react'
 import { use } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { animated } from '@react-spring/web'
-import { isValue } from '@fragments/utils'
-import { linkTarget } from '@fragments/plugin-fragment'
+import { isValue } from '@fragmentsx/utils'
+import { linkTarget } from '@fragmentsx/plugin-fragment'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export const useLayerAttributes = (layerKey: LinkKey) => {

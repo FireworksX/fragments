@@ -1,5 +1,5 @@
 import { use, useMemo } from 'react'
-import { getFieldValueMap, layerMode as defLayerMode } from '@fragments/plugin-fragment'
+import { getFieldValueMap, layerMode as defLayerMode } from '@fragmentsx/plugin-fragment'
 import { LinkKey } from '@graph-state/core'
 import { to } from '@react-spring/web'
 import { useFieldValue } from '@/shared/hooks/fragmentBuilder/useFieldValue'

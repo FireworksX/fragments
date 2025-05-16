@@ -8,7 +8,7 @@ import { Cell } from '@/shared/ui/Cell'
 import { Button } from '@/shared/ui/Button'
 import { VariableIcon } from '@/shared/ui/VariableIcon'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 
 interface BuilderVariableCellProps {
   variableKey?: LinkKey

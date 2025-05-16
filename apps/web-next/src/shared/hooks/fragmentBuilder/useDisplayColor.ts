@@ -4,7 +4,7 @@ import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { isGraphOrKey, LinkKey } from '@graph-state/core'
 import { displayColorInterpolate } from '@/shared/utils/displayColor'
 import { Interpolation, SpringValue } from '@react-spring/web'
-import { objectToColorString } from '@fragments/utils'
+import { objectToColorString } from '@fragmentsx/utils'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export const useDisplayColor = (inputColor?: Color) => {

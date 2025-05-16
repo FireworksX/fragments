@@ -1,6 +1,6 @@
 import { Color } from 'react-color'
 import { to } from '@react-spring/web'
-import { rgbToHex } from '@fragments/utils'
+import { rgbToHex } from '@fragmentsx/utils'
 
 export const displayColor = (color?: Color) => {
   if (color) {

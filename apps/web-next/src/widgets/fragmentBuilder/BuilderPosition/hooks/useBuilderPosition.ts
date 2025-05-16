@@ -1,7 +1,7 @@
 import { useContext, useMemo } from 'react'
 import { useGraph } from '@graph-state/react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'

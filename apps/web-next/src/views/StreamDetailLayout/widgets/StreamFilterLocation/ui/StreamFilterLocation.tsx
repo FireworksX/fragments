@@ -10,7 +10,7 @@ import { DropdownOption } from '@/shared/ui/DropdownOption'
 import { Chip } from '@/shared/ui/Chip'
 import EditIcon from '@/shared/icons/next/pencil.svg'
 import { useStreamLocationFilterLazyQuery } from '../queries/StreamLocationFilter.generated'
-import { noop } from '@fragments/utils'
+import { noop } from '@fragmentsx/utils'
 
 interface StreamFilterLocationProps {
   isEdit?: boolean

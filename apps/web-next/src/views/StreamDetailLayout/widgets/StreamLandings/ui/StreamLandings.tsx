@@ -13,7 +13,7 @@ import { StatusDot } from '@/shared/ui/StatusDot'
 import { useStreamLandings } from '../hooks/useStreamLandings'
 import { Link } from '@/shared/ui/Link'
 import { Placeholder } from '@/components/Placeholder'
-import { noop } from '@fragments/utils'
+import { noop } from '@fragmentsx/utils'
 
 interface StreamLandingsProps {
   className?: string

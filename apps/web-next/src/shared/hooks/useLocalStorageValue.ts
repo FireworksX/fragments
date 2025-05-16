@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { isBrowser } from '@fragments/utils'
+import { isBrowser } from '@fragmentsx/utils'
 
 export interface UseLocalStorageValueOptions {
   sync?: boolean

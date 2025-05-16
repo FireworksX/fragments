@@ -1,5 +1,5 @@
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 
 const ALLOW_TYPES = [definition.sizing.Fixed, definition.sizing.Relative]
 

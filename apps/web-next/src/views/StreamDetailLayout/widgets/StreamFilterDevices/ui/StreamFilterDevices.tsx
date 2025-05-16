@@ -9,7 +9,7 @@ import { Dropdown } from '@/shared/ui/Dropdown'
 import { useStreamDevicesFilterLazyQuery } from '../queries/StreamDevicesFilter.generated'
 import DropdownOptionSelect from '@/shared/ui/DropdownOptionSelect/ui/DropdownOptionSelect'
 import { DeviceType } from '@/graphql/types'
-import { noop } from '@fragments/utils'
+import { noop } from '@fragmentsx/utils'
 
 interface StreamFilterDevicesProps {
   value?: DeviceType[]

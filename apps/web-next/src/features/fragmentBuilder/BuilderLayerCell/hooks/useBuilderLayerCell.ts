@@ -1,6 +1,6 @@
 import { useGraph } from '@graph-state/react'
 import { LinkKey } from '@graph-state/core'
-import { definition } from '@fragments/definition'
+import { definition } from '@fragmentsx/definition'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useBreakpoints } from '@/shared/hooks/fragmentBuilder/useBreakpoints'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'

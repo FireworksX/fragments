@@ -7,7 +7,7 @@ import { to } from '@react-spring/web'
 import { Touchable } from '@/shared/ui/Touchable'
 import { Button } from '@/shared/ui/Button'
 import { Cell } from '@/shared/ui/Cell'
-import { objectToColorString } from '@fragments/utils'
+import { objectToColorString } from '@fragmentsx/utils'
 
 interface ColorCellProps extends PropsWithChildren {
   color: Color | Interpolation<Color>
