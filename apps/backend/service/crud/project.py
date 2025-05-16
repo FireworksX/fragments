@@ -192,6 +192,12 @@ async def create_project_goal_db(
 async def get_project_goal_by_id_db(db: Session, goal_id: int) -> Optional[ProjectGoal]:
     return db.query(ProjectGoal).filter(ProjectGoal.id == goal_id).first()
 
+async def get_project_goal_by_target_action_db(db: Session, project_id: int, target_action: str) -> Optional[ProjectGoal]:
+    return db.query(ProjectGoal).filter(
+        ProjectGoal.project_id == project_id,
+        ProjectGoal.target_action == target_action
+    ).first()
+
 
 async def get_project_goals_db(db: Session, project_id: int) -> List[ProjectGoal]:
     return db.query(ProjectGoal).filter(ProjectGoal.project_id == project_id).all()

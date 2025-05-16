@@ -5,7 +5,7 @@ import strawberry
 from services.core.routes.schemas.campaign import CampaignGet
 from services.core.routes.schemas.filesystem import ProjectDirectoryGet
 from services.core.routes.schemas.user import UserGet, UserRoleGet
-
+from services.core.routes.schemas.client import ClientGet
 
 @strawberry.type
 class ProjectKeyGet:
@@ -42,7 +42,6 @@ class ProjectGet:
     root_directory_id: int
     private_key: Optional[ProjectKeyGet]
     public_keys: List[ProjectKeyGet]
-    goals: List[ProjectGoalGet]
 
 @strawberry.input
 class ProjectPost:
@@ -54,3 +53,11 @@ class ProjectPost:
 class ProjectPatch:
     id: int
     name: Optional[str] = None
+
+@strawberry.type
+class ClientProjectGoalGet:
+    id: int
+    client: ClientGet
+    project_goal: ProjectGoalGet 
+    project: ProjectGet
+    created_at: str
