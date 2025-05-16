@@ -42,7 +42,6 @@ class ProjectGet:
     root_directory_id: int
     private_key: Optional[ProjectKeyGet]
     public_keys: List[ProjectKeyGet]
-    goals: List[ProjectGoalGet]
 
 @strawberry.input
 class ProjectPost:

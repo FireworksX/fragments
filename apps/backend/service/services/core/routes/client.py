@@ -3,20 +3,26 @@ from typing import List, Optional
 import strawberry
 from fastapi import HTTPException, status
 
-from database import Session, Client, ClientHistory
+from database import Session, Client, ClientHistory, ProjectGoal
 from crud.client import (
     create_client_db,
     get_client_by_id_db,
     update_client_last_visited_db,
     create_client_history_db,
     get_client_history_db,
-    get_client_history_by_id_db
+    get_clients_by_project_id_db
 )
-from crud.ipgetter import GeoLocation, get_location_by_ip
-
+from crud.project import get_project_by_id_db, get_project_goal_by_target_action_db
+from crud.client import create_client_project_goal_db
+from crud.ipgetter import get_location_by_ip
+from database.models import Project
 from .middleware import Context
 from .schemas.client import ClientGet, ClientHistoryGet
-
+from .schemas.user import AuthPayload, RoleGet
+from .project import get_user_role_in_project
+async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
+    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
+    return role is not None
 
 def client_history_db_to_history(history: ClientHistory) -> ClientHistoryGet:
     return ClientHistoryGet(
@@ -49,7 +55,7 @@ def client_db_to_client(client: Client, history: List[ClientHistory]) -> ClientG
         history=[client_history_db_to_history(h) for h in history]
     )
 
-async def init_client_session(info: strawberry.Info[Context]) -> None:
+async def init_client_session_route(info: strawberry.Info[Context]) -> None:
     client: Client = await info.context.client()
     db: Session = info.context.session()
     client_info = await info.context.client_info()
@@ -81,12 +87,37 @@ async def init_client_session(info: strawberry.Info[Context]) -> None:
         samesite="Lax"  # Moderate CSRF protection while allowing normal navigation
     )
 
-async def create_client_route(info: strawberry.Info[Context]) -> ClientGet:
+async def contribute_to_project_goal_route(info: strawberry.Info[Context], target_action: str) -> None:
     db: Session = info.context.session()
-    client: Client = await create_client_db(db)
-    history: List[ClientHistory] = await get_client_history_db(db, client.id)
-    return client_db_to_client(client, history)
+    client: Client = await info.context.client()
+    project: Project = await info.context.project()
+    project_goal: ProjectGoal = await get_project_goal_by_target_action_db(db, project.id, target_action)
+    if project_goal is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project goal does not exist')
+    await create_client_project_goal_db(db, client.id, project_goal.id, project.id)
+    
+    
 
+
+
+
+async def get_clients_by_project_id_route(info: strawberry.Info[Context], project_id: int) -> List[ClientGet]:
+    db: Session = info.context.session()
+    user: AuthPayload = await info.context.user()
+
+    project: Project = await get_project_by_id_db(db, project_id)
+    if project is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
+
+    permission: bool = await read_permission(db, user.user.id, project_id)
+    if not permission:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f'User is not allowed to view clients',
+        )
+    
+    clients: List[Client] = await get_clients_by_project_id_db(db, project_id)
+    return [client_db_to_client(c, await get_client_history_db(db, c.id)) for c in clients]
 
 async def get_client_route(info: strawberry.Info[Context], client_id: int) -> ClientGet:
     db: Session = info.context.session()
@@ -100,23 +131,6 @@ async def get_client_route(info: strawberry.Info[Context], client_id: int) -> Cl
         
     history: List[ClientHistory] = await get_client_history_db(db, client_id)
     return client_db_to_client(client, history)
-
-
-async def update_client_last_visited_route(
-    info: strawberry.Info[Context], client_id: int
-) -> ClientGet:
-    db: Session = info.context.session()
-    client: Client = await update_client_last_visited_db(db, client_id)
-    
-    if client is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Client not found"
-        )
-        
-    history: List[ClientHistory] = await get_client_history_db(db, client_id)
-    return client_db_to_client(client, history)
-
 
 async def get_client_history_route(
     info: strawberry.Info[Context], client_id: int

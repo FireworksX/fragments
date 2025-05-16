@@ -86,11 +86,6 @@ async def project_db_to_project(
                 ProjectKeyGet(value=public_key.key, name=public_key.name, id=public_key.id)
                 for public_key in project.public_keys
             ]
-        ),
-        goals=(
-            []
-            if project.goals is None
-            else [project_goal_db_to_goal(goal) for goal in project.goals]
         )
     )
 
@@ -337,6 +332,23 @@ async def create_project_goal_route(
     goal: ProjectGoal = await create_project_goal_db(db, goal.project_id, goal.name, goal.target_action)
     return project_goal_db_to_goal(goal)
 
+async def get_project_goals_route(info: strawberry.Info[Context], project_id: int) -> List[ProjectGoalGet]:
+    user: AuthPayload = await info.context.user()
+    db: Session = info.context.session()
+
+    project: Project = await get_project_by_id_db(db, project_id)
+    if project is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
+
+    permission: bool = await read_permission(db, user.user.id, project_id)
+    if not permission:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f'User is not allowed to view goals',
+        )
+    if project.goals is None:
+        return []
+    return [project_goal_db_to_goal(goal) for goal in project.goals]
 
 async def update_project_goal_route(
     info: strawberry.Info[Context], goal: ProjectGoalPatch  
