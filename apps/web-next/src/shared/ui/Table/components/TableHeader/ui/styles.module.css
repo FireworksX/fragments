@@ -1,0 +1,28 @@
+.innerCell {
+    display: flex;
+    align-items: center;
+    gap: var(--gutter-small);
+}
+
+.root {
+    .th {
+        padding: 8px 12px;
+        font-weight: 400;
+        color: var(--text-color-accent-secondary);
+        background: rgba(var(--secondary-bg-rgb), .6);
+        border-top: 1px solid var(--border-light);
+        border-bottom: 1px solid var(--border-light);
+        border-right: 1px solid var(--border-light);
+    }
+
+    .th:first-child {
+        border-top-left-radius: var(--radius-second);
+        border-left: 1px solid var(--border-light);
+    }
+
+    .th:last-child {
+        border-top-right-radius: var(--radius-second);
+    }
+
+
+}

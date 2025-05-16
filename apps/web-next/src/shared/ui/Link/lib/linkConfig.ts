@@ -23,6 +23,18 @@ export const linkConfig = {
     path: ({ projectSlug }) => `/project/${projectSlug}`,
     params: ['projectSlug']
   },
+  users: {
+    path: ({ projectSlug }) => `/project/${projectSlug}/users`,
+    params: ['projectSlug']
+  },
+  segments: {
+    path: ({ projectSlug }) => `/project/${projectSlug}/users/segments`,
+    params: ['projectSlug']
+  },
+  goals: {
+    path: ({ projectSlug }) => `/project/${projectSlug}/goals`,
+    params: ['projectSlug']
+  },
   projectSetting: {
     path: ({ projectSlug }) => `/project/${projectSlug}/settings`,
     params: ['projectSlug']

@@ -1,0 +1,70 @@
+.root {
+    background: var(--background);
+    border-radius: var(--radius-main);
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 16px 24px;
+
+    &:hover {
+        .editButton {
+            opacity: 1;
+        }
+    }
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    width: 30%;
+}
+
+.infoBody {
+    display: flex;
+    flex-direction: column;
+}
+
+.goalCode {
+    font-size: 12px;
+    color: var(--secondary);
+}
+
+.title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-color-accent);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.editButton {
+    transition: var(--animation-transition-default);
+    opacity: 0;
+}
+
+.body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.row {
+    display: flex;
+    gap: 12px;
+    color: var(--secondary);
+}
+
+.rowName {
+    min-width: 200px;
+
+    &.accent {
+        color: var(--danger);
+    }
+}
+
+.rowValue {
+    color: var(--text-color-accent);
+}
+

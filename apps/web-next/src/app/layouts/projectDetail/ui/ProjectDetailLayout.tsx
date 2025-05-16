@@ -64,6 +64,13 @@ export const ProjectDetailLayout: FC<PropsWithChildren> = ({ children }) => {
             </TabItem>
           )}
         </Link>
+        <Link partial type='users'>
+          {({ isActive }) => (
+            <TabItem className={styles.tab} isActive={isActive}>
+              Users
+            </TabItem>
+          )}
+        </Link>
         <Link partial type='projectSetting'>
           {({ isActive }) => (
             <TabItem className={styles.tab} isActive={isActive}>
