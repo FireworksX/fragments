@@ -16,15 +16,19 @@ from crud.landing import (
     get_landings_by_stream_id_db,
     update_landing_by_id_db,
 )
+from crud.metric import create_landing_metric_db
 from crud.project import get_project_by_id_db
 from crud.stream import get_stream_by_id_db
-from database import Landing, Project, Session, Stream
+from database import Landing, Project, Session, Stream, Client, ClientHistory
 
 from .fragment import fragment_by_id
 from .middleware import Context
-from .schemas.landing import ClientLanding, LandingGet, LandingPatch, LandingPost
+from .schemas.landing import ClientInfo, LandingGet, LandingPatch, LandingPost
 from .schemas.user import AuthPayload, RoleGet
 from .utils import get_user_role_in_project
+
+from crud.ipgetter import GeoLocation, get_location_by_ip
+from crud.client import create_client_history_db
 
 
 async def landing_db_to_landing(info, landing_db: Landing) -> LandingGet:
@@ -247,9 +251,50 @@ async def update_landing_route(
 
 
 async def get_client_landing(info: strawberry.Info[Context]) -> Optional[LandingGet]:
-    client_landing: ClientLanding = await info.context.client_landing()
-    project: Project = await info.context.project()
+    client_info: ClientInfo = await info.context.client_info()
     db: Session = info.context.session()
 
-    landing = await get_best_landing(db, client_landing, project.id)
+    location=get_location_by_ip(client_info.ip_address)
+
+    # Create client history entry
+    client: Client = await info.context.client()
+    await create_client_history_db(
+        db=db,
+        client_id=client.id,
+        device_type=client_info.device_type.value if client_info.device_type else None,
+        os_type=client_info.os_type.value if client_info.os_type else None,
+        browser=None,  # Could be added from user agent if needed
+        language=None,  # Could be added from request headers if needed
+        screen_width=None,
+        screen_height=None,
+        country=location.country,
+        region=location.region,
+        city=location.city,
+        url="",
+        referrer="",
+        domain="",
+        subdomain=""
+    )
+
+    project: Project = await info.context.project()
+    landing = await get_best_landing(db, client_info, project.id)
+
+    # Create landing metric from available client landing data
+    await create_landing_metric_db(
+        db=db,
+        landing_id=landing.id if landing else None,
+        campaign_id=landing.stream.campaign_id if landing else None,
+        url="",
+        domain="",
+        device_type=client_info.device_type.value if client_info.device_type else None,
+        os_type=client_info.os_type.value if client_info.os_type else None,
+        country=location.country,
+        region=location.region,
+        city=location.city,
+        event="client_landing"
+    )
+    
+    if landing is None:
+        return None
+
     return None if landing is None else await landing_db_to_landing(info, landing)

@@ -6,7 +6,6 @@ from fastapi import HTTPException, UploadFile, status
 from thefuzz import fuzz, process
 
 from conf import service_settings
-from crud.bucket import add_file, delete_file
 from crud.campaign import (
     create_campaign_db,
     delete_campaign_by_id_db,
@@ -193,7 +192,7 @@ async def add_campaign_logo_route(
     campaign.logo_id = media.id
     db.commit()
 
-    return MediaGet(id=media.id, media_type=MediaType.CAMPAIGN_LOGO, public_path=media.public_path)
+    return MediaGet(media_id=media.id, media_type=MediaType.CAMPAIGN_LOGO, public_path=media.public_path)
 
 
 async def delete_campaign_logo_route(

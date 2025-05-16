@@ -13,6 +13,23 @@ class ProjectKeyGet:
     name: Optional[str]
     value: str
 
+@strawberry.type
+class ProjectGoalGet:
+    id: int
+    name: str
+    target_action: str
+
+@strawberry.input
+class ProjectGoalPost:
+    project_id: int
+    name: str
+    target_action: str
+
+@strawberry.input
+class ProjectGoalPatch:
+    id: int
+    name: Optional[str] = None
+    target_action: Optional[str] = None
 
 @strawberry.type
 class ProjectGet:
@@ -25,7 +42,7 @@ class ProjectGet:
     root_directory_id: int
     private_key: Optional[ProjectKeyGet]
     public_keys: List[ProjectKeyGet]
-
+    goals: List[ProjectGoalGet]
 
 @strawberry.input
 class ProjectPost:
