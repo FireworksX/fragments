@@ -95,6 +95,18 @@ async def create_client_project_goal_db(
     db.refresh(goal)
     return goal
 
+async def get_client_project_goals_by_project_and_goal_db(
+    db: Session,
+    project_id: int,
+    project_goal_id: int
+) -> List[ClientProjectGoal]:
+    return db.query(ClientProjectGoal).filter(
+        ClientProjectGoal.project_id == project_id,
+        ClientProjectGoal.project_goal_id == project_goal_id
+    ).all()
+
+
+
 
 async def get_client_project_goals_db(db: Session, client_id: int) -> List[ClientProjectGoal]:
     return db.query(ClientProjectGoal).filter(ClientProjectGoal.client_id == client_id).all()

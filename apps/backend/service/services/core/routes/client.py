@@ -3,23 +3,28 @@ from typing import List, Optional
 import strawberry
 from fastapi import HTTPException, status
 
-from database import Session, Client, ClientHistory, ProjectGoal
+from database import Session, Client, ClientHistory, ProjectGoal, ClientProjectGoal
 from crud.client import (
     create_client_db,
     get_client_by_id_db,
     update_client_last_visited_db,
     create_client_history_db,
     get_client_history_db,
-    get_clients_by_project_id_db
+    get_clients_by_project_id_db,
+    get_client_project_goals_by_project_and_goal_db,
+    get_client_project_goal_by_id_db,
+    delete_client_project_goal_db
 )
-from crud.project import get_project_by_id_db, get_project_goal_by_target_action_db
-from crud.client import create_client_project_goal_db
+from crud.project import get_project_by_id_db, get_project_goal_by_target_action_db, get_project_goal_by_id_db
+from crud.client import create_client_project_goal_db, get_client_project_goals_by_project_and_goal_db
 from crud.ipgetter import get_location_by_ip
 from database.models import Project
 from .middleware import Context
 from .schemas.client import ClientGet, ClientHistoryGet
 from .schemas.user import AuthPayload, RoleGet
-from .project import get_user_role_in_project
+from .project import get_user_role_in_project, project_goal_db_to_goal, project_db_to_project
+from .schemas.project import ClientProjectGoalGet
+
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
     role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
     return role is not None
@@ -95,10 +100,48 @@ async def contribute_to_project_goal_route(info: strawberry.Info[Context], targe
     if project_goal is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project goal does not exist')
     await create_client_project_goal_db(db, client.id, project_goal.id, project.id)
-    
-    
 
+async def get_contributions_to_project_goal_route(
+    info: strawberry.Info[Context], 
+    project_id: int,
+    project_goal_id: int
+) -> List[ClientProjectGoalGet]:
+    db: Session = info.context.session()
+    user: AuthPayload = await info.context.user()
 
+    project: Project = await get_project_by_id_db(db, project_id)
+    if project is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail='Project does not exist'
+        )
+
+    permission: bool = await read_permission(db, user.user.id, project_id)
+    if not permission:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail='User is not allowed to view client goals'
+        )
+
+    goals: List[ClientProjectGoal] = await get_client_project_goals_by_project_and_goal_db(
+        db, project_id, project_goal_id
+    )
+
+    result = []
+    for goal in goals:
+        client = goal.client
+        client_history = goal.client.history
+        project_goal = goal.project_goal
+        
+        result.append(ClientProjectGoalGet(
+            id=goal.id,
+            client=client_db_to_client(client, client_history),
+            project_goal=project_goal_db_to_goal(project_goal),
+            project=await project_db_to_project(info, db, project),
+            created_at=goal.created_at.isoformat()
+        ))
+
+    return result
 
 
 async def get_clients_by_project_id_route(info: strawberry.Info[Context], project_id: int) -> List[ClientGet]:
