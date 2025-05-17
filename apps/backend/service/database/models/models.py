@@ -421,6 +421,7 @@ class LandingMetric(Base):
 class Client(Base):
     __tablename__ = 'client'
     id = Column('id', Integer, primary_key=True, index=True)
+    project_id = Column('project_id', Integer, ForeignKey('project.id'))
     created_at = Column('created_at', DateTime, default=datetime.datetime.now(datetime.UTC))
     updated_at = Column('updated_at', DateTime, default=datetime.datetime.now(datetime.UTC), onupdate=datetime.datetime.now(datetime.UTC))
     last_visited_at = Column('last_visited_at', DateTime, nullable=True)
@@ -429,6 +430,18 @@ class Client(Base):
     history = relationship('ClientHistory', back_populates='client')
 
 
+class ClientProjectGoal(Base):
+    __tablename__ = 'client_project_goal'
+    id = Column('id', Integer, primary_key=True, index=True)
+    client_id = Column('client_id', Integer, ForeignKey('client.id'))
+    project_goal_id = Column('project_goal_id', Integer, ForeignKey('project_goal.id'))
+    project_id = Column('project_id', Integer, ForeignKey('project.id'))
+    created_at = Column('created_at', DateTime, default=datetime.datetime.now(datetime.UTC))
+    
+    # Relationships
+    client = relationship('Client')
+    project_goal = relationship('ProjectGoal')
+    project = relationship('Project')
 class ClientHistory(Base):
     __tablename__ = 'client_history'
     id = Column('id', Integer, primary_key=True, index=True)

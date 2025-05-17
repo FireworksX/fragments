@@ -1,11 +1,11 @@
 from typing import List, Optional
 from datetime import datetime, UTC
 
-from database import Session, Client, ClientHistory
+from database import Session, Client, ClientHistory, ClientProjectGoal
 
 
-async def create_client_db(db: Session) -> Client:
-    client = Client()
+async def create_client_db(db: Session, project_id: int) -> Client:
+    client = Client(project_id=project_id)
     db.add(client)
     db.commit()
     db.refresh(client)
@@ -23,6 +23,10 @@ async def update_client_last_visited_db(db: Session, client_id: int) -> Client:
         db.commit()
         db.refresh(client)
     return client
+
+
+async def get_clients_by_project_id_db(db: Session, project_id: int) -> List[Client]:
+    return db.query(Client).filter(Client.project_id == project_id).all()
 
 
 async def create_client_history_db(
@@ -73,3 +77,47 @@ async def get_client_history_db(db: Session, client_id: int) -> List[ClientHisto
 
 async def get_client_history_by_id_db(db: Session, history_id: int) -> Optional[ClientHistory]:
     return db.query(ClientHistory).filter(ClientHistory.id == history_id).first()
+
+
+async def create_client_project_goal_db(
+    db: Session,
+    client_id: int,
+    project_goal_id: int,
+    project_id: int
+) -> ClientProjectGoal:
+    goal = ClientProjectGoal(
+        client_id=client_id,
+        project_goal_id=project_goal_id,
+        project_id=project_id
+    )
+    db.add(goal)
+    db.commit()
+    db.refresh(goal)
+    return goal
+
+async def get_client_project_goals_by_project_and_goal_db(
+    db: Session,
+    project_id: int,
+    project_goal_id: int
+) -> List[ClientProjectGoal]:
+    return db.query(ClientProjectGoal).filter(
+        ClientProjectGoal.project_id == project_id,
+        ClientProjectGoal.project_goal_id == project_goal_id
+    ).all()
+
+
+
+
+async def get_client_project_goals_db(db: Session, client_id: int) -> List[ClientProjectGoal]:
+    return db.query(ClientProjectGoal).filter(ClientProjectGoal.client_id == client_id).all()
+
+
+async def get_client_project_goal_by_id_db(db: Session, goal_id: int) -> Optional[ClientProjectGoal]:
+    return db.query(ClientProjectGoal).filter(ClientProjectGoal.id == goal_id).first()
+
+
+async def delete_client_project_goal_db(db: Session, goal_id: int) -> None:
+    goal = await get_client_project_goal_by_id_db(db, goal_id)
+    if goal:
+        db.delete(goal)
+        db.commit()

@@ -132,26 +132,16 @@ class Context(BaseContext):
         )
     
     async def client(self) -> Client:
-        agent_header = self.request.headers.get('User-Agent', None)
-        user_agent: UserAgentInfo = UserAgentInfo(agent_header)
-        
-        user_ip: Optional[str] = self.request.headers.get('X-User-Ip', None)
-        if user_ip is None:
-            user_ip = self.request.headers.get('X-Forwarded-For', self.request.client.host)
-        
-        page: Optional[str] = self.request.headers.get('Referrer', None)
-        
-        print(
-            f'os_type={user_agent.os_type}, device_type={user_agent.device_type}, page={page}, ip_address={user_ip}'
-        )
+        project: Project = await self.project()
+        if project is None:
+            raise credentials_exception    
 
         user_id: Optional[str] = None
         if self.request.cookies:
             user_id = self.request.cookies.get('user_id')
-            print(f'user_id={user_id}')
             
         if user_id is None:
-            return await create_client_db(self.session())
+            return await create_client_db(self.session(), project_id=project.id)
         else:
             try:
                 return await get_client_by_id_db(self.session(), int(user_id))
