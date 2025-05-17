@@ -1,0 +1,6 @@
+.root {
+    flex: 1;
+    background: var(--background);
+    border-radius: var(--radius-main);
+    padding: var(--gutter-default);
+}

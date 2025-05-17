@@ -38,7 +38,7 @@ const BuilderInteractions: FC<BuilderPositionProps> = memo(({ className }) => {
         </RenderDropdown>
       }
     >
-      {interactions.map((interaction, index) => (
+      {interactions?.map?.((interaction, index) => (
         <ControlRow key={`${index}_${interaction.event}`} title={capitalize(interaction.on)}>
           <ControlRowWide>
             <InputSelect

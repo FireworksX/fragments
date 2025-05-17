@@ -52,6 +52,9 @@ export const styleSheetPlugin: Plugin = (state) => {
         );
       });
 
+      // Add global styles
+      fragmentCssRules.push(`[data-key^="Text"] { p {margin: 0;} }`);
+
       return {
         fragment: state.keyOfEntity(group.fragment),
         styles: fragmentCssRules,

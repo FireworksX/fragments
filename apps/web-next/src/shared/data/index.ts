@@ -27,7 +27,8 @@ export const modalNames = createConstants(
   'createCampaign',
   'configureStream',
   'projectTree',
-  'createCustomBreakpoint'
+  'createCustomBreakpoint',
+  'goalView'
 )
 
 export const booleanTabsSelectorItems: TabsSelectorItem[] = [

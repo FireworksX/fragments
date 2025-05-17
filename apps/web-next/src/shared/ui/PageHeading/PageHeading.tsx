@@ -1,16 +1,21 @@
 import { FC, PropsWithChildren, ReactNode } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { Container } from '@/app/components/Container/Container'
+import { Container } from '@/shared/ui/Container'
 
 interface PageHeadingProps extends PropsWithChildren {
   actions?: ReactNode | ReactNode[]
   className?: string
+  description?: string
 }
 
-export const PageHeading: FC<PageHeadingProps> = ({ className, children, actions }) => (
+export const PageHeading: FC<PageHeadingProps> = ({ className, children, description, actions }) => (
   <Container className={cn(styles.root, className)} data-testid='PageHeading'>
-    {children && <h1 className={styles.title}>{children}</h1>}
+    <div>
+      {children && <h1 className={styles.title}>{children}</h1>}
+      {description && <p className={styles.description}>{description}</p>}
+    </div>
+
     {actions && <div className={styles.actions}>{actions}</div>}
   </Container>
 )

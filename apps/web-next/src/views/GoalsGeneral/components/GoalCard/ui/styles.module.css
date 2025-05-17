@@ -1,0 +1,65 @@
+.root {
+    background: var(--background);
+    border-radius: var(--radius-main);
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 16px 24px;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    width: 30%;
+}
+
+.infoBody {
+    display: flex;
+    flex-direction: column;
+}
+
+.goalCode {
+    font-size: 12px;
+    color: var(--secondary);
+    display: flex;
+    align-items: center;
+}
+
+.title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-color-accent);
+    display: flex;
+    align-items: center;
+}
+
+.editable {
+    padding: var(--gutter-small);
+}
+
+
+.body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.row {
+    display: flex;
+    gap: 12px;
+    color: var(--secondary);
+}
+
+.rowName {
+    min-width: 200px;
+
+    &.accent {
+        color: var(--danger);
+    }
+}
+
+.rowValue {
+    color: var(--text-color-accent);
+}
+

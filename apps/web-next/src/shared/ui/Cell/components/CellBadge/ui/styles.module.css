@@ -1,0 +1,7 @@
+.root {
+    font-size: 9px;
+    background: var(--secondary);
+    color: var(--text-color);
+    padding: 2px 4px;
+    border-radius: 4px;
+}

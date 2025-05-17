@@ -3,13 +3,16 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--gutter-default);
-    padding-block: 40px;
-    border-bottom: 1px solid var(--border);
 }
 
 .title {
-    font-size: 2rem;
+    font-size: 26px;
     font-weight: 500;
+}
+
+.description {
+    font-size: 14px;
+    color: var(--secondary);
 }
 
 .actions {
