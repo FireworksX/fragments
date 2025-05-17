@@ -19,5 +19,8 @@
 
 .content {
     flex: 1;
+    background: var(--background);
+    padding: var(--gutter-default);
+    border-radius: var(--radius-main);
 }
 

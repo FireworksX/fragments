@@ -8,7 +8,7 @@ import { useDeleteStreamMutation } from '@/shared/api/stream/mutation/DeleteStre
 import { useMemo } from 'react'
 
 export const useStreamHeader = () => {
-  const { streamSlug, campaignSlug, projectSlug } = useParams()
+  const { streamSlug, areaSlug, projectSlug } = useParams()
   const [executeUpdateStream, { loading: loadingUpdateStream }] = useUpdateStreamMutation()
   const [executeDeleteStream, { loading: loadingDeleteStream }] = useDeleteStreamMutation()
 
@@ -29,7 +29,7 @@ export const useStreamHeader = () => {
     await executeUpdateStream({
       variables: {
         streamId: +streamSlug,
-        campaignId: +campaignSlug,
+        campaignId: +areaSlug,
         ...variables
       }
     })
@@ -53,7 +53,7 @@ export const useStreamHeader = () => {
     loadingUpdateStream,
     toggleActive,
     projectSlug,
-    campaignSlug,
+    areaSlug,
     streamSlug,
     filters,
     handleUpdateStream,

@@ -1,0 +1,11 @@
+.root {
+    padding: 2px 6px;
+    border-radius: var(--radius-small);
+    background: var(--secondary-bg);
+    font-size: 11px;
+}
+
+.success {
+    background: var(--success-bg);
+    color: var(--success);
+}

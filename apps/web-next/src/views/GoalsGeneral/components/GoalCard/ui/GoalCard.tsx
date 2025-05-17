@@ -3,10 +3,11 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import { Button } from '@/shared/ui/Button'
 import EditIcon from '@/shared/icons/next/pencil.svg'
+import { ContentEditable } from '@/shared/ui/ContentEditable'
 
 interface GoalCardProps {
   className?: string
-  onEdit?: () => void
+  onEdit?: (options: { name?: string; code?: string }) => void
 }
 
 export const GoalCard: FC<GoalCardProps> = ({ className, onEdit }) => {
@@ -15,11 +16,22 @@ export const GoalCard: FC<GoalCardProps> = ({ className, onEdit }) => {
       <div className={styles.info}>
         <div className={styles.infoBody}>
           <div className={styles.title}>
-            1. Шапка матча: клик на кэф
-            <Button className={styles.editButton} mode='tertiary' icon={<EditIcon />} />
+            1.
+            <ContentEditable
+              className={styles.editable}
+              value='Шапка матча: клик на кэф'
+              onSubmit={name => onEdit?.({ name })}
+            />
           </div>
 
-          <div className={styles.goalCode}>Code: match-header-odd-click</div>
+          <div className={styles.goalCode}>
+            Code:{' '}
+            <ContentEditable
+              className={styles.editable}
+              value='match-header-odd-click'
+              onSubmit={code => onEdit?.({ code })}
+            />
+          </div>
         </div>
 
         <div className={styles.body}>

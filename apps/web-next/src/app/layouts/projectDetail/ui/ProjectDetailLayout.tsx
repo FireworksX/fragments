@@ -11,6 +11,12 @@ import { getSession, useSession } from 'next-auth/react'
 import { DndContext, MouseSensor, pointerWithin, useSensor, useSensors } from '@dnd-kit/core'
 import { useProject } from '@/shared/hooks/useProject'
 import { useProjectSettingsTokens } from '@/views/ProjectSettingsTokens/hooks/useProjectSettingsTokens'
+import FragmentsIcon from '@/shared/icons/next/component.svg'
+import OverviewIcon from '@/shared/icons/next/house.svg'
+import AreasIcon from '@/shared/icons/next/scan.svg'
+import GoalsIcon from '@/shared/icons/next/circle-dot.svg'
+import UsersIcon from '@/shared/icons/next/users.svg'
+import SettingsIcon from '@/shared/icons/next/settings-2.svg'
 
 export const ProjectDetailLayout: FC<PropsWithChildren> = ({ children }) => {
   const { data } = useSession()
@@ -27,7 +33,12 @@ export const ProjectDetailLayout: FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     if (data && !globalManager) {
-      const globalManager = createFragmentsClient({ apiToken: data.accessToken, isSelf: true })
+      const isDev = process.env.NODE_ENV === 'development'
+      const globalManager = createFragmentsClient({
+        apiToken: data.accessToken,
+        isSelf: true,
+        url: isDev ? 'http://localhost/graphql' : '/graphql'
+      })
       setGlobalManager(globalManager)
       window.globalManager = globalManager
     }
@@ -38,42 +49,42 @@ export const ProjectDetailLayout: FC<PropsWithChildren> = ({ children }) => {
       <Tabs className={styles.tabs}>
         <Link type='project'>
           {({ isActive }) => (
-            <TabItem className={styles.tab} isActive={isActive}>
+            <TabItem className={styles.tab} icon={<OverviewIcon />} isActive={isActive}>
               Overview
             </TabItem>
           )}
         </Link>
         <Link partial type='builder'>
           {({ isActive }) => (
-            <TabItem className={styles.tab} isActive={isActive}>
-              Builder
+            <TabItem className={styles.tab} icon={<FragmentsIcon />} isActive={isActive}>
+              Fragments
             </TabItem>
           )}
         </Link>
-        <Link partial type='campaignsList'>
+        <Link partial type='areas'>
           {({ isActive }) => (
-            <TabItem className={styles.tab} isActive={isActive}>
-              Campaigns
+            <TabItem className={styles.tab} icon={<AreasIcon />} isActive={isActive}>
+              Areas
             </TabItem>
           )}
         </Link>
         <Link partial type='goals'>
           {({ isActive }) => (
-            <TabItem className={styles.tab} isActive={isActive}>
+            <TabItem className={styles.tab} icon={<GoalsIcon />} isActive={isActive}>
               Goals
             </TabItem>
           )}
         </Link>
         <Link partial type='users'>
           {({ isActive }) => (
-            <TabItem className={styles.tab} isActive={isActive}>
+            <TabItem className={styles.tab} icon={<UsersIcon />} isActive={isActive}>
               Users
             </TabItem>
           )}
         </Link>
         <Link partial type='projectSetting'>
           {({ isActive }) => (
-            <TabItem className={styles.tab} isActive={isActive}>
+            <TabItem className={styles.tab} icon={<SettingsIcon />} isActive={isActive}>
               Settings
             </TabItem>
           )}

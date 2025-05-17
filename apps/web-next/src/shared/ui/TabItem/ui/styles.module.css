@@ -10,6 +10,10 @@
     &.active {
         background: rgba(var(--secondary-bg-rgb), .7);
         font-weight: 500;
+
+        .icon {
+            color: var(--primary);
+        }
     }
 }
 
