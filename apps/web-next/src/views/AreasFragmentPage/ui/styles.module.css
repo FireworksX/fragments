@@ -1,0 +1,39 @@
+.root {
+    flex: 1;
+    background: var(--background);
+    border-radius: var(--radius-main);
+    padding: var(--gutter-default);
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.title {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.titleGroup {
+    display: flex;
+    gap: 12px;
+}
+
+.preview {
+    background: var(--secondary-bg);
+    border-radius: var(--radius-main);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}

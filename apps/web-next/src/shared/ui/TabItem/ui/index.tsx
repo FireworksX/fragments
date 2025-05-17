@@ -6,10 +6,11 @@ import { Touchable, TouchableProps } from '@/shared/ui/Touchable'
 export interface TabItemProps extends PropsWithChildren, TouchableProps {
   icon?: ReactNode
   isActive?: boolean
+  badge?: ReactNode
   className?: string
 }
 
-const Tabs: FC<TabItemProps> = ({ className, icon, children, ...touchableProps }) => {
+const Tabs: FC<TabItemProps> = ({ className, icon, children, badge, ...touchableProps }) => {
   return (
     <Touchable
       className={cn(styles.root, className, {
@@ -19,6 +20,7 @@ const Tabs: FC<TabItemProps> = ({ className, icon, children, ...touchableProps }
     >
       <div className={styles.icon}>{icon}</div>
       {children}
+      {badge}
     </Touchable>
   )
 }

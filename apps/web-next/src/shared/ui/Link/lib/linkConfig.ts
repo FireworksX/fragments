@@ -23,6 +23,18 @@ export const linkConfig = {
     path: ({ projectSlug }) => `/project/${projectSlug}`,
     params: ['projectSlug']
   },
+  users: {
+    path: ({ projectSlug }) => `/project/${projectSlug}/users`,
+    params: ['projectSlug']
+  },
+  segments: {
+    path: ({ projectSlug }) => `/project/${projectSlug}/users/segments`,
+    params: ['projectSlug']
+  },
+  goals: {
+    path: ({ projectSlug }) => `/project/${projectSlug}/goals`,
+    params: ['projectSlug']
+  },
   projectSetting: {
     path: ({ projectSlug }) => `/project/${projectSlug}/settings`,
     params: ['projectSlug']
@@ -39,22 +51,33 @@ export const linkConfig = {
     path: '/project/create',
     params: []
   },
-  campaignsList: {
-    path: ({ projectSlug }) => `/project/${projectSlug}/campaigns`,
+  areas: {
+    path: ({ projectSlug }) => `/project/${projectSlug}/areas`,
     params: ['projectSlug']
   },
-  campaign: {
-    path: ({ campaignSlug, projectSlug }) => `/project/${projectSlug}/campaigns/${campaignSlug}`,
-    params: ['campaignSlug', 'projectSlug']
+  area: {
+    path: ({ areaSlug, projectSlug }) => `/project/${projectSlug}/areas/${areaSlug}`,
+    params: ['areaSlug', 'projectSlug']
   },
-  campaignStreams: {
-    path: ({ campaignSlug, projectSlug }) => `/project/${projectSlug}/campaigns/${campaignSlug}/streams`,
-    params: ['campaignSlug', 'projectSlug']
+  areaStreams: {
+    path: ({ areaSlug, projectSlug }) => `/project/${projectSlug}/areas/${areaSlug}/streams`,
+    params: ['areaSlug', 'projectSlug']
+  },
+  areaFragment: {
+    path: ({ areaSlug, projectSlug }) => `/project/${projectSlug}/areas/${areaSlug}/fragment`,
+    params: ['areaSlug', 'projectSlug']
+  },
+  areaExperiments: {
+    path: ({ areaSlug, projectSlug }) => `/project/${projectSlug}/areas/${areaSlug}/experiments`,
+    params: ['areaSlug', 'projectSlug']
+  },
+  areaIntegration: {
+    path: ({ areaSlug, projectSlug }) => `/project/${projectSlug}/areas/${areaSlug}/integration`,
+    params: ['areaSlug', 'projectSlug']
   },
   stream: {
-    path: ({ campaignSlug, projectSlug, streamSlug }) =>
-      `/project/${projectSlug}/campaigns/${campaignSlug}/streams/${streamSlug}`,
-    params: ['campaignSlug', 'projectSlug', 'streamSlug']
+    path: ({ areaSlug, projectSlug, streamSlug }) => `/project/${projectSlug}/areas/${areaSlug}/streams/${streamSlug}`,
+    params: ['areaSlug', 'projectSlug', 'streamSlug']
   },
   landing: {
     path: ({ campaignSlug, projectSlug, streamSlug, landingSlug }) =>

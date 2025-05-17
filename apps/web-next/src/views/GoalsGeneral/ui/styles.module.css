@@ -1,0 +1,8 @@
+.root {
+    padding-block: 30px;
+}
+
+.row {
+    display: flex;
+    gap: 12px;
+}

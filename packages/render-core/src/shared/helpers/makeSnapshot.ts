@@ -26,8 +26,8 @@ export function makeSnapshot(
 ) {
   if (!globalManager || !targetFragmentId) return null;
 
-  const globalGraph = globalManager.resolve(globalManager.key);
-  const targetFragment = globalGraph?.fragmentsManagers?.[targetFragmentId];
+  const targetFragment =
+    globalManager?.$fragments?.getManager?.(targetFragmentId);
 
   if (!targetFragment) return null;
 

@@ -1,0 +1,23 @@
+.root {
+    width: 100%;
+    border-collapse: separate;
+    background: var(--background);
+    border-radius: var(--radius-second);
+}
+
+.tbody {
+    .cell {
+        border-bottom: 1px solid var(--border-light);
+        border-right: 1px solid var(--border-light);
+    }
+
+    .cell:first-child {
+        border-left: 1px solid var(--border-light);
+    }
+
+    .innerCell {
+        display: flex;
+        align-items: center;
+        gap: var(--gutter-small);
+    }
+}

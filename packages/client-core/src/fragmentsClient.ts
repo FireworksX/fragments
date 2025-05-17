@@ -16,6 +16,7 @@ export const createFragmentsClient = (options: Options) => {
       (state) => {
         state.env = {
           isSelf: options?.isSelf ?? false,
+          url: options?.url,
           apiToken: options?.apiToken,
         };
 
