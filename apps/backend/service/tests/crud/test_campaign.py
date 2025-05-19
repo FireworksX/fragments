@@ -1,10 +1,14 @@
-import pytest
 from unittest.mock import Mock
 
+import pytest
+
 from crud.campaign import (
-    create_campaign_db, get_campaign_by_id_db, delete_campaign_by_id_db,
-    get_campaign_by_name_and_project_id_db, get_campaigns_by_project_id_db,
-    update_campaign_by_id_db
+    create_campaign_db,
+    delete_campaign_by_id_db,
+    get_campaign_by_id_db,
+    get_campaign_by_name_and_project_id_db,
+    get_campaigns_by_project_id_db,
+    update_campaign_by_id_db,
 )
 from database.models import Campaign, Project, ProjectCampaign
 
@@ -22,9 +26,9 @@ def mock_session():
 
 @pytest.mark.asyncio
 async def test_create_campaign(mock_session):
-    name = "Test Campaign"
+    name = 'Test Campaign'
     project_id = 1
-    description = "Test Description"
+    description = 'Test Description'
     active = True
     deleted = False
     author_id = 1
@@ -36,7 +40,7 @@ async def test_create_campaign(mock_session):
         description=description,
         active=active,
         deleted=deleted,
-        author_id=author_id
+        author_id=author_id,
     )
     mock_project = Project(id=project_id)
 
@@ -99,7 +103,7 @@ async def test_delete_campaign_by_id(mock_session):
 @pytest.mark.asyncio
 async def test_get_campaign_by_name_and_project_id(mock_session):
     project_id = 1
-    name = "Test Campaign"
+    name = 'Test Campaign'
     mock_campaign = Campaign(id=1, name=name, project_id=project_id)
 
     mock_query = Mock()
@@ -116,10 +120,7 @@ async def test_get_campaign_by_name_and_project_id(mock_session):
 @pytest.mark.asyncio
 async def test_get_campaigns_by_project_id(mock_session):
     project_id = 1
-    mock_campaigns = [
-        Campaign(id=1, project_id=project_id),
-        Campaign(id=2, project_id=project_id)
-    ]
+    mock_campaigns = [Campaign(id=1, project_id=project_id), Campaign(id=2, project_id=project_id)]
 
     mock_query = Mock()
     mock_filter = Mock()
@@ -141,7 +142,9 @@ async def test_get_campaigns_by_project_id(mock_session):
     assert campaigns == mock_campaigns
 
     # Test with both params
-    campaigns = await get_campaigns_by_project_id_db(mock_session, project_id, active=True, deleted=False)
+    campaigns = await get_campaigns_by_project_id_db(
+        mock_session, project_id, active=True, deleted=False
+    )
     assert campaigns == mock_campaigns
 
 
@@ -149,11 +152,7 @@ async def test_get_campaigns_by_project_id(mock_session):
 async def test_update_campaign_by_id(mock_session):
     campaign_id = 1
     mock_campaign = Campaign(
-        id=campaign_id,
-        name="Old Name",
-        description="Old Description",
-        active=False,
-        deleted=False
+        id=campaign_id, name='Old Name', description='Old Description', active=False, deleted=False
     )
 
     mock_query = Mock()
@@ -164,10 +163,10 @@ async def test_update_campaign_by_id(mock_session):
 
     values = {
         'id': campaign_id,
-        'name': "New Name",
-        'description': "New Description",
+        'name': 'New Name',
+        'description': 'New Description',
         'active': True,
-        'deleted': True
+        'deleted': True,
     }
 
     updated_campaign = await update_campaign_by_id_db(mock_session, values)

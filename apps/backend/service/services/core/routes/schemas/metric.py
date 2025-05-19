@@ -1,9 +1,11 @@
 import datetime
+from enum import Enum
 from typing import Optional
 
 import strawberry
 
 from services.core.routes.schemas.filter import DeviceType, OSType
+
 
 @strawberry.type
 class LandingMetricGet:
@@ -11,7 +13,7 @@ class LandingMetricGet:
     landing_id: Optional[int]
     campaign_id: Optional[int]
     url: Optional[str]
-    referrer: Optional[str] 
+    referrer: Optional[str]
     domain: Optional[str]
     subdomain: Optional[str]
     page_load_time: Optional[float]
@@ -19,13 +21,14 @@ class LandingMetricGet:
     os_type: Optional[OSType]
     browser: Optional[str]
     language: Optional[str]
-    screen_width: Optional[int] 
+    screen_width: Optional[int]
     screen_height: Optional[int]
     country: Optional[str]
     region: Optional[str]
     city: Optional[str]
     created_at: datetime.datetime
     event: Optional[str]
+
 
 @strawberry.input
 class LandingMetricPost:
@@ -41,3 +44,16 @@ class LandingMetricPost:
     screen_width: Optional[int] = None
     screen_height: Optional[int] = None
     event: Optional[str] = None
+
+
+@strawberry.enum
+class ClientMetricType(Enum):
+    INIT_SESSION = 1
+    RELEASE_SESSION = 2
+    REACH_PROJECT_GOAL = 3
+
+
+@strawberry.input
+class ClientMetricPost:
+    metric_type: ClientMetricType
+    metric_value: Optional[str] = None

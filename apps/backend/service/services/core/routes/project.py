@@ -11,15 +11,18 @@ from crud.project import (
     change_project_private_api_key,
     change_user_role_db,
     create_project_db,
+    create_project_goal_db,
     delete_project_by_id_db,
+    delete_project_goal_db,
     delete_project_public_api_key,
     get_project_by_id_db,
+    get_project_goal_by_id_db,
     get_projects_by_user_id_db,
     get_user_project_role,
     update_project_by_id_db,
+    update_project_goal_db,
 )
 from crud.user import get_user_by_id_db
-from crud.project import create_project_goal_db, get_project_goal_by_id_db, update_project_goal_db, delete_project_goal_db
 from database import Media, Session
 from database.models import Project, ProjectGoal, ProjectMemberRole, User
 
@@ -28,7 +31,15 @@ from .middleware import Context
 from .schemas.campaign import CampaignGet
 from .schemas.fragment import FragmentGet
 from .schemas.media import MediaGet, MediaType
-from .schemas.project import ProjectGet, ProjectKeyGet, ProjectPatch, ProjectPost, ProjectGoalGet, ProjectGoalPost, ProjectGoalPatch
+from .schemas.project import (
+    ProjectGet,
+    ProjectGoalGet,
+    ProjectGoalPatch,
+    ProjectGoalPost,
+    ProjectKeyGet,
+    ProjectPatch,
+    ProjectPost,
+)
 from .schemas.user import AuthPayload, RoleGet
 from .utils import get_user_role_in_project, transform_project_members
 
@@ -54,12 +65,10 @@ async def transform_project_campaigns(db: Session, project: Project) -> List[Cam
         res.append(await get_campaign_by_id_db(db, campaign_relation.campaign.id))
     return res
 
+
 def project_goal_db_to_goal(goal: ProjectGoal) -> ProjectGoalGet:
-    return ProjectGoalGet(
-        id=goal.id,
-        name=goal.name,
-        target_action=goal.target_action
-    )
+    return ProjectGoalGet(id=goal.id, name=goal.name, target_action=goal.target_action)
+
 
 async def project_db_to_project(
     info: strawberry.Info[Context], db: Session, project: Project
@@ -86,7 +95,7 @@ async def project_db_to_project(
                 ProjectKeyGet(value=public_key.key, name=public_key.name, id=public_key.id)
                 for public_key in project.public_keys
             ]
-        )
+        ),
     )
 
 
@@ -288,7 +297,9 @@ async def add_project_logo_route(
     project.logo_id = media.id
     db.commit()
 
-    return MediaGet(media_id=media.id, media_type=MediaType.PROJECT_LOGO, public_path=media.public_path)
+    return MediaGet(
+        media_id=media.id, media_type=MediaType.PROJECT_LOGO, public_path=media.public_path
+    )
 
 
 async def delete_project_logo_route(info: strawberry.Info[Context], project_id: int) -> ProjectGet:
@@ -325,14 +336,18 @@ async def create_project_goal_route(
     permission: bool = await write_permission(db, user.user.id, goal.project_id)
     if not permission:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, 
-            detail='User is not allowed to create goals'
+            status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to create goals'
         )
 
-    goal: ProjectGoal = await create_project_goal_db(db, goal.project_id, goal.name, goal.target_action)
+    goal: ProjectGoal = await create_project_goal_db(
+        db, goal.project_id, goal.name, goal.target_action
+    )
     return project_goal_db_to_goal(goal)
 
-async def get_project_goals_route(info: strawberry.Info[Context], project_id: int) -> List[ProjectGoalGet]:
+
+async def get_project_goals_route(
+    info: strawberry.Info[Context], project_id: int
+) -> List[ProjectGoalGet]:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
@@ -350,8 +365,9 @@ async def get_project_goals_route(info: strawberry.Info[Context], project_id: in
         return []
     return [project_goal_db_to_goal(goal) for goal in project.goals]
 
+
 async def update_project_goal_route(
-    info: strawberry.Info[Context], goal: ProjectGoalPatch  
+    info: strawberry.Info[Context], goal: ProjectGoalPatch
 ) -> ProjectGoalGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
@@ -363,17 +379,16 @@ async def update_project_goal_route(
     permission: bool = await write_permission(db, user.user.id, goal_db.project_id)
     if not permission:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail='User is not allowed to update goals'
+            status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to update goals'
         )
 
-    updated_goal: ProjectGoal = await update_project_goal_db(db, goal.id, goal.name, goal.target_action)
+    updated_goal: ProjectGoal = await update_project_goal_db(
+        db, goal.id, goal.name, goal.target_action
+    )
     return project_goal_db_to_goal(updated_goal)
 
 
-async def delete_project_goal_route(
-    info: strawberry.Info[Context], goal_id: int
-) -> None:
+async def delete_project_goal_route(info: strawberry.Info[Context], goal_id: int) -> None:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
@@ -384,8 +399,7 @@ async def delete_project_goal_route(
     permission: bool = await write_permission(db, user.user.id, goal.project_id)
     if not permission:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail='User is not allowed to delete goals'
+            status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to delete goals'
         )
 
     await delete_project_goal_db(db, goal_id)

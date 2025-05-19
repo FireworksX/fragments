@@ -104,9 +104,7 @@ async def stream_matches_client(stream: Stream, client: ClientInfo) -> bool:
     return True
 
 
-async def get_best_landing(
-    db: Session, client: ClientInfo, project_id: int
-) -> Optional[Landing]:
+async def get_best_landing(db: Session, client: ClientInfo, project_id: int) -> Optional[Landing]:
     streams = (
         db.query(Stream)
         .filter(Stream.project_id == project_id, Stream.active == True, Stream.deleted == False)

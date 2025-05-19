@@ -1,3 +1,5 @@
+import datetime
+
 from sqlalchemy import (
     JSON,
     Boolean,
@@ -9,6 +11,7 @@ from sqlalchemy import (
     LargeBinary,
     String,
     Table,
+    UniqueConstraint,
     func,
     orm,
 )
@@ -16,7 +19,7 @@ from sqlalchemy.orm import relationship
 
 from conf import service_settings
 from database import Base
-import datetime
+
 
 class ProjectGoal(Base):
     __tablename__ = 'project_goal'
@@ -24,9 +27,15 @@ class ProjectGoal(Base):
     created_at = Column('created_at', DateTime, default=datetime.datetime.now(datetime.UTC))
     name = Column('name', String, nullable=False)
     target_action = Column('target_action', String, nullable=False)
-    
-    project_id = Column('project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False)
+    __table_args__ = (
+        UniqueConstraint('project_id', 'target_action', name='unique_project_target_action'),
+    )
+
+    project_id = Column(
+        'project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False
+    )
     project = relationship('Project', back_populates='goals')
+
 
 class ProjectMemberRole(Base):
     __tablename__ = 'project_members_role'
@@ -380,21 +389,22 @@ class Media(Base):
     def public_path(self):
         return f'{service_settings.STATIC_SERVER_URL}/{self.filename}'
 
+
 class LandingMetric(Base):
     __tablename__ = 'landing_metric'
     id = Column('id', Integer, primary_key=True, index=True)
-    
+
     # Foreign keys
     landing_id = Column('landing_id', Integer, ForeignKey('landing.id'))
     campaign_id = Column('campaign_id', Integer, ForeignKey('campaign.id'))
-    
+
     # Page info
     url = Column('url', String)
     referrer = Column('referrer', String)
     domain = Column('domain', String)
     subdomain = Column('subdomain', String)
     page_load_time = Column('page_load_time', Float)  # in milliseconds
-    
+
     # Device info
     device_type = Column('device_type', Integer)
     os_type = Column('os_type', Integer)
@@ -402,15 +412,15 @@ class LandingMetric(Base):
     language = Column('language', String)
     screen_width = Column('screen_width', Integer)
     screen_height = Column('screen_height', Integer)
-    
+
     # Geolocation
     country = Column('country', String)
     region = Column('region', String)
     city = Column('city', String)
-    
+
     # Timestamps
     created_at = Column('created_at', DateTime, default=datetime.datetime.now(datetime.UTC))
-    
+
     # Relationships
     landing = relationship('Landing')
     campaign = relationship('Campaign')
@@ -418,12 +428,18 @@ class LandingMetric(Base):
     # Custom event
     event = Column('event', String)
 
+
 class Client(Base):
     __tablename__ = 'client'
     id = Column('id', Integer, primary_key=True, index=True)
     project_id = Column('project_id', Integer, ForeignKey('project.id'))
     created_at = Column('created_at', DateTime, default=datetime.datetime.now(datetime.UTC))
-    updated_at = Column('updated_at', DateTime, default=datetime.datetime.now(datetime.UTC), onupdate=datetime.datetime.now(datetime.UTC))
+    updated_at = Column(
+        'updated_at',
+        DateTime,
+        default=datetime.datetime.now(datetime.UTC),
+        onupdate=datetime.datetime.now(datetime.UTC),
+    )
     last_visited_at = Column('last_visited_at', DateTime, nullable=True)
 
     # Relationships
@@ -437,17 +453,19 @@ class ClientProjectGoal(Base):
     project_goal_id = Column('project_goal_id', Integer, ForeignKey('project_goal.id'))
     project_id = Column('project_id', Integer, ForeignKey('project.id'))
     created_at = Column('created_at', DateTime, default=datetime.datetime.now(datetime.UTC))
-    
+
     # Relationships
     client = relationship('Client')
     project_goal = relationship('ProjectGoal')
     project = relationship('Project')
+
+
 class ClientHistory(Base):
     __tablename__ = 'client_history'
     id = Column('id', Integer, primary_key=True, index=True)
     client_id = Column('client_id', Integer, ForeignKey('client.id'))
     created_at = Column('created_at', DateTime, default=datetime.datetime.now(datetime.UTC))
-    
+
     # Device info
     device_type = Column('device_type', Integer)
     os_type = Column('os_type', Integer)
@@ -462,7 +480,7 @@ class ClientHistory(Base):
     domain = Column('domain', String)
     subdomain = Column('subdomain', String)
     page_load_time = Column('page_load_time', Float)  # in milliseconds
-    
+
     # Geolocation
     country = Column('country', String)
     region = Column('region', String)

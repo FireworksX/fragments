@@ -1,10 +1,15 @@
-import pytest
+from datetime import UTC, datetime
 from unittest.mock import Mock
-from datetime import datetime, UTC
+
+import pytest
 
 from crud.client import (
-    create_client_db, get_client_by_id_db, update_client_last_visited_db,
-    create_client_history_db, get_client_history_db, get_client_history_by_id_db
+    create_client_db,
+    create_client_history_db,
+    get_client_by_id_db,
+    get_client_history_by_id_db,
+    get_client_history_db,
+    update_client_last_visited_db,
 )
 from database.models import Client, ClientHistory
 
@@ -23,9 +28,9 @@ def mock_session():
 async def test_create_client(mock_session):
     mock_client = Client(id=1)
     mock_session.refresh.side_effect = lambda x: None
-    
+
     created_client = await create_client_db(mock_session)
-    
+
     assert isinstance(created_client, Client)
     assert mock_session.add.call_count == 1
     assert mock_session.commit.call_count == 1
@@ -36,13 +41,13 @@ async def test_create_client(mock_session):
 async def test_get_client_by_id(mock_session):
     client_id = 1
     mock_client = Client(id=client_id)
-    
+
     mock_query = Mock()
     mock_filter = Mock()
     mock_session.query.return_value = mock_query
     mock_query.filter.return_value = mock_filter
     mock_filter.first.return_value = mock_client
-    
+
     client = await get_client_by_id_db(mock_session, client_id)
     assert client == mock_client
 
@@ -51,15 +56,15 @@ async def test_get_client_by_id(mock_session):
 async def test_update_client_last_visited(mock_session):
     client_id = 1
     mock_client = Client(id=client_id)
-    
+
     mock_query = Mock()
     mock_filter = Mock()
     mock_session.query.return_value = mock_query
     mock_query.filter.return_value = mock_filter
     mock_filter.first.return_value = mock_client
-    
+
     updated_client = await update_client_last_visited_db(mock_session, client_id)
-    
+
     assert updated_client == mock_client
     assert isinstance(updated_client.last_visited_at, datetime)
     assert mock_session.commit.call_count == 1
@@ -71,17 +76,17 @@ async def test_create_client_history(mock_session):
     client_id = 1
     device_type = 1
     os_type = 1
-    browser = "Chrome"
-    language = "en"
+    browser = 'Chrome'
+    language = 'en'
     screen_width = 1920
     screen_height = 1080
-    country = "US"
-    region = "CA"
-    city = "San Francisco"
-    url = "https://example.com"
-    referrer = "https://google.com"
-    domain = "example.com"
-    subdomain = "www"
+    country = 'US'
+    region = 'CA'
+    city = 'San Francisco'
+    url = 'https://example.com'
+    referrer = 'https://google.com'
+    domain = 'example.com'
+    subdomain = 'www'
     page_load_time = 1.5
 
     mock_client = Client(id=client_id)
@@ -101,7 +106,7 @@ async def test_create_client_history(mock_session):
         referrer=referrer,
         domain=domain,
         subdomain=subdomain,
-        page_load_time=page_load_time
+        page_load_time=page_load_time,
     )
 
     mock_query = Mock()
@@ -112,9 +117,22 @@ async def test_create_client_history(mock_session):
     mock_session.refresh.side_effect = lambda x: None
 
     created_history = await create_client_history_db(
-        mock_session, client_id, device_type, os_type, browser, language,
-        screen_width, screen_height, country, region, city, url, referrer,
-        domain, subdomain, page_load_time
+        mock_session,
+        client_id,
+        device_type,
+        os_type,
+        browser,
+        language,
+        screen_width,
+        screen_height,
+        country,
+        region,
+        city,
+        url,
+        referrer,
+        domain,
+        subdomain,
+        page_load_time,
     )
 
     assert isinstance(created_history, ClientHistory)
@@ -144,15 +162,15 @@ async def test_get_client_history(mock_session):
     client_id = 1
     mock_histories = [
         ClientHistory(id=1, client_id=client_id),
-        ClientHistory(id=2, client_id=client_id)
+        ClientHistory(id=2, client_id=client_id),
     ]
-    
+
     mock_query = Mock()
     mock_filter = Mock()
     mock_session.query.return_value = mock_query
     mock_query.filter.return_value = mock_filter
     mock_filter.all.return_value = mock_histories
-    
+
     histories = await get_client_history_db(mock_session, client_id)
     assert histories == mock_histories
 
@@ -161,12 +179,12 @@ async def test_get_client_history(mock_session):
 async def test_get_client_history_by_id(mock_session):
     history_id = 1
     mock_history = ClientHistory(id=history_id)
-    
+
     mock_query = Mock()
     mock_filter = Mock()
     mock_session.query.return_value = mock_query
     mock_query.filter.return_value = mock_filter
     mock_filter.first.return_value = mock_history
-    
+
     history = await get_client_history_by_id_db(mock_session, history_id)
     assert history == mock_history

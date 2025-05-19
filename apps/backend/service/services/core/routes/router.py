@@ -14,6 +14,15 @@ from .campaign import (
     delete_campaign_route,
     update_campaign_route,
 )
+from .client import (
+    contribute_to_project_goal_route,
+    get_client_history_route,
+    get_client_route,
+    get_clients_by_project_id_route,
+    get_contributions_to_project_goal_route,
+    init_client_session_route,
+    release_client_session_route,
+)
 from .feedback import create_feedback
 from .filesystem import (
     create_directory_route,
@@ -40,6 +49,7 @@ from .landing import (
     landings_in_stream,
     update_landing_route,
 )
+from .metric import create_landing_metric, get_landing_metrics
 from .middleware import Context
 from .project import add_project_logo_route, add_project_public_key_route
 from .project import add_user_to_project as add_user_to_project_route
@@ -47,25 +57,35 @@ from .project import change_project_private_key_route
 from .project import change_user_role as change_user_role_route
 from .project import (
     create_project_goal_route,
-    delete_project_goal_route,
-    update_project_goal_route,
     create_project_route,
+    delete_project_goal_route,
     delete_project_logo_route,
     delete_project_public_key_route,
     delete_project_route,
+    get_project_goals_route,
     project_by_id,
     projects,
+    update_project_goal_route,
     update_project_route,
-    get_project_goals_route
 )
 from .schemas import AllFiltersGet
 from .schemas.campaign import CampaignGet, CampaignPatch, CampaignPost
+from .schemas.client import ClientGet, ClientHistoryGet, ClientHistoryInput
 from .schemas.feedback import FeedbackGet, FeedbackPost
 from .schemas.filesystem import ProjectDirectory, ProjectDirectoryGet, ProjectDirectoryPatch
 from .schemas.fragment import FragmentGet, FragmentPatch, FragmentPost
 from .schemas.landing import ClientInfo, LandingGet, LandingPatch, LandingPost
 from .schemas.media import MediaDelete, MediaGet, MediaPost, MediaType
-from .schemas.project import ProjectGet, ProjectPatch, ProjectPost, ProjectGoalGet, ProjectGoalPost, ProjectGoalPatch, ClientProjectGoalGet
+from .schemas.metric import ClientMetricPost, ClientMetricType, LandingMetricGet, LandingMetricPost
+from .schemas.project import (
+    ClientProjectGoalGet,
+    ProjectGet,
+    ProjectGoalGet,
+    ProjectGoalPatch,
+    ProjectGoalPost,
+    ProjectPatch,
+    ProjectPost,
+)
 from .schemas.stream import StreamGet, StreamPatch, StreamPost
 from .schemas.user import AuthPayload, RoleGet, UserGet
 from .stream import (
@@ -76,10 +96,7 @@ from .stream import (
     update_stream_route,
 )
 from .user import add_avatar_route, delete_avatar_route, login, profile, refresh, signup
-from .metric import create_landing_metric, get_landing_metrics
-from .schemas.metric import LandingMetricGet, LandingMetricPost
-from .client import get_clients_by_project_id_route, init_client_session_route, get_client_route, get_client_history_route, contribute_to_project_goal_route, get_contributions_to_project_goal_route
-from .schemas.client import ClientGet, ClientHistoryGet, ClientHistoryInput
+
 
 @strawberry.type
 class Query:
@@ -103,7 +120,7 @@ class Query:
         landing_id: Optional[int] = None,
     ) -> List[LandingMetricGet]:
         return await get_landing_metrics(info, landing_id)
-    
+
     @strawberry.field
     async def campaign(
         self,
@@ -189,25 +206,33 @@ class Query:
         self, info: strawberry.Info[Context], fragment_id: int
     ) -> Optional[FragmentGet]:
         return await get_client_fragment(info, fragment_id)
-    
+
     @strawberry.field
-    async def clients_by_project_id(self, info: strawberry.Info[Context], project_id: int) -> List[ClientGet]:
+    async def clients_by_project_id(
+        self, info: strawberry.Info[Context], project_id: int
+    ) -> List[ClientGet]:
         return await get_clients_by_project_id_route(info, project_id)
-    
+
     @strawberry.field
     async def client_by_id(self, info: strawberry.Info[Context], client_id: int) -> ClientGet:
         return await get_client_route(info, client_id)
 
     @strawberry.field
-    async def client_history(self, info: strawberry.Info[Context], client_id: int) -> List[ClientHistoryGet]:
+    async def client_history(
+        self, info: strawberry.Info[Context], client_id: int
+    ) -> List[ClientHistoryGet]:
         return await get_client_history_route(info, client_id)
-    
+
     @strawberry.field
-    async def project_goals(self, info: strawberry.Info[Context], project_id: int) -> List[ProjectGoalGet]:
+    async def project_goals(
+        self, info: strawberry.Info[Context], project_id: int
+    ) -> List[ProjectGoalGet]:
         return await get_project_goals_route(info, project_id)
-    
+
     @strawberry.field
-    async def contributions_to_project_goal(self, info: strawberry.Info[Context], project_id: int, project_goal_id: int) -> List[ClientProjectGoalGet]:
+    async def contributions_to_project_goal(
+        self, info: strawberry.Info[Context], project_id: int, project_goal_id: int
+    ) -> List[ClientProjectGoalGet]:
         return await get_contributions_to_project_goal_route(info, project_id, project_goal_id)
 
 
@@ -320,13 +345,17 @@ class Mutation:
         await delete_project_public_key_route(info, project_id, public_key_id)
 
     @strawberry.mutation
-    async def create_project_goal(self, info: strawberry.Info[Context], goal: ProjectGoalPost) -> ProjectGoalGet:
+    async def create_project_goal(
+        self, info: strawberry.Info[Context], goal: ProjectGoalPost
+    ) -> ProjectGoalGet:
         return await create_project_goal_route(info, goal)
-    
+
     @strawberry.mutation
-    async def update_project_goal(self, info: strawberry.Info[Context], goal: ProjectGoalPatch) -> ProjectGoalGet:
+    async def update_project_goal(
+        self, info: strawberry.Info[Context], goal: ProjectGoalPatch
+    ) -> ProjectGoalGet:
         return await update_project_goal_route(info, goal)
-    
+
     @strawberry.mutation
     async def delete_project_goal(self, info: strawberry.Info[Context], goal_id: int) -> None:
         await delete_project_goal_route(info, goal_id)
@@ -413,20 +442,17 @@ class Mutation:
         elif media.media_type == MediaType.USER_LOGO:
             await delete_avatar_route(info)
 
-    #### metric ####
-    # @strawberry.mutation
-    # async def create_landing_metric(self, info: strawberry.Info[Context], metric: LandingMetricPost) -> LandingMetricGet:
-    #     return await create_landing_metric(info, metric)
-
-    #### metric ####
-
     #### client ####
-    
-    @strawberry.field
-    async def init_client_session(self, info: strawberry.Info[Context]) -> None:
-        return await init_client_session_route(info)
 
     @strawberry.field
-    async def contribute_to_project_goal(self, info: strawberry.Info[Context], target_action: str) -> None:
-        return await contribute_to_project_goal_route(info, target_action)
+    async def add_client_metric(
+        self, info: strawberry.Info[Context], metric: ClientMetricPost
+    ) -> None:
+        if metric.metric_type == ClientMetricType.INIT_SESSION:
+            return await init_client_session_route(info)
+        elif metric.metric_type == ClientMetricType.RELEASE_SESSION:
+            return await release_client_session_route(info)
+        elif metric.metric_type == ClientMetricType.REACH_PROJECT_GOAL:
+            return await contribute_to_project_goal_route(info, metric.metric_value)
+
     #### client ####

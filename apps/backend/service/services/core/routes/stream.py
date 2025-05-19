@@ -16,10 +16,12 @@ from database import Campaign, Session, Stream
 from .middleware import Context
 from .schemas.filter import (
     FilterDeviceTypeGet,
+    FilterGeoLocationGet,
     FilterGeoLocationsGet,
     FilterOSTypeGet,
     FilterPageGet,
-    FilterTimeFrameGet, FilterGeoLocationGet, FilterTimeFramesGet,
+    FilterTimeFrameGet,
+    FilterTimeFramesGet,
 )
 from .schemas.stream import StreamGet, StreamPatch, StreamPost
 from .schemas.user import AuthPayload, RoleGet
@@ -45,16 +47,31 @@ def stream_db_to_stream(stream: Stream) -> StreamGet:
             | FilterGeoLocationsGet
             | FilterTimeFramesGet
         ]
-    ] = [FilterOSTypeGet(os_types=[os_type_filter.os_type for os_type_filter in stream.os_types_filter]),
-         FilterDeviceTypeGet(
-             device_types=[device_type_filter.device_type for device_type_filter in stream.device_types_filter]),
-         FilterPageGet(pages=[page.page for page in stream.pages_filter]), FilterGeoLocationsGet(geo_locations=[
-            FilterGeoLocationGet(country=geo_location.country, region=geo_location.region, city=geo_location.city) for
-            geo_location in stream.geo_locations_filter]
-
-                                                                                                 ), FilterTimeFramesGet(
-            time_frames=[FilterTimeFrameGet(from_time=frame.from_time, to_time=frame.to_time) for frame in
-                         stream.time_frames_filter])]
+    ] = [
+        FilterOSTypeGet(
+            os_types=[os_type_filter.os_type for os_type_filter in stream.os_types_filter]
+        ),
+        FilterDeviceTypeGet(
+            device_types=[
+                device_type_filter.device_type for device_type_filter in stream.device_types_filter
+            ]
+        ),
+        FilterPageGet(pages=[page.page for page in stream.pages_filter]),
+        FilterGeoLocationsGet(
+            geo_locations=[
+                FilterGeoLocationGet(
+                    country=geo_location.country, region=geo_location.region, city=geo_location.city
+                )
+                for geo_location in stream.geo_locations_filter
+            ]
+        ),
+        FilterTimeFramesGet(
+            time_frames=[
+                FilterTimeFrameGet(from_time=frame.from_time, to_time=frame.to_time)
+                for frame in stream.time_frames_filter
+            ]
+        ),
+    ]
     return StreamGet(
         id=stream.id,
         name=stream.name,

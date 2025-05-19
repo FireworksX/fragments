@@ -1,7 +1,9 @@
-import pytest
 from unittest.mock import AsyncMock, Mock, patch
 
+import pytest
 from fastapi import HTTPException, UploadFile
+
+from database import Campaign, Media, Project
 from services.core.routes.campaign import (
     add_campaign_logo_route,
     campaign_by_id,
@@ -14,7 +16,7 @@ from services.core.routes.campaign import (
 )
 from services.core.routes.schemas.campaign import CampaignGet, CampaignPatch, CampaignPost
 from services.core.routes.schemas.media import MediaGet, MediaType
-from database import Campaign, Media, Project
+
 
 def mock_info():
     info = Mock()
@@ -22,6 +24,7 @@ def mock_info():
     info.context.user = AsyncMock(return_value=Mock(user=Mock(id=123)))
     info.context.session = Mock(return_value=Mock())
     return info
+
 
 @pytest.mark.asyncio
 async def test_campaigns_in_project_successful():
@@ -40,8 +43,8 @@ async def test_campaigns_in_project_successful():
 
         mock_campaign = Mock(spec=Campaign)
         mock_campaign.id = 1
-        mock_campaign.name = "Test Campaign"
-        mock_campaign.description = "Test Description"
+        mock_campaign.name = 'Test Campaign'
+        mock_campaign.description = 'Test Description'
         mock_campaign.deleted = False
         mock_campaign.active = True
         mock_campaign.logo = None
@@ -56,7 +59,8 @@ async def test_campaigns_in_project_successful():
         assert len(response) == 1
         assert isinstance(response[0], CampaignGet)
         assert response[0].id == 1
-        assert response[0].name == "Test Campaign"
+        assert response[0].name == 'Test Campaign'
+
 
 @pytest.mark.asyncio
 async def test_campaign_by_id_successful():
@@ -68,8 +72,8 @@ async def test_campaign_by_id_successful():
 
         mock_campaign = Mock(spec=Campaign)
         mock_campaign.id = 1
-        mock_campaign.name = "Test Campaign"
-        mock_campaign.description = "Test Description"
+        mock_campaign.name = 'Test Campaign'
+        mock_campaign.description = 'Test Description'
         mock_campaign.deleted = False
         mock_campaign.active = True
         mock_campaign.logo = None
@@ -83,7 +87,8 @@ async def test_campaign_by_id_successful():
 
         assert isinstance(response, CampaignGet)
         assert response.id == 1
-        assert response.name == "Test Campaign"
+        assert response.name == 'Test Campaign'
+
 
 @pytest.mark.asyncio
 async def test_create_campaign_successful():
@@ -102,8 +107,8 @@ async def test_create_campaign_successful():
 
         mock_campaign = Mock(spec=Campaign)
         mock_campaign.id = 1
-        mock_campaign.name = "Test Campaign"
-        mock_campaign.description = "Test Description"
+        mock_campaign.name = 'Test Campaign'
+        mock_campaign.description = 'Test Description'
         mock_campaign.deleted = False
         mock_campaign.active = True
         mock_campaign.logo = None
@@ -112,11 +117,11 @@ async def test_create_campaign_successful():
         mock_create.return_value = mock_campaign
 
         campaign_post = CampaignPost(
-            name="Test Campaign",
+            name='Test Campaign',
             project_id=1,
-            description="Test Description",
+            description='Test Description',
             active=True,
-            deleted=False
+            deleted=False,
         )
 
         info = mock_info()
@@ -124,7 +129,8 @@ async def test_create_campaign_successful():
 
         assert isinstance(response, CampaignGet)
         assert response.id == 1
-        assert response.name == "Test Campaign"
+        assert response.name == 'Test Campaign'
+
 
 @pytest.mark.asyncio
 async def test_add_campaign_logo_successful():
@@ -139,7 +145,7 @@ async def test_add_campaign_logo_successful():
     ) as mock_create_media:
 
         mock_file = Mock(spec=UploadFile)
-        
+
         mock_campaign = Mock(spec=Campaign)
         mock_campaign.id = 1
         mock_campaign.project_id = 1
@@ -148,12 +154,12 @@ async def test_add_campaign_logo_successful():
         mock_project = Mock(spec=Project)
         mock_project.id = 1
         mock_get_project.return_value = mock_project
-        
+
         mock_permission.return_value = True
 
         mock_media = Mock(spec=Media)
         mock_media.id = 1
-        mock_media.public_path = "/media/test.jpg"
+        mock_media.public_path = '/media/test.jpg'
         mock_create_media.return_value = mock_media
 
         info = mock_info()
@@ -162,7 +168,8 @@ async def test_add_campaign_logo_successful():
         assert isinstance(response, MediaGet)
         assert response.media_id == 1
         assert response.media_type == MediaType.CAMPAIGN_LOGO
-        assert response.public_path == "/media/test.jpg"
+        assert response.public_path == '/media/test.jpg'
+
 
 @pytest.mark.asyncio
 async def test_delete_campaign_logo_successful():
@@ -185,7 +192,7 @@ async def test_delete_campaign_logo_successful():
         mock_project = Mock(spec=Project)
         mock_project.id = 1
         mock_get_project.return_value = mock_project
-        
+
         mock_permission.return_value = True
 
         info = mock_info()
