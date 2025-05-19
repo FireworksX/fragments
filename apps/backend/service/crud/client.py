@@ -1,7 +1,7 @@
+from datetime import UTC, datetime
 from typing import List, Optional
-from datetime import datetime, UTC
 
-from database import Session, Client, ClientHistory, ClientProjectGoal
+from database import Client, ClientHistory, ClientProjectGoal, Session
 
 
 async def create_client_db(db: Session, project_id: int) -> Client:
@@ -45,7 +45,7 @@ async def create_client_history_db(
     referrer: str = None,
     domain: str = None,
     subdomain: str = None,
-    page_load_time: float = None
+    page_load_time: float = None,
 ) -> ClientHistory:
     history = ClientHistory(
         client_id=client_id,
@@ -62,7 +62,7 @@ async def create_client_history_db(
         referrer=referrer,
         domain=domain,
         subdomain=subdomain,
-        page_load_time=page_load_time
+        page_load_time=page_load_time,
     )
     db.add(history)
     db.commit()
@@ -80,39 +80,37 @@ async def get_client_history_by_id_db(db: Session, history_id: int) -> Optional[
 
 
 async def create_client_project_goal_db(
-    db: Session,
-    client_id: int,
-    project_goal_id: int,
-    project_id: int
+    db: Session, client_id: int, project_goal_id: int, project_id: int
 ) -> ClientProjectGoal:
     goal = ClientProjectGoal(
-        client_id=client_id,
-        project_goal_id=project_goal_id,
-        project_id=project_id
+        client_id=client_id, project_goal_id=project_goal_id, project_id=project_id
     )
     db.add(goal)
     db.commit()
     db.refresh(goal)
     return goal
 
+
 async def get_client_project_goals_by_project_and_goal_db(
-    db: Session,
-    project_id: int,
-    project_goal_id: int
+    db: Session, project_id: int, project_goal_id: int
 ) -> List[ClientProjectGoal]:
-    return db.query(ClientProjectGoal).filter(
-        ClientProjectGoal.project_id == project_id,
-        ClientProjectGoal.project_goal_id == project_goal_id
-    ).all()
-
-
+    return (
+        db.query(ClientProjectGoal)
+        .filter(
+            ClientProjectGoal.project_id == project_id,
+            ClientProjectGoal.project_goal_id == project_goal_id,
+        )
+        .all()
+    )
 
 
 async def get_client_project_goals_db(db: Session, client_id: int) -> List[ClientProjectGoal]:
     return db.query(ClientProjectGoal).filter(ClientProjectGoal.client_id == client_id).all()
 
 
-async def get_client_project_goal_by_id_db(db: Session, goal_id: int) -> Optional[ClientProjectGoal]:
+async def get_client_project_goal_by_id_db(
+    db: Session, goal_id: int
+) -> Optional[ClientProjectGoal]:
     return db.query(ClientProjectGoal).filter(ClientProjectGoal.id == goal_id).first()
 
 

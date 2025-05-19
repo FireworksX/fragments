@@ -54,7 +54,9 @@ async def get_landing_metric_by_id_db(db: Session, metric_id: int) -> Optional[L
     return db.query(LandingMetric).filter(LandingMetric.id == metric_id).first()
 
 
-async def get_landing_metrics_db(db: Session, skip: int = 0, limit: int = 100) -> List[LandingMetric]:
+async def get_landing_metrics_db(
+    db: Session, skip: int = 0, limit: int = 100
+) -> List[LandingMetric]:
     return db.query(LandingMetric).offset(skip).limit(limit).all()
 
 

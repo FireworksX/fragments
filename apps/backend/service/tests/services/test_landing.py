@@ -1,28 +1,31 @@
-import pytest
 from unittest.mock import AsyncMock, Mock, patch
 
+import pytest
 from fastapi import HTTPException
+
+from crud.ipgetter import GeoLocation
+from database import Fragment, Landing, Project, Stream
 from services.core.routes.landing import (
     create_landing_route,
     delete_landing_route,
+    get_client_landing,
     landing_by_id,
     landings_in_stream,
     update_landing_route,
-    get_client_landing
 )
-from services.core.routes.schemas.landing import LandingGet, LandingPatch, LandingPost, ClientInfo
-from database import Landing, Stream, Project, Fragment
-from crud.ipgetter import GeoLocation
+from services.core.routes.schemas.landing import ClientInfo, LandingGet, LandingPatch, LandingPost
+
 
 def mock_info():
     info = Mock()
     info.context = Mock()
     info.context.user = AsyncMock(return_value=Mock(user=Mock(id=123)))
     info.context.session = Mock(return_value=Mock())
-    info.context.client_info = AsyncMock(return_value=Mock(ip_address="1.2.3.4"))
+    info.context.client_info = AsyncMock(return_value=Mock(ip_address='1.2.3.4'))
     info.context.client = AsyncMock(return_value=Mock(id=1))
     info.context.project = AsyncMock(return_value=Mock(id=1))
     return info
+
 
 @pytest.mark.asyncio
 async def test_create_landing_successful():
@@ -47,12 +50,12 @@ async def test_create_landing_successful():
         mock_project.id = 1
         mock_project.members = []
         mock_get_project.return_value = mock_project
-        
+
         mock_permission.return_value = True
         mock_role.return_value = 1
         mock_landing = Mock(spec=Landing)
         mock_landing.id = 1
-        mock_landing.name = "Test Landing"
+        mock_landing.name = 'Test Landing'
         mock_landing.props = None
         mock_landing.weight = 1
         mock_landing.fragment = None
@@ -62,13 +65,13 @@ async def test_create_landing_successful():
         mock_create.return_value = mock_landing
 
         landing_post = LandingPost(
-            name="Test Landing", 
+            name='Test Landing',
             stream_id=1,
             fragment_id=None,
             props=None,
             weight=1,
             active=True,
-            deleted=False
+            deleted=False,
         )
 
         info = mock_info()
@@ -76,7 +79,8 @@ async def test_create_landing_successful():
 
         assert isinstance(response, LandingGet)
         assert response.id == 1
-        assert response.name == "Test Landing"
+        assert response.name == 'Test Landing'
+
 
 @pytest.mark.asyncio
 async def test_get_client_landing_successful():
@@ -107,7 +111,7 @@ async def test_get_client_landing_successful():
         mock_role.return_value = 1
         mock_fragment = Mock(spec=Fragment)
         mock_fragment.id = 1
-        mock_fragment.name = "Test Fragment"
+        mock_fragment.name = 'Test Fragment'
         mock_fragment.project_id = 1
         mock_fragment.linked_fragments = []
         mock_fragment.assets = []
@@ -115,15 +119,15 @@ async def test_get_client_landing_successful():
 
         mock_landing = Mock(spec=Landing)
         mock_landing.id = 1
-        mock_landing.name = "Test Landing"
+        mock_landing.name = 'Test Landing'
         mock_landing.stream = mock_stream
         mock_landing.fragment = mock_fragment
         mock_get_best.return_value = mock_landing
 
         mock_location = Mock(spec=GeoLocation)
-        mock_location.country = "US"
-        mock_location.region = "CA" 
-        mock_location.city = "San Francisco"
+        mock_location.country = 'US'
+        mock_location.region = 'CA'
+        mock_location.city = 'San Francisco'
         mock_get_location.return_value = mock_location
 
         info = mock_info()
@@ -131,10 +135,11 @@ async def test_get_client_landing_successful():
 
         assert isinstance(response, LandingGet)
         assert response.id == 1
-        assert response.name == "Test Landing"
+        assert response.name == 'Test Landing'
         mock_create_metric.assert_called_once()
 
-@pytest.mark.asyncio 
+
+@pytest.mark.asyncio
 async def test_delete_landing_successful():
     with patch(
         'services.core.routes.landing.get_landing_by_id_db', new_callable=AsyncMock
@@ -162,6 +167,7 @@ async def test_delete_landing_successful():
 
         mock_delete.assert_called_once_with(info.context.session(), 1)
 
+
 @pytest.mark.asyncio
 async def test_update_landing_successful():
     with patch(
@@ -185,7 +191,7 @@ async def test_update_landing_successful():
 
         mock_fragment = Mock(spec=Fragment)
         mock_fragment.id = 2
-        mock_fragment.name = "Test Fragment"
+        mock_fragment.name = 'Test Fragment'
         mock_fragment.project_id = 1
         mock_fragment.linked_fragments = []
         mock_fragment.assets = []
@@ -197,7 +203,7 @@ async def test_update_landing_successful():
         mock_landing.project_id = 1
         mock_landing.fragment_id = 2
         mock_landing.fragment = mock_fragment
-        mock_landing.name = "Test Landing"
+        mock_landing.name = 'Test Landing'
         mock_landing.stream = mock_stream
         mock_get_landing.return_value = mock_landing
         mock_update.return_value = mock_landing
@@ -212,11 +218,7 @@ async def test_update_landing_successful():
         mock_role.return_value = 1
 
         landing_patch = LandingPatch(
-            id=1,
-            name="Updated Landing",
-            active=True,
-            deleted=False,
-            fragment_id=2
+            id=1, name='Updated Landing', active=True, deleted=False, fragment_id=2
         )
 
         info = mock_info()
@@ -224,5 +226,5 @@ async def test_update_landing_successful():
 
         assert isinstance(response, LandingGet)
         assert response.id == 1
-        assert response.name == "Test Landing"
-        assert response.fragment.name == "Test Fragment"
+        assert response.name == 'Test Landing'
+        assert response.fragment.name == 'Test Fragment'

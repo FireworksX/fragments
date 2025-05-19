@@ -1,4 +1,3 @@
-
 from typing import List, Optional
 
 import strawberry
@@ -32,6 +31,7 @@ class ClientGet:
     updated_at: str
     last_visited_at: Optional[str]
     history: List[ClientHistoryGet]
+
 
 @strawberry.input
 class ClientHistoryInput:
