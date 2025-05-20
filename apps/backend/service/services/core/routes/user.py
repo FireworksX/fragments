@@ -20,6 +20,16 @@ from .schemas.media import MediaGet, MediaType
 from .schemas.user import AuthPayload, UserGet
 
 
+def user_db_to_user(user: User) -> UserGet:
+    return UserGet(
+        id=user.id,
+        email=user.email,
+        first_name=user.first_name,
+        last_name=user.last_name,
+        logo=user.avatar.public_path if user.avatar else None,
+    )
+
+
 async def login(info: strawberry.Info[Context], email: str, password: str) -> AuthPayload:
     db: Session = info.context.session()
     user: User = await get_user_by_email_db(db, email)
@@ -32,7 +42,9 @@ async def login(info: strawberry.Info[Context], email: str, password: str) -> Au
     access_token = create_access_token(data={'sub': user.email})
 
     refresh_token = create_refresh_token(data={'sub': user.email})
-    return AuthPayload(user=user, access_token=access_token, refresh_token=refresh_token)
+    return AuthPayload(
+        user=user_db_to_user(user), access_token=access_token, refresh_token=refresh_token
+    )
 
 
 async def signup(
@@ -51,15 +63,13 @@ async def signup(
         )
     hashed_password: str = get_password_hash(password)
     user: User = await create_user_db(db, email, first_name, last_name, hashed_password)
-    if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='Failed to create a user'
-        )
 
     access_token = create_access_token(data={'sub': user.email})
 
     refresh_token = create_refresh_token(data={'sub': user.email})
-    return AuthPayload(user=user, access_token=access_token, refresh_token=refresh_token)
+    return AuthPayload(
+        user=user_db_to_user(user), access_token=access_token, refresh_token=refresh_token
+    )
 
 
 async def add_avatar_route(info: strawberry.Info[Context], file: UploadFile) -> MediaGet:
@@ -94,23 +104,17 @@ async def delete_avatar_route(info: strawberry.Info[Context]) -> UserGet:
     await delete_media_by_id_db(db, user.avatar_id)
     user.avatar_id = None
     db.commit()
-    return UserGet(
-        id=user.id,
-        email=user.email,
-        first_name=user.first_name,
-        last_name=user.last_name,
-        logo=user.avatar.public_path,
-    )
+    return user_db_to_user(user)
 
 
-async def profile(info: strawberry.Info[Context]):
+async def profile(info: strawberry.Info[Context]) -> AuthPayload:
     user = await info.context.user()
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return user
 
 
-async def refresh(info: strawberry.Info[Context]):
+async def refresh(info: strawberry.Info[Context]) -> AuthPayload:
     user = await info.context.refresh_user()
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)

@@ -4,11 +4,18 @@ import strawberry
 from fastapi import UploadFile
 from starlette import status
 
+from .area import (
+    create_area_route,
+    delete_area_route,
+    get_area_by_id_route,
+    get_areas_route,
+    update_area_route,
+)
 from .campaign import (
     add_campaign_logo_route,
     campaign_by_id,
     campaign_by_name,
-    campaigns_in_project,
+    campaigns_in_area,
     create_campaign_route,
     delete_campaign_logo_route,
     delete_campaign_route,
@@ -41,7 +48,6 @@ from .fragment import (
     get_client_fragment,
     update_fragment_route,
 )
-from .schemas.metric import ClientMetricPost, ClientMetricType
 from .middleware import Context
 from .project import add_project_logo_route, add_project_public_key_route
 from .project import add_user_to_project as add_user_to_project_route
@@ -61,12 +67,14 @@ from .project import (
     update_project_route,
 )
 from .schemas import AllFiltersGet
+from .schemas.area import AreaGet, AreaPatch, AreaPost
 from .schemas.campaign import CampaignGet, CampaignPatch, CampaignPost
 from .schemas.client import ClientGet, ClientHistoryGet, ClientHistoryInput
 from .schemas.feedback import FeedbackGet, FeedbackPost
 from .schemas.filesystem import ProjectDirectory, ProjectDirectoryGet, ProjectDirectoryPatch
 from .schemas.fragment import FragmentGet, FragmentPatch, FragmentPost
 from .schemas.media import MediaDelete, MediaGet, MediaPost, MediaType
+from .schemas.metric import ClientMetricPost, ClientMetricType
 from .schemas.project import (
     ClientProjectGoalGet,
     ProjectGet,
@@ -76,15 +84,7 @@ from .schemas.project import (
     ProjectPatch,
     ProjectPost,
 )
-from .schemas.stream import StreamGet, StreamPatch, StreamPost
 from .schemas.user import AuthPayload, RoleGet, UserGet
-from .stream import (
-    create_stream_route,
-    delete_stream_route,
-    stream_by_id,
-    streams_in_campaign,
-    update_stream_route,
-)
 from .user import add_avatar_route, delete_avatar_route, login, profile, refresh, signup
 
 
@@ -108,40 +108,26 @@ class Query:
         self,
         info: strawberry.Info[Context],
         campgain_id: Optional[int] = None,
-        project_id: Optional[int] = None,
+        area_id: Optional[int] = None,
         active: Optional[bool] = None,
-        deleted: Optional[bool] = None,
+        archived: Optional[bool] = None,
     ) -> List[CampaignGet]:
         if campgain_id is not None:
             return [await campaign_by_id(info, campgain_id)]
-        if project_id is not None:
-            return await campaigns_in_project(info, project_id, active, deleted)
+        if area_id is not None:
+            return await campaigns_in_area(info, area_id, active, archived)
 
     @strawberry.field
     async def campaign_by_name(
         self,
         info: strawberry.Info[Context],
-        project_id: int,
+        area_id: int,
         name: str,
         limit: Optional[int] = 5,
         active: Optional[bool] = None,
-        deleted: Optional[bool] = None,
+        archived: Optional[bool] = None,
     ) -> List[CampaignGet]:
-        return await campaign_by_name(info, project_id, name, limit, active, deleted)
-
-    @strawberry.field
-    async def stream(
-        self,
-        info: strawberry.Info[Context],
-        stream_id: Optional[int] = None,
-        campaign_id: Optional[int] = None,
-        active: Optional[bool] = None,
-        deleted: Optional[bool] = None,
-    ) -> List[StreamGet]:
-        if stream_id is not None:
-            return [await stream_by_id(info, stream_id)]
-        if campaign_id is not None:
-            return await streams_in_campaign(info, campaign_id, active, deleted)
+        return await campaign_by_name(info, area_id, name, limit, active, archived)
 
     @strawberry.field
     async def project(
@@ -200,6 +186,14 @@ class Query:
         self, info: strawberry.Info[Context], project_id: int, project_goal_id: int
     ) -> List[ClientProjectGoalGet]:
         return await get_contributions_to_project_goal_route(info, project_id, project_goal_id)
+
+    @strawberry.field
+    async def area(self, info: strawberry.Info[Context], area_id: int) -> AreaGet:
+        return await get_area_by_id_route(info, area_id)
+
+    @strawberry.field
+    async def areas(self, info: strawberry.Info[Context], project_id: int) -> List[AreaGet]:
+        return await get_areas_route(info, project_id)
 
 
 @strawberry.type
@@ -328,21 +322,6 @@ class Mutation:
 
     #### project ####
 
-    #### stream ###
-    @strawberry.mutation
-    async def create_stream(self, info: strawberry.Info[Context], stream: StreamPost) -> StreamGet:
-        return await create_stream_route(info, stream)
-
-    @strawberry.mutation
-    async def update_stream(self, info: strawberry.Info[Context], stream: StreamPatch) -> StreamGet:
-        return await update_stream_route(info, stream)
-
-    @strawberry.mutation
-    async def delete_stream(self, info: strawberry.Info[Context], stream_id: int) -> None:
-        await delete_stream_route(info, stream_id)
-
-    #### stream ###
-
     #### directory ####
 
     @strawberry.mutation
@@ -403,3 +382,19 @@ class Mutation:
             return await contribute_to_project_goal_route(info, metric.metric_value)
 
     #### client ####
+
+    #### area ####
+
+    @strawberry.mutation
+    async def create_area(self, info: strawberry.Info[Context], area: AreaPost) -> AreaGet:
+        return await create_area_route(info, area)
+
+    @strawberry.mutation
+    async def update_area(self, info: strawberry.Info[Context], area: AreaPatch) -> AreaGet:
+        return await update_area_route(info, area)
+
+    @strawberry.mutation
+    async def delete_area(self, info: strawberry.Info[Context], area_id: int) -> None:
+        await delete_area_route(info, area_id)
+
+    #### area ####

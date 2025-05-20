@@ -22,6 +22,7 @@ from .middleware import Context
 from .schemas.fragment import FragmentGet, FragmentMediaGet, FragmentPatch, FragmentPost
 from .schemas.media import MediaGet, MediaType
 from .schemas.user import AuthPayload, RoleGet
+from .user import user_db_to_user
 from .utils import get_user_role_in_project
 
 
@@ -76,7 +77,7 @@ def fragment_db_to_fragment(fragment: Fragment) -> FragmentGet:
         id=fragment.id,
         directory_id=fragment.directory_id,
         name=fragment.name,
-        author=fragment.author,
+        author=user_db_to_user(fragment.author),
         document=fragment.document,
         props=fragment.props,
         assets=(

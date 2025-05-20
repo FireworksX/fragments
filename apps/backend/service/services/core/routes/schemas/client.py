@@ -1,9 +1,10 @@
-from typing import List, Optional
 from datetime import datetime
+from typing import List, Optional
 
 import strawberry
 
 from services.core.routes.schemas.filter import DeviceType, OSType
+
 
 @strawberry.type
 class ClientHistoryGet:
