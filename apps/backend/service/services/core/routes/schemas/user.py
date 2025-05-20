@@ -20,11 +20,6 @@ class UserGet:
     last_name: Optional[str]
     logo: Optional[str]
 
-    _sa_instance_state: strawberry.Private[object]
-    hashed_password: strawberry.Private[object]
-    avatar_id: strawberry.Private[object]
-    avatar: strawberry.Private[object]
-
 
 @strawberry.type
 class UserRoleGet(UserGet):

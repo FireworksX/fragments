@@ -18,13 +18,23 @@ from services.dependencies import get_db
 
 from .schemas.client import ClientInfo
 from .schemas.filter import DeviceType, OSType
-from .schemas.user import AuthPayload
+from .schemas.user import AuthPayload, UserGet
 
 credentials_exception = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
     detail='Could not validate credentials',
     headers={'Authorization': 'token'},
 )
+
+
+def user_db_to_user(user: User) -> UserGet:
+    return UserGet(
+        id=user.id,
+        email=user.email,
+        first_name=user.first_name,
+        last_name=user.last_name,
+        logo=user.avatar.public_path if user.avatar else None,
+    )
 
 
 class UserAgentInfo:
@@ -88,7 +98,9 @@ class Context(BaseContext):
             raise credentials_exception
         if refresh is None:
             refresh = create_refresh_token(data={'sub': user.email})
-        return AuthPayload(user=user, access_token=authorization, refresh_token=refresh)
+        return AuthPayload(
+            user=user_db_to_user(user), access_token=authorization, refresh_token=refresh
+        )
 
     async def project(self) -> Project | None:
         if not self.request:
@@ -168,7 +180,7 @@ class Context(BaseContext):
         if user is None:
             raise credentials_exception
         return AuthPayload(
-            user=user,
+            user=user_db_to_user(user),
             access_token=create_access_token(data={'sub': user.email}),
             refresh_token=refresh,
         )

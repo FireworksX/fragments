@@ -154,7 +154,7 @@ async def get_user_project_role(db: Session, user_id: int, project_id: int) -> i
     return None
 
 
-async def get_project_by_id_db(db: Session, project_id: int) -> Project:
+async def get_project_by_id_db(db: Session, project_id: int) -> Optional[Project]:
     return db.query(Project).filter(Project.id == project_id).first()
 
 
