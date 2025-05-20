@@ -348,26 +348,6 @@ class Fragment(Base):
     )
 
 
-class Landing(Base):
-    __tablename__ = 'landing'
-    id = Column('id', Integer, primary_key=True, index=True)
-    project_id = Column(
-        'project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False
-    )
-    project = relationship('Project')
-    stream_id = Column(
-        'stream_id', Integer, ForeignKey('stream.id', ondelete='CASCADE'), nullable=False
-    )
-    stream = relationship('Stream')
-    fragment_id = Column('fragment_id', Integer, ForeignKey('fragment.id', ondelete='CASCADE'))
-    fragment = relationship('Fragment')
-    props = Column('props', JSON)
-    weight = Column('weight', Float)
-    name = Column('name', String, nullable=False)
-    active = Column('active', Boolean, default=True)
-    deleted = Column('deleted', Boolean, default=False)
-
-
 class Media(Base):
     __tablename__ = 'media'
     id = Column('id', Integer, primary_key=True, index=True)
@@ -388,45 +368,6 @@ class Media(Base):
     @property
     def public_path(self):
         return f'{service_settings.STATIC_SERVER_URL}/{self.filename}'
-
-
-class LandingMetric(Base):
-    __tablename__ = 'landing_metric'
-    id = Column('id', Integer, primary_key=True, index=True)
-
-    # Foreign keys
-    landing_id = Column('landing_id', Integer, ForeignKey('landing.id'))
-    campaign_id = Column('campaign_id', Integer, ForeignKey('campaign.id'))
-
-    # Page info
-    url = Column('url', String)
-    referrer = Column('referrer', String)
-    domain = Column('domain', String)
-    subdomain = Column('subdomain', String)
-    page_load_time = Column('page_load_time', Float)  # in milliseconds
-
-    # Device info
-    device_type = Column('device_type', Integer)
-    os_type = Column('os_type', Integer)
-    browser = Column('browser', String)
-    language = Column('language', String)
-    screen_width = Column('screen_width', Integer)
-    screen_height = Column('screen_height', Integer)
-
-    # Geolocation
-    country = Column('country', String)
-    region = Column('region', String)
-    city = Column('city', String)
-
-    # Timestamps
-    created_at = Column('created_at', DateTime, default=datetime.datetime.now(datetime.UTC))
-
-    # Relationships
-    landing = relationship('Landing')
-    campaign = relationship('Campaign')
-
-    # Custom event
-    event = Column('event', String)
 
 
 class Client(Base):

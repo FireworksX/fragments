@@ -8,7 +8,6 @@ from jwt.exceptions import InvalidTokenError
 from database.models import Project, User
 from services.core.routes.middleware import Context, UserAgentInfo, get_context
 from services.core.routes.schemas.filter import DeviceType, OSType
-from services.core.routes.schemas.landing import ClientInfo
 from services.core.routes.schemas.user import AuthPayload
 
 
@@ -85,25 +84,6 @@ async def test_project_invalid_key():
             await context.project()
 
         assert exc.value.status_code == 401
-
-
-@pytest.mark.asyncio
-async def test_client_landing():
-    context = Context()
-    context.request = mock_request(
-        headers={
-            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X)',
-            'X-User-Ip': '192.168.1.1',
-            'Referrer': 'https://example.com',
-        }
-    )
-
-    result = await context.client_info()
-
-    assert isinstance(result, ClientInfo)
-    assert isinstance(result.time_frame, datetime)
-    assert result.ip_address == '192.168.1.1'
-    assert result.page == 'https://example.com'
 
 
 def test_user_agent_info_mobile():

@@ -10,8 +10,6 @@ from services.core.routes.schemas.campaign import CampaignGet
 from services.core.routes.schemas.filesystem import ProjectDirectoryGet
 from services.core.routes.schemas.filter import AllFiltersGet
 from services.core.routes.schemas.fragment import FragmentGet
-from services.core.routes.schemas.landing import LandingGet
-from services.core.routes.schemas.metric import LandingMetricGet
 from services.core.routes.schemas.project import (
     ProjectGet,
     ProjectGoalGet,
@@ -57,22 +55,6 @@ async def test_query_fragments():
 
         assert result == [mock_fragment]
         mock_fragments.assert_called_once_with(info, [1], 1)
-
-
-@pytest.mark.asyncio
-async def test_query_landing_metrics():
-    with patch(
-        'services.core.routes.router.get_landing_metrics', new_callable=AsyncMock
-    ) as mock_metrics:
-        mock_metric = Mock(spec=LandingMetricGet)
-        mock_metrics.return_value = [mock_metric]
-
-        query = Query()
-        info = mock_info()
-        result = await query.landing_metric(info, landing_id=1)
-
-        assert result == [mock_metric]
-        mock_metrics.assert_called_once_with(info, 1)
 
 
 @pytest.mark.asyncio
@@ -182,36 +164,6 @@ async def test_query_all_projects():
 
 
 @pytest.mark.asyncio
-async def test_query_landing_by_id():
-    with patch('services.core.routes.router.landing_by_id', new_callable=AsyncMock) as mock_landing:
-        mock_land = Mock(spec=LandingGet)
-        mock_landing.return_value = mock_land
-
-        query = Query()
-        info = mock_info()
-        result = await query.landing(info, landing_id=1)
-
-        assert result == [mock_land]
-        mock_landing.assert_called_once_with(info, 1)
-
-
-@pytest.mark.asyncio
-async def test_query_landings_in_stream():
-    with patch(
-        'services.core.routes.router.landings_in_stream', new_callable=AsyncMock
-    ) as mock_landings:
-        mock_land = Mock(spec=LandingGet)
-        mock_landings.return_value = [mock_land]
-
-        query = Query()
-        info = mock_info()
-        result = await query.landing(info, stream_id=1)
-
-        assert result == [mock_land]
-        mock_landings.assert_called_once_with(info, 1)
-
-
-@pytest.mark.asyncio
 async def test_query_filters():
     with patch(
         'services.core.routes.router.get_all_filters', new_callable=AsyncMock
@@ -241,22 +193,6 @@ async def test_query_directory():
 
         assert result == [mock_dir]
         mock_directory.assert_called_once_with(info, 1)
-
-
-@pytest.mark.asyncio
-async def test_query_client_landing():
-    with patch(
-        'services.core.routes.router.get_client_landing', new_callable=AsyncMock
-    ) as mock_landing:
-        mock_land = Mock(spec=LandingGet)
-        mock_landing.return_value = mock_land
-
-        query = Query()
-        info = mock_info()
-        result = await query.client_landing(info)
-
-        assert result == mock_land
-        mock_landing.assert_called_once_with(info)
 
 
 @pytest.mark.asyncio

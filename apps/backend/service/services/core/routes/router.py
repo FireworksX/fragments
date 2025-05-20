@@ -41,15 +41,7 @@ from .fragment import (
     get_client_fragment,
     update_fragment_route,
 )
-from .landing import (
-    create_landing_route,
-    delete_landing_route,
-    get_client_landing,
-    landing_by_id,
-    landings_in_stream,
-    update_landing_route,
-)
-from .metric import create_landing_metric, get_landing_metrics
+from .schemas.metric import ClientMetricPost, ClientMetricType
 from .middleware import Context
 from .project import add_project_logo_route, add_project_public_key_route
 from .project import add_user_to_project as add_user_to_project_route
@@ -74,9 +66,7 @@ from .schemas.client import ClientGet, ClientHistoryGet, ClientHistoryInput
 from .schemas.feedback import FeedbackGet, FeedbackPost
 from .schemas.filesystem import ProjectDirectory, ProjectDirectoryGet, ProjectDirectoryPatch
 from .schemas.fragment import FragmentGet, FragmentPatch, FragmentPost
-from .schemas.landing import ClientInfo, LandingGet, LandingPatch, LandingPost
 from .schemas.media import MediaDelete, MediaGet, MediaPost, MediaType
-from .schemas.metric import ClientMetricPost, ClientMetricType, LandingMetricGet, LandingMetricPost
 from .schemas.project import (
     ClientProjectGoalGet,
     ProjectGet,
@@ -112,14 +102,6 @@ class Query:
         project_id: Optional[int] = None,
     ) -> List[FragmentGet]:
         return await fragments_by_ids(info, fragment_ids, project_id)
-
-    @strawberry.field
-    async def landing_metric(
-        self,
-        info: strawberry.Info[Context],
-        landing_id: Optional[int] = None,
-    ) -> List[LandingMetricGet]:
-        return await get_landing_metrics(info, landing_id)
 
     @strawberry.field
     async def campaign(
@@ -171,18 +153,6 @@ class Query:
             return await projects(info)
 
     @strawberry.field
-    async def landing(
-        self,
-        info: strawberry.Info[Context],
-        stream_id: Optional[int] = None,
-        landing_id: Optional[int] = None,
-    ) -> List[LandingGet]:
-        if landing_id is not None:
-            return [await landing_by_id(info, landing_id)]
-        else:
-            return await landings_in_stream(info, stream_id)
-
-    @strawberry.field
     async def filter(
         self,
         info: strawberry.Info[Context],
@@ -196,10 +166,6 @@ class Query:
         self, info: strawberry.Info[Context], directory_id: int
     ) -> list[ProjectDirectoryGet]:
         return await get_directory(info, directory_id)
-
-    @strawberry.field
-    async def client_landing(self, info: strawberry.Info[Context]) -> Optional[LandingGet]:
-        return await get_client_landing(info)
 
     @strawberry.field
     async def client_fragment(
@@ -376,25 +342,6 @@ class Mutation:
         await delete_stream_route(info, stream_id)
 
     #### stream ###
-
-    #### landing ####
-    @strawberry.mutation
-    async def create_landing(
-        self, info: strawberry.Info[Context], landings: LandingPost
-    ) -> LandingGet:
-        return await create_landing_route(info, landings)
-
-    @strawberry.mutation
-    async def update_landing(
-        self, info: strawberry.Info[Context], landing: LandingPatch
-    ) -> LandingGet:
-        return await update_landing_route(info, landing)
-
-    @strawberry.mutation
-    async def delete_landing(self, info: strawberry.Info[Context], landing_id: int) -> None:
-        return await delete_landing_route(info, landing_id)
-
-    #### landing ####
 
     #### directory ####
 
