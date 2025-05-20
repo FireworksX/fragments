@@ -23,6 +23,12 @@ export const GoalViewModal: FC<GoalViewModalProps> = ({ className }) => {
   const [name, setName] = useState(currentGoal?.name ?? '')
   const [code, setCode] = useState(currentGoal?.code ?? '')
 
+  const handleSubmit = ({ name, code }) => {
+    context?.onSubmit?.({ name, code })
+    setName('')
+    setCode('')
+  }
+
   return (
     <Modal className={cn(styles.root, className)} isOpen={modal.name === modalNames.goalView}>
       <ModalContainer
@@ -32,7 +38,7 @@ export const GoalViewModal: FC<GoalViewModalProps> = ({ className }) => {
             <Button mode='secondary' stretched onClick={modalStore.close}>
               Cancel
             </Button>
-            <Button stretched onClick={() => context?.onSubmit?.({ name, code })}>
+            <Button stretched onClick={() => handleSubmit({ name, code })}>
               {isEdit ? 'Edit' : 'Create'}
             </Button>
           </>

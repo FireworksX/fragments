@@ -31,6 +31,11 @@ export function makeApolloClient() {
       typePolicies: {
         Mutation: {
           fields: {
+            deleteProjectGoal: {
+              merge(_, _incoming, { cache, variables }) {
+                cache.evict({ id: `ProjectGoalGet:${variables?.id}` })
+              }
+            },
             deleteFragment: {
               merge(_, _incoming, { cache, variables }) {
                 cache.evict({ id: `FragmentGet:${variables?.id}` })
@@ -100,6 +105,18 @@ export function makeApolloClient() {
                 cache.modify({
                   fields: {
                     campaign(list = []) {
+                      return [...list, incoming]
+                    }
+                  }
+                })
+              }
+            },
+
+            createProjectGoal: {
+              merge(outcome, incoming, { cache, variables }) {
+                cache.modify({
+                  fields: {
+                    projectGoals(list = []) {
                       return [...list, incoming]
                     }
                   }

@@ -2,6 +2,7 @@ import { Plugin } from "@graph-state/core";
 import { createFetcher } from "./fetcher";
 import { getFragmentQuery } from "./queries/FragmentQuery";
 import { getEmptyFragment } from "./emptyFragment";
+import { fetchBeacon } from "@/plugins/fetch/beacon";
 
 const BASE_ENV = {
   url: "http://localhost/graphql",
@@ -16,6 +17,7 @@ export const fetchPlugin: Plugin = (state) => {
   const fetcher = createFetcher(url, {
     Authorization: `Bearer ${apiToken}`,
   });
+  const beaconFetcher = fetchBeacon(url);
 
   const queryFragment = async (fragmentId: number) => {
     if (!apiToken) return null;
@@ -71,6 +73,8 @@ export const fetchPlugin: Plugin = (state) => {
     cacheDocuments: new Map(),
     cacheLinks: new Map(),
     queryFragment,
+    query: fetcher.query,
+    sendBeacon: beaconFetcher.sendBeacon,
     readFragment: (fragmentId: number) =>
       state.$fetch.cacheDocuments.get(fragmentId),
   };

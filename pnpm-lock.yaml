@@ -33,6 +33,9 @@ importers:
 
   apps/preview:
     dependencies:
+      '@fragmentsx/client-core':
+        specifier: workspace:*
+        version: link:../../packages/client-core
       '@fragmentsx/render-core':
         specifier: workspace:*
         version: link:../../packages/render-core

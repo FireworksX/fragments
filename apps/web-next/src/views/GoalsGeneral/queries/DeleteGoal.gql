@@ -1,0 +1,3 @@
+mutation DeleteGoal($id: Int!) {
+    deleteProjectGoal(goalId: $id)
+}

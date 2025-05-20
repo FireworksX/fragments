@@ -10,7 +10,7 @@ import {
 import { renderToStaticMarkup } from "react-dom/server";
 import type { Metadata } from "next";
 import "./global.css";
-import { createGlobalManager } from "@fragmentsx/render-core";
+import { createFragmentsClient } from "@fragmentsx/client-core";
 import { useSearchParams, useServerInsertedHTML } from "next/navigation";
 import { collectStyles, GlobalManager } from "@fragmentsx/render-react";
 import { isBrowser } from "@fragmentsx/utils";
@@ -21,10 +21,10 @@ import { isBrowser } from "@fragmentsx/utils";
 // };
 
 const WWW = ({ children }) => {
-  const globalManager = createGlobalManager({
+  const globalManager = createFragmentsClient({
     apiToken:
-      "2-534e0ddd2e09c836292ad94436463d45-2ba7423356013cae4bf0c06ab4e22f75ab743caa7367e1256f2ec599587f8c71",
-    isSelfHosted: false,
+      "1-123d89264705c57c8be5f7b5fba4e801-84e9b7c680f56799704f3972e9845cf6bf9acfc6b5e7b2407868261ff5ef6ae0",
+    isSelf: false,
   });
 
   const params = useSearchParams();
@@ -41,7 +41,7 @@ const WWW = ({ children }) => {
     if (!isServerInserted.current) {
       isServerInserted.current = true;
 
-      const styles = collectStyles(globalManager);
+      // const styles = collectStyles(globalManager);
 
       // collectStyles(globalManager, renderToStaticMarkup);
       // const tags = await globalManager.extractStyleTags();
@@ -54,7 +54,7 @@ const WWW = ({ children }) => {
 
       return (
         <>
-          {styles}
+          {/*{styles}*/}
           {/*{styles.map((st) => (*/}
           {/*  <style dangerouslySetInnerHTML={{ __html: st }} />*/}
           {/*))}*/}

@@ -1,0 +1,7 @@
+mutation UpdateGoal($goalId: Int!, $name: String, $code: String) {
+    updateProjectGoal(goal: {id: $goalId, name: $name, targetAction: $code}) {
+        id
+        name
+        code: targetAction
+    }
+}

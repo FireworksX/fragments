@@ -60,6 +60,45 @@ export type CampaignPost = {
   projectId: Scalars['Int']['input'];
 };
 
+export type ClientGet = {
+  __typename?: 'ClientGet';
+  createdAt: Scalars['String']['output'];
+  history: Array<ClientHistoryGet>;
+  id: Scalars['Int']['output'];
+  lastVisitedAt?: Maybe<Scalars['String']['output']>;
+  updatedAt: Scalars['String']['output'];
+};
+
+export type ClientHistoryGet = {
+  __typename?: 'ClientHistoryGet';
+  browser?: Maybe<Scalars['String']['output']>;
+  city?: Maybe<Scalars['String']['output']>;
+  clientId: Scalars['Int']['output'];
+  country?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['String']['output'];
+  deviceType?: Maybe<Scalars['Int']['output']>;
+  domain?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  language?: Maybe<Scalars['String']['output']>;
+  osType?: Maybe<Scalars['Int']['output']>;
+  pageLoadTime?: Maybe<Scalars['Float']['output']>;
+  referrer?: Maybe<Scalars['String']['output']>;
+  region?: Maybe<Scalars['String']['output']>;
+  screenHeight?: Maybe<Scalars['Int']['output']>;
+  screenWidth?: Maybe<Scalars['Int']['output']>;
+  subdomain?: Maybe<Scalars['String']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
+};
+
+export type ClientProjectGoalGet = {
+  __typename?: 'ClientProjectGoalGet';
+  client: ClientGet;
+  createdAt: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  project: ProjectGet;
+  projectGoal: ProjectGoalGet;
+};
+
 export type CountryGet = {
   __typename?: 'CountryGet';
   country: Scalars['String']['output'];
@@ -200,6 +239,29 @@ export type LandingGet = {
   weight?: Maybe<Scalars['Float']['output']>;
 };
 
+export type LandingMetricGet = {
+  __typename?: 'LandingMetricGet';
+  browser?: Maybe<Scalars['String']['output']>;
+  campaignId?: Maybe<Scalars['Int']['output']>;
+  city?: Maybe<Scalars['String']['output']>;
+  country?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  deviceType?: Maybe<DeviceType>;
+  domain?: Maybe<Scalars['String']['output']>;
+  event?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  landingId?: Maybe<Scalars['Int']['output']>;
+  language?: Maybe<Scalars['String']['output']>;
+  osType?: Maybe<OsType>;
+  pageLoadTime?: Maybe<Scalars['Float']['output']>;
+  referrer?: Maybe<Scalars['String']['output']>;
+  region?: Maybe<Scalars['String']['output']>;
+  screenHeight?: Maybe<Scalars['Int']['output']>;
+  screenWidth?: Maybe<Scalars['Int']['output']>;
+  subdomain?: Maybe<Scalars['String']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
+};
+
 export type LandingPatch = {
   active?: InputMaybe<Scalars['Boolean']['input']>;
   deleted?: InputMaybe<Scalars['Boolean']['input']>;
@@ -252,11 +314,13 @@ export type Mutation = {
   addUserToProject?: Maybe<Scalars['Void']['output']>;
   changeProjectPrivateKey: ProjectGet;
   changeUserRole?: Maybe<Scalars['Void']['output']>;
+  contributeToProjectGoal?: Maybe<Scalars['Void']['output']>;
   createCampaign: CampaignGet;
   createDirectory: Array<ProjectDirectoryGet>;
   createFragment: FragmentGet;
   createLanding: LandingGet;
   createProject: ProjectGet;
+  createProjectGoal: ProjectGoalGet;
   createStream: StreamGet;
   deleteAsset?: Maybe<Scalars['Void']['output']>;
   deleteCampaign?: Maybe<Scalars['Void']['output']>;
@@ -264,9 +328,11 @@ export type Mutation = {
   deleteFragment?: Maybe<Scalars['Void']['output']>;
   deleteLanding?: Maybe<Scalars['Void']['output']>;
   deleteProject?: Maybe<Scalars['Void']['output']>;
+  deleteProjectGoal?: Maybe<Scalars['Void']['output']>;
   deleteProjectPublicKey?: Maybe<Scalars['Void']['output']>;
   deleteStream?: Maybe<Scalars['Void']['output']>;
   feedback: FeedbackGet;
+  initClientSession?: Maybe<Scalars['Void']['output']>;
   login: AuthPayload;
   refresh: AuthPayload;
   signup: AuthPayload;
@@ -275,6 +341,7 @@ export type Mutation = {
   updateFragment: FragmentGet;
   updateLanding: LandingGet;
   updateProject: ProjectGet;
+  updateProjectGoal: ProjectGoalGet;
   updateStream: StreamGet;
   uploadAsset: MediaGet;
 };
@@ -305,6 +372,11 @@ export type MutationChangeUserRoleArgs = {
 };
 
 
+export type MutationContributeToProjectGoalArgs = {
+  targetAction: Scalars['String']['input'];
+};
+
+
 export type MutationCreateCampaignArgs = {
   cmp: CampaignPost;
 };
@@ -327,6 +399,11 @@ export type MutationCreateLandingArgs = {
 
 export type MutationCreateProjectArgs = {
   pr: ProjectPost;
+};
+
+
+export type MutationCreateProjectGoalArgs = {
+  goal: ProjectGoalPost;
 };
 
 
@@ -362,6 +439,11 @@ export type MutationDeleteLandingArgs = {
 
 export type MutationDeleteProjectArgs = {
   projectId: Scalars['Int']['input'];
+};
+
+
+export type MutationDeleteProjectGoalArgs = {
+  goalId: Scalars['Int']['input'];
 };
 
 
@@ -420,6 +502,11 @@ export type MutationUpdateProjectArgs = {
 };
 
 
+export type MutationUpdateProjectGoalArgs = {
+  goal: ProjectGoalPatch;
+};
+
+
 export type MutationUpdateStreamArgs = {
   stream: StreamPatch;
 };
@@ -474,6 +561,25 @@ export type ProjectGet = {
   rootDirectoryId: Scalars['Int']['output'];
 };
 
+export type ProjectGoalGet = {
+  __typename?: 'ProjectGoalGet';
+  id: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+  targetAction: Scalars['String']['output'];
+};
+
+export type ProjectGoalPatch = {
+  id: Scalars['Int']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  targetAction?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ProjectGoalPost = {
+  name: Scalars['String']['input'];
+  projectId: Scalars['Int']['input'];
+  targetAction: Scalars['String']['input'];
+};
+
 export type ProjectKeyGet = {
   __typename?: 'ProjectKeyGet';
   id: Scalars['Int']['output'];
@@ -495,14 +601,20 @@ export type Query = {
   __typename?: 'Query';
   campaign: Array<CampaignGet>;
   campaignByName: Array<CampaignGet>;
+  clientById: ClientGet;
   clientFragment?: Maybe<FragmentGet>;
+  clientHistory: Array<ClientHistoryGet>;
   clientLanding?: Maybe<LandingGet>;
+  clientsByProjectId: Array<ClientGet>;
+  contributionsToProjectGoal: Array<ClientProjectGoalGet>;
   directory: Array<ProjectDirectoryGet>;
   filter: AllFiltersGet;
   fragment: Array<FragmentGet>;
   landing: Array<LandingGet>;
+  landingMetric: Array<LandingMetricGet>;
   profile: AuthPayload;
   project: Array<ProjectGet>;
+  projectGoals: Array<ProjectGoalGet>;
   stream: Array<StreamGet>;
 };
 
@@ -524,8 +636,29 @@ export type QueryCampaignByNameArgs = {
 };
 
 
+export type QueryClientByIdArgs = {
+  clientId: Scalars['Int']['input'];
+};
+
+
 export type QueryClientFragmentArgs = {
   fragmentId: Scalars['Int']['input'];
+};
+
+
+export type QueryClientHistoryArgs = {
+  clientId: Scalars['Int']['input'];
+};
+
+
+export type QueryClientsByProjectIdArgs = {
+  projectId: Scalars['Int']['input'];
+};
+
+
+export type QueryContributionsToProjectGoalArgs = {
+  projectGoalId: Scalars['Int']['input'];
+  projectId: Scalars['Int']['input'];
 };
 
 
@@ -552,8 +685,18 @@ export type QueryLandingArgs = {
 };
 
 
+export type QueryLandingMetricArgs = {
+  landingId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
 export type QueryProjectArgs = {
   projectId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryProjectGoalsArgs = {
+  projectId: Scalars['Int']['input'];
 };
 
 

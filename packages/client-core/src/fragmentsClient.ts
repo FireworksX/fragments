@@ -2,6 +2,7 @@ import { createState } from "@graph-state/core";
 import { definition } from "@fragmentsx/definition";
 import { fetchPlugin } from "@/plugins/fetch";
 import { fragmentsPlugin } from "@/plugins/fragments";
+import { metricsPlugin } from "@/plugins/metrics";
 
 interface Options {
   apiToken: string;
@@ -41,6 +42,13 @@ export const createFragmentsClient = (options: Options) => {
       },
       fetchPlugin,
       fragmentsPlugin,
+      metricsPlugin,
+
+      (state) => {
+        if (!state?.env?.isSelf) {
+          state?.$metrics?.initClient?.();
+        }
+      },
     ],
   });
 };
