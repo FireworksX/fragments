@@ -16,8 +16,8 @@ from database.models import Client, Project, User
 from services.core.utils import create_access_token, create_refresh_token
 from services.dependencies import get_db
 
+from .schemas.client import ClientInfo
 from .schemas.filter import DeviceType, OSType
-from .schemas.landing import ClientInfo
 from .schemas.user import AuthPayload
 
 credentials_exception = HTTPException(
