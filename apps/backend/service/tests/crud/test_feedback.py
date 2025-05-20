@@ -1,9 +1,12 @@
-import pytest
 from unittest.mock import Mock
 
+import pytest
+
 from crud.feedback import (
-    create_feedback_db, get_feedback_by_id_db,
-    update_feedback_db, delete_feedback_db
+    create_feedback_db,
+    delete_feedback_db,
+    get_feedback_by_id_db,
+    update_feedback_db,
 )
 from database.models import Feedback
 
@@ -21,8 +24,8 @@ def mock_session():
 @pytest.mark.asyncio
 async def test_create_feedback(mock_session):
     feel = 1
-    page = "test_page"
-    content = "test content"
+    page = 'test_page'
+    content = 'test content'
 
     mock_feedback = Feedback(feel=feel, page=page, content=content)
     mock_session.refresh.side_effect = lambda x: None
@@ -58,11 +61,11 @@ async def test_get_feedback_by_id(mock_session):
 async def test_update_feedback(mock_session):
     feedback_id = 1
     feel = 2
-    page = "updated_page"
-    content = "updated content"
+    page = 'updated_page'
+    content = 'updated content'
 
     mock_feedback = Feedback(id=feedback_id)
-    
+
     mock_query = Mock()
     mock_filter = Mock()
     mock_session.query.return_value = mock_query

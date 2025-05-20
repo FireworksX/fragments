@@ -1,7 +1,19 @@
-import pytest
 from unittest.mock import AsyncMock, Mock, patch
 
+import pytest
 from fastapi import HTTPException
+
+from database import Campaign, Stream
+from services.core.routes.schemas.filter import (
+    FilterDeviceTypeGet,
+    FilterGeoLocationGet,
+    FilterGeoLocationsGet,
+    FilterOSTypeGet,
+    FilterPageGet,
+    FilterTimeFrameGet,
+    FilterTimeFramesGet,
+)
+from services.core.routes.schemas.stream import StreamGet, StreamPatch, StreamPost
 from services.core.routes.stream import (
     create_stream_route,
     delete_stream_route,
@@ -9,17 +21,7 @@ from services.core.routes.stream import (
     streams_in_campaign,
     update_stream_route,
 )
-from services.core.routes.schemas.stream import StreamGet, StreamPatch, StreamPost
-from services.core.routes.schemas.filter import (
-    FilterDeviceTypeGet,
-    FilterGeoLocationsGet,
-    FilterOSTypeGet,
-    FilterPageGet,
-    FilterTimeFrameGet,
-    FilterGeoLocationGet,
-    FilterTimeFramesGet,
-)
-from database import Campaign, Stream
+
 
 def mock_info():
     info = Mock()
@@ -27,6 +29,7 @@ def mock_info():
     info.context.user = AsyncMock(return_value=Mock(user=Mock(id=123)))
     info.context.session = Mock(return_value=Mock())
     return info
+
 
 @pytest.mark.asyncio
 async def test_streams_in_campaign_successful():
@@ -46,7 +49,7 @@ async def test_streams_in_campaign_successful():
 
         mock_stream = Mock(spec=Stream)
         mock_stream.id = 1
-        mock_stream.name = "Test Stream"
+        mock_stream.name = 'Test Stream'
         mock_stream.deleted = False
         mock_stream.active = True
         mock_stream.campaign_id = 1
@@ -65,7 +68,8 @@ async def test_streams_in_campaign_successful():
         assert len(response) == 1
         assert isinstance(response[0], StreamGet)
         assert response[0].id == 1
-        assert response[0].name == "Test Stream"
+        assert response[0].name == 'Test Stream'
+
 
 @pytest.mark.asyncio
 async def test_stream_by_id_successful():
@@ -79,7 +83,7 @@ async def test_stream_by_id_successful():
 
         mock_stream = Mock(spec=Stream)
         mock_stream.id = 1
-        mock_stream.name = "Test Stream"
+        mock_stream.name = 'Test Stream'
         mock_stream.deleted = False
         mock_stream.active = True
         mock_stream.campaign_id = 1
@@ -103,7 +107,8 @@ async def test_stream_by_id_successful():
 
         assert isinstance(response, StreamGet)
         assert response.id == 1
-        assert response.name == "Test Stream"
+        assert response.name == 'Test Stream'
+
 
 @pytest.mark.asyncio
 async def test_create_stream_successful():
@@ -123,7 +128,7 @@ async def test_create_stream_successful():
 
         mock_stream = Mock(spec=Stream)
         mock_stream.id = 1
-        mock_stream.name = "Test Stream"
+        mock_stream.name = 'Test Stream'
         mock_stream.deleted = False
         mock_stream.active = True
         mock_stream.campaign_id = 1
@@ -136,12 +141,7 @@ async def test_create_stream_successful():
         mock_create.return_value = mock_stream
 
         stream_post = StreamPost(
-            name="Test Stream",
-            campaign_id=1,
-            weight=1,
-            active=True,
-            deleted=False,
-            filters=[]
+            name='Test Stream', campaign_id=1, weight=1, active=True, deleted=False, filters=[]
         )
 
         info = mock_info()
@@ -149,7 +149,8 @@ async def test_create_stream_successful():
 
         assert isinstance(response, StreamGet)
         assert response.id == 1
-        assert response.name == "Test Stream"
+        assert response.name == 'Test Stream'
+
 
 @pytest.mark.asyncio
 async def test_update_stream_successful():
@@ -164,7 +165,7 @@ async def test_update_stream_successful():
         mock_stream = Mock(spec=Stream)
         mock_stream.id = 1
         mock_stream.project_id = 1
-        mock_stream.name = "Test Stream"
+        mock_stream.name = 'Test Stream'
         mock_stream.deleted = False
         mock_stream.active = True
         mock_stream.campaign_id = 1
@@ -179,12 +180,7 @@ async def test_update_stream_successful():
         mock_permission.return_value = True
 
         stream_patch = StreamPatch(
-            id=1,
-            name="Updated Stream",
-            active=True,
-            deleted=False,
-            weight=2,
-            filters=[]
+            id=1, name='Updated Stream', active=True, deleted=False, weight=2, filters=[]
         )
 
         info = mock_info()
@@ -192,7 +188,8 @@ async def test_update_stream_successful():
 
         assert isinstance(response, StreamGet)
         assert response.id == 1
-        assert response.name == "Test Stream"
+        assert response.name == 'Test Stream'
+
 
 @pytest.mark.asyncio
 async def test_delete_stream_successful():

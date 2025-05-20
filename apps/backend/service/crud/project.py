@@ -175,14 +175,11 @@ async def update_project_by_id_db(db: Session, values: dict) -> Project:
     db.refresh(project)
     return project
 
+
 async def create_project_goal_db(
     db: Session, project_id: int, name: str, target_action: str
 ) -> ProjectGoal:
-    goal = ProjectGoal(
-        project_id=project_id,
-        name=name,
-        target_action=target_action
-    )
+    goal = ProjectGoal(project_id=project_id, name=name, target_action=target_action)
     db.add(goal)
     db.commit()
     db.refresh(goal)
@@ -192,11 +189,15 @@ async def create_project_goal_db(
 async def get_project_goal_by_id_db(db: Session, goal_id: int) -> Optional[ProjectGoal]:
     return db.query(ProjectGoal).filter(ProjectGoal.id == goal_id).first()
 
-async def get_project_goal_by_target_action_db(db: Session, project_id: int, target_action: str) -> Optional[ProjectGoal]:
-    return db.query(ProjectGoal).filter(
-        ProjectGoal.project_id == project_id,
-        ProjectGoal.target_action == target_action
-    ).first()
+
+async def get_project_goal_by_target_action_db(
+    db: Session, project_id: int, target_action: str
+) -> Optional[ProjectGoal]:
+    return (
+        db.query(ProjectGoal)
+        .filter(ProjectGoal.project_id == project_id, ProjectGoal.target_action == target_action)
+        .first()
+    )
 
 
 async def get_project_goals_db(db: Session, project_id: int) -> List[ProjectGoal]:

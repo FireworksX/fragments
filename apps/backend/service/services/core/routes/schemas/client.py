@@ -1,8 +1,9 @@
-
 from typing import List, Optional
+from datetime import datetime
 
 import strawberry
 
+from services.core.routes.schemas.filter import DeviceType, OSType
 
 @strawberry.type
 class ClientHistoryGet:
@@ -33,6 +34,7 @@ class ClientGet:
     last_visited_at: Optional[str]
     history: List[ClientHistoryGet]
 
+
 @strawberry.input
 class ClientHistoryInput:
     client_id: int
@@ -45,3 +47,12 @@ class ClientHistoryInput:
     country: str
     region: str
     city: str
+
+
+@strawberry.input
+class ClientInfo:
+    os_type: Optional[OSType]
+    device_type: Optional[DeviceType]
+    time_frame: Optional[datetime]
+    page: Optional[str]
+    ip_address: Optional[str]

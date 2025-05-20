@@ -8,17 +8,17 @@ from strawberry.fastapi import BaseContext
 from user_agents import parse as user_agent_parser
 
 from conf.settings import service_settings
+from crud.client import create_client_db, get_client_by_id_db
 from crud.project import get_project_by_id_db, validate_project_public_api_key
 from crud.user import get_user_by_email_db
 from database import Session
-from database.models import Project, User, Client
+from database.models import Client, Project, User
 from services.core.utils import create_access_token, create_refresh_token
 from services.dependencies import get_db
-from crud.client import get_client_by_id_db, create_client_db
-from .schemas.filter import DeviceType, OSType
-from .schemas.landing import ClientInfo
-from .schemas.user import AuthPayload
 
+from .schemas.client import ClientInfo
+from .schemas.filter import DeviceType, OSType
+from .schemas.user import AuthPayload
 
 credentials_exception = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
@@ -130,26 +130,23 @@ class Context(BaseContext):
             page=page,
             ip_address=user_ip,
         )
-    
+
     async def client(self) -> Client:
         project: Project = await self.project()
         if project is None:
-            raise credentials_exception    
+            raise credentials_exception
 
         user_id: Optional[str] = None
         if self.request.cookies:
             user_id = self.request.cookies.get('user_id')
-            
+
         if user_id is None:
             return await create_client_db(self.session(), project_id=project.id)
         else:
             try:
                 return await get_client_by_id_db(self.session(), int(user_id))
             except:
-                raise HTTPException(status_code=400, detail="Invalid user_id format")
-        
-        
-        
+                raise HTTPException(status_code=400, detail='Invalid user_id format')
 
     async def refresh_user(self) -> AuthPayload | None:
         if not self.request:
