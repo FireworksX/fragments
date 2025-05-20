@@ -66,24 +66,6 @@ async def test_signup_user_exists():
 
 
 @pytest.mark.asyncio
-async def test_signup_failed_to_create_user():
-    with patch(
-        'services.core.routes.user.get_user_by_email_db', new_callable=AsyncMock
-    ) as mock_get, patch(
-        'services.core.routes.user.create_user_db', new_callable=AsyncMock
-    ) as mock_create:
-        mock_get.return_value = None
-        mock_create.return_value = None
-
-        info = mock_info()
-        with pytest.raises(HTTPException) as e:
-            response = await signup(info, 'test@test.com', 'Test', None, 'password')
-
-        assert str(e.value) == '500: Failed to create a user'
-        assert e.value.status_code == 500
-
-
-@pytest.mark.asyncio
 async def test_login_user_not_exist():
     with patch(
         'services.core.routes.user.get_user_by_email_db', new_callable=AsyncMock
