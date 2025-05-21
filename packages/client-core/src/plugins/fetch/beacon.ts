@@ -8,7 +8,7 @@ export const fetchBeacon = (baseUrl: string) => {
 
   const sendBeacon = (data?: unknown) => {
     try {
-      sender(baseUrl, JSON.stringify(data));
+      sender("/graphql", "test");
     } catch (e) {
       console.error(e);
     }

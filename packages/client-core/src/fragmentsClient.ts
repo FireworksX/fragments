@@ -3,6 +3,7 @@ import { definition } from "@fragmentsx/definition";
 import { fetchPlugin } from "@/plugins/fetch";
 import { fragmentsPlugin } from "@/plugins/fragments";
 import { metricsPlugin } from "@/plugins/metrics";
+import { isBrowser } from "@fragmentsx/utils";
 
 interface Options {
   apiToken: string;
@@ -20,6 +21,8 @@ export const createFragmentsClient = (options: Options) => {
           url: options?.url,
           apiToken: options?.apiToken,
         };
+
+        state.$global = {};
 
         state.extractStyles = async () => {
           const allFragments = state.$fragments.getManagers();
@@ -45,8 +48,15 @@ export const createFragmentsClient = (options: Options) => {
       metricsPlugin,
 
       (state) => {
-        if (!state?.env?.isSelf) {
-          state?.$metrics?.initClient?.();
+        if (isBrowser) {
+          if (!state?.env?.isSelf) {
+            state?.$metrics?.initClient?.();
+
+            window.addEventListener(
+              "beforeunload",
+              state?.$metrics?.releaseClient?.()
+            );
+          }
         }
       },
     ],

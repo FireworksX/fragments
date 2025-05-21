@@ -91,29 +91,29 @@ export const AreasDetailLayout: FC<CampaignDetailPageProps> = ({ children }) => 
             <Link type='area' areaSlug={areaSlug} projectSlug={projectSlug}>
               {({ isActive }) => (
                 <TabItem name='overview' icon={<OverviewIcon />} isActive={isActive}>
-                  Analytics
+                  Overview
                 </TabItem>
               )}
             </Link>
             <Link type='areaFragment' areaSlug={areaSlug} projectSlug={projectSlug}>
               {({ isActive }) => (
                 <TabItem name='areaFragment' icon={<VisualIcon />} isActive={isActive}>
-                  Default
+                  Fragment
                 </TabItem>
               )}
             </Link>
-            {/*<Link type='areaExperiments' areaSlug={areaSlug} projectSlug={projectSlug}>*/}
-            {/*  {({ isActive }) => (*/}
-            {/*    <TabItem*/}
-            {/*      name='areaExperiments'*/}
-            {/*      badge={<TabItemBadge mode='success'>Active</TabItemBadge>}*/}
-            {/*      icon={<ExperimentsIcon />}*/}
-            {/*      isActive={isActive}*/}
-            {/*    >*/}
-            {/*      Experiments*/}
-            {/*    </TabItem>*/}
-            {/*  )}*/}
-            {/*</Link>*/}
+            <Link type='areaExperiments' areaSlug={areaSlug} projectSlug={projectSlug}>
+              {({ isActive }) => (
+                <TabItem
+                  name='areaExperiments'
+                  badge={<TabItemBadge mode='success'>Active</TabItemBadge>}
+                  icon={<ExperimentsIcon />}
+                  isActive={isActive}
+                >
+                  Experiments
+                </TabItem>
+              )}
+            </Link>
             <Link type='areaStreams' areaSlug={areaSlug} projectSlug={projectSlug}>
               {({ isActive }) => (
                 <TabItem

@@ -16,3 +16,5 @@ export { collectStyles } from "@/helpers/collectStyles";
 export { Instance } from "@/components/Instance";
 
 export { GlobalManager } from "@/components/GlobalManager";
+
+export { useGlobalManager } from "@fragmentsx/render-core";

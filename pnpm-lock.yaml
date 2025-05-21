@@ -119,8 +119,8 @@ importers:
         specifier: ^0.1.2
         version: 0.1.2
       '@graph-state/core':
-        specifier: ^0.11.2
-        version: 0.11.2
+        specifier: ^0.11.3
+        version: 0.11.3
       '@graph-state/plugin-extend':
         specifier: ^0.5.1
         version: 0.5.1
@@ -315,8 +315,8 @@ importers:
         specifier: ^0.1.2
         version: 0.1.2
       '@graph-state/core':
-        specifier: ^0.11.2
-        version: 0.11.2
+        specifier: ^0.11.3
+        version: 0.11.3
     devDependencies:
       '@graph-state/plugin-logger':
         specifier: ^0.3.0
@@ -365,8 +365,8 @@ importers:
         specifier: ^0.1.2
         version: 0.1.2
       '@graph-state/core':
-        specifier: ^0.11.2
-        version: 0.11.2
+        specifier: ^0.11.3
+        version: 0.11.3
       '@graph-state/react':
         specifier: ^0.6.4
         version: 0.6.4(react@19.0.0)(use-sync-external-store@1.2.2(react@19.0.0))
@@ -414,8 +414,8 @@ importers:
         specifier: ^0.1.2
         version: 0.1.2
       '@graph-state/core':
-        specifier: ^0.11.1
-        version: 0.11.1
+        specifier: ^0.11.3
+        version: 0.11.3
       '@graph-state/react':
         specifier: ^0.6.3
         version: 0.6.3(react@17.0.2)
@@ -469,8 +469,8 @@ importers:
         specifier: ^0.1.2
         version: 0.1.2
       '@graph-state/core':
-        specifier: ^0.11.2
-        version: 0.11.2
+        specifier: ^0.11.3
+        version: 0.11.3
       '@graph-state/react':
         specifier: ^0.6.4
         version: 0.6.4(react@17.0.2)(use-sync-external-store@1.2.2(react@17.0.2))
@@ -1979,11 +1979,8 @@ packages:
   '@graph-state/checkers@0.1.2':
     resolution: {integrity: sha512-aKjOVVE5BfsNWZrBElNRx23ThP5NiqVqH3++iBXMrlD6cN/jawyTeaEOa+wqh7uN9bowD4tkfQK2OecepElL7w==}
 
-  '@graph-state/core@0.11.1':
-    resolution: {integrity: sha512-CfVmtPkZzc7EGoEhRbjFVONgBkmxgoT41F4HhFtTN+7enXVZV053DpbCyGI0lYYTk7bF9oTAsUhsuKfijE7rgg==}
-
-  '@graph-state/core@0.11.2':
-    resolution: {integrity: sha512-1wOH0opxw1h3BV29thJ9IoIJtIR1B9lGScFDuwiMSx62D51a6r6gwoK0m5KVapRsudqLewin3v4N0hUOd7/yww==}
+  '@graph-state/core@0.11.3':
+    resolution: {integrity: sha512-Cc8PPBOG+0dOaSfTLdAUv58ciqMS0OLaNMmFvbbIr3F1KGFRMzCa1YOi5oF6avoS4w23B9+bUyIKMIpE2ZjVlw==}
 
   '@graph-state/plugin-extend@0.5.1':
     resolution: {integrity: sha512-ZiotkicKBKl1GmD6vm6oTKYe4lVAPCYYKzLF7aCJCGRzFIzT5dx9c/UjYJUN0syeAkT7GnQ7h8QG0hqPkTmDCA==}
@@ -9603,41 +9600,37 @@ snapshots:
 
   '@graph-state/checkers@0.1.2': {}
 
-  '@graph-state/core@0.11.1':
-    dependencies:
-      '@graph-state/checkers': 0.1.2
-
-  '@graph-state/core@0.11.2':
+  '@graph-state/core@0.11.3':
     dependencies:
       '@graph-state/checkers': 0.1.2
 
   '@graph-state/plugin-extend@0.5.1':
     dependencies:
-      '@graph-state/core': 0.11.2
+      '@graph-state/core': 0.11.3
 
   '@graph-state/plugin-logger@0.2.2':
     dependencies:
-      '@graph-state/core': 0.11.2
+      '@graph-state/core': 0.11.3
 
   '@graph-state/plugin-logger@0.3.0':
     dependencies:
-      '@graph-state/core': 0.11.2
+      '@graph-state/core': 0.11.3
 
   '@graph-state/react@0.6.3(react@17.0.2)':
     dependencies:
-      '@graph-state/core': 0.11.2
+      '@graph-state/core': 0.11.3
       react: 17.0.2
       use-sync-external-store: 1.2.2(react@17.0.2)
 
   '@graph-state/react@0.6.4(react@17.0.2)(use-sync-external-store@1.2.2(react@17.0.2))':
     dependencies:
-      '@graph-state/core': 0.11.2
+      '@graph-state/core': 0.11.3
       react: 17.0.2
       use-sync-external-store: 1.2.2(react@17.0.2)
 
   '@graph-state/react@0.6.4(react@19.0.0)(use-sync-external-store@1.2.2(react@19.0.0))':
     dependencies:
-      '@graph-state/core': 0.11.2
+      '@graph-state/core': 0.11.3
       react: 19.0.0
       use-sync-external-store: 1.2.2(react@19.0.0)
 

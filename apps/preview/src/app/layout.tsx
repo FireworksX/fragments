@@ -50,11 +50,11 @@ const WWW = ({ children }) => {
       //   globalManager.resolve(globalManager.key).fragmentsManagers["16"]
       // );
 
-      // const styles = collectStyles(globalManager);
+      const styles = collectStyles(globalManager);
 
       return (
         <>
-          {/*{styles}*/}
+          {styles}
           {/*{styles.map((st) => (*/}
           {/*  <style dangerouslySetInnerHTML={{ __html: st }} />*/}
           {/*))}*/}

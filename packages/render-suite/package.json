@@ -30,7 +30,7 @@
     "@fragmentsx/render-core": "workspace:*",
     "@fragmentsx/utils": "workspace:*",
     "@graph-state/checkers": "^0.1.2",
-    "@graph-state/core": "^0.11.2",
+    "@graph-state/core": "^0.11.3",
     "@graph-state/react": "^0.6.4",
     "@react-spring/web": "^9.7.4",
     "@types/react": "^19.0.1",

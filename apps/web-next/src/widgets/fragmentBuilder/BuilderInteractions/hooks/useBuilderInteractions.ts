@@ -8,12 +8,14 @@ import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSe
 export const useBuilderInteractions = () => {
   const { documentManager } = useBuilderDocument()
   const { selection } = useBuilderSelection()
-  const [interactions, setInteractions] = useLayerValue('interactions')
+  const [interactions, setInteractions, interactionsInfo] = useLayerValue('interactions')
   const { actions } = useLayerVariables('event', {
     onSetValue: value => {
       addInteraction(value)
     }
   })
+
+  console.log(interactions)
 
   const addInteraction = (eventLinkKey: LinkKey) => {
     setInteractions([
@@ -25,11 +27,13 @@ export const useBuilderInteractions = () => {
   }
 
   const removeInteraction = index => {
-    const layer = documentManager.resolve(selection)
-    layer.interactions.splice(index, 1)
+    const interaction = interactionsInfo?.rawValue?.at(index)
 
-    console.log(layer)
-    documentManager.mutate(selection, layer, { replace: true })
+    documentManager.invalidate(interaction)
+    // layer.interactions.splice(index, 1)
+    //
+    // console.log(layer)
+    // documentManager.mutate(selection, layer, { replace: true })
   }
 
   return {
