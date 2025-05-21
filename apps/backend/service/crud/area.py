@@ -30,7 +30,6 @@ async def create_area_db(
         description='Default campaign',
         project_id=project_id,
         area_id=area.id,
-        weight=1.0,
         default=True,
         active=True,
         archived=False,
