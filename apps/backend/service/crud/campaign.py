@@ -70,7 +70,6 @@ async def create_campaign_db(
     active: bool,
     archived: bool,
     author_id: int,
-    weight: float,
     default: bool,
     fragment_id: Optional[int],
     filters: Optional[FiltersPost],
@@ -83,7 +82,6 @@ async def create_campaign_db(
         active=active,
         archived=archived,
         author_id=author_id,
-        weight=weight,
         fragment_id=fragment_id,
         default=default,
     )
@@ -158,8 +156,6 @@ async def update_campaign_by_id_db(
         campaign.active = values['active']
     if values.get('archived') is not None:
         campaign.archived = values['archived']
-    if values.get('weight') is not None:
-        campaign.weight = values['weight']
     if values.get('fragment_id') is not None:
         campaign.fragment_id = values['fragment_id']
     db.merge(campaign)

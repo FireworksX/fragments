@@ -37,7 +37,6 @@ class CampaignGet:
             | FilterTimeFramesGet
         ]
     ]
-    weight: float
     fragment: Optional[FragmentGet] = None
 
 
@@ -58,7 +57,6 @@ class CampaignPost:
     active: bool
     archived: bool
     filters: Optional[FiltersPost] = None
-    weight: float
     fragment_id: Optional[int] = None
 
 
@@ -70,5 +68,4 @@ class CampaignPatch:
     active: Optional[bool] = None
     archived: Optional[bool] = None
     filters: Optional[FiltersPost] = None
-    weight: Optional[float] = None
     fragment_id: Optional[int] = None

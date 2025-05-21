@@ -212,6 +212,12 @@ async def update_project_goal_db(
     if name is not None:
         goal.name = name
     if target_action is not None:
+        # Check if target_action already exists for another goal in this project
+        existing_goal = await get_project_goal_by_target_action_db(
+            db, goal.project_id, target_action
+        )
+        if existing_goal and existing_goal.id != goal.id:
+            raise ValueError(f"Target action {target_action} already exists in project")
         goal.target_action = target_action
     db.merge(goal)
     db.commit()
