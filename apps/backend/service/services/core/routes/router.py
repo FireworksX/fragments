@@ -107,13 +107,13 @@ class Query:
     async def campaign(
         self,
         info: strawberry.Info[Context],
-        campgain_id: Optional[int] = None,
+        campaign_id: Optional[int] = None,
         area_id: Optional[int] = None,
         active: Optional[bool] = None,
         archived: Optional[bool] = None,
     ) -> List[CampaignGet]:
-        if campgain_id is not None:
-            return [await campaign_by_id(info, campgain_id)]
+        if campaign_id is not None:
+            return [await campaign_by_id(info, campaign_id)]
         if area_id is not None:
             return await campaigns_in_area(info, area_id, active, archived)
 

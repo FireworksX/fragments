@@ -78,6 +78,7 @@ class Area(Base):
     id = Column('id', Integer, primary_key=True, index=True)
     name = Column('name', String, nullable=False)
     description = Column('description', String)
+    area_code = Column('area_code', String, nullable=False)
     author_id = Column('author_id', Integer, ForeignKey('user.id'))
     author = relationship('User')
     project_id = Column('project_id', Integer, ForeignKey('project.id'), nullable=False)
@@ -87,6 +88,8 @@ class Area(Base):
 
     # One-to-Many relationship with Campaign
     campaigns = relationship('Campaign', back_populates='area')
+
+    __table_args__ = (UniqueConstraint('project_id', 'area_code', name='unique_project_area_code'),)
 
 
 class Project(Base):
@@ -236,7 +239,6 @@ class Campaign(Base):
 
     active = Column('active', Boolean, default=True)
     archived = Column('archived', Boolean, default=False)
-    weight = Column('weight', Float, nullable=False)
     default = Column('default', Boolean, default=False)
 
     fragment_id = Column('fragment_id', Integer, ForeignKey('fragment.id'), nullable=True)
