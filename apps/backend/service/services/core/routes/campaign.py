@@ -15,7 +15,7 @@ from crud.campaign import (
     get_campaigns_by_area_id_db,
     update_campaign_by_id_db,
 )
-from crud.media import create_media_db, delete_media_by_id_db
+from crud.media import create_media_db, delete_media_by_id_db, generate_default_media
 from crud.project import get_project_by_id_db
 from database import Area, Campaign, Media, Project, Session
 
@@ -91,7 +91,11 @@ def campaign_db_to_campaign(campaign: Campaign) -> CampaignGet:
         archived=campaign.archived,
         default=campaign.default,
         active=campaign.active,
-        logo=None if campaign.logo is None else campaign.logo.public_path,
+        logo=MediaGet(
+            media_id=campaign.logo_id,
+            media_type=MediaType.CAMPAIGN_LOGO,
+            public_path=campaign.logo.public_path,
+        ),
         author=user_db_to_user(campaign.author),
         filters=filters,
     )
@@ -278,7 +282,8 @@ async def delete_campaign_logo_route(
         )
 
     await delete_media_by_id_db(db, campaign.logo_id)
-    campaign.logo_id = None
+    default_logo = await generate_default_media(db, f"{campaign.name}.png")
+    campaign.logo_id = default_logo.id
     db.commit()
     return campaign_db_to_campaign(campaign)
 

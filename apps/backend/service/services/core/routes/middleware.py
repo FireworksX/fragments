@@ -18,6 +18,7 @@ from services.dependencies import get_db
 
 from .schemas.client import ClientInfo
 from .schemas.filter import DeviceType, OSType
+from .schemas.media import MediaGet, MediaType
 from .schemas.user import AuthPayload, UserGet
 
 credentials_exception = HTTPException(
@@ -33,7 +34,11 @@ def user_db_to_user(user: User) -> UserGet:
         email=user.email,
         first_name=user.first_name,
         last_name=user.last_name,
-        logo=user.avatar.public_path if user.avatar else None,
+        logo=MediaGet(
+            media_id=user.avatar_id,
+            media_type=MediaType.USER_LOGO,
+            public_path=user.avatar.public_path,
+        ),
     )
 
 

@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 
 from conf.settings import service_settings
 from crud.filesystem import create_directory_db
+from crud.media import generate_default_media
 from database import FilesystemDirectory
 from database.models import Project, ProjectApiKey, ProjectGoal, ProjectMemberRole, User
 
@@ -123,7 +124,8 @@ async def validate_project_public_api_key(db: Session, public_api_key: str) -> P
 
 
 async def create_project_db(db: Session, name: str, user_id: int) -> Project:
-    project: Project = Project(name=name, owner_id=user_id)
+    default_project_logo = await generate_default_media(db, f"{name}.png")
+    project: Project = Project(name=name, owner_id=user_id, logo_id=default_project_logo.id)
     db.add(project)
     db.commit()
     db.refresh(project)

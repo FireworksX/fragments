@@ -2,6 +2,7 @@ from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
+from crud.media import generate_default_media
 from database.models import Area, Campaign
 
 
@@ -13,18 +14,21 @@ async def create_area_db(
     area_code: str,
     description: Optional[str] = None,
 ) -> Area:
+    default_media = await generate_default_media(db, f"{area_code}.png")
     area = Area(
         name=name,
         project_id=project_id,
         author_id=author_id,
         description=description,
         area_code=area_code,
+        logo_id=default_media.id,
     )
     db.add(area)
     db.commit()
     db.refresh(area)
 
     # Create default campaign for the area
+    default_campaign_logo = await generate_default_media(db, f"{area_code}_campaign.png")
     default_campaign = Campaign(
         name='Default',
         description='Default campaign',
@@ -35,6 +39,7 @@ async def create_area_db(
         archived=False,
         author_id=author_id,
         fragment_id=None,
+        logo_id=default_campaign_logo.id,
     )
     db.add(default_campaign)
     db.commit()

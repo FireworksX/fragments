@@ -31,6 +31,7 @@ tenacity = "^6.2.0"
 
 PyJWT= "2.9.0"
 passlib = "1.7.4"
+pillow = "11.2.1"
 
 # Postgres
 SQLAlchemy = "1.4.46"

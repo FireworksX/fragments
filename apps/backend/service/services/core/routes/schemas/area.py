@@ -3,6 +3,7 @@ from typing import List, Optional
 import strawberry
 
 from services.core.routes.schemas.campaign import CampaignGet
+from services.core.routes.schemas.media import MediaGet
 from services.core.routes.schemas.user import UserGet
 
 
@@ -16,6 +17,7 @@ class AreaGet:
     author: UserGet
     campaigns: List[CampaignGet]
     default_campaign: CampaignGet
+    logo: MediaGet
 
 
 @strawberry.input
