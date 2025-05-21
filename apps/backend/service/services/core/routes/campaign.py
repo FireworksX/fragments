@@ -94,7 +94,6 @@ def campaign_db_to_campaign(campaign: Campaign) -> CampaignGet:
         logo=None if campaign.logo is None else campaign.logo.public_path,
         author=user_db_to_user(campaign.author),
         filters=filters,
-        weight=campaign.weight,
     )
 
 
@@ -167,7 +166,6 @@ async def create_campaign_route(info: strawberry.Info[Context], cmp: CampaignPos
         cmp.active,
         cmp.archived,
         user.user.id,
-        cmp.weight,
         False,
         cmp.fragment_id,
         cmp.filters,
