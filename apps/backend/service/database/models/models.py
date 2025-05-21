@@ -56,7 +56,7 @@ class User(Base):
 
     projects = relationship('ProjectMemberRole', back_populates='user')
 
-    avatar_id = Column('avatar_id', Integer, ForeignKey('media.id'))
+    avatar_id = Column('avatar_id', Integer, ForeignKey('media.id', ondelete='CASCADE'))
     avatar = relationship('Media')
 
 
@@ -83,6 +83,9 @@ class Area(Base):
     author = relationship('User')
     project_id = Column('project_id', Integer, ForeignKey('project.id'), nullable=False)
 
+    logo_id = Column('logo_id', Integer, ForeignKey('media.id', ondelete='CASCADE'))
+    logo = relationship('Media')
+
     # Relationship to Project
     project = relationship('Project')
 
@@ -96,7 +99,7 @@ class Project(Base):
     __tablename__ = 'project'
     id = Column('id', Integer, primary_key=True, index=True)
     name = Column('name', String)
-    logo_id = Column('logo_id', Integer, ForeignKey('media.id'))
+    logo_id = Column('logo_id', Integer, ForeignKey('media.id', ondelete='CASCADE'))
     logo = relationship('Media')
 
     owner_id = Column('owner_id', Integer, ForeignKey('user.id'))
@@ -234,7 +237,7 @@ class Campaign(Base):
     author_id = Column('author_id', Integer, ForeignKey('user.id'))
     author = relationship('User')
 
-    logo_id = Column('logo_id', Integer, ForeignKey('media.id'))
+    logo_id = Column('logo_id', Integer, ForeignKey('media.id', ondelete='CASCADE'))
     logo = relationship('Media')
 
     active = Column('active', Boolean, default=True)

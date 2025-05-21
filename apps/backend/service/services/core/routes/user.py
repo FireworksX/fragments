@@ -4,7 +4,7 @@ from typing import Optional
 import strawberry
 from fastapi import HTTPException, UploadFile, status
 
-from crud.media import create_media_db, delete_media_by_id_db
+from crud.media import create_media_db, delete_media_by_id_db, generate_default_media
 from crud.user import create_user_db, get_user_by_email_db
 from database import Media, Session
 from database.models import User
@@ -26,7 +26,11 @@ def user_db_to_user(user: User) -> UserGet:
         email=user.email,
         first_name=user.first_name,
         last_name=user.last_name,
-        logo=user.avatar.public_path if user.avatar else None,
+        logo=MediaGet(
+            media_id=user.avatar_id,
+            media_type=MediaType.USER_LOGO,
+            public_path=user.avatar.public_path,
+        ),
     )
 
 
@@ -102,7 +106,8 @@ async def delete_avatar_route(info: strawberry.Info[Context]) -> UserGet:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
     await delete_media_by_id_db(db, user.avatar_id)
-    user.avatar_id = None
+    default_avatar = await generate_default_media(db, f"{user.first_name}.png")
+    user.avatar_id = default_avatar.id
     db.commit()
     return user_db_to_user(user)
 

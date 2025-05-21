@@ -6,6 +6,7 @@ from services.core.routes.schemas.area import AreaGet
 from services.core.routes.schemas.campaign import CampaignGet
 from services.core.routes.schemas.client import ClientGet
 from services.core.routes.schemas.filesystem import ProjectDirectoryGet
+from services.core.routes.schemas.media import MediaGet
 from services.core.routes.schemas.user import UserGet, UserRoleGet
 
 
@@ -41,7 +42,7 @@ class ProjectGoalPatch:
 class ProjectGet:
     id: int
     name: str
-    logo: Optional[str] = None
+    logo: MediaGet
     owner: UserGet
     members: List[UserRoleGet]
     areas: List[AreaGet]

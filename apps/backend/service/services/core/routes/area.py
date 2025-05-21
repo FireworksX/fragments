@@ -1,7 +1,7 @@
 from typing import List
 
 import strawberry
-from fastapi import HTTPException, status
+from fastapi import HTTPException, UploadFile, status
 
 from crud.area import (
     create_area_db,
@@ -10,12 +10,14 @@ from crud.area import (
     get_areas_by_project_id_db,
     update_area_by_id_db,
 )
+from crud.media import create_media_db, delete_media_by_id_db, generate_default_media
 from crud.project import get_project_by_id_db
-from database import Area, Project, Session
+from database import Area, Media, Project, Session
 
 from .campaign import campaign_db_to_campaign
 from .middleware import Context
 from .schemas.area import AreaGet, AreaPatch, AreaPost
+from .schemas.media import MediaGet, MediaType
 from .schemas.user import AuthPayload, RoleGet
 from .user import user_db_to_user
 from .utils import get_user_role_in_project
@@ -51,6 +53,9 @@ def area_db_to_area(area: Area) -> AreaGet:
         author=user_db_to_user(area.author),
         campaigns=campaigns,
         default_campaign=default_campaign,
+        logo=MediaGet(
+            media_id=area.logo_id, media_type=MediaType.AREA_LOGO, public_path=area.logo.public_path
+        ),
     )
 
 
@@ -146,3 +151,53 @@ async def delete_area_route(info: strawberry.Info[Context], area_id: int) -> Non
         )
 
     await delete_area_by_id_db(db, area_id)
+
+
+async def add_area_logo_route(
+    info: strawberry.Info[Context], file: UploadFile, area_id: int
+) -> MediaGet:
+    user: AuthPayload = await info.context.user()
+    db: Session = info.context.session()
+
+    area: Area = await get_area_by_id_db(db, area_id)
+    if area is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Area does not exist')
+
+    permission: bool = await write_permission(db, user.user.id, area.project_id)
+    if not permission:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to add area logo'
+        )
+
+    media: Media = await create_media_db(db, file)
+    if media is None:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='Failed to create media file'
+        )
+    area.logo_id = media.id
+    db.commit()
+
+    return MediaGet(
+        media_id=media.id, media_type=MediaType.AREA_LOGO, public_path=media.public_path
+    )
+
+
+async def delete_area_logo_route(info: strawberry.Info[Context], area_id: int) -> None:
+    user: AuthPayload = await info.context.user()
+    db: Session = info.context.session()
+
+    area: Area = await get_area_by_id_db(db, area_id)
+    if area is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Area does not exist')
+
+    permission: bool = await write_permission(db, user.user.id, area.project_id)
+    if not permission:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail='User is not allowed to delete area logo',
+        )
+
+    await delete_media_by_id_db(db, area.logo_id)
+    default_logo = await generate_default_media(db, f"{area.area_code}.png")
+    area.logo_id = default_logo.id
+    db.commit()

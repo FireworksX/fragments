@@ -5,7 +5,9 @@ from fastapi import UploadFile
 from starlette import status
 
 from .area import (
+    add_area_logo_route,
     create_area_route,
+    delete_area_logo_route,
     delete_area_route,
     get_area_by_id_route,
     get_areas_route,
@@ -356,6 +358,8 @@ class Mutation:
             return await add_campaign_logo_route(info, file, media.target_id)
         elif media.media_type == MediaType.USER_LOGO:
             return await add_avatar_route(info, file)
+        elif media.media_type == MediaType.AREA_LOGO:
+            return await add_area_logo_route(info, file, media.target_id)
 
     @strawberry.mutation
     async def delete_asset(self, info: strawberry.Info[Context], media: MediaDelete) -> None:
@@ -367,6 +371,8 @@ class Mutation:
             await delete_campaign_logo_route(info, media.target_id)
         elif media.media_type == MediaType.USER_LOGO:
             await delete_avatar_route(info)
+        elif media.media_type == MediaType.AREA_LOGO:
+            await delete_area_logo_route(info, media.target_id)
 
     #### client ####
 
