@@ -13,17 +13,3 @@ async def get_user_role_in_project(db: Session, user_id: int, project_id: int) -
     if user_role_db is None:
         return None
     return RoleGet(user_role_db)
-
-
-def transform_project_members(project: Project) -> List[UserRoleGet]:
-    res: List[UserRoleGet] = []
-    for member in project.members:
-        data = member.user.__dict__
-        data['role'] = RoleGet(member.role)
-        res.append(UserRoleGet(**data))
-    return res
-
-
-def transform_project_owner(project: Project) -> UserGet:
-    data = project.owner.__dict__
-    return UserGet(**data)

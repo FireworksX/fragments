@@ -24,8 +24,9 @@ from crud.project import (
 )
 from crud.user import get_user_by_id_db
 from database import Media, Session
-from database.models import Project, ProjectGoal, ProjectMemberRole, User
+from database.models import Project, ProjectGoal, User
 
+from .area import area_db_to_area
 from .filesystem import get_directory
 from .middleware import Context
 from .schemas.campaign import CampaignGet
@@ -40,8 +41,9 @@ from .schemas.project import (
     ProjectPatch,
     ProjectPost,
 )
-from .schemas.user import AuthPayload, RoleGet
-from .utils import get_user_role_in_project, transform_project_members
+from .schemas.user import AuthPayload, RoleGet, UserRoleGet
+from .user import user_db_to_user
+from .utils import get_user_role_in_project
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
@@ -59,13 +61,6 @@ async def private_key_permission(db: Session, user_id: int, project_id: int) -> 
     return role is not None and role is RoleGet.OWNER or role is RoleGet.ADMIN
 
 
-async def transform_project_campaigns(db: Session, project: Project) -> List[CampaignGet]:
-    res: List[CampaignGet] = []
-    for campaign_relation in project.campaigns:
-        res.append(await get_campaign_by_id_db(db, campaign_relation.campaign.id))
-    return res
-
-
 def project_goal_db_to_goal(goal: ProjectGoal) -> ProjectGoalGet:
     return ProjectGoalGet(id=goal.id, name=goal.name, target_action=goal.target_action)
 
@@ -79,10 +74,20 @@ async def project_db_to_project(
         id=project.id,
         name=project.name,
         logo=None if project.logo is None else project.logo.public_path,
-        owner=project.owner,
+        owner=user_db_to_user(project.owner),
         root_directory_id=project.root_directory_id,
-        members=transform_project_members(project),
-        campaigns=await transform_project_campaigns(db, project),
+        members=[
+            UserRoleGet(
+                id=member.user.id,
+                email=member.user.email,
+                first_name=member.user.first_name,
+                last_name=member.user.last_name,
+                logo=member.user.avatar.public_path if member.user.avatar else None,
+                role=RoleGet(member.role),
+            )
+            for member in project.members
+        ],
+        areas=[] if project.areas is None else [area_db_to_area(area) for area in project.areas],
         private_key=(
             ProjectKeyGet(value=project.private_key.key, name='private', id=project.private_key.id)
             if permission

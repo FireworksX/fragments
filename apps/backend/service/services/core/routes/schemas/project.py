@@ -2,6 +2,7 @@ from typing import List, Optional
 
 import strawberry
 
+from services.core.routes.schemas.area import AreaGet
 from services.core.routes.schemas.campaign import CampaignGet
 from services.core.routes.schemas.client import ClientGet
 from services.core.routes.schemas.filesystem import ProjectDirectoryGet
@@ -43,7 +44,7 @@ class ProjectGet:
     logo: Optional[str] = None
     owner: UserGet
     members: List[UserRoleGet]
-    campaigns: List[CampaignGet]
+    areas: List[AreaGet]
     root_directory_id: int
     private_key: Optional[ProjectKeyGet]
     public_keys: List[ProjectKeyGet]

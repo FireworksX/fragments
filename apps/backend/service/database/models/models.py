@@ -46,22 +46,6 @@ class ProjectMemberRole(Base):
     user = relationship('User', back_populates='projects')
 
 
-class ProjectCampaign(Base):
-    __tablename__ = 'project_camnpaign'
-    campaign_id = Column(ForeignKey('campaign.id'), primary_key=True)
-    project_id = Column(ForeignKey('project.id'), primary_key=True)
-    project = relationship('Project', back_populates='campaigns')
-    campaign = relationship('Campaign')
-
-
-class CampaignStream(Base):
-    __tablename__ = 'campaign_stream'
-    campaign_id = Column(ForeignKey('campaign.id'), primary_key=True)
-    stream_id = Column(ForeignKey('stream.id'), primary_key=True)
-    stream = relationship('Stream')
-    campaign = relationship('Campaign', back_populates='streams')
-
-
 class User(Base):
     __tablename__ = 'user'
     id = Column('id', Integer, primary_key=True, index=True)
@@ -74,10 +58,6 @@ class User(Base):
 
     avatar_id = Column('avatar_id', Integer, ForeignKey('media.id'))
     avatar = relationship('Media')
-
-    @orm.reconstructor
-    def init(self) -> None:
-        self.logo = None if self.avatar is None else self.avatar.public_path
 
 
 class ProjectApiKey(Base):
@@ -93,6 +73,22 @@ class ProjectApiKey(Base):
     project = relationship('Project', back_populates='public_keys', foreign_keys=[project_id])
 
 
+class Area(Base):
+    __tablename__ = 'area'
+    id = Column('id', Integer, primary_key=True, index=True)
+    name = Column('name', String, nullable=False)
+    description = Column('description', String)
+    author_id = Column('author_id', Integer, ForeignKey('user.id'))
+    author = relationship('User')
+    project_id = Column('project_id', Integer, ForeignKey('project.id'), nullable=False)
+
+    # Relationship to Project
+    project = relationship('Project')
+
+    # One-to-Many relationship with Campaign
+    campaigns = relationship('Campaign', back_populates='area')
+
+
 class Project(Base):
     __tablename__ = 'project'
     id = Column('id', Integer, primary_key=True, index=True)
@@ -102,8 +98,11 @@ class Project(Base):
 
     owner_id = Column('owner_id', Integer, ForeignKey('user.id'))
     owner = relationship('User')
+
     members = relationship('ProjectMemberRole', back_populates='project')
-    campaigns = relationship('ProjectCampaign', back_populates='project')
+
+    areas = relationship('Area', back_populates='project', cascade='all, delete-orphan')
+
     goals = relationship('ProjectGoal', back_populates='project', cascade='all, delete-orphan')
 
     root_directory_id = Column('directory_id', Integer, ForeignKey('filesystem_directory.id'))
@@ -159,26 +158,6 @@ class FilesystemDirectory(Base):
         return list(self.subdirectories) + list(self.fragments)
 
 
-class Campaign(Base):
-    __tablename__ = 'campaign'
-    id = Column('id', Integer, primary_key=True, index=True)
-    project_id = Column(
-        'project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False
-    )
-    name = Column('name', String)
-    description = Column('description', String)
-    active = Column('active', Boolean, default=True)
-    deleted = Column('deleted', Boolean, default=False)
-
-    author_id = Column('author_id', Integer, ForeignKey('user.id'))
-    author = relationship('User')
-
-    streams = relationship('CampaignStream', back_populates='campaign')
-
-    logo_id = Column('logo_id', Integer, ForeignKey('media.id'))
-    logo = relationship('Media')
-
-
 class GeoLocation(Base):
     __tablename__ = 'geo_location'
     id = Column('id', Integer, primary_key=True, index=True)
@@ -187,93 +166,105 @@ class GeoLocation(Base):
     city = Column('city', String, nullable=False)
 
 
-class StreamGeoLocationFilter(Base):
-    __tablename__ = 'stream_geo_location_filter'
+class CampaignGeoLocationFilter(Base):
+    __tablename__ = 'campaign_geo_location_filter'
     id = Column('id', Integer, primary_key=True, index=True)
-    stream_id = Column(ForeignKey('stream.id'))
+    campaign_id = Column(ForeignKey('campaign.id'))
 
-    stream = relationship('Stream', back_populates='geo_locations_filter')
+    campaign = relationship('Campaign', back_populates='geo_locations_filter')
     country = Column('country', String, nullable=False)
     region = Column('region', String)
     city = Column('city', String, nullable=False)
 
 
-class StreamTimeFrameFilter(Base):
-    __tablename__ = 'stream_time_frame_filter'
+class CampaignTimeFrameFilter(Base):
+    __tablename__ = 'campaign_time_frame_filter'
     id = Column('id', Integer, primary_key=True, index=True)
-    stream_id = Column(ForeignKey('stream.id'))
+    campaign_id = Column(ForeignKey('campaign.id'))
 
-    stream = relationship('Stream', back_populates='time_frames_filter')
+    campaign = relationship('Campaign', back_populates='time_frames_filter')
     from_time = Column('from_time', DateTime, nullable=False)
     to_time = Column('to_time', DateTime, nullable=False)
 
 
-class StreamOSTypeFilter(Base):
-    __tablename__ = 'stream_os_type_filter'
+class CampaignOSTypeFilter(Base):
+    __tablename__ = 'campaign_os_type_filter'
     id = Column('id', Integer, primary_key=True, index=True)
-    stream_id = Column(ForeignKey('stream.id'))
+    campaign_id = Column(ForeignKey('campaign.id'))
 
-    stream = relationship('Stream', back_populates='os_types_filter')
+    campaign = relationship('Campaign', back_populates='os_types_filter')
     os_type = Column('os_type', Integer, nullable=False)
 
 
-class StreamDeviceTypeFilter(Base):
-    __tablename__ = 'stream_device_type_filter'
+class CampaignDeviceTypeFilter(Base):
+    __tablename__ = 'campaign_device_type_filter'
     id = Column('id', Integer, primary_key=True, index=True)
-    stream_id = Column(ForeignKey('stream.id'))
+    campaign_id = Column(ForeignKey('campaign.id'))
 
-    stream = relationship('Stream', back_populates='device_types_filter')
+    campaign = relationship('Campaign', back_populates='device_types_filter')
     device_type = Column('device_type', Integer, nullable=False)
 
 
-class StreamPageFilter(Base):
-    __tablename__ = 'stream_page_filter'
+class CampaignPageFilter(Base):
+    __tablename__ = 'campaign_page_filter'
     id = Column('id', Integer, primary_key=True, index=True)
-    stream_id = Column(ForeignKey('stream.id'))
+    campaign_id = Column(ForeignKey('campaign.id'))
 
-    stream = relationship('Stream', back_populates='pages_filter')
+    campaign = relationship('Campaign', back_populates='pages_filter')
     page = Column('page', String, nullable=False)
 
 
-class Stream(Base):
-    __tablename__ = 'stream'
+class Campaign(Base):
+    __tablename__ = 'campaign'
     id = Column('id', Integer, primary_key=True, index=True)
-    campaign_id = Column(
-        'campaign_id', Integer, ForeignKey('campaign.id', ondelete='CASCADE'), nullable=False
-    )
-    campaign = relationship('Campaign')
     project_id = Column(
         'project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False
     )
     project = relationship('Project')
+
+    area_id = Column('area_id', Integer, ForeignKey('area.id', ondelete='CASCADE'), nullable=False)
+    area = relationship('Area', back_populates='campaigns')
+
+    name = Column('name', String)
+    description = Column('description', String)
+
+    author_id = Column('author_id', Integer, ForeignKey('user.id'))
+    author = relationship('User')
+
+    logo_id = Column('logo_id', Integer, ForeignKey('media.id'))
+    logo = relationship('Media')
+
     active = Column('active', Boolean, default=True)
-    deleted = Column('deleted', Boolean, default=False)
-    name = Column('name', String, nullable=False)
+    archived = Column('archived', Boolean, default=False)
     weight = Column('weight', Float, nullable=False)
+    default = Column('default', Boolean, default=False)
+
+    fragment_id = Column('fragment_id', Integer, ForeignKey('fragment.id'), nullable=True)
+    fragment = relationship('Fragment')
 
     pages_filter = relationship(
-        'StreamPageFilter',
-        back_populates='stream',
+        'CampaignPageFilter',
+        back_populates='campaign',
         cascade='save-update, merge, ' 'delete, delete-orphan',
     )
     device_types_filter = relationship(
-        'StreamDeviceTypeFilter',
-        back_populates='stream',
+        'CampaignDeviceTypeFilter',
+        back_populates='campaign',
         cascade='save-update, merge, ' 'delete, delete-orphan',
     )
     os_types_filter = relationship(
-        'StreamOSTypeFilter',
-        back_populates='stream',
+        'CampaignOSTypeFilter',
+        back_populates='campaign',
         cascade='save-update, merge, ' 'delete, delete-orphan',
     )
     time_frames_filter = relationship(
-        'StreamTimeFrameFilter',
-        back_populates='stream',
+        'CampaignTimeFrameFilter',
+        back_populates='campaign',
         cascade='save-update, merge, ' 'delete, delete-orphan',
     )
     geo_locations_filter = relationship(
-        'StreamGeoLocationFilter',
-        back_populates='stream',
+        'CampaignGeoLocationFilter',
+        back_populates='campaign',
         cascade='save-update, merge, ' 'delete, delete-orphan',
     )
 
