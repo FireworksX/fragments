@@ -1,8 +1,0 @@
-query ListSteams($campaignSlug: Int!) {
-    stream(campaignId: $campaignSlug) {
-        id
-        weight
-        name
-        active
-    }
-}

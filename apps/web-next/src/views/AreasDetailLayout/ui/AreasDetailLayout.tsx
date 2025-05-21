@@ -114,7 +114,7 @@ export const AreasDetailLayout: FC<CampaignDetailPageProps> = ({ children }) => 
                 </TabItem>
               )}
             </Link>
-            <Link type='areaStreams' areaSlug={areaSlug} projectSlug={projectSlug}>
+            <Link type='areaCampaigns' areaSlug={areaSlug} projectSlug={projectSlug}>
               {({ isActive }) => (
                 <TabItem
                   name='areaStreams'

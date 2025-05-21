@@ -1,0 +1,7 @@
+query ListCampaigns($areaId: Int!) {
+    campaign(areaId: $areaId) {
+        id
+        name
+        active
+    }
+}

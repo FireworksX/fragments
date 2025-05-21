@@ -124,18 +124,6 @@ export function makeApolloClient() {
               }
             },
 
-            createLanding: {
-              merge(outcome, incoming, { cache, variables }) {
-                cache.modify({
-                  fields: {
-                    landing(list = []) {
-                      return [...list, incoming]
-                    }
-                  }
-                })
-              }
-            },
-
             createStream: {
               merge(outcome, incoming, { cache, variables }) {
                 cache.modify({

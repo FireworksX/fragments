@@ -13,6 +13,16 @@ type AllFiltersGet {
     osTypes: [OSType!]!
 }
 
+type AreaGet {
+    author: UserGet!
+    campaigns: [CampaignGet!]!
+    defaultCampaign: CampaignGet!
+    description: String
+    id: Int!
+    name: String!
+    projectId: Int!
+}
+
 type AuthPayload {
     accessToken: String!
     refreshToken: String!
@@ -21,13 +31,17 @@ type AuthPayload {
 
 type CampaignGet {
     active: Boolean!
+    archived: Boolean!
+    areaId: Int!
     author: UserGet!
-    deleted: Boolean!
+    default: Boolean!
     description: String
+    filters: [FilterOSTypeGetFilterDeviceTypeGetFilterPageGetFilterGeoLocationsGetFilterTimeFramesGet!]!
+    fragment: FragmentGet
     id: Int!
     logo: String
     name: String!
-    projectId: Int!
+    weight: Float!
 }
 
 type ClientGet {
@@ -124,39 +138,6 @@ type FragmentMediaGet {
     publicPath: String!
 }
 
-type LandingGet {
-    active: Boolean!
-    deleted: Boolean!
-    fragment: FragmentGet
-    id: Int!
-    name: String!
-    props: JSON
-    stream: StreamGet!
-    weight: Float
-}
-
-type LandingMetricGet {
-    browser: String
-    campaignId: Int
-    city: String
-    country: String
-    createdAt: DateTime!
-    deviceType: DeviceType
-    domain: String
-    event: String
-    id: Int!
-    landingId: Int
-    language: String
-    osType: OSType
-    pageLoadTime: Float
-    referrer: String
-    region: String
-    screenHeight: Int
-    screenWidth: Int
-    subdomain: String
-    url: String
-}
-
 type MediaGet {
     mediaId: Int!
     mediaType: MediaType!
@@ -164,39 +145,35 @@ type MediaGet {
 }
 
 type Mutation {
+    addClientMetric(metric: ClientMetricPost!): Void
     addProjectPublicKey(projectId: Int!, publicKeyName: String): ProjectGet!
     addUserToProject(projectId: Int!, role: Int!, userId: Int!): Void
     changeProjectPrivateKey(projectId: Int!): ProjectGet!
     changeUserRole(projectId: Int!, role: RoleGet!, userId: Int!): Void
-    contributeToProjectGoal(targetAction: String!): Void
+    createArea(area: AreaPost!): AreaGet!
     createCampaign(cmp: CampaignPost!): CampaignGet!
     createDirectory(directory: ProjectDirectory!): [ProjectDirectoryGet!]!
     createFragment(fg: FragmentPost!): FragmentGet!
-    createLanding(landings: LandingPost!): LandingGet!
     createProject(pr: ProjectPost!): ProjectGet!
     createProjectGoal(goal: ProjectGoalPost!): ProjectGoalGet!
-    createStream(stream: StreamPost!): StreamGet!
+    deleteArea(areaId: Int!): Void
     deleteAsset(media: MediaDelete!): Void
     deleteCampaign(campaignId: Int!): Void
     deleteDirectory(directoryId: Int!): Void
     deleteFragment(fragmentId: Int!): Void
-    deleteLanding(landingId: Int!): Void
     deleteProject(projectId: Int!): Void
     deleteProjectGoal(goalId: Int!): Void
     deleteProjectPublicKey(projectId: Int!, publicKeyId: Int!): Void
-    deleteStream(streamId: Int!): Void
     feedback(fd: FeedbackPost!): FeedbackGet!
-    initClientSession: Void
     login(email: String!, password: String!): AuthPayload!
     refresh: AuthPayload!
     signup(email: String!, firstName: String!, lastName: String, password: String!): AuthPayload!
+    updateArea(area: AreaPatch!): AreaGet!
     updateCampaign(cmp: CampaignPatch!): CampaignGet!
     updateDirectory(directory: ProjectDirectoryPatch!): [ProjectDirectoryGet!]!
     updateFragment(fg: FragmentPatch!): FragmentGet!
-    updateLanding(landing: LandingPatch!): LandingGet!
     updateProject(pr: ProjectPatch!): ProjectGet!
     updateProjectGoal(goal: ProjectGoalPatch!): ProjectGoalGet!
-    updateStream(stream: StreamPatch!): StreamGet!
     uploadAsset(file: Upload!, media: MediaPost!): MediaGet!
 }
 
@@ -211,7 +188,7 @@ type ProjectDirectoryGet {
 }
 
 type ProjectGet {
-    campaigns: [CampaignGet!]!
+    areas: [AreaGet!]!
     id: Int!
     logo: String
     members: [UserRoleGet!]!
@@ -235,38 +212,26 @@ type ProjectKeyGet {
 }
 
 type Query {
-    campaign(active: Boolean, campgainId: Int, deleted: Boolean, projectId: Int): [CampaignGet!]!
-    campaignByName(active: Boolean, deleted: Boolean, limit: Int = 5, name: String!, projectId: Int!): [CampaignGet!]!
+    area(areaId: Int!): AreaGet!
+    areas(projectId: Int!): [AreaGet!]!
+    campaign(active: Boolean, archived: Boolean, areaId: Int, campgainId: Int): [CampaignGet!]!
+    campaignByName(active: Boolean, archived: Boolean, areaId: Int!, limit: Int = 5, name: String!): [CampaignGet!]!
     clientById(clientId: Int!): ClientGet!
     clientFragment(fragmentId: Int!): FragmentGet
     clientHistory(clientId: Int!): [ClientHistoryGet!]!
-    clientLanding: LandingGet
     clientsByProjectId(projectId: Int!): [ClientGet!]!
     contributionsToProjectGoal(projectGoalId: Int!, projectId: Int!): [ClientProjectGoalGet!]!
     directory(directoryId: Int!): [ProjectDirectoryGet!]!
     filter(countries: [String!], regions: [String!]): AllFiltersGet!
     fragment(fragmentIds: [Int!], projectId: Int): [FragmentGet!]!
-    landing(landingId: Int, streamId: Int): [LandingGet!]!
-    landingMetric(landingId: Int): [LandingMetricGet!]!
     profile: AuthPayload!
     project(projectId: Int): [ProjectGet!]!
     projectGoals(projectId: Int!): [ProjectGoalGet!]!
-    stream(active: Boolean, campaignId: Int, deleted: Boolean, streamId: Int): [StreamGet!]!
 }
 
 type RegionGet {
     cities: [String!]!
     region: String!
-}
-
-type StreamGet {
-    active: Boolean!
-    campaignId: Int!
-    deleted: Boolean!
-    filters: [FilterOSTypeGetFilterDeviceTypeGetFilterPageGetFilterGeoLocationsGetFilterTimeFramesGet!]!
-    id: Int!
-    name: String!
-    weight: Float!
 }
 
 type UserGet {
@@ -284,6 +249,12 @@ type UserRoleGet {
     lastName: String
     logo: String
     role: RoleGet!
+}
+
+enum ClientMetricType {
+    INIT_SESSION
+    REACH_PROJECT_GOAL
+    RELEASE_SESSION
 }
 
 enum DeviceType {
@@ -333,20 +304,43 @@ scalar Upload
 "Represents NULL values"
 scalar Void
 
-input CampaignPatch {
-    active: Boolean
-    deleted: Boolean
+input AreaPatch {
     description: String
     id: Int!
     name: String
 }
 
-input CampaignPost {
-    active: Boolean!
-    deleted: Boolean!
+input AreaPost {
     description: String
     name: String!
     projectId: Int!
+}
+
+input CampaignPatch {
+    active: Boolean
+    archived: Boolean
+    description: String
+    filters: FiltersPost
+    fragmentId: Int
+    id: Int!
+    name: String
+    weight: Float
+}
+
+input CampaignPost {
+    active: Boolean!
+    archived: Boolean!
+    areaId: Int!
+    description: String
+    filters: FiltersPost
+    fragmentId: Int
+    name: String!
+    weight: Float!
+}
+
+input ClientMetricPost {
+    metricType: ClientMetricType!
+    metricValue: String
 }
 
 input FeedbackPost {
@@ -390,26 +384,6 @@ input FragmentPost {
     name: String!
     projectId: Int!
     props: JSON
-}
-
-input LandingPatch {
-    active: Boolean
-    deleted: Boolean
-    fragmentId: Int
-    id: Int!
-    name: String
-    props: JSON
-    weight: Float
-}
-
-input LandingPost {
-    active: Boolean
-    deleted: Boolean
-    fragmentId: Int
-    name: String!
-    props: JSON
-    streamId: Int!
-    weight: Float
 }
 
 input MediaDelete {
@@ -456,22 +430,4 @@ input ProjectPatch {
 input ProjectPost {
     logo: String
     name: String!
-}
-
-input StreamPatch {
-    active: Boolean
-    deleted: Boolean
-    filters: FiltersPost
-    id: Int!
-    name: String
-    weight: Float
-}
-
-input StreamPost {
-    active: Boolean!
-    campaignId: Int!
-    deleted: Boolean!
-    filters: FiltersPost
-    name: String!
-    weight: Float!
 }

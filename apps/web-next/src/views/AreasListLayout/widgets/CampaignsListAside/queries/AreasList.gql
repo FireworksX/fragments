@@ -1,0 +1,10 @@
+query AreasList($projectId: Int!) {
+    areas(projectId: $projectId) {
+        id
+        name
+        description
+        defaultCampaign {
+            active
+        }
+    }
+}

@@ -1,9 +1,0 @@
-  mutation CreateLanding($streamSlug: Int!, $name: String!) {
-    createLanding(landings: { streamId: $streamSlug, name: $name }) {
-      id
-      name
-      props
-      weight
-      props
-    }
-  }

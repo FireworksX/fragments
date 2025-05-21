@@ -1,0 +1,7 @@
+mutation UpdateCampaign($streamId: Int!, $name: String, $active: Boolean) {
+    updateCampaign(cmp: { id: $streamId, name: $name, active: $active}) {
+        id
+        name
+        active
+    }
+}

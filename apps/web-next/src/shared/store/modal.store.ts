@@ -7,7 +7,6 @@ export type ModalPanelMap = {
   createProject: CreateProjectModalContext
   createFragment: CreateFragmentModalContext
   aboutTemplate: unknown
-  createLanding: unknown
   componentVariables: unknown
 }
 
