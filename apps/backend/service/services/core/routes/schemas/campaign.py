@@ -14,6 +14,7 @@ from services.core.routes.schemas.filter import (
     OSType,
 )
 from services.core.routes.schemas.fragment import FragmentGet
+from services.core.routes.schemas.media import MediaGet
 from services.core.routes.schemas.user import UserGet
 
 
@@ -22,7 +23,7 @@ class CampaignGet:
     id: int
     area_id: int
     name: str
-    logo: Optional[str] = None
+    logo: MediaGet
     author: UserGet
     description: Optional[str] = None
     active: bool

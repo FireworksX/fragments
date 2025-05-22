@@ -2,14 +2,20 @@ from typing import Optional
 
 from sqlalchemy.orm import Session
 
+from crud.media import generate_default_media
 from database.models import User
 
 
 async def create_user_db(
     db: Session, email: str, first_name: str, last_name: Optional[str], hashed_password: str
 ) -> User:
+    default_user_avatar = await generate_default_media(db, f"{first_name}.png")
     user: User = User(
-        email=email, first_name=first_name, last_name=last_name, hashed_password=hashed_password
+        email=email,
+        first_name=first_name,
+        last_name=last_name,
+        hashed_password=hashed_password,
+        avatar_id=default_user_avatar.id,
     )
     db.add(user)
     db.commit()

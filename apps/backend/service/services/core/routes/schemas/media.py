@@ -10,6 +10,7 @@ class MediaType(Enum):
     FRAGMENT_ASSET = 2
     CAMPAIGN_LOGO = 3
     USER_LOGO = 4
+    AREA_LOGO = 5
 
 
 @strawberry.input

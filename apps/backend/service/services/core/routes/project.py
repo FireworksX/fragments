@@ -4,7 +4,7 @@ import strawberry
 from fastapi import HTTPException, UploadFile, status
 
 from crud.campaign import get_campaign_by_id_db
-from crud.media import create_media_db, delete_media_by_id_db
+from crud.media import create_media_db, delete_media_by_id_db, generate_default_media
 from crud.project import (
     add_project_public_api_key,
     add_user_to_project_db,
@@ -73,7 +73,11 @@ async def project_db_to_project(
     return ProjectGet(
         id=project.id,
         name=project.name,
-        logo=None if project.logo is None else project.logo.public_path,
+        logo=MediaGet(
+            media_id=project.logo_id,
+            media_type=MediaType.PROJECT_LOGO,
+            public_path=project.logo.public_path,
+        ),
         owner=user_db_to_user(project.owner),
         root_directory_id=project.root_directory_id,
         members=[
@@ -323,7 +327,8 @@ async def delete_project_logo_route(info: strawberry.Info[Context], project_id: 
         )
 
     await delete_media_by_id_db(db, project.logo_id)
-    project.logo_id = None
+    default_logo = await generate_default_media(db, f"{project.name}.png")
+    project.logo_id = default_logo.id
     db.commit()
     return await project_db_to_project(info, db, project)
 

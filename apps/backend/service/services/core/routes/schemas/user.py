@@ -3,6 +3,8 @@ from typing import Optional
 
 import strawberry
 
+from services.core.routes.schemas.media import MediaGet
+
 
 @strawberry.enum
 class RoleGet(Enum):
@@ -18,7 +20,7 @@ class UserGet:
     email: str
     first_name: str
     last_name: Optional[str]
-    logo: Optional[str]
+    logo: MediaGet
 
 
 @strawberry.type

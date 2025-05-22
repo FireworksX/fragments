@@ -2,6 +2,7 @@ from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
+from crud.media import generate_default_media
 from database.models import (
     Campaign,
     CampaignDeviceTypeFilter,
@@ -74,6 +75,7 @@ async def create_campaign_db(
     fragment_id: Optional[int],
     filters: Optional[FiltersPost],
 ) -> Campaign:
+    default_campaign_logo = await generate_default_media(db, f"{name}_campaign.png")
     campaign: Campaign = Campaign(
         name=name,
         project_id=project_id,
@@ -84,6 +86,7 @@ async def create_campaign_db(
         author_id=author_id,
         fragment_id=fragment_id,
         default=default,
+        logo_id=default_campaign_logo.id,
     )
     db.add(campaign)
     db.commit()
