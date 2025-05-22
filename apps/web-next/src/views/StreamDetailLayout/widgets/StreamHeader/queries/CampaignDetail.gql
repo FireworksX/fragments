@@ -1,9 +1,8 @@
 query CampaignDetail($campaignId: Int!) {
-    campaign(campgainId: $campaignId) {
+    campaign(campaignId: $campaignId) {
         id
         name
         active
-        weight
         filters {
             ... on FilterDeviceTypeGet {
                 deviceTypes

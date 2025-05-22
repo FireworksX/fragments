@@ -27,6 +27,7 @@ export type AllFiltersGet = {
 
 export type AreaGet = {
   __typename?: 'AreaGet';
+  areaCode: Scalars['String']['output'];
   author: UserGet;
   campaigns: Array<CampaignGet>;
   defaultCampaign: CampaignGet;
@@ -37,12 +38,14 @@ export type AreaGet = {
 };
 
 export type AreaPatch = {
+  areaCode?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['Int']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type AreaPost = {
+  areaCode: Scalars['String']['input'];
   description?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   projectId: Scalars['Int']['input'];
@@ -68,7 +71,6 @@ export type CampaignGet = {
   id: Scalars['Int']['output'];
   logo?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
-  weight: Scalars['Float']['output'];
 };
 
 export type CampaignPatch = {
@@ -79,7 +81,6 @@ export type CampaignPatch = {
   fragmentId?: InputMaybe<Scalars['Int']['input']>;
   id: Scalars['Int']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
-  weight?: InputMaybe<Scalars['Float']['input']>;
 };
 
 export type CampaignPost = {
@@ -90,7 +91,6 @@ export type CampaignPost = {
   filters?: InputMaybe<FiltersPost>;
   fragmentId?: InputMaybe<Scalars['Int']['input']>;
   name: Scalars['String']['input'];
-  weight: Scalars['Float']['input'];
 };
 
 export type ClientGet = {
@@ -601,7 +601,7 @@ export type QueryCampaignArgs = {
   active?: InputMaybe<Scalars['Boolean']['input']>;
   archived?: InputMaybe<Scalars['Boolean']['input']>;
   areaId?: InputMaybe<Scalars['Int']['input']>;
-  campgainId?: InputMaybe<Scalars['Int']['input']>;
+  campaignId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 

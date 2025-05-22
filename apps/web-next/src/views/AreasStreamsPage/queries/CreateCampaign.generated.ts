@@ -17,7 +17,7 @@ export type CreateCampaignMutation = { __typename?: 'Mutation', createCampaign: 
 export const CreateCampaignDocument = gql`
     mutation CreateCampaign($areaId: Int!, $name: String!, $active: Boolean!, $weight: Float!) {
   createCampaign(
-    cmp: {areaId: $areaId, name: $name, active: $active, weight: $weight, archived: true}
+    cmp: {areaId: $areaId, name: $name, active: $active, archived: true}
   ) {
     id
     name

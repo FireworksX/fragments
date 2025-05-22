@@ -14,6 +14,7 @@ type AllFiltersGet {
 }
 
 type AreaGet {
+    areaCode: String!
     author: UserGet!
     campaigns: [CampaignGet!]!
     defaultCampaign: CampaignGet!
@@ -41,7 +42,6 @@ type CampaignGet {
     id: Int!
     logo: String
     name: String!
-    weight: Float!
 }
 
 type ClientGet {
@@ -214,7 +214,7 @@ type ProjectKeyGet {
 type Query {
     area(areaId: Int!): AreaGet!
     areas(projectId: Int!): [AreaGet!]!
-    campaign(active: Boolean, archived: Boolean, areaId: Int, campgainId: Int): [CampaignGet!]!
+    campaign(active: Boolean, archived: Boolean, areaId: Int, campaignId: Int): [CampaignGet!]!
     campaignByName(active: Boolean, archived: Boolean, areaId: Int!, limit: Int = 5, name: String!): [CampaignGet!]!
     clientById(clientId: Int!): ClientGet!
     clientFragment(fragmentId: Int!): FragmentGet
@@ -305,12 +305,14 @@ scalar Upload
 scalar Void
 
 input AreaPatch {
+    areaCode: String
     description: String
     id: Int!
     name: String
 }
 
 input AreaPost {
+    areaCode: String!
     description: String
     name: String!
     projectId: Int!
@@ -324,7 +326,6 @@ input CampaignPatch {
     fragmentId: Int
     id: Int!
     name: String
-    weight: Float
 }
 
 input CampaignPost {
@@ -335,7 +336,6 @@ input CampaignPost {
     filters: FiltersPost
     fragmentId: Int
     name: String!
-    weight: Float!
 }
 
 input ClientMetricPost {

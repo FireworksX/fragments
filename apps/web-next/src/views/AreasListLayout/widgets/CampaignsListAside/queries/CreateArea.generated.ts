@@ -7,18 +7,20 @@ export type CreateAreaMutationVariables = Types.Exact<{
   name: Types.Scalars['String']['input'];
   description?: Types.InputMaybe<Types.Scalars['String']['input']>;
   projectId: Types.Scalars['Int']['input'];
+  areaCode: Types.Scalars['String']['input'];
 }>;
 
 
-export type CreateAreaMutation = { __typename?: 'Mutation', createArea: { __typename?: 'AreaGet', name: string, description?: string | null, defaultCampaign: { __typename?: 'CampaignGet', active: boolean } } };
+export type CreateAreaMutation = { __typename?: 'Mutation', createArea: { __typename?: 'AreaGet', name: string, areaCode: string, description?: string | null, defaultCampaign: { __typename?: 'CampaignGet', active: boolean } } };
 
 
 export const CreateAreaDocument = gql`
-    mutation CreateArea($name: String!, $description: String, $projectId: Int!) {
+    mutation CreateArea($name: String!, $description: String, $projectId: Int!, $areaCode: String!) {
   createArea(
-    area: {name: $name, description: $description, projectId: $projectId}
+    area: {name: $name, description: $description, projectId: $projectId, areaCode: $areaCode}
   ) {
     name
+    areaCode
     description
     defaultCampaign {
       active
@@ -44,6 +46,7 @@ export type CreateAreaMutationFn = Apollo.MutationFunction<CreateAreaMutation, C
  *      name: // value for 'name'
  *      description: // value for 'description'
  *      projectId: // value for 'projectId'
+ *      areaCode: // value for 'areaCode'
  *   },
  * });
  */

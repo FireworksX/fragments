@@ -1,5 +1,5 @@
-mutation UpdateArea($id: Int!, $name: String, $description: String) {
-    updateArea(area: { id: $id, name: $name, description: $description }) {
+mutation UpdateArea($id: Int!, $name: String, $description: String, $code: String) {
+    updateArea(area: { id: $id, name: $name, description: $description, areaCode: $code }) {
         id
         name
         description

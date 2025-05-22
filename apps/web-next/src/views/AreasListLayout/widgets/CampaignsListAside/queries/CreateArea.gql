@@ -1,7 +1,8 @@
-mutation CreateArea($name: String!, $description: String, $projectId: Int!) {
-    createArea(area: { name: $name, description: $description, projectId: $projectId }
+mutation CreateArea($name: String!, $description: String, $projectId: Int!, $areaCode: String!) {
+    createArea(area: { name: $name, description: $description, projectId: $projectId, areaCode: $areaCode }
     ) {
         name
+        areaCode
         description
         defaultCampaign {
             active

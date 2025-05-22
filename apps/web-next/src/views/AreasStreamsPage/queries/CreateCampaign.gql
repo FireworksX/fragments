@@ -1,5 +1,5 @@
 mutation CreateCampaign($areaId: Int!, $name: String!, $active: Boolean!, $weight: Float!) {
-    createCampaign(cmp: {areaId: $areaId,name: $name, active: $active, weight: $weight, archived: true }) {
+    createCampaign(cmp: {areaId: $areaId,name: $name, active: $active, archived: true }) {
         id
         name
         active

@@ -1,28 +1,30 @@
 import { useParams } from 'next/navigation'
-import { useCreateCampaignMutation } from '../queries/CreateCampaign.generated'
-import { useCampaignsListQuery } from '../queries/CampaingsList.generated'
+import { generateId } from '@fragmentsx/utils'
+import { useCreateAreaMutation } from '../queries/CreateArea.generated'
+import { useAreasListQuery } from '../queries/AreasList.generated'
 
 export const useCampaignsListAside = () => {
   const { projectSlug } = useParams()
-  const [createCampaign, { data: createdCampaign, loading: createCampaignLoading }] = useCreateCampaignMutation()
-  const { data: campaignsListData } = useCampaignsListQuery({
+  const [createArea, { data: createdCampaign, loading: createCampaignLoading }] = useCreateAreaMutation()
+  const { data: campaignsListData } = useAreasListQuery({
     variables: {
       projectId: +projectSlug
     }
   })
 
-  const handleCreateCampaign = async name => {
-    await createCampaign({
+  const handleCreate = async name => {
+    await createArea({
       variables: {
         projectId: +projectSlug,
-        name
+        name,
+        areaCode: generateId()
       }
     })
   }
 
   return {
-    list: campaignsListData?.campaign ?? [],
-    handleCreateCampaign,
+    list: campaignsListData?.areas ?? [],
+    handleCreate,
     createCampaignLoading
   }
 }

@@ -10,7 +10,7 @@ import VisualIcon from '@/shared/icons/next/component.svg'
 import StreamsIcon from '@/shared/icons/next/podcast.svg'
 import DeleteIcon from '@/shared/icons/next/trash.svg'
 import IntegrationIcon from '@/shared/icons/next/brackets.svg'
-import { useCampaignDetail } from '@/views/AreasDetailLayout/hooks/useCampaignDetail'
+import { useAreaDetail } from '@/views/AreasDetailLayout/hooks/useAreaDetail'
 import Tabs from '../../../shared/ui/Tabs/ui'
 import { TabItem } from '@/shared/ui/TabItem'
 import { Link } from '@/shared/ui/Link'
@@ -29,13 +29,14 @@ export const AreasDetailLayout: FC<CampaignDetailPageProps> = ({ children }) => 
   const {
     isStreamRoute,
     editDescription,
-    campaign,
+    area,
     areaSlug,
     projectSlug,
     loadingChangeCampaignActive,
     toggleActive,
-    rename
-  } = useCampaignDetail()
+    rename,
+    editCode
+  } = useAreaDetail()
 
   return (
     <div className={styles.root}>
@@ -45,11 +46,11 @@ export const AreasDetailLayout: FC<CampaignDetailPageProps> = ({ children }) => 
             <div className={styles.logo}></div>
             <div className={styles.info}>
               <div className={styles.name}>
-                <CampaignDetailName name={campaign?.name} isActive={campaign?.active} onRename={rename} />
+                <CampaignDetailName name={area?.name} isActive={area?.defaultCampaign?.active} onRename={rename} />
               </div>
               <div className={styles.meta}>
                 <div className={styles.metaItem}>
-                  ID: <ContentEditable className={styles.editable} value='sidebar' />
+                  ID: <ContentEditable className={styles.editable} value={area?.code} onSubmit={editCode} />
                 </div>
                 {/*<span>Start: 12.10.2025</span>*/}
                 {/*<span>End: 25.10.2025</span>*/}
@@ -68,7 +69,7 @@ export const AreasDetailLayout: FC<CampaignDetailPageProps> = ({ children }) => 
               </Button>
 
               <ToggleActiveButton
-                isActive={campaign?.active}
+                isActive={area?.defaultCampaign?.active}
                 loading={loadingChangeCampaignActive}
                 onClick={toggleActive}
               />
@@ -85,7 +86,7 @@ export const AreasDetailLayout: FC<CampaignDetailPageProps> = ({ children }) => 
             </div>
           </div>
 
-          <CampaignDetailDescription value={campaign?.description} onSubmit={editDescription} />
+          <CampaignDetailDescription value={area?.description} onSubmit={editDescription} />
 
           <Tabs>
             <Link type='area' areaSlug={areaSlug} projectSlug={projectSlug}>

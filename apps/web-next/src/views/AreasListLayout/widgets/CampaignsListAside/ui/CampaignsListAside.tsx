@@ -12,21 +12,21 @@ interface CampaignsListAsideProps {
 }
 
 export const CampaignsListAside: FC<CampaignsListAsideProps> = ({ className }) => {
-  const { list, handleCreateCampaign } = useCampaignsListAside()
+  const { list, handleCreate } = useCampaignsListAside()
 
   return (
     <div className={cn(styles.root, className)}>
       <Container gutterSize={8}>
         <Panel title='Areas'>
           <div className={styles.content}>
-            <CampaignCreateItem onCreate={handleCreateCampaign} />
-            {list.map(campaign => (
+            <CampaignCreateItem onCreate={handleCreate} />
+            {list.map(item => (
               <CampaignPreviewItem
-                key={campaign.id}
+                key={item.id}
                 className={styles.card}
-                name={campaign.name}
-                slug={campaign.id}
-                isActive={campaign.active}
+                name={item.name}
+                slug={item.id}
+                isActive={item.defaultCampaign.active}
               />
             ))}
           </div>

@@ -100,11 +100,11 @@ export function makeApolloClient() {
               }
             },
 
-            createCampaign: {
+            createArea: {
               merge(outcome, incoming, { cache, variables }) {
                 cache.modify({
                   fields: {
-                    campaign(list = []) {
+                    areas(list = []) {
                       return [...list, incoming]
                     }
                   }

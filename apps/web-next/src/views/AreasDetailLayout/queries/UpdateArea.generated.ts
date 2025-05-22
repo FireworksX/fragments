@@ -7,6 +7,7 @@ export type UpdateAreaMutationVariables = Types.Exact<{
   id: Types.Scalars['Int']['input'];
   name?: Types.InputMaybe<Types.Scalars['String']['input']>;
   description?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  code?: Types.InputMaybe<Types.Scalars['String']['input']>;
 }>;
 
 
@@ -14,8 +15,10 @@ export type UpdateAreaMutation = { __typename?: 'Mutation', updateArea: { __type
 
 
 export const UpdateAreaDocument = gql`
-    mutation UpdateArea($id: Int!, $name: String, $description: String) {
-  updateArea(area: {id: $id, name: $name, description: $description}) {
+    mutation UpdateArea($id: Int!, $name: String, $description: String, $code: String) {
+  updateArea(
+    area: {id: $id, name: $name, description: $description, areaCode: $code}
+  ) {
     id
     name
     description
@@ -40,6 +43,7 @@ export type UpdateAreaMutationFn = Apollo.MutationFunction<UpdateAreaMutation, U
  *      id: // value for 'id'
  *      name: // value for 'name'
  *      description: // value for 'description'
+ *      code: // value for 'code'
  *   },
  * });
  */
