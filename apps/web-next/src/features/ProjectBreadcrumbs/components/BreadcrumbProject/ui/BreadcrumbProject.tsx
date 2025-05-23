@@ -11,7 +11,7 @@ import CheckIcon from '@/shared/icons/next/check.svg'
 import PlusIcon from '@/shared/icons/next/circle-plus.svg'
 
 interface BreadcrumbProjectProps {
-  projects: { logo: string; id: number; name: string }[]
+  projects: { logo: { url: string }; id: number; name: string }[]
   currentProject: number
   className?: string
 }
@@ -32,7 +32,7 @@ export const BreadcrumbProject: FC<BreadcrumbProjectProps> = ({ className, proje
                 className={cn(styles.option, {
                   [styles.selected]: project.id === currentProject
                 })}
-                icon={<Avatar size={24} uniqueId={project?.id?.toString() ?? ''} />}
+                // icon={<Avatar size={24} uniqueId={project?.id?.toString() ?? ''} />}
                 suffix={project.id === currentProject && <CheckIcon />}
               >
                 {project?.name}
@@ -52,7 +52,7 @@ export const BreadcrumbProject: FC<BreadcrumbProjectProps> = ({ className, proje
     >
       {active && (
         <Touchable className={cn(styles.root, className)}>
-          <Avatar uniqueId={active?.id?.toString()} firstName={active?.name} size={20} src={active?.logo} />
+          <Avatar uniqueId={active?.id?.toString()} firstName={active?.name} size={20} src={active?.logo.url} />
           {active?.name}
         </Touchable>
       )}

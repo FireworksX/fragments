@@ -33,6 +33,7 @@ export type AreaGet = {
   defaultCampaign: CampaignGet;
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
+  logo: MediaGet;
   name: Scalars['String']['output'];
   projectId: Scalars['Int']['output'];
 };
@@ -69,7 +70,7 @@ export type CampaignGet = {
   filters: Array<FilterOsTypeGetFilterDeviceTypeGetFilterPageGetFilterGeoLocationsGetFilterTimeFramesGet>;
   fragment?: Maybe<FragmentGet>;
   id: Scalars['Int']['output'];
-  logo?: Maybe<Scalars['String']['output']>;
+  logo: MediaGet;
   name: Scalars['String']['output'];
 };
 
@@ -291,6 +292,7 @@ export type MediaPost = {
 };
 
 export enum MediaType {
+  AreaLogo = 'AREA_LOGO',
   CampaignLogo = 'CAMPAIGN_LOGO',
   FragmentAsset = 'FRAGMENT_ASSET',
   ProjectLogo = 'PROJECT_LOGO',
@@ -522,7 +524,7 @@ export type ProjectGet = {
   __typename?: 'ProjectGet';
   areas: Array<AreaGet>;
   id: Scalars['Int']['output'];
-  logo?: Maybe<Scalars['String']['output']>;
+  logo: MediaGet;
   members: Array<UserRoleGet>;
   name: Scalars['String']['output'];
   owner: UserGet;
@@ -685,7 +687,7 @@ export type UserGet = {
   firstName: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   lastName?: Maybe<Scalars['String']['output']>;
-  logo?: Maybe<Scalars['String']['output']>;
+  logo: MediaGet;
 };
 
 export type UserRoleGet = {
@@ -694,6 +696,6 @@ export type UserRoleGet = {
   firstName: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   lastName?: Maybe<Scalars['String']['output']>;
-  logo?: Maybe<Scalars['String']['output']>;
+  logo: MediaGet;
   role: RoleGet;
 };

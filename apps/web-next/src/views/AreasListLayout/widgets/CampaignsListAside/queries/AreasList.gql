@@ -4,6 +4,9 @@ query AreasList($projectId: Int!) {
         name
         description
         defaultCampaign {
+            logo {
+                url: publicPath
+            }
             active
         }
     }

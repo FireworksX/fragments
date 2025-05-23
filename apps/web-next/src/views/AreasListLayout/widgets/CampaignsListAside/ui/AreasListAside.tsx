@@ -7,11 +7,11 @@ import { Container } from '@/shared/ui/Container'
 import { CampaignPreviewItem } from '../components/CampaignPreviewItem'
 import { CampaignCreateItem } from '@/views/AreasListLayout/widgets/CampaignsListAside/components/CampaignCreateItem'
 
-interface CampaignsListAsideProps {
+interface AreasListAsideProps {
   className?: string
 }
 
-export const CampaignsListAside: FC<CampaignsListAsideProps> = ({ className }) => {
+export const AreasListAside: FC<AreasListAsideProps> = ({ className }) => {
   const { list, handleCreate } = useCampaignsListAside()
 
   return (
@@ -24,6 +24,7 @@ export const CampaignsListAside: FC<CampaignsListAsideProps> = ({ className }) =
               <CampaignPreviewItem
                 key={item.id}
                 className={styles.card}
+                logo={item.defaultCampaign?.logo.url}
                 name={item.name}
                 slug={item.id}
                 isActive={item.defaultCampaign.active}

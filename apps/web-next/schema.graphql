@@ -20,6 +20,7 @@ type AreaGet {
     defaultCampaign: CampaignGet!
     description: String
     id: Int!
+    logo: MediaGet!
     name: String!
     projectId: Int!
 }
@@ -40,7 +41,7 @@ type CampaignGet {
     filters: [FilterOSTypeGetFilterDeviceTypeGetFilterPageGetFilterGeoLocationsGetFilterTimeFramesGet!]!
     fragment: FragmentGet
     id: Int!
-    logo: String
+    logo: MediaGet!
     name: String!
 }
 
@@ -190,7 +191,7 @@ type ProjectDirectoryGet {
 type ProjectGet {
     areas: [AreaGet!]!
     id: Int!
-    logo: String
+    logo: MediaGet!
     members: [UserRoleGet!]!
     name: String!
     owner: UserGet!
@@ -239,7 +240,7 @@ type UserGet {
     firstName: String!
     id: Int!
     lastName: String
-    logo: String
+    logo: MediaGet!
 }
 
 type UserRoleGet {
@@ -247,7 +248,7 @@ type UserRoleGet {
     firstName: String!
     id: Int!
     lastName: String
-    logo: String
+    logo: MediaGet!
     role: RoleGet!
 }
 
@@ -272,6 +273,7 @@ enum FeelLevelGet {
 }
 
 enum MediaType {
+    AREA_LOGO
     CAMPAIGN_LOGO
     FRAGMENT_ASSET
     PROJECT_LOGO

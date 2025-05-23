@@ -7,7 +7,6 @@ export type CreateCampaignMutationVariables = Types.Exact<{
   areaId: Types.Scalars['Int']['input'];
   name: Types.Scalars['String']['input'];
   active: Types.Scalars['Boolean']['input'];
-  weight: Types.Scalars['Float']['input'];
 }>;
 
 
@@ -15,7 +14,7 @@ export type CreateCampaignMutation = { __typename?: 'Mutation', createCampaign: 
 
 
 export const CreateCampaignDocument = gql`
-    mutation CreateCampaign($areaId: Int!, $name: String!, $active: Boolean!, $weight: Float!) {
+    mutation CreateCampaign($areaId: Int!, $name: String!, $active: Boolean!) {
   createCampaign(
     cmp: {areaId: $areaId, name: $name, active: $active, archived: true}
   ) {
@@ -43,7 +42,6 @@ export type CreateCampaignMutationFn = Apollo.MutationFunction<CreateCampaignMut
  *      areaId: // value for 'areaId'
  *      name: // value for 'name'
  *      active: // value for 'active'
- *      weight: // value for 'weight'
  *   },
  * });
  */

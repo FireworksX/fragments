@@ -5,6 +5,7 @@ import { isValue } from '@fragmentsx/utils'
 import { StatusDot } from '@/shared/ui/StatusDot'
 import CheckIcon from '@/shared/icons/next/check.svg'
 import { Link } from '@/shared/ui/Link'
+import { Avatar } from '@/shared/ui/Avatar'
 
 interface CampaignPreviewItemProps {
   name: string
@@ -15,7 +16,7 @@ interface CampaignPreviewItemProps {
   className?: string
 }
 
-export const CampaignPreviewItem: FC<CampaignPreviewItemProps> = ({ className, name, slug, isActive, stats, logo }) => {
+export const CampaignPreviewItem: FC<CampaignPreviewItemProps> = ({ className, logo, name, slug, isActive, stats }) => {
   return (
     <Link className={cn(className)} partial type='area' areaSlug={slug}>
       {({ isActive: linkIsActive }) => (
@@ -26,7 +27,7 @@ export const CampaignPreviewItem: FC<CampaignPreviewItemProps> = ({ className, n
                 <StatusDot status={isActive ? 'success' : 'error'} />
               </div>
             )}
-            <div className={styles.logo}></div>
+            <Avatar className={styles.logo} size={24} src={logo} />
             <div className={styles.name}>{name}</div>
           </div>
 

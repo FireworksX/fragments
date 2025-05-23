@@ -3,11 +3,11 @@ import useClickOutside from '@/shared/hooks/useClickOutside'
 import { nextTick } from '@/shared/utils/nextTick'
 import { useListSteamsQuery } from '../queries/ListStreams.generated'
 import { useParams } from 'next/navigation'
+import { useDeleteCampaignMutation } from '@/shared/api/stream/mutation/DeleteCampaign.generated'
 import {
-  UpdateStreamMutationVariables,
-  useUpdateStreamMutation
-} from '@/shared/api/stream/mutation/UpdateStream.generated'
-import { useDeleteStreamMutation } from '@/shared/api/stream/mutation/DeleteStream.generated'
+  UpdateCampaignMutationVariables,
+  useUpdateCampaignMutation
+} from '@/shared/api/stream/mutation/UpdateCampaign.generated'
 
 export const useStreamsTable = (ref: unknown, onCreate: unknown) => {
   const { areaSlug } = useParams()
@@ -16,8 +16,8 @@ export const useStreamsTable = (ref: unknown, onCreate: unknown) => {
   const creatingRowRef = useRef<ComponentRef<'tr'>>(null)
   const isCreating = typeof creatingName === 'string'
 
-  const [handleUpdateUpdateStream] = useUpdateStreamMutation()
-  const [handleDeleteStream] = useDeleteStreamMutation()
+  const [handleUpdateUpdateStream] = useUpdateCampaignMutation()
+  const [handleDeleteStream] = useDeleteCampaignMutation()
 
   const { data: listStreams } = useListSteamsQuery({
     variables: {
@@ -41,7 +41,7 @@ export const useStreamsTable = (ref: unknown, onCreate: unknown) => {
     }
   }))
 
-  const updateStream = (variables: UpdateStreamMutationVariables) => {
+  const updateStream = (variables: UpdateCampaignMutationVariables) => {
     handleUpdateUpdateStream({
       variables
     })

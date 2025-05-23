@@ -1,0 +1,78 @@
+@layer  {
+    .root {
+        background: var(--background);
+        padding: 16px;
+        border-radius: var(--radius-submain);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .head {
+        display: flex;
+        color: var(--secondary);
+    }
+
+    .body {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .progressValue {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--text-color-accent);
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .progress {
+        position: relative;
+        height: 8px;
+        border-radius: var(--radius-small);
+        background: rgba(var(--primary--rgb), .2);
+    }
+
+    .progressInner {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 32%;
+        border-radius: var(--radius-small);
+        background: var(--primary);
+    }
+
+    .section {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .sectionTitle {
+        font-size: 12px;
+        color: var(--secondary);
+    }
+
+    .sectionRow {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--text-color-accent);
+        font-size: 14px;
+    }
+
+    .sectionLabel {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .sectionValue {
+        color: var(--secondary);
+        font-weight: 500;
+    }
+}

@@ -37,7 +37,7 @@ const Avatar: FC<AvatarProps> = ({
   return (
     <div className={cn(className, styles.root)}>
       {src ? (
-        <CommonLogo src={src} size={size} withRadius withBackground alt={children} />
+        <CommonLogo src={src} size={size} withBackground alt={children} />
       ) : (
         <InitialsAvatar gradientColor={gradientCode} size={size} {...placeholderProps}>
           {children}

@@ -2,6 +2,7 @@ import { useParams } from 'next/navigation'
 import { useAreaDetailQuery } from '@/views/AreasDetailLayout/queries/AreaDetail.generated'
 import { useUpdateAreaMutation } from '@/views/AreasDetailLayout/queries/UpdateArea.generated'
 import { useChangeAreaActiveMutation } from '@/views/AreasDetailLayout/queries/ChangeAreaActive.generated'
+import { isBrowser } from '@fragmentsx/utils'
 
 export const useAreaDetail = () => {
   const { areaSlug, projectSlug, streamSlug } = useParams()
