@@ -22,6 +22,7 @@ import { CampaignDetailName } from '@/views/AreasDetailLayout/components/Campaig
 import { CampaignDetailDescription } from '@/views/AreasDetailLayout/components/CampaignDetailDescription'
 import { ContentEditable } from '@/shared/ui/ContentEditable'
 import { TabItemBadge } from '@/shared/ui/TabItem/components/TabItemBadge'
+import { Avatar } from '@/shared/ui/Avatar'
 
 interface CampaignDetailPageProps {}
 
@@ -43,7 +44,7 @@ export const AreasDetailLayout: FC<CampaignDetailPageProps> = ({ children }) => 
       {!isStreamRoute && (
         <Container className={styles.head}>
           <div className={styles.header}>
-            <div className={styles.logo}></div>
+            <Avatar className={styles.logo} src={area?.defaultCampaign?.logo?.url} size={64} />
             <div className={styles.info}>
               <div className={styles.name}>
                 <CampaignDetailName name={area?.name} isActive={area?.defaultCampaign?.active} onRename={rename} />

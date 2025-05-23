@@ -3,6 +3,7 @@ import styles from './styles.module.css'
 import { AnalyticsValueInfo } from '@/views/AreasDetailPage/components/AnalyticsValueInfo'
 import { CurrentFragmentPreview } from '@/views/AreasDetailPage/components/CurrentFragmentPreview'
 import { CurrentExperimentPreview } from '@/views/AreasDetailPage/components/CurrentExperimentPreview'
+import { IntegrationMissMatch } from '@/views/AreasDetailPage/components/IntegrationMissMatch/ui/IntegrationMissMatch'
 
 interface CampaignDetailPageProps {}
 
@@ -10,6 +11,8 @@ export const AreasDetailPage: FC<CampaignDetailPageProps> = () => {
   return (
     <div className={styles.root}>
       <div className={styles.body}>
+        <IntegrationMissMatch className={styles.integration} />
+
         <AnalyticsValueInfo className={styles.valueInfoWidget} title='Impression' trend={12} dynamic='+256'>
           14.688
         </AnalyticsValueInfo>

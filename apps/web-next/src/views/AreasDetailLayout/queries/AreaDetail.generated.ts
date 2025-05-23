@@ -8,7 +8,7 @@ export type AreaDetailQueryVariables = Types.Exact<{
 }>;
 
 
-export type AreaDetailQuery = { __typename?: 'Query', area: { __typename?: 'AreaGet', id: number, name: string, description?: string | null, code: string, defaultCampaign: { __typename?: 'CampaignGet', id: number, active: boolean } } };
+export type AreaDetailQuery = { __typename?: 'Query', area: { __typename?: 'AreaGet', id: number, name: string, description?: string | null, code: string, defaultCampaign: { __typename?: 'CampaignGet', id: number, active: boolean, logo: { __typename?: 'MediaGet', url: string } } } };
 
 
 export const AreaDetailDocument = gql`
@@ -21,6 +21,9 @@ export const AreaDetailDocument = gql`
     defaultCampaign {
       id
       active
+      logo {
+        url: publicPath
+      }
     }
   }
 }

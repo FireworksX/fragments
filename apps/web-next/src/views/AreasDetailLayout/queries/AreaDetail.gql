@@ -7,6 +7,9 @@ query AreaDetail($id: Int!) {
         defaultCampaign {
             id
             active
+            logo {
+                url: publicPath
+            }
         }
     }
 }
