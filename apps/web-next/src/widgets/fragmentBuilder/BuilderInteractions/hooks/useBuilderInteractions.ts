@@ -4,26 +4,51 @@ import { useLayerVariables } from '@/shared/hooks/fragmentBuilder/useLayerVariab
 import { LinkKey } from '@graph-state/core'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
+import { popoutsStore } from '@/shared/store/popouts.store'
+import { popoutNames } from '@/shared/data'
+import { nextTick } from '@/shared/utils/nextTick'
 
 export const useBuilderInteractions = () => {
   const { documentManager } = useBuilderDocument()
   const { selection } = useBuilderSelection()
   const [interactions, setInteractions, interactionsInfo] = useLayerValue('interactions')
-  const { actions } = useLayerVariables('event', {
+  const { actions, createVariable } = useLayerVariables('event', {
+    createName: 'New Event',
+    setName: 'Set Event',
+    editAfterCreate: false,
     onSetValue: value => {
       addInteraction(value)
     }
   })
 
-  console.log(interactions)
+  const openInteraction = (index: number) => {
+    const currentInteractions = documentManager.resolve(selection)?.interactions
+    const currentInteraction = currentInteractions.at(index)
+
+    popoutsStore.open(popoutNames.stackInteraction, {
+      initial: true,
+      context: {
+        on: currentInteraction.on,
+        event: currentInteraction.event,
+        onChangeOn: nextValue => {
+          popoutsStore.updateCurrentContext({ on: nextValue })
+          documentManager.mutate(documentManager.keyOfEntity(currentInteraction), { on: nextValue })
+        }
+      }
+    })
+  }
 
   const addInteraction = (eventLinkKey: LinkKey) => {
     setInteractions([
       {
-        on: interactions.length % 2 ? definition.interactions.click : definition.interactions.mouseover,
+        on: definition.interactions.click,
         event: eventLinkKey
       }
     ])
+
+    const currentInteractions = documentManager.resolve(selection)?.interactions
+    const index = currentInteractions?.length - 1
+    openInteraction(index)
   }
 
   const removeInteraction = index => {
@@ -38,9 +63,19 @@ export const useBuilderInteractions = () => {
 
   return {
     manager: documentManager,
-    actions: [actions],
+    actions: [
+      actions,
+      [
+        {
+          name: 'goal',
+          label: 'Reach Goal',
+          onClick: () => createVariable({ mode: definition.eventMode.goal, name: 'Goal' })
+        }
+      ]
+    ],
     interactions,
     addInteraction,
-    removeInteraction
+    removeInteraction,
+    openInteraction
   }
 }

@@ -7,6 +7,7 @@ interface BuilderPanelProps extends PropsWithChildren {
   title?: string
   titleIcon?: ReactNode
   aside?: ReactNode
+  footer?: ReactNode
   className?: string
   bodyClassName?: string
   hasBody?: SpringValue<boolean> | boolean
@@ -20,6 +21,7 @@ const Panel: FC<BuilderPanelProps> = ({
   bodyClassName,
   titleIcon,
   children,
+  footer,
   title,
   aside,
   withPaddingBottom,
@@ -47,6 +49,8 @@ const Panel: FC<BuilderPanelProps> = ({
           {children}
         </div>
       )}
+
+      {footer && <div className={styles.footer}>{footer}</div>}
     </div>
   )
 }

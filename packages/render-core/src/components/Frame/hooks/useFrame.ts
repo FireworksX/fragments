@@ -7,6 +7,8 @@ import { useHash } from "@/shared/hooks/useHash";
 import { isBrowser, pick } from "@fragmentsx/utils";
 import { useStyleSheet } from "@/shared/hooks/useStyleSheet";
 import { useGlobalManager } from "@/shared/hooks/useGlobalManager";
+import { useLayerValue } from "@/shared/hooks/useLayerValue";
+import { useLayerInteractions } from "@/shared/hooks/useLayerInteractions";
 
 export const useFrame = (layerKey: LinkKey) => {
   const { manager: fragmentManager } = useContext(FragmentContext);
@@ -15,6 +17,7 @@ export const useFrame = (layerKey: LinkKey) => {
   const children = useLayerChildren(layerKey);
   const hash = useHash(layerKey);
   const { addLayerStyle } = useStyleSheet();
+  const events = useLayerInteractions(layerKey);
 
   addLayerStyle(layerKey, styles, fragmentManager.resolve(layerKey));
 
@@ -27,5 +30,6 @@ export const useFrame = (layerKey: LinkKey) => {
     hash,
     styles: {}, //isBrowser ? pick(styles, "background") : {},
     children,
+    events,
   };
 };

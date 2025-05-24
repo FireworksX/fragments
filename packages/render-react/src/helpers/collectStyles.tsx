@@ -15,10 +15,7 @@ export const collectStyles = (globalManager: GraphState) => {
   //   </GlobalManager>
   // );
 
-  console.log(globalManager);
-  const allFragments = globalManager.resolve(
-    globalManager.key
-  ).fragmentsManagers;
+  const allFragments = globalManager.$fragments.getManagers();
 
   const extractors = Object.entries(allFragments)
     .filter(([, value]) => !!value?.resolve)

@@ -98,7 +98,7 @@ const ControlRow: FC<BuilderControlRowProps> = ({
             <ControlRowWide>
               <InputSelectVariable
                 kind={variableValue._type === definition.nodes.Variable ? 'variable' : 'computed'}
-                type={variableValue.type}
+                {...variableValue}
                 onClick={variable?.onClick}
                 onReset={variable?.onReset}
               >

@@ -15,7 +15,7 @@ interface FrameProps {
 
 export const Frame: FC<FrameProps> = memo(({ layerKey, hidden }) => {
   const customRender = useContext(CustomRender);
-  const { styles, children, type, hash } = useFrame(layerKey);
+  const { styles, children, type, hash, events } = useFrame(layerKey);
   const isMounted = useMounted();
 
   if (hidden && isMounted) {

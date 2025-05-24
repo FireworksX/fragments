@@ -23,7 +23,7 @@ import { isBrowser } from "@fragmentsx/utils";
 const WWW = ({ children }) => {
   const globalManager = createFragmentsClient({
     apiToken:
-      "1-123d89264705c57c8be5f7b5fba4e801-84e9b7c680f56799704f3972e9845cf6bf9acfc6b5e7b2407868261ff5ef6ae0",
+      "1-e3d6f5e87168e7550f2b3d146bc3b858-b0401f6918d5edcc9454e9c5dfc5dece27fc53a8f74a2e1a6458f8d209bbdd65",
     isSelf: false,
   });
 

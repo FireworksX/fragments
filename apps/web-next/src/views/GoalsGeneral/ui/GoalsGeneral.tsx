@@ -12,10 +12,10 @@ import { GoalCard } from '@/views/GoalsGeneral/components/GoalCard'
 import { GoalViewModal } from '@/widgets/modals/GoalViewModal'
 import { useModal } from '@/shared/hooks/useModal'
 import { modalNames } from '@/shared/data'
-import { useGoalsListQuery } from '@/views/GoalsGeneral/queries/GoalsList.generated'
-import { useCreateGoalMutation } from '@/views/GoalsGeneral/queries/CreateGoal.generated'
-import { useUpdateGoalMutation } from '@/views/GoalsGeneral/queries/UpdateGoal.generated'
-import { useDeleteGoalMutation } from '@/views/GoalsGeneral/queries/DeleteGoal.generated'
+import { useGoalsListQuery } from '@/shared/api/goals/GoalsList.generated'
+import { useCreateGoalMutation } from '@/shared/api/goals/CreateGoal.generated'
+import { useUpdateGoalMutation } from '@/shared/api/goals/UpdateGoal.generated'
+import { useDeleteGoalMutation } from '@/shared/api/goals/DeleteGoal.generated'
 
 interface GoalsGeneralProps {
   className?: string

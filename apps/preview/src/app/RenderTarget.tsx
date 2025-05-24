@@ -9,14 +9,6 @@ export const RenderTarget = () => {
 
   return (
     <>
-      <button
-        onClick={() => {
-          console.log(globalManager);
-          globalManager?.$metrics.reachGoal("header-click");
-        }}
-      >
-        test
-      </button>
       <Instance fragmentId={+fragmentId} />
     </>
   );

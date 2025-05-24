@@ -13,7 +13,7 @@ interface FrameProps {
 }
 
 export const Frame: FC<FrameProps> = ({ layerKey, hidden }) => {
-  const { styles, hash, children, type } = useFrame(layerKey);
+  const { styles, hash, children, type, events } = useFrame(layerKey);
   const isMounted = useMounted();
 
   if (isMounted && hidden) {
@@ -33,6 +33,7 @@ export const Frame: FC<FrameProps> = ({ layerKey, hidden }) => {
       className={hash}
       data-key={layerKey}
       style={{ ...styles, display: hidden ? "none" : styles.display }}
+      {...events}
     >
       {children.map((childLink) => (
         <Frame key={childLink} layerKey={childLink} />

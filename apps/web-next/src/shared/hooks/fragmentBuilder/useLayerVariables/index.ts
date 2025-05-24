@@ -7,6 +7,9 @@ import { pick } from '@fragmentsx/utils'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 
 interface Options {
+  createName?: string
+  setName?: string
+  editAfterCreate?: boolean
   onSetValue?: (value: unknown) => void
 }
 
@@ -36,17 +39,24 @@ export const useLayerVariables = (field: keyof typeof fieldsConfig, options?: Op
     return countOfSameNames > 0 ? `${preferredName} ${countOfSameNames + 1}` : preferredName
   }
 
-  const createVariable = useCallback(() => {
-    const fieldEntity = fieldsConfig[field]
-    const preferredName = getVariableName(fieldEntity.name)
-    const property = createProperty({
-      ...fieldEntity,
-      name: preferredName,
-      defaultValue: fieldValue ?? fieldEntity?.defaultValue
-    })
-    proxySetFieldValue?.(property)
-    editProperty(property)
-  }, [createProperty, editProperty, field, fieldValue, getVariableName, proxySetFieldValue])
+  const createVariable = useCallback(
+    (customFields?: unknown) => {
+      const fieldEntity = fieldsConfig[field]
+      const preferredName = getVariableName(fieldEntity.name)
+      const property = createProperty({
+        ...fieldEntity,
+        name: preferredName,
+        defaultValue: fieldValue ?? fieldEntity?.defaultValue,
+        ...(customFields ?? {})
+      })
+      proxySetFieldValue?.(property)
+
+      if (options?.editAfterCreate !== false) {
+        editProperty(property)
+      }
+    },
+    [createProperty, editProperty, field, fieldValue, getVariableName, options?.editAfterCreate, proxySetFieldValue]
+  )
 
   const allowVariables = useMemo(() => {
     const allowProps = properties.filter(
@@ -57,7 +67,7 @@ export const useLayerVariables = (field: keyof typeof fieldsConfig, options?: Op
       return [
         {
           name: 'setVariable',
-          label: 'Set variable',
+          label: options?.setName ?? 'Set variable',
           options: [
             allowProps.map(prop => ({
               label: prop?.name,
@@ -72,7 +82,7 @@ export const useLayerVariables = (field: keyof typeof fieldsConfig, options?: Op
     }
 
     return []
-  }, [documentManager, fieldType, fieldValue, properties, proxySetFieldValue])
+  }, [documentManager, fieldType, fieldValue, options?.setName, properties, proxySetFieldValue])
 
   const restoreValue = () => {
     const fieldEntity = fieldsConfig[field]
@@ -91,7 +101,7 @@ export const useLayerVariables = (field: keyof typeof fieldsConfig, options?: Op
       ? [
           {
             name: 'createVariable',
-            label: 'Create variable',
+            label: options?.createName ?? 'Create variable',
             onClick: () => createVariable()
           }
         ].concat(allowVariables)

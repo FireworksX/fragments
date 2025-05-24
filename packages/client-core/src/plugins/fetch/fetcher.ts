@@ -46,7 +46,11 @@ export const createFetcher = (
       .then(async (res) => {
         if (!res.ok) throw new Error(`Fetch error: ${res.status}`);
         const data = await res.json();
-        cache.set(cacheKey, data);
+
+        if (!query.includes("mutation")) {
+          cache.set(cacheKey, data);
+        }
+
         return data;
       })
       .finally(() => {

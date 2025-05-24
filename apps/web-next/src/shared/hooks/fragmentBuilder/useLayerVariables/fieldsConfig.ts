@@ -26,6 +26,7 @@ export const fieldsConfig = {
   },
   event: {
     type: definition.variableType.Event,
-    name: 'Event'
+    name: 'Event',
+    mode: definition.eventMode.callback
   }
 }
