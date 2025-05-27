@@ -16,6 +16,7 @@ import { GraphState, LinkKey } from '@graph-state/core'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { useInstancePropertyValue } from '@/shared/hooks/fragmentBuilder/useInstancePropertyValue'
 import { useNormalizeLayer } from '@/shared/hooks/fragmentBuilder/useNormalizeLayer'
+import InstancePropertyEvent from '../../InstancePropertyEvent/ui/InstancePropertyEvent'
 
 interface InstancePropertyGenericProps {
   value: unknown
@@ -67,6 +68,10 @@ const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({
 
   if (layer?.type === definition.variableType.Color) {
     return <InstancePropertyColor name={layer.name} value={value} onChange={onChange} />
+  }
+
+  if (layer?.type === definition.variableType.Event) {
+    return <InstancePropertyEvent name={layer.name} mode={layer?.mode} value={value} onChange={onChange} />
   }
 
   return null

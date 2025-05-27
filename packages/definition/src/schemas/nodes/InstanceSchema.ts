@@ -11,7 +11,19 @@ export const InstanceSchema = v.object({
   fragment: layerField(v.number()),
   parent: layerField(v.nullable(v.string()), { overridable: false }),
   props: layerField(
-    v.record(v.string(), v.union([v.string(), v.number(), v.boolean()])),
+    v.record(
+      v.string(),
+      v.union([
+        v.string(),
+        v.number(),
+        v.boolean(),
+        // For goals
+        v.object({
+          code: v.string(),
+          name: v.string(),
+        }),
+      ])
+    ),
     {
       fallback: {},
     }

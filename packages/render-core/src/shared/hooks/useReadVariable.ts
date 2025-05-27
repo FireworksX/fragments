@@ -39,8 +39,9 @@ export const useReadVariable = (variableKey?: LinkKey) => {
         layer: null,
       };
     }
+
     const variableLayer = pick(
-      resultManager?.resolve(variableKey),
+      resultManager?.resolve(variableKey) ?? {},
       "defaultValue",
       "required"
     );

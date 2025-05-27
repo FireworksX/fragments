@@ -27,9 +27,8 @@ export const useLayerVariables = (field: keyof typeof fieldsConfig, options?: Op
     (value: unknown) => {
       if (options?.onSetValue) {
         options?.onSetValue?.(value)
-      } else {
-        setFieldValue()
       }
+      setFieldValue(value)
     },
     [options, setFieldValue]
   )

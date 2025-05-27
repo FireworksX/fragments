@@ -24,7 +24,7 @@ export const useFragment = (fragmentId: string, globalManager?: GraphState) => {
       {
         width: "100%",
         height: "100%",
-        "container-type": "inline-size",
+        "container-type": children?.length === 1 ? "normal" : "inline-size",
       },
       manager?.resolve(layerKey),
       manager?.key

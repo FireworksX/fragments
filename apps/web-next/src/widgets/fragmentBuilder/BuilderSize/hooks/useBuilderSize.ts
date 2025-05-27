@@ -4,6 +4,7 @@ import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { useAllowResize } from '@/shared/hooks/fragmentBuilder/useAllowResize'
 import { isValue } from '@fragmentsx/utils'
 import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
+import { useRootLayerAuto } from '@/shared/hooks/fragmentBuilder/useRootLayerAuto'
 
 const DISABLE_UTILS: (keyof typeof definition.sizing)[] = [definition.sizing.Fill, definition.sizing.Hug]
 
@@ -19,9 +20,10 @@ export const useBuilderSize = () => {
   const [heightType, setHeightType, heightTypeInfo] = useLayerValue('heightType')
   const [aspectRatio, setAspectRatio] = useLayerValue('aspectRatio')
   const { width: isAllowResizeWidth, height: isAllowResizeHeight } = useAllowResize()
+  const { canHugContent } = useRootLayerAuto()
 
   const hugContentEnabled =
-    !!layer?.children?.length || type === definition.nodes.Text || type === definition.nodes.Instance
+    (!!layer?.children?.length || type === definition.nodes.Text || type === definition.nodes.Instance) && canHugContent
   const fillContentEnabled = canRelativeSize && parentLayerMode === definition.layerMode.flex
 
   return {
