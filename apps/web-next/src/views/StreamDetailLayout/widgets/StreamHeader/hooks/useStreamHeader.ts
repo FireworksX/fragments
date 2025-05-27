@@ -1,16 +1,11 @@
 import { useParams } from 'next/navigation'
 import { useStreamDetailQuery } from '../queries/StreamDetail.generated'
-import {
-  UpdateStreamMutationVariables,
-  useUpdateStreamMutation
-} from '@/shared/api/stream/mutation/UpdateStream.generated'
-import { useDeleteStreamMutation } from '@/shared/api/stream/mutation/DeleteStream.generated'
 import { useMemo } from 'react'
 
 export const useStreamHeader = () => {
   const { streamSlug, areaSlug, projectSlug } = useParams()
-  const [executeUpdateStream, { loading: loadingUpdateStream }] = useUpdateStreamMutation()
-  const [executeDeleteStream, { loading: loadingDeleteStream }] = useDeleteStreamMutation()
+  const [executeUpdateStream, { loading: loadingUpdateStream }] = [] //useUpdateStreamMutation()
+  const [executeDeleteStream, { loading: loadingDeleteStream }] = [] //useDeleteStreamMutation()
 
   const { data } = useStreamDetailQuery({
     variables: {
