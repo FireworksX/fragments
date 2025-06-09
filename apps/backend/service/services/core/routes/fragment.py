@@ -19,7 +19,7 @@ from crud.project import get_project_by_id_db
 from database import Media, Project, Session
 
 from .middleware import Context
-from .schemas.fragment import FragmentGet, FragmentMediaGet, FragmentPatch, FragmentPost
+from .schemas.fragment import FragmentGet, FragmentPatch, FragmentPost
 from .schemas.media import MediaGet, MediaType
 from .schemas.user import AuthPayload, RoleGet
 from .user import user_db_to_user
@@ -84,7 +84,11 @@ def fragment_db_to_fragment(fragment: Fragment) -> FragmentGet:
             []
             if not fragment.assets
             else [
-                FragmentMediaGet(relation.media.id, relation.media.public_path)
+                MediaGet(
+                    media_id=relation.media.id,
+                    media_type=MediaType.FRAGMENT_ASSET,
+                    public_path=relation.media.public_path,
+                )
                 for relation in fragment.assets
             ]
         ),
@@ -108,7 +112,11 @@ def fragment_db_to_fragment(fragment: Fragment) -> FragmentGet:
                 []
                 if not f.assets
                 else [
-                    FragmentMediaGet(relation.media.id, relation.media.public_path)
+                    MediaGet(
+                        media_id=relation.media.id,
+                        media_type=MediaType.FRAGMENT_ASSET,
+                        public_path=relation.media.public_path,
+                    )
                     for relation in f.assets
                 ]
             ),
