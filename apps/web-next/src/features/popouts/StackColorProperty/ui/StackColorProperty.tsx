@@ -33,9 +33,10 @@ const controls: TabsSelectorItem[] = [
 ]
 
 const StackColorProperty: FC<StackColorPropertyProps> = ({ className }) => {
+  const { documentManager } = useBuilderDocument()
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackColorProperty}`)
   const context = popout?.context ?? {}
-
+  const id = documentManager.entityOfKey(context.propertyLink)?._id
   const [name, setName] = useLayerValue('name', context?.propertyLink)
   const [required, setRequired] = useLayerValue('required', context?.propertyLink)
   const [defaultValue, setDefaultValue] = useLayerValue('defaultValue', context?.propertyLink)
@@ -53,6 +54,11 @@ const StackColorProperty: FC<StackColorPropertyProps> = ({ className }) => {
 
   return (
     <div className={cn(styles.root, className)}>
+      <ControlRow title='ID'>
+        <ControlRowWide>
+          <InputText value={id} disabled />
+        </ControlRowWide>
+      </ControlRow>
       <ControlRow title='Name'>
         <ControlRowWide>
           <InputText value={name} onChangeValue={setName} />

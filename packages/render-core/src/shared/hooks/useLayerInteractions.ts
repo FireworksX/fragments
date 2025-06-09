@@ -22,8 +22,15 @@ export const useLayerInteractions = (layerKey) => {
       const event = fragmentManager.resolve(eventLink);
       const { value: eventValue } = readVariable(eventLink);
 
-      if (event?.mode === definition.eventMode.goal) {
+      if (event?.mode === definition.eventMode.goal && eventValue?.code) {
         globalManager?.$metrics?.reachGoal?.(eventValue?.code);
+      }
+
+      if (
+        event?.mode === definition.eventMode.callback &&
+        typeof eventValue === "function"
+      ) {
+        eventValue();
       }
     },
     [globalManager, fragmentManager]

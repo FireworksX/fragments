@@ -1,40 +1,21 @@
 import { useParams } from 'next/navigation'
-import { useStreamDetailQuery } from '../queries/StreamDetail.generated'
 import { useMemo } from 'react'
+import {
+  UpdateCampaignMutationVariables,
+  useUpdateCampaignMutation
+} from '@/shared/api/stream/mutation/UpdateCampaign.generated'
+import { useDeleteCampaignMutation } from '@/shared/api/stream/mutation/DeleteCampaign.generated'
+import { useCampaignDetailQuery } from '@/views/StreamDetailLayout/widgets/StreamHeader/queries/CampaignDetail.generated'
 
 export const useStreamHeader = () => {
-  const { streamSlug, areaSlug, projectSlug } = useParams()
-  const [executeUpdateStream, { loading: loadingUpdateStream }] = [] //useUpdateStreamMutation()
-  const [executeDeleteStream, { loading: loadingDeleteStream }] = [] //useDeleteStreamMutation()
+  const { campaignSlug, areaSlug, projectSlug } = useParams()
 
-  const { data } = useStreamDetailQuery({
+  const { data } = useCampaignDetailQuery({
     variables: {
-      streamSlug: +streamSlug
+      id: +campaignSlug
     }
   })
-  const stream = data?.stream?.at(0)
-
-  const toggleActive = () => {
-    handleUpdateStream({
-      active: !stream?.active
-    })
-  }
-
-  const handleUpdateStream = async (variables: Omit<UpdateStreamMutationVariables, 'campaignId' | 'streamId'>) => {
-    await executeUpdateStream({
-      variables: {
-        streamId: +streamSlug,
-        campaignId: +areaSlug,
-        ...variables
-      }
-    })
-  }
-
-  const handleDeleteStream = () => {
-    executeDeleteStream({
-      variables: { streamId: +streamSlug }
-    })
-  }
+  const stream = data?.campaign?.at(0)
 
   const filters = useMemo(() => {
     return {
@@ -44,15 +25,11 @@ export const useStreamHeader = () => {
   }, [stream])
 
   return {
+    campaignSlug,
     stream,
-    loadingUpdateStream,
-    toggleActive,
     projectSlug,
     areaSlug,
-    streamSlug,
-    filters,
-    handleUpdateStream,
-    handleDeleteStream,
-    loadingDeleteStream
+    campaignSlug,
+    filters
   }
 }

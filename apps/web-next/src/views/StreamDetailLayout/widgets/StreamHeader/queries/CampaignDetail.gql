@@ -1,5 +1,5 @@
-query CampaignDetail($campaignId: Int!) {
-    campaign(campaignId: $campaignId) {
+query CampaignDetail($id: Int!) {
+    campaign(campaignId: $id) {
         id
         name
         active

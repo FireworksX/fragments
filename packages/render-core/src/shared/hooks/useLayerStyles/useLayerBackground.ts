@@ -30,14 +30,10 @@ export const useLayerBackground = (layerKey: LinkKey) => {
       };
     }
     if (fillType === definition.paintMode.Image && cssImageFill) {
-      const sizeMap = {
-        [definition.imagePaintScaleModes.Fill]: "cover",
-        [definition.imagePaintScaleModes.Fit]: "contain",
-      };
-
       return {
         background: `url(${cssImageFill})`,
-        backgroundSize: sizeMap[cssImageSize],
+        backgroundSize: cssImageSize?.toLowerCase(),
+        backgroundRepeat: "no-repeat",
       };
     }
 

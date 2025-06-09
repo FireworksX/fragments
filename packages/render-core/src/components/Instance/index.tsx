@@ -23,6 +23,7 @@ export const InstanceContext = createContext({
 const InstanceInitial: FC<InstanceProps> = (instanceProps) => {
   const {
     styles,
+    cssProps,
     fragmentId,
     parentManager,
     props,
@@ -47,7 +48,9 @@ const InstanceInitial: FC<InstanceProps> = (instanceProps) => {
           <Fragment fragmentId={fragmentId} globalManager={globalManager} />
         </div>
       ) : (
-        <Fragment fragmentId={fragmentId} globalManager={globalManager} />
+        <div style={cssProps}>
+          <Fragment fragmentId={fragmentId} globalManager={globalManager} />
+        </div>
       )}
     </InstanceContext.Provider>
   );

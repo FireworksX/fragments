@@ -7,6 +7,14 @@ import { PreviewSandboxResize } from '../components/PreviewSandboxResize'
 import { PreviewSandboxProps } from '../widgets/PreviewSandboxProps'
 import { useFragmentPreviewSandbox } from '@/widgets/FragmentPreviewSandbox/hooks/useFragmentPreviewSandbox'
 import { Instance } from '@fragmentsx/render-react'
+import { StackCollector } from '@/widgets/StackCollector'
+import StackFragmentProps from '@/features/popouts/StackFragmentProps/ui/StackFragmentProps'
+import { popoutNames } from '@/shared/data'
+import { Button } from '@/shared/ui/Button'
+import { popoutsStore } from '@/shared/store/popouts.store'
+import { StackPanelColorPicker } from '@/features/popouts/StackPanelColorPicker'
+import StackGoals from '@/features/popouts/StackGoals/ui/StackGoals'
+import StackCreateGoal from '@/features/popouts/StackCreateGoal/ui/StackCreateGoal'
 
 interface FragmentPreviewSandboxProps {
   fragmentId: unknown
@@ -23,8 +31,33 @@ export const FragmentPreviewSandbox: FC<FragmentPreviewSandboxProps> = ({ classN
         <Spinner color='var(--text-color-accent)' />
       ) : (
         <div className={styles.content}>
+          <div className={styles.popout}>
+            <StackCollector>
+              <StackFragmentProps name={popoutNames.stackFragmentProps} title='Configure Props' />
+              <StackPanelColorPicker name={popoutNames.colorPicker} title='Color' />
+              <StackGoals name={popoutNames.stackGoals} title='Goals' />
+              <StackCreateGoal name={popoutNames.stackCreateGoal} title='Create Goal' />
+            </StackCollector>
+          </div>
+
           <div className={styles.actions}>
-            <PreviewSandboxProps fragmentId={fragmentId} props={props} onChange={setProps} />
+            <Button
+              mode='outline'
+              onClick={() => {
+                popoutsStore.open(popoutNames.stackFragmentProps, {
+                  initial: true,
+                  context: {
+                    fragmentId,
+                    props,
+                    onChange: setProps
+                  }
+                })
+              }}
+            >
+              Edit props
+            </Button>
+
+            {/*<PreviewSandboxProps fragmentId={fragmentId} props={props} onChange={setProps} />*/}
           </div>
           <PreviewSandboxResize>
             <Instance fragmentId={fragmentId} props={props} globalManager={window?.globalManager} />

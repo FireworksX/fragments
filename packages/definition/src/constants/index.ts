@@ -25,12 +25,7 @@ export const fragmentGrowingMode = createConstants("auto", "fill");
 export const borderType = createConstants("None", "Solid", "Dashed", "Dotted");
 export const linkTarget = createConstants("_blank");
 export const paintMode = createConstants("None", "Solid", "Image");
-export const imagePaintScaleModes = createConstants(
-  "Fill",
-  "Fit",
-  "Crop",
-  "Tile"
-);
+export const imagePaintScaleModes = createConstants("Auto", "Contain", "Cover");
 export const constrain = createConstants(
   "Min",
   "Center",

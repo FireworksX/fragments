@@ -4,7 +4,7 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type UpdateCampaignMutationVariables = Types.Exact<{
-  streamId: Types.Scalars['Int']['input'];
+  id: Types.Scalars['Int']['input'];
   name?: Types.InputMaybe<Types.Scalars['String']['input']>;
   active?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
 }>;
@@ -14,8 +14,8 @@ export type UpdateCampaignMutation = { __typename?: 'Mutation', updateCampaign: 
 
 
 export const UpdateCampaignDocument = gql`
-    mutation UpdateCampaign($streamId: Int!, $name: String, $active: Boolean) {
-  updateCampaign(cmp: {id: $streamId, name: $name, active: $active}) {
+    mutation UpdateCampaign($id: Int!, $name: String, $active: Boolean) {
+  updateCampaign(cmp: {id: $id, name: $name, active: $active}) {
     id
     name
     active
@@ -37,7 +37,7 @@ export type UpdateCampaignMutationFn = Apollo.MutationFunction<UpdateCampaignMut
  * @example
  * const [updateCampaignMutation, { data, loading, error }] = useUpdateCampaignMutation({
  *   variables: {
- *      streamId: // value for 'streamId'
+ *      id: // value for 'id'
  *      name: // value for 'name'
  *      active: // value for 'active'
  *   },

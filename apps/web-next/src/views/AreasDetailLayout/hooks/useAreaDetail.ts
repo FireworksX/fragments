@@ -5,36 +5,16 @@ import { useChangeAreaActiveMutation } from '@/views/AreasDetailLayout/queries/C
 import { isBrowser } from '@fragmentsx/utils'
 
 export const useAreaDetail = () => {
-  const { areaSlug, projectSlug, streamSlug } = useParams()
+  const { areaSlug, projectSlug, campaignSlug } = useParams()
+  const [updateArea] = useUpdateAreaMutation()
 
-  const [executeChangeCampaignActive, { loading: loadingChangeCampaignActive }] = useChangeAreaActiveMutation()
-  const [updateCampaign] = useUpdateAreaMutation()
-
-  const { data: campaignData } = useAreaDetailQuery({
+  const { data: areaData } = useAreaDetailQuery({
     variables: { id: +areaSlug }
   })
-  const area = campaignData?.area
-
-  const toggleActive = () => {
-    executeChangeCampaignActive({
-      variables: {
-        defaultCampaignId: campaignData?.area?.defaultCampaign?.id,
-        active: !area?.defaultCampaign?.active
-      }
-    })
-  }
-
-  const rename = (name: string) => {
-    updateCampaign({
-      variables: {
-        id: +areaSlug,
-        name
-      }
-    })
-  }
+  const area = areaData?.area
 
   const editDescription = (value: string) => {
-    updateCampaign({
+    updateArea({
       variables: {
         id: +areaSlug,
         description: value
@@ -43,7 +23,7 @@ export const useAreaDetail = () => {
   }
 
   const editCode = (value: string) => {
-    updateCampaign({
+    updateArea({
       variables: {
         id: +areaSlug,
         code: value
@@ -52,13 +32,10 @@ export const useAreaDetail = () => {
   }
 
   return {
-    loadingChangeCampaignActive,
     area,
     areaSlug,
     projectSlug,
-    toggleActive,
-    isStreamRoute: !!streamSlug,
-    rename,
+    isCampaignRoute: !!campaignSlug,
     editCode,
     editDescription
   }

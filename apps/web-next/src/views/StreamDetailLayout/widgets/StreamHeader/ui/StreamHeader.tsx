@@ -25,73 +25,66 @@ import { StatusBadge } from '@/shared/ui/StatusBadge'
 import { ContentEditable } from '@/shared/ui/ContentEditable'
 import { StreamFilterWeight } from '@/views/StreamDetailLayout/widgets/StreamFilterWeight'
 import { Container } from '@/shared/ui/Container'
+import { CampaignHeader } from '@/widgets/CampaignHeader'
+import Tabs from '../../../../../shared/ui/Tabs/ui'
+import { TabItem } from '@/shared/ui/TabItem'
+import OverviewIcon from '@/shared/icons/next/panels-top-left.svg'
+import VisualIcon from '@/shared/icons/next/component.svg'
+import { TabItemBadge } from '@/shared/ui/TabItem/components/TabItemBadge'
+import ExperimentsIcon from '@/shared/icons/next/flask-conical.svg'
+import { ReleaseCondition } from '@/widgets/ReleaseCondition'
 
 interface StreamHeaderProps {
   className?: string
 }
 
 export const StreamHeader: FC<StreamHeaderProps> = ({ className }) => {
-  const { handleUpdateStream, loadingDeleteStream, handleDeleteStream, stream, filters, toggleActive } =
-    useStreamHeader()
+  const { campaignSlug, areaSlug, projectSlug, filters } = useStreamHeader()
 
   return (
-    <Container className={cn(styles.root, className)}>
-      <Link type='campaignStreams'>
-        <Touchable className={styles.backAction} effect='none'>
-          <ArrowLeftIcon />
-          Back to campaign
-        </Touchable>
-      </Link>
-
-      <div className={styles.header}>
-        <div className={styles.logo}></div>
-        <div className={styles.headerData}>
-          <div className={styles.name}>
-            <ContentEditable value={stream?.name} onSubmit={name => handleUpdateStream({ name })} />
-            <span className={styles.id}>#{stream?.id}</span>
-            <StatusBadge status={stream?.active ? 'success' : 'warning'} />
-          </div>
-
-          <div className={styles.filters}>
-            <StreamFilterWeight value={stream?.weight} onChange={weight => handleUpdateStream({ weight })} />
-            {/*<StreamFilterLocation isEdit={isEditMode} />*/}
-            <StreamFilterDevices value={filters.deviceType} />
-            <StreamFilterOperationals value={filters.osType} />
-
-            {/*{isEditMode && (*/}
-            {/*  <Dropdown*/}
-            {/*    trigger='click'*/}
-            {/*    options={*/}
-            {/*      <DropdownGroup>*/}
-            {/*        <DropdownOption>Location</DropdownOption>*/}
-            {/*        <DropdownOption>Device type</DropdownOption>*/}
-            {/*        <DropdownOption>OS type</DropdownOption>*/}
-            {/*      </DropdownGroup>*/}
-            {/*    }*/}
-            {/*  >*/}
-            {/*    <Chip>*/}
-            {/*      <PlusIcon />*/}
-            {/*      Add filter*/}
-            {/*    </Chip>*/}
-            {/*  </Dropdown>*/}
-            {/*)}*/}
-          </div>
-        </div>
-
-        <div className={styles.headerAside}>
-          <ToggleActiveButton isActive={stream?.active} onClick={toggleActive} />
-
-          <Button
-            mode='danger-outline'
-            loading={loadingDeleteStream}
-            preventDefault
-            icon={<DeleteIcon />}
-            onClick={handleDeleteStream}
-          >
-            Delete
-          </Button>
-        </div>
-      </div>
-    </Container>
+    <CampaignHeader
+      campaignID={+campaignSlug}
+      header={
+        <Link type='areaCampaigns'>
+          <Touchable className={styles.backAction} effect='none'>
+            <ArrowLeftIcon />
+            Back to area
+          </Touchable>
+        </Link>
+      }
+      meta={<ReleaseCondition />}
+      footer={
+        <>
+          <Tabs>
+            <Link type='area' areaSlug={areaSlug} projectSlug={projectSlug}>
+              {({ isActive }) => (
+                <TabItem name='overview' icon={<OverviewIcon />} isActive={isActive}>
+                  Overview
+                </TabItem>
+              )}
+            </Link>
+            <Link type='areaFragment' areaSlug={areaSlug} projectSlug={projectSlug}>
+              {({ isActive }) => (
+                <TabItem name='areaFragment' icon={<VisualIcon />} isActive={isActive}>
+                  Fragment
+                </TabItem>
+              )}
+            </Link>
+            <Link type='areaExperiments' areaSlug={areaSlug} projectSlug={projectSlug}>
+              {({ isActive }) => (
+                <TabItem
+                  name='areaExperiments'
+                  badge={<TabItemBadge mode='success'>Active</TabItemBadge>}
+                  icon={<ExperimentsIcon />}
+                  isActive={isActive}
+                >
+                  Experiments
+                </TabItem>
+              )}
+            </Link>
+          </Tabs>
+        </>
+      }
+    />
   )
 }

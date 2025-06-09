@@ -124,11 +124,11 @@ export function makeApolloClient() {
               }
             },
 
-            createStream: {
+            createCampaign: {
               merge(outcome, incoming, { cache, variables }) {
                 cache.modify({
                   fields: {
-                    stream(list = []) {
+                    campaign(list = []) {
                       return [...list, incoming]
                     }
                   }

@@ -1,6 +1,0 @@
-mutation ChangeAreaActive($defaultCampaignId: Int!, $active: Boolean!) {
-    updateCampaign(cmp: { id: $defaultCampaignId, active: $active }) {
-        id
-        active
-    }
-}

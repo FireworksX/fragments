@@ -53,15 +53,15 @@ const StackPanelColorPicker: FC<StackPanelColorPickerProps> = ({ className }) =>
         />
       </Panel>
 
-      <SolidPaintStyles
-        getInitialColor={() => animatableValue(resColor)}
-        activeColorKey={isLinkKey(context?.value) ? context?.value : undefined}
-        onSelect={link => {
-          updateColor(link)
-          popoutsStore.goPrev()
-        }}
-        onCreate={popoutsStore.goPrev}
-      />
+      {/*<SolidPaintStyles*/}
+      {/*  getInitialColor={() => animatableValue(resColor)}*/}
+      {/*  activeColorKey={isLinkKey(context?.value) ? context?.value : undefined}*/}
+      {/*  onSelect={link => {*/}
+      {/*    updateColor(link)*/}
+      {/*    popoutsStore.goPrev()*/}
+      {/*  }}*/}
+      {/*  onCreate={popoutsStore.goPrev}*/}
+      {/*/>*/}
       {/*{!context?.withoutStack && (*/}
       {/*  <StackColors*/}
       {/*    getInitialColor={() => cloneColor(resColor)}*/}

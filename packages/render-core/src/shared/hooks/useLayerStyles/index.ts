@@ -16,6 +16,7 @@ import {
   useReadVariables,
 } from "@/shared/hooks/useReadVariables";
 import { useGraph } from "@graph-state/react";
+import { useLayerTextStyles } from "@/shared/hooks/useLayerStyles/useLayerTextStyles";
 
 export const useLayerStyles = (layerKey: LinkKey) => {
   try {
@@ -37,6 +38,7 @@ export const useLayerStyles = (layerKey: LinkKey) => {
       fragmentManager
     );
     const [whiteSpace] = useLayerValue(layerKey, "whiteSpace", fragmentManager);
+    const textStyles = useLayerTextStyles(layerKey);
 
     // const [{ props, _type }] = useGraph(fragmentManager, layerKey, {
     //   selector: (graph) => pick(graph, "props", "_type"),
@@ -80,6 +82,7 @@ export const useLayerStyles = (layerKey: LinkKey) => {
       "z-index": zIndex !== -1 ? zIndex : null,
       ...layout,
       ...layerSize,
+      ...textStyles,
       "user-select": "none",
     };
   } catch (e) {

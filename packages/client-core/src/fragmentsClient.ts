@@ -10,6 +10,8 @@ interface Options {
   isSelf?: boolean;
 }
 
+let inited = false;
+
 export const createFragmentsClient = (options: Options) => {
   return createState({
     _type: "GlobalManager",
@@ -22,7 +24,9 @@ export const createFragmentsClient = (options: Options) => {
           apiToken: options?.apiToken,
         };
 
-        state.$global = {};
+        state.$global = {
+          status: null, // init, release
+        };
 
         state.extractStyles = async () => {
           const allFragments = state.$fragments.getManagers();
@@ -48,7 +52,8 @@ export const createFragmentsClient = (options: Options) => {
       metricsPlugin,
 
       (state) => {
-        if (isBrowser) {
+        if (isBrowser && !inited) {
+          inited = true;
           if (!state?.env?.isSelf) {
             state?.$metrics?.initClient?.();
 

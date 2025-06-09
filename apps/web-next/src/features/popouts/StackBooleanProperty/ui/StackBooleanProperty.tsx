@@ -10,6 +10,7 @@ import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { InputText } from '@/shared/ui/InputText'
 import { popoutNames } from '@/shared/data'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 interface StackBooleanVariableProps {
   className?: string
@@ -27,15 +28,21 @@ const controls: TabsSelectorItem[] = [
 ]
 
 const StackBooleanProperty: FC<StackBooleanVariableProps> = ({ className }) => {
+  const { documentManager } = useBuilderDocument()
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackBooleanProperty}`)
   const context = popout?.context ?? {}
-
+  const id = documentManager.entityOfKey(context.propertyLink)?._id
   const [name, setName] = useLayerValue('name', context?.propertyLink)
   const [required, setRequired] = useLayerValue('required', context?.propertyLink)
   const [defaultValue, setDefaultValue] = useLayerValue('defaultValue', context?.propertyLink)
 
   return (
     <div className={cn(styles.root, className)}>
+      <ControlRow title='ID'>
+        <ControlRowWide>
+          <InputText value={id} disabled />
+        </ControlRowWide>
+      </ControlRow>
       <ControlRow title='Name'>
         <ControlRowWide>
           <InputText value={name} onChangeValue={setName} />

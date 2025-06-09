@@ -18,6 +18,8 @@ interface InstancePropertyEventProps {
 }
 
 const InstancePropertyEvent: FC<InstancePropertyEventProps> = ({ className, name, mode, value, onChange }) => {
+  if (typeof value?.name !== 'string') return null
+
   return (
     <ControlRow className={className} title={name}>
       <ControlRowWide>
@@ -33,7 +35,6 @@ const InstancePropertyEvent: FC<InstancePropertyEventProps> = ({ className, name
           color='var(--primary)'
           onClick={() => {
             popoutsStore.open(popoutNames.stackGoals, {
-              initial: true,
               context: {
                 activeGoalCode: value?.code,
                 onSelect: goal => {
@@ -44,7 +45,7 @@ const InstancePropertyEvent: FC<InstancePropertyEventProps> = ({ className, name
             })
           }}
         >
-          {value.name}
+          {value?.name}
         </InputSelect>
       </ControlRowWide>
     </ControlRow>

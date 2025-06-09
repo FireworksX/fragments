@@ -22,7 +22,6 @@ const InstancePropertyColor: FC<InstancePropertyFillProps> = ({ className, name,
           color={value}
           onClick={() => {
             popoutsStore.open(popoutNames.colorPicker, {
-              initial: true,
               position: 'right',
               context: {
                 value,

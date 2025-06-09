@@ -1,5 +1,5 @@
 'use client'
-import { ElementRef, FC, Fragment, ReactNode, useCallback, useEffect, useRef, useState } from 'react'
+import { ComponentRef, ElementRef, FC, Fragment, ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { animated, useSpring } from '@react-spring/web'
@@ -20,7 +20,7 @@ interface TabsSelectorProps {
 }
 
 const TabsSelector: FC<TabsSelectorProps> = animated(({ className, cellClassName, items, value, onChange }) => {
-  const rootRef = useRef<ElementRef<'div'>>(null)
+  const rootRef = useRef<ComponentRef<'div'>>(null)
   const [switcherStyles, switcherApi] = useSpring(() => ({
     width: 0,
     x: 0
@@ -59,24 +59,29 @@ const TabsSelector: FC<TabsSelectorProps> = animated(({ className, cellClassName
       }}
     >
       <animated.div className={styles.switcher} style={switcherStyles} />
-      {items.map((el, index) => (
-        <Fragment key={el.name}>
-          {index > 0 && <div className={styles.divider} />}
-          <Touchable
-            className={cn(styles.cell, cellClassName, {
-              [styles.active]: el.name === value,
-              [styles.disabled]: el.disabled
-            })}
-            disabled={el.disabled}
-            TagName='button'
-            data-active={el.name === value}
-            key={index}
-            onClick={() => onChange && onChange(el)}
-          >
-            {el.label}
-          </Touchable>
-        </Fragment>
-      ))}
+      {items.map((el, index) => {
+        const isActive = el.name === value
+        const hasDivider = index !== activeIndex + 1 && index !== activeIndex && index !== 0
+
+        return (
+          <Fragment key={el.name}>
+            <div className={cn(styles.divider, { [styles.hidden]: !hasDivider })} />
+            <Touchable
+              className={cn(styles.cell, cellClassName, {
+                [styles.active]: isActive,
+                [styles.disabled]: el.disabled
+              })}
+              disabled={el.disabled}
+              TagName='button'
+              data-active={isActive}
+              key={index}
+              onClick={() => onChange && onChange(el)}
+            >
+              {el.label}
+            </Touchable>
+          </Fragment>
+        )
+      })}
     </div>
   )
 })

@@ -27,9 +27,7 @@ export const collectStyles = (globalManager: GraphState) => {
       //     </StyleSheetProvider>
       //   </GlobalManager>
       // );
-
-      const a = manager.extractStyleSheet()?.at(0);
-      return a;
+      return manager?.$styleSheet?.extract?.()?.at(0);
     });
 
   return extractors.map((extractor) => (

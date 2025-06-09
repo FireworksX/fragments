@@ -6,6 +6,7 @@ import { InstanceProps } from "@/components/Instance";
 import { useFragmentProperties } from "@/shared/hooks/useFragmentProperties.ts";
 import { useGlobalManager } from "@/shared/hooks/useGlobalManager";
 import { useHash } from "@/shared/hooks/useHash";
+import { omit } from "@fragmentsx/utils";
 
 /*
 Работаем по следующему принципу. Instance может рендериться внутри родителя (Fragment)
@@ -28,10 +29,20 @@ export const useInstance = (instanceProps: InstanceProps) => {
   const { manager: resultGlobalManager } = useGlobalManager(
     instanceProps?.globalManager
   );
-  const resultProps = { ...instanceLayerProps, ...(instanceProps.props ?? {}) };
+  const resultProps = omit(
+    { ...instanceLayerProps, ...(instanceProps.props ?? {}) },
+    "_type",
+    "_id"
+  );
   const resultFragmentId = instanceProps?.fragmentId ?? instanceLayer?.fragment;
   const { properties: definitions, manager: innerFragmentManager } =
     useFragmentProperties(resultFragmentId);
+
+  const cssProps = Object.entries(resultProps).reduce((acc, [key, value]) => {
+    acc[`--${key}`] = value;
+    return acc;
+  }, {});
+
   // // useInstanceProperties(fragmentManager, layerKey);
   //
   // return {
@@ -47,6 +58,7 @@ export const useInstance = (instanceProps: InstanceProps) => {
     styles,
     definitions,
     props: resultProps,
+    cssProps,
     parentManager,
     innerManager: innerFragmentManager,
     fragmentId: resultFragmentId,

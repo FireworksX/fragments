@@ -1,13 +1,13 @@
 import { ComponentRef, useImperativeHandle, useRef, useState } from 'react'
 import useClickOutside from '@/shared/hooks/useClickOutside'
 import { nextTick } from '@/shared/utils/nextTick'
-import { useListSteamsQuery } from '../queries/ListStreams.generated'
 import { useParams } from 'next/navigation'
 import { useDeleteCampaignMutation } from '@/shared/api/stream/mutation/DeleteCampaign.generated'
 import {
   UpdateCampaignMutationVariables,
   useUpdateCampaignMutation
 } from '@/shared/api/stream/mutation/UpdateCampaign.generated'
+import { useListCampaignsQuery } from '@/views/AreasStreamsPage/widgets/StreamsTable/queries/ListCampaigns.generated'
 
 export const useStreamsTable = (ref: unknown, onCreate: unknown) => {
   const { areaSlug } = useParams()
@@ -19,9 +19,9 @@ export const useStreamsTable = (ref: unknown, onCreate: unknown) => {
   const [handleUpdateUpdateStream] = useUpdateCampaignMutation()
   const [handleDeleteStream] = useDeleteCampaignMutation()
 
-  const { data: listStreams } = useListSteamsQuery({
+  const { data: listStreams } = useListCampaignsQuery({
     variables: {
-      campaignSlug: +areaSlug
+      areaId: +areaSlug
     }
   })
 
@@ -49,7 +49,7 @@ export const useStreamsTable = (ref: unknown, onCreate: unknown) => {
 
   return {
     areaSlug,
-    list: listStreams?.stream ?? [],
+    list: listStreams?.campaign ?? [],
     creatingRowRef,
     isCreating,
     creatingInputRef,

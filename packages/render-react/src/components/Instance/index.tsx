@@ -43,17 +43,24 @@ export function createResource(
   return resource;
 }
 
+interface InstanceOptions {
+  ssr?: boolean;
+}
+
 export interface InstanceProps {
   layerKey?: LinkKey;
   fragmentId?: string;
   props?: Record<string, unknown>;
+  options?: InstanceOptions;
   globalManager?: unknown;
 }
 
 const InstanceInitial: FC<InstanceProps> = (instanceProps) => {
+  const ssr = instanceProps?.options?.ssr ?? true;
   const {
     styles,
     fragmentId,
+    cssProps,
     parentManager,
     props,
     hash,
@@ -62,7 +69,7 @@ const InstanceInitial: FC<InstanceProps> = (instanceProps) => {
     globalManager,
   } = useInstance(instanceProps);
 
-  if (!isBrowser) {
+  if (!isBrowser && ssr) {
     if (globalManager && !("resourceCache" in globalManager)) {
       globalManager.resourceCache = new Map();
     }
@@ -91,7 +98,9 @@ const InstanceInitial: FC<InstanceProps> = (instanceProps) => {
           <Fragment fragmentId={fragmentId} globalManager={globalManager} />
         </div>
       ) : (
-        <Fragment fragmentId={fragmentId} globalManager={globalManager} />
+        <div style={cssProps}>
+          <Fragment fragmentId={fragmentId} globalManager={globalManager} />
+        </div>
       )}
     </InstanceContext.Provider>
   );

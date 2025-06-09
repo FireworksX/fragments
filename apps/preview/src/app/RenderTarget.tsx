@@ -9,7 +9,16 @@ export const RenderTarget = () => {
 
   return (
     <>
-      <Instance fragmentId={+fragmentId} />
+      <Instance
+        fragmentId={+fragmentId}
+        props={{
+          ade177f5ef56: "Записаться",
+          e037940040d198: () => {
+            console.log("call");
+          },
+        }}
+        options={{ ssr: false }}
+      />
     </>
   );
 };

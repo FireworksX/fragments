@@ -25,12 +25,22 @@ export const metricsPlugin: Plugin = (state) => {
   };
 
   const initClient = async () => {
-    console.log("initClient");
-    sendMetric(types.INIT_SESSION);
+    const status = state?.$global?.status;
+    if (status === null) {
+      sendMetric(types.INIT_SESSION);
+      state.$global.status = "init";
+    } else {
+      console.log("Client already init or released");
+    }
   };
 
   const releaseClient = async () => {
-    sendMetric(types.RELEASE_SESSION);
+    const status = state?.$global?.status;
+
+    if (status === "init") {
+      sendMetric(types.RELEASE_SESSION);
+      state.$global.status = "release";
+    }
   };
 
   const reachGoal = (goal: string) => {

@@ -15,6 +15,7 @@ import { Slider } from '@/shared/ui/Slider'
 import { Button } from '@/shared/ui/Button'
 import { popoutNames } from '@/shared/data'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 interface StackNumberVariableProps {
   className?: string
@@ -43,8 +44,10 @@ const requiredControls: TabsSelectorItem[] = [
 ]
 
 const StackNumberProperty: FC<StackNumberVariableProps> = ({ className }) => {
+  const { documentManager } = useBuilderDocument()
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackNumberProperty}`)
   const context = popout?.context ?? {}
+  const id = documentManager.entityOfKey(context.propertyLink)?._id
   const [name, setName] = useLayerValue('name', context.propertyLink)
   const [required, setRequired] = useLayerValue('required', context.propertyLink)
   const [defaultValue, setDefaultValue] = useLayerValue('defaultValue', context.propertyLink)
@@ -59,6 +62,11 @@ const StackNumberProperty: FC<StackNumberVariableProps> = ({ className }) => {
 
   return (
     <div className={cn(styles.root, className)}>
+      <ControlRow title='ID'>
+        <ControlRowWide>
+          <InputText value={id} disabled />
+        </ControlRowWide>
+      </ControlRow>
       <ControlRow title='Name'>
         <ControlRowWide>
           <InputText value={name} onChangeValue={setName} />

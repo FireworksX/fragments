@@ -14,7 +14,8 @@ export const popoutNames = createConstants(
   'stackVariableTransform',
   'stackInteraction',
   'stackGoals',
-  'stackCreateGoal'
+  'stackCreateGoal',
+  'stackFragmentProps'
 )
 
 export const droppableAreas = createConstants('builderPlaceholder', 'builderCanvas', 'builderCanvasNode')

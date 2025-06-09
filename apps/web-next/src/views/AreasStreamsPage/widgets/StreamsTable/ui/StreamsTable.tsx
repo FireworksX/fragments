@@ -113,7 +113,7 @@ export const StreamsTable: FC<StreamsTableProps> = ({ className, ref, onCreate }
             <tr key={stream.id} className={styles.row}>
               <td className={cn(styles.cell, styles.idCell)}>{stream.id}</td>
               <td className={styles.cell}>
-                <Link type='stream' streamSlug={stream.id}>
+                <Link type='campaign' campaignSlug={stream.id}>
                   {stream.name}
                 </Link>
               </td>
@@ -134,9 +134,7 @@ export const StreamsTable: FC<StreamsTableProps> = ({ className, ref, onCreate }
                       size='small'
                       mode='warning-outline'
                       icon={<PauseIcon />}
-                      onClick={() =>
-                        updateStream({ campaignId: +areaSlug, streamId: stream.id, campaignId: 1, active: false })
-                      }
+                      onClick={() => updateStream({ id: stream.id, active: false })}
                     >
                       Pause
                     </Button>
@@ -145,9 +143,7 @@ export const StreamsTable: FC<StreamsTableProps> = ({ className, ref, onCreate }
                       size='small'
                       mode='success-outline'
                       icon={<PlayIcon />}
-                      onClick={() =>
-                        updateStream({ campaignId: +areaSlug, streamId: stream.id, campaignId: 1, active: true })
-                      }
+                      onClick={() => updateStream({ id: stream.id, active: true })}
                     >
                       Run
                     </Button>
@@ -157,7 +153,7 @@ export const StreamsTable: FC<StreamsTableProps> = ({ className, ref, onCreate }
                     size='small'
                     mode='danger-outline'
                     icon={<DeleteIcon />}
-                    onClick={() => handleDeleteStream({ variables: { streamId: stream.id } })}
+                    onClick={() => handleDeleteStream({ variables: { id: stream.id } })}
                   >
                     Delete
                   </Button>

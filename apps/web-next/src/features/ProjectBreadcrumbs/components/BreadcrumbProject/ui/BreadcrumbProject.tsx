@@ -52,7 +52,13 @@ export const BreadcrumbProject: FC<BreadcrumbProjectProps> = ({ className, proje
     >
       {active && (
         <Touchable className={cn(styles.root, className)}>
-          <Avatar uniqueId={active?.id?.toString()} firstName={active?.name} size={20} src={active?.logo.url} />
+          <Avatar
+            uniqueId={active?.id?.toString()}
+            firstName={active?.name}
+            withRadius
+            size={20}
+            src={active?.logo.url}
+          />
           {active?.name}
         </Touchable>
       )}

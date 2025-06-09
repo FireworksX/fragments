@@ -1,6 +1,6 @@
 import { GraphState, LinkKey } from "@graph-state/core";
 import { SpringValue } from "@react-spring/web";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { debounce, noop } from "@fragmentsx/utils";
 import { isVariableLink } from "@fragmentsx/definition";
 import { getOverrider, isInheritField } from "@fragmentsx/render-core";
@@ -46,7 +46,7 @@ export const useLayerValueSpring = <T>({
   const springable = springFields.includes(fieldKey);
   const isInherit = isInheritField(manager, layerKey, fieldKey);
 
-  const value$ = useMemo(() => {
+  const getValue$ = useCallback(() => {
     const overrider = getOverrider(manager, layerKey);
     /**
      * Смотрим, перезаписывается ли сейчас значение, если да,
@@ -80,17 +80,20 @@ export const useLayerValueSpring = <T>({
     }
 
     return null;
-  }, [cacheKey, initialValue]);
+  }, [cacheKey, initialValue, isInherit]);
+
+  const value$ = useMemo(() => getValue$(), [cacheKey, initialValue]);
 
   const updateValue = useCallback(
     (nextValue: T) => {
+      const target$ = getValue$();
       if (springable && !isVariableLink(nextValue) && !isInherit) {
-        value$.set(nextValue);
+        target$.set(nextValue);
       } else {
         onFinish?.(nextValue);
       }
     },
-    [value$, onFinish]
+    [onFinish, getValue$]
   );
 
   return [value$, updateValue] as const;

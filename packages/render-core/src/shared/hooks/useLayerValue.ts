@@ -81,7 +81,7 @@ export const useLayerValue = (
     [layer, fieldKey, updateLayerData, resultManager, layerKey, currentValue]
   );
 
-  const { value: cssValue } = useLayerCssVariable(rawValue);
+  const { value: cssValue } = useLayerCssVariable(rawValue ?? layerValue);
 
   return [
     currentValue,

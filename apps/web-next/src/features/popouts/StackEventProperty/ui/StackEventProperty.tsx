@@ -50,6 +50,7 @@ const StackEventProperty: FC<StackNumberVariableProps> = ({ className }) => {
   const { documentManager } = useBuilderDocument()
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackEventProperty}`)
   const context = popout?.context ?? {}
+  const id = documentManager.entityOfKey(context.propertyLink)?._id
   const [name, setName] = useLayerValue('name', context.propertyLink)
   const [required, setRequired] = useLayerValue('required', context.propertyLink)
   const [defaultValue, setDefaultValue] = useLayerValue('defaultValue', context.propertyLink)
@@ -57,6 +58,11 @@ const StackEventProperty: FC<StackNumberVariableProps> = ({ className }) => {
 
   return (
     <div className={cn(styles.root, className)}>
+      <ControlRow title='ID'>
+        <ControlRowWide>
+          <InputText value={id} disabled />
+        </ControlRowWide>
+      </ControlRow>
       <ControlRow title='Name'>
         <ControlRowWide>
           <InputText value={name} onChangeValue={setName} />

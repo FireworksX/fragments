@@ -43,4 +43,10 @@
     width: 1px;
     height: 14px;
     background: var(--border);
+    transition: var(--animation-transition-default);
+    opacity: 1;
+
+    &.hidden {
+        opacity: 0;
+    }
 }

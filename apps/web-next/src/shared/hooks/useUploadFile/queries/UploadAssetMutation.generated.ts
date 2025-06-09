@@ -5,6 +5,7 @@ import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type UploadAssetMutationVariables = Types.Exact<{
   type: Types.MediaType;
+  targetId: Types.Scalars['Int']['input'];
   file: Types.Scalars['Upload']['input'];
 }>;
 
@@ -13,8 +14,8 @@ export type UploadAssetMutation = { __typename?: 'Mutation', uploadAsset: { __ty
 
 
 export const UploadAssetDocument = gql`
-    mutation UploadAsset($type: MediaType!, $file: Upload!) {
-  uploadAsset(media: {mediaType: $type}, file: $file) {
+    mutation UploadAsset($type: MediaType!, $targetId: Int!, $file: Upload!) {
+  uploadAsset(media: {mediaType: $type, targetId: $targetId}, file: $file) {
     url: publicPath
   }
 }
@@ -35,6 +36,7 @@ export type UploadAssetMutationFn = Apollo.MutationFunction<UploadAssetMutation,
  * const [uploadAssetMutation, { data, loading, error }] = useUploadAssetMutation({
  *   variables: {
  *      type: // value for 'type'
+ *      targetId: // value for 'targetId'
  *      file: // value for 'file'
  *   },
  * });

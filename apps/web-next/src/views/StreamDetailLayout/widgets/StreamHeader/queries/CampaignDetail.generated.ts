@@ -4,7 +4,7 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type CampaignDetailQueryVariables = Types.Exact<{
-  campaignId: Types.Scalars['Int']['input'];
+  id: Types.Scalars['Int']['input'];
 }>;
 
 
@@ -12,8 +12,8 @@ export type CampaignDetailQuery = { __typename?: 'Query', campaign: Array<{ __ty
 
 
 export const CampaignDetailDocument = gql`
-    query CampaignDetail($campaignId: Int!) {
-  campaign(campaignId: $campaignId) {
+    query CampaignDetail($id: Int!) {
+  campaign(campaignId: $id) {
     id
     name
     active
@@ -57,7 +57,7 @@ export const CampaignDetailDocument = gql`
  * @example
  * const { data, loading, error } = useCampaignDetailQuery({
  *   variables: {
- *      campaignId: // value for 'campaignId'
+ *      id: // value for 'id'
  *   },
  * });
  */
