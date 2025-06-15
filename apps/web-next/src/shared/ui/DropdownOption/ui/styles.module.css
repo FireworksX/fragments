@@ -1,60 +1,63 @@
-.root {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-radius: 5px;
-    padding: 6px 7px 6px 12px;
-    font-size: 12px;
-    min-width: 100px;
-    transition: var(--animation-transition-default);
-    cursor: pointer;
-    color: var(--text-color-accent);
-    gap: 7px;
-    white-space: nowrap;
+@layer {
+    .root {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 5px;
+        padding: 6px 7px 6px 12px;
+        font-size: 12px;
+        min-width: 100px;
+        transition: var(--animation-transition-default);
+        cursor: pointer;
+        color: var(--text-color-accent);
+        gap: 7px;
+        white-space: nowrap;
 
-    &:hover:not(.disabled) {
-        background: var(--primary-bg);
+        &:hover:not(.disabled) {
+            background: var(--primary-bg);
+        }
+
+        &.disabled {
+            color: var(--secondary);
+            cursor: default;
+
+        }
+
+        &.large {
+            padding: 11px 12px 11px 17px;
+            font-size: 14px;
+        }
+
+        &.danger {
+            color: var(--danger);
+        }
+
+        &.success {
+            color: var(--success);
+        }
+
+        &.warning {
+            color: var(--warning);
+        }
     }
 
-    &.disabled {
+    .icon {
+        display: inline-flex;
+    }
+
+    .body {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+
+
+    .description {
         color: var(--secondary);
-        cursor: default;
-
     }
 
-    &.large {
-        padding: 11px 12px 11px 17px;
-        font-size: 14px;
+    .arrow {
+        color: var(--secondary);
     }
-
-    &.danger {
-        color: var(--danger);
-    }
-
-    &.success {
-        color: var(--success);
-    }
-    &.warning {
-        color: var(--warning);
-    }
-}
-
-.icon {
-    display: inline-flex;
-}
-
-.body {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-}
-
-
-.description {
-    color: var(--secondary);
-}
-
-.arrow {
-    color: var(--secondary);
 }

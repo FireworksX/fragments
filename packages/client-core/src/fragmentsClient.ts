@@ -4,6 +4,7 @@ import { fetchPlugin } from "@/plugins/fetch";
 import { fragmentsPlugin } from "@/plugins/fragments";
 import { metricsPlugin } from "@/plugins/metrics";
 import { isBrowser } from "@fragmentsx/utils";
+import { loadFragmentPlugin } from "@/plugins/loadFragment";
 
 interface Options {
   apiToken: string;
@@ -49,6 +50,7 @@ export const createFragmentsClient = (options: Options) => {
       },
       fetchPlugin,
       fragmentsPlugin,
+      loadFragmentPlugin,
       metricsPlugin,
 
       (state) => {

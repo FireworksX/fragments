@@ -54,7 +54,7 @@ export const AreasDetailLayout: FC<CampaignDetailPageProps> = ({ children }) => 
                 <Link type='areaFragment' areaSlug={areaSlug} projectSlug={projectSlug}>
                   {({ isActive }) => (
                     <TabItem name='areaFragment' icon={<VisualIcon />} isActive={isActive}>
-                      Fragment
+                      Content
                     </TabItem>
                   )}
                 </Link>

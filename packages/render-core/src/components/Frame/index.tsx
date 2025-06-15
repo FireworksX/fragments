@@ -10,7 +10,7 @@ interface FrameProps {
 }
 
 export const Frame: FC<FrameProps> = ({ layerKey }) => {
-  const { events, hash, children, type } = useFrame(layerKey);
+  const { events, hash, children, type, restProps, Tag } = useFrame(layerKey);
 
   if (type === definition.nodes.Text) {
     return <Text layerKey={layerKey} />;
@@ -21,10 +21,10 @@ export const Frame: FC<FrameProps> = ({ layerKey }) => {
   }
 
   return (
-    <div className={hash} data-key={layerKey} {...events}>
+    <Tag className={hash} data-key={layerKey} {...events} {...restProps}>
       {children.map((childLink) => (
         <Frame key={childLink} layerKey={childLink} />
       ))}
-    </div>
+    </Tag>
   );
 };

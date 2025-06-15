@@ -8,6 +8,10 @@
     justify-content: center;
 }
 
+.withRadius {
+    border-radius: 35%;
+}
+
 .body {
     text-transform: uppercase;
     font-weight: bold;

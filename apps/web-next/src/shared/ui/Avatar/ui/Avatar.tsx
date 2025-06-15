@@ -41,7 +41,7 @@ const Avatar: FC<AvatarProps> = ({
       {src ? (
         <CommonLogo src={src} size={size} withBackground withRadius={withRadius} alt={children} />
       ) : (
-        <InitialsAvatar gradientColor={gradientCode} size={size} {...placeholderProps}>
+        <InitialsAvatar gradientColor={gradientCode} withRadius={withRadius} size={size} {...placeholderProps}>
           {children}
         </InitialsAvatar>
       )}

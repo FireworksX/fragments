@@ -26,7 +26,6 @@ export const useBuilderSize = () => {
     (!!layer?.children?.length || type === definition.nodes.Text || type === definition.nodes.Instance) && canHugContent
   const fillContentEnabled = canRelativeSize && parentLayerMode === definition.layerMode.flex
 
-  console.log(canHugContent, hugContentEnabled)
   return {
     canHugContentWidth: canHugContent && hugContentEnabled,
     canHugContentHeight: hugContentEnabled,

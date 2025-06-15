@@ -77,6 +77,11 @@ export const useBuilderCreator = () => {
   }
 
   const createInstance = async (parent: LinkKey, options: { name: string; fragment: string }) => {
+    /**
+     * Делаем запрос на получение фрагмента.
+     * Из главного слоя достаём ширину и высоту.
+     * Применяем их к Инстансу.
+     */
     const fragmentManager = await queryFragmentManager(options.fragment)
     const rootLayerLink = fragmentManager
       ?.resolve(fragmentManager?.$fragment?.root)

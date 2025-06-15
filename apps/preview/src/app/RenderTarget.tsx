@@ -1,6 +1,8 @@
+"use client";
 import { GlobalManager, Instance } from "@fragmentsx/render-react";
 import { useSearchParams } from "next/navigation";
 import { useGlobalManager } from "@fragmentsx/render-react";
+import { Suspense } from "react";
 
 export const RenderTarget = () => {
   const params = useSearchParams();
@@ -8,18 +10,16 @@ export const RenderTarget = () => {
   const { manager: globalManager } = useGlobalManager();
 
   return (
-    <>
-      <Instance
-        fragmentId={+fragmentId}
-        props={{
-          ade177f5ef56: "Записаться",
-          e037940040d198: () => {
-            console.log("call");
-          },
-        }}
-        options={{ ssr: false }}
-      />
-    </>
+    <Instance
+      fragmentId={+fragmentId}
+      props={{
+        ade177f5ef56: "Записаться",
+        e037940040d198: () => {
+          console.log("call");
+        },
+      }}
+      options={{ ssr: true }}
+    />
   );
 };
 

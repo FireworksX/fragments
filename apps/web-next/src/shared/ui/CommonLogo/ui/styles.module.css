@@ -7,6 +7,6 @@
     color: var(--text-color-accent);
 
     &.withRadius {
-        border-radius: var(--radius-second);
+        border-radius: 35%;
     }
 }

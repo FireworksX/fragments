@@ -21,6 +21,10 @@ import { Link } from '@/shared/ui/Link'
 import { InputText } from '@/shared/ui/InputText'
 import { useStreamsTable } from '@/views/AreasStreamsPage/widgets/StreamsTable/hooks/useStreamsTable'
 import { Placeholder } from '@/components/Placeholder'
+import { Table } from '@/shared/ui/Table'
+import { TableHeader } from '@/shared/ui/Table/components/TableHeader'
+import { TableRow } from '@/shared/ui/Table/components/TableRow'
+import { TableCell } from '@/shared/ui/Table/components/TableCell'
 
 interface StreamsTableProps {
   className?: string
@@ -44,125 +48,115 @@ export const StreamsTable: FC<StreamsTableProps> = ({ className, ref, onCreate }
 
   return (
     <div className={cn(styles.root, className)}>
-      <table className={styles.table}>
-        <thead className={styles.thead}>
-          <tr>
-            <th className={cn(styles.cell, styles.idCell)}>
-              <div className={styles.innerCell}>ID</div>
-            </th>
-            <th className={styles.cell}>
-              <div className={styles.innerCell}>
-                <NameIcon />
-                Name
-              </div>
-            </th>
-            <th className={styles.cell}>
-              <div className={styles.innerCell}>
-                <StatusIcon />
-                Status
-              </div>
-            </th>
-            <th className={styles.cell}>
-              <div className={styles.innerCell}>
-                <FilterIcon />
-                Filters
-              </div>
-            </th>
-            <th className={styles.cell}>
-              <div className={styles.innerCell}>
-                <ActionsIcon />
-                Actions
-              </div>
-            </th>
-          </tr>
-        </thead>
-
-        <tbody className={styles.tbody}>
-          {isCreating && (
-            <tr className={styles.row} ref={creatingRowRef}>
-              <td className={styles.cell} colSpan={6}>
-                <form className={styles.innerCell} onSubmit={handleCreate}>
-                  <InputText
-                    ref={creatingInputRef}
-                    value={creatingName}
-                    placeholder='Campaign Name'
-                    onChangeValue={setCreatingName}
-                  />
-                  <Button disabled={creatingName?.length < 3} type='submit' icon={<CheckIcon />} mode='success'>
-                    Create
-                  </Button>
-                </form>
-              </td>
-            </tr>
-          )}
-
-          {list.length === 0 && (
-            <tr className={styles.row}>
-              <td className={styles.cell} colSpan={6}>
-                <Placeholder
-                  icon={<LogoIcon width={24} height={24} />}
-                  title='Empty list of streams'
-                  description='Create new stream for control user flow'
-                  actions={<Button onClick={() => ref?.current?.createNew?.()}>Create Campaign</Button>}
+      <Table
+        className={styles.table}
+        bodyClassName={styles.tbody}
+        header={
+          <TableHeader className={styles.thead}>
+            <div className={styles.innerCell}>ID</div>
+            <div className={styles.innerCell}>
+              <NameIcon />
+              Name
+            </div>
+            <div className={styles.innerCell}>
+              <StatusIcon />
+              Status
+            </div>
+            <div className={styles.innerCell}>
+              <FilterIcon />
+              Filters
+            </div>
+            <div className={styles.innerCell}>
+              <ActionsIcon />
+              Actions
+            </div>
+          </TableHeader>
+        }
+      >
+        {isCreating && (
+          <TableRow className={styles.row} ref={creatingRowRef}>
+            <TableCell className={styles.cell} colSpan={6}>
+              <form className={styles.innerCell} onSubmit={handleCreate}>
+                <InputText
+                  ref={creatingInputRef}
+                  value={creatingName}
+                  placeholder='Campaign Name'
+                  onChangeValue={setCreatingName}
                 />
-              </td>
-            </tr>
-          )}
+                <Button disabled={creatingName?.length < 3} type='submit' icon={<CheckIcon />} mode='success'>
+                  Create
+                </Button>
+              </form>
+            </TableCell>
+          </TableRow>
+        )}
 
-          {list.map(stream => (
-            <tr key={stream.id} className={styles.row}>
-              <td className={cn(styles.cell, styles.idCell)}>{stream.id}</td>
-              <td className={styles.cell}>
-                <Link type='campaign' campaignSlug={stream.id}>
-                  {stream.name}
-                </Link>
-              </td>
-              <td className={styles.cell}>
-                <StatusBadge status={stream.active ? 'success' : 'warning'} />
-              </td>
-              <td className={styles.cell}>
-                <div className={styles.innerCell}>
-                  <Chip prefix='Location:'>Russia</Chip>
-                  <Chip prefix='Device'>Mobile</Chip>
-                  <Chip prefix='URL:'>/sportbooks/*</Chip>
-                </div>
-              </td>
-              <td className={styles.cell}>
-                <div className={styles.innerCell}>
-                  {stream.active ? (
-                    <Button
-                      size='small'
-                      mode='warning-outline'
-                      icon={<PauseIcon />}
-                      onClick={() => updateStream({ id: stream.id, active: false })}
-                    >
-                      Pause
-                    </Button>
-                  ) : (
-                    <Button
-                      size='small'
-                      mode='success-outline'
-                      icon={<PlayIcon />}
-                      onClick={() => updateStream({ id: stream.id, active: true })}
-                    >
-                      Run
-                    </Button>
-                  )}
+        {list.length === 0 && (
+          <TableRow className={styles.row}>
+            <TableCell className={styles.cell} colSpan={6}>
+              <Placeholder
+                icon={<LogoIcon width={24} height={24} />}
+                title='Empty list of streams'
+                description='Create new stream for control user flow'
+                actions={<Button onClick={() => ref?.current?.createNew?.()}>Create Campaign</Button>}
+              />
+            </TableCell>
+          </TableRow>
+        )}
 
+        {list.map(stream => (
+          <TableRow key={stream.id}>
+            <TableCell className={styles.idCell}>{stream.id}</TableCell>
+            <TableCell>
+              <Link type='campaign' campaignSlug={stream.id}>
+                {stream.name}
+              </Link>
+            </TableCell>
+            <TableCell>
+              <StatusBadge status={stream.active ? 'success' : 'warning'} />
+            </TableCell>
+            <TableCell>
+              <div className={styles.innerCell}>
+                <Chip prefix='Location:'>Russia</Chip>
+                <Chip prefix='Device'>Mobile</Chip>
+                <Chip prefix='URL:'>/sportbooks/*</Chip>
+              </div>
+            </TableCell>
+            <TableCell>
+              <div className={styles.innerCell}>
+                {stream.active ? (
                   <Button
                     size='small'
-                    mode='danger-outline'
-                    icon={<DeleteIcon />}
-                    onClick={() => handleDeleteStream({ variables: { id: stream.id } })}
+                    mode='warning-outline'
+                    icon={<PauseIcon />}
+                    onClick={() => updateStream({ id: stream.id, active: false })}
                   >
-                    Delete
+                    Pause
                   </Button>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                ) : (
+                  <Button
+                    size='small'
+                    mode='success-outline'
+                    icon={<PlayIcon />}
+                    onClick={() => updateStream({ id: stream.id, active: true })}
+                  >
+                    Run
+                  </Button>
+                )}
+
+                <Button
+                  size='small'
+                  mode='danger-outline'
+                  icon={<DeleteIcon />}
+                  onClick={() => handleDeleteStream({ variables: { id: stream.id } })}
+                >
+                  Delete
+                </Button>
+              </div>
+            </TableCell>
+          </TableRow>
+        ))}
+      </Table>
     </div>
   )
 }

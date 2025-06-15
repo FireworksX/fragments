@@ -1,4 +1,5 @@
-.root {}
+.root {
+}
 
 .table {
     width: 100%;
@@ -6,10 +7,11 @@
 }
 
 .cell {
-        padding: 8px 12px;
+    padding: 8px 12px;
 }
 
-.innerCell {}
+.innerCell {
+}
 
 .idCell {
     width: 100px;

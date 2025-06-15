@@ -32,9 +32,17 @@ export const BreadcrumbProject: FC<BreadcrumbProjectProps> = ({ className, proje
                 className={cn(styles.option, {
                   [styles.selected]: project.id === currentProject
                 })}
+                bodyClassName={styles.optionBody}
                 // icon={<Avatar size={24} uniqueId={project?.id?.toString() ?? ''} />}
                 suffix={project.id === currentProject && <CheckIcon />}
               >
+                <Avatar
+                  uniqueId={project?.id?.toString()}
+                  firstName={project?.name}
+                  withRadius
+                  size={20}
+                  src={project?.logo.url}
+                />
                 {project?.name}
               </DropdownOption>
             </Link>

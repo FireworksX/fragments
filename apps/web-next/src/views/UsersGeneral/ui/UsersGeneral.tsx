@@ -15,6 +15,7 @@ import { TableRow } from '@/shared/ui/Table/components/TableRow'
 import { TableHeader } from '@/shared/ui/Table/components/TableHeader'
 import { times } from '@fragmentsx/utils'
 import { PageHeading } from '@/shared/ui/PageHeading/PageHeading'
+import { TableCell } from '@/shared/ui/Table/components/TableCell'
 
 interface UsersGeneralProps {
   className?: string
@@ -54,11 +55,11 @@ export const UsersGeneral: FC<UsersGeneralProps> = ({ className }) => {
       >
         {times(30).map(() => (
           <TableRow>
-            <div>Hr32v2fe</div>
-            <div>11.07.2024</div>
-            <div>15.05.2025</div>
-            <div>Fired 6 goals</div>
-            <div>10 experiment</div>
+            <TableCell>Hr32v2fe</TableCell>
+            <TableCell>11.07.2024</TableCell>
+            <TableCell>15.05.2025</TableCell>
+            <TableCell>Fired 6 goals</TableCell>
+            <TableCell>10 experiment</TableCell>
           </TableRow>
         ))}
       </Table>
