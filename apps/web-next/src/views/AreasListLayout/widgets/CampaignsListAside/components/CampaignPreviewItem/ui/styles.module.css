@@ -13,7 +13,7 @@
 }
 
 .active {
-    background: var(--background-secondary);
+    background: rgba(var(--border--rgb), .3);
 }
 
 .header {

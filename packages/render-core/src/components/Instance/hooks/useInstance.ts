@@ -51,7 +51,7 @@ export const useInstance = (instanceProps: InstanceProps) => {
   //   fragmentId: instanceLayer?.fragment,
   // };
 
-  const hash = useHash(instanceProps.layerKey);
+  const hash = useHash(instanceProps.layerKey, innerFragmentManager);
 
   return {
     hash,

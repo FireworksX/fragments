@@ -17,8 +17,8 @@ export const useFrame = (layerKey: LinkKey) => {
   const layer = fragmentManager.entityOfKey(layerKey);
   const styles = useLayerStyles(layerKey);
   const children = useLayerChildren(layerKey);
-  const hash = useHash(layerKey);
-  const { addLayerStyle } = useStyleSheet();
+  const hash = useHash(layerKey, fragmentManager);
+  const { addLayerStyle } = useStyleSheet(fragmentManager);
   const events = useLayerInteractions(layerKey);
   const link = useLayerLink(layerKey);
 

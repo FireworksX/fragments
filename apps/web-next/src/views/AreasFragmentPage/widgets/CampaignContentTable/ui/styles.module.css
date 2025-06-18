@@ -1,0 +1,14 @@
+.root {}
+
+.innerCell {
+    display: flex;
+    align-items: center;
+    gap: var(--gutter-small);
+}
+
+.preview {
+    width: 80px;
+    height: 80px;
+    background: var(--background-secondary);
+    border-radius: var(--radius-second);
+}

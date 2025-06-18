@@ -10,15 +10,15 @@ import { FragmentContext } from "@/components/Fragment/FragmentContext";
 
 export const useFragment = (fragmentId: string, globalManager?: GraphState) => {
   const layerKey = `${definition.nodes.Fragment}:${fragmentId}`;
-  const { manager } = useContext(FragmentContext);
+  const fragmentContext = useFragmentManager(fragmentId);
   const { isDocument } = useRenderTarget(globalManager);
   const { setRef, children, isResize, primary } =
     useFragmentChildren(fragmentId);
-  const hash = useHash(layerKey);
+  const hash = useHash(layerKey, fragmentContext.manager);
 
-  const { addLayerStyle } = useStyleSheet();
+  const { addLayerStyle } = useStyleSheet(fragmentContext.manager);
 
-  if (manager) {
+  if (fragmentContext.manager) {
     addLayerStyle(
       layerKey,
       {
@@ -26,15 +26,15 @@ export const useFragment = (fragmentId: string, globalManager?: GraphState) => {
         height: "100%",
         "container-type": children?.length === 1 ? "normal" : "inline-size",
       },
-      manager?.resolve(layerKey),
-      manager?.key
+      fragmentContext.manager?.resolve(layerKey),
+      fragmentContext.manager?.key
     );
   }
 
   return {
     hash,
     isDocument,
-    manager,
+    fragmentContext,
     setRef,
     children,
     isResize,

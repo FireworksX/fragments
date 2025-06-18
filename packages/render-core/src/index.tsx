@@ -51,8 +51,8 @@ export { useCalcLayerBorder } from "@/shared/hooks/useLayerStyles/useCalcLayerBo
 export { GlobalManager } from "@/providers/GlobalManager";
 export * from "@/providers/StyleSheetProvider";
 export * from "@/providers/RenderTargetProvider";
-export { InstanceContext } from "@/components/Instance";
+export { InstanceContext, Instance } from "@/components/Instance";
 export { FragmentContext } from "@/components/Fragment/FragmentContext";
 
-// export { createElement, render, hydrate } from "preact";
+export { createElement, render, hydrate, cloneElement, h } from "preact";
 // export { renderToString } from "preact-render-to-string";

@@ -10,6 +10,7 @@ import { useAreasFragmentPage } from '../hooks/useAreasFragmentPage'
 import { ProjectTreeModal } from '@/widgets/modals/ProjectTreeModal'
 import { FragmentPreviewSandbox } from '@/widgets/FragmentPreviewSandbox'
 import { Link } from '@/shared/ui/Link'
+import { CampaignContentTable } from '@/views/AreasFragmentPage/widgets/CampaignContentTable'
 
 interface CampaignDetailPageProps {}
 
@@ -19,7 +20,7 @@ export const AreasFragmentPage: FC<CampaignDetailPageProps> = () => {
   return (
     <div className={styles.root}>
       <ProjectTreeModal />
-
+      <CampaignContentTable />
       {fragmentId ? (
         <div className={styles.content}>
           <div className={styles.header}>
