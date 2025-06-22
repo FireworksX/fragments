@@ -1,0 +1,1035 @@
+{
+  "documents": {
+    "2": {
+      "_type": "Fragment",
+      "_id": "2",
+      "children": [
+        {
+          "_type": "Frame",
+          "_id": "8ca5e60891635",
+          "opacity": 1,
+          "parent": "$Fragment:2",
+          "visible": true,
+          "overflow": "visible",
+          "children": [
+            {
+              "_id": "27d3ddbee4719",
+              "_type": "Text",
+              "position": "relative",
+              "widthType": "Hug",
+              "heightType": "Hug",
+              "content": "Подписывайтесь <br/>на телеграм scores24!",
+              "parent": "$Frame:8ca5e60891635",
+              "visible": true,
+              "attributes": {
+                "fontSize": "20px",
+                "_type": "Text",
+                "_id": "27d3ddbee4719.attributes",
+                "fontWeight": "700"
+              },
+              "overrides": [
+                {
+                  "_type": "Text",
+                  "overrideFrom": "$Text:27d3ddbee4719",
+                  "parent": "$Frame:37bf93b19207c8",
+                  "_id": "47e0ef42e5b6b",
+                  "children": [],
+                  "attributes": {
+                    "textAlign": "center",
+                    "_type": "Text",
+                    "_id": "47e0ef42e5b6b.attributes"
+                  }
+                }
+              ]
+            },
+            {
+              "_id": "1266bbf76e3708",
+              "_type": "Text",
+              "position": "relative",
+              "widthType": "Fill",
+              "heightType": "Hug",
+              "content": "Актуальные новости, статистика, лучшие прогнозы, тренды и ставки дня!",
+              "parent": "$Frame:8ca5e60891635",
+              "visible": true,
+              "overrides": [
+                {
+                  "_type": "Text",
+                  "overrideFrom": "$Text:1266bbf76e3708",
+                  "parent": "$Frame:37bf93b19207c8",
+                  "_id": "3b9cd0cbf244d8",
+                  "children": [],
+                  "attributes": {
+                    "textAlign": "center",
+                    "_type": "Text",
+                    "_id": "3b9cd0cbf244d8.attributes"
+                  }
+                }
+              ],
+              "whiteSpace": "normal"
+            },
+            {
+              "_id": "bf7d341f570538",
+              "_type": "Frame",
+              "solidFill": {
+                "_id": "de43eb935b6c38",
+                "_type": "Variable",
+                "type": "Color",
+                "name": "Button bg",
+                "defaultValue": "rgb(118, 169, 99)"
+              },
+              "fillType": "Solid",
+              "position": "relative",
+              "width": 47,
+              "height": 40,
+              "parent": "$Frame:8ca5e60891635",
+              "visible": true,
+              "children": [
+                {
+                  "_id": "40887812eee47",
+                  "_type": "Text",
+                  "position": "relative",
+                  "widthType": "Hug",
+                  "heightType": "Hug",
+                  "content": {
+                    "_id": "ade177f5ef56",
+                    "_type": "Variable",
+                    "type": "String",
+                    "name": "Content",
+                    "defaultValue": "Подписаться"
+                  },
+                  "parent": "$Frame:bf7d341f570538",
+                  "visible": true,
+                  "attributes": {
+                    "textTransform": "uppercase",
+                    "_type": "Text",
+                    "_id": "40887812eee47.attributes",
+                    "color": "rgb(255, 255, 255)",
+                    "fontWeight": "500"
+                  },
+                  "overrides": [
+                    {
+                      "_type": "Text",
+                      "overrideFrom": "$Text:40887812eee47",
+                      "parent": "$Frame:44f1d3d47534e",
+                      "_id": "b01dca17f26e88",
+                      "children": []
+                    },
+                    {
+                      "_type": "Text",
+                      "overrideFrom": "$Text:40887812eee47",
+                      "parent": "$Frame:a9f922e209c18",
+                      "_id": "8c9226a5435d3",
+                      "children": []
+                    },
+                    {
+                      "_type": "Text",
+                      "overrideFrom": "$Text:40887812eee47",
+                      "parent": "$Frame:5cf7a56f65f7a8",
+                      "_id": "51107dba7cca6",
+                      "children": []
+                    }
+                  ]
+                }
+              ],
+              "layerMode": "flex",
+              "layerAlign": "center",
+              "layerDistribute": "center",
+              "widthType": "Hug",
+              "heightType": "Fixed",
+              "padding": "15px 20px 15px 20px",
+              "borderRadius": "8px",
+              "overrides": [
+                {
+                  "_type": "Frame",
+                  "overrideFrom": "$Frame:bf7d341f570538",
+                  "parent": "$Frame:37bf93b19207c8",
+                  "_id": "5cf7a56f65f7a8",
+                  "children": [
+                    {
+                      "_type": "Text",
+                      "overrideFrom": "$Text:40887812eee47",
+                      "parent": "$Frame:5cf7a56f65f7a8",
+                      "_id": "51107dba7cca6",
+                      "children": []
+                    }
+                  ]
+                }
+              ],
+              "top": 133,
+              "interactions": [
+                {
+                  "on": "click",
+                  "event": {
+                    "_id": "d34e05738561d8",
+                    "_type": "Variable",
+                    "type": "Event",
+                    "name": "Goal",
+                    "mode": "goal",
+                    "defaultValue": {
+                      "name": "Click tg",
+                      "code": "click-tg",
+                      "_type": "Variable",
+                      "_id": "d34e05738561d8.defaultValue"
+                    }
+                  },
+                  "_type": "Frame",
+                  "_id": "bf7d341f570538.interactions.a33ff3afabe53"
+                },
+                {
+                  "on": "click",
+                  "event": {
+                    "_id": "e037940040d198",
+                    "_type": "Variable",
+                    "type": "Event",
+                    "name": "Event",
+                    "mode": "callback"
+                  },
+                  "_type": "Frame",
+                  "_id": "bf7d341f570538.interactions.d8c9aaaf5ce39"
+                }
+              ],
+              "opacity": 1
+            }
+          ],
+          "width": 417,
+          "height": 206,
+          "layoutSizingHorizontal": "Fixed",
+          "layoutSizingVertical": "Fixed",
+          "fillType": "Solid",
+          "positionType": "absolute",
+          "solidFill": "rgb(255, 255, 255)",
+          "name": "Frame",
+          "isPrimary": true,
+          "threshold": 320,
+          "layerMode": "flex",
+          "layerAlign": "start",
+          "layerDistribute": "start",
+          "borderRadius": "12px",
+          "widthType": "Fixed",
+          "layerGap": 25,
+          "padding": "20px",
+          "layerDirection": "vertical",
+          "overrides": [
+            {
+              "_type": "Frame",
+              "overrideFrom": "$Frame:8ca5e60891635",
+              "parent": "$Fragment:2",
+              "name": "Mobile",
+              "threshold": 375,
+              "top": 0,
+              "left": 527,
+              "width": 375,
+              "isBreakpoint": true,
+              "isPrimary": false,
+              "_id": "37bf93b19207c8",
+              "children": [
+                {
+                  "_type": "Text",
+                  "overrideFrom": "$Text:27d3ddbee4719",
+                  "parent": "$Frame:37bf93b19207c8",
+                  "_id": "47e0ef42e5b6b",
+                  "children": [],
+                  "attributes": {
+                    "textAlign": "center",
+                    "_type": "Text",
+                    "_id": "47e0ef42e5b6b.attributes"
+                  }
+                },
+                {
+                  "_type": "Text",
+                  "overrideFrom": "$Text:1266bbf76e3708",
+                  "parent": "$Frame:37bf93b19207c8",
+                  "_id": "3b9cd0cbf244d8",
+                  "children": [],
+                  "attributes": {
+                    "textAlign": "center",
+                    "_type": "Text",
+                    "_id": "3b9cd0cbf244d8.attributes"
+                  }
+                },
+                {
+                  "_type": "Frame",
+                  "overrideFrom": "$Frame:bf7d341f570538",
+                  "parent": "$Frame:37bf93b19207c8",
+                  "_id": "5cf7a56f65f7a8",
+                  "children": [
+                    {
+                      "_type": "Text",
+                      "overrideFrom": "$Text:40887812eee47",
+                      "parent": "$Frame:5cf7a56f65f7a8",
+                      "_id": "51107dba7cca6",
+                      "children": []
+                    }
+                  ]
+                }
+              ],
+              "layerAlign": "center"
+            }
+          ],
+          "heightType": "Hug"
+        },
+        {
+          "_type": "Frame",
+          "overrideFrom": "$Frame:8ca5e60891635",
+          "parent": "$Fragment:2",
+          "name": "Mobile",
+          "threshold": 375,
+          "top": 0,
+          "left": 527,
+          "width": 375,
+          "isBreakpoint": true,
+          "isPrimary": false,
+          "_id": "37bf93b19207c8",
+          "children": [
+            {
+              "_type": "Text",
+              "overrideFrom": "$Text:27d3ddbee4719",
+              "parent": "$Frame:37bf93b19207c8",
+              "_id": "47e0ef42e5b6b",
+              "children": [],
+              "attributes": {
+                "textAlign": "center",
+                "_type": "Text",
+                "_id": "47e0ef42e5b6b.attributes"
+              }
+            },
+            {
+              "_type": "Text",
+              "overrideFrom": "$Text:1266bbf76e3708",
+              "parent": "$Frame:37bf93b19207c8",
+              "_id": "3b9cd0cbf244d8",
+              "children": [],
+              "attributes": {
+                "textAlign": "center",
+                "_type": "Text",
+                "_id": "3b9cd0cbf244d8.attributes"
+              }
+            },
+            {
+              "_type": "Frame",
+              "overrideFrom": "$Frame:bf7d341f570538",
+              "parent": "$Frame:37bf93b19207c8",
+              "_id": "5cf7a56f65f7a8",
+              "children": [
+                {
+                  "_type": "Text",
+                  "overrideFrom": "$Text:40887812eee47",
+                  "parent": "$Frame:5cf7a56f65f7a8",
+                  "_id": "51107dba7cca6",
+                  "children": []
+                }
+              ]
+            }
+          ],
+          "layerAlign": "center"
+        }
+      ],
+      "layoutSizingHorizontal": "Fixed",
+      "layoutSizingVertical": "Fixed",
+      "horizontalGrow": "fill",
+      "verticalGrow": "auto",
+      "renderMode": "parent",
+      "opacity": 1,
+      "visible": true,
+      "overflow": "hidden",
+      "overrides": [],
+      "properties": [
+        {
+          "_type": "Variable",
+          "_id": "62218c840bd111"
+        },
+        {
+          "_id": "f131adc37dce7",
+          "_type": "Variable",
+          "type": "Event",
+          "name": "Goal",
+          "mode": "goal"
+        },
+        {
+          "_id": "d34e05738561d8",
+          "_type": "Variable",
+          "type": "Event",
+          "name": "Goal",
+          "mode": "goal",
+          "defaultValue": {
+            "name": "Click tg",
+            "code": "click-tg",
+            "_type": "Variable",
+            "_id": "d34e05738561d8.defaultValue"
+          }
+        },
+        {
+          "_id": "e037940040d198",
+          "_type": "Variable",
+          "type": "Event",
+          "name": "Event",
+          "mode": "callback"
+        },
+        {
+          "_id": "2f9af8ae03dfe",
+          "_type": "Variable",
+          "type": "Number"
+        },
+        {
+          "_id": "ade177f5ef56",
+          "_type": "Variable",
+          "type": "String",
+          "name": "Content",
+          "defaultValue": "Подписаться"
+        },
+        {
+          "_id": "de43eb935b6c38",
+          "_type": "Variable",
+          "type": "Color",
+          "name": "Button bg",
+          "defaultValue": "rgb(118, 169, 99)"
+        }
+      ]
+    },
+    "3": {
+      "_type": "Fragment",
+      "_id": "3",
+      "children": [
+        {
+          "_type": "Frame",
+          "_id": "8dae6001bb73a",
+          "opacity": 1,
+          "parent": "$Fragment:3",
+          "visible": true,
+          "overflow": "visible",
+          "children": [
+            {
+              "_id": "05995dc860d5b",
+              "_type": "Text",
+              "position": "relative",
+              "widthType": "Hug",
+              "heightType": "Hug",
+              "content": {
+                "_id": "043d1e395b824",
+                "_type": "Variable",
+                "type": "String",
+                "name": "Content",
+                "defaultValue": "Button"
+              },
+              "parent": "$Frame:8dae6001bb73a",
+              "visible": true,
+              "attributes": {
+                "fontSize": "16px",
+                "_type": "Text",
+                "_id": "05995dc860d5b.attributes",
+                "fontWeight": "500"
+              },
+              "overrides": []
+            }
+          ],
+          "width": 186,
+          "height": 64,
+          "layoutSizingHorizontal": "Fixed",
+          "layoutSizingVertical": "Fixed",
+          "fillType": "Solid",
+          "positionType": "absolute",
+          "solidFill": {
+            "_id": "65e96154c3b588",
+            "_type": "Variable",
+            "type": "Color",
+            "name": "Fill",
+            "defaultValue": "rgb(201, 255, 206)"
+          },
+          "name": "Frame",
+          "isPrimary": true,
+          "threshold": 320,
+          "borderRadius": "12px",
+          "layerMode": "flex",
+          "layerAlign": "center",
+          "layerDistribute": "center",
+          "widthType": "Hug",
+          "heightType": "Hug",
+          "padding": "10px 20px 10px 20px",
+          "overrides": [],
+          "interactions": [
+            {
+              "on": "click",
+              "event": {
+                "_id": "8d20b5c88b9e08",
+                "_type": "Variable",
+                "type": "Event",
+                "name": "onClick",
+                "mode": "goal",
+                "defaultValue": {
+                  "name": "Button click",
+                  "code": "button-click",
+                  "_type": "Variable",
+                  "_id": "8d20b5c88b9e08.defaultValue"
+                }
+              },
+              "_type": "Frame",
+              "_id": "8dae6001bb73a.interactions.917b369a8e54"
+            }
+          ]
+        }
+      ],
+      "layoutSizingHorizontal": "Fixed",
+      "layoutSizingVertical": "Fixed",
+      "horizontalGrow": "auto",
+      "verticalGrow": "auto",
+      "renderMode": "parent",
+      "opacity": 1,
+      "visible": true,
+      "overflow": "hidden",
+      "overrides": [],
+      "properties": [
+        {
+          "_type": "Variable",
+          "_id": "62218c840bd111"
+        },
+        {
+          "_id": "043d1e395b824",
+          "_type": "Variable",
+          "type": "String",
+          "name": "Content",
+          "defaultValue": "Button"
+        },
+        {
+          "_id": "8d20b5c88b9e08",
+          "_type": "Variable",
+          "type": "Event",
+          "name": "onClick",
+          "mode": "goal",
+          "defaultValue": {
+            "name": "Button click",
+            "code": "button-click",
+            "_type": "Variable",
+            "_id": "8d20b5c88b9e08.defaultValue"
+          }
+        },
+        {
+          "_id": "65e96154c3b588",
+          "_type": "Variable",
+          "type": "Color",
+          "name": "Fill",
+          "defaultValue": "rgb(201, 255, 206)"
+        }
+      ]
+    }
+  },
+  "links": {
+    "2": {
+      "document": {
+        "_type": "Fragment",
+        "_id": "2",
+        "children": [
+          {
+            "_type": "Frame",
+            "_id": "8ca5e60891635",
+            "opacity": 1,
+            "parent": "$Fragment:2",
+            "visible": true,
+            "overflow": "visible",
+            "children": [
+              {
+                "_id": "27d3ddbee4719",
+                "_type": "Text",
+                "position": "relative",
+                "widthType": "Hug",
+                "heightType": "Hug",
+                "content": "Подписывайтесь <br/>на телеграм scores24!",
+                "parent": "$Frame:8ca5e60891635",
+                "visible": true,
+                "attributes": {
+                  "fontSize": "20px",
+                  "_type": "Text",
+                  "_id": "27d3ddbee4719.attributes",
+                  "fontWeight": "700"
+                },
+                "overrides": [
+                  {
+                    "_type": "Text",
+                    "overrideFrom": "$Text:27d3ddbee4719",
+                    "parent": "$Frame:37bf93b19207c8",
+                    "_id": "47e0ef42e5b6b",
+                    "children": [],
+                    "attributes": {
+                      "textAlign": "center",
+                      "_type": "Text",
+                      "_id": "47e0ef42e5b6b.attributes"
+                    }
+                  }
+                ]
+              },
+              {
+                "_id": "1266bbf76e3708",
+                "_type": "Text",
+                "position": "relative",
+                "widthType": "Fill",
+                "heightType": "Hug",
+                "content": "Актуальные новости, статистика, лучшие прогнозы, тренды и ставки дня!",
+                "parent": "$Frame:8ca5e60891635",
+                "visible": true,
+                "overrides": [
+                  {
+                    "_type": "Text",
+                    "overrideFrom": "$Text:1266bbf76e3708",
+                    "parent": "$Frame:37bf93b19207c8",
+                    "_id": "3b9cd0cbf244d8",
+                    "children": [],
+                    "attributes": {
+                      "textAlign": "center",
+                      "_type": "Text",
+                      "_id": "3b9cd0cbf244d8.attributes"
+                    }
+                  }
+                ],
+                "whiteSpace": "normal"
+              },
+              {
+                "_id": "bf7d341f570538",
+                "_type": "Frame",
+                "solidFill": {
+                  "_id": "de43eb935b6c38",
+                  "_type": "Variable",
+                  "type": "Color",
+                  "name": "Button bg",
+                  "defaultValue": "rgb(118, 169, 99)"
+                },
+                "fillType": "Solid",
+                "position": "relative",
+                "width": 47,
+                "height": 40,
+                "parent": "$Frame:8ca5e60891635",
+                "visible": true,
+                "children": [
+                  {
+                    "_id": "40887812eee47",
+                    "_type": "Text",
+                    "position": "relative",
+                    "widthType": "Hug",
+                    "heightType": "Hug",
+                    "content": {
+                      "_id": "ade177f5ef56",
+                      "_type": "Variable",
+                      "type": "String",
+                      "name": "Content",
+                      "defaultValue": "Подписаться"
+                    },
+                    "parent": "$Frame:bf7d341f570538",
+                    "visible": true,
+                    "attributes": {
+                      "textTransform": "uppercase",
+                      "_type": "Text",
+                      "_id": "40887812eee47.attributes",
+                      "color": "rgb(255, 255, 255)",
+                      "fontWeight": "500"
+                    },
+                    "overrides": [
+                      {
+                        "_type": "Text",
+                        "overrideFrom": "$Text:40887812eee47",
+                        "parent": "$Frame:44f1d3d47534e",
+                        "_id": "b01dca17f26e88",
+                        "children": []
+                      },
+                      {
+                        "_type": "Text",
+                        "overrideFrom": "$Text:40887812eee47",
+                        "parent": "$Frame:a9f922e209c18",
+                        "_id": "8c9226a5435d3",
+                        "children": []
+                      },
+                      {
+                        "_type": "Text",
+                        "overrideFrom": "$Text:40887812eee47",
+                        "parent": "$Frame:5cf7a56f65f7a8",
+                        "_id": "51107dba7cca6",
+                        "children": []
+                      }
+                    ]
+                  }
+                ],
+                "layerMode": "flex",
+                "layerAlign": "center",
+                "layerDistribute": "center",
+                "widthType": "Hug",
+                "heightType": "Fixed",
+                "padding": "15px 20px 15px 20px",
+                "borderRadius": "8px",
+                "overrides": [
+                  {
+                    "_type": "Frame",
+                    "overrideFrom": "$Frame:bf7d341f570538",
+                    "parent": "$Frame:37bf93b19207c8",
+                    "_id": "5cf7a56f65f7a8",
+                    "children": [
+                      {
+                        "_type": "Text",
+                        "overrideFrom": "$Text:40887812eee47",
+                        "parent": "$Frame:5cf7a56f65f7a8",
+                        "_id": "51107dba7cca6",
+                        "children": []
+                      }
+                    ]
+                  }
+                ],
+                "top": 133,
+                "interactions": [
+                  {
+                    "on": "click",
+                    "event": {
+                      "_id": "d34e05738561d8",
+                      "_type": "Variable",
+                      "type": "Event",
+                      "name": "Goal",
+                      "mode": "goal",
+                      "defaultValue": {
+                        "name": "Click tg",
+                        "code": "click-tg",
+                        "_type": "Variable",
+                        "_id": "d34e05738561d8.defaultValue"
+                      }
+                    },
+                    "_type": "Frame",
+                    "_id": "bf7d341f570538.interactions.a33ff3afabe53"
+                  },
+                  {
+                    "on": "click",
+                    "event": {
+                      "_id": "e037940040d198",
+                      "_type": "Variable",
+                      "type": "Event",
+                      "name": "Event",
+                      "mode": "callback"
+                    },
+                    "_type": "Frame",
+                    "_id": "bf7d341f570538.interactions.d8c9aaaf5ce39"
+                  }
+                ],
+                "opacity": 1
+              }
+            ],
+            "width": 417,
+            "height": 206,
+            "layoutSizingHorizontal": "Fixed",
+            "layoutSizingVertical": "Fixed",
+            "fillType": "Solid",
+            "positionType": "absolute",
+            "solidFill": "rgb(255, 255, 255)",
+            "name": "Frame",
+            "isPrimary": true,
+            "threshold": 320,
+            "layerMode": "flex",
+            "layerAlign": "start",
+            "layerDistribute": "start",
+            "borderRadius": "12px",
+            "widthType": "Fixed",
+            "layerGap": 25,
+            "padding": "20px",
+            "layerDirection": "vertical",
+            "overrides": [
+              {
+                "_type": "Frame",
+                "overrideFrom": "$Frame:8ca5e60891635",
+                "parent": "$Fragment:2",
+                "name": "Mobile",
+                "threshold": 375,
+                "top": 0,
+                "left": 527,
+                "width": 375,
+                "isBreakpoint": true,
+                "isPrimary": false,
+                "_id": "37bf93b19207c8",
+                "children": [
+                  {
+                    "_type": "Text",
+                    "overrideFrom": "$Text:27d3ddbee4719",
+                    "parent": "$Frame:37bf93b19207c8",
+                    "_id": "47e0ef42e5b6b",
+                    "children": [],
+                    "attributes": {
+                      "textAlign": "center",
+                      "_type": "Text",
+                      "_id": "47e0ef42e5b6b.attributes"
+                    }
+                  },
+                  {
+                    "_type": "Text",
+                    "overrideFrom": "$Text:1266bbf76e3708",
+                    "parent": "$Frame:37bf93b19207c8",
+                    "_id": "3b9cd0cbf244d8",
+                    "children": [],
+                    "attributes": {
+                      "textAlign": "center",
+                      "_type": "Text",
+                      "_id": "3b9cd0cbf244d8.attributes"
+                    }
+                  },
+                  {
+                    "_type": "Frame",
+                    "overrideFrom": "$Frame:bf7d341f570538",
+                    "parent": "$Frame:37bf93b19207c8",
+                    "_id": "5cf7a56f65f7a8",
+                    "children": [
+                      {
+                        "_type": "Text",
+                        "overrideFrom": "$Text:40887812eee47",
+                        "parent": "$Frame:5cf7a56f65f7a8",
+                        "_id": "51107dba7cca6",
+                        "children": []
+                      }
+                    ]
+                  }
+                ],
+                "layerAlign": "center"
+              }
+            ],
+            "heightType": "Hug"
+          },
+          {
+            "_type": "Frame",
+            "overrideFrom": "$Frame:8ca5e60891635",
+            "parent": "$Fragment:2",
+            "name": "Mobile",
+            "threshold": 375,
+            "top": 0,
+            "left": 527,
+            "width": 375,
+            "isBreakpoint": true,
+            "isPrimary": false,
+            "_id": "37bf93b19207c8",
+            "children": [
+              {
+                "_type": "Text",
+                "overrideFrom": "$Text:27d3ddbee4719",
+                "parent": "$Frame:37bf93b19207c8",
+                "_id": "47e0ef42e5b6b",
+                "children": [],
+                "attributes": {
+                  "textAlign": "center",
+                  "_type": "Text",
+                  "_id": "47e0ef42e5b6b.attributes"
+                }
+              },
+              {
+                "_type": "Text",
+                "overrideFrom": "$Text:1266bbf76e3708",
+                "parent": "$Frame:37bf93b19207c8",
+                "_id": "3b9cd0cbf244d8",
+                "children": [],
+                "attributes": {
+                  "textAlign": "center",
+                  "_type": "Text",
+                  "_id": "3b9cd0cbf244d8.attributes"
+                }
+              },
+              {
+                "_type": "Frame",
+                "overrideFrom": "$Frame:bf7d341f570538",
+                "parent": "$Frame:37bf93b19207c8",
+                "_id": "5cf7a56f65f7a8",
+                "children": [
+                  {
+                    "_type": "Text",
+                    "overrideFrom": "$Text:40887812eee47",
+                    "parent": "$Frame:5cf7a56f65f7a8",
+                    "_id": "51107dba7cca6",
+                    "children": []
+                  }
+                ]
+              }
+            ],
+            "layerAlign": "center"
+          }
+        ],
+        "layoutSizingHorizontal": "Fixed",
+        "layoutSizingVertical": "Fixed",
+        "horizontalGrow": "fill",
+        "verticalGrow": "auto",
+        "renderMode": "parent",
+        "opacity": 1,
+        "visible": true,
+        "overflow": "hidden",
+        "overrides": [],
+        "properties": [
+          {
+            "_type": "Variable",
+            "_id": "62218c840bd111"
+          },
+          {
+            "_id": "f131adc37dce7",
+            "_type": "Variable",
+            "type": "Event",
+            "name": "Goal",
+            "mode": "goal"
+          },
+          {
+            "_id": "d34e05738561d8",
+            "_type": "Variable",
+            "type": "Event",
+            "name": "Goal",
+            "mode": "goal",
+            "defaultValue": {
+              "name": "Click tg",
+              "code": "click-tg",
+              "_type": "Variable",
+              "_id": "d34e05738561d8.defaultValue"
+            }
+          },
+          {
+            "_id": "e037940040d198",
+            "_type": "Variable",
+            "type": "Event",
+            "name": "Event",
+            "mode": "callback"
+          },
+          {
+            "_id": "2f9af8ae03dfe",
+            "_type": "Variable",
+            "type": "Number"
+          },
+          {
+            "_id": "ade177f5ef56",
+            "_type": "Variable",
+            "type": "String",
+            "name": "Content",
+            "defaultValue": "Подписаться"
+          },
+          {
+            "_id": "de43eb935b6c38",
+            "_type": "Variable",
+            "type": "Color",
+            "name": "Button bg",
+            "defaultValue": "rgb(118, 169, 99)"
+          }
+        ]
+      },
+      "linkedFragments": [
+        {
+          "id": 3,
+          "document": {
+            "_type": "Fragment",
+            "_id": "3",
+            "children": [
+              {
+                "_type": "Frame",
+                "_id": "8dae6001bb73a",
+                "opacity": 1,
+                "parent": "$Fragment:3",
+                "visible": true,
+                "overflow": "visible",
+                "children": [
+                  {
+                    "_id": "05995dc860d5b",
+                    "_type": "Text",
+                    "position": "relative",
+                    "widthType": "Hug",
+                    "heightType": "Hug",
+                    "content": {
+                      "_id": "043d1e395b824",
+                      "_type": "Variable",
+                      "type": "String",
+                      "name": "Content",
+                      "defaultValue": "Button"
+                    },
+                    "parent": "$Frame:8dae6001bb73a",
+                    "visible": true,
+                    "attributes": {
+                      "fontSize": "16px",
+                      "_type": "Text",
+                      "_id": "05995dc860d5b.attributes",
+                      "fontWeight": "500"
+                    },
+                    "overrides": []
+                  }
+                ],
+                "width": 186,
+                "height": 64,
+                "layoutSizingHorizontal": "Fixed",
+                "layoutSizingVertical": "Fixed",
+                "fillType": "Solid",
+                "positionType": "absolute",
+                "solidFill": {
+                  "_id": "65e96154c3b588",
+                  "_type": "Variable",
+                  "type": "Color",
+                  "name": "Fill",
+                  "defaultValue": "rgb(201, 255, 206)"
+                },
+                "name": "Frame",
+                "isPrimary": true,
+                "threshold": 320,
+                "borderRadius": "12px",
+                "layerMode": "flex",
+                "layerAlign": "center",
+                "layerDistribute": "center",
+                "widthType": "Hug",
+                "heightType": "Hug",
+                "padding": "10px 20px 10px 20px",
+                "overrides": [],
+                "interactions": [
+                  {
+                    "on": "click",
+                    "event": {
+                      "_id": "8d20b5c88b9e08",
+                      "_type": "Variable",
+                      "type": "Event",
+                      "name": "onClick",
+                      "mode": "goal",
+                      "defaultValue": {
+                        "name": "Button click",
+                        "code": "button-click",
+                        "_type": "Variable",
+                        "_id": "8d20b5c88b9e08.defaultValue"
+                      }
+                    },
+                    "_type": "Frame",
+                    "_id": "8dae6001bb73a.interactions.917b369a8e54"
+                  }
+                ]
+              }
+            ],
+            "layoutSizingHorizontal": "Fixed",
+            "layoutSizingVertical": "Fixed",
+            "horizontalGrow": "auto",
+            "verticalGrow": "auto",
+            "renderMode": "parent",
+            "opacity": 1,
+            "visible": true,
+            "overflow": "hidden",
+            "overrides": [],
+            "properties": [
+              {
+                "_type": "Variable",
+                "_id": "62218c840bd111"
+              },
+              {
+                "_id": "043d1e395b824",
+                "_type": "Variable",
+                "type": "String",
+                "name": "Content",
+                "defaultValue": "Button"
+              },
+              {
+                "_id": "8d20b5c88b9e08",
+                "_type": "Variable",
+                "type": "Event",
+                "name": "onClick",
+                "mode": "goal",
+                "defaultValue": {
+                  "name": "Button click",
+                  "code": "button-click",
+                  "_type": "Variable",
+                  "_id": "8d20b5c88b9e08.defaultValue"
+                }
+              },
+              {
+                "_id": "65e96154c3b588",
+                "_type": "Variable",
+                "type": "Color",
+                "name": "Fill",
+                "defaultValue": "rgb(201, 255, 206)"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

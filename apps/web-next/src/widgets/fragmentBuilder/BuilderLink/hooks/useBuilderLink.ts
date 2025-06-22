@@ -1,9 +1,11 @@
-import { definition } from '@fragmentsx/definition'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
+import { useLayerPropertyValue } from '@/shared/hooks/fragmentBuilder/useLayerPropertyVariable'
 
 export const useBuilderLink = () => {
   const [href, setHref] = useLayerValue('href')
-  const [hrefTarget, setHrefTarget] = useLayerValue('hrefTarget')
+  const [hrefNewTab, setHrefNewTab] = useLayerValue('hrefNewTab')
+  const hrefVariable = useLayerPropertyValue('href')
+  const hrefTargetVariable = useLayerPropertyValue('hrefNewTab')
 
   const onClickHeader = () => {
     if (href) {
@@ -14,14 +16,18 @@ export const useBuilderLink = () => {
   }
 
   return {
-    href,
-    setHref,
+    href: {
+      value: href,
+      variable: hrefVariable,
+      onChange: setHref
+    },
     isNewTab: {
-      value: hrefTarget,
-      onChange: setHrefTarget,
+      value: hrefNewTab,
+      variable: hrefTargetVariable,
+      onChange: setHrefNewTab,
       items: [
-        { label: 'Yes', name: definition.linkTarget._blank },
-        { label: 'No', name: definition.linkTarget.none }
+        { label: 'Yes', name: true },
+        { label: 'No', name: false }
       ]
     },
     onClick: onClickHeader

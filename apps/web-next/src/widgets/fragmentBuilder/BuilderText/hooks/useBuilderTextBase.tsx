@@ -25,7 +25,8 @@ import { wrapTextInParagraphWithAttributes } from '../lib/wrapTextInParagraphWit
 import { isVariableLink } from '@/shared/utils/isVariableLink'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
-import { useLayerVariables } from '@/shared/hooks/fragmentBuilder/useLayerVariables'
+import { useLayerVariables } from '../../../../shared/hooks/fragmentBuilder/useLayerVariable'
+import { useLayerPropertyValue } from '@/shared/hooks/fragmentBuilder/useLayerPropertyVariable'
 
 const aligns: TabsSelectorItem[] = [
   {
@@ -70,7 +71,7 @@ export const useBuilderTextBase = () => {
   const [attributesValue, setAttributes] = useLayerValue('attributes')
   const [content, setContent, contentInfo] = useLayerValue('content')
   const [whiteSpace, setWhiteSpace] = useLayerValue('whiteSpace')
-  const contentVariable = useLayerVariables('content')
+  const contentVariable = useLayerPropertyValue('content')
   const attributes = attributesValue ?? {}
 
   const openColor = () => {

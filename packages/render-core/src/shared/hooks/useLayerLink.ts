@@ -8,11 +8,11 @@ export const useLayerLink = (layerKey) => {
   const { manager: fragmentManager } = useContext(FragmentContext);
 
   const [href] = useLayerValue(layerKey, "href", fragmentManager);
-  const [hrefTarget] = useLayerValue(layerKey, "hrefTarget", fragmentManager);
+  const [hrefNewTab] = useLayerValue(layerKey, "hrefNewTab", fragmentManager);
 
   return {
-    isLink: isValue(href),
+    isLink: isValue(href) && typeof href === "string" && !!href?.length,
     linkHref: href,
-    linkTarget: hrefTarget,
+    linkTarget: hrefNewTab ? "_blank" : "",
   };
 };

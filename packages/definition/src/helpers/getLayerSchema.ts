@@ -8,6 +8,7 @@ import { BooleanVariableSchema } from "@/schemas/variables/BooleanVariableSchema
 import { ColorVariableSchema } from "@/schemas/variables/ColorVariableSchema";
 import { StringVariableSchema } from "@/schemas/variables/StringVariableSchema";
 import { EventVariableSchema } from "@/schemas/variables/EventVariableSchema";
+import { LinkVariableSchema } from "@/schemas/variables/LinkVariableSchema";
 
 export const getLayerSchema = (layer?: unknown) => {
   if (!layer?._type) return null;
@@ -24,6 +25,7 @@ export const getLayerSchema = (layer?: unknown) => {
       [variableType.String]: StringVariableSchema,
       [variableType.Color]: ColorVariableSchema,
       [variableType.Event]: EventVariableSchema,
+      [variableType.Link]: LinkVariableSchema,
     };
 
     if (layer.type in types) {

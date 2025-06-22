@@ -29,7 +29,7 @@ export const useLayerStyles = (layerKey: LinkKey) => {
     const { width, height, ...optionalSizes } = useLayerSize(layerKey);
     const { position, top, left } = useLayerPosition(layerKey);
     const display = useLayerDisplay(layerKey);
-    const { background } = useLayerBackground(layerKey);
+    const background = useLayerBackground(layerKey);
     const { border } = useLayerBorder(layerKey);
     const layout = useLayerLayout(layerKey);
     const [zIndex] = useLayerValue(layerKey, "zIndex", fragmentManager);
@@ -42,7 +42,7 @@ export const useLayerStyles = (layerKey: LinkKey) => {
 
     return {
       border,
-      background,
+      ...background,
       position,
       top,
       left,

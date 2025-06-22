@@ -14,7 +14,7 @@ import { InputSelectVariable } from '@/shared/ui/InputSelectVariable'
 import { definition } from '@fragmentsx/definition'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
-interface BuilderControlRowProps extends PropsWithChildren {
+export interface BuilderControlRowProps extends PropsWithChildren {
   title?: string
   className?: string
   actions?: RenderDropdownProps['options']

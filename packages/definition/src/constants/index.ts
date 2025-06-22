@@ -67,6 +67,7 @@ export const effectName = createConstants(
 export const variableType = createConstants(
   "Event",
   "String",
+  "Link",
   "Boolean",
   "Array",
   "Color",

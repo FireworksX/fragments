@@ -9,7 +9,7 @@ import { InstanceContext } from "@/components/Instance";
 export const useReadVariable = (variableKey?: LinkKey) => {
   const isVariable = isVariableLink(variableKey);
   const { manager: fragmentManager } = useContext(FragmentContext);
-  const { props, innerManager, layerKey } = useContext(InstanceContext);
+  const { props, innerManager } = useContext(InstanceContext);
 
   // const { props, innerManager, layerKey } = use(InstanceContext);
   const resultManager = innerManager ?? fragmentManager;
@@ -45,11 +45,16 @@ export const useReadVariable = (variableKey?: LinkKey) => {
       "defaultValue",
       "required"
     );
+
     const { _id: propertyId } = resultManager?.entityOfKey(variableKey) ?? {};
     const currentValue = props?.[propertyId] ?? null;
     const required = variableLayer?.required ?? false;
     const defaultValue = variableLayer?.defaultValue ?? null;
     const resultValue = required ? currentValue : currentValue ?? defaultValue;
+
+    if (isVariableLink(resultValue)) {
+      return readVariable(resultValue);
+    }
 
     return {
       value: resultValue,

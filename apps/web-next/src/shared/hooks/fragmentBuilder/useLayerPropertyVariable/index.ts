@@ -1,0 +1,55 @@
+import { fieldsConfig } from './fieldsConfig'
+import { useCallback, useMemo } from 'react'
+import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
+import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
+import { useLayerVariable, UseLayerVariableOptions } from '../useLayerVariable'
+
+interface Options extends Pick<UseLayerVariableOptions, 'setName' | 'createName' | 'onSetValue'> {
+  editAfterCreate?: boolean
+}
+
+export const useLayerPropertyValue = (field: keyof typeof fieldsConfig, options?: Options) => {
+  const fieldEntity = fieldsConfig[field]
+  const [fieldValue, setFieldValue, fieldInfo] = useLayerValue(field)
+  const disabled = !fieldEntity
+  const { editProperty } = useFragmentProperties()
+
+  const handleSetValue = useCallback(
+    (value: unknown) => {
+      if (options?.onSetValue) {
+        options?.onSetValue?.(value)
+      } else {
+        setFieldValue(value)
+      }
+
+      if (options?.editAfterCreate !== false) {
+        editProperty(value)
+      }
+    },
+    [editProperty, options, setFieldValue]
+  )
+
+  const { createVariable, allowVariables, actions } = useLayerVariable({
+    value: fieldValue,
+    disabled,
+    preferredField: fieldEntity,
+    onSetValue: handleSetValue,
+    ...options
+  })
+
+  const restoreValue = () => {
+    fieldInfo?.restore(fieldEntity?.defaultValue)
+  }
+
+  return {
+    disabled,
+    createVariable,
+    resetVariable: restoreValue,
+    editVariable: () => {
+      fieldInfo?.isVariable && editProperty(fieldInfo?.rawValue)
+    },
+    variableLink: fieldInfo?.isVariable ? fieldInfo?.resultValue : null,
+    actions,
+    allowVariables
+  }
+}

@@ -16,7 +16,7 @@ export const useTextContent = (layerKey: LinkKey, manager: GraphState) => {
 
   const resultAttributes = {
     ...attributes,
-    color: attributes.color ?? "rgb(0, 0, 0)",
+    color: attributes?.color ?? "rgb(0, 0, 0)",
   };
 
   return useMemo(() => {

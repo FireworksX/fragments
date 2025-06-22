@@ -1,36 +1,43 @@
 import { fieldsConfig } from './fieldsConfig'
 import { useCallback, useMemo } from 'react'
+import { definition } from '@fragmentsx/definition'
 import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
 import { useGraphStack } from '@graph-state/react'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { pick } from '@fragmentsx/utils'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 
-interface Options {
+interface PreferredField {
+  type: keyof typeof definition.variableType
+  name?: string
+  defaultValue?: unknown
+}
+
+export interface UseLayerVariableOptions {
+  preferredField: PreferredField
+  value?: unknown
+  disabled?: boolean
   createName?: string
   setName?: string
-  editAfterCreate?: boolean
+  // editAfterCreate?: boolean
   onSetValue?: (value: unknown) => void
 }
 
-export const useLayerVariables = (field: keyof typeof fieldsConfig, options?: Options) => {
+export const useLayerVariable = (options: UseLayerVariableOptions) => {
   const { documentManager } = useBuilderDocument()
-  const [fieldValue, setFieldValue, fieldInfo] = useLayerValue(field)
   const { properties: propertiesLinks, createProperty, editProperty } = useFragmentProperties()
   const properties = useGraphStack(documentManager, propertiesLinks, {
     selector: data => (data ? pick(data, '_id', '_type', 'type', 'name') : data)
   })
-  const disabled = !(field in fieldsConfig)
-  const fieldType = fieldsConfig?.[field]?.type
+  // const disabled = !(field in fieldsConfig)
+  const fieldType = options?.preferredField?.type
 
   const proxySetFieldValue = useCallback(
     (value: unknown) => {
-      if (options?.onSetValue) {
-        options?.onSetValue?.(value)
-      }
-      setFieldValue(value)
+      options?.onSetValue?.(value)
+      // setFieldValue(value)
     },
-    [options, setFieldValue]
+    [options]
   )
 
   const getVariableName = (preferredName: string) => {
@@ -40,26 +47,26 @@ export const useLayerVariables = (field: keyof typeof fieldsConfig, options?: Op
 
   const createVariable = useCallback(
     (customFields?: unknown) => {
-      const fieldEntity = fieldsConfig[field]
+      const fieldEntity = options?.preferredField ?? {}
       const preferredName = getVariableName(fieldEntity.name)
       const property = createProperty({
         ...fieldEntity,
         name: preferredName,
-        defaultValue: fieldValue ?? fieldEntity?.defaultValue,
+        defaultValue: options?.value ?? fieldEntity?.defaultValue,
         ...(customFields ?? {})
       })
       proxySetFieldValue?.(property)
 
-      if (options?.editAfterCreate !== false) {
-        editProperty(property)
-      }
+      // if (options?.editAfterCreate !== false) {
+      //   editProperty(property)
+      // }
     },
-    [createProperty, editProperty, field, fieldValue, getVariableName, options?.editAfterCreate, proxySetFieldValue]
+    [options?.preferredField, options?.value, getVariableName, createProperty, proxySetFieldValue]
   )
 
   const allowVariables = useMemo(() => {
     const allowProps = properties.filter(
-      prop => prop?.type === fieldType && documentManager.keyOfEntity(prop) !== fieldValue
+      prop => prop?.type === fieldType && documentManager.keyOfEntity(prop) !== options?.value
     )
 
     if (allowProps.length) {
@@ -81,22 +88,23 @@ export const useLayerVariables = (field: keyof typeof fieldsConfig, options?: Op
     }
 
     return []
-  }, [documentManager, fieldType, fieldValue, options?.setName, properties, proxySetFieldValue])
+  }, [documentManager, fieldType, options?.value, options?.setName, properties, proxySetFieldValue])
 
-  const restoreValue = () => {
-    const fieldEntity = fieldsConfig[field]
-    fieldInfo?.restore(fieldEntity?.defaultValue)
-  }
+  // const restoreValue = () => {
+  //   const fieldEntity = fieldsConfig[field]
+  //   // fieldInfo?.restore(fieldEntity?.defaultValue)
+  // }
 
   return {
-    disabled,
+    // disabled,
     createVariable,
-    resetVariable: restoreValue,
-    editVariable: () => {
-      fieldInfo?.isVariable && editProperty(fieldInfo?.rawValue)
-    },
-    variableLink: fieldInfo?.isVariable ? fieldInfo?.resultValue : null,
-    actions: !disabled
+    // resetVariable: restoreValue,
+    // editVariable: () => {
+    //   console.log(fieldInfo)
+    //   fieldInfo?.isVariable && editProperty(fieldInfo?.rawValue)
+    // },
+    // variableLink: fieldInfo?.isVariable ? fieldInfo?.resultValue : null,
+    actions: !options?.disabled
       ? [
           {
             name: 'createVariable',

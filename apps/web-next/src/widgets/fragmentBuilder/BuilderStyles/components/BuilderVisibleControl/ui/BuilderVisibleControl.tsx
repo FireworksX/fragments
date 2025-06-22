@@ -7,7 +7,8 @@ import { InputNumber } from '@/shared/ui/InputNumber'
 import { Slider } from '@/shared/ui/Slider'
 import { booleanTabsSelectorItems } from '@/shared/data'
 import { TabsSelector } from '@/shared/ui/TabsSelector'
-import { useLayerVariables } from '@/shared/hooks/fragmentBuilder/useLayerVariables'
+import { useLayerVariables } from '../../../../../../shared/hooks/fragmentBuilder/useLayerVariable'
+import { useLayerPropertyValue } from '@/shared/hooks/fragmentBuilder/useLayerPropertyVariable'
 
 interface BuilderVisibleControlProps {
   className?: string
@@ -15,7 +16,7 @@ interface BuilderVisibleControlProps {
 
 export const BuilderVisibleControl: FC<BuilderVisibleControlProps> = memo(({ className }) => {
   const [value, setValue, valueInfo] = useLayerValue('visible')
-  const { disabled, actions, variableLink, resetVariable } = useLayerVariables('visible')
+  const { disabled, actions, variableLink, resetVariable } = useLayerPropertyValue('visible')
 
   return (
     <ControlRow

@@ -17,6 +17,11 @@ import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { useInstancePropertyValue } from '@/shared/hooks/fragmentBuilder/useInstancePropertyValue'
 import { useNormalizeLayer } from '@/shared/hooks/fragmentBuilder/useNormalizeLayer'
 import InstancePropertyEvent from '../../InstancePropertyEvent/ui/InstancePropertyEvent'
+import { useLayerVariable, useLayerVariables } from '../../../../../../../shared/hooks/fragmentBuilder/useLayerVariable'
+import { isVariableLink } from '@/shared/utils/isVariableLink'
+import { useLayerPropertyValue } from '@/shared/hooks/fragmentBuilder/useLayerPropertyVariable'
+import { fieldsConfig } from '@/shared/hooks/fragmentBuilder/useLayerPropertyVariable/fieldsConfig'
+import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
 
 interface InstancePropertyGenericProps {
   value: unknown
@@ -40,7 +45,30 @@ const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({
   // const [value, setValue, valueInfo] = useInstancePropertyValue(selection, property)
   // const propertyLayer = valueInfo?.propertyLayer ?? {}
   // const type = valueInfo?.propertyLayer?.type
+  const { editProperty } = useFragmentProperties()
+
   const { layer } = useNormalizeLayer(property, manager)
+  const entity =
+    layer?.nodePropertyControlReference in fieldsConfig ? fieldsConfig[layer?.nodePropertyControlReference] : null
+  const instanceVariable = useLayerVariable({
+    preferredField: entity,
+    onSetValue: value => {
+      onChange(value)
+      editProperty(value)
+    }
+  })
+
+  const controlRowProps = {
+    hasConnector: !!entity,
+    variable: {
+      link: isVariableLink(value) ? value : null,
+      actions: instanceVariable.actions,
+      onClick: () => editProperty(value),
+      onReset: () => {
+        onChange(null)
+      }
+    }
+  }
 
   // const [] = useGr
 
@@ -59,7 +87,21 @@ const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({
   }
 
   if (layer?.type === definition.variableType.String) {
-    return <InstancePropertyString name={layer.name} isTextarea={layer.isTextarea} value={value} onChange={onChange} />
+    return (
+      <InstancePropertyString
+        name={layer.name}
+        isTextarea={layer.isTextarea}
+        hasConnector={!instanceVariable.disabled}
+        variable={instanceVariable}
+        value={value}
+        onChange={onChange}
+        {...controlRowProps}
+      />
+    )
+  }
+
+  if (layer?.type === definition.variableType.Link) {
+    return <InstancePropertyString name={layer.name} value={value} onChange={onChange} />
   }
 
   if (layer?.type === definition.variableType.Boolean) {

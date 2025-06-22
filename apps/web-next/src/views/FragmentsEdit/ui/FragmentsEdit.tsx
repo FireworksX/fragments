@@ -56,6 +56,7 @@ import StackInteraction from '@/features/popouts/StackInteraction/ui/StackIntera
 import StackEventProperty from '@/features/popouts/StackEventProperty/ui/StackEventProperty'
 import StackGoals from '@/features/popouts/StackGoals/ui/StackGoals'
 import StackCreateGoal from '@/features/popouts/StackCreateGoal/ui/StackCreateGoal'
+import StackLinkProperty from '../../../features/popouts/StackLinkProperty/ui/StackLinkProperty'
 
 const FragmentsEditInitial = () => {
   // const { setRenderTarget } = useRenderTarget()
@@ -101,6 +102,7 @@ const FragmentsEditInitial = () => {
                   <StackPanelCssOverride name='cssOverride' title='CSS override' />
                   <StackSolidPaintStyle name={popoutNames.stackSolidPaintStyle} title='Color Variable' />
                   <StackStringProperty name={popoutNames.stackStringProperty} title='String Property' />
+                  <StackLinkProperty name={popoutNames.stackLinkProperty} title='Link Property' />
                   <StackNumberProperty name={popoutNames.stackNumberProperty} title='Number Property' />
                   <StackEventProperty name={popoutNames.stackEventProperty} title='Event Property' />
                   <StackBooleanProperty name={popoutNames.stackBooleanProperty} title='Boolean Property' />

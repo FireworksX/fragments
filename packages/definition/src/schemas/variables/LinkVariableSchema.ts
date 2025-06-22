@@ -1,0 +1,18 @@
+import * as v from "valibot";
+import { layerField } from "@/helpers/layerField";
+import { variableType } from "@/constants";
+import { GraphFieldSchema } from "@/schemas/GraphFieldSchema";
+
+export const LinkVariableSchema = v.object({
+  nodePropertyControlReference: layerField(v.string(), { fallback: null }),
+  name: layerField(v.string(), {
+    fallback: "Link",
+    overridable: false,
+  }),
+  type: layerField(v.literal(variableType.Link), {
+    fallback: variableType.Link,
+  }),
+  defaultValue: layerField(v.string(), { fallback: "" }),
+  required: layerField(v.boolean(), { fallback: false }),
+  ...GraphFieldSchema.entries,
+});

@@ -1,21 +1,23 @@
 import { definition } from '@fragmentsx/definition'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
-import { useLayerVariables } from '@/shared/hooks/fragmentBuilder/useLayerVariables'
+import { useLayerVariable, useLayerVariables } from '../../../../shared/hooks/fragmentBuilder/useLayerVariable'
 import { LinkKey } from '@graph-state/core'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { popoutsStore } from '@/shared/store/popouts.store'
 import { popoutNames } from '@/shared/data'
 import { nextTick } from '@/shared/utils/nextTick'
+import { useLayerPropertyValue } from '@/shared/hooks/fragmentBuilder/useLayerPropertyVariable'
+import { fieldsConfig } from '@/shared/hooks/fragmentBuilder/useLayerPropertyVariable/fieldsConfig'
 
 export const useBuilderInteractions = () => {
   const { documentManager } = useBuilderDocument()
   const { selection } = useBuilderSelection()
   const [interactions, setInteractions, interactionsInfo] = useLayerValue('interactions')
-  const { actions, createVariable } = useLayerVariables('event', {
+  const { actions, createVariable } = useLayerVariable({
+    preferredField: fieldsConfig.event,
     createName: 'New Event',
     setName: 'Set Event',
-    editAfterCreate: false,
     onSetValue: value => {
       addInteraction(value)
     }
@@ -23,7 +25,7 @@ export const useBuilderInteractions = () => {
 
   const openInteraction = (index: number) => {
     const currentInteractions = documentManager.resolve(selection)?.interactions
-    const currentInteraction = currentInteractions.at(index)
+    const currentInteraction = currentInteractions?.at(index)
 
     popoutsStore.open(popoutNames.stackInteraction, {
       initial: true,
@@ -48,6 +50,7 @@ export const useBuilderInteractions = () => {
 
     const currentInteractions = documentManager.resolve(selection)?.interactions
     const index = currentInteractions?.length - 1
+
     openInteraction(index)
   }
 

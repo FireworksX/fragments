@@ -1,52 +1,55 @@
-.root {
-    display: flex;
-    align-items: center;
-    background: var(--background-secondary);
-    border-radius: var(--radius-second);
-    position: relative;
-    overflow: hidden;
-    padding: 3px;
-}
-
-.switcher {
-    position: absolute;
-    left: 0;
-    top: 3px;
-    height: calc(100% - 6px);
-    background: var(--background);
-    border-radius: var(--radius-small);
-}
-
-.cell {
-    font-size: 12px;
-    flex: 1;
-    color: var(--secondary);
-    display: flex;
-    font-weight: 500;
-    position: relative;
-    justify-content: center;
-    align-items: center;
-    height: 24px;
-    cursor: pointer;
-    padding-inline: 2px;
-
-    &.active {
-        color: var(--primary);
+@layer {
+    .root {
+        display: flex;
+        align-items: center;
+        background: var(--background-secondary);
+        border-radius: var(--radius-second);
+        position: relative;
+        overflow: hidden;
+        padding: 3px;
+        min-height: 30px;
     }
 
-    &.disabled {
-        color: var(--primary-disabled);
+    .switcher {
+        position: absolute;
+        left: 0;
+        top: 3px;
+        height: calc(100% - 6px);
+        background: var(--background);
+        border-radius: var(--radius-small);
     }
-}
 
-.divider {
-    width: 1px;
-    height: 14px;
-    background: var(--border);
-    transition: var(--animation-transition-default);
-    opacity: 1;
+    .cell {
+        font-size: 12px;
+        flex: 1;
+        color: var(--secondary);
+        display: flex;
+        font-weight: 500;
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        height: 24px;
+        cursor: pointer;
+        padding-inline: 2px;
 
-    &.hidden {
-        opacity: 0;
+        &.active {
+            color: var(--primary);
+        }
+
+        &.disabled {
+            color: var(--primary-disabled);
+        }
+    }
+
+    .divider {
+        width: 1px;
+        height: 14px;
+        background: var(--border);
+        transition: var(--animation-transition-default);
+        opacity: 1;
+
+        &.hidden {
+            opacity: 0;
+        }
     }
 }

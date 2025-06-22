@@ -3,8 +3,9 @@ import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { animated } from '@react-spring/web'
 import { InputText } from '@/shared/ui/InputText'
 import { Textarea } from '@/shared/ui/Textarea'
+import { BuilderControlRowProps } from '@/shared/ui/ControlRow/ui/default/ControlRow'
 
-interface InstancePropertyStringProps {
+interface InstancePropertyStringProps extends Pick<BuilderControlRowProps, 'variable' | 'hasConnector'> {
   name: string
   value: string
   isTextarea?: boolean
@@ -12,9 +13,16 @@ interface InstancePropertyStringProps {
   onChange(value: string): void
 }
 
-const InstancePropertyString: FC<InstancePropertyStringProps> = ({ className, isTextarea, name, value, onChange }) => {
+const InstancePropertyString: FC<InstancePropertyStringProps> = ({
+  className,
+  isTextarea,
+  name,
+  value,
+  onChange,
+  ...controlRowProps
+}) => {
   return (
-    <ControlRow className={className} title={name}>
+    <ControlRow className={className} title={name} {...controlRowProps}>
       <ControlRowWide>
         {isTextarea ? (
           <Textarea value={value ?? ''} onChangeValue={onChange} />

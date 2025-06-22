@@ -19,8 +19,8 @@ interface BuilderLinkProps {
 }
 
 const BuilderLink: FC<BuilderLinkProps> = ({ className }) => {
-  const { href, setHref, isNewTab, onClick } = useBuilderLink()
-  const isEmpty = !isValue(href)
+  const { href, isNewTab, onClick } = useBuilderLink()
+  const isEmpty = !isValue(href.value)
 
   return (
     <Panel
@@ -30,12 +30,30 @@ const BuilderLink: FC<BuilderLinkProps> = ({ className }) => {
     >
       {!isEmpty && (
         <>
-          <ControlRow title='Link to'>
+          <ControlRow
+            title='Link to'
+            hasConnector={!href.variable.disabled}
+            variable={{
+              link: href.variable.variableLink,
+              actions: href.variable.actions,
+              onClick: href.variable.editVariable,
+              onReset: href.variable.resetVariable
+            }}
+          >
             <ControlRowWide>
-              <InputText value={href} onChangeValue={setHref} />
+              <InputText value={href.value} onChangeValue={href.onChange} />
             </ControlRowWide>
           </ControlRow>
-          <ControlRow title='New tab'>
+          <ControlRow
+            title='New tab'
+            hasConnector={!isNewTab.variable.disabled}
+            variable={{
+              link: isNewTab.variable.variableLink,
+              actions: isNewTab.variable.actions,
+              onClick: isNewTab.variable.editVariable,
+              onReset: isNewTab.variable.resetVariable
+            }}
+          >
             <ControlRowWide>
               <TabsSelector
                 items={isNewTab.items}

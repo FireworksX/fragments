@@ -4,6 +4,7 @@ import { eventMode, variableType } from "@/constants";
 import { GraphFieldSchema } from "@/schemas/GraphFieldSchema";
 
 export const EventVariableSchema = v.object({
+  nodePropertyControlReference: layerField(v.string(), { fallback: null }),
   name: layerField(v.string(), {
     fallback: "Event",
     overridable: false,

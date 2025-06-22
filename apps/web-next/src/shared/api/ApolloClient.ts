@@ -59,6 +59,9 @@ export function makeApolloClient() {
                   cache.modify({
                     id: `ProjectDirectoryGet:${parentId}`, // Родительский объект
                     fields: {
+                      hasFragments() {
+                        return true
+                      },
                       fragments(existingFragments = []) {
                         return [...existingFragments, incoming]
                       }

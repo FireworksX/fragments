@@ -17,7 +17,7 @@ interface FragmentProps {
 }
 
 const FragmentInternal: FC<FragmentProps> = ({ fragmentId }) => {
-  const { children, hash, isTopFragment, manager, isResize } =
+  const { children, hash, isTopFragment, fragmentContext, isResize } =
     useFragment(fragmentId);
 
   // const testRef = useRef();
@@ -42,7 +42,7 @@ const FragmentInternal: FC<FragmentProps> = ({ fragmentId }) => {
       className={hash}
     >
       {children.map((childLink) => {
-        const childLayer = manager?.resolve(childLink);
+        const childLayer = fragmentContext.manager?.resolve(childLink);
         const isPrimary = childLayer?.isPrimary ?? false;
         return (
           <Frame
