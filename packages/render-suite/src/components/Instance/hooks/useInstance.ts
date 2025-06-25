@@ -55,16 +55,8 @@ export const useInstance = (instanceProps: InstanceProps) => {
   //   fragmentId: instanceLayer?.fragment,
   // };
 
-  const propsVars = Object.entries(
-    omit(instanceCore.props, "_type", "_id") ?? {}
-  ).reduce((acc, [key, value]) => {
-    acc[`--${key}`] = value;
-    return acc;
-  }, {});
-
   return {
     ...instanceCore,
-    propsVars,
     styles,
     isDeepInstance: !!layerKey,
     layerKey: instanceProps.layerKey,

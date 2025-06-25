@@ -5,6 +5,17 @@ import { getAllChildren } from "./getAllChildren";
 import { buildCssBlock } from "./buildCssBlock";
 
 export const styleSheetPlugin: Plugin = (state) => {
+  const extractCustomStyles = () => {
+    let resultStyles = "";
+    const entries = Array.from(state.$styleSheet?.customStyles?.entries?.());
+
+    entries.forEach(([selector, styles]) => {
+      resultStyles += `${selector} {${styles.join("\n")}}`;
+    });
+
+    return resultStyles;
+  };
+
   const extractStyleSheet = () => {
     const fragments = findGroups(state);
     const cssMaker = makeCss(state);
@@ -38,7 +49,7 @@ export const styleSheetPlugin: Plugin = (state) => {
       group.larger.forEach((largerLayer, index, arr) => {
         const largerChildren = getAllChildren(state, largerLayer);
 
-        const largerCssBlocks = largerChildren.map((l) => cssMaker(l, 123));
+        const largerCssBlocks = largerChildren.map(cssMaker);
 
         const min = largerLayer.width;
         const max = index < arr.length - 1 ? arr[index + 1].width - 1 : null;
@@ -66,8 +77,23 @@ export const styleSheetPlugin: Plugin = (state) => {
 
   state.$styleSheet = {
     cache: new Map(),
+    customStyles: new Map(),
     addStyle: (layerKey: LinkKey, styles, layer) =>
       state.$styleSheet?.cache?.set(layerKey, { styles, layer }),
+
+    registerLayerStyle: (layerKey: LinkKey, styles, layer) => {
+      state.$styleSheet?.cache?.set(layerKey, { styles, layer });
+    },
+
+    registerCustomStyle: (style: string, selector?: string = ":global") => {
+      const currentStyles =
+        state.$styleSheet?.customStyles?.get(selector) ?? [];
+
+      currentStyles.push(style);
+
+      state.$styleSheet?.customStyles?.set(selector, currentStyles);
+    },
     extract: extractStyleSheet,
+    extractCustomStyles,
   };
 };

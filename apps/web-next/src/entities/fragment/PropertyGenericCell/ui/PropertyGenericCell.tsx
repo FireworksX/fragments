@@ -21,6 +21,7 @@ import { InputText } from '@/shared/ui/InputText'
 import { Select } from '@/shared/ui/Select'
 import { RenderDropdown } from '@/shared/ui/RenderDropdown'
 import { definition } from '@fragmentsx/definition'
+import SmartCell from '@/shared/ui/SmartCell/ui/SmartCell'
 
 interface PropertyBooleanCellProps {
   propertyLink: LinkKey
@@ -60,17 +61,9 @@ export const PropertyGenericCell: FC<PropertyBooleanCellProps> = ({ propertyLink
 
   return (
     <>
-      <Cell
-        effect='none'
+      <SmartCell
         className={cn(styles.root, className, { [styles.open]: isOpen })}
-        before={
-          <div className={styles.before}>
-            <Touchable className={cn(styles.caret, { [styles.hideCaret]: !withExtend })} onClick={toggleIsOpen}>
-              <ExtendIcon />
-            </Touchable>
-            <div className={styles.icon}>{Icon && <Icon />}</div>
-          </div>
-        }
+        icon={<div className={styles.icon}>{Icon && <Icon />}</div>}
         after={
           <RenderDropdown appendTo='body' trigger='click' options={[dropdownActions]} hideOnClick>
             <div className={styles.aside}>
@@ -82,8 +75,8 @@ export const PropertyGenericCell: FC<PropertyBooleanCellProps> = ({ propertyLink
         }
         onClick={handleClickProperty}
       >
-        <div className={styles.body}>{name}</div>
-      </Cell>
+        {name}
+      </SmartCell>
 
       {creating && (
         <div className={styles.creatingContainer}>

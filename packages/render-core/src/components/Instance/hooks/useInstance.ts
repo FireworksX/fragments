@@ -8,6 +8,7 @@ import { useGlobalManager } from "@/shared/hooks/useGlobalManager";
 import { useHash } from "@/shared/hooks/useHash";
 import { omit } from "@fragmentsx/utils";
 import { useInstanceProps } from "@/components/Instance/hooks/useInstanceProps";
+import { useLayerLink } from "@/shared/hooks/useLayerLink";
 
 export const useInstance = (instanceProps: InstanceProps) => {
   const { manager: parentManager } = useContext(FragmentContext);

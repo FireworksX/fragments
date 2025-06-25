@@ -47,6 +47,7 @@ export { useLayerSizeValue } from "@/shared/hooks/useLayerStyles/useLayerSizeVal
 export { useLayerDisplay } from "@/shared/hooks/useLayerStyles/useLayerDisplay";
 export { useLayerLayout } from "@/shared/hooks/useLayerStyles/useLayerLayout";
 export { useCalcLayerBorder } from "@/shared/hooks/useLayerStyles/useCalcLayerBorder";
+export { useLayerCssOverride } from "@/shared/hooks/useLayerStyles/useLayerCssOverride";
 
 export { GlobalManager } from "@/providers/GlobalManager";
 export * from "@/providers/StyleSheetProvider";

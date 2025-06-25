@@ -8,6 +8,7 @@ import ColorFillIcon from '@/shared/icons/fills/color-fill.svg'
 import ActionIcon from '@/shared/icons/fills/action-fill.svg'
 import GoalIcon from '@/shared/icons/fills/goal-fill.svg'
 import LinkIcon from '@/shared/icons/fills/link-fill.svg'
+import OptionIcon from '@/shared/icons/fills/option-fill.svg'
 
 interface VariableIconProps {
   type: keyof typeof definition.variableType
@@ -22,6 +23,7 @@ export const VariableIcon: FC<VariableIconProps> = ({ type, mode }) => {
     [definition.variableType.String]: <TextFrameFillIcon style={{ color: 'var(--primary)' }} width={22} height={22} />,
     [definition.variableType.Color]: <ColorFillIcon style={{ color: 'var(--primary)' }} width={22} height={22} />,
     [definition.variableType.Link]: <LinkIcon style={{ color: 'var(--primary)' }} width={22} height={22} />,
+    [definition.variableType.Enum]: <OptionIcon style={{ color: 'var(--primary)' }} width={22} height={22} />,
     [definition.variableType.Event]:
       mode === definition.eventMode.goal ? (
         <GoalIcon style={{ color: 'var(--primary)' }} width={22} height={22} />

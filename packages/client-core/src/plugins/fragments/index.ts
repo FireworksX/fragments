@@ -1,8 +1,27 @@
 import { createState, Plugin } from "@graph-state/core";
-import { isHtmlContent, isHTMLNode } from "@graph-state/checkers";
+import {
+  isGraph,
+  isHtmlContent,
+  isHTMLNode,
+  isLinkKey,
+} from "@graph-state/checkers";
 import { definition } from "@fragmentsx/definition";
 import { isKey } from "@fragmentsx/utils";
 import { styleSheetPlugin } from "@/plugins/styleSheet";
+
+export const allowTypes = (types: string[]) => (input: unknown) => {
+  if (!input) return false;
+  let type: string | null = null;
+  if (isLinkKey(input)) {
+    type = (input as string).split(":")?.[0];
+  }
+
+  if (isGraph(input)) {
+    type = input._type;
+  }
+
+  return type ? !types.includes(type) : false;
+};
 
 export const fragmentsPlugin: Plugin = (state) => {
   const createFragmentManager = (fragmentId: number, initialDocument = {}) => {
@@ -40,7 +59,12 @@ export const fragmentsPlugin: Plugin = (state) => {
         // cssPlugin,
         styleSheetPlugin,
       ],
-      skip: [isHtmlContent, isHTMLNode, isKey],
+      skip: [
+        isHtmlContent,
+        isHTMLNode,
+        isKey,
+        allowTypes(Object.keys(definition.nodes)),
+      ],
     });
 
     manager.mutate(tempGraph);

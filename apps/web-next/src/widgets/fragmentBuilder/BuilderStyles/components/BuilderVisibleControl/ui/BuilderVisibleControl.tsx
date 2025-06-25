@@ -16,7 +16,7 @@ interface BuilderVisibleControlProps {
 
 export const BuilderVisibleControl: FC<BuilderVisibleControlProps> = memo(({ className }) => {
   const [value, setValue, valueInfo] = useLayerValue('visible')
-  const { disabled, actions, variableLink, resetVariable } = useLayerPropertyValue('visible')
+  const { disabled, actions, variableLink, resetVariable, editVariable } = useLayerPropertyValue('visible')
 
   return (
     <ControlRow
@@ -31,6 +31,7 @@ export const BuilderVisibleControl: FC<BuilderVisibleControlProps> = memo(({ cla
       variable={{
         link: variableLink,
         actions,
+        onClick: editVariable,
         onReset: resetVariable
       }}
     >

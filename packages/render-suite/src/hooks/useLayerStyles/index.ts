@@ -5,7 +5,11 @@ import { LinkKey } from "@graph-state/core";
 import { useLayerPosition } from "./useLayerPosition";
 import { useLayerSize } from "./useLayerSize";
 import { useLayerValue } from "@/hooks/useLayerValue";
-import { FragmentContext, useLayerDisplay } from "@fragmentsx/render-core";
+import {
+  FragmentContext,
+  useLayerDisplay,
+  useLayerCssOverride,
+} from "@fragmentsx/render-core";
 import { useLayerBackground } from "@/hooks/useLayerStyles/useLayerBackground";
 import { useLayerBorder } from "@/hooks/useLayerStyles/useLayerBorder";
 import { useLayerLayout } from "@/hooks/useLayerStyles/useLayerLayout";
@@ -39,6 +43,7 @@ export const useLayerStyles = (layerKey: LinkKey) => {
       "borderRadius",
       fragmentManager
     );
+    const cssOverride = useLayerCssOverride(layerKey);
 
     return {
       border,
@@ -56,6 +61,7 @@ export const useLayerStyles = (layerKey: LinkKey) => {
       ...optionalSizes,
       whiteSpace,
       display,
+      ...cssOverride,
       userSelect: "none",
     };
   } catch (e) {

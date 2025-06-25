@@ -7,8 +7,6 @@ import {
   useInstance,
 } from "@fragmentsx/render-core";
 import { Fragment } from "@/components/Fragment";
-import { isBrowser } from "@/helpers/isBrowser";
-import { loadFragmentManager } from "@/helpers/loadFragmentManager";
 
 interface InstanceOptions {
   ssr?: boolean;

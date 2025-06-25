@@ -34,6 +34,13 @@ export const useInstanceProps = (instanceProps: InstanceProps) => {
   const drilledProps = Object.values(mergedProps).filter(isVariableLink);
   const resolveDrilledProps = useGraphStack(parentManager, drilledProps);
 
+  /**
+   * TODO
+   * В будущем нужно будет открепить drilled переменные, сейчас они
+   * крепятся к инстансу, который их использует, а должен браться от родительского
+   * инстанса.
+   */
+
   const resultProps = useMemo(() => {
     const props = { ...mergedProps };
 
@@ -47,6 +54,11 @@ export const useInstanceProps = (instanceProps: InstanceProps) => {
   }, [resolveDrilledProps, mergedProps]);
 
   const cssProps = Object.entries(resultProps).reduce((acc, [key, value]) => {
+    if (isVariableLink(value)) {
+      const nestedVariableId = parentManager.entityOfKey(value)?._id;
+      value = `var(--${nestedVariableId})`;
+    }
+
     acc[`--${key}`] = value;
     return acc;
   }, {});

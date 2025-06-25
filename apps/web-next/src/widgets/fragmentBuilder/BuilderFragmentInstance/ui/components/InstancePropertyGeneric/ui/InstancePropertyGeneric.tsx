@@ -22,6 +22,7 @@ import { isVariableLink } from '@/shared/utils/isVariableLink'
 import { useLayerPropertyValue } from '@/shared/hooks/fragmentBuilder/useLayerPropertyVariable'
 import { fieldsConfig } from '@/shared/hooks/fragmentBuilder/useLayerPropertyVariable/fieldsConfig'
 import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
+import InstancePropertyEnum from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/components/InstancePropertyEnum/ui/InstancePropertyEnum'
 
 interface InstancePropertyGenericProps {
   value: unknown
@@ -65,7 +66,7 @@ const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({
       actions: instanceVariable.actions,
       onClick: () => editProperty(value),
       onReset: () => {
-        onChange(null)
+        onChange(entity?.defaultValue ?? null)
       }
     }
   }
@@ -82,6 +83,7 @@ const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({
         max={layer.max}
         displayStepper={layer.displayStepper}
         onChange={onChange}
+        {...controlRowProps}
       />
     )
   }
@@ -91,8 +93,6 @@ const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({
       <InstancePropertyString
         name={layer.name}
         isTextarea={layer.isTextarea}
-        hasConnector={!instanceVariable.disabled}
-        variable={instanceVariable}
         value={value}
         onChange={onChange}
         {...controlRowProps}
@@ -105,15 +105,43 @@ const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({
   }
 
   if (layer?.type === definition.variableType.Boolean) {
-    return <InstancePropertyBoolean name={layer.name} isTextarea={layer.isTextarea} value={value} onChange={onChange} />
+    return (
+      <InstancePropertyBoolean
+        name={layer.name}
+        isTextarea={layer.isTextarea}
+        value={value}
+        onChange={onChange}
+        {...controlRowProps}
+      />
+    )
   }
 
   if (layer?.type === definition.variableType.Color) {
-    return <InstancePropertyColor name={layer.name} value={value} onChange={onChange} />
+    return <InstancePropertyColor name={layer.name} value={value} onChange={onChange} {...controlRowProps} />
+  }
+
+  if (layer?.type === definition.variableType.Enum) {
+    return (
+      <InstancePropertyEnum
+        propertyReference={layer?.nodePropertyControlReference}
+        name={layer.name}
+        value={value}
+        onChange={onChange}
+        {...controlRowProps}
+      />
+    )
   }
 
   if (layer?.type === definition.variableType.Event) {
-    return <InstancePropertyEvent name={layer.name} mode={layer?.mode} value={value} onChange={onChange} />
+    return (
+      <InstancePropertyEvent
+        name={layer.name}
+        mode={layer?.mode}
+        value={value}
+        onChange={onChange}
+        {...controlRowProps}
+      />
+    )
   }
 
   return null

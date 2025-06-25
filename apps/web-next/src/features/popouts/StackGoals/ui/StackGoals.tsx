@@ -23,6 +23,10 @@ import { Cell } from '@/shared/ui/Cell'
 import PlusIcon from '@/shared/icons/next/plus.svg'
 import { pick, times } from '@fragmentsx/utils'
 import { useStackGoals } from '@/features/popouts/StackGoals/hooks/useStackGoals'
+import { Dropdown } from '@/shared/ui/Dropdown'
+import { DropdownOption } from '@/shared/ui/DropdownOption'
+import InfoIcon from '@/shared/icons/next/info.svg'
+import { DropdownGroup } from '@/shared/ui/DropdownGroup'
 
 interface StackNumberVariableProps {
   className?: string
@@ -78,7 +82,18 @@ const StackGoals: FC<StackNumberVariableProps> = ({ className }) => {
         <Cell
           key={goal.id}
           className={cn(styles.cell, { [styles.active]: context?.activeGoalCode === goal.code })}
-          description={goal.code}
+          description={
+            <Dropdown
+              trigger='mouseenter'
+              options={
+                <DropdownGroup>
+                  <DropdownOption>{goal.code}</DropdownOption>
+                </DropdownGroup>
+              }
+            >
+              <InfoIcon />
+            </Dropdown>
+          }
           onClick={() => context?.onSelect?.(pick(goal, 'name', 'code'))}
         >
           {goal.name}

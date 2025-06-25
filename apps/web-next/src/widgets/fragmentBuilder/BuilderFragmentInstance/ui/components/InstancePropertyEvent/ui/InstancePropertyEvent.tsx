@@ -8,8 +8,9 @@ import { popoutNames } from '@/shared/data'
 import { objectToColorString } from '@fragmentsx/utils'
 import ActionIcon from '@/shared/icons/next/zap.svg'
 import GoalIcon from '@/shared/icons/next/circle-dot.svg'
+import { BuilderControlRowProps } from '@/shared/ui/ControlRow/ui/default/ControlRow'
 
-interface InstancePropertyEventProps {
+interface InstancePropertyEventProps extends Pick<BuilderControlRowProps, 'variable' | 'hasConnector'> {
   name: string
   value: { name?: string }
   mode?: keyof typeof definition.eventMode
@@ -17,11 +18,18 @@ interface InstancePropertyEventProps {
   onChange(value: string): void
 }
 
-const InstancePropertyEvent: FC<InstancePropertyEventProps> = ({ className, name, mode, value, onChange }) => {
-  if (typeof value?.name !== 'string') return null
+const InstancePropertyEvent: FC<InstancePropertyEventProps> = ({
+  className,
+  name,
+  mode,
+  value,
+  onChange,
+  ...controlRowProps
+}) => {
+  // if (typeof value?.name !== 'string') return null
 
   return (
-    <ControlRow className={className} title={name}>
+    <ControlRow className={className} title={name} {...controlRowProps}>
       <ControlRowWide>
         <InputSelect
           hasIcon

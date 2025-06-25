@@ -34,14 +34,14 @@ const Inner = memo((allProps) => {
 });
 
 export const Instance: FC<InstanceProps> = (instanceProps) => {
-  const { styles, hash, isDeepInstance, propsVars, ...allProps } =
+  const { styles, hash, isDeepInstance, cssProps, ...allProps } =
     useInstance(instanceProps);
 
   if (allProps.parentManager) {
     return (
       <animated.div
         className={isDeepInstance ? hash : null}
-        style={!isDeepInstance ? { ...styles, ...propsVars } : {}}
+        style={!isDeepInstance ? { ...styles, ...cssProps } : {}}
         data-key={instanceProps.layerKey}
       >
         <Inner {...allProps} />

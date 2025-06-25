@@ -5,6 +5,7 @@ import { OverridesSchema } from "@/schemas/OverridesSchema";
 import { PositionSchema } from "@/schemas/styles/PositionSchema";
 import { SceneSchema } from "@/schemas/styles/SceneSchema";
 import { SizeSchema } from "@/schemas/styles/SizeSchema";
+import { LinkSchema } from "@/schemas/LinkSchema";
 
 export const InstanceSchema = v.object({
   name: layerField(v.string(), { fallback: "Instance", overridable: false }),
@@ -33,4 +34,5 @@ export const InstanceSchema = v.object({
   ...PositionSchema.entries,
   ...SizeSchema.entries,
   ...SceneSchema.entries,
+  ...LinkSchema.entries,
 });

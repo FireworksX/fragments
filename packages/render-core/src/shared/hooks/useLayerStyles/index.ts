@@ -17,6 +17,9 @@ import {
 } from "@/shared/hooks/useReadVariables";
 import { useGraph } from "@graph-state/react";
 import { useLayerTextStyles } from "@/shared/hooks/useLayerStyles/useLayerTextStyles";
+import { isVariableLink } from "@/shared/helpers/checks";
+import { InstanceContext } from "@/components/Instance";
+import { useLayerCssOverride } from "@/shared/hooks/useLayerStyles/useLayerCssOverride";
 
 export const useLayerStyles = (layerKey: LinkKey) => {
   try {
@@ -39,6 +42,7 @@ export const useLayerStyles = (layerKey: LinkKey) => {
     );
     const [whiteSpace] = useLayerValue(layerKey, "whiteSpace", fragmentManager);
     const textStyles = useLayerTextStyles(layerKey);
+    const cssOverride = useLayerCssOverride(layerKey);
 
     // const [{ props, _type }] = useGraph(fragmentManager, layerKey, {
     //   selector: (graph) => pick(graph, "props", "_type"),
@@ -54,23 +58,30 @@ export const useLayerStyles = (layerKey: LinkKey) => {
     //     : []
     // );
 
-    let props = {};
-    const { _type } = fragmentManager.entityOfKey(layerKey) ?? {};
-    if (_type === definition.nodes.Instance) {
-      const instanceProps = omit(
-        fragmentManager?.resolve(layerKey)?.props,
-        "_id",
-        "_type"
-      );
-      props = Object.entries(instanceProps).reduce((acc, [key, value]) => {
-        acc[`--${key}`] = value;
-        return acc;
-      }, {});
-    }
+    // let props = {};
+    // const { _type } = fragmentManager.entityOfKey(layerKey) ?? {};
+    // if (_type === definition.nodes.Instance) {
+    //   const instanceProps = omit(
+    //     fragmentManager?.resolve(layerKey)?.props,
+    //     "_id",
+    //     "_type"
+    //   );
+    //
+    //   props = Object.entries(instanceProps).reduce((acc, [key, value]) => {
+    //     if (isVariableLink(value)) {
+    //       const nestedVariableId = fragmentManager?.entityOfKey?.(value)?._id;
+    //       value = `var(--${nestedVariableId})`;
+    //     }
+    //
+    //     acc[`--${key}`] = value;
+    //     return acc;
+    //   }, {});
+    // }
+
+    // console.log(layerKey, props, fragmentManager?.resolve(layerKey));
 
     return {
-      ...(props ?? {}),
-      display,
+      // ...(props ?? {}),
       border,
       ...background,
       position,
@@ -83,7 +94,9 @@ export const useLayerStyles = (layerKey: LinkKey) => {
       ...layout,
       ...layerSize,
       ...textStyles,
+      display,
       "user-select": "none",
+      ...cssOverride,
     };
   } catch (e) {
     console.debug(e);

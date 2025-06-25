@@ -27,6 +27,7 @@ interface SmartCellProps {
   collapsed?: boolean
   ref?: ForwardedRef<ComponentRef<'div'>>
   icon?: ReactNode
+  after?: ReactNode
   selected?: boolean
   isLoading?: boolean
   onEdit?(value: string): void
@@ -40,6 +41,7 @@ const SmartCell: FC<SmartCellProps> = ({
   children,
   selected,
   icon,
+  after,
   ref,
   collapsed,
   isLoading,
@@ -113,6 +115,7 @@ const SmartCell: FC<SmartCellProps> = ({
           {icon && <div className={styles.icon}>{icon}</div>}
         </div>
       }
+      after={after}
       onClick={handleClickCell}
     >
       <div className={styles.label}>
