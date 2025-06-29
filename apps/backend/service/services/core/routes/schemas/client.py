@@ -3,7 +3,7 @@ from typing import List, Optional
 
 import strawberry
 
-from services.core.routes.schemas.filter import DeviceType, OSType
+from services.core.routes.schemas.release_condition import DeviceType, OSType
 
 
 @strawberry.type

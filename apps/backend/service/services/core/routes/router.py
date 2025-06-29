@@ -68,7 +68,6 @@ from .project import (
     update_project_goal_route,
     update_project_route,
 )
-from .schemas import AllFiltersGet
 from .schemas.area import AreaGet, AreaPatch, AreaPost
 from .schemas.campaign import CampaignGet, CampaignPatch, CampaignPost
 from .schemas.client import ClientGet, ClientHistoryGet, ClientHistoryInput
@@ -86,6 +85,7 @@ from .schemas.project import (
     ProjectPatch,
     ProjectPost,
 )
+from .schemas.release_condition import AllFiltersGet
 from .schemas.user import AuthPayload, RoleGet, UserGet
 from .user import add_avatar_route, delete_avatar_route, login, profile, refresh, signup
 

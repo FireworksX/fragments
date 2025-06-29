@@ -6,7 +6,7 @@ from crud.geolocation import get_geo_locations
 from database import Session
 from services.core.routes.middleware import Context
 
-from .schemas.filter import AllFiltersGet, CountryGet, DeviceType, OSType, RegionGet
+from .schemas.release_condition import AllFiltersGet, CountryGet, DeviceType, OSType, RegionGet
 from .schemas.user import AuthPayload
 
 
