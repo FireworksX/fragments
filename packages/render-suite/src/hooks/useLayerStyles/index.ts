@@ -43,7 +43,7 @@ export const useLayerStyles = (layerKey: LinkKey) => {
       "borderRadius",
       fragmentManager
     );
-    const cssOverride = useLayerCssOverride(layerKey);
+    // const cssOverride = useLayerCssOverride(layerKey);
 
     return {
       border,
@@ -61,7 +61,7 @@ export const useLayerStyles = (layerKey: LinkKey) => {
       ...optionalSizes,
       whiteSpace,
       display,
-      ...cssOverride,
+      // ...cssOverride,
       userSelect: "none",
     };
   } catch (e) {

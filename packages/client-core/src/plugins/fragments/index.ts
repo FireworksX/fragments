@@ -4,24 +4,13 @@ import {
   isHtmlContent,
   isHTMLNode,
   isLinkKey,
+  allowTypes,
 } from "@graph-state/checkers";
 import { definition } from "@fragmentsx/definition";
-import { isKey } from "@fragmentsx/utils";
-import { styleSheetPlugin } from "@/plugins/styleSheet";
-
-export const allowTypes = (types: string[]) => (input: unknown) => {
-  if (!input) return false;
-  let type: string | null = null;
-  if (isLinkKey(input)) {
-    type = (input as string).split(":")?.[0];
-  }
-
-  if (isGraph(input)) {
-    type = input._type;
-  }
-
-  return type ? !types.includes(type) : false;
-};
+import { isBrowser, isKey } from "@fragmentsx/utils";
+import { fragmentStylesheetPlugin } from "@/plugins/styleSheet";
+import { autoInjector } from "@/plugins/styleSheet/utils/autoInjector";
+import { PLUGIN_TYPES } from "@/fragmentsClient";
 
 export const fragmentsPlugin: Plugin = (state) => {
   const createFragmentManager = (fragmentId: number, initialDocument = {}) => {
@@ -57,13 +46,18 @@ export const fragmentsPlugin: Plugin = (state) => {
           };
         },
         // cssPlugin,
-        styleSheetPlugin,
+        fragmentStylesheetPlugin,
       ],
       skip: [
         isHtmlContent,
         isHTMLNode,
         isKey,
-        allowTypes(Object.keys(definition.nodes)),
+        allowTypes([
+          ...Object.keys(definition.nodes),
+          "Temp",
+          "Spring",
+          PLUGIN_TYPES.FragmentStylesheet,
+        ]),
       ],
     });
 
@@ -86,14 +80,14 @@ export const fragmentsPlugin: Plugin = (state) => {
   };
 
   state.$fragments = {
-    key: `FragmentsPlugin:root`,
+    key: `${PLUGIN_TYPES.FragmentsPlugin}:root`,
     createFragmentManager,
     getManager,
     getManagers,
   };
 
   state.mutate({
-    _type: "FragmentsPlugin",
+    _type: PLUGIN_TYPES.FragmentsPlugin,
     _id: "root",
     managers: {},
   });

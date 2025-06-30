@@ -8,8 +8,12 @@ export const useStyleSheet = (manager) => {
 
   const addLayerStyle = useCallback(
     (layerKey, styles, layer) => {
-      if (manager && "addStyle" in manager?.$styleSheet) {
-        manager?.$styleSheet?.addStyle(layerKey, styles, layer);
+      if (
+        !!manager?.$styleSheet &&
+        manager &&
+        "addStyle" in manager?.$styleSheet
+      ) {
+        manager?.$styleSheet?.addStyle?.(layerKey, styles, layer);
 
         if (isBrowser) {
           injectStyle();

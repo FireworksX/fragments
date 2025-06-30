@@ -3,8 +3,10 @@ import { definition } from "@fragmentsx/definition";
 import { fetchPlugin } from "@/plugins/fetch";
 import { fragmentsPlugin } from "@/plugins/fragments";
 import { metricsPlugin } from "@/plugins/metrics";
-import { isBrowser } from "@fragmentsx/utils";
+import { createConstants, isBrowser } from "@fragmentsx/utils";
 import { loadFragmentPlugin } from "@/plugins/loadFragment";
+import { globalStylesheetPlugin } from "@/plugins/styleSheet";
+import { allowTypes } from "@graph-state/checkers";
 
 interface Options {
   apiToken: string;
@@ -13,10 +15,22 @@ interface Options {
 
 let inited = false;
 
+export const PLUGIN_TYPES = createConstants(
+  "FragmentsPlugin",
+  "GlobalStylesheet",
+  "FragmentStylesheet"
+);
+
 export const createFragmentsClient = (options: Options) => {
   return createState({
     _type: "GlobalManager",
     initialState: {},
+    skip: [
+      allowTypes([
+        ...Object.keys(definition.nodes),
+        ...Object.keys(PLUGIN_TYPES),
+      ]),
+    ],
     plugins: [
       (state) => {
         state.env = {
@@ -52,6 +66,7 @@ export const createFragmentsClient = (options: Options) => {
       fragmentsPlugin,
       loadFragmentPlugin,
       metricsPlugin,
+      globalStylesheetPlugin,
 
       (state) => {
         if (isBrowser && !inited) {

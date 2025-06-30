@@ -55,6 +55,7 @@ export const boot = () => {
   };
 
   return {
+    getInstance: () => clientInstance,
     init,
     renderInstance,
     autoRender,

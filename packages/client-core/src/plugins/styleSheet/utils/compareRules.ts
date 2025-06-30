@@ -1,4 +1,4 @@
-type CSSRules = Record<string, string | number>;
+export type CSSRules = Record<string, string | number>;
 
 export function compareRules(
   prev: CSSRules = {},
