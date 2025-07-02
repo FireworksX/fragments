@@ -2,7 +2,7 @@ import { useEffect, useState } from "preact/compat";
 import { useGlobalManager } from "@/shared/hooks/useGlobalManager";
 
 export const useFragmentManager = (
-  fragmentId?: unknown,
+  fragmentId?: unknown | null,
   inputGlobalManager
 ) => {
   const {

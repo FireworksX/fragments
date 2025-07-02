@@ -86,11 +86,13 @@ export const useLayerValueSpring = <T>({
 
   const updateValue = useCallback(
     (nextValue: T) => {
-      const target$ = getValue$();
-      if (springable && !isVariableLink(nextValue) && !isInherit) {
-        target$.set(nextValue);
-      } else {
-        onFinish?.(nextValue);
+      if (layerKey) {
+        const target$ = getValue$();
+        if (springable && !isVariableLink(nextValue) && !isInherit) {
+          target$.set(nextValue);
+        } else {
+          onFinish?.(nextValue);
+        }
       }
     },
     [onFinish, getValue$]

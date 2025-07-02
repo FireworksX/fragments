@@ -1,10 +1,11 @@
-import { InstanceProps } from "@/components/Instance";
+import { InstanceContext, InstanceProps } from "@/components/Instance";
 import { useContext, useMemo } from "preact/compat";
 import { FragmentContext } from "@/components/Fragment/FragmentContext";
 import { omit } from "@fragmentsx/utils";
 import { useGraph, useGraphStack } from "@graph-state/react";
 import { isVariableLink } from "@/shared/helpers/checks";
 import { useReadVariable } from "@/shared/hooks/useReadVariable";
+import { useFragmentManager } from "@/shared/hooks/useFragmentManager";
 
 /*
 Работаем по следующему принципу. Instance может рендериться внутри родителя (Fragment)
@@ -19,20 +20,43 @@ import { useReadVariable } from "@/shared/hooks/useReadVariable";
 1. Пропсы мы получаем снаружи
  */
 export const useInstanceProps = (instanceProps: InstanceProps) => {
-  const { manager: parentManager } = useContext(FragmentContext);
-  const { readVariable } = useReadVariable();
+  const isTopInstance = !instanceProps?.layerKey;
+  const { manager: loadedManager } = useFragmentManager(
+    isTopInstance ? instanceProps?.fragmentId : null
+  );
+  const { manager: fragmentContextManager } = useContext(FragmentContext);
 
-  const [instanceLayer] = useGraph(parentManager, instanceProps.layerKey);
+  const fragmentManager = isTopInstance
+    ? loadedManager
+    : fragmentContextManager;
+
+  const { readVariable } = useReadVariable(null, fragmentManager);
+
+  const [instanceLayer] = useGraph(fragmentManager, instanceProps.layerKey);
   const instanceLayerProps = instanceLayer?.props ?? {};
 
-  const mergedProps = omit(
-    { ...instanceLayerProps, ...(instanceProps.props ?? {}) },
-    "_type",
-    "_id"
-  );
+  const mergedProps = useMemo(() => {
+    let base = instanceLayerProps;
+
+    if (isTopInstance && fragmentManager) {
+      const defs =
+        fragmentManager?.resolve(fragmentManager?.$fragment?.root)
+          ?.properties ?? [];
+
+      defs.forEach((definition) => {
+        const resolvedDefinition = fragmentManager?.resolve(definition);
+        const defId = resolvedDefinition._id;
+
+        base[defId] =
+          instanceProps?.props?.[defId] ?? readVariable(definition)?.value;
+      });
+    }
+
+    return omit(base, "_type", "_id");
+  }, [isTopInstance, fragmentManager, instanceLayerProps]);
 
   const drilledProps = Object.values(mergedProps).filter(isVariableLink);
-  const resolveDrilledProps = useGraphStack(parentManager, drilledProps);
+  const resolveDrilledProps = useGraphStack(fragmentManager, drilledProps);
 
   /**
    * TODO
@@ -44,18 +68,20 @@ export const useInstanceProps = (instanceProps: InstanceProps) => {
   const resultProps = useMemo(() => {
     const props = { ...mergedProps };
 
-    resolveDrilledProps.forEach((variable) => {
-      props[variable?._id] = readVariable(
-        parentManager.keyOfEntity(variable)
-      ).value;
-    });
+    // resolveDrilledProps.forEach((variable) => {
+    //   props[variable?._id] = readVariable(
+    //     fragmentManager.keyOfEntity(variable)
+    //   ).value;
+    // });
 
     return props;
   }, [resolveDrilledProps, mergedProps]);
 
+  console.log(instanceProps, resultProps, mergedProps);
+
   const cssProps = Object.entries(resultProps).reduce((acc, [key, value]) => {
     if (isVariableLink(value)) {
-      const nestedVariableId = parentManager.entityOfKey(value)?._id;
+      const nestedVariableId = fragmentManager.entityOfKey(value)?._id;
       value = `var(--${nestedVariableId})`;
     }
 

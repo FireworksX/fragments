@@ -21,9 +21,10 @@ export const makeCss =
       : {};
 
     const resultCssRules = compareRules(overriderLayerCss, layerCss);
+    const cssOverride = cacheLayer?.cssOverride ?? "";
 
     return {
       hash: layerHash,
-      css: toCSS(resultCssRules),
+      css: cssOverride + toCSS(resultCssRules),
     };
   };

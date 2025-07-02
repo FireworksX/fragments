@@ -1,18 +1,21 @@
 import { useContext } from "preact/compat";
-import { LinkKey } from "@graph-state/core";
+import { GraphState, LinkKey } from "@graph-state/core";
 import { useGraph } from "@graph-state/react";
 import { pick } from "@fragmentsx/utils";
 import { FragmentContext } from "@/components/Fragment/FragmentContext";
 import { isVariableLink } from "@fragmentsx/definition";
 import { InstanceContext } from "@/components/Instance";
 
-export const useReadVariable = (variableKey?: LinkKey) => {
+export const useReadVariable = (
+  variableKey?: LinkKey | null,
+  customManager?: GraphState
+) => {
   const isVariable = isVariableLink(variableKey);
   const { manager: fragmentManager } = useContext(FragmentContext);
   const { props, innerManager } = useContext(InstanceContext);
 
   // const { props, innerManager, layerKey } = use(InstanceContext);
-  const resultManager = innerManager ?? fragmentManager;
+  const resultManager = customManager ?? innerManager ?? fragmentManager;
   const { _id: propertyId } = resultManager?.entityOfKey(variableKey) ?? {};
   // const { layer: propertyLayer } = useLayer(propertyKey, resultManager);
 

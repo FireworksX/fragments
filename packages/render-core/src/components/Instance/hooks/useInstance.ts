@@ -15,8 +15,6 @@ export const useInstance = (instanceProps: InstanceProps) => {
   const [instanceLayer] = useGraph(parentManager, instanceProps.layerKey);
   const styles = useLayerStyles(instanceProps.layerKey);
 
-  const { props, cssProps } = useInstanceProps(instanceProps);
-
   const { manager: resultGlobalManager } = useGlobalManager(
     instanceProps?.globalManager
   );
@@ -24,6 +22,9 @@ export const useInstance = (instanceProps: InstanceProps) => {
   const resultFragmentId = instanceProps?.fragmentId ?? instanceLayer?.fragment;
   const { properties: definitions, manager: innerFragmentManager } =
     useFragmentProperties(resultFragmentId);
+
+  console.log(instanceProps, innerFragmentManager);
+  const { props, cssProps } = useInstanceProps(instanceProps);
 
   // // useInstanceProperties(fragmentManager, layerKey);
   //

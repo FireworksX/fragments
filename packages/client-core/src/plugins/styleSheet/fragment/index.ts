@@ -6,11 +6,12 @@ import { makeCss } from "@/plugins/styleSheet/utils/makeCss";
 import { PLUGIN_TYPES } from "@/fragmentsClient";
 import { autoInjector } from "@/plugins/styleSheet/utils/autoInjector";
 import { setKey } from "@fragmentsx/utils";
+import { CSSRules } from "@/plugins/styleSheet/utils/compareRules";
 
 /**
  * Тип для кэша стилей слоя
  */
-export type LayerStyles = Record<string, { layer: Graph; style: string }>;
+export type LayerStyles = Record<string, CSSRules>;
 
 export type LayerResolver = GraphState["resolve"];
 
@@ -101,9 +102,12 @@ function extractStyleSheet(styles: LayerStyles, layerResolver: LayerResolver) {
   // Основной слой
   fragmentCssRules.push(buildCssBlock(cssMaker(group.fragmentLayerKey)));
   // Primary breakpoint
-  fragmentCssRules.push(
-    ...generatePrimaryCssBlocks(layerResolver, group, cssMaker)
+  const primaryStyles = generatePrimaryCssBlocks(
+    layerResolver,
+    group,
+    cssMaker
   );
+  fragmentCssRules.push(...primaryStyles);
   // Smaller breakpoints
   fragmentCssRules.push(
     ...generateSmallerCssBlocks(layerResolver, group, cssMaker)

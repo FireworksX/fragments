@@ -42,7 +42,7 @@ export const useLayerStyles = (layerKey: LinkKey) => {
     );
     const [whiteSpace] = useLayerValue(layerKey, "whiteSpace", fragmentManager);
     const textStyles = useLayerTextStyles(layerKey);
-    const cssOverride = useLayerCssOverride(layerKey);
+    // const cssOverride = useLayerCssOverride(layerKey);
 
     // const [{ props, _type }] = useGraph(fragmentManager, layerKey, {
     //   selector: (graph) => pick(graph, "props", "_type"),
@@ -96,7 +96,7 @@ export const useLayerStyles = (layerKey: LinkKey) => {
       ...textStyles,
       display,
       "user-select": "none",
-      ...cssOverride,
+      // ...cssOverride,
     };
   } catch (e) {
     console.debug(e);
