@@ -196,9 +196,6 @@ class Campaign(Base):
     experiment_id = Column('experiment_id', Integer, ForeignKey('experiment.id'), nullable=True)
     experiment = relationship('Experiment')
 
-    fragment_id = Column('fragment_id', Integer, ForeignKey('fragment.id'), nullable=True)
-    fragment = relationship('Fragment')
-
 
 class ReleaseCondition(Base):
     __tablename__ = 'release_condition'

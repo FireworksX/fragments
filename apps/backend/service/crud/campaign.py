@@ -20,7 +20,6 @@ async def create_campaign_db(
     archived: bool,
     author_id: int,
     default: bool,
-    fragment_id: Optional[int],
     experiment_id: Optional[int],
     feature_flag: Optional[FeatureFlagPost],
 ) -> Campaign:
@@ -33,7 +32,6 @@ async def create_campaign_db(
         active=active,
         archived=archived,
         author_id=author_id,
-        fragment_id=fragment_id,
         default=default,
         logo_id=default_campaign_logo.id,
     )
@@ -99,8 +97,6 @@ async def update_campaign_by_id_db(db: Session, values: dict) -> Campaign:
         campaign.active = values['active']
     if values.get('archived') is not None:
         campaign.archived = values['archived']
-    if values.get('fragment_id') is not None:
-        campaign.fragment_id = values['fragment_id']
     if values.get('experiment_id') is not None:
         campaign.experiment_id = values['experiment_id']
     db.merge(campaign)
