@@ -1,20 +1,16 @@
-from typing import List, Optional, Union
+from typing import Optional
 
 import strawberry
 
-from services.core.routes.schemas.filter import (
-    DeviceType,
-    FilterDeviceTypeGet,
-    FilterGeoLocationPost,
-    FilterGeoLocationsGet,
-    FilterOSTypeGet,
-    FilterPageGet,
-    FilterTimeFramePost,
-    FilterTimeFramesGet,
-    OSType,
-)
+from services.core.routes.schemas.experiment import ExperimentGet
+from services.core.routes.schemas.feature_flag import FeatureFlagGet, FeatureFlagPost
 from services.core.routes.schemas.fragment import FragmentGet
 from services.core.routes.schemas.media import MediaGet
+from services.core.routes.schemas.release_condition import (
+    ReleaseConditionGet,
+    ReleaseConditionPatch,
+    ReleaseConditionPost,
+)
 from services.core.routes.schemas.user import UserGet
 
 
@@ -29,25 +25,10 @@ class CampaignGet:
     active: bool
     default: bool
     archived: bool
-    filters: List[
-        Union[
-            FilterOSTypeGet
-            | FilterDeviceTypeGet
-            | FilterPageGet
-            | FilterGeoLocationsGet
-            | FilterTimeFramesGet
-        ]
-    ]
+    release_condition: Optional[ReleaseConditionGet] = None
     fragment: Optional[FragmentGet] = None
-
-
-@strawberry.input
-class FiltersPost:
-    os_types: List[OSType]
-    device_types: List[DeviceType]
-    geolocations: List[FilterGeoLocationPost]
-    time_frames: List[FilterTimeFramePost]
-    pages: List[str]
+    experiment: Optional[ExperimentGet] = None
+    feature_flag: Optional[FeatureFlagGet] = None
 
 
 @strawberry.input
@@ -57,8 +38,10 @@ class CampaignPost:
     description: Optional[str] = None
     active: bool
     archived: bool
-    filters: Optional[FiltersPost] = None
     fragment_id: Optional[int] = None
+    release_condition: Optional[ReleaseConditionPost] = None
+    experiment_id: Optional[int] = None
+    feature_flag: Optional[FeatureFlagPost] = None
 
 
 @strawberry.input
@@ -68,5 +51,7 @@ class CampaignPatch:
     description: Optional[str] = None
     active: Optional[bool] = None
     archived: Optional[bool] = None
-    filters: Optional[FiltersPost] = None
     fragment_id: Optional[int] = None
+    release_condition: Optional[ReleaseConditionPatch] = None
+    experiment_id: Optional[int] = None
+    feature_flag: Optional[FeatureFlagPost] = None

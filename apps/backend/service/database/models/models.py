@@ -164,62 +164,6 @@ class FilesystemDirectory(Base):
         return list(self.subdirectories) + list(self.fragments)
 
 
-class GeoLocation(Base):
-    __tablename__ = 'geo_location'
-    id = Column('id', Integer, primary_key=True, index=True)
-    country = Column('country', String, nullable=False)
-    region = Column('region', String)
-    city = Column('city', String, nullable=False)
-
-
-class CampaignGeoLocationFilter(Base):
-    __tablename__ = 'campaign_geo_location_filter'
-    id = Column('id', Integer, primary_key=True, index=True)
-    campaign_id = Column(ForeignKey('campaign.id'))
-
-    campaign = relationship('Campaign', back_populates='geo_locations_filter')
-    country = Column('country', String, nullable=False)
-    region = Column('region', String)
-    city = Column('city', String, nullable=False)
-
-
-class CampaignTimeFrameFilter(Base):
-    __tablename__ = 'campaign_time_frame_filter'
-    id = Column('id', Integer, primary_key=True, index=True)
-    campaign_id = Column(ForeignKey('campaign.id'))
-
-    campaign = relationship('Campaign', back_populates='time_frames_filter')
-    from_time = Column('from_time', DateTime, nullable=False)
-    to_time = Column('to_time', DateTime, nullable=False)
-
-
-class CampaignOSTypeFilter(Base):
-    __tablename__ = 'campaign_os_type_filter'
-    id = Column('id', Integer, primary_key=True, index=True)
-    campaign_id = Column(ForeignKey('campaign.id'))
-
-    campaign = relationship('Campaign', back_populates='os_types_filter')
-    os_type = Column('os_type', Integer, nullable=False)
-
-
-class CampaignDeviceTypeFilter(Base):
-    __tablename__ = 'campaign_device_type_filter'
-    id = Column('id', Integer, primary_key=True, index=True)
-    campaign_id = Column(ForeignKey('campaign.id'))
-
-    campaign = relationship('Campaign', back_populates='device_types_filter')
-    device_type = Column('device_type', Integer, nullable=False)
-
-
-class CampaignPageFilter(Base):
-    __tablename__ = 'campaign_page_filter'
-    id = Column('id', Integer, primary_key=True, index=True)
-    campaign_id = Column(ForeignKey('campaign.id'))
-
-    campaign = relationship('Campaign', back_populates='pages_filter')
-    page = Column('page', String, nullable=False)
-
-
 class Campaign(Base):
     __tablename__ = 'campaign'
     id = Column('id', Integer, primary_key=True, index=True)
@@ -244,33 +188,166 @@ class Campaign(Base):
     archived = Column('archived', Boolean, default=False)
     default = Column('default', Boolean, default=False)
 
+    release_condition_id = Column(
+        'release_condition_id', Integer, ForeignKey('release_condition.id'), nullable=True
+    )
+    release_condition = relationship('ReleaseCondition')
+
+    feature_flag_id = Column('feature_flag_id', Integer, ForeignKey('feature_flag.id'), nullable=True)
+    feature_flag = relationship('FeatureFlag')
+
+    experiment_id = Column('experiment_id', Integer, ForeignKey('experiment.id'), nullable=True)
+    experiment = relationship('Experiment')
+
     fragment_id = Column('fragment_id', Integer, ForeignKey('fragment.id'), nullable=True)
     fragment = relationship('Fragment')
 
-    pages_filter = relationship(
-        'CampaignPageFilter',
-        back_populates='campaign',
-        cascade='save-update, merge, ' 'delete, delete-orphan',
+
+class ReleaseCondition(Base):
+    __tablename__ = 'release_condition'
+    id = Column('id', Integer, primary_key=True, index=True)
+    name = Column('name', String, nullable=False)
+
+    condition_sets = relationship(
+        'ConditionSet',
+        back_populates='release_condition',
+        cascade='save-update, merge, delete, delete-orphan',
     )
-    device_types_filter = relationship(
-        'CampaignDeviceTypeFilter',
-        back_populates='campaign',
-        cascade='save-update, merge, ' 'delete, delete-orphan',
+
+
+class ConditionSet(Base):
+    __tablename__ = 'condition_set'
+    id = Column('id', Integer, primary_key=True, index=True)
+    name = Column('name', String, nullable=False)
+    release_condition_id = Column(
+        'release_condition_id',
+        Integer,
+        ForeignKey('release_condition.id', ondelete='CASCADE'),
+        nullable=False,
     )
-    os_types_filter = relationship(
-        'CampaignOSTypeFilter',
-        back_populates='campaign',
-        cascade='save-update, merge, ' 'delete, delete-orphan',
+    release_condition = relationship('ReleaseCondition', back_populates='condition_sets')
+
+    conditions = relationship(
+        'Condition',
+        back_populates='condition_set',
+        cascade='save-update, merge, delete, delete-orphan',
     )
-    time_frames_filter = relationship(
-        'CampaignTimeFrameFilter',
-        back_populates='campaign',
-        cascade='save-update, merge, ' 'delete, delete-orphan',
+
+
+class GeoLocation(Base):
+    __tablename__ = 'geo_location'
+    id = Column('id', Integer, primary_key=True, index=True)
+    country = Column('country', String, nullable=False)
+    region = Column('region', String)
+    city = Column('city', String, nullable=False)
+
+
+class GeoLocationFilter(Base):
+    __tablename__ = 'geo_location_filter'
+    id = Column('id', Integer, primary_key=True, index=True)
+    country = Column('country', String, nullable=False)
+    region = Column('region', String)
+    city = Column('city', String, nullable=False)
+
+
+class TimeFrameFilter(Base):
+    __tablename__ = 'time_frame_filter'
+    id = Column('id', Integer, primary_key=True, index=True)
+    from_time = Column('from_time', DateTime, nullable=False)
+    to_time = Column('to_time', DateTime, nullable=False)
+
+
+class OSTypeFilter(Base):
+    __tablename__ = 'os_type_filter'
+    id = Column('id', Integer, primary_key=True, index=True)
+    os_type = Column('os_type', Integer, nullable=False)
+
+
+class DeviceTypeFilter(Base):
+    __tablename__ = 'device_type_filter'
+    id = Column('id', Integer, primary_key=True, index=True)
+    device_type = Column('device_type', Integer, nullable=False)
+
+
+class PageFilter(Base):
+    __tablename__ = 'page_filter'
+    id = Column('id', Integer, primary_key=True, index=True)
+    page = Column('page', String, nullable=False)
+
+
+class Condition(Base):
+    __tablename__ = 'condition'
+    id = Column('id', Integer, primary_key=True, index=True)
+    condition_set_id = Column(
+        'condition_set_id',
+        Integer,
+        ForeignKey('condition_set.id', ondelete='CASCADE'),
+        nullable=False,
     )
-    geo_locations_filter = relationship(
-        'CampaignGeoLocationFilter',
-        back_populates='campaign',
-        cascade='save-update, merge, ' 'delete, delete-orphan',
+    condition_set = relationship('ConditionSet', back_populates='conditions')
+
+    # Type of filter this condition represents
+    filter_type = Column('filter_type', Integer, nullable=False)
+
+    # Foreign keys to filter tables
+    page_filter_id = Column(Integer, ForeignKey('page_filter.id'))
+    device_type_filter_id = Column(Integer, ForeignKey('device_type_filter.id'))
+    os_type_filter_id = Column(Integer, ForeignKey('os_type_filter.id'))
+    time_frame_filter_id = Column(Integer, ForeignKey('time_frame_filter.id'))
+    geo_location_filter_id = Column(Integer, ForeignKey('geo_location_filter.id'))
+
+    # Relationships to filter tables
+    page_filter = relationship('PageFilter')
+    device_type_filter = relationship('DeviceTypeFilter')
+    os_type_filter = relationship('OSTypeFilter')
+    time_frame_filter = relationship('TimeFrameFilter')
+    geo_location_filter = relationship('GeoLocationFilter')
+
+
+class FeatureFlag(Base):
+    __tablename__ = 'feature_flag'
+    id = Column('id', Integer, primary_key=True, index=True)
+    name = Column('name', String, nullable=False, unique=True)
+    description = Column('description', String)
+    release_condition_id = Column(
+        'release_condition_id',
+        Integer,
+        ForeignKey('release_condition.id', ondelete='CASCADE'),
+        nullable=False,
+    )
+    release_condition = relationship('ReleaseCondition')
+    variants = relationship('Variant', back_populates='feature_flag', cascade='all, delete-orphan')
+
+
+class Variant(Base):
+    __tablename__ = 'variant'
+    id = Column('id', Integer, primary_key=True, index=True)
+    feature_flag_id = Column(
+        'feature_flag_id',
+        Integer,
+        ForeignKey('feature_flag.id', ondelete='CASCADE'),
+        nullable=False,
+    )
+    feature_flag = relationship('FeatureFlag')
+    name = Column('name', String, nullable=False)
+    rollout_percentage = Column('rollout_percentage', Float, nullable=False, default=0)
+    fragment_id = Column('fragment_id', Integer, ForeignKey('fragment.id', ondelete='CASCADE'))
+    fragment = relationship('Fragment')
+
+
+class Experiment(Base):
+    __tablename__ = 'experiment'
+    id = Column('id', Integer, primary_key=True, index=True)
+    name = Column('name', String, nullable=False, unique=True)
+    description = Column('description', String)
+    feature_flag_id = Column(
+        'feature_flag_id', Integer, ForeignKey('feature_flag.id', ondelete='CASCADE')
+    )
+    feature_flag = relationship('FeatureFlag')
+
+    created_at = Column('created_at', DateTime, nullable=False, default=func.now())
+    updated_at = Column(
+        'updated_at', DateTime, nullable=False, default=func.now(), onupdate=func.now()
     )
 
 

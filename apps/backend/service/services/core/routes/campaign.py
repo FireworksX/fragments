@@ -22,15 +22,6 @@ from database import Area, Campaign, Media, Project, Session
 from .fragment import fragment_db_to_fragment
 from .middleware import Context
 from .schemas.campaign import CampaignGet, CampaignPatch, CampaignPost
-from .schemas.filter import (
-    FilterDeviceTypeGet,
-    FilterGeoLocationGet,
-    FilterGeoLocationsGet,
-    FilterOSTypeGet,
-    FilterPageGet,
-    FilterTimeFrameGet,
-    FilterTimeFramesGet,
-)
 from .schemas.media import MediaGet, MediaType
 from .schemas.user import AuthPayload, RoleGet
 from .user import user_db_to_user
@@ -48,40 +39,6 @@ async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
 
 
 def campaign_db_to_campaign(campaign: Campaign) -> CampaignGet:
-    filters: List[
-        Union[
-            FilterOSTypeGet
-            | FilterDeviceTypeGet
-            | FilterPageGet
-            | FilterGeoLocationsGet
-            | FilterTimeFramesGet
-        ]
-    ] = [
-        FilterOSTypeGet(
-            os_types=[os_type_filter.os_type for os_type_filter in campaign.os_types_filter]
-        ),
-        FilterDeviceTypeGet(
-            device_types=[
-                device_type_filter.device_type
-                for device_type_filter in campaign.device_types_filter
-            ]
-        ),
-        FilterPageGet(pages=[page.page for page in campaign.pages_filter]),
-        FilterGeoLocationsGet(
-            geo_locations=[
-                FilterGeoLocationGet(
-                    country=geo_location.country, region=geo_location.region, city=geo_location.city
-                )
-                for geo_location in campaign.geo_locations_filter
-            ]
-        ),
-        FilterTimeFramesGet(
-            time_frames=[
-                FilterTimeFrameGet(from_time=frame.from_time, to_time=frame.to_time)
-                for frame in campaign.time_frames_filter
-            ]
-        ),
-    ]
     return CampaignGet(
         id=campaign.id,
         fragment=fragment_db_to_fragment(campaign.fragment) if campaign.fragment else None,
@@ -97,7 +54,9 @@ def campaign_db_to_campaign(campaign: Campaign) -> CampaignGet:
             public_path=campaign.logo.public_path,
         ),
         author=user_db_to_user(campaign.author),
-        filters=filters,
+        release_condition=campaign.release_condition,
+        experiment=campaign.experiment,
+        feature_flag=campaign.feature_flag,
     )
 
 
@@ -172,7 +131,9 @@ async def create_campaign_route(info: strawberry.Info[Context], cmp: CampaignPos
         user.user.id,
         False,
         cmp.fragment_id,
-        cmp.filters,
+        cmp.release_condition,
+        cmp.experiment_id,
+        cmp.feature_flag,
     )
 
     return campaign_db_to_campaign(campaign)
@@ -198,7 +159,10 @@ async def update_campaign_route(info: strawberry.Info[Context], cmp: CampaignPat
         )
 
     campaign: Campaign = await update_campaign_by_id_db(
-        db, values=cmp.__dict__, filters=cmp.filters
+        db,
+        values=cmp.__dict__,
+        release_condition=cmp.release_condition,
+        feature_flag=cmp.feature_flag,
     )
 
     return campaign_db_to_campaign(campaign)

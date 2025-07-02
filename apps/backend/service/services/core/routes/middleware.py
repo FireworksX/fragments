@@ -17,8 +17,8 @@ from services.core.utils import create_access_token, create_refresh_token
 from services.dependencies import get_db
 
 from .schemas.client import ClientInfo
-from .schemas.filter import DeviceType, OSType
 from .schemas.media import MediaGet, MediaType
+from .schemas.release_condition import DeviceType, OSType
 from .schemas.user import AuthPayload, UserGet
 
 credentials_exception = HTTPException(
