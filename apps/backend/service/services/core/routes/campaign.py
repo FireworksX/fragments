@@ -19,6 +19,7 @@ from crud.media import create_media_db, delete_media_by_id_db, generate_default_
 from crud.project import get_project_by_id_db
 from database import Area, Campaign, Media, Project, Session
 
+from .feature_flag import feature_flag_db_to_feature_flag
 from .fragment import fragment_db_to_fragment
 from .middleware import Context
 from .schemas.campaign import CampaignGet, CampaignPatch, CampaignPost
@@ -54,9 +55,12 @@ def campaign_db_to_campaign(campaign: Campaign) -> CampaignGet:
             public_path=campaign.logo.public_path,
         ),
         author=user_db_to_user(campaign.author),
-        release_condition=campaign.release_condition,
         experiment=campaign.experiment,
-        feature_flag=campaign.feature_flag,
+        feature_flag=(
+            feature_flag_db_to_feature_flag(campaign.feature_flag)
+            if campaign.feature_flag
+            else None
+        ),
     )
 
 
@@ -131,7 +135,6 @@ async def create_campaign_route(info: strawberry.Info[Context], cmp: CampaignPos
         user.user.id,
         False,
         cmp.fragment_id,
-        cmp.release_condition,
         cmp.experiment_id,
         cmp.feature_flag,
     )
@@ -158,12 +161,7 @@ async def update_campaign_route(info: strawberry.Info[Context], cmp: CampaignPat
             detail=f'User is not allowed to change campaign',
         )
 
-    campaign: Campaign = await update_campaign_by_id_db(
-        db,
-        values=cmp.__dict__,
-        release_condition=cmp.release_condition,
-        feature_flag=cmp.feature_flag,
-    )
+    campaign: Campaign = await update_campaign_by_id_db(db, values=cmp.__dict__)
 
     return campaign_db_to_campaign(campaign)
 

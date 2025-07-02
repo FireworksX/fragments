@@ -21,7 +21,6 @@ async def create_campaign_db(
     author_id: int,
     default: bool,
     fragment_id: Optional[int],
-    release_condition: Optional[ReleaseConditionPost],
     experiment_id: Optional[int],
     feature_flag: Optional[FeatureFlagPost],
 ) -> Campaign:
@@ -42,8 +41,6 @@ async def create_campaign_db(
     db.commit()
     db.refresh(campaign)
 
-    if release_condition is not None:
-        campaign.release_condition = await create_release_condition_db(db, release_condition)
     if experiment_id is not None:
         campaign.experiment_id = experiment_id
     if feature_flag is not None:
@@ -92,12 +89,7 @@ async def get_default_campaign_by_project_id_db(db: Session, project_id: int) ->
     )
 
 
-async def update_campaign_by_id_db(
-    db: Session,
-    values: dict,
-    release_condition: Optional[ReleaseConditionPost],
-    feature_flag: Optional[FeatureFlagPost],
-) -> Campaign:
+async def update_campaign_by_id_db(db: Session, values: dict) -> Campaign:
     campaign: Campaign = await get_campaign_by_id_db(db, values['id'])
     if values.get('name') is not None:
         campaign.name = values['name']
@@ -115,10 +107,4 @@ async def update_campaign_by_id_db(
     db.commit()
     db.refresh(campaign)
 
-    if release_condition is not None:
-        campaign.release_condition = await create_release_condition_db(db, release_condition)
-    if feature_flag is not None:
-        campaign.feature_flag = await create_feature_flag_db(db, feature_flag)
-    db.commit()
-    db.refresh(campaign)
     return campaign

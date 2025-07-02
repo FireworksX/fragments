@@ -2,8 +2,10 @@ from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
+from crud.feature_flag import create_feature_flag_db
 from crud.media import generate_default_media
 from database.models import Area, Campaign
+from services.core.routes.schemas.feature_flag import FeatureFlagPost
 
 
 async def create_area_db(
@@ -29,9 +31,20 @@ async def create_area_db(
 
     # Create default campaign for the area
     default_campaign_logo = await generate_default_media(db, f"{area_code}_campaign.png")
+    default_campaign_feature_flag = await create_feature_flag_db(
+        db,
+        FeatureFlagPost(
+            name=f'{area_code}_default_feature_flag',
+            description=f'Default feature flag for {area_code}',
+            project_id=project_id,
+        ),
+    )
+    db.add(default_campaign_feature_flag)
+    db.commit()
+    db.refresh(default_campaign_feature_flag)
     default_campaign = Campaign(
-        name='Default',
-        description='Default campaign',
+        name=f'{area_code}_default_campaign',
+        description=f'Default campaign for {area_code}',
         project_id=project_id,
         area_id=area.id,
         default=True,
@@ -40,6 +53,7 @@ async def create_area_db(
         author_id=author_id,
         fragment_id=None,
         logo_id=default_campaign_logo.id,
+        feature_flag_id=default_campaign_feature_flag.id,
     )
     db.add(default_campaign)
     db.commit()

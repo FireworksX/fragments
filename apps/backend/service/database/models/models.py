@@ -188,12 +188,9 @@ class Campaign(Base):
     archived = Column('archived', Boolean, default=False)
     default = Column('default', Boolean, default=False)
 
-    release_condition_id = Column(
-        'release_condition_id', Integer, ForeignKey('release_condition.id'), nullable=True
+    feature_flag_id = Column(
+        'feature_flag_id', Integer, ForeignKey('feature_flag.id'), nullable=True
     )
-    release_condition = relationship('ReleaseCondition')
-
-    feature_flag_id = Column('feature_flag_id', Integer, ForeignKey('feature_flag.id'), nullable=True)
     feature_flag = relationship('FeatureFlag')
 
     experiment_id = Column('experiment_id', Integer, ForeignKey('experiment.id'), nullable=True)
@@ -309,6 +306,10 @@ class FeatureFlag(Base):
     id = Column('id', Integer, primary_key=True, index=True)
     name = Column('name', String, nullable=False, unique=True)
     description = Column('description', String)
+    project_id = Column(
+        'project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False
+    )
+    project = relationship('Project')
     release_condition_id = Column(
         'release_condition_id',
         Integer,
@@ -328,11 +329,16 @@ class Variant(Base):
         ForeignKey('feature_flag.id', ondelete='CASCADE'),
         nullable=False,
     )
+    project_id = Column(
+        'project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False
+    )
+    project = relationship('Project')
     feature_flag = relationship('FeatureFlag')
     name = Column('name', String, nullable=False)
     rollout_percentage = Column('rollout_percentage', Float, nullable=False, default=0)
     fragment_id = Column('fragment_id', Integer, ForeignKey('fragment.id', ondelete='CASCADE'))
     fragment = relationship('Fragment')
+    props = Column('props', JSON, nullable=True)
 
 
 class Experiment(Base):

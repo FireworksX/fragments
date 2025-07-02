@@ -11,18 +11,36 @@ from services.core.routes.schemas.release_condition import (
 
 
 @strawberry.type
+class FragmentVariantGet:
+    fragment: FragmentGet
+    props: Optional[strawberry.scalars.JSON] = None
+
+
+@strawberry.type
 class VariantGet:
     id: int
     name: str
     rollout_percentage: float
-    fragment: FragmentGet
+    fragment: Optional[FragmentVariantGet] = None
+
+
+@strawberry.input
+class FragmentVariantPost:
+    fragment_id: int
+    props: Optional[strawberry.scalars.JSON] = None
+
+
+@strawberry.input
+class FragmentVariantPatch:
+    id: int
+    props: Optional[strawberry.scalars.JSON] = None
 
 
 @strawberry.input
 class VariantPost:
     name: str
     rollout_percentage: float
-    fragment_id: int
+    fragment: FragmentVariantPost
 
 
 @strawberry.input
@@ -30,7 +48,7 @@ class VariantPatch:
     id: int
     name: Optional[str] = None
     rollout_percentage: Optional[float] = None
-    fragment_id: Optional[int] = None
+    fragment: Optional[FragmentVariantPatch] = None
 
 
 @strawberry.type
