@@ -25,8 +25,6 @@ class CampaignGet:
     active: bool
     default: bool
     archived: bool
-    release_condition: Optional[ReleaseConditionGet] = None
-    fragment: Optional[FragmentGet] = None
     experiment: Optional[ExperimentGet] = None
     feature_flag: Optional[FeatureFlagGet] = None
 
@@ -38,8 +36,6 @@ class CampaignPost:
     description: Optional[str] = None
     active: bool
     archived: bool
-    fragment_id: Optional[int] = None
-    release_condition: Optional[ReleaseConditionPost] = None
     experiment_id: Optional[int] = None
     feature_flag: Optional[FeatureFlagPost] = None
 
@@ -51,7 +47,5 @@ class CampaignPatch:
     description: Optional[str] = None
     active: Optional[bool] = None
     archived: Optional[bool] = None
-    fragment_id: Optional[int] = None
-    release_condition: Optional[ReleaseConditionPatch] = None
     experiment_id: Optional[int] = None
     feature_flag: Optional[FeatureFlagPost] = None

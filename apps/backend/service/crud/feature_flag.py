@@ -19,7 +19,8 @@ async def create_feature_flag_db(db: Session, feature_flag: FeatureFlagPost) -> 
         variant = Variant(
             name=variant.name,
             rollout_percentage=variant.rollout_percentage,
-            fragment_id=variant.fragment_id,
+            fragment_id=variant.fragment.fragment_id,
+            props=variant.fragment.props,
         )
         db.add(variant)
         db.commit()
@@ -66,12 +67,13 @@ async def delete_feature_flag_db(db: Session, feature_flag_id: int) -> None:
     db.commit()
 
 
-async def create_variant_db(db: Session, feature_flag_id: int, variant: VariantPost) -> Variant:
+async def create_variant_db(db: Session, variant: VariantPost) -> Variant:
     variant = Variant(
-        feature_flag_id=feature_flag_id,
+        feature_flag_id=variant.feature_flag_id,
         name=variant.name,
         rollout_percentage=variant.rollout_percentage,
-        fragment_id=variant.fragment_id,
+        fragment_id=variant.fragment.fragment_id,
+        props=variant.fragment.props,
     )
     db.add(variant)
     db.commit()
@@ -95,6 +97,8 @@ async def update_variant_db(db: Session, variant_id: int, values: dict) -> Varia
         variant.rollout_percentage = values['rollout_percentage']
     if values.get('fragment_id') is not None:
         variant.fragment_id = values['fragment_id']
+    if values.get('props') is not None:
+        variant.props = values['props']
     db.commit()
     db.refresh(variant)
     return variant

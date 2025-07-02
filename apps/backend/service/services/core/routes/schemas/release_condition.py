@@ -23,17 +23,17 @@ class DeviceType(Enum):
 
 @strawberry.type
 class FilterOSTypeGet:
-    os_types: List[OSType]
+    os_type: OSType
 
 
 @strawberry.type
 class FilterDeviceTypeGet:
-    device_types: List[DeviceType]
+    device_type: DeviceType
 
 
 @strawberry.type
 class FilterPageGet:
-    pages: List[str]
+    page: str
 
 
 @strawberry.type
@@ -44,19 +44,9 @@ class FilterGeoLocationGet:
 
 
 @strawberry.type
-class FilterGeoLocationsGet:
-    geo_locations: List[FilterGeoLocationGet]
-
-
-@strawberry.type
 class FilterTimeFrameGet:
     from_time: datetime.datetime
     to_time: datetime.datetime
-
-
-@strawberry.type
-class FilterTimeFramesGet:
-    time_frames: List[FilterTimeFrameGet]
 
 
 @strawberry.type
@@ -160,6 +150,7 @@ class ConditionSetPost:
 
 @strawberry.input
 class ReleaseConditionPost:
+    feature_flag_id: int
     name: str
     condition_sets: List[ConditionSetPost]
 
