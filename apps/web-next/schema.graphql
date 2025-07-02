@@ -5,7 +5,7 @@ schema {
     mutation: Mutation
 }
 
-union FilterOSTypeGetFilterDeviceTypeGetFilterPageGetFilterGeoLocationsGetFilterTimeFramesGet = FilterDeviceTypeGet | FilterGeoLocationsGet | FilterOSTypeGet | FilterPageGet | FilterTimeFramesGet
+union FilterPageGetFilterDeviceTypeGetFilterOSTypeGetFilterTimeFrameGetFilterGeoLocationGet = FilterDeviceTypeGet | FilterGeoLocationGet | FilterOSTypeGet | FilterPageGet | FilterTimeFrameGet
 
 type AllFiltersGet {
     deviceTypes: [DeviceType!]!
@@ -38,11 +38,13 @@ type CampaignGet {
     author: UserGet!
     default: Boolean!
     description: String
-    filters: [FilterOSTypeGetFilterDeviceTypeGetFilterPageGetFilterGeoLocationsGetFilterTimeFramesGet!]!
+    experiment: ExperimentGet
+    featureFlag: FeatureFlagGet
     fragment: FragmentGet
     id: Int!
     logo: MediaGet!
     name: String!
+    releaseCondition: ReleaseConditionGet
 }
 
 type ClientGet {
@@ -81,9 +83,38 @@ type ClientProjectGoalGet {
     projectGoal: ProjectGoalGet!
 }
 
+type ConditionGet {
+    filterData: FilterPageGetFilterDeviceTypeGetFilterOSTypeGetFilterTimeFrameGetFilterGeoLocationGet!
+    filterType: FilterType!
+    id: Int!
+}
+
+type ConditionSetGet {
+    conditions: [ConditionGet!]!
+    id: Int!
+    name: String!
+}
+
 type CountryGet {
     country: String!
     regions: [RegionGet!]!
+}
+
+type ExperimentGet {
+    active: Boolean!
+    archived: Boolean!
+    description: String
+    featureFlag: FeatureFlagGet!
+    id: Int!
+    name: String!
+}
+
+type FeatureFlagGet {
+    description: String
+    id: Int!
+    name: String!
+    releaseCondition: ReleaseConditionGet!
+    variants: [VariantGet!]!
 }
 
 type FeedbackGet {
@@ -102,10 +133,6 @@ type FilterGeoLocationGet {
     region: String
 }
 
-type FilterGeoLocationsGet {
-    geoLocations: [FilterGeoLocationGet!]!
-}
-
 type FilterOSTypeGet {
     osTypes: [OSType!]!
 }
@@ -119,12 +146,8 @@ type FilterTimeFrameGet {
     toTime: DateTime!
 }
 
-type FilterTimeFramesGet {
-    timeFrames: [FilterTimeFrameGet!]!
-}
-
 type FragmentGet {
-    assets: [FragmentMediaGet!]!
+    assets: [MediaGet!]!
     author: UserGet!
     directoryId: Int!
     document: JSON!
@@ -132,11 +155,6 @@ type FragmentGet {
     linkedFragments: [FragmentGet!]
     name: String!
     props: JSON
-}
-
-type FragmentMediaGet {
-    id: Int!
-    publicPath: String!
 }
 
 type MediaGet {
@@ -235,6 +253,12 @@ type RegionGet {
     region: String!
 }
 
+type ReleaseConditionGet {
+    conditionSets: [ConditionSetGet!]!
+    id: Int!
+    name: String!
+}
+
 type UserGet {
     email: String!
     firstName: String!
@@ -250,6 +274,13 @@ type UserRoleGet {
     lastName: String
     logo: MediaGet!
     role: RoleGet!
+}
+
+type VariantGet {
+    fragment: FragmentGet!
+    id: Int!
+    name: String!
+    rolloutPercentage: Float!
 }
 
 enum ClientMetricType {
@@ -270,6 +301,14 @@ enum FeelLevelGet {
     ONE
     THREE
     TWO
+}
+
+enum FilterType {
+    DEVICE_TYPE
+    GEO_LOCATION
+    OS_TYPE
+    PAGE
+    TIME_FRAME
 }
 
 enum MediaType {
@@ -324,10 +363,12 @@ input CampaignPatch {
     active: Boolean
     archived: Boolean
     description: String
-    filters: FiltersPost
+    experimentId: Int
+    featureFlag: FeatureFlagPost
     fragmentId: Int
     id: Int!
     name: String
+    releaseCondition: ReleaseConditionPatch
 }
 
 input CampaignPost {
@@ -335,14 +376,37 @@ input CampaignPost {
     archived: Boolean!
     areaId: Int!
     description: String
-    filters: FiltersPost
+    experimentId: Int
+    featureFlag: FeatureFlagPost
     fragmentId: Int
     name: String!
+    releaseCondition: ReleaseConditionPost
 }
 
 input ClientMetricPost {
     metricType: ClientMetricType!
     metricValue: String
+}
+
+input ConditionPost {
+    deviceType: DeviceType
+    filterType: FilterType!
+    geoLocation: FilterGeoLocationPost
+    osType: OSType
+    page: String
+    timeFrame: FilterTimeFramePost
+}
+
+input ConditionSetPost {
+    conditions: [ConditionPost!]!
+    name: String!
+}
+
+input FeatureFlagPost {
+    description: String
+    name: String!
+    releaseCondition: ReleaseConditionPost!
+    variants: [VariantPost!]!
 }
 
 input FeedbackPost {
@@ -360,14 +424,6 @@ input FilterGeoLocationPost {
 input FilterTimeFramePost {
     fromTime: DateTime!
     toTime: DateTime!
-}
-
-input FiltersPost {
-    deviceTypes: [DeviceType!]!
-    geolocations: [FilterGeoLocationPost!]!
-    osTypes: [OSType!]!
-    pages: [String!]!
-    timeFrames: [FilterTimeFramePost!]!
 }
 
 input FragmentPatch {
@@ -432,4 +488,21 @@ input ProjectPatch {
 input ProjectPost {
     logo: String
     name: String!
+}
+
+input ReleaseConditionPatch {
+    conditionSets: [ConditionSetPost!]
+    id: Int!
+    name: String
+}
+
+input ReleaseConditionPost {
+    conditionSets: [ConditionSetPost!]!
+    name: String!
+}
+
+input VariantPost {
+    fragmentId: Int!
+    name: String!
+    rolloutPercentage: Float!
 }

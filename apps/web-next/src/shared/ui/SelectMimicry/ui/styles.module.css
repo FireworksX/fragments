@@ -1,12 +1,15 @@
 @layer {
     .root {
         position: relative;
+        cursor: pointer;
+        user-select: none;
     }
 
     .caret {
         position: absolute;
         right: 10px;
         top: calc(50% - 6px);
+        color: var(--secondary);
     }
 
     .inner {
@@ -22,5 +25,15 @@
         outline: none;
         display: flex;
         align-items: center;
+    }
+
+    .content {
+
+    }
+
+    .disabled {
+        .content {
+            opacity: .4;
+        }
     }
 }

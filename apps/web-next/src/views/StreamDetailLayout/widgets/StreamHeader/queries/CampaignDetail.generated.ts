@@ -8,7 +8,7 @@ export type CampaignDetailQueryVariables = Types.Exact<{
 }>;
 
 
-export type CampaignDetailQuery = { __typename?: 'Query', campaign: Array<{ __typename?: 'CampaignGet', id: number, name: string, active: boolean, filters: Array<{ __typename?: 'FilterDeviceTypeGet', deviceTypes: Array<Types.DeviceType> } | { __typename?: 'FilterGeoLocationsGet', geoLocations: Array<{ __typename?: 'FilterGeoLocationGet', city?: string | null, country: string, region?: string | null }> } | { __typename?: 'FilterOSTypeGet', osTypes: Array<Types.OsType> } | { __typename?: 'FilterPageGet', pages: Array<string> } | { __typename?: 'FilterTimeFramesGet', timeFrames: Array<{ __typename?: 'FilterTimeFrameGet', fromTime: any, toTime: any }> }> }> };
+export type CampaignDetailQuery = { __typename?: 'Query', campaign: Array<{ __typename?: 'CampaignGet', id: number, name: string, active: boolean, featureFlag?: { __typename?: 'FeatureFlagGet', id: number, releaseCondition: { __typename?: 'ReleaseConditionGet', id: number, conditionSets: Array<{ __typename?: 'ConditionSetGet', id: number, conditions: Array<{ __typename?: 'ConditionGet', id: number }> }> } } | null }> };
 
 
 export const CampaignDetailDocument = gql`
@@ -17,27 +17,15 @@ export const CampaignDetailDocument = gql`
     id
     name
     active
-    filters {
-      ... on FilterDeviceTypeGet {
-        deviceTypes
-      }
-      ... on FilterOSTypeGet {
-        osTypes
-      }
-      ... on FilterGeoLocationsGet {
-        geoLocations {
-          city
-          country
-          region
-        }
-      }
-      ... on FilterPageGet {
-        pages
-      }
-      ... on FilterTimeFramesGet {
-        timeFrames {
-          fromTime
-          toTime
+    featureFlag {
+      id
+      releaseCondition {
+        id
+        conditionSets {
+          id
+          conditions {
+            id
+          }
         }
       }
     }

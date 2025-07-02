@@ -11,6 +11,7 @@ export interface DropdownProps extends PropsWithChildren {
   isLoading?: boolean
   className?: string
   disabled?: boolean
+  width?: number
   trigger?: PopoverProps['trigger']
   appendTo?: PopoverProps['appendTo']
   placement?: TippyProps['placement']
@@ -27,6 +28,7 @@ const Dropdown: FC<DropdownProps> = ({
   children,
   isLoading,
   placement,
+  width,
   trigger,
   appendTo,
   hideOnClick,
@@ -48,7 +50,7 @@ const Dropdown: FC<DropdownProps> = ({
       appendTo={appendTo}
       arrow={arrow}
       content={
-        <div className={styles.options}>
+        <div className={styles.options} style={{ width }}>
           {isLoading ? (
             <div className={styles.loadingContainer}>
               <Spinner size={14} color='var(--text-color-accent)' />

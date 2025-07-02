@@ -26,6 +26,10 @@
     gap: var(--gutter-medium);
 }
 
+.titleContent {
+    flex: 1;
+}
+
 .titleLegendDelimiter {
     width: 5px;
     height: 5px;

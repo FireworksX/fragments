@@ -67,21 +67,25 @@ export type CampaignGet = {
   author: UserGet;
   default: Scalars['Boolean']['output'];
   description?: Maybe<Scalars['String']['output']>;
-  filters: Array<FilterOsTypeGetFilterDeviceTypeGetFilterPageGetFilterGeoLocationsGetFilterTimeFramesGet>;
+  experiment?: Maybe<ExperimentGet>;
+  featureFlag?: Maybe<FeatureFlagGet>;
   fragment?: Maybe<FragmentGet>;
   id: Scalars['Int']['output'];
   logo: MediaGet;
   name: Scalars['String']['output'];
+  releaseCondition?: Maybe<ReleaseConditionGet>;
 };
 
 export type CampaignPatch = {
   active?: InputMaybe<Scalars['Boolean']['input']>;
   archived?: InputMaybe<Scalars['Boolean']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
-  filters?: InputMaybe<FiltersPost>;
+  experimentId?: InputMaybe<Scalars['Int']['input']>;
+  featureFlag?: InputMaybe<FeatureFlagPost>;
   fragmentId?: InputMaybe<Scalars['Int']['input']>;
   id: Scalars['Int']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
+  releaseCondition?: InputMaybe<ReleaseConditionPatch>;
 };
 
 export type CampaignPost = {
@@ -89,9 +93,11 @@ export type CampaignPost = {
   archived: Scalars['Boolean']['input'];
   areaId: Scalars['Int']['input'];
   description?: InputMaybe<Scalars['String']['input']>;
-  filters?: InputMaybe<FiltersPost>;
+  experimentId?: InputMaybe<Scalars['Int']['input']>;
+  featureFlag?: InputMaybe<FeatureFlagPost>;
   fragmentId?: InputMaybe<Scalars['Int']['input']>;
   name: Scalars['String']['input'];
+  releaseCondition?: InputMaybe<ReleaseConditionPost>;
 };
 
 export type ClientGet = {
@@ -144,6 +150,34 @@ export type ClientProjectGoalGet = {
   projectGoal: ProjectGoalGet;
 };
 
+export type ConditionGet = {
+  __typename?: 'ConditionGet';
+  filterData: FilterPageGetFilterDeviceTypeGetFilterOsTypeGetFilterTimeFrameGetFilterGeoLocationGet;
+  filterType: FilterType;
+  id: Scalars['Int']['output'];
+};
+
+export type ConditionPost = {
+  deviceType?: InputMaybe<DeviceType>;
+  filterType: FilterType;
+  geoLocation?: InputMaybe<FilterGeoLocationPost>;
+  osType?: InputMaybe<OsType>;
+  page?: InputMaybe<Scalars['String']['input']>;
+  timeFrame?: InputMaybe<FilterTimeFramePost>;
+};
+
+export type ConditionSetGet = {
+  __typename?: 'ConditionSetGet';
+  conditions: Array<ConditionGet>;
+  id: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+};
+
+export type ConditionSetPost = {
+  conditions: Array<ConditionPost>;
+  name: Scalars['String']['input'];
+};
+
 export type CountryGet = {
   __typename?: 'CountryGet';
   country: Scalars['String']['output'];
@@ -155,6 +189,32 @@ export enum DeviceType {
   Mobile = 'MOBILE',
   Tablet = 'TABLET'
 }
+
+export type ExperimentGet = {
+  __typename?: 'ExperimentGet';
+  active: Scalars['Boolean']['output'];
+  archived: Scalars['Boolean']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  featureFlag: FeatureFlagGet;
+  id: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+};
+
+export type FeatureFlagGet = {
+  __typename?: 'FeatureFlagGet';
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+  releaseCondition: ReleaseConditionGet;
+  variants: Array<VariantGet>;
+};
+
+export type FeatureFlagPost = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  releaseCondition: ReleaseConditionPost;
+  variants: Array<VariantPost>;
+};
 
 export type FeedbackGet = {
   __typename?: 'FeedbackGet';
@@ -195,22 +255,17 @@ export type FilterGeoLocationPost = {
   region?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type FilterGeoLocationsGet = {
-  __typename?: 'FilterGeoLocationsGet';
-  geoLocations: Array<FilterGeoLocationGet>;
-};
-
 export type FilterOsTypeGet = {
   __typename?: 'FilterOSTypeGet';
   osTypes: Array<OsType>;
 };
 
-export type FilterOsTypeGetFilterDeviceTypeGetFilterPageGetFilterGeoLocationsGetFilterTimeFramesGet = FilterDeviceTypeGet | FilterGeoLocationsGet | FilterOsTypeGet | FilterPageGet | FilterTimeFramesGet;
-
 export type FilterPageGet = {
   __typename?: 'FilterPageGet';
   pages: Array<Scalars['String']['output']>;
 };
+
+export type FilterPageGetFilterDeviceTypeGetFilterOsTypeGetFilterTimeFrameGetFilterGeoLocationGet = FilterDeviceTypeGet | FilterGeoLocationGet | FilterOsTypeGet | FilterPageGet | FilterTimeFrameGet;
 
 export type FilterTimeFrameGet = {
   __typename?: 'FilterTimeFrameGet';
@@ -223,22 +278,17 @@ export type FilterTimeFramePost = {
   toTime: Scalars['DateTime']['input'];
 };
 
-export type FilterTimeFramesGet = {
-  __typename?: 'FilterTimeFramesGet';
-  timeFrames: Array<FilterTimeFrameGet>;
-};
-
-export type FiltersPost = {
-  deviceTypes: Array<DeviceType>;
-  geolocations: Array<FilterGeoLocationPost>;
-  osTypes: Array<OsType>;
-  pages: Array<Scalars['String']['input']>;
-  timeFrames: Array<FilterTimeFramePost>;
-};
+export enum FilterType {
+  DeviceType = 'DEVICE_TYPE',
+  GeoLocation = 'GEO_LOCATION',
+  OsType = 'OS_TYPE',
+  Page = 'PAGE',
+  TimeFrame = 'TIME_FRAME'
+}
 
 export type FragmentGet = {
   __typename?: 'FragmentGet';
-  assets: Array<FragmentMediaGet>;
+  assets: Array<MediaGet>;
   author: UserGet;
   directoryId: Scalars['Int']['output'];
   document: Scalars['JSON']['output'];
@@ -246,12 +296,6 @@ export type FragmentGet = {
   linkedFragments?: Maybe<Array<FragmentGet>>;
   name: Scalars['String']['output'];
   props?: Maybe<Scalars['JSON']['output']>;
-};
-
-export type FragmentMediaGet = {
-  __typename?: 'FragmentMediaGet';
-  id: Scalars['Int']['output'];
-  publicPath: Scalars['String']['output'];
 };
 
 export type FragmentPatch = {
@@ -674,6 +718,24 @@ export type RegionGet = {
   region: Scalars['String']['output'];
 };
 
+export type ReleaseConditionGet = {
+  __typename?: 'ReleaseConditionGet';
+  conditionSets: Array<ConditionSetGet>;
+  id: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+};
+
+export type ReleaseConditionPatch = {
+  conditionSets?: InputMaybe<Array<ConditionSetPost>>;
+  id: Scalars['Int']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ReleaseConditionPost = {
+  conditionSets: Array<ConditionSetPost>;
+  name: Scalars['String']['input'];
+};
+
 export enum RoleGet {
   Admin = 'ADMIN',
   Designer = 'DESIGNER',
@@ -698,4 +760,18 @@ export type UserRoleGet = {
   lastName?: Maybe<Scalars['String']['output']>;
   logo: MediaGet;
   role: RoleGet;
+};
+
+export type VariantGet = {
+  __typename?: 'VariantGet';
+  fragment: FragmentGet;
+  id: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+  rolloutPercentage: Scalars['Float']['output'];
+};
+
+export type VariantPost = {
+  fragmentId: Scalars['Int']['input'];
+  name: Scalars['String']['input'];
+  rolloutPercentage: Scalars['Float']['input'];
 };

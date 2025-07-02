@@ -25,12 +25,25 @@ import { Placeholder } from '@/components/Placeholder'
 import Logo from '@/shared/icons/next/logo.svg'
 import ConnectIcon from '@/shared/icons/next/plug.svg'
 import PlusIcon from '@/shared/icons/next/plus.svg'
+import { useCampaignContentTable } from '@/views/AreasFragmentPage/widgets/CampaignContentTable/hooks/useCampaignContentTable'
+import { SearchInput } from '@/shared/ui/SearchInput'
+import { Dropdown } from '@/shared/ui/Dropdown'
+import { DropdownGroup } from '@/shared/ui/DropdownGroup'
+import { DropdownOption } from '@/shared/ui/DropdownOption'
+import { SelectMimicry } from '@/shared/ui/SelectMimicry'
+import { ContentEditable } from '@/shared/ui/ContentEditable'
+import { InputSelect } from '@/shared/ui/InputSelect'
+import { ConfigureFeatureFlagVariant } from '@/widgets/modals/ConfigureFeatureFlagVariant'
 
 interface CampaignContentTableProps {
+  campaignId: number
   className?: string
+  onAddFragment?: () => void
 }
 
-export const CampaignContentTable: FC<CampaignContentTableProps> = ({ className }) => {
+export const CampaignContentTable: FC<CampaignContentTableProps> = ({ className, campaignId, onAddFragment }) => {
+  const { handleAddVariant } = useCampaignContentTable(campaignId)
+
   const list = [
     {
       id: 10,
@@ -40,109 +53,136 @@ export const CampaignContentTable: FC<CampaignContentTableProps> = ({ className 
   ]
 
   return (
-    <Table
-      className={styles.table}
-      bodyClassName={styles.tbody}
-      header={
-        <TableHeader className={styles.thead}>
-          <div className={styles.innerCell}>ID</div>
-          <div className={styles.innerCell}>
-            <NameIcon />
-            Name
-          </div>
-          <div className={styles.innerCell}>
-            <StatusIcon />
-            Status
-          </div>
-          <div className={styles.innerCell}>
-            <WeightIcon />
-            Rollout
-          </div>
-          <div className={styles.innerCell}>
-            <FragmentIcon />
-            Fragment
-          </div>
-          <div className={styles.innerCell}>
-            <ActionsIcon />
-            Actions
-          </div>
-        </TableHeader>
-      }
-    >
-      {/*{isCreating && (*/}
-      {/*  <TableRow className={styles.row} ref={creatingRowRef}>*/}
-      {/*    <TableCell className={styles.cell} colSpan={6}>*/}
-      {/*      <form className={styles.innerCell} onSubmit={handleCreate}>*/}
-      {/*        <InputText*/}
-      {/*          ref={creatingInputRef}*/}
-      {/*          value={creatingName}*/}
-      {/*          placeholder='Campaign Name'*/}
-      {/*          onChangeValue={setCreatingName}*/}
-      {/*        />*/}
-      {/*        <Button disabled={creatingName?.length < 3} type='submit' icon={<CheckIcon />} mode='success'>*/}
-      {/*          Create*/}
-      {/*        </Button>*/}
-      {/*      </form>*/}
-      {/*    </TableCell>*/}
-      {/*  </TableRow>*/}
-      {/*)}*/}
+    <div className={styles.root}>
+      <ConfigureFeatureFlagVariant />
+      <div className={styles.header}>
+        <SearchInput mode='tiny' placeholder='Search...' />
+        <Dropdown
+          width={230}
+          placement='bottom-end'
+          trigger='click'
+          options={
+            <DropdownGroup>
+              <DropdownOption description='The user is shown the same option every time.'>Keep</DropdownOption>
+              <DropdownOption description='The user is shown a random option each time.'>Loose</DropdownOption>
+            </DropdownGroup>
+          }
+        >
+          <SelectMimicry>Rotation mode: Keep</SelectMimicry>
+        </Dropdown>
 
-      {list.length === 0 && (
-        <TableRow className={styles.row}>
-          <TableCell className={styles.cell} colSpan={6}>
-            <Placeholder
-              stretched
-              icon={<Logo width={36} height={36} />}
-              title='Connect fragment'
-              description='Connect exists fragment or create new'
-              actions={
-                <>
-                  <Button icon={<ConnectIcon />}>Connect</Button>
-                  <Button mode='outline' icon={<PlusIcon />}>
-                    Create new
-                  </Button>
-                </>
-              }
-            />
-          </TableCell>
-        </TableRow>
-      )}
+        {/*<Button mode='outline' icon={<PlusIcon />}>*/}
+        {/*  Create new*/}
+        {/*</Button>*/}
+        <Button icon={<PlusIcon />} onClick={handleAddVariant}>
+          Add variant
+        </Button>
+      </div>
 
-      {list.map(stream => (
-        <TableRow key={stream.id}>
-          <TableCell className={styles.idCell}>{stream.id}</TableCell>
-          <TableCell>
-            <Link type='campaign' campaignSlug={stream.id}>
-              {stream.name}
-            </Link>
-          </TableCell>
-          <TableCell>
-            <StatusBadge status={stream.active ? 'success' : 'warning'} />
-          </TableCell>
-          <TableCell>40%</TableCell>
-          <TableCell className={styles.innerCell}>
-            <div className={styles.preview}></div>
-            <Button mode='tertiary'>TG banner</Button>
-          </TableCell>
-          <TableCell>
+      <Table
+        className={cn(styles.table, className)}
+        bodyClassName={styles.tbody}
+        header={
+          <TableHeader className={styles.thead}>
+            <div className={styles.innerCell}>ID</div>
             <div className={styles.innerCell}>
-              {stream.active ? (
-                <Button size='small' mode='warning-outline' icon={<PauseIcon />}>
-                  Pause
-                </Button>
-              ) : (
-                <Button size='small' mode='success-outline' icon={<PlayIcon />}>
-                  Run
-                </Button>
-              )}
-
-              <Button size='small' mode='danger-outline' icon={<DeleteIcon />}>
-                Delete
-              </Button>
+              <NameIcon />
+              Name
             </div>
-          </TableCell>
-        </TableRow>
-      ))}
-    </Table>
+            <div className={styles.innerCell}>
+              <StatusIcon />
+              Status
+            </div>
+            <div className={styles.innerCell}>
+              <WeightIcon />
+              Rollout
+            </div>
+            <div className={styles.innerCell}>
+              <FragmentIcon />
+              Fragment
+            </div>
+            <div className={styles.innerCell}>
+              <ActionsIcon />
+              Actions
+            </div>
+          </TableHeader>
+        }
+      >
+        {/*{isCreating && (*/}
+        {/*  <TableRow className={styles.row} ref={creatingRowRef}>*/}
+        {/*    <TableCell className={styles.cell} colSpan={6}>*/}
+        {/*      <form className={styles.innerCell} onSubmit={handleCreate}>*/}
+        {/*        <InputText*/}
+        {/*          ref={creatingInputRef}*/}
+        {/*          value={creatingName}*/}
+        {/*          placeholder='Campaign Name'*/}
+        {/*          onChangeValue={setCreatingName}*/}
+        {/*        />*/}
+        {/*        <Button disabled={creatingName?.length < 3} type='submit' icon={<CheckIcon />} mode='success'>*/}
+        {/*          Create*/}
+        {/*        </Button>*/}
+        {/*      </form>*/}
+        {/*    </TableCell>*/}
+        {/*  </TableRow>*/}
+        {/*)}*/}
+
+        {list.length === 0 && (
+          <TableRow className={styles.row}>
+            <TableCell className={styles.cell} colSpan={6}>
+              <Placeholder
+                stretched
+                icon={<Logo width={36} height={36} />}
+                title='Connect fragment'
+                description='Connect exists fragment or create new'
+                actions={
+                  <>
+                    <Button icon={<PlusIcon />} onClick={onAddFragment}>
+                      Add fragment
+                    </Button>
+                    {/*<Button mode='outline' icon={<PlusIcon />}>*/}
+                    {/*  Create new*/}
+                    {/*</Button>*/}
+                  </>
+                }
+              />
+            </TableCell>
+          </TableRow>
+        )}
+
+        {list.map(stream => (
+          <TableRow key={stream.id}>
+            <TableCell className={styles.idCell}>{stream.id}</TableCell>
+            <TableCell>
+              <ContentEditable className={styles.editableCell} value={stream.name} />
+            </TableCell>
+            <TableCell>
+              <StatusBadge status={stream.active ? 'success' : 'warning'} />
+            </TableCell>
+            <TableCell>40%</TableCell>
+            <TableCell className={styles.innerCell}>
+              <div className={styles.preview}></div>
+              <Button mode='tertiary'>TG banner</Button>
+            </TableCell>
+            <TableCell>
+              <div className={styles.innerCell}>
+                {stream.active ? (
+                  <Button size='small' mode='warning-outline' icon={<PauseIcon />}>
+                    Pause
+                  </Button>
+                ) : (
+                  <Button size='small' mode='success-outline' icon={<PlayIcon />}>
+                    Run
+                  </Button>
+                )}
+
+                <Button size='small' mode='danger-outline' icon={<DeleteIcon />}>
+                  Delete
+                </Button>
+              </div>
+            </TableCell>
+          </TableRow>
+        ))}
+      </Table>
+    </div>
   )
 }

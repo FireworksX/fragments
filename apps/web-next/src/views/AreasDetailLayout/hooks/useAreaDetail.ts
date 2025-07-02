@@ -1,8 +1,6 @@
+import { useUpdateAreaMutation } from '@/shared/api/area/mutation/UpdateArea.generated'
 import { useParams } from 'next/navigation'
-import { useAreaDetailQuery } from '@/views/AreasDetailLayout/queries/AreaDetail.generated'
-import { useUpdateAreaMutation } from '@/views/AreasDetailLayout/queries/UpdateArea.generated'
-import { useChangeAreaActiveMutation } from '@/views/AreasDetailLayout/queries/ChangeAreaActive.generated'
-import { isBrowser } from '@fragmentsx/utils'
+import { useAreaDetailQuery } from '@/shared/api/area/query/AreaDetail.generated'
 
 export const useAreaDetail = () => {
   const { areaSlug, projectSlug, campaignSlug } = useParams()

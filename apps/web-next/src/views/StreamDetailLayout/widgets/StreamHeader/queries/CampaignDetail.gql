@@ -3,29 +3,41 @@ query CampaignDetail($id: Int!) {
         id
         name
         active
-        filters {
-            ... on FilterDeviceTypeGet {
-                deviceTypes
-            }
-            ... on FilterOSTypeGet {
-                osTypes
-            }
-            ... on FilterGeoLocationsGet {
-                geoLocations {
-                    city
-                    country
-                    region
-                }
-            }
-            ... on FilterPageGet {
-                pages
-            }
-            ... on FilterTimeFramesGet {
-                timeFrames {
-                    fromTime
-                    toTime
+        featureFlag {
+            id
+            releaseCondition {
+                id
+                conditionSets {
+                    id
+                    conditions {
+                        id
+                    }
                 }
             }
         }
+#        filters {
+#            ... on FilterDeviceTypeGet {
+#                deviceTypes
+#            }
+#            ... on FilterOSTypeGet {
+#                osTypes
+#            }
+#            ... on FilterGeoLocationsGet {
+#                geoLocations {
+#                    city
+#                    country
+#                    region
+#                }
+#            }
+#            ... on FilterPageGet {
+#                pages
+#            }
+#            ... on FilterTimeFramesGet {
+#                timeFrames {
+#                    fromTime
+#                    toTime
+#                }
+#            }
+#        }
     }
 }

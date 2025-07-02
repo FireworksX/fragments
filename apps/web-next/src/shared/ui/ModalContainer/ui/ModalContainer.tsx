@@ -2,7 +2,8 @@ import { FC, PropsWithChildren, ReactNode } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { Touchable } from '@/shared/ui/Touchable'
-import CaretLeftIcon from '@/shared/icons/caret-left.svg'
+import CaretLeftIcon from '@/shared/icons/next/arrow-left.svg'
+import CloseIcon from '@/shared/icons/next/close.svg'
 
 interface ModalContainerProps extends PropsWithChildren {
   title?: string
@@ -11,7 +12,8 @@ interface ModalContainerProps extends PropsWithChildren {
   footer?: ReactNode | ReactNode[]
   className?: string
   bodyClassName?: string
-  onBack?(): void
+  onBack?: () => void
+  onClose?: () => void
 }
 
 const ModalContainer: FC<ModalContainerProps> = ({
@@ -22,7 +24,8 @@ const ModalContainer: FC<ModalContainerProps> = ({
   title,
   titleLegend,
   children,
-  onBack
+  onBack,
+  onClose
 }) => {
   return (
     <div className={cn(styles.root, className)}>
@@ -33,12 +36,18 @@ const ModalContainer: FC<ModalContainerProps> = ({
               <CaretLeftIcon />
             </Touchable>
           )}
-          {title}
+          <div className={styles.titleContent}>{title}</div>
           {titleLegend && (
             <>
               <div className={styles.titleLegendDelimiter} />
               <div className={styles.titleLegend}>{titleLegend}</div>
             </>
+          )}
+
+          {!!onClose && (
+            <Touchable className={styles.backAction} onClick={onClose}>
+              <CloseIcon />
+            </Touchable>
           )}
         </div>
       )}

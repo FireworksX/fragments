@@ -11,7 +11,7 @@
         transition: var(--animation-transition-default);
         cursor: pointer;
         color: var(--text-color-accent);
-        gap: 7px;
+        gap: 2px;
         white-space: nowrap;
 
         &:hover:not(.disabled) {
@@ -40,6 +40,10 @@
         &.warning {
             color: var(--warning);
         }
+
+        &.column {
+            flex-direction: column;
+        }
     }
 
     .icon {
@@ -55,6 +59,11 @@
 
     .description {
         color: var(--secondary);
+    }
+
+    .bottomDescription {
+        color: var(--secondary);
+        white-space: normal;
     }
 
     .arrow {

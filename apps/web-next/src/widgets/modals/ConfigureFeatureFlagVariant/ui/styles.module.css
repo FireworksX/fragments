@@ -1,0 +1,8 @@
+.root {
+  width: 260px;
+}
+
+.body {
+  display: flex;
+  gap: 12px;
+}
