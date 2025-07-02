@@ -3,7 +3,7 @@ from typing import List
 import strawberry
 from fastapi import HTTPException, status
 
-from crud.feature_flag import (
+from crud.variant import (
     create_variant_db,
     delete_variant_db,
     get_variant_by_id_db,
@@ -42,10 +42,12 @@ def variant_db_to_variant(variant: Variant) -> VariantGet:
             if variant.fragment
             else None
         ),
+        status=variant.status,
+        rotation_type=variant.rotation_type,
     )
 
 
-async def variants(
+async def variants_by_feature_flag_id(
     info: strawberry.Info[Context],
     feature_flag_id: int,
 ) -> List[VariantGet]:

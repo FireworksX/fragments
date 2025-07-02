@@ -21,7 +21,6 @@ async def create_campaign_db(
     author_id: int,
     default: bool,
     experiment_id: Optional[int],
-    feature_flag: Optional[FeatureFlagPost],
 ) -> Campaign:
     default_campaign_logo = await generate_default_media(db, f"{name}_campaign.png")
     campaign: Campaign = Campaign(
@@ -41,8 +40,18 @@ async def create_campaign_db(
 
     if experiment_id is not None:
         campaign.experiment_id = experiment_id
-    if feature_flag is not None:
-        campaign.feature_flag = await create_feature_flag_db(db, feature_flag)
+    default_campaign_feature_flag = await create_feature_flag_db(
+        db,
+        FeatureFlagPost(
+            name=f'{name}_default_feature_flag',
+            description=f'Default feature flag for {name}',
+            project_id=project_id,
+        ),
+    )
+    db.add(default_campaign_feature_flag)
+    db.commit()
+    db.refresh(default_campaign_feature_flag)
+    campaign.feature_flag_id = default_campaign_feature_flag.id
     db.commit()
     db.refresh(campaign)
     return campaign

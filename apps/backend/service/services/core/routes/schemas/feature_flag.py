@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import List, Optional
 
 import strawberry
@@ -16,12 +17,26 @@ class FragmentVariantGet:
     props: Optional[strawberry.scalars.JSON] = None
 
 
+@strawberry.enum
+class VariantStatus(Enum):
+    ACTIVE = 1
+    INACTIVE = 2
+
+
+@strawberry.enum
+class VariantRotationType(Enum):
+    KEEP = 1
+    ROTATE = 2
+
+
 @strawberry.type
 class VariantGet:
     id: int
     name: str
     rollout_percentage: float
     fragment: Optional[FragmentVariantGet] = None
+    status: VariantStatus
+    rotation_type: VariantRotationType
 
 
 @strawberry.input
@@ -41,6 +56,8 @@ class VariantPost:
     name: str
     rollout_percentage: float
     fragment: FragmentVariantPost
+    status: VariantStatus
+    rotation_type: VariantRotationType
 
 
 @strawberry.input
@@ -49,6 +66,8 @@ class VariantPatch:
     name: Optional[str] = None
     rollout_percentage: Optional[float] = None
     fragment: Optional[FragmentVariantPatch] = None
+    status: Optional[VariantStatus] = None
+    rotation_type: Optional[VariantRotationType] = None
 
 
 @strawberry.type

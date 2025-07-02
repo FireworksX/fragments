@@ -54,11 +54,6 @@ def campaign_db_to_campaign(campaign: Campaign) -> CampaignGet:
         ),
         author=user_db_to_user(campaign.author),
         experiment=campaign.experiment,
-        feature_flag=(
-            feature_flag_db_to_feature_flag(campaign.feature_flag)
-            if campaign.feature_flag
-            else None
-        ),
     )
 
 
@@ -133,7 +128,6 @@ async def create_campaign_route(info: strawberry.Info[Context], cmp: CampaignPos
         user.user.id,
         False,
         cmp.experiment_id,
-        cmp.feature_flag,
     )
 
     return campaign_db_to_campaign(campaign)

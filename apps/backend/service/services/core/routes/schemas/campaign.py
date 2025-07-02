@@ -26,7 +26,7 @@ class CampaignGet:
     default: bool
     archived: bool
     experiment: Optional[ExperimentGet] = None
-    feature_flag: Optional[FeatureFlagGet] = None
+    feature_flag: FeatureFlagGet
 
 
 @strawberry.input
@@ -37,7 +37,6 @@ class CampaignPost:
     active: bool
     archived: bool
     experiment_id: Optional[int] = None
-    feature_flag: Optional[FeatureFlagPost] = None
 
 
 @strawberry.input
@@ -48,4 +47,3 @@ class CampaignPatch:
     active: Optional[bool] = None
     archived: Optional[bool] = None
     experiment_id: Optional[int] = None
-    feature_flag: Optional[FeatureFlagPost] = None
