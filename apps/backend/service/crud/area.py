@@ -10,7 +10,7 @@ from crud.campaign import create_campaign_db
 
 async def create_area_db(
     db: Session,
-    name: str,
+    default_campaign_name: str,
     project_id: int,
     author_id: int,
     area_code: str,
@@ -29,7 +29,7 @@ async def create_area_db(
     db.refresh(area)
 
     default_campaign = await create_campaign_db(db,
-        name=name,
+        name=default_campaign_name,
         description=f'Default campaign for {area_code}',
         project_id=project_id,
         area_id=area.id,
