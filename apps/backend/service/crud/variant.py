@@ -39,9 +39,24 @@ async def recalculate_variants_rollout_percentage_db(
     db.commit()
     
 
+async def normalize_variants_rollout_percentage_db(db: Session, feature_flag_id: int) -> None:
+    variants = await get_variants_by_feature_flag_id_db(db, feature_flag_id)
+    if len(variants) == 0:
+        return
+    
+    procent = 100 / float(len(variants))
+    for variant in variants:
+        variant.rollout_percentage = procent
+        db.merge(variant)
+    
+    db.commit()
 
 async def create_variant_db(db: Session, variant: VariantPost) -> Variant:
-    variant = Variant(
+    variants = await get_variants_by_feature_flag_id_db(db, variant.feature_flag_id)
+    if len(variants) == 0:
+        variant.rollout_percentage = 100
+
+    variant_db = Variant(
         feature_flag_id=variant.feature_flag_id,
         name=variant.name,
         rollout_percentage=variant.rollout_percentage,
@@ -49,14 +64,14 @@ async def create_variant_db(db: Session, variant: VariantPost) -> Variant:
         props=variant.fragment.props,
         status=int(variant.status.value)
     )
-    db.add(variant)
+    db.add(variant_db)
     db.commit()
-    db.refresh(variant)
+    db.refresh(variant_db)
     await recalculate_variants_rollout_percentage_db(
-        db, variant.feature_flag_id, variant.id, variant.rollout_percentage, variant.rollout_percentage
+        db, variant.feature_flag_id, variant_db.id, variant_db.rollout_percentage, variant_db.rollout_percentage
     )
 
-    return variant
+    return variant_db
 
 
 async def get_variant_by_id_db(db: Session, variant_id: int) -> Optional[Variant]:

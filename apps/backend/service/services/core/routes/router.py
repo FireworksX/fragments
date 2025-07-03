@@ -128,6 +128,7 @@ from .variant import (
     VariantPost,
     create_variant_route,
     delete_variant_route,
+    normalize_variants_rollout_percentage_route,
     update_variant_route,
     variant_by_id,
     variants_by_feature_flag_id,
@@ -519,6 +520,10 @@ class FeatureFlagMutation:
     @strawberry.mutation
     async def delete_variant(self, info: strawberry.Info[Context], variant_id: int) -> None:
         await delete_variant_route(info, variant_id)
+
+    @strawberry.mutation
+    async def normalize_variants_rollout_percentage(self, info: strawberry.Info[Context], feature_flag_id: int) -> None:
+        await normalize_variants_rollout_percentage_route(info, feature_flag_id)
 
 
 @strawberry.type
