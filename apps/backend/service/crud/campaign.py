@@ -6,7 +6,7 @@ from crud.feature_flag import create_feature_flag_db
 from crud.media import generate_default_media
 from crud.release_condition import create_release_condition_db
 from database.models import Campaign
-from services.core.routes.schemas.feature_flag import FeatureFlagPost
+from services.core.routes.schemas.feature_flag import FeatureFlagPost, RotationType
 from services.core.routes.schemas.release_condition import ReleaseConditionPost
 
 
@@ -29,6 +29,7 @@ async def create_campaign_db(
         FeatureFlagPost(
             name=f'{name}_default_feature_flag',
             description=f'Default feature flag for {name}',
+            rotation_type=RotationType.KEEP,
             release_condition= ReleaseConditionPost(
                 name = f'{name}_default_release_condition',
                 condition_sets= []
