@@ -68,12 +68,10 @@ export type CampaignGet = {
   default: Scalars['Boolean']['output'];
   description?: Maybe<Scalars['String']['output']>;
   experiment?: Maybe<ExperimentGet>;
-  featureFlag?: Maybe<FeatureFlagGet>;
-  fragment?: Maybe<FragmentGet>;
+  featureFlag: FeatureFlagGet;
   id: Scalars['Int']['output'];
   logo: MediaGet;
   name: Scalars['String']['output'];
-  releaseCondition?: Maybe<ReleaseConditionGet>;
 };
 
 export type CampaignPatch = {
@@ -81,11 +79,8 @@ export type CampaignPatch = {
   archived?: InputMaybe<Scalars['Boolean']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   experimentId?: InputMaybe<Scalars['Int']['input']>;
-  featureFlag?: InputMaybe<FeatureFlagPost>;
-  fragmentId?: InputMaybe<Scalars['Int']['input']>;
   id: Scalars['Int']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
-  releaseCondition?: InputMaybe<ReleaseConditionPatch>;
 };
 
 export type CampaignPost = {
@@ -94,10 +89,7 @@ export type CampaignPost = {
   areaId: Scalars['Int']['input'];
   description?: InputMaybe<Scalars['String']['input']>;
   experimentId?: InputMaybe<Scalars['Int']['input']>;
-  featureFlag?: InputMaybe<FeatureFlagPost>;
-  fragmentId?: InputMaybe<Scalars['Int']['input']>;
   name: Scalars['String']['input'];
-  releaseCondition?: InputMaybe<ReleaseConditionPost>;
 };
 
 export type ClientGet = {
@@ -157,6 +149,16 @@ export type ConditionGet = {
   id: Scalars['Int']['output'];
 };
 
+export type ConditionPatch = {
+  deviceType?: InputMaybe<DeviceType>;
+  filterType?: InputMaybe<FilterType>;
+  geoLocation?: InputMaybe<FilterGeoLocationPost>;
+  id: Scalars['Int']['input'];
+  osType?: InputMaybe<OsType>;
+  page?: InputMaybe<Scalars['String']['input']>;
+  timeFrame?: InputMaybe<FilterTimeFramePost>;
+};
+
 export type ConditionPost = {
   deviceType?: InputMaybe<DeviceType>;
   filterType: FilterType;
@@ -171,6 +173,12 @@ export type ConditionSetGet = {
   conditions: Array<ConditionGet>;
   id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
+};
+
+export type ConditionSetPatch = {
+  conditions?: InputMaybe<Array<ConditionPost>>;
+  id: Scalars['Int']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type ConditionSetPost = {
@@ -209,6 +217,14 @@ export type FeatureFlagGet = {
   variants: Array<VariantGet>;
 };
 
+export type FeatureFlagPatch = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  releaseCondition?: InputMaybe<ReleaseConditionPatch>;
+  variants?: InputMaybe<Array<VariantPatch>>;
+};
+
 export type FeatureFlagPost = {
   description?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
@@ -239,7 +255,7 @@ export enum FeelLevelGet {
 
 export type FilterDeviceTypeGet = {
   __typename?: 'FilterDeviceTypeGet';
-  deviceTypes: Array<DeviceType>;
+  deviceType: DeviceType;
 };
 
 export type FilterGeoLocationGet = {
@@ -257,12 +273,12 @@ export type FilterGeoLocationPost = {
 
 export type FilterOsTypeGet = {
   __typename?: 'FilterOSTypeGet';
-  osTypes: Array<OsType>;
+  osType: OsType;
 };
 
 export type FilterPageGet = {
   __typename?: 'FilterPageGet';
-  pages: Array<Scalars['String']['output']>;
+  page: Scalars['String']['output'];
 };
 
 export type FilterPageGetFilterDeviceTypeGetFilterOsTypeGetFilterTimeFrameGetFilterGeoLocationGet = FilterDeviceTypeGet | FilterGeoLocationGet | FilterOsTypeGet | FilterPageGet | FilterTimeFrameGet;
@@ -316,6 +332,22 @@ export type FragmentPost = {
   props?: InputMaybe<Scalars['JSON']['input']>;
 };
 
+export type FragmentVariantGet = {
+  __typename?: 'FragmentVariantGet';
+  fragment: FragmentGet;
+  props?: Maybe<Scalars['JSON']['output']>;
+};
+
+export type FragmentVariantPatch = {
+  id: Scalars['Int']['input'];
+  props?: InputMaybe<Scalars['JSON']['input']>;
+};
+
+export type FragmentVariantPost = {
+  fragmentId: Scalars['Int']['input'];
+  props?: InputMaybe<Scalars['JSON']['input']>;
+};
+
 export type MediaDelete = {
   mediaId?: InputMaybe<Scalars['Int']['input']>;
   mediaType: MediaType;
@@ -352,28 +384,43 @@ export type Mutation = {
   changeUserRole?: Maybe<Scalars['Void']['output']>;
   createArea: AreaGet;
   createCampaign: CampaignGet;
+  createCondition: ConditionGet;
+  createConditionSet: ConditionSetGet;
   createDirectory: Array<ProjectDirectoryGet>;
+  createFeatureFlag: FeatureFlagGet;
   createFragment: FragmentGet;
   createProject: ProjectGet;
   createProjectGoal: ProjectGoalGet;
+  createReleaseCondition: ReleaseConditionGet;
+  createVariant: VariantGet;
   deleteArea?: Maybe<Scalars['Void']['output']>;
   deleteAsset?: Maybe<Scalars['Void']['output']>;
   deleteCampaign?: Maybe<Scalars['Void']['output']>;
+  deleteCondition?: Maybe<Scalars['Void']['output']>;
+  deleteConditionSet?: Maybe<Scalars['Void']['output']>;
   deleteDirectory?: Maybe<Scalars['Void']['output']>;
+  deleteFeatureFlag?: Maybe<Scalars['Void']['output']>;
   deleteFragment?: Maybe<Scalars['Void']['output']>;
   deleteProject?: Maybe<Scalars['Void']['output']>;
   deleteProjectGoal?: Maybe<Scalars['Void']['output']>;
   deleteProjectPublicKey?: Maybe<Scalars['Void']['output']>;
+  deleteReleaseCondition?: Maybe<Scalars['Void']['output']>;
+  deleteVariant?: Maybe<Scalars['Void']['output']>;
   feedback: FeedbackGet;
   login: AuthPayload;
   refresh: AuthPayload;
   signup: AuthPayload;
   updateArea: AreaGet;
   updateCampaign: CampaignGet;
+  updateCondition: ConditionGet;
+  updateConditionSet: ConditionSetGet;
   updateDirectory: Array<ProjectDirectoryGet>;
+  updateFeatureFlag: FeatureFlagGet;
   updateFragment: FragmentGet;
   updateProject: ProjectGet;
   updateProjectGoal: ProjectGoalGet;
+  updateReleaseCondition: ReleaseConditionGet;
+  updateVariant: VariantGet;
   uploadAsset: MediaGet;
 };
 
@@ -418,8 +465,23 @@ export type MutationCreateCampaignArgs = {
 };
 
 
+export type MutationCreateConditionArgs = {
+  condition: ConditionPost;
+};
+
+
+export type MutationCreateConditionSetArgs = {
+  conditionSet: ConditionSetPost;
+};
+
+
 export type MutationCreateDirectoryArgs = {
   directory: ProjectDirectory;
+};
+
+
+export type MutationCreateFeatureFlagArgs = {
+  featureFlag: FeatureFlagPost;
 };
 
 
@@ -438,6 +500,16 @@ export type MutationCreateProjectGoalArgs = {
 };
 
 
+export type MutationCreateReleaseConditionArgs = {
+  releaseCondition: ReleaseConditionPost;
+};
+
+
+export type MutationCreateVariantArgs = {
+  variant: VariantPost;
+};
+
+
 export type MutationDeleteAreaArgs = {
   areaId: Scalars['Int']['input'];
 };
@@ -453,8 +525,23 @@ export type MutationDeleteCampaignArgs = {
 };
 
 
+export type MutationDeleteConditionArgs = {
+  conditionId: Scalars['Int']['input'];
+};
+
+
+export type MutationDeleteConditionSetArgs = {
+  conditionSetId: Scalars['Int']['input'];
+};
+
+
 export type MutationDeleteDirectoryArgs = {
   directoryId: Scalars['Int']['input'];
+};
+
+
+export type MutationDeleteFeatureFlagArgs = {
+  featureFlagId: Scalars['Int']['input'];
 };
 
 
@@ -476,6 +563,16 @@ export type MutationDeleteProjectGoalArgs = {
 export type MutationDeleteProjectPublicKeyArgs = {
   projectId: Scalars['Int']['input'];
   publicKeyId: Scalars['Int']['input'];
+};
+
+
+export type MutationDeleteReleaseConditionArgs = {
+  releaseConditionId: Scalars['Int']['input'];
+};
+
+
+export type MutationDeleteVariantArgs = {
+  variantId: Scalars['Int']['input'];
 };
 
 
@@ -508,8 +605,23 @@ export type MutationUpdateCampaignArgs = {
 };
 
 
+export type MutationUpdateConditionArgs = {
+  condition: ConditionPatch;
+};
+
+
+export type MutationUpdateConditionSetArgs = {
+  conditionSet: ConditionSetPatch;
+};
+
+
 export type MutationUpdateDirectoryArgs = {
   directory: ProjectDirectoryPatch;
+};
+
+
+export type MutationUpdateFeatureFlagArgs = {
+  featureFlag: FeatureFlagPatch;
 };
 
 
@@ -525,6 +637,16 @@ export type MutationUpdateProjectArgs = {
 
 export type MutationUpdateProjectGoalArgs = {
   goal: ProjectGoalPatch;
+};
+
+
+export type MutationUpdateReleaseConditionArgs = {
+  releaseCondition: ReleaseConditionPatch;
+};
+
+
+export type MutationUpdateVariantArgs = {
+  variant: VariantPatch;
 };
 
 
@@ -615,31 +737,28 @@ export type ProjectPost = {
 
 export type Query = {
   __typename?: 'Query';
-  area: AreaGet;
-  areas: Array<AreaGet>;
+  area: Array<AreaGet>;
   campaign: Array<CampaignGet>;
-  campaignByName: Array<CampaignGet>;
-  clientById: ClientGet;
+  client: Array<ClientGet>;
   clientFragment?: Maybe<FragmentGet>;
   clientHistory: Array<ClientHistoryGet>;
-  clientsByProjectId: Array<ClientGet>;
+  condition: ConditionGet;
+  conditionSet: ConditionSetGet;
   contributionsToProjectGoal: Array<ClientProjectGoalGet>;
   directory: Array<ProjectDirectoryGet>;
+  featureFlag: FeatureFlagGet;
   filter: AllFiltersGet;
-  fragment: Array<FragmentGet>;
   profile: AuthPayload;
   project: Array<ProjectGet>;
   projectGoals: Array<ProjectGoalGet>;
+  releaseCondition: ReleaseConditionGet;
+  variant: Array<VariantGet>;
 };
 
 
 export type QueryAreaArgs = {
-  areaId: Scalars['Int']['input'];
-};
-
-
-export type QueryAreasArgs = {
-  projectId: Scalars['Int']['input'];
+  areaId?: InputMaybe<Scalars['Int']['input']>;
+  projectId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -648,20 +767,14 @@ export type QueryCampaignArgs = {
   archived?: InputMaybe<Scalars['Boolean']['input']>;
   areaId?: InputMaybe<Scalars['Int']['input']>;
   campaignId?: InputMaybe<Scalars['Int']['input']>;
-};
-
-
-export type QueryCampaignByNameArgs = {
-  active?: InputMaybe<Scalars['Boolean']['input']>;
-  archived?: InputMaybe<Scalars['Boolean']['input']>;
-  areaId: Scalars['Int']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
-  name: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 
-export type QueryClientByIdArgs = {
-  clientId: Scalars['Int']['input'];
+export type QueryClientArgs = {
+  clientId?: InputMaybe<Scalars['Int']['input']>;
+  projectId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -675,8 +788,13 @@ export type QueryClientHistoryArgs = {
 };
 
 
-export type QueryClientsByProjectIdArgs = {
-  projectId: Scalars['Int']['input'];
+export type QueryConditionArgs = {
+  conditionId: Scalars['Int']['input'];
+};
+
+
+export type QueryConditionSetArgs = {
+  conditionSetId: Scalars['Int']['input'];
 };
 
 
@@ -691,15 +809,14 @@ export type QueryDirectoryArgs = {
 };
 
 
-export type QueryFilterArgs = {
-  countries?: InputMaybe<Array<Scalars['String']['input']>>;
-  regions?: InputMaybe<Array<Scalars['String']['input']>>;
+export type QueryFeatureFlagArgs = {
+  featureFlagId: Scalars['Int']['input'];
 };
 
 
-export type QueryFragmentArgs = {
-  fragmentIds?: InputMaybe<Array<Scalars['Int']['input']>>;
-  projectId?: InputMaybe<Scalars['Int']['input']>;
+export type QueryFilterArgs = {
+  countries?: InputMaybe<Array<Scalars['String']['input']>>;
+  regions?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 
@@ -710,6 +827,17 @@ export type QueryProjectArgs = {
 
 export type QueryProjectGoalsArgs = {
   projectId: Scalars['Int']['input'];
+};
+
+
+export type QueryReleaseConditionArgs = {
+  releaseConditionId: Scalars['Int']['input'];
+};
+
+
+export type QueryVariantArgs = {
+  featureFlagId?: InputMaybe<Scalars['Int']['input']>;
+  variantId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type RegionGet = {
@@ -764,14 +892,38 @@ export type UserRoleGet = {
 
 export type VariantGet = {
   __typename?: 'VariantGet';
-  fragment: FragmentGet;
+  fragment?: Maybe<FragmentVariantGet>;
   id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   rolloutPercentage: Scalars['Float']['output'];
+  rotationType: VariantRotationType;
+  status: VariantStatus;
+};
+
+export type VariantPatch = {
+  fragment?: InputMaybe<FragmentVariantPatch>;
+  id: Scalars['Int']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  rolloutPercentage?: InputMaybe<Scalars['Float']['input']>;
+  rotationType?: InputMaybe<VariantRotationType>;
+  status?: InputMaybe<VariantStatus>;
 };
 
 export type VariantPost = {
-  fragmentId: Scalars['Int']['input'];
+  featureFlagId: Scalars['Int']['input'];
+  fragment: FragmentVariantPost;
   name: Scalars['String']['input'];
   rolloutPercentage: Scalars['Float']['input'];
+  rotationType: VariantRotationType;
+  status: VariantStatus;
 };
+
+export enum VariantRotationType {
+  Keep = 'KEEP',
+  Rotate = 'ROTATE'
+}
+
+export enum VariantStatus {
+  Active = 'ACTIVE',
+  Inactive = 'INACTIVE'
+}

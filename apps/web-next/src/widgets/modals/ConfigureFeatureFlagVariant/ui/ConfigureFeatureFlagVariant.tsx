@@ -19,6 +19,8 @@ import { DropdownOption } from '@/shared/ui/DropdownOption'
 import { Slider } from '@/shared/ui/Slider'
 import FragmentIcon from '@/shared/icons/next/component.svg'
 import { useModal } from '@/shared/hooks/useModal'
+import { StatusDot } from '@/shared/ui/StatusDot'
+import { capitalize } from '@/shared/utils/capitalize'
 
 interface CreateCustomBreakpointProps {
   className?: string
@@ -30,52 +32,79 @@ export interface CreateCustomBreakpointContext {
 
 export const ConfigureFeatureFlagVariant: FC<CreateCustomBreakpointProps> = ({ className }) => {
   const { openModal, modal } = useModal()
-  const [name, setName] = useState('')
-  const [width, setWidth] = useState(0)
   const context = modal?.context ?? {}
+  const isEdit = context?.isEdit ?? false
+
+  const [featureFlag, setFeatureFlag] = useState(
+    () => context?.initialState ?? { name: '', status: 'pause', rollout: 0, fragment: null }
+  )
+
+  const indicatorMap = {
+    pause: 'warning',
+    active: 'success'
+  }
+
+  const setField = (field: keyof typeof featureFlag, value: unknown) =>
+    setFeatureFlag(prev => ({
+      ...prev,
+      [field]: value
+    }))
 
   return (
     <Modal className={cn(styles.root, className)} isOpen={modal?.name === modalNames.configureFeatureFlagVariant}>
       <ModalContainer
-        title='Configure Variant'
+        title={isEdit ? 'Configure Variant' : 'Create Variant'}
         footer={
           <>
             <Button mode='secondary' stretched onClick={modalStore.close}>
               Cancel
             </Button>
-            <Button stretched onClick={() => context?.onAdd(name, width)}>
-              Add
+            <Button stretched onClick={() => context?.onSubmit?.(featureFlag)}>
+              {isEdit ? 'Update' : 'Create'}
             </Button>
           </>
         }
-        onBack={() => undefined}
         onClose={modalStore.close}
       >
         <Panel>
           <ControlRow title='Name'>
             <ControlRowWide>
-              <InputText placeholder='Name' />
+              <InputText placeholder='Name' value={featureFlag.name} onChangeValue={v => setField('name', v)} />
             </ControlRowWide>
           </ControlRow>
 
           <ControlRow title='Status'>
-            <ControlRowWide>
+            <ControlRowWide className={styles.relative}>
               <Dropdown
+                width='contentSize'
+                placement='bottom-end'
+                hideOnClick
+                arrow={false}
+                trigger='click'
                 options={
                   <DropdownGroup>
-                    <DropdownOption>Active</DropdownOption>
-                    <DropdownOption>Pause</DropdownOption>
+                    <DropdownOption icon={<StatusDot status='success' />} onClick={() => setField('status', 'active')}>
+                      Active
+                    </DropdownOption>
+                    <DropdownOption icon={<StatusDot status='warning' />} onClick={() => setField('status', 'pause')}>
+                      Pause
+                    </DropdownOption>
                   </DropdownGroup>
                 }
               >
-                <SelectMimicry>Active</SelectMimicry>
+                <SelectMimicry>
+                  <div className={styles.statusRow}>
+                    <StatusDot status={indicatorMap[featureFlag.status]} />
+                    {capitalize(featureFlag.status)}
+                  </div>
+                </SelectMimicry>
               </Dropdown>
             </ControlRowWide>
           </ControlRow>
 
           <ControlRow title='Rollout'>
-            <InputNumber suffix='%' />
-            <Slider value={30} />
+            <InputNumber suffix='%' value={featureFlag.rollout} onChange={v => setField('rollout', v)} />
+            <Slider value={featureFlag.rollout} onChange={v => setField('rollout', v)} />
           </ControlRow>
 
           <ControlRow title='Fragment'>
@@ -89,6 +118,14 @@ export const ConfigureFeatureFlagVariant: FC<CreateCustomBreakpointProps> = ({ c
                   openModal(modalNames.projectTree, {
                     onBack: () => {
                       openModal(modalNames.configureFeatureFlagVariant, context)
+                    },
+                    onClick: item => {
+                      openModal(modalNames.configureFragmentVariant, {
+                        fragment: item.id,
+                        onBack: () => {
+                          openModal(modalNames.configureFeatureFlagVariant, context)
+                        }
+                      })
                     }
                   })
                 }

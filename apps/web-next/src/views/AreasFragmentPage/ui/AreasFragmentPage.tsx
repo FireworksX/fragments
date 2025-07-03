@@ -26,7 +26,7 @@ export const AreasFragmentPage: FC<CampaignDetailPageProps> = () => {
   const { data: areaData } = useAreaDetailQuery({
     variables: { id: +areaSlug }
   })
-  const campaignId = areaData?.area?.defaultCampaign?.id
+  const campaignId = areaData?.area?.at(0)?.defaultCampaign?.id
 
   return (
     <div className={styles.root}>

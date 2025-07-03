@@ -34,6 +34,7 @@ import { SelectMimicry } from '@/shared/ui/SelectMimicry'
 import { ContentEditable } from '@/shared/ui/ContentEditable'
 import { InputSelect } from '@/shared/ui/InputSelect'
 import { ConfigureFeatureFlagVariant } from '@/widgets/modals/ConfigureFeatureFlagVariant'
+import { ConfigureFragmentVariant } from '@/widgets/modals/ConfigureFragmentVariant'
 
 interface CampaignContentTableProps {
   campaignId: number
@@ -55,6 +56,7 @@ export const CampaignContentTable: FC<CampaignContentTableProps> = ({ className,
   return (
     <div className={styles.root}>
       <ConfigureFeatureFlagVariant />
+      <ConfigureFragmentVariant />
       <div className={styles.header}>
         <SearchInput mode='tiny' placeholder='Search...' />
         <Dropdown
@@ -63,12 +65,18 @@ export const CampaignContentTable: FC<CampaignContentTableProps> = ({ className,
           trigger='click'
           options={
             <DropdownGroup>
-              <DropdownOption description='The user is shown the same option every time.'>Keep</DropdownOption>
-              <DropdownOption description='The user is shown a random option each time.'>Loose</DropdownOption>
+              <DropdownOption gap={2} direction='column' description='The user is shown the same option every time.'>
+                Keep
+              </DropdownOption>
+              <DropdownOption gap={2} direction='column' description='The user is shown a random option each time.'>
+                Loose
+              </DropdownOption>
             </DropdownGroup>
           }
         >
-          <SelectMimicry>Rotation mode: Keep</SelectMimicry>
+          <SelectMimicry>
+            <span className={styles.rotationSpan}>Rotation mode:</span> Keep
+          </SelectMimicry>
         </Dropdown>
 
         {/*<Button mode='outline' icon={<PlusIcon />}>*/}

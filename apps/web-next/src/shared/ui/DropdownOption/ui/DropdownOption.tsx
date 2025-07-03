@@ -14,6 +14,7 @@ export interface DropdownOptionProps extends PropsWithChildren, TouchableProps {
   description?: string
   indicator?: string | number
   className?: string
+  gap?: number
   bodyClassName?: string
   disabled?: boolean
   fetching?: boolean
@@ -26,8 +27,9 @@ const DropdownOption: FC<DropdownOptionProps> = ({
   className,
   bodyClassName,
   size = 'medium',
-  direction = 'column',
+  direction = 'row',
   icon,
+  gap,
   indicator,
   disabled,
   hasNested,
@@ -45,6 +47,7 @@ const DropdownOption: FC<DropdownOptionProps> = ({
       className={cn(styles.root, className, styles[size], styles[mode], styles[direction], {
         [styles.disabled]: disabled
       })}
+      style={{ gap }}
       {...touchableProps}
     >
       {icon && <div className={styles.icon}>{icon}</div>}

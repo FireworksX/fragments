@@ -8,7 +8,7 @@ export type CampaignContentQueryVariables = Types.Exact<{
 }>;
 
 
-export type CampaignContentQuery = { __typename?: 'Query', campaign: Array<{ __typename?: 'CampaignGet', id: number, featureFlag?: { __typename?: 'FeatureFlagGet', id: number, variants: Array<{ __typename?: 'VariantGet', id: number, rolloutPercentage: number, name: string, fragment: { __typename?: 'FragmentGet', id: number, name: string } }> } | null }> };
+export type CampaignContentQuery = { __typename?: 'Query', campaign: Array<{ __typename?: 'CampaignGet', id: number, featureFlag: { __typename?: 'FeatureFlagGet', id: number, variants: Array<{ __typename?: 'VariantGet', id: number, rolloutPercentage: number, name: string, fragment?: { __typename?: 'FragmentVariantGet', props?: any | null, fragment: { __typename?: 'FragmentGet', id: number } } | null }> } }> };
 
 
 export const CampaignContentDocument = gql`
@@ -22,8 +22,10 @@ export const CampaignContentDocument = gql`
         rolloutPercentage
         name
         fragment {
-          id
-          name
+          fragment {
+            id
+          }
+          props
         }
       }
     }

@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, ReactNode } from 'react'
+import { ComponentRef, FC, PropsWithChildren, ReactNode, useRef, useState } from 'react'
 import cn from 'classnames'
 import { TippyProps } from '@tippyjs/react'
 import styles from './styles.module.css'
@@ -11,7 +11,7 @@ export interface DropdownProps extends PropsWithChildren {
   isLoading?: boolean
   className?: string
   disabled?: boolean
-  width?: number
+  width?: number | 'contentSize'
   trigger?: PopoverProps['trigger']
   appendTo?: PopoverProps['appendTo']
   placement?: TippyProps['placement']
@@ -40,6 +40,16 @@ const Dropdown: FC<DropdownProps> = ({
   onShow,
   onHide
 }) => {
+  const [optionsWidth, setOptionsWidth] = useState(typeof width === 'number' ? width : undefined)
+
+  const onCreateProxy = (instance: Instance) => {
+    if (width === 'contentSize' && instance.reference) {
+      setOptionsWidth(instance.reference?.getBoundingClientRect()?.width)
+    }
+
+    onCreate?.(instance)
+  }
+
   return (
     <Popover
       className={cn(styles.root, className)}
@@ -50,7 +60,7 @@ const Dropdown: FC<DropdownProps> = ({
       appendTo={appendTo}
       arrow={arrow}
       content={
-        <div className={styles.options} style={{ width }}>
+        <div className={styles.options} style={{ width: optionsWidth }}>
           {isLoading ? (
             <div className={styles.loadingContainer}>
               <Spinner size={14} color='var(--text-color-accent)' />
@@ -62,7 +72,7 @@ const Dropdown: FC<DropdownProps> = ({
       }
       hideOnClick={hideOnClick}
       stopPropagation={stopPropagation}
-      onCreate={onCreate}
+      onCreate={onCreateProxy}
       onShown={onShow}
       onHide={onHide}
     >

@@ -7,5 +7,27 @@ query Campaign($areaId: Int, $id: Int) {
             url: publicPath
         }
         default
+        featureFlag {
+            id
+            name
+            releaseCondition {
+                id
+                conditionSets {
+                    conditions {
+                        filterType
+                    }
+                }
+            }
+            variants {
+                rolloutPercentage
+                rotationType
+                fragment {
+                    fragment {
+                        id
+                    }
+                    props
+                }
+            }
+        }
     }
 }

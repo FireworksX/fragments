@@ -23,7 +23,7 @@ export const useCampaignsListAside = () => {
   }
 
   return {
-    list: campaignsListData?.areas ?? [],
+    list: campaignsListData?.area ?? [],
     handleCreate,
     createCampaignLoading
   }

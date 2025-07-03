@@ -11,7 +11,7 @@
         transition: var(--animation-transition-default);
         cursor: pointer;
         color: var(--text-color-accent);
-        gap: 2px;
+        gap: 8px;
         white-space: nowrap;
 
         &:hover:not(.disabled) {

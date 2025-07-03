@@ -37,7 +37,8 @@ export const modalNames = createConstants(
   'projectTree',
   'createCustomBreakpoint',
   'goalView',
-  'configureFeatureFlagVariant'
+  'configureFeatureFlagVariant',
+  'configureFragmentVariant'
 )
 
 export const booleanTabsSelectorItems: TabsSelectorItem[] = [

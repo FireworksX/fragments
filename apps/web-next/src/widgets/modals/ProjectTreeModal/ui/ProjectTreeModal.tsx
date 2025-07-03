@@ -19,7 +19,12 @@ export const ProjectTreeModal: FC<ProjectTreeModalProps> = ({ className }) => {
 
   return (
     <Modal className={cn(styles.root, className)} isOpen={modal.name === modalNames.projectTree}>
-      <ModalContainer title='Project Tree' onBack={context?.onBack}>
+      <ModalContainer
+        title='Project Tree'
+        description='Select the fragment you need. You can also organize them into folders or create new ones.'
+        onBack={context?.onBack}
+        onClose={modalStore.close}
+      >
         <ProjectTree onClick={context?.onClick} />
       </ModalContainer>
     </Modal>

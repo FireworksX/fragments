@@ -8,8 +8,10 @@ query CampaignContent($id: Int!) {
                 rolloutPercentage
                 name
                 fragment {
-                    id
-                    name
+                    fragment {
+                        id
+                    }
+                    props
                 }
             }
         }

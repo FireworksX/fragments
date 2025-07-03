@@ -1,5 +1,5 @@
 query AreasList($projectId: Int!) {
-    areas(projectId: $projectId) {
+    area(projectId: $projectId) {
         id
         name
         description

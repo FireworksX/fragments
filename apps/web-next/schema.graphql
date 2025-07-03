@@ -39,12 +39,10 @@ type CampaignGet {
     default: Boolean!
     description: String
     experiment: ExperimentGet
-    featureFlag: FeatureFlagGet
-    fragment: FragmentGet
+    featureFlag: FeatureFlagGet!
     id: Int!
     logo: MediaGet!
     name: String!
-    releaseCondition: ReleaseConditionGet
 }
 
 type ClientGet {
@@ -124,7 +122,7 @@ type FeedbackGet {
 }
 
 type FilterDeviceTypeGet {
-    deviceTypes: [DeviceType!]!
+    deviceType: DeviceType!
 }
 
 type FilterGeoLocationGet {
@@ -134,11 +132,11 @@ type FilterGeoLocationGet {
 }
 
 type FilterOSTypeGet {
-    osTypes: [OSType!]!
+    osType: OSType!
 }
 
 type FilterPageGet {
-    pages: [String!]!
+    page: String!
 }
 
 type FilterTimeFrameGet {
@@ -157,6 +155,11 @@ type FragmentGet {
     props: JSON
 }
 
+type FragmentVariantGet {
+    fragment: FragmentGet!
+    props: JSON
+}
+
 type MediaGet {
     mediaId: Int!
     mediaType: MediaType!
@@ -171,28 +174,43 @@ type Mutation {
     changeUserRole(projectId: Int!, role: RoleGet!, userId: Int!): Void
     createArea(area: AreaPost!): AreaGet!
     createCampaign(cmp: CampaignPost!): CampaignGet!
+    createCondition(condition: ConditionPost!): ConditionGet!
+    createConditionSet(conditionSet: ConditionSetPost!): ConditionSetGet!
     createDirectory(directory: ProjectDirectory!): [ProjectDirectoryGet!]!
+    createFeatureFlag(featureFlag: FeatureFlagPost!): FeatureFlagGet!
     createFragment(fg: FragmentPost!): FragmentGet!
     createProject(pr: ProjectPost!): ProjectGet!
     createProjectGoal(goal: ProjectGoalPost!): ProjectGoalGet!
+    createReleaseCondition(releaseCondition: ReleaseConditionPost!): ReleaseConditionGet!
+    createVariant(variant: VariantPost!): VariantGet!
     deleteArea(areaId: Int!): Void
     deleteAsset(media: MediaDelete!): Void
     deleteCampaign(campaignId: Int!): Void
+    deleteCondition(conditionId: Int!): Void
+    deleteConditionSet(conditionSetId: Int!): Void
     deleteDirectory(directoryId: Int!): Void
+    deleteFeatureFlag(featureFlagId: Int!): Void
     deleteFragment(fragmentId: Int!): Void
     deleteProject(projectId: Int!): Void
     deleteProjectGoal(goalId: Int!): Void
     deleteProjectPublicKey(projectId: Int!, publicKeyId: Int!): Void
+    deleteReleaseCondition(releaseConditionId: Int!): Void
+    deleteVariant(variantId: Int!): Void
     feedback(fd: FeedbackPost!): FeedbackGet!
     login(email: String!, password: String!): AuthPayload!
     refresh: AuthPayload!
     signup(email: String!, firstName: String!, lastName: String, password: String!): AuthPayload!
     updateArea(area: AreaPatch!): AreaGet!
     updateCampaign(cmp: CampaignPatch!): CampaignGet!
+    updateCondition(condition: ConditionPatch!): ConditionGet!
+    updateConditionSet(conditionSet: ConditionSetPatch!): ConditionSetGet!
     updateDirectory(directory: ProjectDirectoryPatch!): [ProjectDirectoryGet!]!
+    updateFeatureFlag(featureFlag: FeatureFlagPatch!): FeatureFlagGet!
     updateFragment(fg: FragmentPatch!): FragmentGet!
     updateProject(pr: ProjectPatch!): ProjectGet!
     updateProjectGoal(goal: ProjectGoalPatch!): ProjectGoalGet!
+    updateReleaseCondition(releaseCondition: ReleaseConditionPatch!): ReleaseConditionGet!
+    updateVariant(variant: VariantPatch!): VariantGet!
     uploadAsset(file: Upload!, media: MediaPost!): MediaGet!
 }
 
@@ -231,21 +249,22 @@ type ProjectKeyGet {
 }
 
 type Query {
-    area(areaId: Int!): AreaGet!
-    areas(projectId: Int!): [AreaGet!]!
-    campaign(active: Boolean, archived: Boolean, areaId: Int, campaignId: Int): [CampaignGet!]!
-    campaignByName(active: Boolean, archived: Boolean, areaId: Int!, limit: Int = 5, name: String!): [CampaignGet!]!
-    clientById(clientId: Int!): ClientGet!
+    area(areaId: Int, projectId: Int): [AreaGet!]!
+    campaign(active: Boolean, archived: Boolean, areaId: Int, campaignId: Int, limit: Int = 5, name: String): [CampaignGet!]!
+    client(clientId: Int, projectId: Int): [ClientGet!]!
     clientFragment(fragmentId: Int!): FragmentGet
     clientHistory(clientId: Int!): [ClientHistoryGet!]!
-    clientsByProjectId(projectId: Int!): [ClientGet!]!
+    condition(conditionId: Int!): ConditionGet!
+    conditionSet(conditionSetId: Int!): ConditionSetGet!
     contributionsToProjectGoal(projectGoalId: Int!, projectId: Int!): [ClientProjectGoalGet!]!
     directory(directoryId: Int!): [ProjectDirectoryGet!]!
+    featureFlag(featureFlagId: Int!): FeatureFlagGet!
     filter(countries: [String!], regions: [String!]): AllFiltersGet!
-    fragment(fragmentIds: [Int!], projectId: Int): [FragmentGet!]!
     profile: AuthPayload!
     project(projectId: Int): [ProjectGet!]!
     projectGoals(projectId: Int!): [ProjectGoalGet!]!
+    releaseCondition(releaseConditionId: Int!): ReleaseConditionGet!
+    variant(featureFlagId: Int, variantId: Int): [VariantGet!]!
 }
 
 type RegionGet {
@@ -277,10 +296,12 @@ type UserRoleGet {
 }
 
 type VariantGet {
-    fragment: FragmentGet!
+    fragment: FragmentVariantGet
     id: Int!
     name: String!
     rolloutPercentage: Float!
+    rotationType: VariantRotationType!
+    status: VariantStatus!
 }
 
 enum ClientMetricType {
@@ -334,6 +355,16 @@ enum RoleGet {
     OWNER
 }
 
+enum VariantRotationType {
+    KEEP
+    ROTATE
+}
+
+enum VariantStatus {
+    ACTIVE
+    INACTIVE
+}
+
 "Date with time (isoformat)"
 scalar DateTime
 
@@ -364,11 +395,8 @@ input CampaignPatch {
     archived: Boolean
     description: String
     experimentId: Int
-    featureFlag: FeatureFlagPost
-    fragmentId: Int
     id: Int!
     name: String
-    releaseCondition: ReleaseConditionPatch
 }
 
 input CampaignPost {
@@ -377,15 +405,22 @@ input CampaignPost {
     areaId: Int!
     description: String
     experimentId: Int
-    featureFlag: FeatureFlagPost
-    fragmentId: Int
     name: String!
-    releaseCondition: ReleaseConditionPost
 }
 
 input ClientMetricPost {
     metricType: ClientMetricType!
     metricValue: String
+}
+
+input ConditionPatch {
+    deviceType: DeviceType
+    filterType: FilterType
+    geoLocation: FilterGeoLocationPost
+    id: Int!
+    osType: OSType
+    page: String
+    timeFrame: FilterTimeFramePost
 }
 
 input ConditionPost {
@@ -397,9 +432,23 @@ input ConditionPost {
     timeFrame: FilterTimeFramePost
 }
 
+input ConditionSetPatch {
+    conditions: [ConditionPost!]
+    id: Int!
+    name: String
+}
+
 input ConditionSetPost {
     conditions: [ConditionPost!]!
     name: String!
+}
+
+input FeatureFlagPatch {
+    description: String
+    id: Int!
+    name: String
+    releaseCondition: ReleaseConditionPatch
+    variants: [VariantPatch!]
 }
 
 input FeatureFlagPost {
@@ -441,6 +490,16 @@ input FragmentPost {
     linkedFragments: [Int!]
     name: String!
     projectId: Int!
+    props: JSON
+}
+
+input FragmentVariantPatch {
+    id: Int!
+    props: JSON
+}
+
+input FragmentVariantPost {
+    fragmentId: Int!
     props: JSON
 }
 
@@ -501,8 +560,20 @@ input ReleaseConditionPost {
     name: String!
 }
 
+input VariantPatch {
+    fragment: FragmentVariantPatch
+    id: Int!
+    name: String
+    rolloutPercentage: Float
+    rotationType: VariantRotationType
+    status: VariantStatus
+}
+
 input VariantPost {
-    fragmentId: Int!
+    featureFlagId: Int!
+    fragment: FragmentVariantPost!
     name: String!
     rolloutPercentage: Float!
+    rotationType: VariantRotationType!
+    status: VariantStatus!
 }

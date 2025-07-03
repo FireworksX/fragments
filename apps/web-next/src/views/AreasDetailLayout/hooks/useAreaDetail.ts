@@ -9,7 +9,7 @@ export const useAreaDetail = () => {
   const { data: areaData } = useAreaDetailQuery({
     variables: { id: +areaSlug }
   })
-  const area = areaData?.area
+  const area = areaData?.area?.at(0)
 
   const editDescription = (value: string) => {
     updateArea({

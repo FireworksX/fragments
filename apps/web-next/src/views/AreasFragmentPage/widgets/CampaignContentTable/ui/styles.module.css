@@ -26,3 +26,7 @@
     background: var(--background-secondary);
     border-radius: var(--radius-second);
 }
+
+.rotationSpan {
+    color: var(--secondary);
+}

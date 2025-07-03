@@ -8,7 +8,7 @@ export type CampaignDetailQueryVariables = Types.Exact<{
 }>;
 
 
-export type CampaignDetailQuery = { __typename?: 'Query', campaign: Array<{ __typename?: 'CampaignGet', id: number, name: string, active: boolean, featureFlag?: { __typename?: 'FeatureFlagGet', id: number, releaseCondition: { __typename?: 'ReleaseConditionGet', id: number, conditionSets: Array<{ __typename?: 'ConditionSetGet', id: number, conditions: Array<{ __typename?: 'ConditionGet', id: number }> }> } } | null }> };
+export type CampaignDetailQuery = { __typename?: 'Query', campaign: Array<{ __typename?: 'CampaignGet', id: number, name: string, active: boolean, featureFlag: { __typename?: 'FeatureFlagGet', id: number, releaseCondition: { __typename?: 'ReleaseConditionGet', id: number, conditionSets: Array<{ __typename?: 'ConditionSetGet', id: number, conditions: Array<{ __typename?: 'ConditionGet', id: number }> }> } } }> };
 
 
 export const CampaignDetailDocument = gql`
