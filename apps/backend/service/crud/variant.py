@@ -23,9 +23,9 @@ async def recalculate_variants_rollout_percentage_on_delete_db(
     db: Session, feature_flag_id: int, deleted_variant_percentage: float
 ) -> None:
     variants = await get_variants_by_feature_flag_id_db(db, feature_flag_id)
-    scale_factor = deleted_variant_percentage / 100
+    scale_factor = deleted_variant_percentage / len(variants)
     for variant in variants:
-        variant.rollout_percentage = variant.rollout_percentage + (variant.rollout_percentage * scale_factor)
+        variant.rollout_percentage = variant.rollout_percentage + scale_factor
         db.merge(variant)
 
     db.commit()
