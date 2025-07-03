@@ -189,7 +189,7 @@ class Campaign(Base):
     default = Column('default', Boolean, default=False)
 
     feature_flag_id = Column(
-        'feature_flag_id', Integer, ForeignKey('feature_flag.id'), nullable=True
+        'feature_flag_id', Integer, ForeignKey('feature_flag.id'), nullable=False
     )
     feature_flag = relationship('FeatureFlag')
 
