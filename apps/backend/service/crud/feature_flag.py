@@ -5,18 +5,20 @@ from sqlalchemy.orm import Session
 from database.models import FeatureFlag, Variant
 from services.core.routes.schemas.feature_flag import FeatureFlagPost, VariantPost
 
-from .variant import create_variant_db
 from .release_condition import create_release_condition_db
+from .variant import create_variant_db
 
 
-async def create_feature_flag_db(db: Session, project_id: int, feature_flag: FeatureFlagPost) -> FeatureFlag:
+async def create_feature_flag_db(
+    db: Session, project_id: int, feature_flag: FeatureFlagPost
+) -> FeatureFlag:
     release_condition = await create_release_condition_db(db, feature_flag.release_condition)
     feature_flag_db = FeatureFlag(
         name=feature_flag.name,
         description=feature_flag.description,
         release_condition_id=release_condition.id,
         project_id=project_id,
-        rotation_type=int(feature_flag.rotation_type.value)
+        rotation_type=int(feature_flag.rotation_type.value),
     )
     db.add(feature_flag_db)
     db.commit()

@@ -34,6 +34,7 @@ class FragmentVariantGet:
     fragment: FragmentGet
     props: Optional[strawberry.scalars.JSON] = None
 
+
 @strawberry.type
 class VariantGet:
     id: int

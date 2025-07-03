@@ -522,7 +522,9 @@ class FeatureFlagMutation:
         await delete_variant_route(info, variant_id)
 
     @strawberry.mutation
-    async def normalize_variants_rollout_percentage(self, info: strawberry.Info[Context], feature_flag_id: int) -> None:
+    async def normalize_variants_rollout_percentage(
+        self, info: strawberry.Info[Context], feature_flag_id: int
+    ) -> None:
         await normalize_variants_rollout_percentage_route(info, feature_flag_id)
 
 
