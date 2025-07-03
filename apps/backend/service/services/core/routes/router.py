@@ -36,7 +36,6 @@ from .feature_flag import (
     FeatureFlagGet,
     FeatureFlagPatch,
     FeatureFlagPost,
-    VariantGet,
     create_feature_flag_route,
     delete_feature_flag_route,
     feature_flag_by_id,
@@ -166,6 +165,7 @@ class AuthMutation:
 
 @strawberry.type
 class FragmentQuery:
+    @strawberry.field
     async def fragment(
         self,
         info: strawberry.Info[Context],

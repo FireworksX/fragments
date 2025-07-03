@@ -12,10 +12,10 @@ from crud.feature_flag import (
 )
 from database import FeatureFlag, Session
 
-from .fragment import fragment_db_to_fragment
 from .middleware import Context
 from .release_condition import release_condition_db_to_release_condition
-from .schemas.feature_flag import FeatureFlagGet, FeatureFlagPatch, FeatureFlagPost, VariantGet
+from .schemas.feature_flag import FeatureFlagGet, FeatureFlagPatch, FeatureFlagPost, RotationType
+from .variant import variant_db_to_variant
 from .schemas.user import AuthPayload, RoleGet
 from .utils import get_user_role_in_project
 
@@ -36,14 +36,9 @@ def feature_flag_db_to_feature_flag(feature_flag: FeatureFlag) -> FeatureFlagGet
         name=feature_flag.name,
         description=feature_flag.description,
         release_condition=release_condition_db_to_release_condition(feature_flag.release_condition),
+        rotation_type=RotationType(feature_flag.rotation_type),
         variants=[
-            VariantGet(
-                id=variant.id,
-                name=variant.name,
-                rollout_percentage=variant.rollout_percentage,
-                fragment=fragment_db_to_fragment(variant.fragment) if variant.fragment else None,
-                props=variant.props,
-            )
+            variant_db_to_variant(variant)
             for variant in feature_flag.variants
         ],
     )

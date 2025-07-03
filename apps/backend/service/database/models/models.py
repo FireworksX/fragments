@@ -76,7 +76,6 @@ class ProjectApiKey(Base):
 class Area(Base):
     __tablename__ = 'area'
     id = Column('id', Integer, primary_key=True, index=True)
-    name = Column('name', String, nullable=False)
     description = Column('description', String)
     area_code = Column('area_code', String, nullable=False)
     author_id = Column('author_id', Integer, ForeignKey('user.id'))
@@ -315,6 +314,7 @@ class FeatureFlag(Base):
     )
     release_condition = relationship('ReleaseCondition')
     variants = relationship('Variant', back_populates='feature_flag', cascade='all, delete-orphan')
+    rotation_type = Column('rotation_type', Integer, nullable=False, default=1)
 
 
 class Variant(Base):
@@ -334,7 +334,6 @@ class Variant(Base):
     fragment = relationship('Fragment')
     props = Column('props', JSON, nullable=True)
     status = Column('status', Integer, nullable=False, default=1)
-    rotation_type = Column('rotation_type', Integer, nullable=False, default=1)
 
 
 class Experiment(Base):

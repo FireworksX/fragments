@@ -10,7 +10,7 @@ from crud.campaign import create_campaign_db
 
 async def create_area_db(
     db: Session,
-    name: str,
+    default_campaign_name: str,
     project_id: int,
     author_id: int,
     area_code: str,
@@ -18,7 +18,6 @@ async def create_area_db(
 ) -> Area:
     default_media = await generate_default_media(db, f"{area_code}.png")
     area = Area(
-        name=name,
         project_id=project_id,
         author_id=author_id,
         description=description,
@@ -30,7 +29,7 @@ async def create_area_db(
     db.refresh(area)
 
     default_campaign = await create_campaign_db(db,
-        name=f'{area_code}_default_campaign',
+        name=default_campaign_name,
         description=f'Default campaign for {area_code}',
         project_id=project_id,
         area_id=area.id,
@@ -54,20 +53,12 @@ async def get_area_by_code_and_project_id_db(
     return db.query(Area).filter(Area.project_id == project_id, Area.area_code == area_code).first()
 
 
-async def get_area_by_name_and_project_id_db(
-    db: Session, project_id: int, name: str
-) -> Optional[Area]:
-    return db.query(Area).filter(Area.project_id == project_id, Area.name == name).first()
-
-
 async def get_areas_by_project_id_db(db: Session, project_id: int) -> List[Area]:
     return db.query(Area).filter(Area.project_id == project_id).all()
 
 
 async def update_area_by_id_db(db: Session, values: dict) -> Area:
     area: Area = await get_area_by_id_db(db, values['id'])
-    if values.get('name') is not None:
-        area.name = values['name']
     if values.get('description') is not None:
         area.description = values['description']
     if values.get('area_code') is not None:
