@@ -41,7 +41,6 @@ class VariantGet:
     rollout_percentage: float
     fragment: Optional[FragmentVariantGet] = None
     status: VariantStatus
-    rotation_type: RotationType
 
 
 @strawberry.input
