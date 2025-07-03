@@ -130,142 +130,20 @@ from .variant import (
     create_variant_route,
     delete_variant_route,
     update_variant_route,
+    variant_by_id,
+    variants_by_feature_flag_id,
 )
 
 
 @strawberry.type
-class Query:
+class AuthQuery:
     @strawberry.field
     async def profile(self, info: strawberry.Info[Context]) -> AuthPayload:
         return await profile(info)
 
-    @strawberry.field
-    async def fragment(
-        self,
-        info: strawberry.Info[Context],
-        fragment_ids: Optional[List[int]] = None,
-        project_id: Optional[int] = None,
-    ) -> List[FragmentGet]:
-        return await fragments_by_ids(info, fragment_ids, project_id)
-
-    @strawberry.field
-    async def campaign(
-        self,
-        info: strawberry.Info[Context],
-        campaign_id: Optional[int] = None,
-        area_id: Optional[int] = None,
-        active: Optional[bool] = None,
-        archived: Optional[bool] = None,
-    ) -> List[CampaignGet]:
-        if campaign_id is not None:
-            return [await campaign_by_id(info, campaign_id)]
-        if area_id is not None:
-            return await campaigns_in_area(info, area_id, active, archived)
-
-    @strawberry.field
-    async def campaign_by_name(
-        self,
-        info: strawberry.Info[Context],
-        area_id: int,
-        name: str,
-        limit: Optional[int] = 5,
-        active: Optional[bool] = None,
-        archived: Optional[bool] = None,
-    ) -> List[CampaignGet]:
-        return await campaign_by_name(info, area_id, name, limit, active, archived)
-
-    @strawberry.field
-    async def project(
-        self, info: strawberry.Info[Context], project_id: Optional[int] = None
-    ) -> List[ProjectGet]:
-        if project_id is not None:
-            return [await project_by_id(info, project_id)]
-        else:
-            return await projects(info)
-
-    @strawberry.field
-    async def filter(
-        self,
-        info: strawberry.Info[Context],
-        countries: Optional[List[str]] = None,
-        regions: Optional[List[str]] = None,
-    ) -> AllFiltersGet:
-        return await get_all_filters(info, countries, regions)
-
-    @strawberry.field
-    async def directory(
-        self, info: strawberry.Info[Context], directory_id: int
-    ) -> list[ProjectDirectoryGet]:
-        return await get_directory(info, directory_id)
-
-    @strawberry.field
-    async def client_fragment(
-        self, info: strawberry.Info[Context], fragment_id: int
-    ) -> Optional[FragmentGet]:
-        return await get_client_fragment(info, fragment_id)
-
-    @strawberry.field
-    async def clients_by_project_id(
-        self, info: strawberry.Info[Context], project_id: int
-    ) -> List[ClientGet]:
-        return await get_clients_by_project_id_route(info, project_id)
-
-    @strawberry.field
-    async def client_by_id(self, info: strawberry.Info[Context], client_id: int) -> ClientGet:
-        return await get_client_route(info, client_id)
-
-    @strawberry.field
-    async def client_history(
-        self, info: strawberry.Info[Context], client_id: int
-    ) -> List[ClientHistoryGet]:
-        return await get_client_history_route(info, client_id)
-
-    @strawberry.field
-    async def project_goals(
-        self, info: strawberry.Info[Context], project_id: int
-    ) -> List[ProjectGoalGet]:
-        return await get_project_goals_route(info, project_id)
-
-    @strawberry.field
-    async def contributions_to_project_goal(
-        self, info: strawberry.Info[Context], project_id: int, project_goal_id: int
-    ) -> List[ClientProjectGoalGet]:
-        return await get_contributions_to_project_goal_route(info, project_id, project_goal_id)
-
-    @strawberry.field
-    async def area(self, info: strawberry.Info[Context], area_id: int) -> AreaGet:
-        return await get_area_by_id_route(info, area_id)
-
-    @strawberry.field
-    async def areas(self, info: strawberry.Info[Context], project_id: int) -> List[AreaGet]:
-        return await get_areas_route(info, project_id)
-
-    @strawberry.field
-    async def release_condition(
-        self, info: strawberry.Info[Context], release_condition_id: int
-    ) -> ReleaseConditionGet:
-        return await release_condition_by_id(info, release_condition_id)
-
-    @strawberry.field
-    async def feature_flag(
-        self, info: strawberry.Info[Context], feature_flag_id: int
-    ) -> FeatureFlagGet:
-        return await feature_flag_by_id(info, feature_flag_id)
-
-    @strawberry.field
-    async def condition_set(
-        self, info: strawberry.Info[Context], condition_set_id: int
-    ) -> ConditionSetGet:
-        return await get_condition_set_route(info, condition_set_id)
-
-    @strawberry.field
-    async def condition(self, info: strawberry.Info[Context], condition_id: int) -> ConditionGet:
-        return await get_condition_route(info, condition_id)
-
 
 @strawberry.type
-class Mutation:
-
+class AuthMutation:
     @strawberry.mutation
     async def signup(
         self,
@@ -285,11 +163,20 @@ class Mutation:
     async def refresh(self, info: strawberry.Info[Context]) -> AuthPayload:
         return await refresh(info)
 
-    @strawberry.mutation
-    async def feedback(self, info: strawberry.Info[Context], fd: FeedbackPost) -> FeedbackGet:
-        return await create_feedback(info, fd)
 
-    #### fragments ####
+@strawberry.type
+class FragmentQuery:
+    async def fragment(
+        self,
+        info: strawberry.Info[Context],
+        fragment_ids: Optional[List[int]] = None,
+        project_id: Optional[int] = None,
+    ) -> List[FragmentGet]:
+        return await fragments_by_ids(info, fragment_ids, project_id)
+
+
+@strawberry.type
+class FragmentMutation:
     @strawberry.mutation
     async def create_fragment(
         self, info: strawberry.Info[Context], fg: FragmentPost
@@ -306,10 +193,31 @@ class Mutation:
     async def delete_fragment(self, info: strawberry.Info[Context], fragment_id: int) -> None:
         await delete_fragment_route(info, fragment_id)
 
-    #### fragments ####
 
-    #### campaign ####
+@strawberry.type
+class CampaignQuery:
+    @strawberry.field
+    async def campaign(
+        self,
+        info: strawberry.Info[Context],
+        campaign_id: Optional[int] = None,
+        area_id: Optional[int] = None,
+        name: Optional[str] = None,
+        limit: Optional[int] = 5,
+        active: Optional[bool] = None,
+        archived: Optional[bool] = None,
+    ) -> List[CampaignGet]:
+        if campaign_id is not None:
+            return [await campaign_by_id(info, campaign_id)]
+        if area_id is not None:
+            if name is not None:
+                return await campaign_by_name(info, area_id, name, limit, active, archived)
+            return await campaigns_in_area(info, area_id, active, archived)
+        return []
 
+
+@strawberry.type
+class CampaignMutation:
     @strawberry.mutation
     async def create_campaign(
         self, info: strawberry.Info[Context], cmp: CampaignPost
@@ -326,9 +234,33 @@ class Mutation:
     async def delete_campaign(self, info: strawberry.Info[Context], campaign_id: int) -> None:
         return await delete_campaign_route(info, campaign_id)
 
-    #### campaign ####
 
-    #### project ####
+@strawberry.type
+class ProjectQuery:
+    @strawberry.field
+    async def project(
+        self, info: strawberry.Info[Context], project_id: Optional[int] = None
+    ) -> List[ProjectGet]:
+        if project_id is not None:
+            return [await project_by_id(info, project_id)]
+        else:
+            return await projects(info)
+
+    @strawberry.field
+    async def project_goals(
+        self, info: strawberry.Info[Context], project_id: int
+    ) -> List[ProjectGoalGet]:
+        return await get_project_goals_route(info, project_id)
+
+    @strawberry.field
+    async def contributions_to_project_goal(
+        self, info: strawberry.Info[Context], project_id: int, project_goal_id: int
+    ) -> List[ClientProjectGoalGet]:
+        return await get_contributions_to_project_goal_route(info, project_id, project_goal_id)
+
+
+@strawberry.type
+class ProjectMutation:
     @strawberry.mutation
     async def create_project(self, info: strawberry.Info[Context], pr: ProjectPost) -> ProjectGet:
         return await create_project_route(info, pr)
@@ -387,10 +319,18 @@ class Mutation:
     async def delete_project_goal(self, info: strawberry.Info[Context], goal_id: int) -> None:
         await delete_project_goal_route(info, goal_id)
 
-    #### project ####
 
-    #### directory ####
+@strawberry.type
+class FilesystemQuery:
+    @strawberry.field
+    async def directory(
+        self, info: strawberry.Info[Context], directory_id: int
+    ) -> list[ProjectDirectoryGet]:
+        return await get_directory(info, directory_id)
 
+
+@strawberry.type
+class FilesystemMutation:
     @strawberry.mutation
     async def create_directory(
         self, info: strawberry.Info[Context], directory: ProjectDirectory
@@ -407,10 +347,182 @@ class Mutation:
     ) -> list[ProjectDirectoryGet]:
         return await update_directory_route(info, directory)
 
-    #### directory ####
 
-    #### logos ####
+@strawberry.type
+class AreaQuery:
+    @strawberry.field
+    async def area(
+        self,
+        info: strawberry.Info[Context],
+        area_id: Optional[int] = None,
+        project_id: Optional[int] = None,
+    ) -> List[AreaGet]:
+        if area_id is not None:
+            return [await get_area_by_id_route(info, area_id)]
+        if project_id is not None:
+            return await get_areas_route(info, project_id)
+        return []
 
+
+@strawberry.type
+class AreaMutation:
+    @strawberry.mutation
+    async def create_area(self, info: strawberry.Info[Context], area: AreaPost) -> AreaGet:
+        return await create_area_route(info, area)
+
+    @strawberry.mutation
+    async def update_area(self, info: strawberry.Info[Context], area: AreaPatch) -> AreaGet:
+        return await update_area_route(info, area)
+
+    @strawberry.mutation
+    async def delete_area(self, info: strawberry.Info[Context], area_id: int) -> None:
+        await delete_area_route(info, area_id)
+
+
+@strawberry.type
+class ReleaseConditionQuery:
+    @strawberry.field
+    async def release_condition(
+        self, info: strawberry.Info[Context], release_condition_id: int
+    ) -> ReleaseConditionGet:
+        return await release_condition_by_id(info, release_condition_id)
+
+    @strawberry.field
+    async def condition_set(
+        self, info: strawberry.Info[Context], condition_set_id: int
+    ) -> ConditionSetGet:
+        return await get_condition_set_route(info, condition_set_id)
+
+    @strawberry.field
+    async def condition(self, info: strawberry.Info[Context], condition_id: int) -> ConditionGet:
+        return await get_condition_route(info, condition_id)
+
+    @strawberry.field
+    async def filter(
+        self,
+        info: strawberry.Info[Context],
+        countries: Optional[List[str]] = None,
+        regions: Optional[List[str]] = None,
+    ) -> AllFiltersGet:
+        return await get_all_filters(info, countries, regions)
+
+
+@strawberry.type
+class ReleaseConditionMutation:
+    @strawberry.mutation
+    async def create_condition(
+        self, info: strawberry.Info[Context], condition: ConditionPost
+    ) -> ConditionGet:
+        return await create_condition_route(info, condition)
+
+    @strawberry.mutation
+    async def update_condition(
+        self, info: strawberry.Info[Context], condition: ConditionPatch
+    ) -> ConditionGet:
+        return await update_condition_route(info, condition)
+
+    @strawberry.mutation
+    async def delete_condition(self, info: strawberry.Info[Context], condition_id: int) -> None:
+        await delete_condition_route(info, condition_id)
+
+    @strawberry.mutation
+    async def create_release_condition(
+        self, info: strawberry.Info[Context], release_condition: ReleaseConditionPost
+    ) -> ReleaseConditionGet:
+        return await create_release_condition_route(info, release_condition)
+
+    @strawberry.mutation
+    async def update_release_condition(
+        self, info: strawberry.Info[Context], release_condition: ReleaseConditionPatch
+    ) -> ReleaseConditionGet:
+        return await update_release_condition_route(info, release_condition)
+
+    @strawberry.mutation
+    async def delete_release_condition(
+        self, info: strawberry.Info[Context], release_condition_id: int
+    ) -> None:
+        await delete_release_condition_route(info, release_condition_id)
+
+    @strawberry.mutation
+    async def create_condition_set(
+        self, info: strawberry.Info[Context], condition_set: ConditionSetPost
+    ) -> ConditionSetGet:
+        return await create_condition_set_route(info, condition_set)
+
+    @strawberry.mutation
+    async def update_condition_set(
+        self, info: strawberry.Info[Context], condition_set: ConditionSetPatch
+    ) -> ConditionSetGet:
+        return await update_condition_set_route(info, condition_set)
+
+    @strawberry.mutation
+    async def delete_condition_set(
+        self, info: strawberry.Info[Context], condition_set_id: int
+    ) -> None:
+        await delete_condition_set_route(info, condition_set_id)
+
+
+@strawberry.type
+class FeatureFlagQuery:
+    @strawberry.field
+    async def feature_flag(
+        self, info: strawberry.Info[Context], feature_flag_id: int
+    ) -> FeatureFlagGet:
+        return await feature_flag_by_id(info, feature_flag_id)
+
+    @strawberry.field
+    async def variant(
+        self,
+        info: strawberry.Info[Context],
+        feature_flag_id: Optional[int] = None,
+        variant_id: Optional[int] = None,
+    ) -> List[VariantGet]:
+        if variant_id is not None:
+            return [await variant_by_id(info, variant_id)]
+        if feature_flag_id is not None:
+            return await variants_by_feature_flag_id(info, feature_flag_id)
+        return []
+
+
+@strawberry.type
+class FeatureFlagMutation:
+    @strawberry.mutation
+    async def create_feature_flag(
+        self, info: strawberry.Info[Context], feature_flag: FeatureFlagPost
+    ) -> FeatureFlagGet:
+        return await create_feature_flag_route(info, feature_flag)
+
+    @strawberry.mutation
+    async def update_feature_flag(
+        self, info: strawberry.Info[Context], feature_flag: FeatureFlagPatch
+    ) -> FeatureFlagGet:
+        return await update_feature_flag_route(info, feature_flag)
+
+    @strawberry.mutation
+    async def delete_feature_flag(
+        self, info: strawberry.Info[Context], feature_flag_id: int
+    ) -> None:
+        await delete_feature_flag_route(info, feature_flag_id)
+
+    @strawberry.mutation
+    async def create_variant(
+        self, info: strawberry.Info[Context], variant: VariantPost
+    ) -> VariantGet:
+        return await create_variant_route(info, variant)
+
+    @strawberry.mutation
+    async def update_variant(
+        self, info: strawberry.Info[Context], variant: VariantPatch
+    ) -> VariantGet:
+        return await update_variant_route(info, variant)
+
+    @strawberry.mutation
+    async def delete_variant(self, info: strawberry.Info[Context], variant_id: int) -> None:
+        await delete_variant_route(info, variant_id)
+
+
+@strawberry.type
+class AssetMutation:
     @strawberry.mutation
     async def upload_asset(
         self, info: strawberry.Info[Context], media: MediaPost, file: UploadFile
@@ -439,9 +551,42 @@ class Mutation:
         elif media.media_type == MediaType.AREA_LOGO:
             await delete_area_logo_route(info, media.target_id)
 
-    #### client ####
+
+@strawberry.type
+class ClientQuery:
+    @strawberry.field
+    async def client_fragment(
+        self, info: strawberry.Info[Context], fragment_id: int
+    ) -> Optional[FragmentGet]:
+        return await get_client_fragment(info, fragment_id)
 
     @strawberry.field
+    async def client(
+        self,
+        info: strawberry.Info[Context],
+        client_id: Optional[int] = None,
+        project_id: Optional[int] = None,
+    ) -> List[ClientGet]:
+        if client_id is not None:
+            return [await get_client_route(info, client_id)]
+        if project_id is not None:
+            return await get_clients_by_project_id_route(info, project_id)
+        return []
+
+    @strawberry.field
+    async def client_history(
+        self, info: strawberry.Info[Context], client_id: int
+    ) -> List[ClientHistoryGet]:
+        return await get_client_history_route(info, client_id)
+
+
+@strawberry.type
+class ClientMutation:
+    @strawberry.mutation
+    async def feedback(self, info: strawberry.Info[Context], fd: FeedbackPost) -> FeedbackGet:
+        return await create_feedback(info, fd)
+
+    @strawberry.mutation
     async def add_client_metric(
         self, info: strawberry.Info[Context], metric: ClientMetricPost
     ) -> None:
@@ -452,117 +597,33 @@ class Mutation:
         elif metric.metric_type == ClientMetricType.REACH_PROJECT_GOAL:
             return await contribute_to_project_goal_route(info, metric.metric_value)
 
-    #### client ####
 
-    #### area ####
+@strawberry.type
+class Query(
+    AuthQuery,
+    FragmentQuery,
+    CampaignQuery,
+    ProjectQuery,
+    FilesystemQuery,
+    AreaQuery,
+    ReleaseConditionQuery,
+    FeatureFlagQuery,
+    ClientQuery,
+):
+    pass
 
-    @strawberry.mutation
-    async def create_area(self, info: strawberry.Info[Context], area: AreaPost) -> AreaGet:
-        return await create_area_route(info, area)
 
-    @strawberry.mutation
-    async def update_area(self, info: strawberry.Info[Context], area: AreaPatch) -> AreaGet:
-        return await update_area_route(info, area)
-
-    @strawberry.mutation
-    async def delete_area(self, info: strawberry.Info[Context], area_id: int) -> None:
-        await delete_area_route(info, area_id)
-
-    #### area ####
-
-    #### release condition ####
-
-    @strawberry.mutation
-    async def create_release_condition(
-        self, info: strawberry.Info[Context], release_condition: ReleaseConditionPost
-    ) -> ReleaseConditionGet:
-        return await create_release_condition_route(info, release_condition)
-
-    @strawberry.mutation
-    async def update_release_condition(
-        self, info: strawberry.Info[Context], release_condition: ReleaseConditionPatch
-    ) -> ReleaseConditionGet:
-        return await update_release_condition_route(info, release_condition)
-
-    @strawberry.mutation
-    async def delete_release_condition(
-        self, info: strawberry.Info[Context], release_condition_id: int
-    ) -> None:
-        await delete_release_condition_route(info, release_condition_id)
-
-    #### release condition ####
-
-    #### condition set ####
-    @strawberry.mutation
-    async def create_condition_set(
-        self, info: strawberry.Info[Context], condition_set: ConditionSetPost
-    ) -> ConditionSetGet:
-        return await create_condition_set_route(info, condition_set)
-
-    @strawberry.mutation
-    async def update_condition_set(
-        self, info: strawberry.Info[Context], condition_set: ConditionSetPatch
-    ) -> ConditionSetGet:
-        return await update_condition_set_route(info, condition_set)
-
-    @strawberry.mutation
-    async def delete_condition_set(
-        self, info: strawberry.Info[Context], condition_set_id: int
-    ) -> None:
-        await delete_condition_set_route(info, condition_set_id)
-
-    #### condition ####
-
-    @strawberry.mutation
-    async def create_condition(
-        self, info: strawberry.Info[Context], condition: ConditionPost
-    ) -> ConditionGet:
-        return await create_condition_route(info, condition)
-
-    @strawberry.mutation
-    async def update_condition(
-        self, info: strawberry.Info[Context], condition: ConditionPatch
-    ) -> ConditionGet:
-        return await update_condition_route(info, condition)
-
-    @strawberry.mutation
-    async def delete_condition(self, info: strawberry.Info[Context], condition_id: int) -> None:
-        await delete_condition_route(info, condition_id)
-
-    #### feature flag ####
-
-    @strawberry.mutation
-    async def create_feature_flag(
-        self, info: strawberry.Info[Context], feature_flag: FeatureFlagPost
-    ) -> FeatureFlagGet:
-        return await create_feature_flag_route(info, feature_flag)
-
-    @strawberry.mutation
-    async def update_feature_flag(
-        self, info: strawberry.Info[Context], feature_flag: FeatureFlagPatch
-    ) -> FeatureFlagGet:
-        return await update_feature_flag_route(info, feature_flag)
-
-    @strawberry.mutation
-    async def delete_feature_flag(
-        self, info: strawberry.Info[Context], feature_flag_id: int
-    ) -> None:
-        await delete_feature_flag_route(info, feature_flag_id)
-
-    #### feature flag ####
-
-    @strawberry.mutation
-    async def create_variant(
-        self, info: strawberry.Info[Context], variant: VariantPost
-    ) -> VariantGet:
-        return await create_variant_route(info, variant)
-
-    @strawberry.mutation
-    async def update_variant(
-        self, info: strawberry.Info[Context], variant: VariantPatch
-    ) -> VariantGet:
-        return await update_variant_route(info, variant)
-
-    @strawberry.mutation
-    async def delete_variant(self, info: strawberry.Info[Context], variant_id: int) -> None:
-        await delete_variant_route(info, variant_id)
+@strawberry.type
+class Mutation(
+    AuthMutation,
+    FragmentMutation,
+    CampaignMutation,
+    ProjectMutation,
+    FilesystemMutation,
+    AreaMutation,
+    ReleaseConditionMutation,
+    FeatureFlagMutation,
+    ClientMutation,
+    AssetMutation,
+):
+    pass

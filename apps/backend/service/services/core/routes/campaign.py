@@ -20,7 +20,6 @@ from crud.project import get_project_by_id_db
 from database import Area, Campaign, Media, Project, Session
 
 from .feature_flag import feature_flag_db_to_feature_flag
-from .fragment import fragment_db_to_fragment
 from .middleware import Context
 from .schemas.campaign import CampaignGet, CampaignPatch, CampaignPost
 from .schemas.media import MediaGet, MediaType
@@ -42,7 +41,6 @@ async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
 def campaign_db_to_campaign(campaign: Campaign) -> CampaignGet:
     return CampaignGet(
         id=campaign.id,
-        fragment=fragment_db_to_fragment(campaign.fragment) if campaign.fragment else None,
         area_id=campaign.area_id,
         name=campaign.name,
         description=campaign.description,
@@ -56,11 +54,6 @@ def campaign_db_to_campaign(campaign: Campaign) -> CampaignGet:
         ),
         author=user_db_to_user(campaign.author),
         experiment=campaign.experiment,
-        feature_flag=(
-            feature_flag_db_to_feature_flag(campaign.feature_flag)
-            if campaign.feature_flag
-            else None
-        ),
     )
 
 
@@ -134,9 +127,7 @@ async def create_campaign_route(info: strawberry.Info[Context], cmp: CampaignPos
         cmp.archived,
         user.user.id,
         False,
-        cmp.fragment_id,
         cmp.experiment_id,
-        cmp.feature_flag,
     )
 
     return campaign_db_to_campaign(campaign)

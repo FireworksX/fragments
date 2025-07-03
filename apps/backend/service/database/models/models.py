@@ -196,9 +196,6 @@ class Campaign(Base):
     experiment_id = Column('experiment_id', Integer, ForeignKey('experiment.id'), nullable=True)
     experiment = relationship('Experiment')
 
-    fragment_id = Column('fragment_id', Integer, ForeignKey('fragment.id'), nullable=True)
-    fragment = relationship('Fragment')
-
 
 class ReleaseCondition(Base):
     __tablename__ = 'release_condition'
@@ -339,6 +336,8 @@ class Variant(Base):
     fragment_id = Column('fragment_id', Integer, ForeignKey('fragment.id', ondelete='CASCADE'))
     fragment = relationship('Fragment')
     props = Column('props', JSON, nullable=True)
+    status = Column('status', Integer, nullable=False, default=1)
+    rotation_type = Column('rotation_type', Integer, nullable=False, default=1)
 
 
 class Experiment(Base):

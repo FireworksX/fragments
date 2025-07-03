@@ -20,9 +20,7 @@ async def create_campaign_db(
     archived: bool,
     author_id: int,
     default: bool,
-    fragment_id: Optional[int],
     experiment_id: Optional[int],
-    feature_flag: Optional[FeatureFlagPost],
 ) -> Campaign:
     default_campaign_logo = await generate_default_media(db, f"{name}_campaign.png")
     campaign: Campaign = Campaign(
@@ -33,7 +31,6 @@ async def create_campaign_db(
         active=active,
         archived=archived,
         author_id=author_id,
-        fragment_id=fragment_id,
         default=default,
         logo_id=default_campaign_logo.id,
     )
@@ -43,8 +40,18 @@ async def create_campaign_db(
 
     if experiment_id is not None:
         campaign.experiment_id = experiment_id
-    if feature_flag is not None:
-        campaign.feature_flag = await create_feature_flag_db(db, feature_flag)
+    default_campaign_feature_flag = await create_feature_flag_db(
+        db,
+        FeatureFlagPost(
+            name=f'{name}_default_feature_flag',
+            description=f'Default feature flag for {name}',
+            project_id=project_id,
+        ),
+    )
+    db.add(default_campaign_feature_flag)
+    db.commit()
+    db.refresh(default_campaign_feature_flag)
+    campaign.feature_flag_id = default_campaign_feature_flag.id
     db.commit()
     db.refresh(campaign)
     return campaign
@@ -99,8 +106,6 @@ async def update_campaign_by_id_db(db: Session, values: dict) -> Campaign:
         campaign.active = values['active']
     if values.get('archived') is not None:
         campaign.archived = values['archived']
-    if values.get('fragment_id') is not None:
-        campaign.fragment_id = values['fragment_id']
     if values.get('experiment_id') is not None:
         campaign.experiment_id = values['experiment_id']
     db.merge(campaign)
