@@ -166,6 +166,7 @@ class AuthMutation:
 
 @strawberry.type
 class FragmentQuery:
+    @strawberry.field
     async def fragment(
         self,
         info: strawberry.Info[Context],
