@@ -102,7 +102,7 @@ async def create_feature_flag_route(
             detail=f'User is not allowed to create feature flags',
         )
 
-    feature_flag: FeatureFlag = await create_feature_flag_db(db, ff)
+    feature_flag: FeatureFlag = await create_feature_flag_db(db, project_id, ff)
 
     return feature_flag_db_to_feature_flag(feature_flag)
 

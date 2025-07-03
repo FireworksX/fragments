@@ -150,7 +150,6 @@ class ConditionSetPost:
 
 @strawberry.input
 class ReleaseConditionPost:
-    feature_flag_id: int
     name: str
     condition_sets: List[ConditionSetPost]
 

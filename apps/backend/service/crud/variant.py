@@ -14,7 +14,7 @@ async def recalculate_variants_rollout_percentage_db(
     scale_factor = new_variant_percentage / 100
 
     for variant in variants:
-        variant.rollout_percentage = variant.rollout_percentage * scale_factor
+        variant.rollout_percentage = variant.rollout_percentage - (variant.rollout_percentage * scale_factor)
         db.merge(variant)
 
     db.commit()
@@ -27,8 +27,8 @@ async def create_variant_db(db: Session, variant: VariantPost) -> Variant:
         rollout_percentage=variant.rollout_percentage,
         fragment_id=variant.fragment.fragment_id,
         props=variant.fragment.props,
-        status=variant.status,
-        rotation_type=variant.rotation_type,
+        status=int(variant.status.value),
+        rotation_type=int(variant.rotation_type.value),
     )
     db.add(variant)
     db.commit()
@@ -61,9 +61,9 @@ async def update_variant_db(db: Session, variant_id: int, values: dict) -> Varia
     if values.get('props') is not None:
         variant.props = values['props']
     if values.get('status') is not None:
-        variant.status = values['status']
+        variant.status = int(values['status'])
     if values.get('rotation_type') is not None:
-        variant.rotation_type = values['rotation_type']
+        variant.rotation_type = int(values['rotation_type'])
     db.commit()
     db.refresh(variant)
     return variant

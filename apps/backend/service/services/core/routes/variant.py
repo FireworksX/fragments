@@ -79,7 +79,8 @@ async def variant_by_id(info: strawberry.Info[Context], variant_id: int) -> Vari
     if not variant:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Variant does not exist')
 
-    permission: bool = await read_permission(db, user.user.id, variant.project_id)
+    feature_flag: FeatureFlag = await get_feature_flag_by_id_db(db, variant.feature_flag_id)
+    permission: bool = await read_permission(db, user.user.id, feature_flag.project_id)
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -119,7 +120,8 @@ async def update_variant_route(info: strawberry.Info[Context], v: VariantPatch) 
     if not variant:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Variant does not exist')
 
-    permission: bool = await write_permission(db, user.user.id, variant.project_id)
+    feature_flag: FeatureFlag = await get_feature_flag_by_id_db(db, variant.feature_flag_id)
+    permission: bool = await write_permission(db, user.user.id, feature_flag.project_id)
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -139,7 +141,8 @@ async def delete_variant_route(info: strawberry.Info[Context], variant_id: int) 
     if not variant:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Variant does not exist')
 
-    permission: bool = await write_permission(db, user.user.id, variant.project_id)
+    feature_flag: FeatureFlag = await get_feature_flag_by_id_db(db, variant.feature_flag_id)
+    permission: bool = await write_permission(db, user.user.id, feature_flag.project_id)
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

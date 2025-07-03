@@ -29,12 +29,6 @@ async def create_release_condition_db(
 ) -> ReleaseCondition:
     release_condition_db = ReleaseCondition(
         name=release_condition.name,
-        description=release_condition.description,
-        active=release_condition.active,
-        archived=release_condition.archived,
-        default=release_condition.default,
-        created_at=release_condition.created_at,
-        updated_at=release_condition.updated_at,
     )
     db.add(release_condition_db)
     db.commit()
