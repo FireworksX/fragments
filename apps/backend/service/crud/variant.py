@@ -23,7 +23,7 @@ async def recalculate_variants_rollout_percentage_on_delete_db(
     db: Session, feature_flag_id: int, deleted_variant_percentage: float
 ) -> None:
     variants = await get_variants_by_feature_flag_id_db(db, feature_flag_id)
-    scale_factor = deleted_variant_percentage / len(variants)
+    scale_factor = deleted_variant_percentage / float(len(variants))
     for variant in variants:
         variant.rollout_percentage = variant.rollout_percentage + scale_factor
         db.merge(variant)
@@ -37,8 +37,7 @@ async def create_variant_db(db: Session, variant: VariantPost) -> Variant:
         rollout_percentage=variant.rollout_percentage,
         fragment_id=variant.fragment.fragment_id,
         props=variant.fragment.props,
-        status=int(variant.status.value),
-        rotation_type=int(variant.rotation_type.value),
+        status=int(variant.status.value)
     )
     db.add(variant)
     db.commit()
@@ -72,8 +71,6 @@ async def update_variant_db(db: Session, variant_id: int, values: dict) -> Varia
         variant.props = values['props']
     if values.get('status') is not None:
         variant.status = int(values['status'])
-    if values.get('rotation_type') is not None:
-        variant.rotation_type = int(values['rotation_type'])
     db.commit()
     db.refresh(variant)
     return variant

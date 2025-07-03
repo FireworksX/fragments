@@ -47,7 +47,6 @@ def area_db_to_area(area: Area) -> AreaGet:
     return AreaGet(
         id=area.id,
         area_code=area.area_code,
-        name=area.name,
         project_id=area.project_id,
         description=area.description,
         author=user_db_to_user(area.author),

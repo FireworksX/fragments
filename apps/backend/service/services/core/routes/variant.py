@@ -42,8 +42,7 @@ def variant_db_to_variant(variant: Variant) -> VariantGet:
             if variant.fragment
             else None
         ),
-        status=variant.status,
-        rotation_type=variant.rotation_type,
+        status=variant.status
     )
 
 

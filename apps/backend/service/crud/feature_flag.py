@@ -16,6 +16,7 @@ async def create_feature_flag_db(db: Session, project_id: int, feature_flag: Fea
         description=feature_flag.description,
         release_condition_id=release_condition.id,
         project_id=project_id,
+        rotation_type=int(feature_flag.rotation_type.value)
     )
     db.add(feature_flag_db)
     db.commit()

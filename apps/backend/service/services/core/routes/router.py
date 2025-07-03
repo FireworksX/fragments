@@ -36,7 +36,6 @@ from .feature_flag import (
     FeatureFlagGet,
     FeatureFlagPatch,
     FeatureFlagPost,
-    VariantGet,
     create_feature_flag_route,
     delete_feature_flag_route,
     feature_flag_by_id,
