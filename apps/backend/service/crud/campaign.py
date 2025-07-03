@@ -40,12 +40,18 @@ async def create_campaign_db(
 
     if experiment_id is not None:
         campaign.experiment_id = experiment_id
+
     default_campaign_feature_flag = await create_feature_flag_db(
         db,
+        project_id,
         FeatureFlagPost(
             name=f'{name}_default_feature_flag',
             description=f'Default feature flag for {name}',
-            project_id=project_id,
+            release_condition= ReleaseConditionPost(
+                name = f'{name}_default_release_condition',
+                condition_sets= []
+            ),
+            variants = []
         ),
     )
     db.add(default_campaign_feature_flag)

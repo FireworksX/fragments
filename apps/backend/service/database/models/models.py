@@ -326,10 +326,7 @@ class Variant(Base):
         ForeignKey('feature_flag.id', ondelete='CASCADE'),
         nullable=False,
     )
-    project_id = Column(
-        'project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False
-    )
-    project = relationship('Project')
+
     feature_flag = relationship('FeatureFlag')
     name = Column('name', String, nullable=False)
     rollout_percentage = Column('rollout_percentage', Float, nullable=False, default=0)

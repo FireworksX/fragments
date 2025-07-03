@@ -53,6 +53,7 @@ class FragmentVariantPatch:
 
 @strawberry.input
 class VariantPost:
+    feature_flag_id: int
     name: str
     rollout_percentage: float
     fragment: FragmentVariantPost
