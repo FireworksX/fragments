@@ -30,11 +30,10 @@ async def create_campaign_db(
             name=f'{name}_default_feature_flag',
             description=f'Default feature flag for {name}',
             rotation_type=RotationType.KEEP,
-            release_condition= ReleaseConditionPost(
-                name = f'{name}_default_release_condition',
-                condition_sets= []
+            release_condition=ReleaseConditionPost(
+                name=f'{name}_default_release_condition', condition_sets=[]
             ),
-            variants = []
+            variants=[],
         ),
     )
     db.add(default_campaign_feature_flag)
@@ -52,7 +51,7 @@ async def create_campaign_db(
         default=default,
         logo_id=default_campaign_logo.id,
         feature_flag_id=default_campaign_feature_flag.id,
-        experiment_id=experiment_id
+        experiment_id=experiment_id,
     )
 
     db.add(campaign)

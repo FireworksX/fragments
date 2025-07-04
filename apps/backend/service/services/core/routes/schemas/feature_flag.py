@@ -34,6 +34,7 @@ class FragmentVariantGet:
     fragment: FragmentGet
     props: Optional[strawberry.scalars.JSON] = None
 
+
 @strawberry.type
 class VariantGet:
     id: int
@@ -41,7 +42,6 @@ class VariantGet:
     rollout_percentage: float
     fragment: Optional[FragmentVariantGet] = None
     status: VariantStatus
-    rotation_type: RotationType
 
 
 @strawberry.input

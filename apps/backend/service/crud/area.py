@@ -2,11 +2,12 @@ from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
+from crud.campaign import create_campaign_db
 from crud.feature_flag import create_feature_flag_db
 from crud.media import generate_default_media
 from database.models import Area, Campaign
 from services.core.routes.schemas.feature_flag import FeatureFlagPost
-from crud.campaign import create_campaign_db
+
 
 async def create_area_db(
     db: Session,
@@ -28,7 +29,8 @@ async def create_area_db(
     db.commit()
     db.refresh(area)
 
-    default_campaign = await create_campaign_db(db,
+    default_campaign = await create_campaign_db(
+        db,
         name=default_campaign_name,
         description=f'Default campaign for {area_code}',
         project_id=project_id,
@@ -37,7 +39,7 @@ async def create_area_db(
         active=True,
         archived=False,
         author_id=author_id,
-        experiment_id=None
+        experiment_id=None,
     )
 
     return area

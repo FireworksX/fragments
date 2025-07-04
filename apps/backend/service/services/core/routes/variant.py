@@ -8,6 +8,7 @@ from crud.variant import (
     delete_variant_db,
     get_variant_by_id_db,
     get_variants_by_feature_flag_id_db,
+    normalize_variants_rollout_percentage_db,
     update_variant_db,
 )
 from database import FeatureFlag, Session, Variant
@@ -42,7 +43,7 @@ def variant_db_to_variant(variant: Variant) -> VariantGet:
             if variant.fragment
             else None
         ),
-        status=variant.status
+        status=variant.status,
     )
 
 
@@ -149,3 +150,25 @@ async def delete_variant_route(info: strawberry.Info[Context], variant_id: int) 
         )
 
     await delete_variant_db(db, variant_id)
+
+
+async def normalize_variants_rollout_percentage_route(
+    info: strawberry.Info[Context], feature_flag_id: int
+) -> None:
+    user: AuthPayload = await info.context.user()
+    db: Session = info.context.session()
+
+    feature_flag: FeatureFlag = await get_feature_flag_by_id_db(db, feature_flag_id)
+    if not feature_flag:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail='Feature flag does not exist'
+        )
+
+    permission: bool = await write_permission(db, user.user.id, feature_flag.project_id)
+    if not permission:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f'User is not allowed to normalize variants rollout percentage',
+        )
+
+    await normalize_variants_rollout_percentage_db(db, feature_flag_id)
