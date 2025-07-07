@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from database.models.models import Variant
 from services.core.routes.schemas.feature_flag import VariantPost
 
+from services.core.routes.schemas.feature_flag import VariantStatus
 
 async def recalculate_variants_rollout_percentage_db(
     db: Session,
@@ -20,29 +21,28 @@ async def recalculate_variants_rollout_percentage_db(
         .all()
     )
     if len(variants) == 0:
-        print('No variants to recalculate')
         return
 
     if new_variant_percentage == old_variant_percentage:
         # adding a variant
-        print('Adding a variant')
         scale_factor = new_variant_percentage / float(100)
-        print(f"Scale factor: {scale_factor}")
         for variant in variants:
             variant.rollout_percentage -= variant.rollout_percentage * scale_factor
-            print(f"Variant: {variant.id} - {variant.rollout_percentage}")
+            variant.rollout_percentage = round(variant.rollout_percentage)
             db.merge(variant)
     elif new_variant_percentage > old_variant_percentage:
         # increasing the percentage of a variant
         scale_factor = new_variant_percentage / float(100)
         for variant in variants:
             variant.rollout_percentage -= variant.rollout_percentage * scale_factor
+            variant.rollout_percentage = round(variant.rollout_percentage)
             db.merge(variant)
     else:
         # decreasing the percentage of a variant
         percents_to_add = (old_variant_percentage - new_variant_percentage) / float(len(variants))
         for variant in variants:
             variant.rollout_percentage += percents_to_add
+            variant.rollout_percentage = round(variant.rollout_percentage)
             db.merge(variant)
 
     db.commit()
@@ -115,6 +115,15 @@ async def update_variant_db(db: Session, variant_id: int, values: dict) -> Varia
         variant.props = values['props']
     if values.get('status') is not None:
         variant.status = int(values['status'])
+        if variant.status == int(VariantStatus.INACTIVE):
+            await recalculate_variants_rollout_percentage_db(
+            db,
+            variant.feature_flag_id,
+            variant.id,
+            variant.rollout_percentage,
+            0)
+
+            variant.rollout_percentage = 0
     db.commit()
     db.refresh(variant)
     return variant

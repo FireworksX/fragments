@@ -50,6 +50,8 @@ async def update_feature_flag_db(
         feature_flag.description = values['description']
     if values.get('release_condition_id'):
         feature_flag.release_condition_id = values['release_condition_id']
+    if values.get('rotation_type'):
+        feature_flag.rotation_type = int(values['rotation_type'])
     if variants is not None:
         feature_flag.variants.clear()
         for variant in variants:
