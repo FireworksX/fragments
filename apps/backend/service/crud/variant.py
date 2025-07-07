@@ -3,7 +3,7 @@ from typing import List, Optional
 from sqlalchemy.orm import Session
 
 from database.models.models import Variant
-from services.core.routes.schemas.feature_flag import VariantPost
+from services.core.routes.schemas.feature_flag import VariantPost, VariantPatch
 
 from services.core.routes.schemas.feature_flag import VariantStatus
 
@@ -96,25 +96,24 @@ async def get_variants_by_feature_flag_id_db(db: Session, feature_flag_id: int) 
     return db.query(Variant).filter(Variant.feature_flag_id == feature_flag_id).all()
 
 
-async def update_variant_db(db: Session, variant_id: int, values: dict) -> Variant:
-    variant = await get_variant_by_id_db(db, variant_id)
-    if values.get('name'):
-        variant.name = values['name']
-    if values.get('rollout_percentage') is not None:
+async def update_variant_db(db: Session, v: VariantPatch) -> Variant:
+    variant = await get_variant_by_id_db(db, v.id)
+    if v.name is not None:
+        variant.name = v.name
+    if v.rollout_percentage is not None:
         await recalculate_variants_rollout_percentage_db(
             db,
             variant.feature_flag_id,
             variant.id,
             variant.rollout_percentage,
-            values['rollout_percentage'],
+            v.rollout_percentage,
         )
-        variant.rollout_percentage = values['rollout_percentage']
-    if values.get('fragment_id') is not None:
-        variant.fragment_id = values['fragment_id']
-    if values.get('props') is not None:
-        variant.props = values['props']
-    if values.get('status') is not None:
-        variant.status = int(values['status'].value)
+        variant.rollout_percentage = v.rollout_percentage
+    if v.fragment is not None:
+        variant.fragment_id = v.fragment.fragment_id
+        variant.props = v.fragment.props
+    if v.status is not None:
+        variant.status = int(v.status.value)
         if variant.status == int(VariantStatus.INACTIVE):
             await recalculate_variants_rollout_percentage_db(
             db,
