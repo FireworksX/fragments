@@ -114,7 +114,7 @@ async def update_variant_db(db: Session, variant_id: int, values: dict) -> Varia
     if values.get('props') is not None:
         variant.props = values['props']
     if values.get('status') is not None:
-        variant.status = int(values['status'])
+        variant.status = int(values['status'].value)
         if variant.status == int(VariantStatus.INACTIVE):
             await recalculate_variants_rollout_percentage_db(
             db,
