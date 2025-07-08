@@ -34,6 +34,7 @@ from .schemas.user import AuthPayload, RoleGet
 from .schemas.release_condition import FilterType
 from .fragment import fragment_db_to_fragment
 from .variant import variant_db_to_variant
+from .area import area_db_to_area
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
@@ -61,6 +62,8 @@ def client_history_db_to_history(history: ClientHistory) -> ClientHistoryGet:
         page_load_time=history.page_load_time,
         created_at=history.created_at.isoformat(),
         event_type=ClientHistoryEventType(history.event_type),
+        area = area_db_to_area(history.area) if history.area else None,
+        variant = variant_db_to_variant(history.variant) if history.variant else None
     )
 
 
@@ -97,6 +100,8 @@ async def init_client_session_route(info: strawberry.Info[Context]) -> None:
         referrer='',
         domain='',
         subdomain='',
+        area_id=None,
+        variant_id=None,
     )
 
     info.context.response.set_cookie(
@@ -131,6 +136,8 @@ async def release_client_session_route(info: strawberry.Info[Context]) -> None:
         referrer='',
         domain='',
         subdomain='',
+        area_id=None,
+        variant_id=None,
     )
 
     info.context.response.set_cookie(
@@ -174,6 +181,8 @@ async def contribute_to_project_goal_route(
         referrer='',
         domain='',
         subdomain='',
+        area_id=None,
+        variant_id=None,
     )
     await create_client_project_goal_db(db, client.id, project_goal.id, project.id)
 
