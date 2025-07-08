@@ -31,6 +31,7 @@ from .client import (
     get_contributions_to_project_goal_route,
     init_client_session_route,
     release_client_session_route,
+    client_fragment_variant_route
 )
 from .feature_flag import (
     FeatureFlagGet,
@@ -94,7 +95,6 @@ from .release_condition import (
 from .schemas.area import AreaGet, AreaPatch, AreaPost
 from .schemas.campaign import CampaignGet, CampaignPatch, CampaignPost, CampaignStatus
 from .schemas.client import ClientGet, ClientHistoryGet
-from .schemas.feature_flag import FragmentVariantGet
 from .schemas.feedback import FeedbackGet, FeedbackPost
 from .schemas.filesystem import ProjectDirectory, ProjectDirectoryGet, ProjectDirectoryPatch
 from .schemas.fragment import FragmentGet, FragmentPatch, FragmentPost
@@ -121,10 +121,10 @@ from .schemas.release_condition import (
     ReleaseConditionPatch,
     ReleaseConditionPost,
 )
+from .schemas.feature_flag import VariantGet
 from .schemas.user import AuthPayload, RoleGet, UserGet
 from .user import add_avatar_route, delete_avatar_route, login, profile, refresh, signup
 from .variant import (
-    VariantGet,
     VariantPatch,
     VariantPost,
     create_variant_route,
@@ -589,7 +589,7 @@ class ClientQuery:
     @strawberry.field
     async def client_fragment_variant(
         self, info: strawberry.Info[Context], area_id: int
-    ) -> FragmentVariantGet:
+    ) -> Optional[VariantGet]:
         return await client_fragment_variant_route(info, area_id)
 
 

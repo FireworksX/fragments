@@ -28,11 +28,12 @@ from .campaign import get_area_by_id_db, get_campaigns_by_area_id_db, CampaignSt
 from .middleware import ClientInfo, Context
 from .project import get_user_role_in_project, project_db_to_project, project_goal_db_to_goal
 from .schemas.client import ClientGet, ClientHistoryGet, ClientHistoryEventType
-from .schemas.feature_flag import FragmentVariantGet, RotationType, VariantStatus
+from .schemas.feature_flag import FragmentVariantGet, RotationType, VariantGet, VariantStatus
 from .schemas.project import ClientProjectGoalGet
 from .schemas.user import AuthPayload, RoleGet
 from .schemas.release_condition import FilterType
 from .fragment import fragment_db_to_fragment
+from .variant import variant_db_to_variant
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
@@ -264,7 +265,7 @@ async def get_client_history_route(
 
 async def client_fragment_variant_route(
     info: strawberry.Info[Context], area_id: int
-) -> Optional[FragmentVariantGet]:
+) -> Optional[VariantGet]:
     db: Session = info.context.session()
 
     client: Client = await info.context.client()
@@ -340,47 +341,44 @@ async def client_fragment_variant_route(
     if not best_campaign or not best_campaign.feature_flag or not best_campaign.feature_flag.variants:
         return None
     
-    fragmentVariant: Optional[FragmentVariantGet] = None
+    variantFragment: Optional[VariantGet] = None
 
     if best_campaign.feature_flag.rotation_type == int(RotationType.KEEP.value):
         last_viewed_variant = await get_last_viewed_variant_in_area_db(db, client.id, area_id)
         if last_viewed_variant:
             variant = await get_variant_by_id_db(db, last_viewed_variant.variant_id)
             if variant:
-                fragmentVariant = FragmentVariantGet(
-                    fragment=fragment_db_to_fragment(variant.fragment), props=variant.props
-                )
+                variantFragment = variant_db_to_variant(variant)
     
 
-    if fragmentVariant is None:
+    if variantFragment is None:
         active_variants = [v for v in best_campaign.feature_flag.variants if v.status == VariantStatus.ACTIVE]
         weights = [v.rollout_percentage for v in active_variants]
 
         if active_variants:
             variant = random.choices(active_variants, weights=weights, k=1)[0]
-            fragmentVariant = FragmentVariantGet(
-                fragment=fragment_db_to_fragment(variant.fragment), props=variant.props
-            )
+            variantFragment = variant_db_to_variant(variant)
     
-    
-    await create_client_history_db(
-        db=db,
-        client_id=client.id,
-        device_type=client_info.device_type.value if client_info.device_type else None,
-        os_type=client_info.os_type.value if client_info.os_type else None,
-        browser=None,
-        language=None,
-        screen_width=None,
-        screen_height=None,
-        country=location.country,
-        region=location.region,
-        city=location.city,
-        event_type=int(ClientHistoryEventType.VIEW.value),
-        url='',
-        referrer='',
-        domain='',
-        subdomain='',
-        fragment_variant=fragmentVariant,
-    )
+    if variantFragment:
+        await create_client_history_db(
+            db=db,
+            client_id=client.id,
+            device_type=client_info.device_type.value if client_info.device_type else None,
+            os_type=client_info.os_type.value if client_info.os_type else None,
+            browser=None,
+            language=None,
+            screen_width=None,
+            screen_height=None,
+            country=location.country,
+            region=location.region,
+            city=location.city,
+            event_type=int(ClientHistoryEventType.VIEW.value),
+            url='',
+            referrer='',
+            domain='',
+            subdomain='',
+            area_id=area_id,
+            variant_id=variantFragment.id
+        )
         
-    return fragmentVariant
+    return variantFragment
