@@ -501,3 +501,10 @@ class ClientHistory(Base):
 
     # Relationships
     client = relationship('Client', back_populates='history')
+
+    area_id = Column('area_id', Integer, ForeignKey('area.id'), nullable=True)
+    area = relationship('Area')
+    variant_id = Column('variant_id', Integer, ForeignKey('variant.id'), nullable=True)
+    variant = relationship('Variant')
+
+    event_type = Column('event_type', Integer, nullable=False)

@@ -41,11 +41,14 @@ async def create_client_history_db(
     country: str,
     region: str,
     city: str,
+    event_type: int,
     url: str = None,
     referrer: str = None,
     domain: str = None,
     subdomain: str = None,
     page_load_time: float = None,
+    area_id: int = None,
+    variant_id: int = None,
 ) -> ClientHistory:
     history = ClientHistory(
         client_id=client_id,
@@ -58,17 +61,32 @@ async def create_client_history_db(
         country=country,
         region=region,
         city=city,
+        event_type=event_type,
         url=url,
         referrer=referrer,
         domain=domain,
         subdomain=subdomain,
         page_load_time=page_load_time,
+        area_id=area_id,
+        variant_id=variant_id,
     )
     db.add(history)
     db.commit()
     db.refresh(history)
     await update_client_last_visited_db(db, client_id)
     return history
+
+async def get_last_viewed_variant_in_area_db(db: Session, client_id: int, area_id: int) -> Optional[ClientHistory]:
+    return (
+        db.query(ClientHistory)
+        .filter(
+            ClientHistory.client_id == client_id,
+            ClientHistory.area_id == area_id,
+            ClientHistory.variant_id.isnot(None)
+        )
+        .order_by(ClientHistory.created_at.desc())
+        .first()
+    )
 
 
 async def get_client_history_db(db: Session, client_id: int) -> List[ClientHistory]:
