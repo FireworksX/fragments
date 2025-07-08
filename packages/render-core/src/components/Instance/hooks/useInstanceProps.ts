@@ -77,8 +77,6 @@ export const useInstanceProps = (instanceProps: InstanceProps) => {
     return props;
   }, [resolveDrilledProps, mergedProps]);
 
-  console.log(instanceProps, resultProps, mergedProps);
-
   const cssProps = Object.entries(resultProps).reduce((acc, [key, value]) => {
     if (isVariableLink(value)) {
       const nestedVariableId = fragmentManager.entityOfKey(value)?._id;

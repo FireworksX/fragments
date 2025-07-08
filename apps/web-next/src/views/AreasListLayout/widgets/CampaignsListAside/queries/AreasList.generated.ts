@@ -8,16 +8,17 @@ export type AreasListQueryVariables = Types.Exact<{
 }>;
 
 
-export type AreasListQuery = { __typename?: 'Query', area: Array<{ __typename?: 'AreaGet', id: number, name: string, description?: string | null, defaultCampaign: { __typename?: 'CampaignGet', active: boolean, logo: { __typename?: 'MediaGet', url: string } } }> };
+export type AreasListQuery = { __typename?: 'Query', area: Array<{ __typename?: 'AreaGet', id: number, description?: string | null, defaultCampaign: { __typename?: 'CampaignGet', id: number, name: string, active: boolean, logo: { __typename?: 'MediaGet', url: string } } }> };
 
 
 export const AreasListDocument = gql`
     query AreasList($projectId: Int!) {
   area(projectId: $projectId) {
     id
-    name
     description
     defaultCampaign {
+      id
+      name
       logo {
         url: publicPath
       }

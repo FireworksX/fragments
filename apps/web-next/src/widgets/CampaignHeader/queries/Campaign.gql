@@ -20,7 +20,6 @@ query Campaign($areaId: Int, $id: Int) {
             }
             variants {
                 rolloutPercentage
-                rotationType
                 fragment {
                     fragment {
                         id

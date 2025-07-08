@@ -1,4 +1,4 @@
-import { FC, useContext, useState } from 'react'
+import { FC, useContext, useEffect, useState } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { useGraph, useGraphFields } from '@graph-state/react'
@@ -21,6 +21,11 @@ import FragmentIcon from '@/shared/icons/next/component.svg'
 import { useModal } from '@/shared/hooks/useModal'
 import { StatusDot } from '@/shared/ui/StatusDot'
 import { capitalize } from '@/shared/utils/capitalize'
+import { statusToIndicatorMap, statusToLabel } from '@/shared/data/constants'
+import { VariantStatus } from '@/__generated__/types'
+import { useReadProjectTreeItem } from '@/shared/api/fragment/query/useReadProjectTreeItem'
+import { projectItemType } from '@/widgets/ProjectTree/hooks/useProjectTree'
+import { pick } from '@fragmentsx/utils'
 
 interface CreateCustomBreakpointProps {
   className?: string
@@ -34,15 +39,21 @@ export const ConfigureFeatureFlagVariant: FC<CreateCustomBreakpointProps> = ({ c
   const { openModal, modal } = useModal()
   const context = modal?.context ?? {}
   const isEdit = context?.isEdit ?? false
+  const countVariants = context?.countVariants ?? 0
+  const isOpen = modal?.name === modalNames.configureFeatureFlagVariant
 
   const [featureFlag, setFeatureFlag] = useState(
-    () => context?.initialState ?? { name: '', status: 'pause', rollout: 0, fragment: null }
+    () =>
+      context?.initialState ?? {
+        name: `Variant ${countVariants + 1}`,
+        status: VariantStatus.Inactive,
+        rollout: countVariants === 0 ? 100 : 0,
+        fragmentId: null,
+        fragmentProps: null
+      }
   )
 
-  const indicatorMap = {
-    pause: 'warning',
-    active: 'success'
-  }
+  const fragmentInfo = useReadProjectTreeItem({ type: projectItemType.fragment, id: featureFlag?.fragmentId })
 
   const setField = (field: keyof typeof featureFlag, value: unknown) =>
     setFeatureFlag(prev => ({
@@ -50,8 +61,19 @@ export const ConfigureFeatureFlagVariant: FC<CreateCustomBreakpointProps> = ({ c
       [field]: value
     }))
 
+  useEffect(() => {
+    setField('name', `Variant ${countVariants + 1}`)
+    setField('rollout', countVariants === 0 ? 100 : 0)
+  }, [countVariants, isOpen])
+
+  useEffect(() => {
+    if (context?.initialState) {
+      setFeatureFlag(context?.initialState)
+    }
+  }, [isOpen, context?.initialState])
+
   return (
-    <Modal className={cn(styles.root, className)} isOpen={modal?.name === modalNames.configureFeatureFlagVariant}>
+    <Modal className={cn(styles.root, className)} isOpen={isOpen}>
       <ModalContainer
         title={isEdit ? 'Configure Variant' : 'Create Variant'}
         footer={
@@ -83,10 +105,16 @@ export const ConfigureFeatureFlagVariant: FC<CreateCustomBreakpointProps> = ({ c
                 trigger='click'
                 options={
                   <DropdownGroup>
-                    <DropdownOption icon={<StatusDot status='success' />} onClick={() => setField('status', 'active')}>
+                    <DropdownOption
+                      icon={<StatusDot status='success' />}
+                      onClick={() => setField('status', VariantStatus.Active)}
+                    >
                       Active
                     </DropdownOption>
-                    <DropdownOption icon={<StatusDot status='warning' />} onClick={() => setField('status', 'pause')}>
+                    <DropdownOption
+                      icon={<StatusDot status='warning' />}
+                      onClick={() => setField('status', VariantStatus.Inactive)}
+                    >
                       Pause
                     </DropdownOption>
                   </DropdownGroup>
@@ -94,18 +122,20 @@ export const ConfigureFeatureFlagVariant: FC<CreateCustomBreakpointProps> = ({ c
               >
                 <SelectMimicry>
                   <div className={styles.statusRow}>
-                    <StatusDot status={indicatorMap[featureFlag.status]} />
-                    {capitalize(featureFlag.status)}
+                    <StatusDot status={statusToIndicatorMap[featureFlag.status]} />
+                    {statusToLabel[featureFlag?.status]}
                   </div>
                 </SelectMimicry>
               </Dropdown>
             </ControlRowWide>
           </ControlRow>
 
-          <ControlRow title='Rollout'>
-            <InputNumber suffix='%' value={featureFlag.rollout} onChange={v => setField('rollout', v)} />
-            <Slider value={featureFlag.rollout} onChange={v => setField('rollout', v)} />
-          </ControlRow>
+          {countVariants > 0 && (
+            <ControlRow title='Rollout'>
+              <InputNumber suffix='%' value={featureFlag.rollout} onChange={v => setField('rollout', v)} />
+              <Slider value={featureFlag.rollout} onChange={v => setField('rollout', v)} />
+            </ControlRow>
+          )}
 
           <ControlRow title='Fragment'>
             <ControlRowWide>
@@ -120,8 +150,14 @@ export const ConfigureFeatureFlagVariant: FC<CreateCustomBreakpointProps> = ({ c
                       openModal(modalNames.configureFeatureFlagVariant, context)
                     },
                     onClick: item => {
+                      setField('fragment', pick(item, 'id'))
+
                       openModal(modalNames.configureFragmentVariant, {
                         fragment: item.id,
+                        onSubmit: props => {
+                          openModal(modalNames.configureFeatureFlagVariant, context)
+                          setField('fragmentProps', props)
+                        },
                         onBack: () => {
                           openModal(modalNames.configureFeatureFlagVariant, context)
                         }
@@ -129,7 +165,9 @@ export const ConfigureFeatureFlagVariant: FC<CreateCustomBreakpointProps> = ({ c
                     }
                   })
                 }
-              ></InputSelect>
+              >
+                {fragmentInfo?.name}
+              </InputSelect>
             </ControlRowWide>
           </ControlRow>
         </Panel>

@@ -30,3 +30,20 @@
 .rotationSpan {
     color: var(--secondary);
 }
+
+.rollout {
+    min-width: 40px;
+    position: relative;
+
+    &.rolloutLoading {
+        &:after {
+            content: '';
+            display: block;
+            position: absolute;
+            inset: 0;
+            background: rgba(var(--background-secondary--rgb), .4);
+            border-radius: var(--radius-small);
+            backdrop-filter: blur(5px);
+        }
+    }
+}

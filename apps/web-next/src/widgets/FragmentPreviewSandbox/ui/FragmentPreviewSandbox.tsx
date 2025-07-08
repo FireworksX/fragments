@@ -17,12 +17,19 @@ import StackGoals from '@/features/popouts/StackGoals/ui/StackGoals'
 import StackCreateGoal from '@/features/popouts/StackCreateGoal/ui/StackCreateGoal'
 
 interface FragmentPreviewSandboxProps {
+  initialProps?: unknown
   fragmentId: unknown
   className?: string
+  onChangeProps?: () => void
 }
 
-export const FragmentPreviewSandbox: FC<FragmentPreviewSandboxProps> = ({ className, fragmentId }) => {
-  const { props, setProps } = useFragmentPreviewSandbox()
+export const FragmentPreviewSandbox: FC<FragmentPreviewSandboxProps> = ({
+  className,
+  fragmentId,
+  initialProps,
+  onChangeProps
+}) => {
+  const { props, setProps } = useFragmentPreviewSandbox(initialProps, onChangeProps)
   // const { loading } = useFragmentManager(fragmentId)
 
   return (

@@ -23,7 +23,6 @@ export const useInstance = (instanceProps: InstanceProps) => {
   const { properties: definitions, manager: innerFragmentManager } =
     useFragmentProperties(resultFragmentId);
 
-  console.log(instanceProps, innerFragmentManager);
   const { props, cssProps } = useInstanceProps(instanceProps);
 
   // // useInstanceProperties(fragmentManager, layerKey);

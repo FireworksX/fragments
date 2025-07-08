@@ -5,6 +5,12 @@
     background: var(--background-secondary);
     display: flex;
     align-items: center;
+
+    &:not(:has(.reset)) {
+        .body {
+            margin-right: 8px;
+        }
+    }
 }
 
 .body {
@@ -51,7 +57,7 @@
 }
 
 .reset {
-    width: 34px;
+    width: 22px;
     height: 100%;
     display: flex;
     align-items: center;

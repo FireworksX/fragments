@@ -18,7 +18,7 @@ export type CreateFeatureFlagVariantMutation = { __typename?: 'Mutation', create
 export const CreateFeatureFlagVariantDocument = gql`
     mutation CreateFeatureFlagVariant($featureFlagId: Int!, $name: String!, $rollout: Float!, $status: VariantStatus!, $fragment: FragmentVariantPost!) {
   createVariant(
-    variant: {featureFlagId: $featureFlagId, name: $name, rolloutPercentage: $rollout, status: $status, rotationType: KEEP, fragment: $fragment}
+    variant: {featureFlagId: $featureFlagId, name: $name, rolloutPercentage: $rollout, status: $status, fragment: $fragment}
   ) {
     id
     name

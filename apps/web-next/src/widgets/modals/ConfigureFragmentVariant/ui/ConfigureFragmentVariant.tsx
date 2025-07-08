@@ -22,6 +22,7 @@ import { useModal } from '@/shared/hooks/useModal'
 import { StatusDot } from '@/shared/ui/StatusDot'
 import { capitalize } from '@/shared/utils/capitalize'
 import { FragmentPreviewSandbox } from '@/widgets/FragmentPreviewSandbox'
+import { noop, omit } from '@fragmentsx/utils'
 
 interface CreateCustomBreakpointProps {
   className?: string
@@ -36,6 +37,10 @@ export const ConfigureFragmentVariant: FC<CreateCustomBreakpointProps> = ({ clas
   const context = modal?.context ?? {}
   const fragment = context.fragment
 
+  const [props, setProps] = useState(omit(context?.initialProps ?? {}, '_type', '_id'))
+
+  const onSubmit = () => context?.onSubmit?.(props) ?? noop
+
   return (
     <Modal className={cn(styles.root, className)} isOpen={modal?.name === modalNames.configureFragmentVariant}>
       <ModalContainer
@@ -45,7 +50,7 @@ export const ConfigureFragmentVariant: FC<CreateCustomBreakpointProps> = ({ clas
             <Button mode='secondary' stretched onClick={modalStore.close}>
               Cancel
             </Button>
-            <Button stretched onClick={() => context?.onSubmit()}>
+            <Button stretched onClick={onSubmit}>
               Save
             </Button>
           </>
@@ -54,7 +59,7 @@ export const ConfigureFragmentVariant: FC<CreateCustomBreakpointProps> = ({ clas
         onBack={context?.onBack}
       >
         <div className={styles.preview}>
-          <FragmentPreviewSandbox fragmentId={fragment} />
+          <FragmentPreviewSandbox fragmentId={fragment} initialProps={props} onChangeProps={setProps} />
         </div>
       </ModalContainer>
     </Modal>

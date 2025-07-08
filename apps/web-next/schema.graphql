@@ -21,7 +21,6 @@ type AreaGet {
     description: String
     id: Int!
     logo: MediaGet!
-    name: String!
     projectId: Int!
 }
 
@@ -112,6 +111,7 @@ type FeatureFlagGet {
     id: Int!
     name: String!
     releaseCondition: ReleaseConditionGet!
+    rotationType: RotationType!
     variants: [VariantGet!]!
 }
 
@@ -198,6 +198,7 @@ type Mutation {
     deleteVariant(variantId: Int!): Void
     feedback(fd: FeedbackPost!): FeedbackGet!
     login(email: String!, password: String!): AuthPayload!
+    normalizeVariantsRolloutPercentage(featureFlagId: Int!): Void
     refresh: AuthPayload!
     signup(email: String!, firstName: String!, lastName: String, password: String!): AuthPayload!
     updateArea(area: AreaPatch!): AreaGet!
@@ -260,6 +261,7 @@ type Query {
     directory(directoryId: Int!): [ProjectDirectoryGet!]!
     featureFlag(featureFlagId: Int!): FeatureFlagGet!
     filter(countries: [String!], regions: [String!]): AllFiltersGet!
+    fragment(fragmentIds: [Int!], projectId: Int): [FragmentGet!]!
     profile: AuthPayload!
     project(projectId: Int): [ProjectGet!]!
     projectGoals(projectId: Int!): [ProjectGoalGet!]!
@@ -300,7 +302,6 @@ type VariantGet {
     id: Int!
     name: String!
     rolloutPercentage: Float!
-    rotationType: VariantRotationType!
     status: VariantStatus!
 }
 
@@ -355,7 +356,7 @@ enum RoleGet {
     OWNER
 }
 
-enum VariantRotationType {
+enum RotationType {
     KEEP
     ROTATE
 }
@@ -380,13 +381,12 @@ input AreaPatch {
     areaCode: String
     description: String
     id: Int!
-    name: String
 }
 
 input AreaPost {
     areaCode: String!
+    defaultCampaignName: String!
     description: String
-    name: String!
     projectId: Int!
 }
 
@@ -448,6 +448,7 @@ input FeatureFlagPatch {
     id: Int!
     name: String
     releaseCondition: ReleaseConditionPatch
+    rotationType: RotationType
     variants: [VariantPatch!]
 }
 
@@ -455,6 +456,7 @@ input FeatureFlagPost {
     description: String
     name: String!
     releaseCondition: ReleaseConditionPost!
+    rotationType: RotationType!
     variants: [VariantPost!]!
 }
 
@@ -565,7 +567,6 @@ input VariantPatch {
     id: Int!
     name: String
     rolloutPercentage: Float
-    rotationType: VariantRotationType
     status: VariantStatus
 }
 
@@ -574,6 +575,5 @@ input VariantPost {
     fragment: FragmentVariantPost!
     name: String!
     rolloutPercentage: Float!
-    rotationType: VariantRotationType!
     status: VariantStatus!
 }

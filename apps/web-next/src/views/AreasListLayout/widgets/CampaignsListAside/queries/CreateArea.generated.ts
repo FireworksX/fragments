@@ -11,19 +11,20 @@ export type CreateAreaMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateAreaMutation = { __typename?: 'Mutation', createArea: { __typename?: 'AreaGet', name: string, areaCode: string, description?: string | null, defaultCampaign: { __typename?: 'CampaignGet', active: boolean } } };
+export type CreateAreaMutation = { __typename?: 'Mutation', createArea: { __typename?: 'AreaGet', areaCode: string, description?: string | null, defaultCampaign: { __typename?: 'CampaignGet', id: number, active: boolean, name: string } } };
 
 
 export const CreateAreaDocument = gql`
     mutation CreateArea($name: String!, $description: String, $projectId: Int!, $areaCode: String!) {
   createArea(
-    area: {name: $name, description: $description, projectId: $projectId, areaCode: $areaCode}
+    area: {defaultCampaignName: $name, description: $description, projectId: $projectId, areaCode: $areaCode}
   ) {
-    name
     areaCode
     description
     defaultCampaign {
+      id
       active
+      name
     }
   }
 }

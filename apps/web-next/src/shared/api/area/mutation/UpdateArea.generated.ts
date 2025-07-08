@@ -11,16 +11,13 @@ export type UpdateAreaMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateAreaMutation = { __typename?: 'Mutation', updateArea: { __typename?: 'AreaGet', id: number, name: string, description?: string | null } };
+export type UpdateAreaMutation = { __typename?: 'Mutation', updateArea: { __typename?: 'AreaGet', id: number, description?: string | null } };
 
 
 export const UpdateAreaDocument = gql`
     mutation UpdateArea($id: Int!, $name: String, $description: String, $code: String) {
-  updateArea(
-    area: {id: $id, name: $name, description: $description, areaCode: $code}
-  ) {
+  updateArea(area: {id: $id, description: $description, areaCode: $code}) {
     id
-    name
     description
   }
 }

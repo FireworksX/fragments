@@ -23,8 +23,9 @@ import { useLayerPropertyValue } from '@/shared/hooks/fragmentBuilder/useLayerPr
 import { fieldsConfig } from '@/shared/hooks/fragmentBuilder/useLayerPropertyVariable/fieldsConfig'
 import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
 import InstancePropertyEnum from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/components/InstancePropertyEnum/ui/InstancePropertyEnum'
+import { BuilderControlRowProps } from '@/shared/ui/ControlRow/ui/default/ControlRow'
 
-interface InstancePropertyGenericProps {
+export interface InstancePropertyGenericProps extends BuilderControlRowProps {
   value: unknown
   property: LinkKey
   manager: GraphState
@@ -33,45 +34,16 @@ interface InstancePropertyGenericProps {
   onChange(value: boolean): void
 }
 
-const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({
+export const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({
   className,
   manager,
   value,
   property,
   instanceManager,
-  onChange
+  onChange,
+  ...controlRowProps
 }) => {
-  // const { documentManager } = useBuilderDocument()
-  // const { selection } = useBuilderSelection()
-  // const [value, setValue, valueInfo] = useInstancePropertyValue(selection, property)
-  // const propertyLayer = valueInfo?.propertyLayer ?? {}
-  // const type = valueInfo?.propertyLayer?.type
-  const { editProperty } = useFragmentProperties()
-
   const { layer } = useNormalizeLayer(property, manager)
-  const entity =
-    layer?.nodePropertyControlReference in fieldsConfig ? fieldsConfig[layer?.nodePropertyControlReference] : null
-  const instanceVariable = useLayerVariable({
-    preferredField: entity,
-    onSetValue: value => {
-      onChange(value)
-      editProperty(value)
-    }
-  })
-
-  const controlRowProps = {
-    hasConnector: !!entity,
-    variable: {
-      link: isVariableLink(value) ? value : null,
-      actions: instanceVariable.actions,
-      onClick: () => editProperty(value),
-      onReset: () => {
-        onChange(entity?.defaultValue ?? null)
-      }
-    }
-  }
-
-  // const [] = useGr
 
   if (layer?.type === definition.variableType.Number) {
     return (
@@ -172,5 +144,3 @@ const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({
   //   )
   // }
 }
-
-export default InstancePropertyGeneric

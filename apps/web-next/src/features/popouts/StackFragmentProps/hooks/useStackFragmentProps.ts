@@ -1,6 +1,7 @@
 import { useFragmentManager, useFragmentProperties } from '@fragmentsx/render-suite'
 import { popoutsStore } from '@/shared/store/popouts.store'
 import { popoutNames } from '@/shared/data'
+import { omit } from '@fragmentsx/utils'
 
 interface Options {
   fragmentId: number
@@ -13,7 +14,7 @@ export const useStackFragmentProps = (options: Options) => {
   const { manager: fragmentManager } = useFragmentManager(options.fragmentId)
 
   const handleChangeValue = (id, value) => {
-    const nextProps = { ...options.props, [id]: value }
+    const nextProps = omit({ ...options.props, [id]: value }, '_type', '_id')
 
     options.onChange(nextProps)
     popoutsStore.updateContext(popoutNames.stackFragmentProps, {

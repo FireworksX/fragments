@@ -34,7 +34,6 @@ export type AreaGet = {
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
   logo: MediaGet;
-  name: Scalars['String']['output'];
   projectId: Scalars['Int']['output'];
 };
 
@@ -42,13 +41,12 @@ export type AreaPatch = {
   areaCode?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['Int']['input'];
-  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type AreaPost = {
   areaCode: Scalars['String']['input'];
+  defaultCampaignName: Scalars['String']['input'];
   description?: InputMaybe<Scalars['String']['input']>;
-  name: Scalars['String']['input'];
   projectId: Scalars['Int']['input'];
 };
 
@@ -214,6 +212,7 @@ export type FeatureFlagGet = {
   id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   releaseCondition: ReleaseConditionGet;
+  rotationType: RotationType;
   variants: Array<VariantGet>;
 };
 
@@ -222,6 +221,7 @@ export type FeatureFlagPatch = {
   id: Scalars['Int']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
   releaseCondition?: InputMaybe<ReleaseConditionPatch>;
+  rotationType?: InputMaybe<RotationType>;
   variants?: InputMaybe<Array<VariantPatch>>;
 };
 
@@ -229,6 +229,7 @@ export type FeatureFlagPost = {
   description?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   releaseCondition: ReleaseConditionPost;
+  rotationType: RotationType;
   variants: Array<VariantPost>;
 };
 
@@ -408,6 +409,7 @@ export type Mutation = {
   deleteVariant?: Maybe<Scalars['Void']['output']>;
   feedback: FeedbackGet;
   login: AuthPayload;
+  normalizeVariantsRolloutPercentage?: Maybe<Scalars['Void']['output']>;
   refresh: AuthPayload;
   signup: AuthPayload;
   updateArea: AreaGet;
@@ -587,6 +589,11 @@ export type MutationLoginArgs = {
 };
 
 
+export type MutationNormalizeVariantsRolloutPercentageArgs = {
+  featureFlagId: Scalars['Int']['input'];
+};
+
+
 export type MutationSignupArgs = {
   email: Scalars['String']['input'];
   firstName: Scalars['String']['input'];
@@ -748,6 +755,7 @@ export type Query = {
   directory: Array<ProjectDirectoryGet>;
   featureFlag: FeatureFlagGet;
   filter: AllFiltersGet;
+  fragment: Array<FragmentGet>;
   profile: AuthPayload;
   project: Array<ProjectGet>;
   projectGoals: Array<ProjectGoalGet>;
@@ -820,6 +828,12 @@ export type QueryFilterArgs = {
 };
 
 
+export type QueryFragmentArgs = {
+  fragmentIds?: InputMaybe<Array<Scalars['Int']['input']>>;
+  projectId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
 export type QueryProjectArgs = {
   projectId?: InputMaybe<Scalars['Int']['input']>;
 };
@@ -871,6 +885,11 @@ export enum RoleGet {
   Owner = 'OWNER'
 }
 
+export enum RotationType {
+  Keep = 'KEEP',
+  Rotate = 'ROTATE'
+}
+
 export type UserGet = {
   __typename?: 'UserGet';
   email: Scalars['String']['output'];
@@ -896,7 +915,6 @@ export type VariantGet = {
   id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   rolloutPercentage: Scalars['Float']['output'];
-  rotationType: VariantRotationType;
   status: VariantStatus;
 };
 
@@ -905,7 +923,6 @@ export type VariantPatch = {
   id: Scalars['Int']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
   rolloutPercentage?: InputMaybe<Scalars['Float']['input']>;
-  rotationType?: InputMaybe<VariantRotationType>;
   status?: InputMaybe<VariantStatus>;
 };
 
@@ -914,14 +931,8 @@ export type VariantPost = {
   fragment: FragmentVariantPost;
   name: Scalars['String']['input'];
   rolloutPercentage: Scalars['Float']['input'];
-  rotationType: VariantRotationType;
   status: VariantStatus;
 };
-
-export enum VariantRotationType {
-  Keep = 'KEEP',
-  Rotate = 'ROTATE'
-}
 
 export enum VariantStatus {
   Active = 'ACTIVE',

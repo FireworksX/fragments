@@ -27,6 +27,7 @@
         &.secondary {
             background-color: var(--background-secondary);
             color: var(--text-color-accent);
+
             &:disabled {
                 color: var(--primary-disabled);
             }
@@ -35,9 +36,11 @@
         &.tertiary {
             background-color: transparent;
             color: var(--primary);
+
             &:active {
                 background-color: transparent;
             }
+
             &:disabled {
                 color: var(--primary-disabled);
             }
@@ -45,6 +48,7 @@
 
         &.tertiary-secondary {
             color: var(--text-color-accent);
+
             &:hover {
                 color: var(--secondary-active);
             }
@@ -53,6 +57,7 @@
         &.outline {
             color: var(--text-color-accent);
             border: 1px solid var(--border);
+
             &:hover {
                 background-color: var(--secondary-bg);
             }
@@ -61,6 +66,7 @@
         &.success {
             color: var(--text-color);
             background: var(--success);
+
             &:hover {
                 background-color: var(--success);
             }
@@ -75,6 +81,7 @@
             color: var(--success);
             background: var(--success-bg);
             border: 1px solid var(--success);
+
             &:hover {
                 background-color: var(--success-bg);
             }
@@ -83,6 +90,7 @@
         &.warning {
             color: var(--text-color);
             background: var(--warning);
+
             &:hover {
                 background-color: var(--warning);
             }
@@ -92,6 +100,7 @@
             color: var(--warning);
             background: var(--warning-bg);
             border: 1px solid var(--warning);
+
             &:hover {
                 background-color: var(--warning-bg);
             }
@@ -100,6 +109,7 @@
         &.danger {
             color: var(--text-color-accent);
             background: var(--danger);
+
             &:hover {
                 background-color: var(--danger);
             }
@@ -109,6 +119,7 @@
             color: var(--danger);
             background: var(--danger-bg);
             border: 1px solid var(--danger);
+
             &:hover {
                 background-color: var(--danger-bg);
             }
@@ -163,12 +174,43 @@
 
             /*animation: glowing 5s infinite linear;*/
         }
+
     }
 
     .suffix {
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+
+    .cancelable {
+        .body {
+            opacity: 0;
+        }
+        &.danger-outline {
+            .cancelBody {
+                background: var(--danger-bg);
+            }
+        }
+    }
+
+    .cancelBody {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        border-radius: inherit;
+        justify-content: center;
+        overflow: hidden;
+
+        &:after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: inherit;
+            width: 100%;
+            animation: shrinkOut linear 3s;
+        }
     }
 
 
@@ -217,6 +259,15 @@
         }
         100% {
             box-shadow: 2px 0 3px 0 var(--glow-color);
+        }
+    }
+
+    @keyframes shrinkOut {
+        from {
+            width: 100%;
+        }
+        to {
+            width: 0;
         }
     }
 }

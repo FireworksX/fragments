@@ -25,7 +25,7 @@ export const AreasListAside: FC<AreasListAsideProps> = ({ className }) => {
                 key={item.id}
                 className={styles.card}
                 logo={item.defaultCampaign?.logo.url}
-                name={item.name}
+                name={item.defaultCampaign?.name}
                 slug={item.id}
                 isActive={item.defaultCampaign.active}
               />

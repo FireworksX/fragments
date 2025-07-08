@@ -1,11 +1,12 @@
 mutation CreateArea($name: String!, $description: String, $projectId: Int!, $areaCode: String!) {
-    createArea(area: { name: $name, description: $description, projectId: $projectId, areaCode: $areaCode }
+    createArea(area: { defaultCampaignName: $name, description: $description, projectId: $projectId, areaCode: $areaCode }
     ) {
-        name
         areaCode
         description
         defaultCampaign {
+            id
             active
+            name
         }
     }
 }

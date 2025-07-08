@@ -1,6 +1,7 @@
+'use client'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { ElementRef, FC, PropsWithChildren, ReactNode, RefObject } from 'react'
+import { ComponentRef, ElementRef, FC, PropsWithChildren, ReactNode, RefObject, useRef, useState } from 'react'
 import { TouchableProps } from '@/shared/ui/Touchable/ui'
 import { Touchable } from '@/shared/ui/Touchable'
 import { Spinner } from '@/shared/ui/Spinner'
@@ -26,7 +27,9 @@ export interface ButtonProps extends TouchableProps, PropsWithChildren {
   className?: string
   icon?: ReactNode
   suffix?: ReactNode
-  ref?: RefObject<ElementRef<'button'>>
+  cancelable?: boolean
+  cancelDuration?: number
+  ref?: RefObject<ComponentRef<'button'>>
 }
 
 const Button: FC<ButtonProps> = ({
@@ -40,7 +43,10 @@ const Button: FC<ButtonProps> = ({
   children,
   suffix,
   icon,
+  cancelable,
+  cancelDuration = 3000,
   ref,
+  onClick,
   ...touchProps
 }) => {
   const spinnerColorByMode = {
@@ -49,6 +55,30 @@ const Button: FC<ButtonProps> = ({
     'success-outline': 'var(--success)'
   }[mode]
 
+  const cancelableTimer = useRef<ReturnType<typeof setTimeout>>(null)
+  const [isCancelable, setIsCancelable] = useState(false)
+
+  const proxyOnClick = (e: unknown) => {
+    if (onClick) {
+      if (cancelable) {
+        if (cancelableTimer.current) {
+          setIsCancelable(false)
+          clearTimeout(cancelableTimer.current)
+          cancelableTimer.current = null
+        } else {
+          setIsCancelable(true)
+          cancelableTimer.current = setTimeout(() => {
+            setIsCancelable(false)
+            cancelableTimer.current = null
+            onClick(e)
+          }, cancelDuration)
+        }
+      } else {
+        onClick(e)
+      }
+    }
+  }
+
   return (
     <Touchable
       ref={ref}
@@ -56,11 +86,23 @@ const Button: FC<ButtonProps> = ({
       className={cn(styles.root, className, styles[mode], styles[size], {
         [styles.stretched]: stretched,
         [styles.loading]: loading,
-        [styles.glowing]: glowing
+        [styles.glowing]: glowing,
+        [styles.cancelable]: isCancelable
       })}
       TagName='button'
+      onClick={proxyOnClick}
       {...touchProps}
     >
+      {isCancelable && (
+        <div
+          className={styles.cancelBody}
+          style={{
+            animationDuration: `${cancelDuration}ms`
+          }}
+        >
+          Cancel
+        </div>
+      )}
       {loading && (
         <div className={styles.loadingState}>
           <Spinner size={16} color={spinnerColorByMode} />

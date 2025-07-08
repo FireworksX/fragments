@@ -4,26 +4,20 @@ import styles from './styles.module.css'
 import { Table } from '@/shared/ui/Table'
 import { TableHeader } from '@/shared/ui/Table/components/TableHeader'
 import NameIcon from '@/shared/icons/next/a-large-small.svg'
-import HashIcon from '@/shared/icons/next/hash.svg'
 import StatusIcon from '@/shared/icons/next/circle-fading-plus.svg'
-import FilterIcon from '@/shared/icons/next/funnel.svg'
 import FragmentIcon from '@/shared/icons/next/component.svg'
 import ActionsIcon from '@/shared/icons/next/zap.svg'
 import WeightIcon from '@/shared/icons/next/weight.svg'
+import EditIcon from '@/shared/icons/next/pencil.svg'
 import DeleteIcon from '@/shared/icons/next/trash.svg'
 import PauseIcon from '@/shared/icons/next/pause.svg'
 import PlayIcon from '@/shared/icons/next/play.svg'
-import CheckIcon from '@/shared/icons/next/check.svg'
-import LogoIcon from '@/shared/icons/next/logo.svg'
+import Logo from '@/shared/icons/next/logo.svg'
 import { TableRow } from '@/shared/ui/Table/components/TableRow'
 import { TableCell } from '@/shared/ui/Table/components/TableCell'
-import { Link } from '@/shared/ui/Link'
-import { Chip } from '@/shared/ui/Chip'
 import { StatusBadge } from '@/shared/ui/StatusBadge'
 import { Button } from '@/shared/ui/Button'
 import { Placeholder } from '@/components/Placeholder'
-import Logo from '@/shared/icons/next/logo.svg'
-import ConnectIcon from '@/shared/icons/next/plug.svg'
 import PlusIcon from '@/shared/icons/next/plus.svg'
 import { useCampaignContentTable } from '@/views/AreasFragmentPage/widgets/CampaignContentTable/hooks/useCampaignContentTable'
 import { SearchInput } from '@/shared/ui/SearchInput'
@@ -32,9 +26,13 @@ import { DropdownGroup } from '@/shared/ui/DropdownGroup'
 import { DropdownOption } from '@/shared/ui/DropdownOption'
 import { SelectMimicry } from '@/shared/ui/SelectMimicry'
 import { ContentEditable } from '@/shared/ui/ContentEditable'
-import { InputSelect } from '@/shared/ui/InputSelect'
 import { ConfigureFeatureFlagVariant } from '@/widgets/modals/ConfigureFeatureFlagVariant'
 import { ConfigureFragmentVariant } from '@/widgets/modals/ConfigureFragmentVariant'
+import { statusToIndicatorMap } from '@/shared/data/constants'
+import { RotationType, VariantStatus } from '@/__generated__/types'
+import { Spinner } from '@/shared/ui/Spinner'
+import { InputSelect } from '@/shared/ui/InputSelect'
+import { capitalize } from '@/shared/utils/capitalize'
 
 interface CampaignContentTableProps {
   campaignId: number
@@ -43,46 +41,66 @@ interface CampaignContentTableProps {
 }
 
 export const CampaignContentTable: FC<CampaignContentTableProps> = ({ className, campaignId, onAddFragment }) => {
-  const { handleAddVariant } = useCampaignContentTable(campaignId)
-
-  const list = [
-    {
-      id: 10,
-      name: 'test',
-      active: false
-    }
-  ]
+  const {
+    variants,
+    loadingVariants,
+    featureFlag,
+    variantsRollout,
+    loadingVariantsRollout,
+    creatingVariant,
+    removingVariant,
+    removeVariant,
+    handleAddVariant,
+    handleSetRotationType,
+    handleEditFragment,
+    handleEditVariant
+  } = useCampaignContentTable(campaignId)
 
   return (
     <div className={styles.root}>
       <ConfigureFeatureFlagVariant />
       <ConfigureFragmentVariant />
       <div className={styles.header}>
-        <SearchInput mode='tiny' placeholder='Search...' />
-        <Dropdown
-          width={230}
-          placement='bottom-end'
-          trigger='click'
-          options={
-            <DropdownGroup>
-              <DropdownOption gap={2} direction='column' description='The user is shown the same option every time.'>
-                Keep
-              </DropdownOption>
-              <DropdownOption gap={2} direction='column' description='The user is shown a random option each time.'>
-                Loose
-              </DropdownOption>
-            </DropdownGroup>
-          }
-        >
-          <SelectMimicry>
-            <span className={styles.rotationSpan}>Rotation mode:</span> Keep
-          </SelectMimicry>
-        </Dropdown>
+        {variants.length > 1 && (
+          <>
+            <SearchInput mode='tiny' placeholder='Search...' />
+            <Dropdown
+              width={230}
+              placement='bottom-end'
+              trigger='click'
+              options={
+                <DropdownGroup>
+                  <DropdownOption
+                    gap={2}
+                    direction='column'
+                    description='The user is shown the same option every time.'
+                    onClick={() => handleSetRotationType(RotationType.Keep)}
+                  >
+                    Keep
+                  </DropdownOption>
+                  <DropdownOption
+                    gap={2}
+                    direction='column'
+                    description='The user is shown a random option each time.'
+                    onClick={() => handleSetRotationType(RotationType.Rotate)}
+                  >
+                    Rotate
+                  </DropdownOption>
+                </DropdownGroup>
+              }
+            >
+              <SelectMimicry>
+                <span className={styles.rotationSpan}>Rotation mode:</span>{' '}
+                {capitalize(featureFlag?.rotationType?.toLowerCase())}
+              </SelectMimicry>
+            </Dropdown>
+          </>
+        )}
 
         {/*<Button mode='outline' icon={<PlusIcon />}>*/}
         {/*  Create new*/}
         {/*</Button>*/}
-        <Button icon={<PlusIcon />} onClick={handleAddVariant}>
+        <Button icon={<PlusIcon />} loading={creatingVariant} onClick={handleAddVariant}>
           Add variant
         </Button>
       </div>
@@ -104,6 +122,14 @@ export const CampaignContentTable: FC<CampaignContentTableProps> = ({ className,
             <div className={styles.innerCell}>
               <WeightIcon />
               Rollout
+              <Spinner
+                style={{
+                  transition: 'var(--animation-transition-default)',
+                  opacity: loadingVariantsRollout ? 1 : 0
+                }}
+                size={12}
+                color='var(--secondary)'
+              />
             </div>
             <div className={styles.innerCell}>
               <FragmentIcon />
@@ -134,7 +160,15 @@ export const CampaignContentTable: FC<CampaignContentTableProps> = ({ className,
         {/*  </TableRow>*/}
         {/*)}*/}
 
-        {list.length === 0 && (
+        {loadingVariants && (
+          <TableRow className={styles.row}>
+            <TableCell className={styles.cell} colSpan={6}>
+              <Placeholder stretched actions={<Spinner size={16} color='var(--text-color-accent)' />} />
+            </TableCell>
+          </TableRow>
+        )}
+
+        {variants.length === 0 && !loadingVariants && (
           <TableRow className={styles.row}>
             <TableCell className={styles.cell} colSpan={6}>
               <Placeholder
@@ -157,33 +191,41 @@ export const CampaignContentTable: FC<CampaignContentTableProps> = ({ className,
           </TableRow>
         )}
 
-        {list.map(stream => (
-          <TableRow key={stream.id}>
-            <TableCell className={styles.idCell}>{stream.id}</TableCell>
+        {variants.map((variant, index) => (
+          <TableRow key={variant.id}>
+            <TableCell className={styles.idCell}>{variant.id}</TableCell>
+            <TableCell>{variant.name}</TableCell>
             <TableCell>
-              <ContentEditable className={styles.editableCell} value={stream.name} />
+              <StatusBadge status={statusToIndicatorMap[variant.status]} />
             </TableCell>
-            <TableCell>
-              <StatusBadge status={stream.active ? 'success' : 'warning'} />
+            <TableCell className={cn(styles.rollout, { [styles.rolloutLoading]: loadingVariantsRollout })}>
+              {loadingVariantsRollout ? 100 : variantsRollout.at(index)?.rolloutPercentage}%
             </TableCell>
-            <TableCell>40%</TableCell>
             <TableCell className={styles.innerCell}>
-              <div className={styles.preview}></div>
-              <Button mode='tertiary'>TG banner</Button>
+              <InputSelect
+                icon={<FragmentIcon color='var(--text-color)' />}
+                color='var(--component)'
+                placeholder='Set...'
+                onClick={() => handleEditFragment(variant.id)}
+              >
+                {variant?.fragment?.fragment?.name}
+              </InputSelect>
+              {/*<div className={styles.preview}></div>*/}
+              {/*<Button mode='tertiary'>{variant?.fragment?.fragment?.name}</Button>*/}
             </TableCell>
             <TableCell>
               <div className={styles.innerCell}>
-                {stream.active ? (
-                  <Button size='small' mode='warning-outline' icon={<PauseIcon />}>
-                    Pause
-                  </Button>
-                ) : (
-                  <Button size='small' mode='success-outline' icon={<PlayIcon />}>
-                    Run
-                  </Button>
-                )}
+                <Button size='small' mode='outline' icon={<EditIcon />} onClick={() => handleEditVariant(variant.id)}>
+                  Edit
+                </Button>
 
-                <Button size='small' mode='danger-outline' icon={<DeleteIcon />}>
+                <Button
+                  size='small'
+                  mode='danger-outline'
+                  icon={<DeleteIcon />}
+                  cancelable
+                  onClick={() => removeVariant({ variables: { id: variant.id } })}
+                >
                   Delete
                 </Button>
               </div>

@@ -1,7 +1,7 @@
 query AreaDetail($id: Int!) {
     area(areaId: $id) {
         id
-        name
+#        name
         description
         code: areaCode
         defaultCampaign {

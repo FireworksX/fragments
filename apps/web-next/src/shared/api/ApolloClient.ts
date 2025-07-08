@@ -36,6 +36,11 @@ export function makeApolloClient() {
                 cache.evict({ id: `ProjectGoalGet:${variables?.id}` })
               }
             },
+            deleteVariant: {
+              merge(_, _incoming, { cache, variables }) {
+                cache.evict({ id: `VariantGet:${variables?.id}` })
+              }
+            },
             deleteFragment: {
               merge(_, _incoming, { cache, variables }) {
                 cache.evict({ id: `FragmentGet:${variables?.id}` })
@@ -107,7 +112,7 @@ export function makeApolloClient() {
               merge(outcome, incoming, { cache, variables }) {
                 cache.modify({
                   fields: {
-                    areas(list = []) {
+                    area(list = []) {
                       return [...list, incoming]
                     }
                   }
@@ -142,6 +147,26 @@ export function makeApolloClient() {
             createProject: {
               merge(_, _incoming, { cache }) {
                 cache.evict({ id: 'ROOT_QUERY', fieldName: 'project' })
+              }
+            },
+
+            createVariant: {
+              merge(_, incoming, { cache, variables }) {
+                const featureFlagId = variables?.featureFlagId
+
+                if (featureFlagId) {
+                  cache.modify({
+                    id: cache.identify({
+                      __typename: 'FeatureFlagGet',
+                      id: featureFlagId
+                    }),
+                    fields: {
+                      variants(list = []) {
+                        return [...list, incoming]
+                      }
+                    }
+                  })
+                }
               }
             }
           }

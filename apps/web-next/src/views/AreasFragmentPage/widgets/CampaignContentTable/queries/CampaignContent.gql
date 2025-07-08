@@ -3,13 +3,15 @@ query CampaignContent($id: Int!) {
         id
         featureFlag {
             id
+            rotationType
             variants {
                 id
-                rolloutPercentage
                 name
+                status
                 fragment {
                     fragment {
                         id
+                        name
                     }
                     props
                 }
