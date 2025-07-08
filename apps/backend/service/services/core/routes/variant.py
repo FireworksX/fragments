@@ -128,7 +128,7 @@ async def update_variant_route(info: strawberry.Info[Context], v: VariantPatch) 
             detail=f'User is not allowed to change variant',
         )
 
-    variant: Variant = await update_variant_db(db, variant_id=v.id, values=v.__dict__)
+    variant: Variant = await update_variant_db(db, v)
 
     return variant_db_to_variant(variant)
 
