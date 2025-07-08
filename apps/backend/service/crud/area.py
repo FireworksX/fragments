@@ -6,6 +6,7 @@ from crud.campaign import create_campaign_db
 from crud.feature_flag import create_feature_flag_db
 from crud.media import generate_default_media
 from database.models import Area, Campaign
+from services.core.routes.schemas.campaign import CampaignStatus
 from services.core.routes.schemas.feature_flag import FeatureFlagPost
 
 
@@ -36,8 +37,7 @@ async def create_area_db(
         project_id=project_id,
         area_id=area.id,
         default=True,
-        active=True,
-        archived=False,
+        status=CampaignStatus.ACTIVE,
         author_id=author_id,
         experiment_id=None,
     )

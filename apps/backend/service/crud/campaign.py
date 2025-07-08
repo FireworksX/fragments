@@ -6,6 +6,7 @@ from crud.feature_flag import create_feature_flag_db
 from crud.media import generate_default_media
 from crud.release_condition import create_release_condition_db
 from database.models import Campaign
+from services.core.routes.schemas.campaign import CampaignStatus
 from services.core.routes.schemas.feature_flag import FeatureFlagPost, RotationType
 from services.core.routes.schemas.release_condition import ReleaseConditionPost
 
@@ -16,10 +17,9 @@ async def create_campaign_db(
     project_id: int,
     area_id: int,
     description: str,
-    active: bool,
-    archived: bool,
-    author_id: int,
     default: bool,
+    status: CampaignStatus,
+    author_id: int,
     experiment_id: Optional[int],
 ) -> Campaign:
     default_campaign_logo = await generate_default_media(db, f"{name}_campaign.png")
@@ -45,10 +45,9 @@ async def create_campaign_db(
         project_id=project_id,
         area_id=area_id,
         description=description,
-        active=active,
-        archived=archived,
-        author_id=author_id,
         default=default,
+        status=int(status.value),
+        author_id=author_id,
         logo_id=default_campaign_logo.id,
         feature_flag_id=default_campaign_feature_flag.id,
         experiment_id=experiment_id,
@@ -82,13 +81,11 @@ async def get_campaign_by_name_and_area_id_db(
 
 
 async def get_campaigns_by_area_id_db(
-    db: Session, area_id: int, active: Optional[bool] = None, archived: Optional[bool] = None
+    db: Session, area_id: int, status: Optional[CampaignStatus] = None
 ) -> List[Campaign]:
     query = db.query(Campaign).filter(Campaign.area_id == area_id)
-    if active is not None:
-        query = query.filter(Campaign.active == active)
-    if archived is not None:
-        query = query.filter(Campaign.archived == archived)
+    if status is not None:
+        query = query.filter(Campaign.status == int(status.value))
     return query.all()
 
 
@@ -106,10 +103,8 @@ async def update_campaign_by_id_db(db: Session, values: dict) -> Campaign:
         campaign.name = values['name']
     if values.get('description') is not None:
         campaign.description = values['description']
-    if values.get('active') is not None:
-        campaign.active = values['active']
-    if values.get('archived') is not None:
-        campaign.archived = values['archived']
+    if values.get('status') is not None:
+        campaign.status = int(values['status'].value)
     if values.get('experiment_id') is not None:
         campaign.experiment_id = values['experiment_id']
     db.merge(campaign)

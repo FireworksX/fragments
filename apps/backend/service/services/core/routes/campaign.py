@@ -21,7 +21,7 @@ from database import Area, Campaign, Media, Project, Session
 
 from .feature_flag import feature_flag_db_to_feature_flag
 from .middleware import Context
-from .schemas.campaign import CampaignGet, CampaignPatch, CampaignPost
+from .schemas.campaign import CampaignGet, CampaignPatch, CampaignPost, CampaignStatus
 from .schemas.media import MediaGet, MediaType
 from .schemas.user import AuthPayload, RoleGet
 from .user import user_db_to_user
@@ -45,9 +45,7 @@ def campaign_db_to_campaign(campaign: Campaign) -> CampaignGet:
         area_id=campaign.area_id,
         name=campaign.name,
         description=campaign.description,
-        archived=campaign.archived,
-        default=campaign.default,
-        active=campaign.active,
+        status=campaign.status,
         logo=MediaGet(
             media_id=campaign.logo_id,
             media_type=MediaType.CAMPAIGN_LOGO,
@@ -62,8 +60,7 @@ def campaign_db_to_campaign(campaign: Campaign) -> CampaignGet:
 async def campaigns_in_area(
     info: strawberry.Info[Context],
     area_id: int,
-    active: Optional[bool] = None,
-    archived: Optional[bool] = None,
+    status: Optional[CampaignStatus] = None,
 ) -> List[CampaignGet]:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
@@ -79,7 +76,7 @@ async def campaigns_in_area(
             detail=f'User is not allowed to view campaigns',
         )
 
-    campaigns: List[Campaign] = await get_campaigns_by_area_id_db(db, area_id, active, archived)
+    campaigns: List[Campaign] = await get_campaigns_by_area_id_db(db, area_id, status)
     out: List[CampaignGet] = []
     for cp in campaigns:
         out.append(campaign_db_to_campaign(cp))
@@ -125,10 +122,9 @@ async def create_campaign_route(info: strawberry.Info[Context], cmp: CampaignPos
         area.project_id,
         cmp.area_id,
         cmp.description,
-        cmp.active,
-        cmp.archived,
-        user.user.id,
         False,
+        cmp.status,
+        user.user.id,
         cmp.experiment_id,
     )
 
@@ -248,8 +244,7 @@ async def campaign_by_name(
     area_id: int,
     name: str,
     limit: Optional[int] = 5,
-    active: Optional[bool] = None,
-    archived: Optional[bool] = None,
+    status: Optional[CampaignStatus] = None,
 ) -> list[CampaignGet]:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
@@ -269,7 +264,7 @@ async def campaign_by_name(
     if campaign:
         return [campaign_db_to_campaign(campaign)]
 
-    campaigns: list[CampaignGet] = await campaigns_in_area(info, area_id, active, archived)
+    campaigns: list[CampaignGet] = await campaigns_in_area(info, area_id, status)
     scores = process.extractBests(name, [campaign.name for campaign in campaigns], limit=limit)
     out: List[CampaignGet] = []
     for score in scores:

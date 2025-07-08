@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Optional
 
 import strawberry
@@ -5,13 +6,19 @@ import strawberry
 from services.core.routes.schemas.feature_flag import FeatureFlagGet
 
 
+@strawberry.enum
+class ExperimentStatus(Enum):
+    ACTIVE = 1
+    INACTIVE = 2
+    ARCHIVED = 3
+
+
 @strawberry.type
 class ExperimentGet:
     id: int
     name: str
     description: Optional[str] = None
-    active: bool
-    archived: bool
+    status: ExperimentStatus
     feature_flag: FeatureFlagGet
 
 
@@ -19,8 +26,7 @@ class ExperimentGet:
 class ExperimentPost:
     name: str
     description: Optional[str] = None
-    active: bool = True
-    archived: bool = False
+    status: ExperimentStatus
     feature_flag_id: int
 
 
@@ -29,6 +35,5 @@ class ExperimentPatch:
     id: int
     name: Optional[str] = None
     description: Optional[str] = None
-    active: Optional[bool] = None
-    archived: Optional[bool] = None
+    status: Optional[ExperimentStatus] = None
     feature_flag_id: Optional[int] = None

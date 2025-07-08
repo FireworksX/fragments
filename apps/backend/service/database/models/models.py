@@ -183,10 +183,8 @@ class Campaign(Base):
     logo_id = Column('logo_id', Integer, ForeignKey('media.id', ondelete='CASCADE'))
     logo = relationship('Media')
 
-    active = Column('active', Boolean, default=True)
-    archived = Column('archived', Boolean, default=False)
-    default = Column('default', Boolean, default=False)
-
+    status = Column('status', Integer, nullable=False, default=1)
+    default = Column('default', Boolean, nullable=False, default=False)
     feature_flag_id = Column(
         'feature_flag_id', Integer, ForeignKey('feature_flag.id'), nullable=False
     )

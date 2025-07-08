@@ -21,12 +21,14 @@ from crud.project import (
     get_project_goal_by_id_db,
     get_project_goal_by_target_action_db,
 )
-from database import Client, ClientHistory, ClientProjectGoal, ProjectGoal, Session
+from database import Area, Campaign, Client, ClientHistory, ClientProjectGoal, ProjectGoal, Session
 from database.models import Project
 
+from .campaign import get_area_by_id_db, get_campaigns_by_area_id_db
 from .middleware import Context
 from .project import get_user_role_in_project, project_db_to_project, project_goal_db_to_goal
 from .schemas.client import ClientGet, ClientHistoryGet
+from .schemas.feature_flag import FragmentVariantGet
 from .schemas.project import ClientProjectGoalGet
 from .schemas.user import AuthPayload, RoleGet
 
@@ -233,3 +235,45 @@ async def get_client_history_route(
 
     history: List[ClientHistory] = await get_client_history_db(db, client_id)
     return [client_history_db_to_history(h) for h in history]
+
+
+async def client_fragment_variant_route(
+    info: strawberry.Info[Context], area_id: int
+) -> FragmentVariantGet:
+    db: Session = info.context.session()
+
+    client: Client = await info.context.client()
+
+    client_info = await info.context.client_info()
+    location = get_location_by_ip(client_info.ip_address)
+
+    await create_client_history_db(
+        db=db,
+        client_id=client.id,
+        device_type=client_info.device_type.value if client_info.device_type else None,
+        os_type=client_info.os_type.value if client_info.os_type else None,
+        browser=None,
+        language=None,
+        screen_width=None,
+        screen_height=None,
+        country=location.country,
+        region=location.region,
+        city=location.city,
+        url='',
+        referrer='',
+        domain='',
+        subdomain='',
+    )
+
+    area: Area = await get_area_by_id_db(db, area_id)
+    if area is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Area does not exist')
+
+    permission: bool = await read_permission(db, user.user.id, area.project_id)
+    if not permission:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f'User is not allowed to view campaigns',
+        )
+
+    campaigns: List[Campaign] = await get_campaigns_by_area_id_db(db, area_id, True, False)
