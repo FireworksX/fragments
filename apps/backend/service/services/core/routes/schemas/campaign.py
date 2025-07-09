@@ -1,17 +1,19 @@
+from enum import Enum
 from typing import Optional
 
 import strawberry
 
 from services.core.routes.schemas.experiment import ExperimentGet
-from services.core.routes.schemas.feature_flag import FeatureFlagGet, FeatureFlagPost
-from services.core.routes.schemas.fragment import FragmentGet
+from services.core.routes.schemas.feature_flag import FeatureFlagGet
 from services.core.routes.schemas.media import MediaGet
-from services.core.routes.schemas.release_condition import (
-    ReleaseConditionGet,
-    ReleaseConditionPatch,
-    ReleaseConditionPost,
-)
 from services.core.routes.schemas.user import UserGet
+
+
+@strawberry.enum
+class CampaignStatus(Enum):
+    ACTIVE = 1
+    INACTIVE = 2
+    ARCHIVED = 3
 
 
 @strawberry.type
@@ -22,9 +24,7 @@ class CampaignGet:
     logo: MediaGet
     author: UserGet
     description: Optional[str] = None
-    active: bool
-    default: bool
-    archived: bool
+    status: CampaignStatus
     experiment: Optional[ExperimentGet] = None
     feature_flag: FeatureFlagGet
 
@@ -34,8 +34,7 @@ class CampaignPost:
     area_id: int
     name: str
     description: Optional[str] = None
-    active: bool
-    archived: bool
+    status: CampaignStatus
     experiment_id: Optional[int] = None
 
 
@@ -44,6 +43,5 @@ class CampaignPatch:
     id: int
     name: Optional[str] = None
     description: Optional[str] = None
-    active: Optional[bool] = None
-    archived: Optional[bool] = None
+    status: Optional[CampaignStatus] = None
     experiment_id: Optional[int] = None

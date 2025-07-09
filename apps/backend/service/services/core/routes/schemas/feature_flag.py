@@ -52,7 +52,7 @@ class FragmentVariantPost:
 
 @strawberry.input
 class FragmentVariantPatch:
-    id: int
+    fragment_id: int
     props: Optional[strawberry.scalars.JSON] = None
 
 

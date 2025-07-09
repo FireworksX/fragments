@@ -3,9 +3,8 @@ from typing import List, Optional
 from sqlalchemy.orm import Session
 
 from database.models.models import Variant
-from services.core.routes.schemas.feature_flag import VariantPost, VariantPatch
+from services.core.routes.schemas.feature_flag import VariantPatch, VariantPost, VariantStatus
 
-from services.core.routes.schemas.feature_flag import VariantStatus
 
 async def recalculate_variants_rollout_percentage_db(
     db: Session,
@@ -116,11 +115,8 @@ async def update_variant_db(db: Session, v: VariantPatch) -> Variant:
         variant.status = int(v.status.value)
         if variant.status == int(VariantStatus.INACTIVE):
             await recalculate_variants_rollout_percentage_db(
-            db,
-            variant.feature_flag_id,
-            variant.id,
-            variant.rollout_percentage,
-            0)
+                db, variant.feature_flag_id, variant.id, variant.rollout_percentage, 0
+            )
 
             variant.rollout_percentage = 0
     db.commit()

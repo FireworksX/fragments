@@ -31,6 +31,7 @@ from .client import (
     get_contributions_to_project_goal_route,
     init_client_session_route,
     release_client_session_route,
+    client_fragment_variant_route
 )
 from .feature_flag import (
     FeatureFlagGet,
@@ -92,8 +93,8 @@ from .release_condition import (
     update_release_condition_route,
 )
 from .schemas.area import AreaGet, AreaPatch, AreaPost
-from .schemas.campaign import CampaignGet, CampaignPatch, CampaignPost
-from .schemas.client import ClientGet, ClientHistoryGet, ClientHistoryInput
+from .schemas.campaign import CampaignGet, CampaignPatch, CampaignPost, CampaignStatus
+from .schemas.client import ClientGet, ClientHistoryGet
 from .schemas.feedback import FeedbackGet, FeedbackPost
 from .schemas.filesystem import ProjectDirectory, ProjectDirectoryGet, ProjectDirectoryPatch
 from .schemas.fragment import FragmentGet, FragmentPatch, FragmentPost
@@ -120,10 +121,10 @@ from .schemas.release_condition import (
     ReleaseConditionPatch,
     ReleaseConditionPost,
 )
+from .schemas.feature_flag import VariantGet
 from .schemas.user import AuthPayload, RoleGet, UserGet
 from .user import add_avatar_route, delete_avatar_route, login, profile, refresh, signup
 from .variant import (
-    VariantGet,
     VariantPatch,
     VariantPost,
     create_variant_route,
@@ -205,15 +206,14 @@ class CampaignQuery:
         area_id: Optional[int] = None,
         name: Optional[str] = None,
         limit: Optional[int] = 5,
-        active: Optional[bool] = None,
-        archived: Optional[bool] = None,
+        status: Optional[CampaignStatus] = None,
     ) -> List[CampaignGet]:
         if campaign_id is not None:
             return [await campaign_by_id(info, campaign_id)]
         if area_id is not None:
             if name is not None:
-                return await campaign_by_name(info, area_id, name, limit, active, archived)
-            return await campaigns_in_area(info, area_id, active, archived)
+                return await campaign_by_name(info, area_id, name, limit, status)
+            return await campaigns_in_area(info, area_id, status)
         return []
 
 
@@ -585,6 +585,12 @@ class ClientQuery:
         self, info: strawberry.Info[Context], client_id: int
     ) -> List[ClientHistoryGet]:
         return await get_client_history_route(info, client_id)
+
+    @strawberry.field
+    async def client_fragment_variant(
+        self, info: strawberry.Info[Context], area_id: int
+    ) -> Optional[VariantGet]:
+        return await client_fragment_variant_route(info, area_id)
 
 
 @strawberry.type

@@ -1,14 +1,15 @@
 import random
 from io import BytesIO
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Union
 
 import cairo
 import gi
+gi.require_version('Rsvg', '2.0')
 import svgwrite
-from gi.repository import Gio, GLib, Rsvg
+from gi.repository import Gio, Rsvg
 from svgwrite.drawing import Drawing
 
-gi.require_version('Rsvg', '2.0')
+
 AVAILABLE_COLORS: List[str] = [
     '#FFC700',
     '#1BC47D',
