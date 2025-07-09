@@ -240,6 +240,7 @@ class GeoLocationFilter(Base):
     region = Column('region', String)
     city = Column('city', String, nullable=False)
 
+    condition = relationship('Condition', back_populates='geo_location_filters')
 
 class TimeFrameFilter(Base):
     __tablename__ = 'time_frame_filter'
@@ -247,11 +248,13 @@ class TimeFrameFilter(Base):
     from_time = Column('from_time', DateTime, nullable=False)
     to_time = Column('to_time', DateTime, nullable=False)
 
-
+    condition = relationship('Condition', back_populates='time_frame_filters')
 class OSTypeFilter(Base):
     __tablename__ = 'os_type_filter'
     id = Column('id', Integer, primary_key=True, index=True)
     os_type = Column('os_type', Integer, nullable=False)
+
+    condition = relationship('Condition', back_populates='os_type_filters')
 
 
 class DeviceTypeFilter(Base):
@@ -259,12 +262,15 @@ class DeviceTypeFilter(Base):
     id = Column('id', Integer, primary_key=True, index=True)
     device_type = Column('device_type', Integer, nullable=False)
 
+    condition = relationship('Condition', back_populates='device_type_filters')
+
 
 class PageFilter(Base):
     __tablename__ = 'page_filter'
     id = Column('id', Integer, primary_key=True, index=True)
     page = Column('page', String, nullable=False)
 
+    condition = relationship('Condition', back_populates='page_filters')
 
 class Condition(Base):
     __tablename__ = 'condition'
@@ -280,19 +286,12 @@ class Condition(Base):
     # Type of filter this condition represents
     filter_type = Column('filter_type', Integer, nullable=False)
 
-    # Foreign keys to filter tables
-    page_filter_id = Column(Integer, ForeignKey('page_filter.id'))
-    device_type_filter_id = Column(Integer, ForeignKey('device_type_filter.id'))
-    os_type_filter_id = Column(Integer, ForeignKey('os_type_filter.id'))
-    time_frame_filter_id = Column(Integer, ForeignKey('time_frame_filter.id'))
-    geo_location_filter_id = Column(Integer, ForeignKey('geo_location_filter.id'))
-
     # Relationships to filter tables
-    page_filter = relationship('PageFilter')
-    device_type_filter = relationship('DeviceTypeFilter')
-    os_type_filter = relationship('OSTypeFilter')
-    time_frame_filter = relationship('TimeFrameFilter')
-    geo_location_filter = relationship('GeoLocationFilter')
+    page_filters = relationship('PageFilter', back_populates='condition', cascade='save-update, merge, delete, delete-orphan', foreign_keys=[PageFilter.id])
+    device_type_filters = relationship('DeviceTypeFilter', back_populates='condition', cascade='save-update, merge, delete, delete-orphan', foreign_keys=[DeviceTypeFilter.id])
+    os_type_filters = relationship('OSTypeFilter', back_populates='condition', cascade='save-update, merge, delete, delete-orphan', foreign_keys=[OSTypeFilter.id])
+    time_frame_filters = relationship('TimeFrameFilter', back_populates='condition', cascade='save-update, merge, delete, delete-orphan', foreign_keys=[TimeFrameFilter.id])
+    geo_location_filters = relationship('GeoLocationFilter', back_populates='condition', cascade='save-update, merge, delete, delete-orphan', foreign_keys=[GeoLocationFilter.id])
 
 
 class FeatureFlag(Base):
