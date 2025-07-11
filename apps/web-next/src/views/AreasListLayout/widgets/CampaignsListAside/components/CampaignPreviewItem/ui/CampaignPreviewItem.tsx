@@ -24,7 +24,7 @@ export const CampaignPreviewItem: FC<CampaignPreviewItemProps> = ({ className, l
           <div className={styles.header}>
             {isValue(isActive) && (
               <div className={styles.status}>
-                <StatusDot status={isActive ? 'success' : 'error'} />
+                <StatusDot status={isActive ? 'success' : 'warning'} />
               </div>
             )}
             <Avatar className={styles.logo} withRadius size={24} src={logo} />

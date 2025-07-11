@@ -8,7 +8,7 @@ export type CampaignDetailQueryVariables = Types.Exact<{
 }>;
 
 
-export type CampaignDetailQuery = { __typename?: 'Query', campaign: Array<{ __typename?: 'CampaignGet', id: number, name: string, active: boolean, featureFlag: { __typename?: 'FeatureFlagGet', id: number, releaseCondition: { __typename?: 'ReleaseConditionGet', id: number, conditionSets: Array<{ __typename?: 'ConditionSetGet', id: number, conditions: Array<{ __typename?: 'ConditionGet', id: number }> }> } } }> };
+export type CampaignDetailQuery = { __typename?: 'Query', campaign: Array<{ __typename?: 'CampaignGet', id: number, name: string, status: Types.CampaignStatus, featureFlag: { __typename?: 'FeatureFlagGet', id: number, releaseCondition: { __typename?: 'ReleaseConditionGet', id: number, conditionSets: Array<{ __typename?: 'ConditionSetGet', id: number, conditions: Array<{ __typename?: 'ConditionGet', id: number, filterType: Types.FilterType, filterData: { __typename?: 'FilterDeviceTypeGet', deviceType: Types.DeviceType } | { __typename?: 'FilterGeoLocationGet', country: string, region?: string | null, city?: string | null } | { __typename?: 'FilterOSTypeGet', osType: Types.OsType } | { __typename?: 'FilterPageGet', page: string } | { __typename?: 'FilterTimeFrameGet', fromTime: any, toTime: any } }> }> } } }> };
 
 
 export const CampaignDetailDocument = gql`
@@ -16,7 +16,7 @@ export const CampaignDetailDocument = gql`
   campaign(campaignId: $id) {
     id
     name
-    active
+    status
     featureFlag {
       id
       releaseCondition {
@@ -25,6 +25,27 @@ export const CampaignDetailDocument = gql`
           id
           conditions {
             id
+            filterType
+            filterData {
+              ... on FilterDeviceTypeGet {
+                deviceType
+              }
+              ... on FilterOSTypeGet {
+                osType
+              }
+              ... on FilterGeoLocationGet {
+                country
+                region
+                city
+              }
+              ... on FilterPageGet {
+                page
+              }
+              ... on FilterTimeFrameGet {
+                fromTime
+                toTime
+              }
+            }
           }
         }
       }

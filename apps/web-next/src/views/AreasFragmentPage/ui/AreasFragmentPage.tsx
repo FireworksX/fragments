@@ -30,8 +30,6 @@ export const AreasFragmentPage: FC<CampaignDetailPageProps> = () => {
 
   return (
     <div className={styles.root}>
-      <ProjectTreeModal />
-
       <CampaignContentTable campaignId={campaignId} />
 
       {/*{fragmentId ? (*/}

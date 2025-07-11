@@ -2,6 +2,22 @@ query ListCampaigns($areaId: Int!) {
     campaign(areaId: $areaId) {
         id
         name
-        active
+        status
+#        default
+        logo {
+            publicPath
+        }
+        featureFlag {
+            releaseCondition {
+                id
+                conditionSets {
+                    id
+                    name
+                    conditions {
+                        id
+                    }
+                }
+            }
+        }
     }
 }

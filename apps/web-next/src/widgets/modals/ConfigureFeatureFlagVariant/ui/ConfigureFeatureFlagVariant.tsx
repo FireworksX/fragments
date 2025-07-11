@@ -63,7 +63,7 @@ export const ConfigureFeatureFlagVariant: FC<CreateCustomBreakpointProps> = ({ c
 
   useEffect(() => {
     setField('name', `Variant ${countVariants + 1}`)
-    setField('rollout', countVariants === 0 ? 100 : 0)
+    setField('rollout', context?.initialState?.rollout ?? countVariants === 0 ? 100 : 0)
   }, [countVariants, isOpen])
 
   useEffect(() => {
@@ -150,7 +150,7 @@ export const ConfigureFeatureFlagVariant: FC<CreateCustomBreakpointProps> = ({ c
                       openModal(modalNames.configureFeatureFlagVariant, context)
                     },
                     onClick: item => {
-                      setField('fragment', pick(item, 'id'))
+                      setField('fragmentId', item.id)
 
                       openModal(modalNames.configureFragmentVariant, {
                         fragment: item.id,

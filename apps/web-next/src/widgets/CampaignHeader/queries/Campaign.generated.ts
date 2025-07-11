@@ -9,7 +9,7 @@ export type CampaignQueryVariables = Types.Exact<{
 }>;
 
 
-export type CampaignQuery = { __typename?: 'Query', campaign: Array<{ __typename?: 'CampaignGet', id: number, name: string, active: boolean, default: boolean, logo: { __typename?: 'MediaGet', url: string }, featureFlag: { __typename?: 'FeatureFlagGet', id: number, name: string, releaseCondition: { __typename?: 'ReleaseConditionGet', id: number, conditionSets: Array<{ __typename?: 'ConditionSetGet', conditions: Array<{ __typename?: 'ConditionGet', filterType: Types.FilterType }> }> }, variants: Array<{ __typename?: 'VariantGet', rolloutPercentage: number, fragment?: { __typename?: 'FragmentVariantGet', props?: any | null, fragment: { __typename?: 'FragmentGet', id: number } } | null }> } }> };
+export type CampaignQuery = { __typename?: 'Query', campaign: Array<{ __typename?: 'CampaignGet', id: number, name: string, status: Types.CampaignStatus, logo: { __typename?: 'MediaGet', url: string }, featureFlag: { __typename?: 'FeatureFlagGet', id: number, name: string, releaseCondition: { __typename?: 'ReleaseConditionGet', id: number, conditionSets: Array<{ __typename?: 'ConditionSetGet', conditions: Array<{ __typename?: 'ConditionGet', filterType: Types.FilterType }> }> }, variants: Array<{ __typename?: 'VariantGet', rolloutPercentage: number, fragment?: { __typename?: 'FragmentVariantGet', props?: any | null, fragment: { __typename?: 'FragmentGet', id: number } } | null }> } }> };
 
 
 export const CampaignDocument = gql`
@@ -17,11 +17,10 @@ export const CampaignDocument = gql`
   campaign(areaId: $areaId, campaignId: $id) {
     id
     name
-    active
+    status
     logo {
       url: publicPath
     }
-    default
     featureFlag {
       id
       name

@@ -8,7 +8,7 @@ query AreasList($projectId: Int!) {
             logo {
                 url: publicPath
             }
-            active
+            status
         }
     }
 }

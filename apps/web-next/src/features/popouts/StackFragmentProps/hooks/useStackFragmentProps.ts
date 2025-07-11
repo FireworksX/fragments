@@ -1,7 +1,7 @@
 import { useFragmentManager, useFragmentProperties } from '@fragmentsx/render-suite'
 import { popoutsStore } from '@/shared/store/popouts.store'
 import { popoutNames } from '@/shared/data'
-import { omit } from '@fragmentsx/utils'
+import { isObject, omit } from '@fragmentsx/utils'
 
 interface Options {
   fragmentId: number
@@ -29,7 +29,7 @@ export const useStackFragmentProps = (options: Options) => {
 
       return {
         link: definition,
-        value: _id in options.props ? options?.props[_id] : defaultValue,
+        value: isObject(options.props) && _id in options.props ? options?.props[_id] : defaultValue,
         setValue: value => handleChangeValue(_id, value)
       }
     }),

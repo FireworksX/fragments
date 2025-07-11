@@ -14,6 +14,7 @@ interface StackNumberVariableProps {
 const StackFragmentProps: FC<StackNumberVariableProps> = ({ className }) => {
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackFragmentProps}`)
   const context = popout?.context ?? {}
+
   const { definitions, manager } = useStackFragmentProps(context)
 
   return (

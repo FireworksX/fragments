@@ -59,36 +59,38 @@ export type AuthPayload = {
 
 export type CampaignGet = {
   __typename?: 'CampaignGet';
-  active: Scalars['Boolean']['output'];
-  archived: Scalars['Boolean']['output'];
   areaId: Scalars['Int']['output'];
   author: UserGet;
-  default: Scalars['Boolean']['output'];
   description?: Maybe<Scalars['String']['output']>;
   experiment?: Maybe<ExperimentGet>;
   featureFlag: FeatureFlagGet;
   id: Scalars['Int']['output'];
   logo: MediaGet;
   name: Scalars['String']['output'];
+  status: CampaignStatus;
 };
 
 export type CampaignPatch = {
-  active?: InputMaybe<Scalars['Boolean']['input']>;
-  archived?: InputMaybe<Scalars['Boolean']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   experimentId?: InputMaybe<Scalars['Int']['input']>;
   id: Scalars['Int']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<CampaignStatus>;
 };
 
 export type CampaignPost = {
-  active: Scalars['Boolean']['input'];
-  archived: Scalars['Boolean']['input'];
   areaId: Scalars['Int']['input'];
   description?: InputMaybe<Scalars['String']['input']>;
   experimentId?: InputMaybe<Scalars['Int']['input']>;
   name: Scalars['String']['input'];
+  status: CampaignStatus;
 };
+
+export enum CampaignStatus {
+  Active = 'ACTIVE',
+  Archived = 'ARCHIVED',
+  Inactive = 'INACTIVE'
+}
 
 export type ClientGet = {
   __typename?: 'ClientGet';
@@ -99,8 +101,17 @@ export type ClientGet = {
   updatedAt: Scalars['String']['output'];
 };
 
+export enum ClientHistoryEventType {
+  Contribute = 'CONTRIBUTE',
+  Feedback = 'FEEDBACK',
+  Init = 'INIT',
+  Release = 'RELEASE',
+  View = 'VIEW'
+}
+
 export type ClientHistoryGet = {
   __typename?: 'ClientHistoryGet';
+  area?: Maybe<AreaGet>;
   browser?: Maybe<Scalars['String']['output']>;
   city?: Maybe<Scalars['String']['output']>;
   clientId: Scalars['Int']['output'];
@@ -108,6 +119,7 @@ export type ClientHistoryGet = {
   createdAt: Scalars['String']['output'];
   deviceType?: Maybe<Scalars['Int']['output']>;
   domain?: Maybe<Scalars['String']['output']>;
+  eventType: ClientHistoryEventType;
   id: Scalars['Int']['output'];
   language?: Maybe<Scalars['String']['output']>;
   osType?: Maybe<Scalars['Int']['output']>;
@@ -118,6 +130,7 @@ export type ClientHistoryGet = {
   screenWidth?: Maybe<Scalars['Int']['output']>;
   subdomain?: Maybe<Scalars['String']['output']>;
   url?: Maybe<Scalars['String']['output']>;
+  variant?: Maybe<VariantGet>;
 };
 
 export type ClientMetricPost = {
@@ -198,13 +211,18 @@ export enum DeviceType {
 
 export type ExperimentGet = {
   __typename?: 'ExperimentGet';
-  active: Scalars['Boolean']['output'];
-  archived: Scalars['Boolean']['output'];
   description?: Maybe<Scalars['String']['output']>;
   featureFlag: FeatureFlagGet;
   id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
+  status: ExperimentStatus;
 };
+
+export enum ExperimentStatus {
+  Active = 'ACTIVE',
+  Archived = 'ARCHIVED',
+  Inactive = 'INACTIVE'
+}
 
 export type FeatureFlagGet = {
   __typename?: 'FeatureFlagGet';
@@ -340,7 +358,7 @@ export type FragmentVariantGet = {
 };
 
 export type FragmentVariantPatch = {
-  id: Scalars['Int']['input'];
+  fragmentId: Scalars['Int']['input'];
   props?: InputMaybe<Scalars['JSON']['input']>;
 };
 
@@ -748,6 +766,7 @@ export type Query = {
   campaign: Array<CampaignGet>;
   client: Array<ClientGet>;
   clientFragment?: Maybe<FragmentGet>;
+  clientFragmentVariant?: Maybe<VariantGet>;
   clientHistory: Array<ClientHistoryGet>;
   condition: ConditionGet;
   conditionSet: ConditionSetGet;
@@ -771,12 +790,11 @@ export type QueryAreaArgs = {
 
 
 export type QueryCampaignArgs = {
-  active?: InputMaybe<Scalars['Boolean']['input']>;
-  archived?: InputMaybe<Scalars['Boolean']['input']>;
   areaId?: InputMaybe<Scalars['Int']['input']>;
   campaignId?: InputMaybe<Scalars['Int']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<CampaignStatus>;
 };
 
 
@@ -788,6 +806,11 @@ export type QueryClientArgs = {
 
 export type QueryClientFragmentArgs = {
   fragmentId: Scalars['Int']['input'];
+};
+
+
+export type QueryClientFragmentVariantArgs = {
+  areaId: Scalars['Int']['input'];
 };
 
 

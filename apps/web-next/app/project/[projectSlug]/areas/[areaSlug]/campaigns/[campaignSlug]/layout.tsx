@@ -1,3 +1,3 @@
-import { StreamDetailLayout } from '@/views/StreamDetailLayout'
+import { CampaignDetailLayout } from '@/views/CampaignDetailLayout'
 
-export default StreamDetailLayout
+export default CampaignDetailLayout

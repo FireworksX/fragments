@@ -11,7 +11,7 @@ export type CreateAreaMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateAreaMutation = { __typename?: 'Mutation', createArea: { __typename?: 'AreaGet', areaCode: string, description?: string | null, defaultCampaign: { __typename?: 'CampaignGet', id: number, active: boolean, name: string } } };
+export type CreateAreaMutation = { __typename?: 'Mutation', createArea: { __typename?: 'AreaGet', areaCode: string, description?: string | null, defaultCampaign: { __typename?: 'CampaignGet', id: number, status: Types.CampaignStatus, name: string } } };
 
 
 export const CreateAreaDocument = gql`
@@ -23,7 +23,7 @@ export const CreateAreaDocument = gql`
     description
     defaultCampaign {
       id
-      active
+      status
       name
     }
   }

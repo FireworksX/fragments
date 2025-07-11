@@ -8,7 +8,7 @@ export type ListCampaignsQueryVariables = Types.Exact<{
 }>;
 
 
-export type ListCampaignsQuery = { __typename?: 'Query', campaign: Array<{ __typename?: 'CampaignGet', id: number, name: string, active: boolean }> };
+export type ListCampaignsQuery = { __typename?: 'Query', campaign: Array<{ __typename?: 'CampaignGet', id: number, name: string, status: Types.CampaignStatus, logo: { __typename?: 'MediaGet', publicPath: string }, featureFlag: { __typename?: 'FeatureFlagGet', releaseCondition: { __typename?: 'ReleaseConditionGet', id: number, conditionSets: Array<{ __typename?: 'ConditionSetGet', id: number, name: string, conditions: Array<{ __typename?: 'ConditionGet', id: number }> }> } } }> };
 
 
 export const ListCampaignsDocument = gql`
@@ -16,7 +16,22 @@ export const ListCampaignsDocument = gql`
   campaign(areaId: $areaId) {
     id
     name
-    active
+    status
+    logo {
+      publicPath
+    }
+    featureFlag {
+      releaseCondition {
+        id
+        conditionSets {
+          id
+          name
+          conditions {
+            id
+          }
+        }
+      }
+    }
   }
 }
     `;

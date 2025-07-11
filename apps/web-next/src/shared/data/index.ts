@@ -38,7 +38,8 @@ export const modalNames = createConstants(
   'createCustomBreakpoint',
   'goalView',
   'configureFeatureFlagVariant',
-  'configureFragmentVariant'
+  'configureFragmentVariant',
+  'configureCampaign'
 )
 
 export const booleanTabsSelectorItems: TabsSelectorItem[] = [

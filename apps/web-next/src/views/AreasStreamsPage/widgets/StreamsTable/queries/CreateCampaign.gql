@@ -1,0 +1,7 @@
+mutation CreateCampaign($areaId: Int!, $name: String!, $status: CampaignStatus!) {
+    createCampaign(cmp: {areaId: $areaId,name: $name, status: $status }) {
+        id
+        name
+        status
+    }
+}

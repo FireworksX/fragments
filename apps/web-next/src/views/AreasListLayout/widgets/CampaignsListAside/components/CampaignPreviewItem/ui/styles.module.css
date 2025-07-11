@@ -8,12 +8,16 @@
     border-radius: var(--radius-small);
 
     &:hover {
-        background: var(--background-secondary);
+        background: rgba(var(--border--rgb), .3);
     }
 }
 
 .active {
-    background: rgba(var(--border--rgb), .3);
+    background: rgba(var(--border--rgb), .5);
+
+    &:hover {
+        background: rgba(var(--border--rgb), .5);
+    }
 }
 
 .header {

@@ -63,8 +63,8 @@ export const linkConfig = {
     path: ({ areaSlug, projectSlug }) => `/project/${projectSlug}/areas/${areaSlug}/campaigns`,
     params: ['areaSlug', 'projectSlug']
   },
-  areaFragment: {
-    path: ({ areaSlug, projectSlug }) => `/project/${projectSlug}/areas/${areaSlug}/fragment`,
+  areaContent: {
+    path: ({ areaSlug, projectSlug }) => `/project/${projectSlug}/areas/${areaSlug}/content`,
     params: ['areaSlug', 'projectSlug']
   },
   areaExperiments: {
@@ -78,6 +78,11 @@ export const linkConfig = {
   campaign: {
     path: ({ areaSlug, projectSlug, campaignSlug }) =>
       `/project/${projectSlug}/areas/${areaSlug}/campaigns/${campaignSlug}`,
+    params: ['areaSlug', 'projectSlug', 'campaignSlug']
+  },
+  campaignContent: {
+    path: ({ areaSlug, projectSlug, campaignSlug }) =>
+      `/project/${projectSlug}/areas/${areaSlug}/campaigns/${campaignSlug}/content`,
     params: ['areaSlug', 'projectSlug', 'campaignSlug']
   },
 

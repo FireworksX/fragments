@@ -55,7 +55,7 @@ export const CampaignCreateItem: FC<CampaignCreateItemProps> = ({ className, onC
           </Button>
         </>
       ) : (
-        <span>Create New</span>
+        <span>Create Area</span>
       )}
     </Tag>
   )

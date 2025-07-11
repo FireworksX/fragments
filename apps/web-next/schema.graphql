@@ -5,8 +5,6 @@ schema {
     mutation: Mutation
 }
 
-union FilterPageGetFilterDeviceTypeGetFilterOSTypeGetFilterTimeFrameGetFilterGeoLocationGet = FilterDeviceTypeGet | FilterGeoLocationGet | FilterOSTypeGet | FilterPageGet | FilterTimeFrameGet
-
 type AllFiltersGet {
     deviceTypes: [DeviceType!]!
     geoLocations: [CountryGet!]!
@@ -31,17 +29,15 @@ type AuthPayload {
 }
 
 type CampaignGet {
-    active: Boolean!
-    archived: Boolean!
     areaId: Int!
     author: UserGet!
-    default: Boolean!
     description: String
     experiment: ExperimentGet
     featureFlag: FeatureFlagGet!
     id: Int!
     logo: MediaGet!
     name: String!
+    status: CampaignStatus!
 }
 
 type ClientGet {
@@ -53,6 +49,7 @@ type ClientGet {
 }
 
 type ClientHistoryGet {
+    area: AreaGet
     browser: String
     city: String
     clientId: Int!
@@ -60,6 +57,7 @@ type ClientHistoryGet {
     createdAt: String!
     deviceType: Int
     domain: String
+    eventType: ClientHistoryEventType!
     id: Int!
     language: String
     osType: Int
@@ -70,6 +68,7 @@ type ClientHistoryGet {
     screenWidth: Int
     subdomain: String
     url: String
+    variant: VariantGet
 }
 
 type ClientProjectGoalGet {
@@ -81,9 +80,13 @@ type ClientProjectGoalGet {
 }
 
 type ConditionGet {
-    filterData: FilterPageGetFilterDeviceTypeGetFilterOSTypeGetFilterTimeFrameGetFilterGeoLocationGet!
+    deviceTypes: [DeviceType!]
     filterType: FilterType!
+    geoLocations: [FilterGeoLocationGet!]
     id: Int!
+    osTypes: [OSType!]
+    pages: [String!]
+    timeFrames: [FilterTimeFrameGet!]
 }
 
 type ConditionSetGet {
@@ -98,12 +101,11 @@ type CountryGet {
 }
 
 type ExperimentGet {
-    active: Boolean!
-    archived: Boolean!
     description: String
     featureFlag: FeatureFlagGet!
     id: Int!
     name: String!
+    status: ExperimentStatus!
 }
 
 type FeatureFlagGet {
@@ -121,22 +123,10 @@ type FeedbackGet {
     page: String!
 }
 
-type FilterDeviceTypeGet {
-    deviceType: DeviceType!
-}
-
 type FilterGeoLocationGet {
     city: String
     country: String!
     region: String
-}
-
-type FilterOSTypeGet {
-    osType: OSType!
-}
-
-type FilterPageGet {
-    page: String!
 }
 
 type FilterTimeFrameGet {
@@ -251,9 +241,10 @@ type ProjectKeyGet {
 
 type Query {
     area(areaId: Int, projectId: Int): [AreaGet!]!
-    campaign(active: Boolean, archived: Boolean, areaId: Int, campaignId: Int, limit: Int = 5, name: String): [CampaignGet!]!
+    campaign(areaId: Int, campaignId: Int, limit: Int = 5, name: String, status: CampaignStatus): [CampaignGet!]!
     client(clientId: Int, projectId: Int): [ClientGet!]!
     clientFragment(fragmentId: Int!): FragmentGet
+    clientFragmentVariant(areaId: Int!): VariantGet
     clientHistory(clientId: Int!): [ClientHistoryGet!]!
     condition(conditionId: Int!): ConditionGet!
     conditionSet(conditionSetId: Int!): ConditionSetGet!
@@ -305,6 +296,20 @@ type VariantGet {
     status: VariantStatus!
 }
 
+enum CampaignStatus {
+    ACTIVE
+    ARCHIVED
+    INACTIVE
+}
+
+enum ClientHistoryEventType {
+    CONTRIBUTE
+    FEEDBACK
+    INIT
+    RELEASE
+    VIEW
+}
+
 enum ClientMetricType {
     INIT_SESSION
     REACH_PROJECT_GOAL
@@ -315,6 +320,12 @@ enum DeviceType {
     DESKTOP
     MOBILE
     TABLET
+}
+
+enum ExperimentStatus {
+    ACTIVE
+    ARCHIVED
+    INACTIVE
 }
 
 enum FeelLevelGet {
@@ -391,21 +402,19 @@ input AreaPost {
 }
 
 input CampaignPatch {
-    active: Boolean
-    archived: Boolean
     description: String
     experimentId: Int
     id: Int!
     name: String
+    status: CampaignStatus
 }
 
 input CampaignPost {
-    active: Boolean!
-    archived: Boolean!
     areaId: Int!
     description: String
     experimentId: Int
     name: String!
+    status: CampaignStatus!
 }
 
 input ClientMetricPost {
@@ -414,22 +423,22 @@ input ClientMetricPost {
 }
 
 input ConditionPatch {
-    deviceType: DeviceType
+    deviceTypes: [DeviceType!]
     filterType: FilterType
-    geoLocation: FilterGeoLocationPost
+    geoLocations: [FilterGeoLocationPost!]
     id: Int!
-    osType: OSType
-    page: String
-    timeFrame: FilterTimeFramePost
+    osTypes: [OSType!]
+    pages: [String!]
+    timeFrames: [FilterTimeFramePost!]
 }
 
 input ConditionPost {
-    deviceType: DeviceType
+    deviceTypes: [DeviceType!]
     filterType: FilterType!
-    geoLocation: FilterGeoLocationPost
-    osType: OSType
-    page: String
-    timeFrame: FilterTimeFramePost
+    geoLocations: [FilterGeoLocationPost!]
+    osTypes: [OSType!]
+    pages: [String!]
+    timeFrames: [FilterTimeFramePost!]
 }
 
 input ConditionSetPatch {
@@ -496,7 +505,7 @@ input FragmentPost {
 }
 
 input FragmentVariantPatch {
-    id: Int!
+    fragmentId: Int!
     props: JSON
 }
 

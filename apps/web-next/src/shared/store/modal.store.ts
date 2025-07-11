@@ -17,7 +17,13 @@ interface ModalStore extends GraphState {
   close(): void
 }
 
-export const modalStore = createState({
+interface AAModal {
+  _type: 'Modal'
+  name: string
+  onSubmit(): any
+}
+
+export const modalStore = createState<AAModal>({
   initialState: {
     name: null,
     context: null
@@ -47,4 +53,17 @@ export const modalStore = createState({
       return state
     }
   ]
-}) as ModalStore
+})
+
+modalStore.mutate({
+  _type: 'Modal',
+  _id: 10,
+  name: 'test',
+  onSubmit() {
+    alert(1)
+  }
+})
+
+const a = modalStore.resolve('Modal:10')
+
+console.log(a)

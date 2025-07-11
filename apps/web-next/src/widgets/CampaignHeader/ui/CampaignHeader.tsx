@@ -10,6 +10,7 @@ import { ToggleActiveButton } from '@/features/ToggleActiveButton'
 import DeleteIcon from '@/shared/icons/next/trash.svg'
 import { Container } from '@/shared/ui/Container'
 import { useCampaignHeader } from '../hooks/useCampaignHeader'
+import { CampaignStatus } from '@/__generated__/types'
 
 interface CampaignHeaderProps {
   campaignID: number
@@ -28,7 +29,7 @@ export const CampaignHeader: FC<CampaignHeaderProps> = ({
   footer,
   meta
 }) => {
-  const { campaign, rename } = useCampaignHeader(campaignID)
+  const { campaign, rename, toggleActive } = useCampaignHeader(campaignID)
 
   return (
     <Container className={styles.head}>
@@ -37,7 +38,11 @@ export const CampaignHeader: FC<CampaignHeaderProps> = ({
         <Avatar className={styles.logo} withRadius src={campaign?.logo?.url} size={64} />
         <div className={styles.info}>
           <div className={styles.name}>
-            <CampaignDetailName name={campaign?.name} isActive={campaign?.active} onRename={rename} />
+            <CampaignDetailName
+              name={campaign?.name}
+              isActive={campaign?.status === CampaignStatus.Active}
+              onRename={rename}
+            />
           </div>
           {meta && <div className={styles.meta}>{meta}</div>}
         </div>
@@ -56,9 +61,9 @@ export const CampaignHeader: FC<CampaignHeaderProps> = ({
           )}
 
           <ToggleActiveButton
-            isActive={campaign?.active}
+            isActive={campaign?.status === CampaignStatus.Active}
             // loading={loadingChangeCampaignActive}
-            // onClick={toggleActive}
+            onClick={toggleActive}
           />
 
           <Button
@@ -66,6 +71,7 @@ export const CampaignHeader: FC<CampaignHeaderProps> = ({
             preventDefault
             // loading={loadingUpdateStream}
             icon={<DeleteIcon />}
+            cancelable
             // onClick={toggleActive}
           >
             Delete

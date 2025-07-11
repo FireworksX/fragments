@@ -1,0 +1,9 @@
+.root {
+    flex: 1;
+    background: var(--background);
+    border-radius: var(--radius-main);
+    padding: var(--gutter-default);
+    gap: 12px;
+    display: flex;
+    flex-direction: column;
+}

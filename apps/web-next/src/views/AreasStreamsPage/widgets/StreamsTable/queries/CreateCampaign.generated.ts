@@ -1,4 +1,4 @@
-import * as Types from '../../../__generated__/types';
+import * as Types from '../../../../../__generated__/types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
@@ -6,21 +6,19 @@ const defaultOptions = {} as const;
 export type CreateCampaignMutationVariables = Types.Exact<{
   areaId: Types.Scalars['Int']['input'];
   name: Types.Scalars['String']['input'];
-  active: Types.Scalars['Boolean']['input'];
+  status: Types.CampaignStatus;
 }>;
 
 
-export type CreateCampaignMutation = { __typename?: 'Mutation', createCampaign: { __typename?: 'CampaignGet', id: number, name: string, active: boolean } };
+export type CreateCampaignMutation = { __typename?: 'Mutation', createCampaign: { __typename?: 'CampaignGet', id: number, name: string, status: Types.CampaignStatus } };
 
 
 export const CreateCampaignDocument = gql`
-    mutation CreateCampaign($areaId: Int!, $name: String!, $active: Boolean!) {
-  createCampaign(
-    cmp: {areaId: $areaId, name: $name, active: $active, archived: true}
-  ) {
+    mutation CreateCampaign($areaId: Int!, $name: String!, $status: CampaignStatus!) {
+  createCampaign(cmp: {areaId: $areaId, name: $name, status: $status}) {
     id
     name
-    active
+    status
   }
 }
     `;
@@ -41,7 +39,7 @@ export type CreateCampaignMutationFn = Apollo.MutationFunction<CreateCampaignMut
  *   variables: {
  *      areaId: // value for 'areaId'
  *      name: // value for 'name'
- *      active: // value for 'active'
+ *      status: // value for 'status'
  *   },
  * });
  */

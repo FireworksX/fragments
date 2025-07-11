@@ -65,7 +65,6 @@ export const useCampaignContentTable = (campaignId: number) => {
     const variant = variants?.find(el => el.id === variantId)
 
     if (variant) {
-      console.log(variant)
       openModal(modalNames.configureFeatureFlagVariant, {
         initialState: {
           ...variant,
@@ -80,7 +79,7 @@ export const useCampaignContentTable = (campaignId: number) => {
               rollout: nextVariant.rollout,
               status: nextVariant.status,
               fragment: {
-                id: nextVariant?.fragmentId,
+                fragmentId: nextVariant?.fragmentId,
                 props: nextVariant?.fragmentProps
               }
             }
@@ -96,17 +95,17 @@ export const useCampaignContentTable = (campaignId: number) => {
     const variant = variants?.find(el => el.id === variantId)
 
     if (variant) {
-      const fragmentID = variant?.fragment?.fragment?.id
+      const fragmentId = variant?.fragment?.fragment?.id
 
       openModal(modalNames.configureFragmentVariant, {
-        fragment: fragmentID,
+        fragment: fragmentId,
+        initialProps: variant?.fragment?.props,
         onSubmit: async props => {
-          console.log(props)
           await updateVariant({
             variables: {
               id: variantId,
               fragment: {
-                id: fragmentID,
+                fragmentId: fragmentId,
                 props
               }
             }

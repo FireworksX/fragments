@@ -6,19 +6,19 @@ const defaultOptions = {} as const;
 export type UpdateCampaignMutationVariables = Types.Exact<{
   id: Types.Scalars['Int']['input'];
   name?: Types.InputMaybe<Types.Scalars['String']['input']>;
-  active?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
+  status?: Types.InputMaybe<Types.CampaignStatus>;
 }>;
 
 
-export type UpdateCampaignMutation = { __typename?: 'Mutation', updateCampaign: { __typename?: 'CampaignGet', id: number, name: string, active: boolean } };
+export type UpdateCampaignMutation = { __typename?: 'Mutation', updateCampaign: { __typename?: 'CampaignGet', id: number, name: string, status: Types.CampaignStatus } };
 
 
 export const UpdateCampaignDocument = gql`
-    mutation UpdateCampaign($id: Int!, $name: String, $active: Boolean) {
-  updateCampaign(cmp: {id: $id, name: $name, active: $active}) {
+    mutation UpdateCampaign($id: Int!, $name: String, $status: CampaignStatus) {
+  updateCampaign(cmp: {id: $id, name: $name, status: $status}) {
     id
     name
-    active
+    status
   }
 }
     `;
@@ -39,7 +39,7 @@ export type UpdateCampaignMutationFn = Apollo.MutationFunction<UpdateCampaignMut
  *   variables: {
  *      id: // value for 'id'
  *      name: // value for 'name'
- *      active: // value for 'active'
+ *      status: // value for 'status'
  *   },
  * });
  */

@@ -1,5 +1,6 @@
 import { useCampaignQuery } from '../queries/Campaign.generated'
 import { useUpdateCampaignMutation } from '@/shared/api/stream/mutation/UpdateCampaign.generated'
+import { CampaignStatus } from '@/__generated__/types'
 
 export const useCampaignHeader = (campaignID: number) => {
   const { data } = useCampaignQuery({
@@ -20,9 +21,18 @@ export const useCampaignHeader = (campaignID: number) => {
       }
     })
   }
+  const toggleActive = (name: string) => {
+    updateCampaign({
+      variables: {
+        id: campaignID,
+        status: campaign?.status === CampaignStatus.Active ? CampaignStatus.Inactive : CampaignStatus.Active
+      }
+    })
+  }
 
   return {
     campaign,
+    toggleActive,
     rename
   }
 }

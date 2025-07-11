@@ -33,6 +33,7 @@ import { RotationType, VariantStatus } from '@/__generated__/types'
 import { Spinner } from '@/shared/ui/Spinner'
 import { InputSelect } from '@/shared/ui/InputSelect'
 import { capitalize } from '@/shared/utils/capitalize'
+import { ProjectTreeModal } from '@/widgets/modals/ProjectTreeModal'
 
 interface CampaignContentTableProps {
   campaignId: number
@@ -48,7 +49,6 @@ export const CampaignContentTable: FC<CampaignContentTableProps> = ({ className,
     variantsRollout,
     loadingVariantsRollout,
     creatingVariant,
-    removingVariant,
     removeVariant,
     handleAddVariant,
     handleSetRotationType,
@@ -60,6 +60,8 @@ export const CampaignContentTable: FC<CampaignContentTableProps> = ({ className,
     <div className={styles.root}>
       <ConfigureFeatureFlagVariant />
       <ConfigureFragmentVariant />
+      <ProjectTreeModal />
+
       <div className={styles.header}>
         {variants.length > 1 && (
           <>
@@ -68,6 +70,7 @@ export const CampaignContentTable: FC<CampaignContentTableProps> = ({ className,
               width={230}
               placement='bottom-end'
               trigger='click'
+              hideOnClick
               options={
                 <DropdownGroup>
                   <DropdownOption
@@ -174,12 +177,12 @@ export const CampaignContentTable: FC<CampaignContentTableProps> = ({ className,
               <Placeholder
                 stretched
                 icon={<Logo width={36} height={36} />}
-                title='Connect fragment'
-                description='Connect exists fragment or create new'
+                title='Add variant'
+                description='You can add few varaints and configure rotation itself'
                 actions={
                   <>
-                    <Button icon={<PlusIcon />} onClick={onAddFragment}>
-                      Add fragment
+                    <Button icon={<PlusIcon />} onClick={handleAddVariant}>
+                      Add variant
                     </Button>
                     {/*<Button mode='outline' icon={<PlusIcon />}>*/}
                     {/*  Create new*/}

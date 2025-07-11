@@ -8,7 +8,7 @@ export type AreasListQueryVariables = Types.Exact<{
 }>;
 
 
-export type AreasListQuery = { __typename?: 'Query', area: Array<{ __typename?: 'AreaGet', id: number, description?: string | null, defaultCampaign: { __typename?: 'CampaignGet', id: number, name: string, active: boolean, logo: { __typename?: 'MediaGet', url: string } } }> };
+export type AreasListQuery = { __typename?: 'Query', area: Array<{ __typename?: 'AreaGet', id: number, description?: string | null, defaultCampaign: { __typename?: 'CampaignGet', id: number, name: string, status: Types.CampaignStatus, logo: { __typename?: 'MediaGet', url: string } } }> };
 
 
 export const AreasListDocument = gql`
@@ -22,7 +22,7 @@ export const AreasListDocument = gql`
       logo {
         url: publicPath
       }
-      active
+      status
     }
   }
 }

@@ -46,6 +46,11 @@ export function makeApolloClient() {
                 cache.evict({ id: `FragmentGet:${variables?.id}` })
               }
             },
+            deleteCampaign: {
+              merge(_, _incoming, { cache, variables }) {
+                cache.evict({ id: `CampaignGet:${variables?.id}` })
+              }
+            },
             deleteDirectory: {
               merge(_, _incoming, { cache, variables }) {
                 cache.evict({ id: `ProjectDirectoryGet:${variables?.id}` })

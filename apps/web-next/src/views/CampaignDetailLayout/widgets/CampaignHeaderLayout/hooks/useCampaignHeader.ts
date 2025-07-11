@@ -5,9 +5,9 @@ import {
   useUpdateCampaignMutation
 } from '@/shared/api/stream/mutation/UpdateCampaign.generated'
 import { useDeleteCampaignMutation } from '@/shared/api/stream/mutation/DeleteCampaign.generated'
-import { useCampaignDetailQuery } from '@/views/StreamDetailLayout/widgets/StreamHeader/queries/CampaignDetail.generated'
+import { useCampaignDetailQuery } from '@/views/CampaignDetailLayout/widgets/CampaignHeaderLayout/queries/CampaignDetail.generated'
 
-export const useStreamHeader = () => {
+export const useCampaignHeader = () => {
   const { campaignSlug, areaSlug, projectSlug } = useParams()
 
   const { data } = useCampaignDetailQuery({
@@ -29,7 +29,6 @@ export const useStreamHeader = () => {
     stream,
     projectSlug,
     areaSlug,
-    campaignSlug,
     filters
   }
 }

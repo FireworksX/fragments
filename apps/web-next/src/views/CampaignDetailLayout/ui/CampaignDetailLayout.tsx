@@ -1,12 +1,12 @@
 'use client'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { StreamHeader } from '@/views/StreamDetailLayout/widgets/StreamHeader'
+import { CampaignHeaderLayout } from '../widgets/CampaignHeaderLayout'
 
-export const StreamDetailLayout = ({ children }) => {
+export const CampaignDetailLayout = ({ children }) => {
   return (
     <div className={cn(styles.root)}>
-      <StreamHeader className={styles.header} />
+      <CampaignHeaderLayout className={styles.header} />
       <div className={styles.content}>{children}</div>
     </div>
   )

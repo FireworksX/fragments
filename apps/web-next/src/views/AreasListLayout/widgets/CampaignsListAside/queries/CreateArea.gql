@@ -5,7 +5,7 @@ mutation CreateArea($name: String!, $description: String, $projectId: Int!, $are
         description
         defaultCampaign {
             id
-            active
+            status
             name
         }
     }

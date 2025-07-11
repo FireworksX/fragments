@@ -1,4 +1,4 @@
-import { FC, useContext, useState } from 'react'
+import { FC, useContext, useEffect, useState } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { useGraph, useGraphFields } from '@graph-state/react'
@@ -36,13 +36,20 @@ export const ConfigureFragmentVariant: FC<CreateCustomBreakpointProps> = ({ clas
   const { openModal, modal } = useModal()
   const context = modal?.context ?? {}
   const fragment = context.fragment
+  const isOpen = modal?.name === modalNames.configureFragmentVariant
 
   const [props, setProps] = useState(omit(context?.initialProps ?? {}, '_type', '_id'))
 
   const onSubmit = () => context?.onSubmit?.(props) ?? noop
 
+  useEffect(() => {
+    if (context?.initialProps) {
+      setProps(context?.initialProps)
+    }
+  }, [isOpen])
+
   return (
-    <Modal className={cn(styles.root, className)} isOpen={modal?.name === modalNames.configureFragmentVariant}>
+    <Modal className={cn(styles.root, className)} isOpen={isOpen}>
       <ModalContainer
         title='Configure Fragment'
         footer={

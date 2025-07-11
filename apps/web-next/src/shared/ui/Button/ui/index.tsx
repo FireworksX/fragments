@@ -1,12 +1,22 @@
 'use client'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { ComponentRef, ElementRef, FC, PropsWithChildren, ReactNode, RefObject, useRef, useState } from 'react'
+import {
+  ComponentProps,
+  ComponentRef,
+  ElementRef,
+  FC,
+  PropsWithChildren,
+  ReactNode,
+  RefObject,
+  useRef,
+  useState
+} from 'react'
 import { TouchableProps } from '@/shared/ui/Touchable/ui'
 import { Touchable } from '@/shared/ui/Touchable'
 import { Spinner } from '@/shared/ui/Spinner'
 
-export interface ButtonProps extends TouchableProps, PropsWithChildren {
+export interface ButtonProps extends TouchableProps, PropsWithChildren, ComponentProps<'button'> {
   size?: 'small' | 'regular' | 'medium' | 'large' | 'xlarge'
   mode?:
     | 'primary'

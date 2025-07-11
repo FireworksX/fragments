@@ -1,7 +1,0 @@
-mutation CreateCampaign($areaId: Int!, $name: String!, $active: Boolean!) {
-    createCampaign(cmp: {areaId: $areaId,name: $name, active: $active, archived: true }) {
-        id
-        name
-        active
-    }
-}
