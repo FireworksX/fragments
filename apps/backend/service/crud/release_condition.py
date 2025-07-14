@@ -173,9 +173,14 @@ async def update_condition_db(
     if condition.name is not None:
         condition_db.name = condition.name
     if condition.filter_type is not None:
+        condition_db.filter_type = int(condition.filter_type.value)
+        condition_db.page_filters.clear()
+        condition_db.device_type_filters.clear()
+        condition_db.os_type_filters.clear()
+        condition_db.time_frame_filters.clear()
+        condition_db.geo_location_filters.clear()
         if condition.filter_type == FilterType.PAGE and condition.pages is not None:
             for page in condition.pages:
-                print(page)
                 page_filter = PageFilter(
                     page=page,
                     condition_id=condition_db.id,
