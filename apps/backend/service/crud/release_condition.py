@@ -29,12 +29,14 @@ async def create_release_condition_db(
 ) -> ReleaseCondition:
     release_condition_db = ReleaseCondition(
         name=release_condition.name,
+        project_id=release_condition.project_id,
     )
     db.add(release_condition_db)
     db.commit()
     db.refresh(release_condition_db)
     for condition_set in release_condition.condition_sets:
-        condition_set = await create_condition_set_db(db, condition_set)
+        condition_set = await create_condition_set_db(db, release_condition_db.id, condition_set)
+    db.refresh(release_condition_db)
     return release_condition_db
 
 
@@ -48,15 +50,16 @@ async def get_release_conditions_db(db: Session) -> List[ReleaseCondition]:
     return db.query(ReleaseCondition).all()
 
 
-async def create_condition_set_db(db: Session, condition_set: ConditionSetPost) -> ConditionSet:
+async def create_condition_set_db(db: Session, release_condition_id: int, condition_set: ConditionSetPost) -> ConditionSet:
     condition_set_db = ConditionSet(
         name=condition_set.name,
-        release_condition_id=condition_set.release_condition_id,
+        release_condition_id=release_condition_id,
     )
-    for condition in condition_set.conditions:
-        condition = await create_condition_db(db, condition)
     db.add(condition_set_db)
     db.commit()
+    db.refresh(condition_set_db)
+    for condition in condition_set.conditions:
+        condition = await create_condition_db(db, condition_set_db.id, condition)
     db.refresh(condition_set_db)
     return condition_set_db
 
@@ -85,51 +88,59 @@ async def update_release_condition_db(
     return release_condition
 
 
-async def create_condition_db(db: Session, condition: ConditionPost) -> Condition:
+async def create_condition_db(db: Session, condition_set_id: int, condition: ConditionPost) -> Condition:
     condition_db = Condition(
         name=condition.name,
-        condition_set_id=condition.condition_set_id,
-        filter_type=condition.filter_type,
+        condition_set_id=condition_set_id,
+        filter_type=int(condition.filter_type.value),
     )
-    if condition.filter_type == FilterType.PAGE:
+    db.add(condition_db)
+    db.commit()
+    db.refresh(condition_db)
+    if condition.filter_type == FilterType.PAGE and condition.pages is not None:
         for page in condition.pages:
             page_filter = PageFilter(
                 page=page,
+                condition_id=condition_db.id,
             )
             db.add(page_filter)
             db.commit()
             condition_db.page_filters.append(page_filter)
-    elif condition.filter_type == FilterType.DEVICE_TYPE:
+    elif condition.filter_type == FilterType.DEVICE_TYPE and condition.device_types is not None:
         for device_type in condition.device_types:
             device_type_filter = DeviceTypeFilter(
                 device_type=device_type,
+                condition_id=condition_db.id,
             )
             db.add(device_type_filter)
             db.commit()
             condition_db.device_type_filters.append(device_type_filter)
-    elif condition.filter_type == FilterType.OS_TYPE:
+    elif condition.filter_type == FilterType.OS_TYPE and condition.os_types is not None:
         for os_type in condition.os_types:
             os_type_filter = OSTypeFilter(
                 os_type=os_type,
+                condition_id=condition_db.id,
             )
             db.add(os_type_filter)
             db.commit()
             condition_db.os_type_filters.append(os_type_filter)
-    elif condition.filter_type == FilterType.TIME_FRAME:
+    elif condition.filter_type == FilterType.TIME_FRAME and condition.time_frames is not None:
         for time_frame in condition.time_frames:
             time_frame_filter = TimeFrameFilter(
                 from_time=time_frame.from_time,
                 to_time=time_frame.to_time,
+                condition_id=condition_db.id,
             )
             db.add(time_frame_filter)
             db.commit()
             condition_db.time_frame_filters.append(time_frame_filter)
-    elif condition.filter_type == FilterType.GEO_LOCATION:
+    elif condition.filter_type == FilterType.GEO_LOCATION and condition.geo_locations is not None:
         for geo_location in condition.geo_locations:
             geo_location_filter = GeoLocationFilter(
                 country=geo_location.country,
                 region=geo_location.region,
                 city=geo_location.city,
+                condition_id=condition_db.id,
             )
             db.add(geo_location_filter)
             db.commit()
@@ -158,56 +169,67 @@ async def update_condition_set_db(
 async def update_condition_db(
     db: Session, condition_id: int, condition: ConditionPatch
 ) -> Condition:
-    condition = db.query(Condition).filter(Condition.id == condition_id).first()
+    condition_db = db.query(Condition).filter(Condition.id == condition_id).first()
     if condition.name is not None:
-        condition.name = condition.name
+        condition_db.name = condition.name
     if condition.filter_type is not None:
-        if condition.filter_type == FilterType.PAGE:
+        condition_db.filter_type = int(condition.filter_type.value)
+        condition_db.page_filters.clear()
+        condition_db.device_type_filters.clear()
+        condition_db.os_type_filters.clear()
+        condition_db.time_frame_filters.clear()
+        condition_db.geo_location_filters.clear()
+        if condition.filter_type == FilterType.PAGE and condition.pages is not None:
             for page in condition.pages:
                 page_filter = PageFilter(
                     page=page,
+                    condition_id=condition_db.id,
                 )
                 db.add(page_filter)
                 db.commit()
-                condition.page_filters.append(page_filter)
-        elif condition.filter_type == FilterType.DEVICE_TYPE:
+                condition_db.page_filters.append(page_filter)
+        elif condition.filter_type == FilterType.DEVICE_TYPE and condition.device_types is not None:
             for device_type in condition.device_types:
                 device_type_filter = DeviceTypeFilter(
                     device_type=device_type,
+                    condition_id=condition_db.id,
                 )
                 db.add(device_type_filter)
                 db.commit()
-                condition.device_type_filters.append(device_type_filter)
-        elif condition.filter_type == FilterType.OS_TYPE:
+                condition_db.device_type_filters.append(device_type_filter)
+        elif condition.filter_type == FilterType.OS_TYPE and condition.os_types is not None:
             for os_type in condition.os_types:
                 os_type_filter = OSTypeFilter(
                     os_type=os_type,
+                    condition_id=condition_db.id,
                 )
                 db.add(os_type_filter)
                 db.commit()
-                condition.os_type_filters.append(os_type_filter)
-        elif condition.filter_type == FilterType.TIME_FRAME:
+                condition_db.os_type_filters.append(os_type_filter)
+        elif condition.filter_type == FilterType.TIME_FRAME and condition.time_frames is not None:
             for time_frame in condition.time_frames:
                 time_frame_filter = TimeFrameFilter(
                     from_time=time_frame.from_time,
                     to_time=time_frame.to_time,
+                    condition_id=condition_db.id,
                 )
                 db.add(time_frame_filter)
                 db.commit()
-                condition.time_frame_filters.append(time_frame_filter)
-        elif condition.filter_type == FilterType.GEO_LOCATION:
+                condition_db.time_frame_filters.append(time_frame_filter)
+        elif condition.filter_type == FilterType.GEO_LOCATION and condition.geo_locations is not None:
             for geo_location in condition.geo_locations:
                 geo_location_filter = GeoLocationFilter(
                     country=geo_location.country,
                     region=geo_location.region,
                     city=geo_location.city,
+                    condition_id=condition_db.id,
                 )
                 db.add(geo_location_filter)
                 db.commit()
-                condition.geo_location_filters.append(geo_location_filter)
+                condition_db.geo_location_filters.append(geo_location_filter)
     db.commit()
-    db.refresh(condition)
-    return condition
+    db.refresh(condition_db)
+    return condition_db
 
 
 async def delete_release_condition_db(db: Session, release_condition_id: int) -> None:

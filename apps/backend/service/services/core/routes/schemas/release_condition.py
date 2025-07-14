@@ -93,6 +93,7 @@ class FilterType(Enum):
 @strawberry.type
 class ConditionGet:
     id: int
+    name: str
     filter_type: FilterType
     pages: Optional[List[str]] = None
     device_types: Optional[List[DeviceType]] = None
@@ -131,6 +132,7 @@ class FilterOSTypePost:
 
 @strawberry.input
 class ConditionPost:
+    name: str
     filter_type: FilterType
     pages: Optional[List[str]] = None
     device_types: Optional[List[DeviceType]] = None
@@ -149,7 +151,7 @@ class ConditionSetPost:
 class ReleaseConditionPost:
     name: str
     condition_sets: List[ConditionSetPost]
-
+    project_id: int
 
 @strawberry.input
 class ReleaseConditionPatch:
@@ -168,6 +170,7 @@ class ConditionSetPatch:
 @strawberry.input
 class ConditionPatch:
     id: int
+    name: Optional[str] = None
     filter_type: Optional[FilterType] = None
     pages: Optional[List[str]] = None
     device_types: Optional[List[DeviceType]] = None
