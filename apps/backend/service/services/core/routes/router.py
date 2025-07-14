@@ -412,9 +412,9 @@ class ReleaseConditionQuery:
 class ReleaseConditionMutation:
     @strawberry.mutation
     async def create_condition(
-        self, info: strawberry.Info[Context], condition: ConditionPost
+        self, info: strawberry.Info[Context], condition_set_id: int, condition: ConditionPost
     ) -> ConditionGet:
-        return await create_condition_route(info, condition)
+        return await create_condition_route(info, condition_set_id, condition)
 
     @strawberry.mutation
     async def update_condition(
@@ -446,9 +446,9 @@ class ReleaseConditionMutation:
 
     @strawberry.mutation
     async def create_condition_set(
-        self, info: strawberry.Info[Context], condition_set: ConditionSetPost
+        self, info: strawberry.Info[Context], release_condition_id: int, condition_set: ConditionSetPost
     ) -> ConditionSetGet:
-        return await create_condition_set_route(info, condition_set)
+        return await create_condition_set_route(info, release_condition_id, condition_set)
 
     @strawberry.mutation
     async def update_condition_set(

@@ -56,31 +56,13 @@ async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
 def condition_db_to_condition(condition: Condition) -> ConditionGet:
     return ConditionGet(
         id=condition.id,
-        filter_type=condition.filter_type,
-        filter_data=(
-            FilterPageGet(page=condition.page_filter)
-            if condition.filter_type == FilterType.PAGE
-            else (
-                FilterDeviceTypeGet(device_type=condition.device_type_filter)
-                if condition.filter_type == FilterType.DEVICE_TYPE
-                else (
-                    FilterOSTypeGet(os_type=condition.os_type_filter)
-                    if condition.filter_type == FilterType.OS_TYPE
-                    else (
-                        FilterTimeFrameGet(
-                            from_time=condition.time_frame_filter.from_time,
-                            to_time=condition.time_frame_filter.to_time,
-                        )
-                        if condition.filter_type == FilterType.TIME_FRAME
-                        else FilterGeoLocationGet(
-                            country=condition.geo_location_filter.country,
-                            region=condition.geo_location_filter.region,
-                            city=condition.geo_location_filter.city,
-                        )
-                    )
-                )
-            )
-        ),
+        name=condition.name,
+        filter_type=FilterType(condition.filter_type),
+        pages=[page.page for page in condition.page_filters] if condition.filter_type == int(FilterType.PAGE.value) else None,
+        device_types=[dt.device_type for dt in condition.device_type_filters] if condition.filter_type == int(FilterType.DEVICE_TYPE.value) else None,
+        os_types=[os.os_type for os in condition.os_type_filters] if condition.filter_type == int(FilterType.OS_TYPE.value) else None,
+        time_frames=[FilterTimeFrameGet(from_time=tf.from_time, to_time=tf.to_time) for tf in condition.time_frame_filters] if condition.filter_type == int(FilterType.TIME_FRAME.value) else None,
+        geo_locations=[FilterGeoLocationGet(country=gl.country, region=gl.region, city=gl.city) for gl in condition.geo_location_filters] if condition.filter_type == int(FilterType.GEO_LOCATION.value) else None
     )
 
 
@@ -141,7 +123,7 @@ async def create_release_condition_route(
             status_code=status.HTTP_404_NOT_FOUND, detail='Feature flag does not exist'
         )
 
-    permission: bool = await write_permission(db, user.user.id, feature_flag.project_id)
+    permission: bool = await write_permission(db, user.user.id, rc.project_id)
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -275,7 +257,7 @@ async def create_condition_set_route(
             detail=f'User is not allowed to create condition set',
         )
 
-    condition_set: ConditionSet = await create_condition_set_db(db, cs)
+    condition_set: ConditionSet = await create_condition_set_db(db, release_condition_id, cs)
 
     return condition_set_db_to_condition_set(condition_set)
 
@@ -355,12 +337,12 @@ async def get_conditions_route(
 
 
 async def create_condition_route(
-    info: strawberry.Info[Context], condition: ConditionPost
+    info: strawberry.Info[Context], condition_set_id: int, condition: ConditionPost
 ) -> ConditionGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    condition_set: ConditionSet = await get_condition_set_by_id_db(db, condition.condition_set_id)
+    condition_set: ConditionSet = await get_condition_set_by_id_db(db, condition_set_id)
     if not condition_set:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Condition set does not exist'
@@ -369,7 +351,7 @@ async def create_condition_route(
     permission: bool = await write_permission(
         db, user.user.id, condition_set.release_condition.project_id
     )
-    return await create_condition_db(db, condition)
+    return await create_condition_db(db, condition_set_id, condition)
 
 
 async def get_condition_route(info: strawberry.Info[Context], condition_id: int) -> ConditionGet:
