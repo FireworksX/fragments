@@ -101,7 +101,7 @@ class FilterType(Enum):
 class ConditionGet:
     id: int
     name: str
-    filter_data: Union[FilterPageGet, FilterDeviceTypeGet, FilterOSTypeGet, FilterTimeFrameGet, FilterGeoLocationsGet]
+    filter_data: Union[None,FilterPageGet, FilterDeviceTypeGet, FilterOSTypeGet, FilterTimeFramesGet, FilterGeoLocationsGet]
 
 @strawberry.type
 class ConditionSetGet:
@@ -118,40 +118,12 @@ class ReleaseConditionGet:
 
 
 @strawberry.input
-class FilterPagePost:
-    page: str
-
-
-@strawberry.input
-class FilterOSTypePost:
-    os_types: List[OSType]
-
-
-@strawberry.input
-class FilterDeviceTypePost:
-    device_types: List[DeviceType]
-
-@strawberry.input
-class FilterPagePost:
-    pages: List[str]
-
-
-@strawberry.input
-class FilterTimeFramesPost:
-    time_frames: List[FilterTimeFramePost]
-
-@strawberry.input
-class FilterGeoLocationsPost:
-    geo_locations: List[FilterGeoLocationPost]
-
-
-@strawberry.input
 class FilterPost:
-    pages: Optional[FilterPagePost] = None
-    device_types: Optional[FilterDeviceTypePost] = None
-    os_types: Optional[FilterOSTypePost] = None
-    time_frames: Optional[FilterTimeFramesPost] = None
-    geo_locations: Optional[FilterGeoLocationsPost] = None
+    pages: List[str] = None
+    device_types: List[DeviceType] = None
+    os_types: List[OSType] = None
+    time_frames: List[FilterTimeFramePost] = None
+    geo_locations: List[FilterGeoLocationPost] = None
 
 @strawberry.input
 class ConditionPost:
