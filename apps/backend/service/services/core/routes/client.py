@@ -24,7 +24,9 @@ from crud.project import (
 from database import Area, Campaign, Client, ClientHistory, ClientProjectGoal, ProjectGoal, Session
 from database.models import Project
 
-from .campaign import get_area_by_id_db, get_campaigns_by_area_id_db, CampaignStatus
+from crud.area import get_area_by_code_db
+
+from .campaign import get_campaigns_by_area_id_db, CampaignStatus
 from .middleware import ClientInfo, Context
 from .project import get_user_role_in_project, project_db_to_project, project_goal_db_to_goal
 from .schemas.client import ClientGet, ClientHistoryGet, ClientHistoryEventType
@@ -272,8 +274,8 @@ async def get_client_history_route(
     return [client_history_db_to_history(h) for h in history]
 
 
-async def client_fragment_variant_route(
-    info: strawberry.Info[Context], area_id: int
+async def client_area_route(
+    info: strawberry.Info[Context], area_code: str
 ) -> Optional[VariantGet]:
     db: Session = info.context.session()
 
@@ -283,7 +285,7 @@ async def client_fragment_variant_route(
     client_info: ClientInfo = await info.context.client_info()
     location = get_location_by_ip(client_info.ip_address)
 
-    area: Area = await get_area_by_id_db(db, area_id)
+    area: Area = await get_area_by_code_db(db, area_code)
     if area is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Area does not exist')
 
@@ -294,7 +296,7 @@ async def client_fragment_variant_route(
         )
 
 
-    campaigns: List[Campaign] = await get_campaigns_by_area_id_db(db, area_id, CampaignStatus.ACTIVE)
+    campaigns: List[Campaign] = await get_campaigns_by_area_id_db(db, area.id, CampaignStatus.ACTIVE)
     best_campaign = None
     max_matched_filters = -1
 
@@ -360,7 +362,7 @@ async def client_fragment_variant_route(
     variantFragment: Optional[VariantGet] = None
 
     if best_campaign.feature_flag.rotation_type == int(RotationType.KEEP.value):
-        last_viewed_variant = await get_last_viewed_variant_in_area_db(db, client.id, area_id)
+        last_viewed_variant = await get_last_viewed_variant_in_area_db(db, client.id, area.id)
         if last_viewed_variant:
             variant = await get_variant_by_id_db(db, last_viewed_variant.variant_id)
             if variant:
@@ -393,7 +395,7 @@ async def client_fragment_variant_route(
             referrer='',
             domain='',
             subdomain='',
-            area_id=area_id,
+            area_id=area.id,
             variant_id=variantFragment.id
         )
         

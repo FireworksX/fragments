@@ -31,7 +31,7 @@ from .client import (
     get_contributions_to_project_goal_route,
     init_client_session_route,
     release_client_session_route,
-    client_fragment_variant_route
+    client_area_route
 )
 from .feature_flag import (
     FeatureFlagGet,
@@ -587,10 +587,10 @@ class ClientQuery:
         return await get_client_history_route(info, client_id)
 
     @strawberry.field
-    async def client_fragment_variant(
-        self, info: strawberry.Info[Context], area_id: int
+    async def client_area(
+        self, info: strawberry.Info[Context], area_code: str
     ) -> Optional[VariantGet]:
-        return await client_fragment_variant_route(info, area_id)
+        return await client_area_route(info, area_code)
 
 
 @strawberry.type
