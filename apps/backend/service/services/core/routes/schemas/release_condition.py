@@ -23,17 +23,17 @@ class DeviceType(Enum):
 
 @strawberry.type
 class FilterOSTypeGet:
-    os_type: OSType
+    os_types: List[OSType]
 
 
 @strawberry.type
 class FilterDeviceTypeGet:
-    device_type: DeviceType
+    device_types: List[DeviceType]
 
 
 @strawberry.type
 class FilterPageGet:
-    page: str
+    pages: List[str]
 
 
 @strawberry.type
@@ -47,7 +47,14 @@ class FilterGeoLocationGet:
 class FilterTimeFrameGet:
     from_time: datetime.datetime
     to_time: datetime.datetime
+    
+@strawberry.type
+class FilterTimeFramesGet:
+    time_frames: List[FilterTimeFrameGet]
 
+@strawberry.type
+class FilterGeoLocationsGet:
+    geo_locations: List[FilterGeoLocationGet]
 
 @strawberry.type
 class RegionGet:
@@ -94,12 +101,7 @@ class FilterType(Enum):
 class ConditionGet:
     id: int
     name: str
-    filter_type: FilterType
-    pages: Optional[List[str]] = None
-    device_types: Optional[List[DeviceType]] = None
-    os_types: Optional[List[OSType]] = None
-    time_frames: Optional[List[FilterTimeFrameGet]] = None
-    geo_locations: Optional[List[FilterGeoLocationGet]] = None
+    filter_data: Union[FilterPageGet, FilterDeviceTypeGet, FilterOSTypeGet, FilterTimeFrameGet, FilterGeoLocationsGet]
 
 @strawberry.type
 class ConditionSetGet:
@@ -120,25 +122,41 @@ class FilterPagePost:
     page: str
 
 
-@strawberry.type
-class FilterDeviceTypePost:
-    device_type: DeviceType
-
-
-@strawberry.type
+@strawberry.input
 class FilterOSTypePost:
-    os_type: OSType
+    os_types: List[OSType]
 
+
+@strawberry.input
+class FilterDeviceTypePost:
+    device_types: List[DeviceType]
+
+@strawberry.input
+class FilterPagePost:
+    pages: List[str]
+
+
+@strawberry.input
+class FilterTimeFramesPost:
+    time_frames: List[FilterTimeFramePost]
+
+@strawberry.input
+class FilterGeoLocationsPost:
+    geo_locations: List[FilterGeoLocationPost]
+
+
+@strawberry.input
+class FilterPost:
+    pages: Optional[FilterPagePost] = None
+    device_types: Optional[FilterDeviceTypePost] = None
+    os_types: Optional[FilterOSTypePost] = None
+    time_frames: Optional[FilterTimeFramesPost] = None
+    geo_locations: Optional[FilterGeoLocationsPost] = None
 
 @strawberry.input
 class ConditionPost:
     name: str
-    filter_type: FilterType
-    pages: Optional[List[str]] = None
-    device_types: Optional[List[DeviceType]] = None
-    os_types: Optional[List[OSType]] = None
-    time_frames: Optional[List[FilterTimeFramePost]] = None
-    geo_locations: Optional[List[FilterGeoLocationPost]] = None
+    filter_data: FilterPost
 
 
 @strawberry.input
@@ -171,9 +189,4 @@ class ConditionSetPatch:
 class ConditionPatch:
     id: int
     name: Optional[str] = None
-    filter_type: Optional[FilterType] = None
-    pages: Optional[List[str]] = None
-    device_types: Optional[List[DeviceType]] = None
-    os_types: Optional[List[OSType]] = None
-    time_frames: Optional[List[FilterTimeFramePost]] = None
-    geo_locations: Optional[List[FilterGeoLocationPost]] = None
+    filter_data: Optional[FilterPost] = None

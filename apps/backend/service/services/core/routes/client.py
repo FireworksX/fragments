@@ -320,26 +320,26 @@ async def client_area_route(
             for condition in condition_set.conditions:
                 condition_met = False
 
-                if condition.filter_type == FilterType.PAGE and condition.pages:
+                if condition.pages:
                     if client_info.page:
                         for page in condition.pages:
                             if re.match(page, client_info.page):
                                 condition_met = True
                                 break
-                elif condition.filter_type == FilterType.DEVICE_TYPE and condition.device_types:
+                elif condition.device_types:
                     if client_info.device_type and client_info.device_type.value in condition.device_types:
                         condition_met = True 
-                elif condition.filter_type == FilterType.OS_TYPE and condition.os_types:
+                elif condition.os_types:
                     if client_info.os_type and client_info.os_type.value in condition.os_types:
                         condition_met = True
-                elif condition.filter_type == FilterType.GEO_LOCATION and condition.geo_locations:
+                elif condition.geo_locations:
                     for geo_location in condition.geo_locations:
                         if (location.country == geo_location.country and
                             (not geo_location.region or location.region == geo_location.region) and
                             (not geo_location.city or location.city == geo_location.city)):
                             condition_met = True
                             break
-                elif condition.filter_type == FilterType.TIME_FRAME and condition.time_frames:
+                elif condition.time_frames:
                     current_time = datetime.now()
                     for time_frame in condition.time_frames:
                         if time_frame.from_time <= current_time <= time_frame.to_time:
