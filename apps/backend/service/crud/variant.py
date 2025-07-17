@@ -113,7 +113,7 @@ async def update_variant_db(db: Session, v: VariantPatch) -> Variant:
         variant.props = v.fragment.props
     if v.status is not None:
         variant.status = int(v.status.value)
-        if variant.status == int(VariantStatus.INACTIVE):
+        if variant.status == int(VariantStatus.INACTIVE.value):
             await recalculate_variants_rollout_percentage_db(
                 db, variant.feature_flag_id, variant.id, variant.rollout_percentage, 0
             )
