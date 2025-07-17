@@ -1,5 +1,5 @@
 query StreamLocationFilter {
-    filter(countries: [], regions: []) {
+    filter {
         geoLocations {
             country
 #            regions {

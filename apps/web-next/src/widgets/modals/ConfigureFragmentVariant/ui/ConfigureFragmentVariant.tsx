@@ -28,47 +28,44 @@ interface CreateCustomBreakpointProps {
   className?: string
 }
 
-export interface CreateCustomBreakpointContext {
-  onAdd?: (name: string, width: number) => void
+export type ConfigureFragmentVariantProps = Record<string, unknown>
+
+export interface ConfigureFragmentVariantContext {
+  fragmentId: number
+  initialProps?: ConfigureFragmentVariantProps
+  onSubmit?: (props: ConfigureFragmentVariantProps) => void
 }
 
 export const ConfigureFragmentVariant: FC<CreateCustomBreakpointProps> = ({ className }) => {
-  const { openModal, modal } = useModal()
-  const context = modal?.context ?? {}
-  const fragment = context.fragment
-  const isOpen = modal?.name === modalNames.configureFragmentVariant
+  const { close: closeModal, readContext } = useModal()
+  const context = readContext(modalNames.configureFragmentVariant)
 
-  const [props, setProps] = useState(omit(context?.initialProps ?? {}, '_type', '_id'))
-
-  const onSubmit = () => context?.onSubmit?.(props) ?? noop
-
-  useEffect(() => {
-    if (context?.initialProps) {
-      setProps(context?.initialProps)
-    }
-  }, [isOpen])
+  const [props, setProps] = useState(context?.initialProps ?? {})
 
   return (
-    <Modal className={cn(styles.root, className)} isOpen={isOpen}>
-      <ModalContainer
-        title='Configure Fragment'
-        footer={
-          <>
-            <Button mode='secondary' stretched onClick={modalStore.close}>
-              Cancel
-            </Button>
-            <Button stretched onClick={onSubmit}>
-              Save
-            </Button>
-          </>
-        }
-        onClose={modalStore.close}
-        onBack={context?.onBack}
-      >
-        <div className={styles.preview}>
-          <FragmentPreviewSandbox fragmentId={fragment} initialProps={props} onChangeProps={setProps} />
-        </div>
-      </ModalContainer>
-    </Modal>
+    <ModalContainer
+      className={styles.root}
+      title='Configure Fragment'
+      footer={
+        <>
+          <Button mode='secondary' stretched onClick={closeModal}>
+            Cancel
+          </Button>
+          <Button
+            stretched
+            onClick={() => {
+              console.log(context?.onSubmit, props)
+              context?.onSubmit?.(props)
+            }}
+          >
+            Save
+          </Button>
+        </>
+      }
+    >
+      <div className={styles.preview}>
+        <FragmentPreviewSandbox fragmentId={context?.fragmentId} initialProps={props} onChangeProps={setProps} />
+      </div>
+    </ModalContainer>
   )
 }

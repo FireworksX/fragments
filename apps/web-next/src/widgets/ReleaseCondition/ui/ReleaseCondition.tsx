@@ -8,8 +8,10 @@ import { DropdownOption } from '@/shared/ui/DropdownOption'
 import { Chip } from '@/shared/ui/Chip'
 import PlusIcon from '@/shared/icons/next/Plus.svg'
 import { FilterOperationals } from '@/widgets/ReleaseCondition/widgets/FilterOperationals'
+import { ConditionGet } from '@/__generated__/types'
 
 interface ReleaseConditionProps {
+  condition: ConditionGet
   className?: string
 }
 

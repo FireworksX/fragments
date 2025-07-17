@@ -34,6 +34,9 @@ import { Spinner } from '@/shared/ui/Spinner'
 import { InputSelect } from '@/shared/ui/InputSelect'
 import { capitalize } from '@/shared/utils/capitalize'
 import { ProjectTreeModal } from '@/widgets/modals/ProjectTreeModal'
+import { ModalCollector } from '@/widgets/ModalCollector'
+import { withModalCollector } from '@/shared/hocs/withModalCollector'
+import { modalNames } from '@/shared/data'
 
 interface CampaignContentTableProps {
   campaignId: number
@@ -41,7 +44,7 @@ interface CampaignContentTableProps {
   onAddFragment?: () => void
 }
 
-export const CampaignContentTable: FC<CampaignContentTableProps> = ({ className, campaignId, onAddFragment }) => {
+const CampaignContentTable: FC<CampaignContentTableProps> = ({ className, campaignId, onAddFragment }) => {
   const {
     variants,
     loadingVariants,
@@ -58,10 +61,6 @@ export const CampaignContentTable: FC<CampaignContentTableProps> = ({ className,
 
   return (
     <div className={styles.root}>
-      <ConfigureFeatureFlagVariant />
-      <ConfigureFragmentVariant />
-      <ProjectTreeModal />
-
       <div className={styles.header}>
         {variants.length > 1 && (
           <>
@@ -239,3 +238,9 @@ export const CampaignContentTable: FC<CampaignContentTableProps> = ({ className,
     </div>
   )
 }
+
+export default withModalCollector(CampaignContentTable, {
+  [modalNames.configureFeatureFlagVariant]: <ConfigureFeatureFlagVariant />,
+  [modalNames.configureFragmentVariant]: <ConfigureFragmentVariant />,
+  [modalNames.projectTree]: <ProjectTreeModal />
+})

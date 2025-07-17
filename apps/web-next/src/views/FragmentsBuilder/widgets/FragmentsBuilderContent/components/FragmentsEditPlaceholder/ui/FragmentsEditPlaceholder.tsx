@@ -25,7 +25,7 @@ export const FragmentsEditPlaceholder: FC<FragmentsEditPlaceholderProps> = ({ cl
     data: { area: 'builderPlaceholder' }
   })
 
-  const { openModal, updateContext, closeModal } = useModal()
+  const { open: openModal, close: closeModal } = useModal()
   const { createProjectFragment, projectSlug } = useProjectFiles()
   const { openFragment } = useBuilder()
 
@@ -58,7 +58,7 @@ export const FragmentsEditPlaceholder: FC<FragmentsEditPlaceholderProps> = ({ cl
                 openModal(modalNames.createFragment, {
                   creating: false,
                   onCreate: async ({ name }) => {
-                    updateContext({ creating: true })
+                    // updateContext({ creating: true })
 
                     await createProjectFragment({
                       variables: {
@@ -68,7 +68,7 @@ export const FragmentsEditPlaceholder: FC<FragmentsEditPlaceholderProps> = ({ cl
                       }
                     })
 
-                    updateContext({ creating: false })
+                    // updateContext({ creating: false })
                     closeModal()
                   }
                 })

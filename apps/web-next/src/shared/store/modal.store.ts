@@ -54,16 +54,3 @@ export const modalStore = createState<AAModal>({
     }
   ]
 })
-
-modalStore.mutate({
-  _type: 'Modal',
-  _id: 10,
-  name: 'test',
-  onSubmit() {
-    alert(1)
-  }
-})
-
-const a = modalStore.resolve('Modal:10')
-
-console.log(a)

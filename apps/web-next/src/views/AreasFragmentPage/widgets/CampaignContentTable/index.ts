@@ -1,1 +1,1 @@
-export { CampaignContentTable } from './ui/CampaignContentTable';
+export { default as CampaignContentTable } from './ui/CampaignContentTable'

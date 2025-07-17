@@ -10,7 +10,7 @@ import { useRemoveFeatureFlagVariantMutation } from '@/shared/api/featureFlagVar
 import { useUpdateFeatureFlagVariantMutation } from '@/shared/api/featureFlagVariant/mutations/UpdateFeatureFlagVariant.generated'
 
 export const useCampaignContentTable = (campaignId: number) => {
-  const { openModal, closeModal } = useModal()
+  const { open: openModal, close: closeModal } = useModal()
 
   const [createVariant, { loading: creatingVariant }] = useCreateFeatureFlagVariantMutation()
   const [removeVariant, { loading: removingVariant }] = useRemoveFeatureFlagVariantMutation()
@@ -50,8 +50,8 @@ export const useCampaignContentTable = (campaignId: number) => {
             rollout: nextVariant.rollout,
             status: nextVariant.status,
             fragment: {
-              fragmentId: nextVariant?.fragmentId,
-              props: nextVariant?.fragmentProps
+              fragmentId: nextVariant?.fragment.id,
+              props: nextVariant?.fragment.props
             }
           }
         })

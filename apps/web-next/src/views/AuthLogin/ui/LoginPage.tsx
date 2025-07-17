@@ -7,6 +7,11 @@ import { InputText } from '@/shared/ui/InputText'
 import { Button } from '@/shared/ui/Button'
 import { useAuthLogin } from '@/views/AuthLogin/hooks/useAuthLogin'
 import Logo from '@/shared/icons/next/logo.svg'
+import { ConfigureFeatureFlagVariant } from '@/widgets/modals/ConfigureFeatureFlagVariant'
+import { modalStore } from '@/shared/store/modal.store'
+import { modalNames } from '@/shared/data'
+import { ModalCollector } from '@/widgets/ModalCollector'
+import { useModal } from '@/shared/hooks/useModal'
 
 interface LoginProps {
   className?: string

@@ -2,15 +2,20 @@ import React, { createContext, FC, useRef } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { ProjectTreeItem } from '../widgets/ProjectTreeItem'
-import { useProjectTree } from '../hooks/useProjectTree'
+import { projectItemType, useProjectTree } from '../hooks/useProjectTree'
 import { ProjectTreeSortableItem } from '../widgets/ProjectTreeSortableItem'
 import { Spinner } from '@/shared/ui/Spinner'
 import { DragOverlay } from '@dnd-kit/core'
 
+export interface ProjectTreeItem {
+  id: number
+  type: keyof typeof projectItemType
+}
+
 interface ProjectTreeProps {
   className?: string
-  onClick?: (item: unknown) => void
   draggable?: boolean
+  onClick?: (item: ProjectTreeItem) => void
 }
 
 export const ProjectTreeContext = createContext({

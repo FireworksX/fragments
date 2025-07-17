@@ -31,147 +31,159 @@ interface CreateCustomBreakpointProps {
   className?: string
 }
 
-export interface CreateCustomBreakpointContext {
-  onAdd?: (name: string, width: number) => void
+interface State {
+  name: string
+  status: VariantStatus
+  rollout: number
+  fragment: {
+    id: number | null
+    props: unknown | null
+  }
+}
+
+export interface ConfigureFeatureFlagVariantContext {
+  isEdit?: boolean
+  countVariants?: number
+  initialState?: State
+  onSubmit: (state: State) => void
 }
 
 export const ConfigureFeatureFlagVariant: FC<CreateCustomBreakpointProps> = ({ className }) => {
-  const { openModal, modal } = useModal()
-  const context = modal?.context ?? {}
+  const { open: openModal, close: closeModal, readContext } = useModal()
+  const context = readContext(modalNames.configureFeatureFlagVariant) ?? {}
   const isEdit = context?.isEdit ?? false
   const countVariants = context?.countVariants ?? 0
-  const isOpen = modal?.name === modalNames.configureFeatureFlagVariant
 
-  const [featureFlag, setFeatureFlag] = useState(
+  const [featureFlag, setFeatureFlag] = useState<State>(
     () =>
       context?.initialState ?? {
         name: `Variant ${countVariants + 1}`,
         status: VariantStatus.Inactive,
         rollout: countVariants === 0 ? 100 : 0,
-        fragmentId: null,
-        fragmentProps: null
+        fragment: {
+          id: null,
+          props: null
+        }
       }
   )
 
-  const fragmentInfo = useReadProjectTreeItem({ type: projectItemType.fragment, id: featureFlag?.fragmentId })
+  const fragmentInfo = useReadProjectTreeItem({ type: projectItemType.fragment, id: featureFlag?.fragment.id })
 
-  const setField = (field: keyof typeof featureFlag, value: unknown) =>
+  const setField = <T extends keyof typeof featureFlag>(field: T, value: (typeof featureFlag)[T]) =>
     setFeatureFlag(prev => ({
       ...prev,
       [field]: value
     }))
 
-  useEffect(() => {
-    setField('name', `Variant ${countVariants + 1}`)
-    setField('rollout', context?.initialState?.rollout ?? countVariants === 0 ? 100 : 0)
-  }, [countVariants, isOpen])
-
-  useEffect(() => {
-    if (context?.initialState) {
-      setFeatureFlag(context?.initialState)
-    }
-  }, [isOpen, context?.initialState])
+  // useEffect(() => {
+  //   setField('name', `Variant ${countVariants + 1}`)
+  //   setField('rollout', context?.initialState?.rollout ?? countVariants === 0 ? 100 : 0)
+  // }, [countVariants, isOpen])
+  //
+  // useEffect(() => {
+  //   if (context?.initialState) {
+  //     setFeatureFlag(context?.initialState)
+  //   }
+  // }, [isOpen, context?.initialState])
 
   return (
-    <Modal className={cn(styles.root, className)} isOpen={isOpen}>
-      <ModalContainer
-        title={isEdit ? 'Configure Variant' : 'Create Variant'}
-        footer={
-          <>
-            <Button mode='secondary' stretched onClick={modalStore.close}>
-              Cancel
-            </Button>
-            <Button stretched onClick={() => context?.onSubmit?.(featureFlag)}>
-              {isEdit ? 'Update' : 'Create'}
-            </Button>
-          </>
-        }
-        onClose={modalStore.close}
-      >
-        <Panel>
-          <ControlRow title='Name'>
-            <ControlRowWide>
-              <InputText placeholder='Name' value={featureFlag.name} onChangeValue={v => setField('name', v)} />
-            </ControlRowWide>
+    <ModalContainer
+      title={isEdit ? 'Configure Variant' : 'Create Variant'}
+      footer={
+        <>
+          <Button mode='secondary' stretched onClick={closeModal}>
+            Cancel
+          </Button>
+          <Button stretched onClick={() => context?.onSubmit?.(featureFlag)}>
+            {isEdit ? 'Update' : 'Create'}
+          </Button>
+        </>
+      }
+    >
+      <Panel>
+        <ControlRow title='Name'>
+          <ControlRowWide>
+            <InputText placeholder='Name' value={featureFlag.name} onChangeValue={v => setField('name', v)} />
+          </ControlRowWide>
+        </ControlRow>
+
+        <ControlRow title='Status'>
+          <ControlRowWide className={styles.relative}>
+            <Dropdown
+              width='contentSize'
+              placement='bottom-end'
+              hideOnClick
+              arrow={false}
+              trigger='click'
+              options={
+                <DropdownGroup>
+                  <DropdownOption
+                    icon={<StatusDot status='success' />}
+                    onClick={() => setField('status', VariantStatus.Active)}
+                  >
+                    Active
+                  </DropdownOption>
+                  <DropdownOption
+                    icon={<StatusDot status='warning' />}
+                    onClick={() => setField('status', VariantStatus.Inactive)}
+                  >
+                    Pause
+                  </DropdownOption>
+                </DropdownGroup>
+              }
+            >
+              <SelectMimicry>
+                <div className={styles.statusRow}>
+                  <StatusDot status={statusToIndicatorMap[featureFlag.status]} />
+                  {statusToLabel[featureFlag?.status]}
+                </div>
+              </SelectMimicry>
+            </Dropdown>
+          </ControlRowWide>
+        </ControlRow>
+
+        {countVariants > 0 && (
+          <ControlRow title='Rollout'>
+            <InputNumber suffix='%' value={featureFlag.rollout} onChange={v => setField('rollout', v)} />
+            <Slider value={featureFlag.rollout} onChange={v => setField('rollout', v)} />
           </ControlRow>
+        )}
 
-          <ControlRow title='Status'>
-            <ControlRowWide className={styles.relative}>
-              <Dropdown
-                width='contentSize'
-                placement='bottom-end'
-                hideOnClick
-                arrow={false}
-                trigger='click'
-                options={
-                  <DropdownGroup>
-                    <DropdownOption
-                      icon={<StatusDot status='success' />}
-                      onClick={() => setField('status', VariantStatus.Active)}
-                    >
-                      Active
-                    </DropdownOption>
-                    <DropdownOption
-                      icon={<StatusDot status='warning' />}
-                      onClick={() => setField('status', VariantStatus.Inactive)}
-                    >
-                      Pause
-                    </DropdownOption>
-                  </DropdownGroup>
-                }
-              >
-                <SelectMimicry>
-                  <div className={styles.statusRow}>
-                    <StatusDot status={statusToIndicatorMap[featureFlag.status]} />
-                    {statusToLabel[featureFlag?.status]}
-                  </div>
-                </SelectMimicry>
-              </Dropdown>
-            </ControlRowWide>
-          </ControlRow>
-
-          {countVariants > 0 && (
-            <ControlRow title='Rollout'>
-              <InputNumber suffix='%' value={featureFlag.rollout} onChange={v => setField('rollout', v)} />
-              <Slider value={featureFlag.rollout} onChange={v => setField('rollout', v)} />
-            </ControlRow>
-          )}
-
-          <ControlRow title='Fragment'>
-            <ControlRowWide>
-              <InputSelect
-                icon={<FragmentIcon color='var(--text-color)' />}
-                color='var(--component)'
-                placeholder='Set...'
-                onReset={() => undefined}
-                onClick={() =>
-                  openModal(modalNames.projectTree, {
-                    onBack: () => {
-                      openModal(modalNames.configureFeatureFlagVariant, context)
-                    },
-                    onClick: item => {
-                      setField('fragmentId', item.id)
-
-                      openModal(modalNames.configureFragmentVariant, {
-                        fragment: item.id,
-                        onSubmit: props => {
-                          openModal(modalNames.configureFeatureFlagVariant, context)
-                          setField('fragmentProps', props)
-                        },
-                        onBack: () => {
-                          openModal(modalNames.configureFeatureFlagVariant, context)
-                        }
-                      })
-                    }
-                  })
-                }
-              >
-                {fragmentInfo?.name}
-              </InputSelect>
-            </ControlRowWide>
-          </ControlRow>
-        </Panel>
-      </ModalContainer>
-    </Modal>
+        <ControlRow title='Fragment'>
+          <ControlRowWide>
+            <InputSelect
+              icon={<FragmentIcon color='var(--text-color)' />}
+              color='var(--component)'
+              placeholder='Set...'
+              onReset={() => undefined}
+              onClick={() => {
+                // open(modalNames.projectTree)
+                openModal(modalNames.projectTree, {
+                  onSelect: item => {
+                    openModal(modalNames.configureFragmentVariant, {
+                      fragmentId: item.id,
+                      onSubmit: props => {
+                        openModal(modalNames.configureFeatureFlagVariant, {
+                          ...context,
+                          initialState: {
+                            ...featureFlag,
+                            fragment: {
+                              id: item.id,
+                              props
+                            }
+                          }
+                        })
+                      }
+                    })
+                  }
+                })
+              }}
+            >
+              {fragmentInfo?.name}
+            </InputSelect>
+          </ControlRowWide>
+        </ControlRow>
+      </Panel>
+    </ModalContainer>
   )
 }
