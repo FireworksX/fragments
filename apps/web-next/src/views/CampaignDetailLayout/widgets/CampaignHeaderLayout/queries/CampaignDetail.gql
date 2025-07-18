@@ -11,29 +11,9 @@ query CampaignDetail($id: Int!) {
                     id
                     conditions {
                         id
-                        filterType
                         filterData {
                             ... on FilterDeviceTypeGet {
-                                deviceType
-                            }
-
-                            ... on FilterOSTypeGet {
-                                osType
-                            }
-
-                            ... on FilterGeoLocationGet  {
-                                country
-                                region
-                                city
-                            }
-
-                            ... on FilterPageGet {
-                                page
-                            }
-
-                            ... on FilterTimeFrameGet {
-                                fromTime
-                                toTime
+                                deviceTypes
                             }
                         }
                     }

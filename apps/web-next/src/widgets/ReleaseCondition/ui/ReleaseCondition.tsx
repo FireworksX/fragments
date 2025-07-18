@@ -8,33 +8,47 @@ import { DropdownOption } from '@/shared/ui/DropdownOption'
 import { Chip } from '@/shared/ui/Chip'
 import PlusIcon from '@/shared/icons/next/Plus.svg'
 import { FilterOperationals } from '@/widgets/ReleaseCondition/widgets/FilterOperationals'
-import { ConditionGet } from '@/__generated__/types'
+import { ConditionGet, ConditionSetGet, ReleaseConditionGet, ReleaseConditionPost } from '@/__generated__/types'
+import { useReleaseCondition } from '@/widgets/ReleaseCondition/hooks/useReleaseCondition'
 
 interface ReleaseConditionProps {
-  condition: ConditionGet
+  releaseCondition: ReleaseConditionGet
   className?: string
 }
 
-export const ReleaseCondition: FC<ReleaseConditionProps> = ({ className }) => {
+export const ReleaseCondition: FC<ReleaseConditionProps> = ({ className, releaseCondition }) => {
+  const { devices, updateDevices, osTypes } = useReleaseCondition(releaseCondition)
+  // if (conditionSet.filterData?.__typename === 'FilterDeviceTypeGet') {
+  //   conditionSet.filterData.deviceTypes
+  // }
+
   return (
     <div className={cn(styles.root, className)}>
-      <FilterDevices />
-      <FilterOperationals />
-      <Dropdown
-        trigger='click'
-        options={
-          <DropdownGroup>
-            <DropdownOption>Location</DropdownOption>
-            <DropdownOption>Device type</DropdownOption>
-            <DropdownOption>OS type</DropdownOption>
-          </DropdownGroup>
-        }
-      >
-        <Chip>
-          <PlusIcon />
-          Add filter
-        </Chip>
-      </Dropdown>
+      <FilterDevices
+        value={devices}
+        onChange={next => {
+          updateDevices(next)
+        }}
+      />
+      <FilterOperationals value={osTypes} />
+
+      {/*{condition.deviceTypes && <FilterDevices value={condition.deviceTypes} />}*/}
+      {/*<FilterDevices />*/}
+      {/*<Dropdown*/}
+      {/*  trigger='click'*/}
+      {/*  options={*/}
+      {/*    <DropdownGroup>*/}
+      {/*      <DropdownOption>Location</DropdownOption>*/}
+      {/*      <DropdownOption>Device type</DropdownOption>*/}
+      {/*      <DropdownOption>OS type</DropdownOption>*/}
+      {/*    </DropdownGroup>*/}
+      {/*  }*/}
+      {/*>*/}
+      {/*  <Chip>*/}
+      {/*    <PlusIcon />*/}
+      {/*    Add filter*/}
+      {/*  </Chip>*/}
+      {/*</Dropdown>*/}
     </div>
   )
 }

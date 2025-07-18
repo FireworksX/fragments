@@ -66,21 +66,24 @@ export const useCampaignContentTable = (campaignId: number) => {
 
     if (variant) {
       openModal(modalNames.configureFeatureFlagVariant, {
+        isEdit: true,
         initialState: {
           ...variant,
-          fragmentId: variant.fragment?.fragment.id,
-          fragmentProps: variant?.fragment?.props
+          fragment: {
+            id: variant.fragment?.fragment.id,
+            props: variant?.fragment?.props
+          }
         },
         onSubmit: async nextVariant => {
           await updateVariant({
             variables: {
-              id: nextVariant?.id,
+              id: variant?.id,
               name: nextVariant.name,
               rollout: nextVariant.rollout,
               status: nextVariant.status,
               fragment: {
-                fragmentId: nextVariant?.fragmentId,
-                props: nextVariant?.fragmentProps
+                fragmentId: nextVariant.fragment.id,
+                props: nextVariant.fragment.props
               }
             }
           })
@@ -98,7 +101,7 @@ export const useCampaignContentTable = (campaignId: number) => {
       const fragmentId = variant?.fragment?.fragment?.id
 
       openModal(modalNames.configureFragmentVariant, {
-        fragment: fragmentId,
+        fragmentId,
         initialProps: variant?.fragment?.props,
         onSubmit: async props => {
           await updateVariant({

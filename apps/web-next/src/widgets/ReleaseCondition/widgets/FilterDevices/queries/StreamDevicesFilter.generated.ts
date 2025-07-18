@@ -11,7 +11,7 @@ export type StreamDevicesFilterQuery = { __typename?: 'Query', filter: { __typen
 
 export const StreamDevicesFilterDocument = gql`
     query StreamDevicesFilter {
-  filter(countries: [], regions: []) {
+  filter {
     deviceTypes
   }
 }

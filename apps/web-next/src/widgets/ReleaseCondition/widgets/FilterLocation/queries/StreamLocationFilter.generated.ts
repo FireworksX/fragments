@@ -11,7 +11,7 @@ export type StreamLocationFilterQuery = { __typename?: 'Query', filter: { __type
 
 export const StreamLocationFilterDocument = gql`
     query StreamLocationFilter {
-  filter(countries: [], regions: []) {
+  filter {
     geoLocations {
       country
     }

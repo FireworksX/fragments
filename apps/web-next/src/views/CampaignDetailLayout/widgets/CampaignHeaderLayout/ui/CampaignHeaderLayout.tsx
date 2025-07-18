@@ -39,7 +39,7 @@ interface StreamHeaderProps {
 }
 
 export const CampaignHeaderLayout: FC<StreamHeaderProps> = ({ className }) => {
-  const { campaignSlug, areaSlug, projectSlug, filters } = useCampaignHeader()
+  const { campaignSlug, areaSlug, projectSlug, releaseCondition } = useCampaignHeader()
 
   return (
     <CampaignHeader
@@ -52,7 +52,7 @@ export const CampaignHeaderLayout: FC<StreamHeaderProps> = ({ className }) => {
           </Touchable>
         </Link>
       }
-      meta={<ReleaseCondition />}
+      meta={<ReleaseCondition releaseCondition={releaseCondition} />}
       footer={
         <>
           <Tabs>

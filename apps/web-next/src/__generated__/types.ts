@@ -155,28 +155,20 @@ export type ClientProjectGoalGet = {
 
 export type ConditionGet = {
   __typename?: 'ConditionGet';
-  filterData: FilterPageGetFilterDeviceTypeGetFilterOsTypeGetFilterTimeFrameGetFilterGeoLocationGet;
-  filterType: FilterType;
+  filterData?: Maybe<FilterPageGetFilterDeviceTypeGetFilterOsTypeGetFilterTimeFramesGetFilterGeoLocationsGet>;
   id: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type ConditionPatch = {
-  deviceType?: InputMaybe<DeviceType>;
-  filterType?: InputMaybe<FilterType>;
-  geoLocation?: InputMaybe<FilterGeoLocationPost>;
+  filterData?: InputMaybe<FilterPost>;
   id: Scalars['Int']['input'];
-  osType?: InputMaybe<OsType>;
-  page?: InputMaybe<Scalars['String']['input']>;
-  timeFrame?: InputMaybe<FilterTimeFramePost>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type ConditionPost = {
-  deviceType?: InputMaybe<DeviceType>;
-  filterType: FilterType;
-  geoLocation?: InputMaybe<FilterGeoLocationPost>;
-  osType?: InputMaybe<OsType>;
-  page?: InputMaybe<Scalars['String']['input']>;
-  timeFrame?: InputMaybe<FilterTimeFramePost>;
+  filterData: FilterPost;
+  name: Scalars['String']['input'];
 };
 
 export type ConditionSetGet = {
@@ -274,7 +266,7 @@ export enum FeelLevelGet {
 
 export type FilterDeviceTypeGet = {
   __typename?: 'FilterDeviceTypeGet';
-  deviceType: DeviceType;
+  deviceTypes: Array<DeviceType>;
 };
 
 export type FilterGeoLocationGet = {
@@ -290,17 +282,30 @@ export type FilterGeoLocationPost = {
   region?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type FilterGeoLocationsGet = {
+  __typename?: 'FilterGeoLocationsGet';
+  geoLocations: Array<FilterGeoLocationGet>;
+};
+
 export type FilterOsTypeGet = {
   __typename?: 'FilterOSTypeGet';
-  osType: OsType;
+  osTypes: Array<OsType>;
 };
 
 export type FilterPageGet = {
   __typename?: 'FilterPageGet';
-  page: Scalars['String']['output'];
+  pages: Array<Scalars['String']['output']>;
 };
 
-export type FilterPageGetFilterDeviceTypeGetFilterOsTypeGetFilterTimeFrameGetFilterGeoLocationGet = FilterDeviceTypeGet | FilterGeoLocationGet | FilterOsTypeGet | FilterPageGet | FilterTimeFrameGet;
+export type FilterPageGetFilterDeviceTypeGetFilterOsTypeGetFilterTimeFramesGetFilterGeoLocationsGet = FilterDeviceTypeGet | FilterGeoLocationsGet | FilterOsTypeGet | FilterPageGet | FilterTimeFramesGet;
+
+export type FilterPost = {
+  deviceTypes: Array<DeviceType>;
+  geoLocations: Array<FilterGeoLocationPost>;
+  osTypes: Array<OsType>;
+  pages: Array<Scalars['String']['input']>;
+  timeFrames: Array<FilterTimeFramePost>;
+};
 
 export type FilterTimeFrameGet = {
   __typename?: 'FilterTimeFrameGet';
@@ -313,13 +318,10 @@ export type FilterTimeFramePost = {
   toTime: Scalars['DateTime']['input'];
 };
 
-export enum FilterType {
-  DeviceType = 'DEVICE_TYPE',
-  GeoLocation = 'GEO_LOCATION',
-  OsType = 'OS_TYPE',
-  Page = 'PAGE',
-  TimeFrame = 'TIME_FRAME'
-}
+export type FilterTimeFramesGet = {
+  __typename?: 'FilterTimeFramesGet';
+  timeFrames: Array<FilterTimeFrameGet>;
+};
 
 export type FragmentGet = {
   __typename?: 'FragmentGet';
@@ -487,11 +489,13 @@ export type MutationCreateCampaignArgs = {
 
 export type MutationCreateConditionArgs = {
   condition: ConditionPost;
+  conditionSetId: Scalars['Int']['input'];
 };
 
 
 export type MutationCreateConditionSetArgs = {
   conditionSet: ConditionSetPost;
+  releaseConditionId: Scalars['Int']['input'];
 };
 
 
@@ -765,8 +769,8 @@ export type Query = {
   area: Array<AreaGet>;
   campaign: Array<CampaignGet>;
   client: Array<ClientGet>;
+  clientArea?: Maybe<VariantGet>;
   clientFragment?: Maybe<FragmentGet>;
-  clientFragmentVariant?: Maybe<VariantGet>;
   clientHistory: Array<ClientHistoryGet>;
   condition: ConditionGet;
   conditionSet: ConditionSetGet;
@@ -804,13 +808,13 @@ export type QueryClientArgs = {
 };
 
 
-export type QueryClientFragmentArgs = {
-  fragmentId: Scalars['Int']['input'];
+export type QueryClientAreaArgs = {
+  areaCode: Scalars['String']['input'];
 };
 
 
-export type QueryClientFragmentVariantArgs = {
-  areaId: Scalars['Int']['input'];
+export type QueryClientFragmentArgs = {
+  fragmentId: Scalars['Int']['input'];
 };
 
 
@@ -899,6 +903,7 @@ export type ReleaseConditionPatch = {
 export type ReleaseConditionPost = {
   conditionSets: Array<ConditionSetPost>;
   name: Scalars['String']['input'];
+  projectId: Scalars['Int']['input'];
 };
 
 export enum RoleGet {

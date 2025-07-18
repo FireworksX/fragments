@@ -5,6 +5,8 @@ schema {
     mutation: Mutation
 }
 
+union FilterPageGetFilterDeviceTypeGetFilterOSTypeGetFilterTimeFramesGetFilterGeoLocationsGet = FilterDeviceTypeGet | FilterGeoLocationsGet | FilterOSTypeGet | FilterPageGet | FilterTimeFramesGet
+
 type AllFiltersGet {
     deviceTypes: [DeviceType!]!
     geoLocations: [CountryGet!]!
@@ -80,13 +82,9 @@ type ClientProjectGoalGet {
 }
 
 type ConditionGet {
-    deviceTypes: [DeviceType!]
-    filterType: FilterType!
-    geoLocations: [FilterGeoLocationGet!]
+    filterData: FilterPageGetFilterDeviceTypeGetFilterOSTypeGetFilterTimeFramesGetFilterGeoLocationsGet
     id: Int!
-    osTypes: [OSType!]
-    pages: [String!]
-    timeFrames: [FilterTimeFrameGet!]
+    name: String!
 }
 
 type ConditionSetGet {
@@ -123,15 +121,35 @@ type FeedbackGet {
     page: String!
 }
 
+type FilterDeviceTypeGet {
+    deviceTypes: [DeviceType!]!
+}
+
 type FilterGeoLocationGet {
     city: String
     country: String!
     region: String
 }
 
+type FilterGeoLocationsGet {
+    geoLocations: [FilterGeoLocationGet!]!
+}
+
+type FilterOSTypeGet {
+    osTypes: [OSType!]!
+}
+
+type FilterPageGet {
+    pages: [String!]!
+}
+
 type FilterTimeFrameGet {
     fromTime: DateTime!
     toTime: DateTime!
+}
+
+type FilterTimeFramesGet {
+    timeFrames: [FilterTimeFrameGet!]!
 }
 
 type FragmentGet {
@@ -164,8 +182,8 @@ type Mutation {
     changeUserRole(projectId: Int!, role: RoleGet!, userId: Int!): Void
     createArea(area: AreaPost!): AreaGet!
     createCampaign(cmp: CampaignPost!): CampaignGet!
-    createCondition(condition: ConditionPost!): ConditionGet!
-    createConditionSet(conditionSet: ConditionSetPost!): ConditionSetGet!
+    createCondition(condition: ConditionPost!, conditionSetId: Int!): ConditionGet!
+    createConditionSet(conditionSet: ConditionSetPost!, releaseConditionId: Int!): ConditionSetGet!
     createDirectory(directory: ProjectDirectory!): [ProjectDirectoryGet!]!
     createFeatureFlag(featureFlag: FeatureFlagPost!): FeatureFlagGet!
     createFragment(fg: FragmentPost!): FragmentGet!
@@ -243,8 +261,8 @@ type Query {
     area(areaId: Int, projectId: Int): [AreaGet!]!
     campaign(areaId: Int, campaignId: Int, limit: Int = 5, name: String, status: CampaignStatus): [CampaignGet!]!
     client(clientId: Int, projectId: Int): [ClientGet!]!
+    clientArea(areaCode: String!): VariantGet
     clientFragment(fragmentId: Int!): FragmentGet
-    clientFragmentVariant(areaId: Int!): VariantGet
     clientHistory(clientId: Int!): [ClientHistoryGet!]!
     condition(conditionId: Int!): ConditionGet!
     conditionSet(conditionSetId: Int!): ConditionSetGet!
@@ -336,14 +354,6 @@ enum FeelLevelGet {
     TWO
 }
 
-enum FilterType {
-    DEVICE_TYPE
-    GEO_LOCATION
-    OS_TYPE
-    PAGE
-    TIME_FRAME
-}
-
 enum MediaType {
     AREA_LOGO
     CAMPAIGN_LOGO
@@ -423,22 +433,14 @@ input ClientMetricPost {
 }
 
 input ConditionPatch {
-    deviceTypes: [DeviceType!]
-    filterType: FilterType
-    geoLocations: [FilterGeoLocationPost!]
+    filterData: FilterPost
     id: Int!
-    osTypes: [OSType!]
-    pages: [String!]
-    timeFrames: [FilterTimeFramePost!]
+    name: String
 }
 
 input ConditionPost {
-    deviceTypes: [DeviceType!]
-    filterType: FilterType!
-    geoLocations: [FilterGeoLocationPost!]
-    osTypes: [OSType!]
-    pages: [String!]
-    timeFrames: [FilterTimeFramePost!]
+    filterData: FilterPost!
+    name: String!
 }
 
 input ConditionSetPatch {
@@ -479,6 +481,14 @@ input FilterGeoLocationPost {
     city: String
     country: String!
     region: String
+}
+
+input FilterPost {
+    deviceTypes: [DeviceType!]!
+    geoLocations: [FilterGeoLocationPost!]!
+    osTypes: [OSType!]!
+    pages: [String!]!
+    timeFrames: [FilterTimeFramePost!]!
 }
 
 input FilterTimeFramePost {
@@ -569,6 +579,7 @@ input ReleaseConditionPatch {
 input ReleaseConditionPost {
     conditionSets: [ConditionSetPost!]!
     name: String!
+    projectId: Int!
 }
 
 input VariantPatch {

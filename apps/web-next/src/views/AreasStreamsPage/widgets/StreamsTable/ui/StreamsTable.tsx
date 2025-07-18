@@ -32,17 +32,18 @@ import PlusIcon from '@/shared/icons/next/plus.svg'
 import { Avatar } from '@/shared/ui/Avatar'
 import { CommonLogo } from '@/shared/ui/CommonLogo'
 import { CampaignStatus } from '@/__generated__/types'
+import { withModalCollector } from '@/shared/hocs/withModalCollector'
+import { modalNames } from '@/shared/data'
 
 interface StreamsTableProps {
   className?: string
 }
 
-export const StreamsTable: FC<StreamsTableProps> = ({ className }) => {
+const StreamsTable: FC<StreamsTableProps> = ({ className }) => {
   const { list, updateStream, handleDeleteCampaignMutation, handleCreateCampaign } = useStreamsTable()
 
   return (
     <div className={styles.root}>
-      <ConfigureCampaign />
       <div className={styles.header}>
         <InputText className={styles.search} placeholder='Search' />
         <Button mode='secondary' icon={<SettingsIcon />}>
@@ -159,3 +160,7 @@ export const StreamsTable: FC<StreamsTableProps> = ({ className }) => {
     </div>
   )
 }
+
+export default withModalCollector(StreamsTable, {
+  [modalNames.configureCampaign]: <ConfigureCampaign />
+})

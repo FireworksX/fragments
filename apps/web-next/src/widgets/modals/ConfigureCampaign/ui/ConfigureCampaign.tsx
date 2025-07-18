@@ -31,8 +31,16 @@ interface CreateCustomBreakpointProps {
   className?: string
 }
 
-export interface CreateCustomBreakpointContext {
-  onAdd?: (name: string, width: number) => void
+interface State {
+  name: string
+  status: CampaignStatus
+}
+
+export interface ConfigureCampaignContext {
+  isEdit?: boolean
+  countCampaigns?: number
+  initialState?: State
+  onSubmit?: (state: State) => void
 }
 
 const initialCampaign = {
@@ -41,13 +49,18 @@ const initialCampaign = {
 }
 
 export const ConfigureCampaign: FC<CreateCustomBreakpointProps> = ({ className }) => {
-  const { openModal, modal } = useModal()
-  const context = modal?.context ?? {}
+  const { open: openModal, close: closeModal, readContext } = useModal()
+  const context = readContext(modalNames.configureCampaign) ?? {}
   const isEdit = context?.isEdit ?? false
   const countCampaigns = context?.countCampaigns ?? 0
-  const isOpen = modal?.name === modalNames.configureCampaign
 
-  const [campaign, setCampaign] = useState(() => context?.initialState ?? {})
+  const [campaign, setCampaign] = useState(
+    () =>
+      context?.initialState ?? {
+        name: `Campaign ${countCampaigns + 1}`,
+        status: CampaignStatus.Inactive
+      }
+  )
   //
   // const fragmentInfo = useReadProjectTreeItem({ type: projectItemType.fragment, id: featureFlag?.fragmentId })
   //
@@ -56,83 +69,71 @@ export const ConfigureCampaign: FC<CreateCustomBreakpointProps> = ({ className }
       ...prev,
       [field]: value
     }))
-  //
-  useEffect(() => {
-    setField('name', `Campaign ${countCampaigns + 1}`)
-  }, [countCampaigns, isOpen])
-  //
-  useEffect(() => {
-    if (context?.initialState) {
-      setCampaign(context?.initialState)
-    }
-  }, [isOpen, context?.initialState])
 
   return (
-    <Modal className={cn(styles.root, className)} isOpen={isOpen}>
-      <ModalContainer
-        title={isEdit ? 'Configure Campaign' : 'Create Campaign'}
-        footer={
-          <>
-            <Button mode='secondary' stretched onClick={modalStore.close}>
-              Cancel
-            </Button>
-            <Button type='submit' stretched onClick={() => context?.onSubmit?.(campaign)}>
-              {isEdit ? 'Update' : 'Create'}
-            </Button>
-          </>
-        }
-        onClose={modalStore.close}
+    <ModalContainer
+      width={300}
+      title={isEdit ? 'Configure Campaign' : 'Create Campaign'}
+      footer={
+        <>
+          <Button mode='secondary' stretched onClick={closeModal}>
+            Cancel
+          </Button>
+          <Button type='submit' stretched onClick={() => context?.onSubmit?.(campaign)}>
+            {isEdit ? 'Update' : 'Create'}
+          </Button>
+        </>
+      }
+    >
+      <form
+        onSubmit={event => {
+          event.preventDefault()
+          context?.onSubmit?.(campaign)
+        }}
       >
-        <form
-          onSubmit={event => {
-            event.preventDefault()
-            context?.onSubmit?.(campaign)
-          }}
-        >
-          <Panel>
-            <ControlRow title='Name'>
-              <ControlRowWide>
-                <InputText placeholder='Name' value={campaign.name} onChangeValue={v => setField('name', v)} />
-              </ControlRowWide>
-            </ControlRow>
+        <Panel>
+          <ControlRow title='Name'>
+            <ControlRowWide>
+              <InputText placeholder='Name' value={campaign.name} onChangeValue={v => setField('name', v)} />
+            </ControlRowWide>
+          </ControlRow>
 
-            <ControlRow title='Status'>
-              <ControlRowWide className={styles.relative}>
-                <Dropdown
-                  width='contentSize'
-                  placement='bottom-end'
-                  hideOnClick
-                  arrow={false}
-                  trigger='click'
-                  options={
-                    <DropdownGroup>
-                      <DropdownOption
-                        icon={<StatusDot status='success' />}
-                        onClick={() => setField('status', VariantStatus.Active)}
-                      >
-                        Active
-                      </DropdownOption>
-                      <DropdownOption
-                        icon={<StatusDot status='warning' />}
-                        onClick={() => setField('status', VariantStatus.Inactive)}
-                      >
-                        Pause
-                      </DropdownOption>
-                    </DropdownGroup>
-                  }
-                >
-                  <SelectMimicry>
-                    <div className={styles.statusRow}>
-                      <StatusDot status={campaign.status === CampaignStatus.Active ? 'success' : 'warning'} />
-                      {campaign.status === CampaignStatus.Active ? statusToLabel.ACTIVE : statusToLabel.INACTIVE}
-                    </div>
-                  </SelectMimicry>
-                </Dropdown>
-              </ControlRowWide>
-            </ControlRow>
-          </Panel>
-        </form>
-      </ModalContainer>
-    </Modal>
+          <ControlRow title='Status'>
+            <ControlRowWide className={styles.relative}>
+              <Dropdown
+                width='contentSize'
+                placement='bottom-end'
+                hideOnClick
+                arrow={false}
+                trigger='click'
+                options={
+                  <DropdownGroup>
+                    <DropdownOption
+                      icon={<StatusDot status='success' />}
+                      onClick={() => setField('status', VariantStatus.Active)}
+                    >
+                      Active
+                    </DropdownOption>
+                    <DropdownOption
+                      icon={<StatusDot status='warning' />}
+                      onClick={() => setField('status', VariantStatus.Inactive)}
+                    >
+                      Pause
+                    </DropdownOption>
+                  </DropdownGroup>
+                }
+              >
+                <SelectMimicry>
+                  <div className={styles.statusRow}>
+                    <StatusDot status={campaign.status === CampaignStatus.Active ? 'success' : 'warning'} />
+                    {campaign.status === CampaignStatus.Active ? statusToLabel.ACTIVE : statusToLabel.INACTIVE}
+                  </div>
+                </SelectMimicry>
+              </Dropdown>
+            </ControlRowWide>
+          </ControlRow>
+        </Panel>
+      </form>
+    </ModalContainer>
   )
 }

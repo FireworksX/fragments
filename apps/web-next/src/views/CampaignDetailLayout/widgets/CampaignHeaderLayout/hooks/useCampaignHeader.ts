@@ -17,18 +17,11 @@ export const useCampaignHeader = () => {
   })
   const stream = data?.campaign?.at(0)
 
-  const filters = useMemo(() => {
-    return {
-      osType: stream?.filters?.find(filter => filter.__typename === 'FilterOSTypeGet'),
-      deviceType: stream?.filters?.find(filter => filter.__typename === 'FilterDeviceTypeGet')
-    }
-  }, [stream])
-
   return {
     campaignSlug,
     stream,
     projectSlug,
     areaSlug,
-    filters
+    releaseCondition: stream?.featureFlag?.releaseCondition
   }
 }

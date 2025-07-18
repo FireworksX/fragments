@@ -51,13 +51,7 @@ export const ConfigureFragmentVariant: FC<CreateCustomBreakpointProps> = ({ clas
           <Button mode='secondary' stretched onClick={closeModal}>
             Cancel
           </Button>
-          <Button
-            stretched
-            onClick={() => {
-              console.log(context?.onSubmit, props)
-              context?.onSubmit?.(props)
-            }}
-          >
+          <Button stretched onClick={() => context?.onSubmit(props)}>
             Save
           </Button>
         </>

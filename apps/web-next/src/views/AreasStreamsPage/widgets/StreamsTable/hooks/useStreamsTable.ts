@@ -1,6 +1,3 @@
-import { ComponentRef, useImperativeHandle, useRef, useState } from 'react'
-import useClickOutside from '@/shared/hooks/useClickOutside'
-import { nextTick } from '@/shared/utils/nextTick'
 import { useParams } from 'next/navigation'
 import { useDeleteCampaignMutation } from '@/shared/api/stream/mutation/DeleteCampaign.generated'
 import {
@@ -15,7 +12,7 @@ import { CampaignStatus } from '@/__generated__/types'
 import { useAreaDetailQuery } from '@/shared/api/area/query/AreaDetail.generated'
 
 export const useStreamsTable = () => {
-  const { openModal, closeModal } = useModal()
+  const { open: openModal, close: closeModal } = useModal()
   const { areaSlug } = useParams()
 
   const [handleUpdateUpdateCampaignMutation] = useUpdateCampaignMutation()

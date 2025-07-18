@@ -1,0 +1,22 @@
+mutation CreateReleaseCondition($projectId: Int!, $filterData: FilterPost!) {
+    createReleaseCondition(
+        releaseCondition: {
+            projectId: $projectId
+            name: "default"
+            conditionSets: [{ name: "default", conditions: [{ name: "default", filterData: $filterData }] }]
+        }
+    ) {
+        id
+        conditionSets {
+            id
+            conditions {
+                id
+                filterData {
+                    ... on FilterDeviceTypeGet {
+                        deviceTypes
+                    }
+                }
+            }
+        }
+    }
+}

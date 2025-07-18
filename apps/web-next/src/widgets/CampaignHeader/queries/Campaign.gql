@@ -14,7 +14,11 @@ query Campaign($areaId: Int, $id: Int) {
                 id
                 conditionSets {
                     conditions {
-                        filterType
+                        filterData {
+                            ... on FilterDeviceTypeGet {
+                                deviceTypes
+                            }
+                        }
                     }
                 }
             }

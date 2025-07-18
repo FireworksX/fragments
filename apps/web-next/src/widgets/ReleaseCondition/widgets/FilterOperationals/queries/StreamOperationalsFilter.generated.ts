@@ -11,7 +11,7 @@ export type StreamOperationalsFilterQuery = { __typename?: 'Query', filter: { __
 
 export const StreamOperationalsFilterDocument = gql`
     query StreamOperationalsFilter {
-  filter(countries: [], regions: []) {
+  filter {
     osTypes
   }
 }

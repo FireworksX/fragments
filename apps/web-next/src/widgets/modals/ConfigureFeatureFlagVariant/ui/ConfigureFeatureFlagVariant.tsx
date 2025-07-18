@@ -88,6 +88,7 @@ export const ConfigureFeatureFlagVariant: FC<CreateCustomBreakpointProps> = ({ c
 
   return (
     <ModalContainer
+      width={300}
       title={isEdit ? 'Configure Variant' : 'Create Variant'}
       footer={
         <>
