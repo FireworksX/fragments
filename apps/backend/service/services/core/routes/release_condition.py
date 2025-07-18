@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 
 import strawberry
 from fastapi import HTTPException, status
@@ -34,10 +34,12 @@ from services.core.routes.schemas.release_condition import (
     FilterOSTypeGet,
     FilterPageGet,
     FilterTimeFrameGet,
+    FilterGeoLocationsGet,
     FilterType,
     ReleaseConditionGet,
     ReleaseConditionPatch,
     ReleaseConditionPost,
+    FilterPost
 )
 from services.core.routes.schemas.user import AuthPayload, RoleGet
 from services.core.routes.utils import get_user_role_in_project
@@ -57,12 +59,19 @@ def condition_db_to_condition(condition: Condition) -> ConditionGet:
     return ConditionGet(
         id=condition.id,
         name=condition.name,
-        filter_type=FilterType(condition.filter_type),
-        pages=[page.page for page in condition.page_filters] if condition.filter_type == int(FilterType.PAGE.value) else None,
-        device_types=[dt.device_type for dt in condition.device_type_filters] if condition.filter_type == int(FilterType.DEVICE_TYPE.value) else None,
-        os_types=[os.os_type for os in condition.os_type_filters] if condition.filter_type == int(FilterType.OS_TYPE.value) else None,
-        time_frames=[FilterTimeFrameGet(from_time=tf.from_time, to_time=tf.to_time) for tf in condition.time_frame_filters] if condition.filter_type == int(FilterType.TIME_FRAME.value) else None,
-        geo_locations=[FilterGeoLocationGet(country=gl.country, region=gl.region, city=gl.city) for gl in condition.geo_location_filters] if condition.filter_type == int(FilterType.GEO_LOCATION.value) else None
+        filter_data=(
+            FilterPageGet(pages=[page.page for page in condition.page_filters])
+            if condition.page_filters
+            else FilterDeviceTypeGet(device_types=[dt.device_type for dt in condition.device_type_filters])
+            if condition.device_type_filters
+            else FilterOSTypeGet(os_types=[os.os_type for os in condition.os_type_filters])
+            if condition.os_type_filters
+            else FilterTimeFrameGet(time_frames=[FilterTimeFrameGet(from_time=tf.from_time, to_time=tf.to_time) for tf in condition.time_frame_filters])
+            if condition.time_frame_filters
+            else FilterGeoLocationsGet(geo_locations=[FilterGeoLocationGet(country=gl.country, region=gl.region, city=gl.city) for gl in condition.geo_location_filters])
+            if condition.geo_location_filters
+            else None
+        )
     )
 
 

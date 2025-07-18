@@ -291,9 +291,6 @@ class Condition(Base):
     )
     condition_set = relationship('ConditionSet', back_populates='conditions')
 
-    # Type of filter this condition represents
-    filter_type = Column('filter_type', Integer, nullable=False)
-
     # Relationships to filter tables
     page_filters = relationship('PageFilter', back_populates='condition', cascade='save-update, merge, delete, delete-orphan')
     device_type_filters = relationship('DeviceTypeFilter', back_populates='condition', cascade='save-update, merge, delete, delete-orphan')

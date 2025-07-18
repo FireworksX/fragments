@@ -49,6 +49,10 @@ async def get_area_by_id_db(db: Session, area_id: int) -> Optional[Area]:
     return db.query(Area).filter(Area.id == area_id).first()
 
 
+async def get_area_by_code_db(db: Session, area_code: str) -> Optional[Area]:
+    return db.query(Area).filter(Area.area_code == area_code).first()
+
+
 async def get_area_by_code_and_project_id_db(
     db: Session, project_id: int, area_code: str
 ) -> Optional[Area]:
