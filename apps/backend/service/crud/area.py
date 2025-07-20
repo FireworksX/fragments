@@ -1,13 +1,12 @@
 from typing import List, Optional
+from datetime import datetime, timezone
 
 from sqlalchemy.orm import Session
 
 from crud.campaign import create_campaign_db
-from crud.feature_flag import create_feature_flag_db
 from crud.media import generate_default_media
-from database.models import Area, Campaign
+from database.models import Area
 from services.core.routes.schemas.campaign import CampaignStatus
-from services.core.routes.schemas.feature_flag import FeatureFlagPost
 
 
 async def create_area_db(
@@ -46,21 +45,25 @@ async def create_area_db(
 
 
 async def get_area_by_id_db(db: Session, area_id: int) -> Optional[Area]:
-    return db.query(Area).filter(Area.id == area_id).first()
+    return db.query(Area).filter(Area.id == area_id, Area.deleted_at.is_(None)).first()
 
 
 async def get_area_by_code_db(db: Session, area_code: str) -> Optional[Area]:
-    return db.query(Area).filter(Area.area_code == area_code).first()
+    return db.query(Area).filter(Area.area_code == area_code, Area.deleted_at.is_(None)).first()
 
 
 async def get_area_by_code_and_project_id_db(
     db: Session, project_id: int, area_code: str
 ) -> Optional[Area]:
-    return db.query(Area).filter(Area.project_id == project_id, Area.area_code == area_code).first()
+    return db.query(Area).filter(
+        Area.project_id == project_id, 
+        Area.area_code == area_code,
+        Area.deleted_at.is_(None)
+    ).first()
 
 
 async def get_areas_by_project_id_db(db: Session, project_id: int) -> List[Area]:
-    return db.query(Area).filter(Area.project_id == project_id).all()
+    return db.query(Area).filter(Area.project_id == project_id, Area.deleted_at.is_(None)).all()
 
 
 async def update_area_by_id_db(db: Session, values: dict) -> Area:
@@ -82,5 +85,8 @@ async def update_area_by_id_db(db: Session, values: dict) -> Area:
 
 
 async def delete_area_by_id_db(db: Session, area_id: int) -> None:
-    db.query(Area).filter(Area.id == area_id).delete()
-    db.commit()
+    area = await get_area_by_id_db(db, area_id)
+    if area:
+        area.deleted_at = datetime.now(timezone.utc)
+        db.merge(area)
+        db.commit()

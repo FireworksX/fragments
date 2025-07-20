@@ -81,7 +81,7 @@ class Area(Base):
     author_id = Column('author_id', Integer, ForeignKey('user.id'))
     author = relationship('User')
     project_id = Column('project_id', Integer, ForeignKey('project.id'), nullable=False)
-
+    deleted_at = Column('deleted_at', DateTime, nullable=True)
     logo_id = Column('logo_id', Integer, ForeignKey('media.id', ondelete='CASCADE'))
     logo = relationship('Media')
 
@@ -185,6 +185,7 @@ class Campaign(Base):
 
     status = Column('status', Integer, nullable=False, default=1)
     default = Column('default', Boolean, nullable=False, default=False)
+    deleted_at = Column('deleted_at', DateTime, nullable=True)
     feature_flag_id = Column(
         'feature_flag_id', Integer, ForeignKey('feature_flag.id', ondelete='CASCADE'), nullable=False
     )
@@ -317,7 +318,7 @@ class FeatureFlag(Base):
     release_condition = relationship('ReleaseCondition')
     variants = relationship('Variant', back_populates='feature_flag', cascade='all, delete-orphan')
     rotation_type = Column('rotation_type', Integer, nullable=False, default=1)
-
+    deleted_at = Column('deleted_at', DateTime, nullable=True)
     __table_args__ = (
         UniqueConstraint('name', 'project_id', name='uix_feature_flag_name_project'),
     )
