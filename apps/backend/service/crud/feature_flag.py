@@ -1,4 +1,5 @@
 from typing import List, Optional
+from datetime import datetime, timezone
 
 from sqlalchemy.orm import Session
 
@@ -29,15 +30,21 @@ async def create_feature_flag_db(
 
 
 async def get_feature_flag_by_id_db(db: Session, feature_flag_id: int) -> Optional[FeatureFlag]:
-    return db.query(FeatureFlag).filter(FeatureFlag.id == feature_flag_id).first()
+    return db.query(FeatureFlag).filter(
+        FeatureFlag.id == feature_flag_id,
+        FeatureFlag.deleted_at.is_(None)
+    ).first()
 
 
 async def get_feature_flag_by_name_db(db: Session, name: str) -> Optional[FeatureFlag]:
-    return db.query(FeatureFlag).filter(FeatureFlag.name == name).first()
+    return db.query(FeatureFlag).filter(
+        FeatureFlag.name == name,
+        FeatureFlag.deleted_at.is_(None)
+    ).first()
 
 
 async def get_feature_flags_db(db: Session) -> List[FeatureFlag]:
-    return db.query(FeatureFlag).all()
+    return db.query(FeatureFlag).filter(FeatureFlag.deleted_at.is_(None)).all()
 
 
 async def update_feature_flag_db(
@@ -63,5 +70,7 @@ async def update_feature_flag_db(
 
 async def delete_feature_flag_db(db: Session, feature_flag_id: int) -> None:
     feature_flag = await get_feature_flag_by_id_db(db, feature_flag_id)
-    db.delete(feature_flag)
-    db.commit()
+    if feature_flag:
+        feature_flag.deleted_at = datetime.now(timezone.utc)
+        db.merge(feature_flag)
+        db.commit()

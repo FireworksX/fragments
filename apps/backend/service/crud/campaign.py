@@ -1,10 +1,10 @@
 from typing import List, Optional
+from datetime import datetime, timezone
 
 from sqlalchemy.orm import Session
 
 from crud.feature_flag import create_feature_flag_db
 from crud.media import generate_default_media
-from crud.release_condition import create_release_condition_db
 from database.models import Campaign
 from services.core.routes.schemas.campaign import CampaignStatus
 from services.core.routes.schemas.feature_flag import FeatureFlagPost, RotationType
@@ -36,9 +36,6 @@ async def create_campaign_db(
             variants=[],
         ),
     )
-    db.add(default_campaign_feature_flag)
-    db.commit()
-    db.refresh(default_campaign_feature_flag)
 
     campaign: Campaign = Campaign(
         name=name,
@@ -61,14 +58,15 @@ async def create_campaign_db(
 
 
 async def get_campaign_by_id_db(db: Session, campaign_id: int) -> Optional[Campaign]:
-    return db.query(Campaign).filter(Campaign.id == campaign_id).first()
+    return db.query(Campaign).filter(Campaign.id == campaign_id, Campaign.deleted_at.is_(None)).first()
 
 
 async def delete_campaign_by_id_db(db: Session, campaign_id: int) -> None:
     campaign = db.query(Campaign).filter(Campaign.id == campaign_id).first()
     if campaign.default:
         raise ValueError('Cannot delete default campaign')
-    db.delete(campaign)
+    campaign.deleted_at = datetime.now(timezone.utc)
+    db.merge(campaign)
     db.commit()
 
 
@@ -76,14 +74,18 @@ async def get_campaign_by_name_and_area_id_db(
     db: Session, area_id: int, name: str
 ) -> Optional[Campaign]:
     return (
-        db.query(Campaign).filter(Campaign.area_id == area_id).filter(Campaign.name == name).first()
+        db.query(Campaign)
+        .filter(Campaign.area_id == area_id)
+        .filter(Campaign.name == name)
+        .filter(Campaign.deleted_at.is_(None))
+        .first()
     )
 
 
 async def get_campaigns_by_area_id_db(
     db: Session, area_id: int, status: Optional[CampaignStatus] = None
 ) -> List[Campaign]:
-    query = db.query(Campaign).filter(Campaign.area_id == area_id)
+    query = db.query(Campaign).filter(Campaign.area_id == area_id, Campaign.deleted_at.is_(None))
     if status is not None:
         query = query.filter(Campaign.status == int(status.value))
     return query.all()
@@ -92,7 +94,7 @@ async def get_campaigns_by_area_id_db(
 async def get_default_campaign_by_project_id_db(db: Session, project_id: int) -> Optional[Campaign]:
     return (
         db.query(Campaign)
-        .filter(Campaign.project_id == project_id, Campaign.default == True)
+        .filter(Campaign.project_id == project_id, Campaign.default == True, Campaign.deleted_at.is_(None))
         .first()
     )
 
