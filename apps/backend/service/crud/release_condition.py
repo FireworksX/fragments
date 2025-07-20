@@ -101,7 +101,7 @@ async def create_condition_db(db: Session, condition_set_id: int, condition: Con
     elif condition.filter_data.device_types is not None:
         for device_type in condition.filter_data.device_types:
             device_type_filter = DeviceTypeFilter(
-                device_type=device_type,
+                device_type=int(device_type.value),
                 condition_id=condition_db.id,
             )
             db.add(device_type_filter)
@@ -110,7 +110,7 @@ async def create_condition_db(db: Session, condition_set_id: int, condition: Con
     elif condition.filter_data.os_types is not None:
         for os_type in condition.filter_data.os_types:
             os_type_filter = OSTypeFilter(
-                os_type=os_type,
+                os_type=int(os_type.value),
                 condition_id=condition_db.id,
             )
             db.add(os_type_filter)
@@ -186,7 +186,7 @@ async def update_condition_db(
         condition_db.geo_location_filters.clear()
         for device_type in condition.filter_data.device_types:
             device_type_filter = DeviceTypeFilter(
-                device_type=device_type,
+                device_type=int(device_type.value),
                 condition_id=condition_db.id,
             )
             db.add(device_type_filter)
@@ -200,7 +200,7 @@ async def update_condition_db(
         condition_db.geo_location_filters.clear()
         for os_type in condition.filter_data.os_types:
             os_type_filter = OSTypeFilter(
-                os_type=os_type,
+                os_type=int(os_type.value),
                 condition_id=condition_db.id,
             )
             db.add(os_type_filter)
