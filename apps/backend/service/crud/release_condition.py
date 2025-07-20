@@ -74,15 +74,8 @@ async def update_release_condition_db(
         release_condition.name = rc.name
     if rc.condition_sets is not None:
         release_condition.condition_sets.clear()
-        for condition_set in release_condition.condition_sets:
-            condition_set = ConditionSet(
-                name=condition_set.name,
-                release_condition_id=release_condition.id,
-            )
-            db.add(condition_set)
-            db.commit()
-            for condition in condition_set.conditions:
-                condition = await create_condition_db(db, condition_set.id, condition)
+        for condition_set in rc.condition_sets:
+            condition_set = await create_condition_set_db(db, release_condition.id, condition_set)
     db.commit()
     db.refresh(release_condition)
     return release_condition
