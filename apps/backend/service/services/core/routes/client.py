@@ -307,12 +307,15 @@ async def client_area_route(
         has_active_variant = False
         if campaign.feature_flag.variants:
             for variant in campaign.feature_flag.variants:
-                if variant.status == VariantStatus.ACTIVE:
+                if variant.status == int(VariantStatus.ACTIVE.value):
                     has_active_variant = True
                     break
         if not has_active_variant:
             continue
 
+        if campaign.default is True:
+            best_campaign = campaign
+        
         for condition_set in campaign.feature_flag.release_condition.condition_sets:
             matched_filters = 0
             all_conditions_met = True
@@ -370,7 +373,7 @@ async def client_area_route(
     
 
     if variantFragment is None:
-        active_variants = [v for v in best_campaign.feature_flag.variants if v.status == VariantStatus.ACTIVE]
+        active_variants = [v for v in best_campaign.feature_flag.variants if v.status == int(VariantStatus.ACTIVE.value)]
         weights = [v.rollout_percentage for v in active_variants]
 
         if active_variants:
