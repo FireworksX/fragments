@@ -39,7 +39,6 @@ async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
 
 
 def campaign_db_to_campaign(campaign: Campaign) -> CampaignGet:
-    print(campaign.default)
     return CampaignGet(
         id=campaign.id,
         area_id=campaign.area_id,

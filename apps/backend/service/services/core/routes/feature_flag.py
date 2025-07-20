@@ -37,7 +37,7 @@ def feature_flag_db_to_feature_flag(feature_flag: FeatureFlag) -> FeatureFlagGet
         description=feature_flag.description,
         release_condition=release_condition_db_to_release_condition(feature_flag.release_condition),
         rotation_type=RotationType(feature_flag.rotation_type),
-        variants=[variant_db_to_variant(variant) for variant in feature_flag.variants],
+        variants=[variant_db_to_variant(variant) for variant in feature_flag.variants if variant.deleted_at is None],
     )
 
 

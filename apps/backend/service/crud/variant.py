@@ -135,5 +135,6 @@ async def delete_variant_db(db: Session, variant_id: int) -> None:
         db, variant.feature_flag_id, variant.id, variant.rollout_percentage, 0
     )
     variant.deleted_at = datetime.now(timezone.utc)
+    variant.status = int(VariantStatus.INACTIVE.value)
     db.merge(variant)
     db.commit()
