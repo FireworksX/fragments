@@ -1,5 +1,6 @@
 from typing import List, Optional
 from datetime import datetime, timezone
+import uuid
 
 from sqlalchemy.orm import Session
 
@@ -23,19 +24,34 @@ async def create_campaign_db(
     experiment_id: Optional[int],
 ) -> Campaign:
     default_campaign_logo = await generate_default_media(db, f"{name}_campaign.png")
-    default_campaign_feature_flag = await create_feature_flag_db(
-        db,
-        project_id,
-        FeatureFlagPost(
-            name=f'{name}_default_feature_flag',
-            description=f'Default feature flag for {name}',
-            rotation_type=RotationType.KEEP,
-            release_condition=ReleaseConditionPost(project_id=project_id,
-                name=f'{name}_default_release_condition', condition_sets=[]
+    try:
+        default_campaign_feature_flag = await create_feature_flag_db(
+            db,
+            project_id,
+            FeatureFlagPost(
+                name=f'{name}_default_feature_flag',
+                description=f'Default feature flag for {name}',
+                rotation_type=RotationType.KEEP,
+                release_condition=ReleaseConditionPost(project_id=project_id,
+                    name=f'{name}_default_release_condition', condition_sets=[]
+                ),
+                variants=[],
             ),
-            variants=[],
-        ),
-    )
+        )
+    except ValueError:
+            default_campaign_feature_flag = await create_feature_flag_db(
+            db,
+            project_id,
+            FeatureFlagPost(
+                name=f'{name}_{uuid.uuid4()}_default_feature_flag',
+                description=f'Default feature flag for {name}',
+                rotation_type=RotationType.KEEP,
+                release_condition=ReleaseConditionPost(project_id=project_id,
+                    name=f'{name}_{uuid.uuid4()}_default_release_condition', condition_sets=[]
+                ),
+                variants=[],
+            ),
+        )
 
     campaign: Campaign = Campaign(
         name=name,

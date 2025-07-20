@@ -13,6 +13,9 @@ from .variant import create_variant_db
 async def create_feature_flag_db(
     db: Session, project_id: int, feature_flag: FeatureFlagPost
 ) -> FeatureFlag:
+    existing_feature_flag = await get_feature_flag_by_name_db(db, feature_flag.name)
+    if existing_feature_flag:
+        raise ValueError(f"Feature flag with name {feature_flag.name} already exists")
     release_condition = await create_release_condition_db(db, feature_flag.release_condition)
     feature_flag_db = FeatureFlag(
         name=feature_flag.name,
@@ -52,6 +55,9 @@ async def update_feature_flag_db(
 ) -> FeatureFlag:
     feature_flag = await get_feature_flag_by_id_db(db, feature_flag_id)
     if values.get('name'):
+        existing_feature_flag = await get_feature_flag_by_name_db(db, values['name'])
+        if existing_feature_flag:
+            raise ValueError(f"Feature flag with name {values['name']} already exists")
         feature_flag.name = values['name']
     if values.get('description') is not None:
         feature_flag.description = values['description']
