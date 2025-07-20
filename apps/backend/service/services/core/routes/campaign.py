@@ -86,7 +86,21 @@ async def campaigns_in_area_without_default(
     area_id: int,
     status: Optional[CampaignStatus] = None,
 ) -> List[CampaignGet]:
-    campaigns: List[Campaign] = await campaigns_in_area(info, area_id, status)
+    user: AuthPayload = await info.context.user()
+    db: Session = info.context.session()
+
+    area: Area = await get_area_by_id_db(db, area_id)
+    if area is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Area does not exist')
+
+    permission: bool = await read_permission(db, user.user.id, area.project_id)
+    if not permission:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f'User is not allowed to view campaigns',
+        )
+
+    campaigns: List[Campaign] = await get_campaigns_by_area_id_db(db, area_id, status)
     out: List[CampaignGet] = []
     for cp in campaigns:
         if cp.default:
