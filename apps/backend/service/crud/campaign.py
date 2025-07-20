@@ -66,6 +66,7 @@ async def delete_campaign_by_id_db(db: Session, campaign_id: int) -> None:
     if campaign.default:
         raise ValueError('Cannot delete default campaign')
     campaign.deleted_at = datetime.now(timezone.utc)
+    campaign.status = int(CampaignStatus.INACTIVE.value)
     db.merge(campaign)
     db.commit()
 
