@@ -81,6 +81,19 @@ async def campaigns_in_area(
         out.append(campaign_db_to_campaign(cp))
     return out
 
+async def campaigns_in_area_without_default(
+    info: strawberry.Info[Context],
+    area_id: int,
+    status: Optional[CampaignStatus] = None,
+) -> List[CampaignGet]:
+    campaigns: List[Campaign] = await campaigns_in_area(info, area_id, status)
+    out: List[CampaignGet] = []
+    for cp in campaigns:
+        if cp.default:
+            continue
+        out.append(campaign_db_to_campaign(cp))
+    return out
+
 
 async def campaign_by_id(info: strawberry.Info[Context], campaign_id: int) -> CampaignGet:
     user: AuthPayload = await info.context.user()

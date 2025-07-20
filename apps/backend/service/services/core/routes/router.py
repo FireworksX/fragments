@@ -18,6 +18,7 @@ from .campaign import (
     campaign_by_id,
     campaign_by_name,
     campaigns_in_area,
+    campaigns_in_area_without_default,
     create_campaign_route,
     delete_campaign_logo_route,
     delete_campaign_route,
@@ -205,6 +206,7 @@ class CampaignQuery:
         campaign_id: Optional[int] = None,
         area_id: Optional[int] = None,
         name: Optional[str] = None,
+        without_default: Optional[bool] = True,
         limit: Optional[int] = 5,
         status: Optional[CampaignStatus] = None,
     ) -> List[CampaignGet]:
@@ -213,6 +215,8 @@ class CampaignQuery:
         if area_id is not None:
             if name is not None:
                 return await campaign_by_name(info, area_id, name, limit, status)
+            if without_default:
+                return await campaigns_in_area_without_default(info, area_id, status)
             return await campaigns_in_area(info, area_id, status)
         return []
 
