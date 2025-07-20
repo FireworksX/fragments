@@ -186,7 +186,7 @@ class Campaign(Base):
     status = Column('status', Integer, nullable=False, default=1)
     default = Column('default', Boolean, nullable=False, default=False)
     feature_flag_id = Column(
-        'feature_flag_id', Integer, ForeignKey('feature_flag.id'), nullable=False
+        'feature_flag_id', Integer, ForeignKey('feature_flag.id', ondelete='CASCADE'), nullable=False
     )
     feature_flag = relationship('FeatureFlag')
 
@@ -302,7 +302,7 @@ class Condition(Base):
 class FeatureFlag(Base):
     __tablename__ = 'feature_flag'
     id = Column('id', Integer, primary_key=True, index=True)
-    name = Column('name', String, nullable=False, unique=True)
+    name = Column('name', String, nullable=False)
     description = Column('description', String)
     project_id = Column(
         'project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False
@@ -317,6 +317,10 @@ class FeatureFlag(Base):
     release_condition = relationship('ReleaseCondition')
     variants = relationship('Variant', back_populates='feature_flag', cascade='all, delete-orphan')
     rotation_type = Column('rotation_type', Integer, nullable=False, default=1)
+
+    __table_args__ = (
+        UniqueConstraint('name', 'project_id', name='uix_feature_flag_name_project'),
+    )
 
 
 class Variant(Base):
