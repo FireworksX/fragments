@@ -119,11 +119,11 @@ class ReleaseConditionGet:
 
 @strawberry.input
 class FilterPost:
-    pages: List[str] = None
-    device_types: List[DeviceType] = None
-    os_types: List[OSType] = None
-    time_frames: List[FilterTimeFramePost] = None
-    geo_locations: List[FilterGeoLocationPost] = None
+    pages: Optional[List[str]] = None
+    device_types: Optional[List[DeviceType]] = None
+    os_types: Optional[List[OSType]] = None
+    time_frames: Optional[List[FilterTimeFramePost]] = None
+    geo_locations: Optional[List[FilterGeoLocationPost]] = None
 
 @strawberry.input
 class ConditionPost:
