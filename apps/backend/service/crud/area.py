@@ -17,6 +17,10 @@ async def create_area_db(
     area_code: str,
     description: Optional[str] = None,
 ) -> Area:
+    existing_area = await get_area_by_code_and_project_id_db(db, project_id, area_code)
+    if existing_area:
+        raise ValueError(f"Area code {area_code} already exists in project")
+
     default_media = await generate_default_media(db, f"{area_code}.png")
     area = Area(
         project_id=project_id,

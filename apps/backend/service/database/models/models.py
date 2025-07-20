@@ -91,9 +91,6 @@ class Area(Base):
     # One-to-Many relationship with Campaign
     campaigns = relationship('Campaign', back_populates='area')
 
-    __table_args__ = (UniqueConstraint('project_id', 'area_code', name='unique_project_area_code'),)
-
-
 class Project(Base):
     __tablename__ = 'project'
     id = Column('id', Integer, primary_key=True, index=True)
