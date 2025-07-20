@@ -82,7 +82,7 @@ async def update_release_condition_db(
             db.add(condition_set)
             db.commit()
             for condition in condition_set.conditions:
-                condition = await create_condition_db(db, condition)
+                condition = await create_condition_db(db, condition_set.id, condition)
     db.commit()
     db.refresh(release_condition)
     return release_condition
