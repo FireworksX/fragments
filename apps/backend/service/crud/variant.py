@@ -1,4 +1,5 @@
 from typing import List, Optional
+from datetime import datetime, timezone
 
 from sqlalchemy.orm import Session
 
@@ -17,6 +18,7 @@ async def recalculate_variants_rollout_percentage_db(
         db.query(Variant)
         .filter(Variant.feature_flag_id == feature_flag_id)
         .filter(Variant.id != variant_id)
+        .filter(Variant.deleted_at.is_(None))
         .all()
     )
     if len(variants) == 0:
@@ -88,11 +90,14 @@ async def create_variant_db(db: Session, variant: VariantPost) -> Variant:
 
 
 async def get_variant_by_id_db(db: Session, variant_id: int) -> Optional[Variant]:
-    return db.query(Variant).filter(Variant.id == variant_id).first()
+    return db.query(Variant).filter(Variant.id == variant_id, Variant.deleted_at.is_(None)).first()
 
 
 async def get_variants_by_feature_flag_id_db(db: Session, feature_flag_id: int) -> List[Variant]:
-    return db.query(Variant).filter(Variant.feature_flag_id == feature_flag_id).all()
+    return db.query(Variant).filter(
+        Variant.feature_flag_id == feature_flag_id,
+        Variant.deleted_at.is_(None)
+    ).all()
 
 
 async def update_variant_db(db: Session, v: VariantPatch) -> Variant:
@@ -129,5 +134,6 @@ async def delete_variant_db(db: Session, variant_id: int) -> None:
     await recalculate_variants_rollout_percentage_db(
         db, variant.feature_flag_id, variant.id, variant.rollout_percentage, 0
     )
-    db.delete(variant)
+    variant.deleted_at = datetime.now(timezone.utc)
+    db.merge(variant)
     db.commit()
