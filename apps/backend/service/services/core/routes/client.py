@@ -421,7 +421,7 @@ async def client_area_route(
 
     if best_campaign.feature_flag.rotation_type == int(RotationType.KEEP.value):
         logger.debug("Using KEEP rotation type - checking last viewed variant")
-        last_viewed_variant = await get_last_viewed_variant_in_area_db(db, client.id, area.id)
+        last_viewed_variant = await get_last_viewed_variant_in_area_db(db, client.id, area.id, best_campaign.id)
         if last_viewed_variant:
             variant = await get_variant_by_id_db(db, last_viewed_variant.variant_id)
             if variant:
@@ -457,7 +457,8 @@ async def client_area_route(
             domain='',
             subdomain='',
             area_id=area.id,
-            variant_id=variantFragment.id
+            variant_id=variantFragment.id,
+            campaign_id=best_campaign.id
         )
         
     return variantFragment

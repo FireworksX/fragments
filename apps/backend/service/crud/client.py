@@ -85,13 +85,14 @@ async def create_client_history_db(
     logger.debug(f"Created client history with id={history.id}")
     return history
 
-async def get_last_viewed_variant_in_area_db(db: Session, client_id: int, area_id: int) -> Optional[ClientHistory]:
+async def get_last_viewed_variant_in_area_db(db: Session, client_id: int, area_id: int, campaign_id: int) -> Optional[ClientHistory]:
     logger.debug(f"Getting last viewed variant for client_id={client_id} in area_id={area_id}")
     return (
         db.query(ClientHistory)
         .filter(
             ClientHistory.client_id == client_id,
             ClientHistory.area_id == area_id,
+            ClientHistory.campaign_id == campaign_id,
             ClientHistory.variant_id.isnot(None)
         )
         .order_by(ClientHistory.created_at.desc())
