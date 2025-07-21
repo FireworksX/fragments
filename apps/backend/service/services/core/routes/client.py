@@ -365,37 +365,37 @@ async def client_area_route(
 
                 if condition.page_filters:
                     if client_info.page:
-                        for page in condition.page_filters:
-                            if re.match(page, client_info.page):
-                                logger.debug(f"Page condition met: {client_info.page} matches {page}")
+                        for page_filter in condition.page_filters:
+                            if re.match(page_filter.page, client_info.page):
+                                logger.debug(f"Page condition met: {client_info.page} matches {page_filter.page}")
                                 condition_met = True
                                 break
                 if condition.device_type_filters:
                     if client_info.device_type:
-                        for device_type in condition.device_type_filters:
-                            if int(client_info.device_type.value) == device_type:
+                        for device_type_filter in condition.device_type_filters:
+                            if int(client_info.device_type.value) == device_type_filter.device_type:
                                 logger.debug(f"Device type condition met: {client_info.device_type.value}")
                                 condition_met = True
                                 break
                 if condition.os_type_filters:
                     if client_info.os_type:
-                        for os_type in condition.os_type_filters:
-                            if int(client_info.os_type.value) == os_type:
+                        for os_type_filter in condition.os_type_filters:
+                            if int(client_info.os_type.value) == os_type_filter.os_type:
                                 logger.debug(f"OS type condition met: {client_info.os_type.value}")
                                 condition_met = True
                                 break
                 if condition.geo_location_filters:
-                    for geo_location in condition.geo_location_filters:
-                        if (location.country == geo_location.country and
-                            (not geo_location.region or location.region == geo_location.region) and
-                            (not geo_location.city or location.city == geo_location.city)):
+                    for geo_location_filter in condition.geo_location_filters:
+                        if (location.country == geo_location_filter.country and
+                            (not geo_location_filter.region or location.region == geo_location_filter.region) and
+                            (not geo_location_filter.city or location.city == geo_location_filter.city)):
                             logger.debug(f"Geo location condition met: {location.country}/{location.region}/{location.city}")
                             condition_met = True
                             break
                 if condition.time_frame_filters:
                     current_time = datetime.datetime.now(datetime.UTC)
-                    for time_frame in condition.time_frame_filters:
-                        if time_frame.from_time <= current_time <= time_frame.to_time:
+                    for time_frame_filter in condition.time_frame_filters:
+                        if time_frame_filter.from_time <= current_time <= time_frame_filter.to_time:
                             logger.debug(f"Time frame condition met: current time {current_time}")
                             condition_met = True
                             break
