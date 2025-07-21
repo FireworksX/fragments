@@ -506,6 +506,8 @@ class ClientHistory(Base):
     client = relationship('Client', back_populates='history')
 
     area_id = Column('area_id', Integer, ForeignKey('area.id'), nullable=True)
+    campaign_id = Column('campaign_id', Integer, ForeignKey('campaign.id'), nullable=True)
+    campaign = relationship('Campaign')
     area = relationship('Area')
     variant_id = Column('variant_id', Integer, ForeignKey('variant.id'), nullable=True)
     variant = relationship('Variant')
