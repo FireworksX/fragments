@@ -4,24 +4,34 @@ from typing import List, Optional
 import pycountry
 
 from database import GeoLocation, Session
+from conf.settings import logger
 
 
 def get_country_name(country_code: str):
+    logger.debug(f"Getting country name for code: {country_code}")
     try:
-        return pycountry.countries.get(alpha_2=country_code.upper()).name
+        country_name = pycountry.countries.get(alpha_2=country_code.upper()).name
+        logger.debug(f"Found country name: {country_name}")
+        return country_name
     except AttributeError:
+        logger.warning(f"Invalid country code: {country_code}")
         return 'Invalid country code'
 
 
 def get_geo_locations(
     db: Session, countries_filter: Optional[List[str]], regions_filter: Optional[List[str]]
 ) -> List[GeoLocation]:
+    logger.info("Getting geo locations")
+    logger.debug(f"Filters - countries: {countries_filter}, regions: {regions_filter}")
+    
     geo_locations: List[GeoLocation] = db.query(GeoLocation).all()
     if not geo_locations:
+        logger.info("No geo locations found in DB, loading from file")
         with open('/opt/app/data/cities500.json', 'r', encoding='utf-8') as file:
             data = json.load(file)
 
         # Convert JSON objects to instances of GeoLocationGet
+        logger.debug(f"Converting {len(data)} locations from JSON")
         geo_locations: List[GeoLocation] = [
             GeoLocation(
                 country=get_country_name(item.get('country', '')),
@@ -30,15 +40,21 @@ def get_geo_locations(
             )
             for item in data
         ]
+        logger.debug("Adding locations to database")
         db.add_all(geo_locations)
         db.commit()
+        logger.info(f"Added {len(geo_locations)} locations to database")
 
     query = db.query(GeoLocation)
     # Apply filters if provided
     if countries_filter:
+        logger.debug(f"Filtering by countries: {countries_filter}")
         query = query.filter(GeoLocation.country.in_(countries_filter))
     if regions_filter:
+        logger.debug(f"Filtering by regions: {regions_filter}")
         query = query.filter(GeoLocation.region.in_(regions_filter))
 
     # Execute the query and return the results
-    return query.all()
+    results = query.all()
+    logger.debug(f"Returning {len(results)} geo locations")
+    return results

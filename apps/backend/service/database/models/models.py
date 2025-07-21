@@ -316,9 +316,6 @@ class FeatureFlag(Base):
     variants = relationship('Variant', back_populates='feature_flag', cascade='all, delete-orphan')
     rotation_type = Column('rotation_type', Integer, nullable=False, default=1)
     deleted_at = Column('deleted_at', DateTime, nullable=True)
-    __table_args__ = (
-        UniqueConstraint('name', 'project_id', name='uix_feature_flag_name_project'),
-    )
 
 
 class Variant(Base):
