@@ -363,32 +363,32 @@ async def client_area_route(
             for condition in condition_set.conditions:
                 condition_met = False
 
-                if condition.pages:
+                if condition.page_filters:
                     if client_info.page:
-                        for page in condition.pages:
+                        for page in condition.page_filters:
                             if re.match(page, client_info.page):
                                 logger.debug(f"Page condition met: {client_info.page} matches {page}")
                                 condition_met = True
                                 break
-                elif condition.device_types:
-                    if client_info.device_type and client_info.device_type.value in condition.device_types:
+                elif condition.device_type_filters:
+                    if client_info.device_type and client_info.device_type.value in condition.device_type_filters:
                         logger.debug(f"Device type condition met: {client_info.device_type.value}")
                         condition_met = True 
-                elif condition.os_types:
-                    if client_info.os_type and client_info.os_type.value in condition.os_types:
+                elif condition.os_type_filters:
+                    if client_info.os_type and client_info.os_type.value in condition.os_type_filters:
                         logger.debug(f"OS type condition met: {client_info.os_type.value}")
                         condition_met = True
-                elif condition.geo_locations:
-                    for geo_location in condition.geo_locations:
+                elif condition.geo_location_filters:
+                    for geo_location in condition.geo_location_filters:
                         if (location.country == geo_location.country and
                             (not geo_location.region or location.region == geo_location.region) and
                             (not geo_location.city or location.city == geo_location.city)):
                             logger.debug(f"Geo location condition met: {location.country}/{location.region}/{location.city}")
                             condition_met = True
                             break
-                elif condition.time_frames:
-                    current_time = datetime.now()
-                    for time_frame in condition.time_frames:
+                elif condition.time_frame_filters:
+                    current_time = datetime.datetime.now(datetime.UTC)
+                    for time_frame in condition.time_frame_filters:
                         if time_frame.from_time <= current_time <= time_frame.to_time:
                             logger.debug(f"Time frame condition met: current time {current_time}")
                             condition_met = True
