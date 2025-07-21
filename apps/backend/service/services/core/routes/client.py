@@ -371,13 +371,19 @@ async def client_area_route(
                                 condition_met = True
                                 break
                 elif condition.device_type_filters:
-                    if client_info.device_type and client_info.device_type.value in condition.device_type_filters:
-                        logger.debug(f"Device type condition met: {client_info.device_type.value}")
-                        condition_met = True 
+                    if client_info.device_type:
+                        for device_type in condition.device_type_filters:
+                            if client_info.device_type.value == device_type:
+                                logger.debug(f"Device type condition met: {client_info.device_type.value}")
+                                condition_met = True
+                                break
                 elif condition.os_type_filters:
-                    if client_info.os_type and client_info.os_type.value in condition.os_type_filters:
-                        logger.debug(f"OS type condition met: {client_info.os_type.value}")
-                        condition_met = True
+                    if client_info.os_type:
+                        for os_type in condition.os_type_filters:
+                            if client_info.os_type.value == os_type:
+                                logger.debug(f"OS type condition met: {client_info.os_type.value}")
+                                condition_met = True
+                                break
                 elif condition.geo_location_filters:
                     for geo_location in condition.geo_location_filters:
                         if (location.country == geo_location.country and
