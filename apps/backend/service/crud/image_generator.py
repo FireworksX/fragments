@@ -9,6 +9,8 @@ import svgwrite
 from gi.repository import Gio, Rsvg
 from svgwrite.drawing import Drawing
 
+from conf.settings import logger
+
 
 AVAILABLE_COLORS: List[str] = [
     '#FFC700',
@@ -22,10 +24,12 @@ AVAILABLE_COLORS: List[str] = [
 
 
 def get_random_int(min_val: int, max_val: int) -> int:
+    logger.debug(f"Getting random int between {min_val} and {max_val}")
     return random.randint(min_val, max_val)
 
 
 def get_random(min_val: float, max_val: float) -> float:
+    logger.debug(f"Getting random float between {min_val} and {max_val}")
     return random.uniform(min_val, max_val)
 
 
@@ -38,10 +42,12 @@ def generate_rectangle_svg(
     fill_type: str,
     gradient: Optional[Dict[str, Any]] = None,
 ) -> str:
+    logger.debug(f"Generating rectangle SVG at ({x}, {y}) with dimensions {width}x{height}")
     gradient_def = ''
     fill_value = fill
 
     if fill_type == 'gradient':
+        logger.debug("Generating gradient for rectangle")
         x1, y1 = x, y + height / 2
         x2, y2 = x + width, y + height / 2
         stop1_color = random.choice(AVAILABLE_COLORS)
@@ -59,14 +65,17 @@ def generate_rectangle_svg(
 
 
 def generate_ellipse_svg(x: int, y: int, width: int, height: int, fill: str) -> str:
+    logger.debug(f"Generating ellipse SVG at ({x}, {y}) with dimensions {width}x{height}")
     return f'<ellipse cx="{x}" cy="{y}" rx="{width / 2}" ry="{height / 2}" fill="{fill}"/>'
 
 
 def generate_triangle_svg(x: int, y: int, width: int, height: int, fill: str) -> str:
+    logger.debug(f"Generating triangle SVG at ({x}, {y}) with dimensions {width}x{height}")
     return f'<path d="M{x} {y} L{x - width / 2} {y + height} L{x + width / 2} {y + height} Z" fill="{fill}"/>'
 
 
 def generate_shape(index: int) -> Dict[str, Union[Dict[str, Any], Dict[str, Union[str, int]]]]:
+    logger.debug(f"Generating shape with index {index}")
     x = get_random_int(0, 800)
     y = get_random_int(0, 800)
     width = get_random_int(800, 1280)
@@ -88,6 +97,7 @@ def generate_shape(index: int) -> Dict[str, Union[Dict[str, Any], Dict[str, Unio
     }
 
     if random.random() < 0.2:
+        logger.debug("Adding gradient to shape")
         shape['fill_type'] = 'gradient'
         shape['gradient'] = {
             'type': 'linear',
@@ -101,6 +111,7 @@ def generate_shape(index: int) -> Dict[str, Union[Dict[str, Any], Dict[str, Unio
 
 
 def generate_gradient_config() -> Dict[str, Any]:
+    logger.info("Generating gradient configuration")
     shape_counts = [1, 2, 3, 4, 5, 6]
     config: List[Dict[str, Any]] = []
 
@@ -109,6 +120,7 @@ def generate_gradient_config() -> Dict[str, Any]:
     light_dark_mode = '#FFFFFF'
 
     number_of_shapes = random.choice(shape_counts)
+    logger.debug(f"Generating {number_of_shapes} shapes")
 
     shapes = []
     for i in range(number_of_shapes):
@@ -118,6 +130,7 @@ def generate_gradient_config() -> Dict[str, Any]:
             config.append(color)
             shapes.append(shape)
         except Exception as e:
+            logger.error(f"Error generating shape {i}: {str(e)}")
             raise e
 
     config.append({'type': 'background', 'id': len(config), 'value': background_color})
@@ -138,6 +151,7 @@ def generate_gradient_config() -> Dict[str, Any]:
 
 
 def generate_svg(config: Dict[str, Any]) -> svgwrite.Drawing:
+    logger.info("Generating SVG from config")
     # Disable profile to allow custom filters
     dwg = svgwrite.Drawing(
         'noisy_gradient.svg',
@@ -150,6 +164,7 @@ def generate_svg(config: Dict[str, Any]) -> svgwrite.Drawing:
     defs = dwg.defs
 
     # Background layers
+    logger.debug("Adding background layers")
     dwg.add(dwg.rect(insert=(0, 0), size=('1600px', '1600px'), fill=config['light_dark_mode']))
     dwg.add(
         dwg.rect(
@@ -163,6 +178,7 @@ def generate_svg(config: Dict[str, Any]) -> svgwrite.Drawing:
     # Main shape group
     g = dwg.g(clip_path='url(#clip0_50_327)', filter='url(#filter0_f_50_327)')
 
+    logger.debug(f"Adding {len(config['shapes'])} shapes")
     for shape in config['shapes']:
         if shape['shape'] == 'rectangle':
             rect = dwg.rect(
@@ -197,13 +213,7 @@ def generate_svg(config: Dict[str, Any]) -> svgwrite.Drawing:
 
     dwg.add(g)
 
-    # noise_g = dwg.g(style="mix-blend-mode:overlay")
-    # noise_g.add(dwg.rect(insert=(0, 0), size=('1600', '1600'), fill="url(#pattern0)", fill_opacity=0.75))
-    # noise_g.add(dwg.rect(insert=(0, 0), size=('1600', '1600'), style="fill:gray; stroke:transparent; filter: url(#feTurb02)"))
-    # dwg.add(noise_g)
-
-    # # Filter: feTurbulence and blend
-
+    logger.debug("Adding filters and patterns")
     turb_filter = dwg.defs.add(
         dwg.filter(
             id='feTurb02',
@@ -258,6 +268,7 @@ def generate_svg(config: Dict[str, Any]) -> svgwrite.Drawing:
 
 
 def convert_svg_to_png(dwg: Drawing) -> BytesIO:
+    logger.info("Converting SVG to PNG")
     # Convert SVG to UTF-8 bytes
     svg_content = dwg.tostring()
     svg_bytes = svg_content.encode('utf-8')
@@ -282,11 +293,14 @@ def convert_svg_to_png(dwg: Drawing) -> BytesIO:
     png_io = BytesIO()
     surface.write_to_png(png_io)
     png_io.seek(0)
+    logger.debug("Successfully converted SVG to PNG")
     return png_io
 
 
 def generate_image() -> BytesIO:
+    logger.info("Starting image generation")
     config = generate_gradient_config()
     dwg = generate_svg(config)
     png_bytes = convert_svg_to_png(dwg)
+    logger.info("Completed image generation")
     return png_bytes
