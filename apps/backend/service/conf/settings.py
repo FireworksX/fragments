@@ -1,6 +1,7 @@
 # pylint: disable=W0401,C0413,W0614
 
 import os
+import logging
 from typing import Optional
 
 from pydantic_settings import BaseSettings
@@ -89,3 +90,10 @@ def uri_maker(conf_object, driver):
 make_pg_uri = uri_maker(pg_settings, 'postgresql+psycopg2')
 
 PG_URI = make_pg_uri()
+
+
+log_dir = '/opt/app/logs'
+os.makedirs(log_dir, exist_ok=True)
+
+logging.config.fileConfig('logging.conf')
+logger = logging.getLogger('backend-core')

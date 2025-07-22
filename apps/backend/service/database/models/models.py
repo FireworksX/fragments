@@ -76,13 +76,12 @@ class ProjectApiKey(Base):
 class Area(Base):
     __tablename__ = 'area'
     id = Column('id', Integer, primary_key=True, index=True)
-    name = Column('name', String, nullable=False)
     description = Column('description', String)
     area_code = Column('area_code', String, nullable=False)
     author_id = Column('author_id', Integer, ForeignKey('user.id'))
     author = relationship('User')
     project_id = Column('project_id', Integer, ForeignKey('project.id'), nullable=False)
-
+    deleted_at = Column('deleted_at', DateTime, nullable=True)
     logo_id = Column('logo_id', Integer, ForeignKey('media.id', ondelete='CASCADE'))
     logo = relationship('Media')
 
@@ -91,9 +90,6 @@ class Area(Base):
 
     # One-to-Many relationship with Campaign
     campaigns = relationship('Campaign', back_populates='area')
-
-    __table_args__ = (UniqueConstraint('project_id', 'area_code', name='unique_project_area_code'),)
-
 
 class Project(Base):
     __tablename__ = 'project'
@@ -164,62 +160,6 @@ class FilesystemDirectory(Base):
         return list(self.subdirectories) + list(self.fragments)
 
 
-class GeoLocation(Base):
-    __tablename__ = 'geo_location'
-    id = Column('id', Integer, primary_key=True, index=True)
-    country = Column('country', String, nullable=False)
-    region = Column('region', String)
-    city = Column('city', String, nullable=False)
-
-
-class CampaignGeoLocationFilter(Base):
-    __tablename__ = 'campaign_geo_location_filter'
-    id = Column('id', Integer, primary_key=True, index=True)
-    campaign_id = Column(ForeignKey('campaign.id'))
-
-    campaign = relationship('Campaign', back_populates='geo_locations_filter')
-    country = Column('country', String, nullable=False)
-    region = Column('region', String)
-    city = Column('city', String, nullable=False)
-
-
-class CampaignTimeFrameFilter(Base):
-    __tablename__ = 'campaign_time_frame_filter'
-    id = Column('id', Integer, primary_key=True, index=True)
-    campaign_id = Column(ForeignKey('campaign.id'))
-
-    campaign = relationship('Campaign', back_populates='time_frames_filter')
-    from_time = Column('from_time', DateTime, nullable=False)
-    to_time = Column('to_time', DateTime, nullable=False)
-
-
-class CampaignOSTypeFilter(Base):
-    __tablename__ = 'campaign_os_type_filter'
-    id = Column('id', Integer, primary_key=True, index=True)
-    campaign_id = Column(ForeignKey('campaign.id'))
-
-    campaign = relationship('Campaign', back_populates='os_types_filter')
-    os_type = Column('os_type', Integer, nullable=False)
-
-
-class CampaignDeviceTypeFilter(Base):
-    __tablename__ = 'campaign_device_type_filter'
-    id = Column('id', Integer, primary_key=True, index=True)
-    campaign_id = Column(ForeignKey('campaign.id'))
-
-    campaign = relationship('Campaign', back_populates='device_types_filter')
-    device_type = Column('device_type', Integer, nullable=False)
-
-
-class CampaignPageFilter(Base):
-    __tablename__ = 'campaign_page_filter'
-    id = Column('id', Integer, primary_key=True, index=True)
-    campaign_id = Column(ForeignKey('campaign.id'))
-
-    campaign = relationship('Campaign', back_populates='pages_filter')
-    page = Column('page', String, nullable=False)
-
-
 class Campaign(Base):
     __tablename__ = 'campaign'
     id = Column('id', Integer, primary_key=True, index=True)
@@ -240,37 +180,176 @@ class Campaign(Base):
     logo_id = Column('logo_id', Integer, ForeignKey('media.id', ondelete='CASCADE'))
     logo = relationship('Media')
 
-    active = Column('active', Boolean, default=True)
-    archived = Column('archived', Boolean, default=False)
-    default = Column('default', Boolean, default=False)
+    status = Column('status', Integer, nullable=False, default=1)
+    default = Column('default', Boolean, nullable=False, default=False)
+    deleted_at = Column('deleted_at', DateTime, nullable=True)
+    feature_flag_id = Column(
+        'feature_flag_id', Integer, ForeignKey('feature_flag.id', ondelete='CASCADE'), nullable=False
+    )
+    feature_flag = relationship('FeatureFlag')
 
-    fragment_id = Column('fragment_id', Integer, ForeignKey('fragment.id'), nullable=True)
+    experiment_id = Column('experiment_id', Integer, ForeignKey('experiment.id'), nullable=True)
+    experiment = relationship('Experiment')
+
+
+class ReleaseCondition(Base):
+    __tablename__ = 'release_condition'
+    id = Column('id', Integer, primary_key=True, index=True)
+    name = Column('name', String, nullable=False)
+    project_id = Column('project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False)
+    project = relationship('Project')
+
+    condition_sets = relationship(
+        'ConditionSet',
+        back_populates='release_condition',
+        cascade='save-update, merge, delete, delete-orphan',
+    )
+
+
+class ConditionSet(Base):
+    __tablename__ = 'condition_set'
+    id = Column('id', Integer, primary_key=True, index=True)
+    name = Column('name', String, nullable=False)
+    release_condition_id = Column(
+        'release_condition_id',
+        Integer,
+        ForeignKey('release_condition.id', ondelete='CASCADE'),
+        nullable=False,
+    )
+    release_condition = relationship('ReleaseCondition', back_populates='condition_sets')
+
+    conditions = relationship(
+        'Condition',
+        back_populates='condition_set',
+        cascade='save-update, merge, delete, delete-orphan',
+    )
+
+
+class GeoLocation(Base):
+    __tablename__ = 'geo_location'
+    id = Column('id', Integer, primary_key=True, index=True)
+    country = Column('country', String, nullable=False)
+    region = Column('region', String)
+    city = Column('city', String, nullable=False)
+
+
+class GeoLocationFilter(Base):
+    __tablename__ = 'geo_location_filter'
+    id = Column('id', Integer, primary_key=True, index=True)
+    country = Column('country', String, nullable=False)
+    region = Column('region', String)
+    city = Column('city', String, nullable=False)
+
+    condition_id = Column('condition_id', Integer, ForeignKey('condition.id', ondelete='CASCADE'), nullable=False)
+    condition = relationship('Condition', back_populates='geo_location_filters')
+
+class TimeFrameFilter(Base):
+    __tablename__ = 'time_frame_filter'
+    id = Column('id', Integer, primary_key=True, index=True)
+    from_time = Column('from_time', DateTime, nullable=False)
+    to_time = Column('to_time', DateTime, nullable=False)
+
+    condition_id = Column('condition_id', Integer, ForeignKey('condition.id', ondelete='CASCADE'), nullable=False)
+    condition = relationship('Condition', back_populates='time_frame_filters')
+class OSTypeFilter(Base):
+    __tablename__ = 'os_type_filter'
+    id = Column('id', Integer, primary_key=True, index=True)
+    os_type = Column('os_type', Integer, nullable=False)
+
+    condition_id = Column('condition_id', Integer, ForeignKey('condition.id', ondelete='CASCADE'), nullable=False)
+    condition = relationship('Condition', back_populates='os_type_filters')
+
+
+class DeviceTypeFilter(Base):
+    __tablename__ = 'device_type_filter'
+    id = Column('id', Integer, primary_key=True, index=True)
+    device_type = Column('device_type', Integer, nullable=False)
+
+    condition_id = Column('condition_id', Integer, ForeignKey('condition.id', ondelete='CASCADE'), nullable=False)
+    condition = relationship('Condition', back_populates='device_type_filters')
+
+
+class PageFilter(Base):
+    __tablename__ = 'page_filter'
+    id = Column('id', Integer, primary_key=True, index=True)
+    page = Column('page', String, nullable=False)
+
+    condition_id = Column('condition_id', Integer, ForeignKey('condition.id', ondelete='CASCADE'), nullable=False)
+    condition = relationship('Condition', back_populates='page_filters')
+
+class Condition(Base):
+    __tablename__ = 'condition'
+    id = Column('id', Integer, primary_key=True, index=True)
+    name = Column('name', String, nullable=False)
+    condition_set_id = Column(
+        'condition_set_id',
+        Integer,
+        ForeignKey('condition_set.id', ondelete='CASCADE'),
+        nullable=False,
+    )
+    condition_set = relationship('ConditionSet', back_populates='conditions')
+
+    # Relationships to filter tables
+    page_filters = relationship('PageFilter', back_populates='condition', cascade='save-update, merge, delete, delete-orphan')
+    device_type_filters = relationship('DeviceTypeFilter', back_populates='condition', cascade='save-update, merge, delete, delete-orphan')
+    os_type_filters = relationship('OSTypeFilter', back_populates='condition', cascade='save-update, merge, delete, delete-orphan')
+    time_frame_filters = relationship('TimeFrameFilter', back_populates='condition', cascade='save-update, merge, delete, delete-orphan')
+    geo_location_filters = relationship('GeoLocationFilter', back_populates='condition', cascade='save-update, merge, delete, delete-orphan')
+
+
+class FeatureFlag(Base):
+    __tablename__ = 'feature_flag'
+    id = Column('id', Integer, primary_key=True, index=True)
+    name = Column('name', String, nullable=False)
+    description = Column('description', String)
+    project_id = Column(
+        'project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False
+    )
+    project = relationship('Project')
+    release_condition_id = Column(
+        'release_condition_id',
+        Integer,
+        ForeignKey('release_condition.id', ondelete='CASCADE'),
+        nullable=False,
+    )
+    release_condition = relationship('ReleaseCondition')
+    variants = relationship('Variant', back_populates='feature_flag', cascade='all, delete-orphan')
+    rotation_type = Column('rotation_type', Integer, nullable=False, default=1)
+    deleted_at = Column('deleted_at', DateTime, nullable=True)
+
+
+class Variant(Base):
+    __tablename__ = 'variant'
+    id = Column('id', Integer, primary_key=True, index=True)
+    feature_flag_id = Column(
+        'feature_flag_id',
+        Integer,
+        ForeignKey('feature_flag.id', ondelete='CASCADE'),
+        nullable=False,
+    )
+
+    feature_flag = relationship('FeatureFlag')
+    name = Column('name', String, nullable=False)
+    rollout_percentage = Column('rollout_percentage', Float, nullable=False, default=0)
+    fragment_id = Column('fragment_id', Integer, ForeignKey('fragment.id', ondelete='CASCADE'))
     fragment = relationship('Fragment')
+    props = Column('props', JSON, nullable=True)
+    status = Column('status', Integer, nullable=False, default=1)
+    deleted_at = Column('deleted_at', DateTime, nullable=True)
 
-    pages_filter = relationship(
-        'CampaignPageFilter',
-        back_populates='campaign',
-        cascade='save-update, merge, ' 'delete, delete-orphan',
+class Experiment(Base):
+    __tablename__ = 'experiment'
+    id = Column('id', Integer, primary_key=True, index=True)
+    name = Column('name', String, nullable=False, unique=True)
+    description = Column('description', String)
+    feature_flag_id = Column(
+        'feature_flag_id', Integer, ForeignKey('feature_flag.id', ondelete='CASCADE')
     )
-    device_types_filter = relationship(
-        'CampaignDeviceTypeFilter',
-        back_populates='campaign',
-        cascade='save-update, merge, ' 'delete, delete-orphan',
-    )
-    os_types_filter = relationship(
-        'CampaignOSTypeFilter',
-        back_populates='campaign',
-        cascade='save-update, merge, ' 'delete, delete-orphan',
-    )
-    time_frames_filter = relationship(
-        'CampaignTimeFrameFilter',
-        back_populates='campaign',
-        cascade='save-update, merge, ' 'delete, delete-orphan',
-    )
-    geo_locations_filter = relationship(
-        'CampaignGeoLocationFilter',
-        back_populates='campaign',
-        cascade='save-update, merge, ' 'delete, delete-orphan',
+    feature_flag = relationship('FeatureFlag')
+
+    created_at = Column('created_at', DateTime, nullable=False, default=func.now())
+    updated_at = Column(
+        'updated_at', DateTime, nullable=False, default=func.now(), onupdate=func.now()
     )
 
 
@@ -425,3 +504,12 @@ class ClientHistory(Base):
 
     # Relationships
     client = relationship('Client', back_populates='history')
+
+    area_id = Column('area_id', Integer, ForeignKey('area.id'), nullable=True)
+    campaign_id = Column('campaign_id', Integer, ForeignKey('campaign.id'), nullable=True)
+    campaign = relationship('Campaign')
+    area = relationship('Area')
+    variant_id = Column('variant_id', Integer, ForeignKey('variant.id'), nullable=True)
+    variant = relationship('Variant')
+
+    event_type = Column('event_type', Integer, nullable=False)

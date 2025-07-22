@@ -1,21 +1,19 @@
-from typing import List, Optional, Union
+from enum import Enum
+from typing import Optional
 
 import strawberry
 
-from services.core.routes.schemas.filter import (
-    DeviceType,
-    FilterDeviceTypeGet,
-    FilterGeoLocationPost,
-    FilterGeoLocationsGet,
-    FilterOSTypeGet,
-    FilterPageGet,
-    FilterTimeFramePost,
-    FilterTimeFramesGet,
-    OSType,
-)
-from services.core.routes.schemas.fragment import FragmentGet
+from services.core.routes.schemas.experiment import ExperimentGet
+from services.core.routes.schemas.feature_flag import FeatureFlagGet
 from services.core.routes.schemas.media import MediaGet
 from services.core.routes.schemas.user import UserGet
+
+
+@strawberry.enum
+class CampaignStatus(Enum):
+    ACTIVE = 1
+    INACTIVE = 2
+    ARCHIVED = 3
 
 
 @strawberry.type
@@ -26,28 +24,9 @@ class CampaignGet:
     logo: MediaGet
     author: UserGet
     description: Optional[str] = None
-    active: bool
-    default: bool
-    archived: bool
-    filters: List[
-        Union[
-            FilterOSTypeGet
-            | FilterDeviceTypeGet
-            | FilterPageGet
-            | FilterGeoLocationsGet
-            | FilterTimeFramesGet
-        ]
-    ]
-    fragment: Optional[FragmentGet] = None
-
-
-@strawberry.input
-class FiltersPost:
-    os_types: List[OSType]
-    device_types: List[DeviceType]
-    geolocations: List[FilterGeoLocationPost]
-    time_frames: List[FilterTimeFramePost]
-    pages: List[str]
+    status: CampaignStatus
+    experiment: Optional[ExperimentGet] = None
+    feature_flag: FeatureFlagGet
 
 
 @strawberry.input
@@ -55,10 +34,8 @@ class CampaignPost:
     area_id: int
     name: str
     description: Optional[str] = None
-    active: bool
-    archived: bool
-    filters: Optional[FiltersPost] = None
-    fragment_id: Optional[int] = None
+    status: CampaignStatus
+    experiment_id: Optional[int] = None
 
 
 @strawberry.input
@@ -66,7 +43,5 @@ class CampaignPatch:
     id: int
     name: Optional[str] = None
     description: Optional[str] = None
-    active: Optional[bool] = None
-    archived: Optional[bool] = None
-    filters: Optional[FiltersPost] = None
-    fragment_id: Optional[int] = None
+    status: Optional[CampaignStatus] = None
+    experiment_id: Optional[int] = None

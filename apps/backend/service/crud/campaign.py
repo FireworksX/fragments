@@ -1,65 +1,16 @@
 from typing import List, Optional
+from datetime import datetime, timezone
+import uuid
 
 from sqlalchemy.orm import Session
 
+from crud.feature_flag import create_feature_flag_db
 from crud.media import generate_default_media
-from database.models import (
-    Campaign,
-    CampaignDeviceTypeFilter,
-    CampaignGeoLocationFilter,
-    CampaignOSTypeFilter,
-    CampaignPageFilter,
-    CampaignTimeFrameFilter,
-)
-from services.core.routes.schemas.campaign import FiltersPost
-from services.core.routes.schemas.filter import (
-    DeviceType,
-    FilterGeoLocationPost,
-    FilterTimeFramePost,
-    OSType,
-)
-
-
-def add_os_type_filter_to_campaign(campaign: Campaign, os_type_filter: OSType) -> None:
-    relation: CampaignOSTypeFilter = CampaignOSTypeFilter(
-        campaign_id=campaign.id, os_type=int(os_type_filter.value)
-    )
-    relation.campaign = campaign
-
-
-def add_device_type_filter_to_campaign(campaign: Campaign, device_type_filter: DeviceType) -> None:
-    relation: CampaignDeviceTypeFilter = CampaignDeviceTypeFilter(
-        campaign_id=campaign.id, device_type=int(device_type_filter.value)
-    )
-    relation.campaign = campaign
-
-
-def add_page_filter_to_campaign(campaign: Campaign, page_filter: str) -> None:
-    relation: CampaignPageFilter = CampaignPageFilter(campaign_id=campaign.id, page=page_filter)
-    relation.campaign = campaign
-
-
-def add_geolocation_filter_to_campaign(
-    campaign: Campaign, geo_location_filter: FilterGeoLocationPost
-) -> None:
-    relation: CampaignGeoLocationFilter = CampaignGeoLocationFilter(
-        campaign_id=campaign.id,
-        country=geo_location_filter.country,
-        region=geo_location_filter.region,
-        city=geo_location_filter.city,
-    )
-    relation.campaign = campaign
-
-
-def add_time_frame_filter_to_campaign(
-    campaign: Campaign, time_frame_filter: FilterTimeFramePost
-) -> None:
-    relation: CampaignTimeFrameFilter = CampaignTimeFrameFilter(
-        campaign_id=campaign.id,
-        to_time=time_frame_filter.to_time,
-        from_time=time_frame_filter.from_time,
-    )
-    relation.campaign = campaign
+from database.models import Campaign
+from services.core.routes.schemas.campaign import CampaignStatus
+from services.core.routes.schemas.feature_flag import FeatureFlagPost, RotationType
+from services.core.routes.schemas.release_condition import ReleaseConditionPost
+from conf.settings import logger
 
 
 async def create_campaign_db(
@@ -68,121 +19,150 @@ async def create_campaign_db(
     project_id: int,
     area_id: int,
     description: str,
-    active: bool,
-    archived: bool,
-    author_id: int,
     default: bool,
-    fragment_id: Optional[int],
-    filters: Optional[FiltersPost],
+    status: CampaignStatus,
+    author_id: int,
+    experiment_id: Optional[int],
 ) -> Campaign:
+    logger.info(f"Creating campaign {name} in area {area_id}")
     default_campaign_logo = await generate_default_media(db, f"{name}_campaign.png")
+    try:
+        logger.debug(f"Creating default feature flag for campaign {name}")
+        default_campaign_feature_flag = await create_feature_flag_db(
+            db,
+            project_id,
+            FeatureFlagPost(
+                name=f'{name}_default_feature_flag',
+                description=f'Default feature flag for {name}',
+                rotation_type=RotationType.KEEP,
+                release_condition=ReleaseConditionPost(project_id=project_id,
+                    name=f'{name}_default_release_condition', condition_sets=[]
+                ),
+                variants=[],
+            ),
+        )
+    except ValueError:
+        logger.warning(f"Feature flag name conflict for {name}, adding UUID")
+        default_campaign_feature_flag = await create_feature_flag_db(
+            db,
+            project_id,
+            FeatureFlagPost(
+                name=f'{name}_{uuid.uuid4()}_default_feature_flag',
+                description=f'Default feature flag for {name}',
+                rotation_type=RotationType.KEEP,
+                release_condition=ReleaseConditionPost(project_id=project_id,
+                    name=f'{name}_{uuid.uuid4()}_default_release_condition', condition_sets=[]
+                ),
+                variants=[],
+            ),
+        )
+
     campaign: Campaign = Campaign(
         name=name,
         project_id=project_id,
         area_id=area_id,
         description=description,
-        active=active,
-        archived=archived,
-        author_id=author_id,
-        fragment_id=fragment_id,
         default=default,
+        status=int(status.value),
+        author_id=author_id,
         logo_id=default_campaign_logo.id,
+        feature_flag_id=default_campaign_feature_flag.id,
+        experiment_id=experiment_id,
     )
+
     db.add(campaign)
     db.commit()
     db.refresh(campaign)
+    logger.debug(f"Created campaign {campaign.id}")
 
-    if filters is not None:
-        for os_type in filters.os_types:
-            add_os_type_filter_to_campaign(campaign, os_type)
-        for device_type in filters.device_types:
-            add_device_type_filter_to_campaign(campaign, device_type)
-        for page in filters.pages:
-            add_page_filter_to_campaign(campaign, page)
-        for geo_location in filters.geolocations:
-            add_geolocation_filter_to_campaign(campaign, geo_location)
-        for time_frame in filters.time_frames:
-            add_time_frame_filter_to_campaign(campaign, time_frame)
-    db.commit()
-    db.refresh(campaign)
     return campaign
 
 
 async def get_campaign_by_id_db(db: Session, campaign_id: int) -> Optional[Campaign]:
-    return db.query(Campaign).filter(Campaign.id == campaign_id).first()
+    logger.info(f"Getting campaign by id {campaign_id}")
+    campaign = db.query(Campaign).filter(Campaign.id == campaign_id, Campaign.deleted_at.is_(None)).first()
+    if campaign:
+        logger.debug(f"Found campaign {campaign.id}")
+    else:
+        logger.debug(f"Campaign {campaign_id} not found")
+    return campaign
 
 
 async def delete_campaign_by_id_db(db: Session, campaign_id: int) -> None:
+    logger.info(f"Deleting campaign {campaign_id}")
     campaign = db.query(Campaign).filter(Campaign.id == campaign_id).first()
     if campaign.default:
+        logger.error(f"Cannot delete default campaign {campaign_id}")
         raise ValueError('Cannot delete default campaign')
-    db.delete(campaign)
+    campaign.deleted_at = datetime.now(timezone.utc)
+    campaign.status = int(CampaignStatus.INACTIVE.value)
+    db.merge(campaign)
     db.commit()
+    logger.debug(f"Deleted campaign {campaign_id}")
 
 
 async def get_campaign_by_name_and_area_id_db(
     db: Session, area_id: int, name: str
 ) -> Optional[Campaign]:
-    return (
-        db.query(Campaign).filter(Campaign.area_id == area_id).filter(Campaign.name == name).first()
+    logger.info(f"Getting campaign by name {name} in area {area_id}")
+    campaign = (
+        db.query(Campaign)
+        .filter(Campaign.area_id == area_id)
+        .filter(Campaign.name == name)
+        .filter(Campaign.deleted_at.is_(None))
+        .first()
     )
+    if campaign:
+        logger.debug(f"Found campaign {campaign.id}")
+    else:
+        logger.debug(f"Campaign {name} not found in area {area_id}")
+    return campaign
 
 
 async def get_campaigns_by_area_id_db(
-    db: Session, area_id: int, active: Optional[bool] = None, archived: Optional[bool] = None
+    db: Session, area_id: int, status: Optional[CampaignStatus] = None
 ) -> List[Campaign]:
-    query = db.query(Campaign).filter(Campaign.area_id == area_id)
-    if active is not None:
-        query = query.filter(Campaign.active == active)
-    if archived is not None:
-        query = query.filter(Campaign.archived == archived)
-    return query.all()
+    logger.info(f"Getting campaigns for area {area_id} with status {status}")
+    query = db.query(Campaign).filter(Campaign.area_id == area_id, Campaign.deleted_at.is_(None))
+    if status is not None:
+        query = query.filter(Campaign.status == int(status.value))
+    campaigns = query.all()
+    logger.debug(f"Found {len(campaigns)} campaigns")
+    return campaigns
 
 
 async def get_default_campaign_by_project_id_db(db: Session, project_id: int) -> Optional[Campaign]:
-    return (
+    logger.info(f"Getting default campaign for project {project_id}")
+    campaign = (
         db.query(Campaign)
-        .filter(Campaign.project_id == project_id, Campaign.default == True)
+        .filter(Campaign.project_id == project_id, Campaign.default == True, Campaign.deleted_at.is_(None))
         .first()
     )
+    if campaign:
+        logger.debug(f"Found default campaign {campaign.id}")
+    else:
+        logger.debug(f"No default campaign found for project {project_id}")
+    return campaign
 
 
-async def update_campaign_by_id_db(
-    db: Session, values: dict, filters: Optional[FiltersPost]
-) -> Campaign:
+async def update_campaign_by_id_db(db: Session, values: dict) -> Campaign:
+    logger.info(f"Updating campaign {values['id']}")
     campaign: Campaign = await get_campaign_by_id_db(db, values['id'])
     if values.get('name') is not None:
+        logger.debug(f"Updating name to {values['name']}")
         campaign.name = values['name']
     if values.get('description') is not None:
+        logger.debug(f"Updating description")
         campaign.description = values['description']
-    if values.get('active') is not None:
-        campaign.active = values['active']
-    if values.get('archived') is not None:
-        campaign.archived = values['archived']
-    if values.get('fragment_id') is not None:
-        campaign.fragment_id = values['fragment_id']
+    if values.get('status') is not None:
+        logger.debug(f"Updating status to {values['status']}")
+        campaign.status = int(values['status'].value)
+    if values.get('experiment_id') is not None:
+        logger.debug(f"Updating experiment_id to {values['experiment_id']}")
+        campaign.experiment_id = values['experiment_id']
     db.merge(campaign)
     db.commit()
     db.refresh(campaign)
+    logger.debug(f"Updated campaign {campaign.id}")
 
-    if filters is not None:
-        campaign.os_types_filter.clear()
-        campaign.device_types_filter.clear()
-        campaign.pages_filter.clear()
-        campaign.geo_locations_filter.clear()
-        campaign.time_frames_filter.clear()
-
-        for os_type in filters.os_types:
-            add_os_type_filter_to_campaign(campaign, os_type)
-        for device_type in filters.device_types:
-            add_device_type_filter_to_campaign(campaign, device_type)
-        for page in filters.pages:
-            add_page_filter_to_campaign(campaign, page)
-        for geo_location in filters.geolocations:
-            add_geolocation_filter_to_campaign(campaign, geo_location)
-        for time_frame in filters.time_frames:
-            add_time_frame_filter_to_campaign(campaign, time_frame)
-
-    db.commit()
-    db.refresh(campaign)
     return campaign

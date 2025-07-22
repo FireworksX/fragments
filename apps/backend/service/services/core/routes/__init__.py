@@ -12,10 +12,6 @@ from .router import Mutation, Query
 
 api: Api = Api()
 
-# Import routes here
-# from .module import *  # isort:skip
-
-
 schema = strawberry.Schema(query=Query, mutation=Mutation, scalar_overrides={UploadFile: Upload})
 graphql_app = GraphQLRouter(schema, context_getter=get_context, multipart_uploads_enabled=True)
 
