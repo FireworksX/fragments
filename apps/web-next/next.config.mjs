@@ -8,7 +8,7 @@ const nextConfig = {
   },
   output: 'standalone',
   images: {
-    domains: ['*', 'localhost'],
+    domains: ['*', 'localhost', '85.192.29.65'],
   },
   async rewrites() {
     return [

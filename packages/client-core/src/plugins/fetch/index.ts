@@ -38,7 +38,7 @@ declare module "@graph-state/core" {
 
 export const fetchPlugin: Plugin = (state) => {
   const isSelf = state?.env?.isSelf ?? false;
-  const url = state?.env?.url ?? "http://localhost/graphql";
+  const url = state?.env?.backendEndpoint;
   const apiToken = state?.env?.apiToken;
 
   const fetcher = createFetcher(url, {

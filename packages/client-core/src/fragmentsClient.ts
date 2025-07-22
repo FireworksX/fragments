@@ -14,6 +14,7 @@ declare module "@graph-state/core" {
     env: {
       isSelf: boolean;
       apiToken: string;
+      backendEndpoint: string;
     };
   }
 }
@@ -21,6 +22,7 @@ declare module "@graph-state/core" {
 interface Options {
   apiToken: string;
   isSelf?: boolean;
+  backendEndpoint?: string;
 }
 
 let inited = false;
@@ -43,8 +45,13 @@ export const createFragmentsClient = (options: Options) => {
     ],
     plugins: [
       (state) => {
+        if (!options?.backendEndpoint) {
+          throw new Error("Define backendEndpoint");
+        }
+
         state.env = {
           isSelf: options?.isSelf ?? false,
+          backendEndpoint: options?.backendEndpoint,
           apiToken: options?.apiToken,
         };
 

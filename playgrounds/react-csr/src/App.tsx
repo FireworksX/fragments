@@ -8,6 +8,7 @@ const globalManager = createFragmentsClient({
   apiToken:
     "1-f1b8febcd84b4482513888393a82cc99-8e026b36977ead522dfe698118b6f652d1bd8c1dd499bce4223835f356d18a72",
   isSelf: false,
+  backendEndpoint: "http://localhost/graphql",
 });
 
 globalManager.use(ssrPlugin);
