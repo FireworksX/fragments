@@ -7,8 +7,10 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 # Копируем lock-файлы для кеширования зависимостей
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
+COPY packages/client-core/package.json packages/client-core/
 COPY packages/render-core/package.json packages/render-core/
 COPY packages/render-react/package.json packages/render-react/
+COPY packages/render-web/package.json packages/render-web/
 COPY packages/definition/package.json packages/definition/
 COPY packages/utils/package.json packages/utils/
 COPY apps/web-next/package.json apps/web-next/
@@ -48,6 +50,8 @@ COPY --from=builder /app/apps/web-next/.next/static ./standalone/apps/web-next/.
 #COPY --from=builder /app/node_modules ./node_modules
 
 COPY --from=builder /app/packages/render-core/dist ./packages/render-core/dist
+COPY --from=builder /app/packages/client-core/dist ./packages/client-core/dist
+COPY --from=builder /app/packages/render-web/dist ./packages/render-web/dist
 COPY --from=builder /app/packages/render-react/dist ./packages/render-react/dist
 COPY --from=builder /app/packages/definition/dist ./packages/definition/dist
 COPY --from=builder /app/packages/utils/dist ./packages/utils/dist
