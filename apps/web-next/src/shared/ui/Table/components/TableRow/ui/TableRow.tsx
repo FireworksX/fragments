@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren } from 'react'
+import React, { FC, PropsWithChildren, cloneElement } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 
@@ -11,11 +11,9 @@ export const TableRow: FC<TableRowProps> = ({ className, children }) => {
 
   return (
     <tr className={cn(styles.root, className)}>
-      {resultChildren.map((child, index) => (
-        <td key={index} className={styles.td}>
-          {child}
-        </td>
-      ))}
+      {resultChildren.map((child, index) =>
+        cloneElement(child, { ...child.props, className: cn(child.props.className, styles.td), key: index })
+      )}
     </tr>
   )
 }

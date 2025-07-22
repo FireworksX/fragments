@@ -13,7 +13,7 @@ interface CellProps extends TouchableProps, PropsWithChildren {
 const Cell: FC<CellProps> = ({ className, children, before, after, description, ...touchableProps }) => {
   return (
     <Touchable className={cn(styles.root, className)} TagName='button' {...touchableProps}>
-      {before}
+      {before && <div className={styles.before}>{before}</div>}
       <div className={styles.text}>{children}</div>
       {description && <div className={styles.description}>{description}</div>}
       {after}

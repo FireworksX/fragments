@@ -1,0 +1,30 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.search {
+    position: sticky;
+    top: 0;
+}
+
+.cell {
+    padding-inline: 8px;
+    min-height: 30px;
+    border-radius: var(--radius-small);
+}
+
+.cellCreate {
+    padding-inline: 8px;
+    color: var(--secondary);
+    font-weight: 500;
+    min-height: 30px;
+}
+
+.active {
+    background: var(--background-secondary);
+    font-weight: 500;
+}

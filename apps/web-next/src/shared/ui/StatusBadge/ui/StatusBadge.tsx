@@ -3,7 +3,7 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import { StatusDot } from '@/shared/ui/StatusDot'
 
-interface StatusBadgeProps {
+export interface StatusBadgeProps {
   className?: string
   status: 'success' | 'error' | 'warning' | 'info'
 }

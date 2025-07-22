@@ -2,7 +2,7 @@
     height: 30px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .before {
@@ -10,6 +10,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    color: var(--secondary);
 }
 
 .text {

@@ -1,0 +1,5 @@
+query StreamDevicesFilter {
+    filter {
+        deviceTypes
+    }
+}

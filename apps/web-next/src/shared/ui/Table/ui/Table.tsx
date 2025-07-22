@@ -5,13 +5,14 @@ import styles from './styles.module.css'
 interface TableProps extends PropsWithChildren {
   header?: ReactNode
   className?: string
+  bodyClassName?: string
 }
 
-export const Table: FC<TableProps> = ({ className, header, children }) => {
+export const Table: FC<TableProps> = ({ className, header, children, bodyClassName }) => {
   return (
     <table className={cn(styles.root, className)}>
       {header}
-      <tbody>{children}</tbody>
+      <tbody className={bodyClassName}>{children}</tbody>
     </table>
   )
 }

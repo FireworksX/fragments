@@ -1,0 +1,63 @@
+@layer  {
+    .root {
+        background: var(--background);
+        padding: 16px;
+        border-radius: var(--radius-submain);
+        position: relative;
+
+        &:after {
+            content: '';
+            position: absolute;
+            border-radius: var(--radius-submain);
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 0;
+        }
+    }
+
+    .image {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: var(--radius-submain);
+    }
+
+    .inner {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 16px;
+        position: relative;
+        z-index: 1;
+        height: 100%;
+    }
+
+    .head {
+        display: flex;
+        color: var(--secondary);
+    }
+
+    .placeholder {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .title {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--text-color);
+    }
+
+    .description {
+        font-size: 14px;
+        font-weight: 400;
+        color: var(--secondary);
+    }
+
+    .action {
+        background: rgba(var(--background--rgb), .1) !important;
+    }
+}

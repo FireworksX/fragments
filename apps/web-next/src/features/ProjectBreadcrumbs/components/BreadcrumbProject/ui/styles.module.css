@@ -17,6 +17,13 @@
 
 .option {
     width: 200px !important;
+    margin-bottom: 2px;
+}
+
+.optionBody {
+    justify-content: flex-start;
+    gap: 8px;
+    align-items: center;
 }
 
 .selected {

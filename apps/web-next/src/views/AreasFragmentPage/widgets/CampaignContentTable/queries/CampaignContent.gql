@@ -1,0 +1,21 @@
+query CampaignContent($id: Int!) {
+    campaign(campaignId: $id) {
+        id
+        featureFlag {
+            id
+            rotationType
+            variants {
+                id
+                name
+                status
+                fragment {
+                    fragment {
+                        id
+                        name
+                    }
+                    props
+                }
+            }
+        }
+    }
+}

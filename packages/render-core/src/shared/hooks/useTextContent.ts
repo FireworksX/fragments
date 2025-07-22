@@ -14,9 +14,14 @@ export const useTextContent = (layerKey: LinkKey, manager: GraphState) => {
   );
   const [attributes] = useLayerValue(layerKey, "attributes", fragmentManager);
 
+  const resultAttributes = {
+    ...attributes,
+    color: attributes?.color ?? "rgb(0, 0, 0)",
+  };
+
   return useMemo(() => {
     if (typeof content === "string" && isValue(attributes)) {
-      return wrapTextInParagraphWithAttributes(content, attributes);
+      return wrapTextInParagraphWithAttributes(content, resultAttributes);
     }
 
     return content;

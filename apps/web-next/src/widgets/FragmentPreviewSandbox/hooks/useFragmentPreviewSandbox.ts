@@ -1,7 +1,12 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { omit } from '@fragmentsx/utils'
 
-export const useFragmentPreviewSandbox = () => {
-  const [props, setProps] = useState({})
+export const useFragmentPreviewSandbox = (initialProps: unknown = {}, onChangeProps?: () => void) => {
+  const [props, setProps] = useState(() => omit(initialProps, '_type', '_id'))
+
+  useEffect(() => {
+    onChangeProps?.(props)
+  }, [props])
 
   return {
     props,

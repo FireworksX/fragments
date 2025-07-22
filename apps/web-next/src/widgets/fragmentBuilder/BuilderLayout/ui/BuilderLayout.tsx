@@ -26,7 +26,16 @@ const BuilderLayout: FC<BuilderLayoutProps> = ({ className }) => {
       hasBody={mode.enabled}
       aside={<PanelHeadAside isOpen={mode.enabled} onClick={mode.toggle} />}
     >
-      <ControlRow title='Direction'>
+      <ControlRow
+        title='Direction'
+        hasConnector={!direction.variable.disabled}
+        variable={{
+          link: direction.variable.variableLink,
+          actions: direction.variable.actions,
+          onClick: direction.variable.editVariable,
+          onReset: direction.variable.resetVariable
+        }}
+      >
         <ControlRowWide>
           <TabsSelector
             items={direction.items}
@@ -36,13 +45,31 @@ const BuilderLayout: FC<BuilderLayoutProps> = ({ className }) => {
         </ControlRowWide>
       </ControlRow>
 
-      <ControlRow title='Align'>
+      <ControlRow
+        title='Align'
+        hasConnector={!align.variable.disabled}
+        variable={{
+          link: align.variable.variableLink,
+          actions: align.variable.actions,
+          onClick: align.variable.editVariable,
+          onReset: align.variable.resetVariable
+        }}
+      >
         <ControlRowWide>
           <TabsSelector items={align.items} value={align.value} onChange={({ name }) => align.update(name)} />
         </ControlRowWide>
       </ControlRow>
 
-      <ControlRow title='Distribute'>
+      <ControlRow
+        title='Distribute'
+        hasConnector={!distribute.variable.disabled}
+        variable={{
+          link: distribute.variable.variableLink,
+          actions: distribute.variable.actions,
+          onClick: distribute.variable.editVariable,
+          onReset: distribute.variable.resetVariable
+        }}
+      >
         <ControlRowWide>
           <Select value={distribute.value} onChange={distribute.update}>
             {distribute.items.map(el => (
@@ -54,13 +81,31 @@ const BuilderLayout: FC<BuilderLayoutProps> = ({ className }) => {
         </ControlRowWide>
       </ControlRow>
 
-      <ControlRow title='Wrap'>
+      <ControlRow
+        title='Wrap'
+        hasConnector={!wrap.variable.disabled}
+        variable={{
+          link: wrap.variable.variableLink,
+          actions: wrap.variable.actions,
+          onClick: wrap.variable.editVariable,
+          onReset: wrap.variable.resetVariable
+        }}
+      >
         <ControlRowWide>
           <TabsSelector items={wrap.items} value={wrap.value} onChange={({ name }) => wrap.update(name)} />
         </ControlRowWide>
       </ControlRow>
 
-      <ControlRow title='Gap'>
+      <ControlRow
+        title='Gap'
+        hasConnector={!gap.variable.disabled}
+        variable={{
+          link: gap.variable.variableLink,
+          actions: gap.variable.actions,
+          onClick: gap.variable.editVariable,
+          onReset: gap.variable.resetVariable
+        }}
+      >
         <InputNumber value={gap.value} max={100} onChange={gap.update} />
         <Slider value={gap.value} max={100} onChange={gap.update} />
       </ControlRow>

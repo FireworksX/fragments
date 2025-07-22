@@ -15,7 +15,8 @@ interface FrameProps {
 
 export const Frame: FC<FrameProps> = memo(({ layerKey, hidden }) => {
   const customRender = useContext(CustomRender);
-  const { styles, children, type, hash } = useFrame(layerKey);
+  const { styles, children, type, hash, events, restProps, Tag } =
+    useFrame(layerKey);
   const isMounted = useMounted();
 
   if (hidden && isMounted) {
@@ -44,6 +45,7 @@ export const Frame: FC<FrameProps> = memo(({ layerKey, hidden }) => {
       className={hash}
       data-key={layerKey}
       style={{ ...styles, display: hidden ? "none" : styles.display }}
+      {...restProps}
     >
       {children.map((childLink) => (
         <Frame key={childLink} layerKey={childLink} />

@@ -8,20 +8,7 @@ const nextConfig = {
   },
   output: 'standalone',
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'bytescale.mobbin.com',
-        port: '',
-        pathname: '**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'ixebbuxefdlgoxodcjku.supabase.co',
-        port: '',
-        pathname: '**',
-      },
-    ],
+    domains: ['*', 'localhost'],
   },
   async rewrites() {
     return [

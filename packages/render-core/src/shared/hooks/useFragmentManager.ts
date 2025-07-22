@@ -2,7 +2,7 @@ import { useEffect, useState } from "preact/compat";
 import { useGlobalManager } from "@/shared/hooks/useGlobalManager";
 
 export const useFragmentManager = (
-  fragmentId?: unknown,
+  fragmentId?: unknown | null,
   inputGlobalManager
 ) => {
   const {
@@ -12,6 +12,8 @@ export const useFragmentManager = (
     queryFragmentManager,
   } = useGlobalManager(inputGlobalManager);
   const [loading, setLoading] = useState(false);
+
+  const manager = getFragmentManager(fragmentId);
 
   // const loadFragmentManager = async (id: string) => {
   //   if (id) {
@@ -32,7 +34,7 @@ export const useFragmentManager = (
 
   useEffect(() => {
     (async () => {
-      if (fragmentsGraph && !getFragmentManager(fragmentId)) {
+      if (fragmentsGraph && !getFragmentManager(fragmentId) && !!fragmentId) {
         setLoading(true);
         await queryFragmentManager(fragmentId);
         setLoading(false);
@@ -42,7 +44,8 @@ export const useFragmentManager = (
 
   return {
     loading,
-    manager: getFragmentManager(fragmentId),
+    manager: manager,
+    fragmentLayerKey: manager?.$fragment?.root,
     queryFragmentManager,
     // loadFragmentManager,
   };

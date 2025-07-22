@@ -53,7 +53,7 @@ const InputNumber: FC<InputNumberProps> = animated(
     }, [zeroIsEmpty, step, value])
     // const resultValue =
 
-    const refCreator = (target?: ElementRef<'input'> | null) => {
+    const refCreator = (target?: ComponentRef<'input'> | null) => {
       const listener = () => {
         target?.blur()
       }
@@ -93,7 +93,6 @@ const InputNumber: FC<InputNumberProps> = animated(
         <div className={cn(styles.root, className)}>
           <input
             className={styles.inner}
-            ref={mergeRefs([refCreator, inputRef])}
             type='number'
             value={!empty ? fixedValue : ''}
             min={min}
@@ -108,6 +107,7 @@ const InputNumber: FC<InputNumberProps> = animated(
               }
             }}
             {...rest}
+            ref={mergeRefs([refCreator, inputRef])}
           />
           {suffix && <div className={styles.suffix}>{suffix}</div>}
           {!withoutTicker && !disabled && (

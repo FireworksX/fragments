@@ -10,6 +10,7 @@ export interface AvatarProps extends AvatarPlaceholderInitial {
   src?: string
   uniqueId?: string // По этому коду будет вычисляться цвет для заливки
   children?: string
+  withRadius?: string
   size?: CommonLogoProps['size']
   className?: string
 }
@@ -19,6 +20,7 @@ const Avatar: FC<AvatarProps> = ({
   src,
   mode = 'circle',
   uniqueId,
+  withRadius,
   children,
   size,
   ...placeholderProps
@@ -37,9 +39,9 @@ const Avatar: FC<AvatarProps> = ({
   return (
     <div className={cn(className, styles.root)}>
       {src ? (
-        <CommonLogo src={src} size={size} withRadius withBackground alt={children} />
+        <CommonLogo src={src} size={size} withBackground withRadius={withRadius} alt={children} />
       ) : (
-        <InitialsAvatar gradientColor={gradientCode} size={size} {...placeholderProps}>
+        <InitialsAvatar gradientColor={gradientCode} withRadius={withRadius} size={size} {...placeholderProps}>
           {children}
         </InitialsAvatar>
       )}

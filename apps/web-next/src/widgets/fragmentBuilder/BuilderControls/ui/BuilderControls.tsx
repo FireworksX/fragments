@@ -75,14 +75,14 @@ const BuilderControls: FC<ControlsProps> = ({
   const hasCssOverride = [definition.nodes.Frame, definition.nodes.Text].some(type => layerInfo.type === type)
   const hasInstanceProps = [definition.nodes.Instance].some(type => layerInfo.type === type)
   const hasInteractions = [definition.nodes.Frame].some(type => layerInfo.type === type)
+  const hasLink = [definition.nodes.Frame, definition.nodes.Instance].some(type => layerInfo.type === type)
 
   return (
     <Container className={cn(className, styles.root)}>
       {fragmentGeneral}
       {selection && (
         <>
-          {/*<BuilderLink />*/}
-          {linkNode}
+          {hasLink && linkNode}
           {hasInteractions && interactionsNode}
           {hasGrowing && fragmentGrowingNode}
           {hasFragmentProps && fragmentPropsNode}

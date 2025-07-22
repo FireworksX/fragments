@@ -27,11 +27,6 @@ export const useLayerBackground = (layerKey: LinkKey) => {
   );
 
   return useMemo(() => {
-    const sizeMap = {
-      [definition.imagePaintScaleModes.Fill]: "cover",
-      [definition.imagePaintScaleModes.Fit]: "contain",
-    };
-
     if (fillType === definition.paintMode.Solid) {
       return {
         background: solidFill,
@@ -40,12 +35,13 @@ export const useLayerBackground = (layerKey: LinkKey) => {
     if (fillType === definition.paintMode.Image && imageFill) {
       return {
         background: `url(${imageFill})`,
-        backgroundSize: sizeMap[imageSize],
+        backgroundSize: imageSize?.toLowerCase(),
+        backgroundRepeat: "no-repeat",
       };
     }
 
     return {
       background: "transparent",
     };
-  }, [fillType, solidFill, imageFill]);
+  }, [fillType, solidFill, imageFill, imageSize]);
 };

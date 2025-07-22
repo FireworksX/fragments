@@ -7,7 +7,7 @@ import { all } from 'axios'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { stateAlias } from '@/views/FragmentDetail/ui/FragmentDetail'
 import { definition } from '@fragmentsx/definition'
-import { getAllParents } from '@fragmentsx/render-core'
+import { getAllParents, moveChildren } from '@fragmentsx/render-core'
 
 const findIndexOfNode = (items: unknown[], linkNode: LinkKey) => {
   const index = items.findIndex(item => item.id === linkNode)
@@ -69,6 +69,7 @@ export const useBuilderLayers = () => {
         return
       }
 
+      moveChildren(documentManager, itemKey, toKey, itemOrder)
       // moveNode(documentManager, itemKey, toKey, itemOrder)
     }
   }

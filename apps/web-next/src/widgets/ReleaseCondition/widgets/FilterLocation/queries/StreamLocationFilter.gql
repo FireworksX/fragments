@@ -1,0 +1,11 @@
+query StreamLocationFilter {
+    filter {
+        geoLocations {
+            country
+#            regions {
+#                region
+#                cities
+#            }
+        }
+    }
+}

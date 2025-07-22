@@ -4,18 +4,20 @@ export const loadFragmentManager = async (
   globalManager: GraphState,
   fragmentId: number
 ) => {
-  const { document, linkedFragments } = await globalManager?.queryFragment?.(
-    fragmentId
-  );
+  const { document, linkedFragments } =
+    await globalManager?.$fetch?.queryFragment?.(fragmentId);
 
   if (fragmentId && document) {
     if (linkedFragments) {
       linkedFragments.forEach(({ id, document }) => {
-        globalManager?.createFragmentManager(id, document);
+        globalManager?.$fragments.createFragmentManager(id, document);
       });
     }
 
-    return globalManager?.createFragmentManager(fragmentId, document);
+    return globalManager?.$fragments.createFragmentManager(
+      fragmentId,
+      document
+    );
   }
 
   return null;

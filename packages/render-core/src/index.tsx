@@ -47,12 +47,16 @@ export { useLayerSizeValue } from "@/shared/hooks/useLayerStyles/useLayerSizeVal
 export { useLayerDisplay } from "@/shared/hooks/useLayerStyles/useLayerDisplay";
 export { useLayerLayout } from "@/shared/hooks/useLayerStyles/useLayerLayout";
 export { useCalcLayerBorder } from "@/shared/hooks/useLayerStyles/useCalcLayerBorder";
+export { useLayerCssOverride } from "@/shared/hooks/useLayerStyles/useLayerCssOverride";
 
 export { GlobalManager } from "@/providers/GlobalManager";
 export * from "@/providers/StyleSheetProvider";
 export * from "@/providers/RenderTargetProvider";
-export { InstanceContext } from "@/components/Instance";
+export { InstanceContext, Instance } from "@/components/Instance";
+export { Area } from "@/components/Area";
+export type { AreaProps } from "@/components/Area";
+export { useArea } from "@/components/Area/hooks/useArea";
 export { FragmentContext } from "@/components/Fragment/FragmentContext";
 
-// export { createElement, render, hydrate } from "preact";
+export { createElement, render, hydrate, cloneElement, h } from "preact";
 // export { renderToString } from "preact-render-to-string";

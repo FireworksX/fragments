@@ -5,16 +5,17 @@ import CaretDown from '@/shared/icons/caret-down.svg'
 
 interface SelectProps extends PropsWithChildren {
   className?: string
+  disabled?: boolean
   classNameInner?: string
   onClick?: () => void
 }
 
-const SelectMimicry: FC<SelectProps> = ({ className, classNameInner, children, onClick }) => {
+const SelectMimicry: FC<SelectProps> = ({ className, disabled, classNameInner, children, onClick }) => {
   return (
-    <div className={cn(styles.root, className)}>
+    <div className={cn(styles.root, className, { [styles.disabled]: disabled })}>
       <CaretDown className={styles.caret} width={11} />
       <div className={cn(styles.inner, classNameInner)} onClick={onClick}>
-        {children}
+        <div className={styles.content}>{children}</div>
       </div>
     </div>
   )

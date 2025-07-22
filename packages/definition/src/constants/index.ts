@@ -23,14 +23,9 @@ export const nodes = createConstants(
 export const fragmentGrowingMode = createConstants("auto", "fill");
 
 export const borderType = createConstants("None", "Solid", "Dashed", "Dotted");
-export const linkTarget = createConstants("_blank");
+export const linkTarget = createConstants("_blank", "none");
 export const paintMode = createConstants("None", "Solid", "Image");
-export const imagePaintScaleModes = createConstants(
-  "Fill",
-  "Fit",
-  "Crop",
-  "Tile"
-);
+export const imagePaintScaleModes = createConstants("Auto", "Contain", "Cover");
 export const constrain = createConstants(
   "Min",
   "Center",
@@ -72,6 +67,7 @@ export const effectName = createConstants(
 export const variableType = createConstants(
   "Event",
   "String",
+  "Link",
   "Boolean",
   "Array",
   "Color",
@@ -118,3 +114,5 @@ export const renderTarget = createConstants("canvas", "document");
 export const renderMode = createConstants("viewport", "parent", "fixed");
 
 export const interactions = createConstants("click", "mouseover");
+
+export const eventMode = createConstants("goal", "callback");

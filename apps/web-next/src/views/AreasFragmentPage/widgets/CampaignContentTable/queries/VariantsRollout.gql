@@ -1,0 +1,9 @@
+query VariantsRollout($featureFlagId: Int!) {
+    featureFlag(featureFlagId: $featureFlagId) {
+        id
+        variants {
+            id
+            rolloutPercentage
+        }
+    }
+}

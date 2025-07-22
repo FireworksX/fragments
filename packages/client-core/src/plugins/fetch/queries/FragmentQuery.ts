@@ -1,8 +1,34 @@
-export const getFragmentQuery = (isSelf?: boolean) =>
-  isSelf
-    ? `
-query FragmentDocument($fragmentSlug: Int!) {
-    fragment(fragmentIds: [$fragmentSlug]) {
+export interface QueryReturnSelf {
+  fragment: {
+    id: number;
+    document: string;
+    linkedFragments: {
+      id: number;
+      document: string;
+    };
+  }[];
+}
+
+export interface QueryReturnNotSelf {
+  clientFragment: {
+    id: number;
+    document: string;
+    linkedFragments: {
+      id: number;
+      document: string;
+    };
+  };
+}
+
+export const getFragmentQuery = <TIsSelf extends boolean>(
+  fragmentId: number,
+  isSelf?: TIsSelf
+) => {
+  return {
+    query: isSelf
+      ? `
+query FragmentDocument($fragmentId: Int!) {
+    fragment(fragmentIds: [$fragmentId]) {
         id
         document
         linkedFragments {
@@ -12,9 +38,9 @@ query FragmentDocument($fragmentSlug: Int!) {
     }
 }
 `
-    : `
-query FragmentDocument($fragmentSlug: Int!) {
-    clientFragment(fragmentId: $fragmentSlug) {
+      : `
+query FragmentDocument($fragmentId: Int!) {
+    clientFragment(fragmentId: $fragmentId) {
         id
         document
         linkedFragments {
@@ -22,5 +48,12 @@ query FragmentDocument($fragmentSlug: Int!) {
             document
         }
     }
-}
-`;
+}`,
+    variables: {
+      fragmentId,
+    },
+    _type: null as any as TIsSelf extends true
+      ? QueryReturnSelf
+      : QueryReturnNotSelf,
+  };
+};

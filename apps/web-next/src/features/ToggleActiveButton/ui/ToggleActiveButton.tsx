@@ -11,11 +11,11 @@ interface ToggleActiveButtonProps {
 
 export const ToggleActiveButton: FC<ToggleActiveButtonProps> = ({ isActive, loading, onClick }) => {
   return isActive ? (
-    <Button mode='warning-outline' preventDefault loading={loading} icon={<PauseIcon />} onClick={onClick}>
+    <Button mode='warning-outline' preventDefault loading={loading} cancelable icon={<PauseIcon />} onClick={onClick}>
       Pause
     </Button>
   ) : (
-    <Button mode='success-outline' preventDefault loading={loading} icon={<RunIcon />} onClick={onClick}>
+    <Button mode='success-outline' preventDefault loading={loading} cancelable icon={<RunIcon />} onClick={onClick}>
       Run
     </Button>
   )

@@ -1,7 +1,7 @@
 @layer ui {
     .root {
         padding: 5px 10px;
-        background: rgba(var(--background-secondary--rgb), .7);
+        background: rgba(var(--background-secondary--rgb), 1);
         border-radius: var(--radius-main);
         color: var(--text-color-accent);
         font-size: 12px;

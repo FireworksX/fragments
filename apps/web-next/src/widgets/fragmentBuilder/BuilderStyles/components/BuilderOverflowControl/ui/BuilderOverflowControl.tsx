@@ -4,6 +4,7 @@ import { Select } from '@/shared/ui/Select'
 import { capitalize } from '@/shared/utils/capitalize'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { definition } from '@fragmentsx/definition'
+import { useLayerPropertyValue } from '@/shared/hooks/fragmentBuilder/useLayerPropertyVariable'
 
 interface BuilderOverflowControlProps {
   className?: string
@@ -13,6 +14,7 @@ const overflowOptions = Object.keys(definition.overflow)
 
 export const BuilderOverflowControl: FC<BuilderOverflowControlProps> = memo(({ className }) => {
   const [value, setValue, valueInfo] = useLayerValue('overflow')
+  const { disabled, actions, variableLink, resetVariable, editVariable } = useLayerPropertyValue('overflow')
 
   return (
     <ControlRow
@@ -21,6 +23,13 @@ export const BuilderOverflowControl: FC<BuilderOverflowControlProps> = memo(({ c
       override={{
         isOverride: valueInfo.isOverride,
         onRestOverride: valueInfo.resetOverride
+      }}
+      hasConnector={!disabled}
+      variable={{
+        link: variableLink,
+        actions,
+        onClick: editVariable,
+        onReset: resetVariable
       }}
     >
       <ControlRowWide>

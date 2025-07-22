@@ -23,6 +23,7 @@ export const InstanceContext = createContext({
 const InstanceInitial: FC<InstanceProps> = (instanceProps) => {
   const {
     styles,
+    cssProps,
     fragmentId,
     parentManager,
     props,
@@ -43,17 +44,23 @@ const InstanceInitial: FC<InstanceProps> = (instanceProps) => {
       }}
     >
       {parentManager ? (
-        <div className={hash} data-key={instanceProps.layerKey}>
+        <div
+          className={hash}
+          data-key={instanceProps.layerKey}
+          style={cssProps}
+        >
           <Fragment fragmentId={fragmentId} globalManager={globalManager} />
         </div>
       ) : (
-        <Fragment fragmentId={fragmentId} globalManager={globalManager} />
+        <div style={cssProps}>
+          <Fragment fragmentId={fragmentId} globalManager={globalManager} />
+        </div>
       )}
     </InstanceContext.Provider>
   );
 };
 
-export const Instance = (props) => {
+export const Instance: FC<InstanceProps> = (props) => {
   return "globalManager" in props ? (
     <GlobalManager value={props.globalManager}>
       <InstanceInitial {...props} />

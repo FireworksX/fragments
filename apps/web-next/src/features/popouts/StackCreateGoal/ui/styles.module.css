@@ -1,0 +1,24 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.search {
+    position: sticky;
+    top: 0;
+}
+
+.cell {
+    padding-inline: 8px;
+    min-height: 30px;
+}
+
+.cellCreate {
+    padding-inline: 8px;
+    color: var(--secondary);
+    font-weight: 500;
+    min-height: 30px;
+}

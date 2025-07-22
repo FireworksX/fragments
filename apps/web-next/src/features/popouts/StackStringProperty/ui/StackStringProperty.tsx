@@ -12,6 +12,7 @@ import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { InputText, InputTextAnimated } from '@/shared/ui/InputText'
 import { Textarea, TextareaAnimated } from '@/shared/ui/Textarea'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 interface StackStringVariableProps {
   className?: string
@@ -29,9 +30,10 @@ const controls: TabsSelectorItem[] = [
 ]
 
 const StackStringProperty: FC<StackStringVariableProps> = ({ className }) => {
+  const { documentManager } = useBuilderDocument()
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackStringProperty}`)
   const context = popout?.context ?? {}
-
+  const id = documentManager.entityOfKey(context.propertyLink)?._id
   const [name, setName] = useLayerValue('name', context?.propertyLink)
   const [required, setRequired] = useLayerValue('required', context?.propertyLink)
   const [placeholder, setPlaceholder] = useLayerValue('placeholder', context?.propertyLink)
@@ -40,6 +42,11 @@ const StackStringProperty: FC<StackStringVariableProps> = ({ className }) => {
 
   return (
     <div className={cn(styles.root, className)}>
+      <ControlRow title='ID'>
+        <ControlRowWide>
+          <InputText value={id} disabled />
+        </ControlRowWide>
+      </ControlRow>
       <ControlRow title='Name'>
         <ControlRowWide>
           <InputText value={name} onChangeValue={setName} />

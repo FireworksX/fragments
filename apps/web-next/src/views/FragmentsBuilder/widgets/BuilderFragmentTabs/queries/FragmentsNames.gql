@@ -1,6 +1,6 @@
-query FragmentsNames($projectSlug: Int!, $fragmentIds: [Int!]) {
-    fragment(projectId: $projectSlug, fragmentIds: $fragmentIds) {
-        id
-        name
-    }
-}
+#query FragmentsNames($projectSlug: Int!, $fragmentIds: [Int!]) {
+#    fragment(projectId: $projectSlug, fragmentIds: $fragmentIds) {
+#        id
+#        name
+#    }
+#}

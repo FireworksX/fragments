@@ -7,6 +7,7 @@ export type CreateProjectFragmentMutationVariables = Types.Exact<{
   projectSlug: Types.Scalars['Int']['input'];
   name: Types.Scalars['String']['input'];
   parentId: Types.Scalars['Int']['input'];
+  document: Types.Scalars['JSON']['input'];
 }>;
 
 
@@ -14,9 +15,9 @@ export type CreateProjectFragmentMutation = { __typename?: 'Mutation', createFra
 
 
 export const CreateProjectFragmentDocument = gql`
-    mutation CreateProjectFragment($projectSlug: Int!, $name: String!, $parentId: Int!) {
+    mutation CreateProjectFragment($projectSlug: Int!, $name: String!, $parentId: Int!, $document: JSON!) {
   createFragment(
-    fg: {name: $name, projectId: $projectSlug, document: "{}", directoryId: $parentId}
+    fg: {name: $name, projectId: $projectSlug, document: $document, directoryId: $parentId}
   ) {
     id
     name
@@ -42,6 +43,7 @@ export type CreateProjectFragmentMutationFn = Apollo.MutationFunction<CreateProj
  *      projectSlug: // value for 'projectSlug'
  *      name: // value for 'name'
  *      parentId: // value for 'parentId'
+ *      document: // value for 'document'
  *   },
  * });
  */

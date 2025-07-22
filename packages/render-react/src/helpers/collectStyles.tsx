@@ -15,9 +15,7 @@ export const collectStyles = (globalManager: GraphState) => {
   //   </GlobalManager>
   // );
 
-  const allFragments = globalManager.resolve(
-    globalManager.key
-  ).fragmentsManagers;
+  const allFragments = globalManager.$fragments.getManagers();
 
   const extractors = Object.entries(allFragments)
     .filter(([, value]) => !!value?.resolve)
@@ -29,9 +27,7 @@ export const collectStyles = (globalManager: GraphState) => {
       //     </StyleSheetProvider>
       //   </GlobalManager>
       // );
-
-      const a = manager.extractStyleSheet()?.at(0);
-      return a;
+      return manager?.$styleSheet?.extract?.()?.at(0);
     });
 
   return extractors.map((extractor) => (

@@ -21,23 +21,32 @@ interface FragmentProps {
 
 const FragmentInternal: FC<FragmentProps> = ({ fragmentId, globalManager }) => {
   const { manager: resultGlobalManager } = useGlobalManager(globalManager);
-  const { setRef, children, manager, hash } = useFragment(
+  const { setRef, children, fragmentContext, hash, isResize } = useFragment(
     fragmentId,
     globalManager
   );
 
   return (
     <GlobalManager value={resultGlobalManager}>
-      <FragmentContext.Provider value={manager}>
+      <FragmentContext.Provider value={fragmentContext}>
         <div
           ref={setRef}
           data-key={`${definition.nodes.Fragment}:${fragmentId}`}
           // className={isDocument ? styles.fragmentDocument : styles.fragment}
           className={`${styles.fragment} ${hash}`}
         >
-          {children.map((childLink) => (
-            <Frame key={childLink} layerKey={childLink} />
-          ))}
+          {children.map((childLink) => {
+            const childLayer = fragmentContext.manager?.resolve(childLink);
+            const isPrimary = childLayer?.isPrimary ?? false;
+
+            return (
+              <Frame
+                key={childLink}
+                layerKey={childLink}
+                hidden={!isResize && !isPrimary}
+              />
+            );
+          })}
         </div>
       </FragmentContext.Provider>
     </GlobalManager>

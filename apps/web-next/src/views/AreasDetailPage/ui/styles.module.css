@@ -3,4 +3,37 @@
     background: var(--background);
     border-radius: var(--radius-main);
     padding: var(--gutter-default);
+    container: inline-size;
+}
+
+.body {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.integration {
+    grid-column: span 6;
+    background: var(--secondary-bg);
+}
+
+.valueInfoWidget {
+    grid-column: span 2;
+    background: var(--secondary-bg);
+}
+
+.currentFragment {
+    grid-column: span 3;
+    background: var(--secondary-bg);
+}
+
+.currentExperiment {
+    grid-column: span 3;
+    background: var(--secondary-bg);
+}
+
+@container (inline-size > 1024px) {
+    .body {
+        grid-template-columns: repeat(6, 1fr);
+    }
 }

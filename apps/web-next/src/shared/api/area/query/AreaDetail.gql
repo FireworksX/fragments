@@ -1,0 +1,11 @@
+query AreaDetail($id: Int!) {
+    area(areaId: $id) {
+        id
+#        name
+        description
+        code: areaCode
+        defaultCampaign {
+            id
+        }
+    }
+}

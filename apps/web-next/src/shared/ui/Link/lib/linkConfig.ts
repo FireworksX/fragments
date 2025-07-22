@@ -59,12 +59,12 @@ export const linkConfig = {
     path: ({ areaSlug, projectSlug }) => `/project/${projectSlug}/areas/${areaSlug}`,
     params: ['areaSlug', 'projectSlug']
   },
-  areaStreams: {
-    path: ({ areaSlug, projectSlug }) => `/project/${projectSlug}/areas/${areaSlug}/streams`,
+  areaCampaigns: {
+    path: ({ areaSlug, projectSlug }) => `/project/${projectSlug}/areas/${areaSlug}/campaigns`,
     params: ['areaSlug', 'projectSlug']
   },
-  areaFragment: {
-    path: ({ areaSlug, projectSlug }) => `/project/${projectSlug}/areas/${areaSlug}/fragment`,
+  areaContent: {
+    path: ({ areaSlug, projectSlug }) => `/project/${projectSlug}/areas/${areaSlug}/content`,
     params: ['areaSlug', 'projectSlug']
   },
   areaExperiments: {
@@ -75,14 +75,15 @@ export const linkConfig = {
     path: ({ areaSlug, projectSlug }) => `/project/${projectSlug}/areas/${areaSlug}/integration`,
     params: ['areaSlug', 'projectSlug']
   },
-  stream: {
-    path: ({ areaSlug, projectSlug, streamSlug }) => `/project/${projectSlug}/areas/${areaSlug}/streams/${streamSlug}`,
-    params: ['areaSlug', 'projectSlug', 'streamSlug']
+  campaign: {
+    path: ({ areaSlug, projectSlug, campaignSlug }) =>
+      `/project/${projectSlug}/areas/${areaSlug}/campaigns/${campaignSlug}`,
+    params: ['areaSlug', 'projectSlug', 'campaignSlug']
   },
-  landing: {
-    path: ({ campaignSlug, projectSlug, streamSlug, landingSlug }) =>
-      `/project/${projectSlug}/campaigns/${campaignSlug}/streams/${streamSlug}/${landingSlug}`,
-    params: ['campaignSlug', 'projectSlug', 'streamSlug', 'landingSlug']
+  campaignContent: {
+    path: ({ areaSlug, projectSlug, campaignSlug }) =>
+      `/project/${projectSlug}/areas/${areaSlug}/campaigns/${campaignSlug}/content`,
+    params: ['areaSlug', 'projectSlug', 'campaignSlug']
   },
 
   builder: {

@@ -18,9 +18,8 @@ import { isBrowser } from "@fragmentsx/utils";
 
 export const useFragmentChildren = (fragmentId: number) => {
   const { layerKey: instanceLayerKey } = useContext(InstanceContext);
-  const { manager } = useFragmentManager(fragmentId);
-  const layerKey = `${definition.nodes.Fragment}:${fragmentId}`;
-  const children = useLayerChildren(layerKey, manager);
+  const { manager, fragmentLayerKey } = useFragmentManager(fragmentId);
+  const children = useLayerChildren(fragmentLayerKey, manager);
   const { isDocument, renderTarget } = useRenderTarget();
   const [resizeChildren, setResizeChildren] = useState<LinkKey | null>(null);
 

@@ -4,8 +4,9 @@ import { InputNumber } from '@/shared/ui/InputNumber'
 import { Slider } from '@/shared/ui/Slider'
 import { animated } from '@react-spring/web'
 import { Stepper } from '@/shared/ui/Stepper'
+import { BuilderControlRowProps } from '@/shared/ui/ControlRow/ui/default/ControlRow'
 
-interface BuilderImageProps {
+interface BuilderImageProps extends Pick<BuilderControlRowProps, 'variable' | 'hasConnector'> {
   name: string
   step?: number
   min?: number
@@ -24,10 +25,11 @@ const InstancePropertyNumber: FC<BuilderImageProps> = ({
   max,
   step,
   value,
-  onChange
+  onChange,
+  ...controlRowProps
 }) => {
   return (
-    <ControlRow className={className} title={name}>
+    <ControlRow className={className} title={name} {...controlRowProps}>
       <InputNumber step={step} min={min} max={max} value={value} onChange={onChange} />
       {displayStepper ? (
         <Stepper step={step} min={min} max={max} value={value} onChange={onChange} />

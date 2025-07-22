@@ -5,6 +5,13 @@
     align-items: center;
     gap: 18px;
     padding: 16px 24px;
+    position: relative;
+
+    &:hover {
+        .actions {
+            opacity: 1;
+        }
+    }
 }
 
 .info {
@@ -35,7 +42,7 @@
 }
 
 .editable {
-    padding: var(--gutter-small);
+    padding-inline: var(--gutter-small);
 }
 
 
@@ -63,3 +70,10 @@
     color: var(--text-color-accent);
 }
 
+.actions {
+    transition: var(--animation-transition-default);
+    opacity: 0;
+    position: absolute;
+    right: 15px;
+    top: 15px;
+}

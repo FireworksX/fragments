@@ -8,10 +8,12 @@ import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderMana
 import { ComponentRef, RefObject } from 'react'
 import { useGesture } from '@use-gesture/react'
 import { getAllParents } from '@fragmentsx/render-core'
+import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
 
 export const useCanvasClick = (targetRef: RefObject<ComponentRef<'div'>>) => {
   const { documentManager } = useBuilderDocument()
   const { manager: builderManager, isTextEditing } = useBuilderManager()
+  const { openFragment } = useBuilder()
 
   const { manager: canvasManager } = useBuilderCanvas()
   const { creator, manager, createText, createBreakpoint, createFrame } = useBuilderCreator()
@@ -38,6 +40,11 @@ export const useCanvasClick = (targetRef: RefObject<ComponentRef<'div'>>) => {
           }
         } else {
           if (documentManager.entityOfKey(layerKey)?._type === definition.nodes.Instance) {
+            if (event.detail >= 2) {
+              const instanceFragmentId = documentManager.resolve(layerKey)?.fragment
+              openFragment(instanceFragmentId)
+            }
+
             // const isTopInstance = getAllParents(documentManager, layerKey)?.at(-1)?._type === definition.nodes.Fragment
             // console.log(isTopInstance)
             builderManager.toggleTextEditor(false)

@@ -1,3 +1,4 @@
+import { definition } from '@fragmentsx/definition'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
@@ -21,17 +22,20 @@ export const useBuilderFragmentInstance = () => {
 
   return {
     instanceFragmentId: instance?.fragment,
-    definition: properties.map(prop => {
-      const { _id, defaultValue } = manager?.resolve?.(prop) ?? {}
+    definition: properties
+      .map(prop => {
+        const { _id, defaultValue, type } = manager?.resolve?.(prop) ?? {}
 
-      return {
-        link: prop,
-        value: _id in props ? props[_id] : defaultValue,
-        setValue: value => {
-          setInstanceProps({ props: { [_id]: value } })
+        return {
+          type,
+          link: prop,
+          value: _id in props ? props[_id] : defaultValue,
+          setValue: value => {
+            setInstanceProps({ props: { [_id]: value } })
+          }
         }
-      }
-    }),
+      })
+      .toSorted(a => (a.type === definition.variableType.Event ? 1 : -1)),
     name,
     instanceManager: manager
     // instance: fragmentInstance,

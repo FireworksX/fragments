@@ -7,6 +7,9 @@ interface Options {
   overrideTarget?: unknown;
 }
 
+const isObject = (x: unknown): x is Record<PropertyKey, unknown> =>
+  !!x && typeof x === "object" && !Array.isArray(x);
+
 export const normalizeLayer = (
   schema: v.ObjectSchema<any, any>,
   rawLayer: unknown,
@@ -30,7 +33,13 @@ export const normalizeLayer = (
             ? overrideTarget?.[key]
             : null;
 
-        const resultValue = parsedLayer[key] ?? overrideValue ?? fallback;
+        let layerValue = parsedLayer[key];
+
+        if (isObject(layerValue) && isObject(overrideValue)) {
+          layerValue = { ...overrideValue, ...layerValue };
+        }
+
+        const resultValue = layerValue ?? overrideValue ?? fallback;
         return [key, resultValue];
       })
     );

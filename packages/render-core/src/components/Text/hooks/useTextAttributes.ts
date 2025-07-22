@@ -10,8 +10,8 @@ export const useTextAttributes = (layerKey: LinkKey) => {
   const { manager: fragmentManager } = useContext(FragmentContext);
   const styles = useLayerStyles(layerKey);
   const content = useTextContent(layerKey);
-  const hash = useHash(layerKey);
-  const { addLayerStyle } = useStyleSheet();
+  const hash = useHash(layerKey, fragmentManager);
+  const { addLayerStyle } = useStyleSheet(fragmentManager);
 
   addLayerStyle(layerKey, styles, fragmentManager.resolve(layerKey));
 

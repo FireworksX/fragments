@@ -1,12 +1,44 @@
-import { createState, Plugin } from "@graph-state/core";
-import { isHtmlContent, isHTMLNode } from "@graph-state/checkers";
+import { createState, LinkKey, Plugin } from "@graph-state/core";
+import {
+  isGraph,
+  isHtmlContent,
+  isHTMLNode,
+  isLinkKey,
+  allowTypes,
+} from "@graph-state/checkers";
 import { definition } from "@fragmentsx/definition";
-import { isKey } from "@fragmentsx/utils";
-import { styleSheetPlugin } from "@/plugins/styleSheet";
+import { isBrowser, isKey } from "@fragmentsx/utils";
+import { fragmentStylesheetPlugin } from "@/plugins/styleSheet";
+import { autoInjector } from "@/plugins/styleSheet/utils/autoInjector";
+import { PLUGIN_TYPES } from "@/fragmentsClient";
+
+declare module "@graph-state/core" {
+  interface GraphState {
+    $fragments: {
+      key: LinkKey;
+      createFragmentManager: (
+        fragmentId: number,
+        initialDocument?: unknown
+      ) => void;
+      getManager: (fragmentId: number) => GraphState;
+      getManagers: () => Record<number, GraphState>;
+    };
+  }
+}
 
 export const fragmentsPlugin: Plugin = (state) => {
   const createFragmentManager = (fragmentId: number, initialDocument = {}) => {
     if (!fragmentId || !initialDocument) return null;
+
+    const fragmentLayerId =
+      initialDocument?._type === definition.nodes.Fragment
+        ? initialDocument?._id
+        : null;
+
+    if (!fragmentLayerId) {
+      console.error("Cannot find fragment layer id");
+      return;
+    }
 
     const cacheManager = state.resolve(state.$fragments.key)?.managers?.[
       fragmentId
@@ -33,14 +65,24 @@ export const fragmentsPlugin: Plugin = (state) => {
       plugins: [
         (state) => {
           state.$fragment = {
-            root: `${definition.nodes.Fragment}:${fragmentId}`,
+            root: `${definition.nodes.Fragment}:${fragmentLayerId}`,
             temp: "Temp:root",
           };
         },
         // cssPlugin,
-        styleSheetPlugin,
+        fragmentStylesheetPlugin,
       ],
-      skip: [isHtmlContent, isHTMLNode, isKey],
+      skip: [
+        isHtmlContent,
+        isHTMLNode,
+        isKey,
+        allowTypes([
+          ...Object.keys(definition.nodes),
+          "Temp",
+          "Spring",
+          PLUGIN_TYPES.FragmentStylesheet,
+        ]),
+      ],
     });
 
     manager.mutate(tempGraph);
@@ -62,14 +104,14 @@ export const fragmentsPlugin: Plugin = (state) => {
   };
 
   state.$fragments = {
-    key: `FragmentsPlugin:root`,
+    key: `${PLUGIN_TYPES.FragmentsPlugin}:root`,
     createFragmentManager,
     getManager,
     getManagers,
   };
 
   state.mutate({
-    _type: "FragmentsPlugin",
+    _type: PLUGIN_TYPES.FragmentsPlugin,
     _id: "root",
     managers: {},
   });

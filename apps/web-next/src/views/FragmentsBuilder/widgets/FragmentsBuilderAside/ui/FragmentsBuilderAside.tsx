@@ -26,13 +26,18 @@ export const FragmentsBuilderAside: FC<FragmentsBuilderAsideProps> = ({ classNam
   const { openFragment } = useBuilder()
 
   return (
-    <Container className={styles.root}>
-      <TabsSelector className={styles.selector} items={tabs} value={mode} onChange={({ name }) => setMode(name)} />
+    <div className={styles.root}>
+      <div className={styles.header}>
+        <TabsSelector className={styles.selector} items={tabs} value={mode} onChange={({ name }) => setMode(name)} />
+      </div>
+
       <div className={styles.delimiter} />
 
-      <ProjectTree className={cn({ [styles.hidden]: mode !== 'project' })} onClick={fg => openFragment(fg.id)} />
-      {!!documentManager && <BuilderLayers className={cn({ [styles.hidden]: mode !== 'layers' })} />}
-      <ProjectAssets className={cn({ [styles.hidden]: mode !== 'assets' })} />
-    </Container>
+      <div className={styles.body}>
+        <ProjectTree className={cn({ [styles.hidden]: mode !== 'project' })} onClick={fg => openFragment(fg.id)} />
+        {!!documentManager && <BuilderLayers className={cn({ [styles.hidden]: mode !== 'layers' })} />}
+        <ProjectAssets className={cn({ [styles.hidden]: mode !== 'assets' })} />
+      </div>
+    </div>
   )
 }

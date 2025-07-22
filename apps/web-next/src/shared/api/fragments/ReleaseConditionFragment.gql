@@ -1,0 +1,36 @@
+fragment ReleaseCondition on ReleaseConditionGet {
+    id
+    name
+    conditionSets {
+        id
+        name
+        conditions {
+            id
+            name
+            filterData {
+                ... on FilterDeviceTypeGet {
+                    deviceTypes
+                }
+                ... on FilterOSTypeGet {
+                    osTypes
+                }
+                ... on FilterTimeFramesGet {
+                    timeFrames {
+                        fromTime
+                        toTime
+                    }
+                }
+                ... on FilterPageGet {
+                    pages
+                }
+                ... on FilterGeoLocationsGet {
+                    geoLocations {
+                        country
+                        region
+                        city
+                    }
+                }
+            }
+        }
+    }
+}

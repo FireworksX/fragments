@@ -61,12 +61,12 @@ export function ExecuteOnly({ children }: ExecuteOnlyProps) {
 }
 
 const FragmentInternal: FC<FragmentProps> = ({ fragmentId, globalManager }) => {
-  const { setRef, children, manager, hash, isResize } = useFragment(
+  const { setRef, children, fragmentContext, hash, isResize } = useFragment(
     fragmentId,
     globalManager
   );
 
-  if (!manager) return null;
+  if (!fragmentContext.manager) return null;
 
   return (
     <div
@@ -75,7 +75,7 @@ const FragmentInternal: FC<FragmentProps> = ({ fragmentId, globalManager }) => {
       className={hash}
     >
       {children.map((childLink) => {
-        const childLayer = manager?.resolve(childLink);
+        const childLayer = fragmentContext.manager?.resolve(childLink);
         const isPrimary = childLayer?.isPrimary ?? false;
 
         return (

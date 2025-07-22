@@ -13,13 +13,25 @@
         }
     }
 
-    .options {
+    .content {
         max-height: 400px;
         overflow: auto;
     }
 
+    .header {
+        position: sticky;
+        top: 0;
+        padding: 12px;
+        background: linear-gradient(to bottom, var(--background) 0%, var(--background) 80%, rgba(var(--background--rgb), 0) 100%);
+        border-radius: var(--radius-second);
+    }
+
+    .options {
+
+    }
+
     .loadingContainer {
-        width: 120px;
+        min-width: 120px;
         height: 40px;
         display: flex;
         align-items: center;

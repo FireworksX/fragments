@@ -19,6 +19,7 @@ export interface TouchableProps {
 const Touchable: React.FC<TouchableProps> = ({
   className,
   TagName = 'div',
+  type = 'button',
   disabled,
   children,
   effect = 'scale',
@@ -52,6 +53,7 @@ const Touchable: React.FC<TouchableProps> = ({
         [styles.withEffect]: effect !== 'none',
         [styles.asButton]: TagName === 'button'
       })}
+      type={TagName === 'button' ? type : null}
       disabled={disabled}
       {...rest}
     >

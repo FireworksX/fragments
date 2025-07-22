@@ -19,8 +19,9 @@ import { booleanTabsSelectorItems } from '@/shared/data'
 import { CornerSides } from '@/shared/ui/CornerSides'
 import { toPx } from '@/shared/utils/toPx'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { useLayerPropertyValue } from '@/shared/hooks/fragmentBuilder/useLayerPropertyVariable'
 
-const directions: TabsSelectorItem[] = [
+export const directions: TabsSelectorItem[] = [
   {
     name: definition.layerDirection.vertical,
     label: <DirectionVertical width={16} height={16} />
@@ -31,7 +32,7 @@ const directions: TabsSelectorItem[] = [
   }
 ]
 
-const aligns: TabsSelectorItem[] = [
+export const aligns: TabsSelectorItem[] = [
   {
     name: definition.layerAlign.start,
     label: <AlignTop width={16} height={16} />
@@ -56,11 +57,22 @@ export const useBuilderLayout = () => {
   // const paddingInvoker = layerInvoker('padding')
 
   const [layerMode, setLayerMode] = useLayerValue('layerMode')
+
   const [layerDirection, setLayerDirection] = useLayerValue('layerDirection')
+  const layerDirectionVariable = useLayerPropertyValue('layerDirection')
+
+  const layerDistributeVariable = useLayerPropertyValue('layerDistribute')
   const [layerDistribute, setLayerDistribute] = useLayerValue('layerDistribute')
+
   const [layerAlign, setLayerAlign] = useLayerValue('layerAlign')
+  const layerAlignVariable = useLayerPropertyValue('layerAlign')
+
   const [, setLayerGap, { value$: layerGap$ }] = useLayerValue('layerGap')
+  const layerGapVariable = useLayerPropertyValue('layerGap')
+
   const [layerWrap, setLayerWrap] = useLayerValue('layerWrap')
+  const layerWrapVariable = useLayerPropertyValue('layerWrap')
+
   const paddingSideByIndex = useMemo(() => {
     if (paddingSide === 0) return 'top'
     if (paddingSide === 1) return 'right'
@@ -91,25 +103,30 @@ export const useBuilderLayout = () => {
     direction: {
       items: directions,
       value: layerDirection,
+      variable: layerDirectionVariable,
       update: setLayerDirection
     },
     align: {
       items: aligns,
       value: layerAlign,
+      variable: layerAlignVariable,
       update: setLayerAlign
     },
     wrap: {
       items: booleanTabsSelectorItems,
       value: layerWrap,
+      variable: layerWrapVariable,
       update: setLayerWrap
     },
     distribute: {
       items: Object.keys(definition.layerDistribute),
       value: layerDistribute,
+      variable: layerDistributeVariable,
       update: setLayerDistribute
     },
     gap: {
       value: layerGap$,
+      variable: layerGapVariable,
       update: setLayerGap
     },
     padding: {

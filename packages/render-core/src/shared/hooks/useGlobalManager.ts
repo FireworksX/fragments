@@ -12,18 +12,10 @@ export const useGlobalManager = (globalManager?: GraphState) => {
     resultManager?.$fragments?.key
   );
 
-  const queryFragmentManager = async (id: string) => {
-    const queryResult = await resultManager?.$fetch?.queryFragment(id);
-    const { document, linkedFragments } = queryResult ?? {};
+  const queryFragmentManager = (id: string) =>
+    resultManager?.$load?.loadFragment?.(id);
 
-    if (linkedFragments) {
-      linkedFragments.forEach(({ id, document }) => {
-        resultManager.$fragments.createFragmentManager(id, document);
-      });
-    }
-
-    return resultManager.$fragments.createFragmentManager(id, document);
-  };
+  const queryArea = (id: string) => resultManager?.$load?.loadArea?.(id);
 
   const setRenderTarget = (value) => {
     resultManager?.setRenderTarget(value);
@@ -33,6 +25,7 @@ export const useGlobalManager = (globalManager?: GraphState) => {
     fragmentsGraph,
     manager: resultManager,
     queryFragmentManager,
+    queryArea,
     getFragmentManager: resultManager?.$fragments?.getManager ?? noop,
     setRenderTarget,
   };

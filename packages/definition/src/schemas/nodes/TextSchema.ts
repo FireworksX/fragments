@@ -6,6 +6,7 @@ import { PositionSchema } from "@/schemas/styles/PositionSchema";
 import { SceneSchema } from "@/schemas/styles/SceneSchema";
 import { SizeSchema } from "@/schemas/styles/SizeSchema";
 import { whiteSpace } from "@/constants";
+import { CssOverrideSchema } from "@/schemas/CssOverrideSchema";
 
 export const TextSchema = v.object({
   name: layerField(v.string(), { fallback: "Text", overridable: false }),
@@ -33,6 +34,7 @@ export const TextSchema = v.object({
   ),
   ...GraphFieldSchema.entries,
   ...OverridesSchema.entries,
+  ...CssOverrideSchema.entries,
   ...PositionSchema.entries,
   ...SceneSchema.entries,
   ...SizeSchema.entries,

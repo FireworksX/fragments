@@ -10,6 +10,7 @@ import { definition } from '@fragmentsx/definition'
 
 interface InputSelectVariableProps extends PropsWithChildren {
   type: keyof typeof definition.variableType
+  mode?: keyof typeof definition.eventMode
   kind: 'variable' | 'computed'
   className?: string
   bodyClassName?: string
@@ -20,6 +21,7 @@ interface InputSelectVariableProps extends PropsWithChildren {
 export const InputSelectVariable: FC<InputSelectVariableProps> = ({
   kind = 'variable',
   type,
+  mode,
   className,
   bodyClassName,
   children,
@@ -28,7 +30,7 @@ export const InputSelectVariable: FC<InputSelectVariableProps> = ({
 }) => {
   const Icon =
     kind === 'variable' ? (
-      <VariableIcon type={type} />
+      <VariableIcon type={type} mode={mode} />
     ) : (
       <FilterFillIcon style={{ color: 'var(--primary)' }} width={22} height={22} />
     )

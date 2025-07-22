@@ -9,6 +9,7 @@ import { LayerInvokerValue } from '@/shared/hooks/fragmentBuilder/useLayerInvoke
 import { Panel } from '@/shared/ui/Panel'
 import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { definition } from '@fragmentsx/definition'
+import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
 
 export type ImagePickerValue = ImagePaint
 
@@ -19,7 +20,8 @@ interface ImagePickerProps {
 }
 
 const ImagePicker: FC<ImagePickerProps> = ({ className, urlInvoker, scaleModeInvoker }) => {
-  const { data, progress, loading, onUpload } = useUploadFile('projectAssets')
+  const { currentFragmentId } = useBuilder()
+  const { data, progress, loading, onUpload } = useUploadFile(currentFragmentId, 'projectAssets')
 
   useEffect(() => {
     if (data && data !== urlInvoker.value) {

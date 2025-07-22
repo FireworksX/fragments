@@ -12,9 +12,17 @@
     display: flex;
     flex-direction: column;
     flex: 1;
+    position: revert;
 }
 
 .actions {
     display: flex;
     padding: 12px;
+}
+
+.popout {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: var(--z-index-builder-popout);
 }

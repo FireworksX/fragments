@@ -1,0 +1,30 @@
+mutation UpdateReleaseCondition($id: Int!, $conditions: [ConditionPost!]!) {
+    updateReleaseCondition(
+        releaseCondition: {
+            id: $id
+            conditionSets: [
+                {
+                    name: "default"
+                    conditions: $conditions
+                }
+            ]
+        }
+    ) {
+        id
+        conditionSets {
+            id
+            conditions {
+                id
+                name
+                filterData {
+                    ... on FilterDeviceTypeGet {
+                        deviceTypes
+                    }
+                    ... on FilterOSTypeGet {
+                        osTypes
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,1 +1,1 @@
-export { CampaignsListAside } from './ui/CampaignsListAside';
+export { AreasListAside } from './ui/AreasListAside'

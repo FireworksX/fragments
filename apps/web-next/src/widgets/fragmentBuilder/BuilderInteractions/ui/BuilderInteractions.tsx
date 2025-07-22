@@ -1,5 +1,6 @@
 import { FC, memo, useContext } from 'react'
 import cn from 'classnames'
+import { definition } from '@fragmentsx/definition'
 import styles from './styles.module.css'
 import { useBuilderInteractions } from '../hooks/useBuilderInteractions'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
@@ -12,6 +13,7 @@ import { PanelHeadAside } from '@/shared/ui/PanelHeadAside'
 import { InputSelect } from '@/shared/ui/InputSelect'
 import { capitalize } from '@/shared/utils/capitalize'
 import ActionIcon from '@/shared/icons/next/zap.svg'
+import GoalIcon from '@/shared/icons/next/circle-dot.svg'
 import { Dropdown } from '@/shared/ui/Dropdown'
 import { DropdownGroup } from '@/shared/ui/DropdownGroup'
 import { DropdownOption } from '@/shared/ui/DropdownOption'
@@ -23,7 +25,7 @@ interface BuilderPositionProps {
 }
 
 const BuilderInteractions: FC<BuilderPositionProps> = memo(({ className }) => {
-  const { manager, interactions, actions, addInteraction, removeInteraction } = useBuilderInteractions()
+  const { manager, interactions, actions, openInteraction, removeInteraction } = useBuilderInteractions()
   //
   // if (!selectionGraph?.position && selectionGraph?._type !== builderNodes.Screen) {
   //   return null
@@ -39,20 +41,29 @@ const BuilderInteractions: FC<BuilderPositionProps> = memo(({ className }) => {
       }
     >
       {interactions?.map?.((interaction, index) => (
-        <ControlRow key={`${index}_${interaction.event}`} title={capitalize(interaction.on)}>
-          <ControlRowWide>
-            <InputSelect
-              icon={<ActionIcon style={{ color: 'var(--text-color)' }} />}
-              color='var(--primary)'
-              placeholder='Set event...'
-              onReset={() => removeInteraction(index)}
-            >
-              <GraphValue graphState={manager} field={interaction.event}>
-                {graph => graph?.name}
-              </GraphValue>
-            </InputSelect>
-          </ControlRowWide>
-        </ControlRow>
+        <GraphValue key={`${index}_${interaction.event}`} graphState={manager} field={interaction.event}>
+          {event => (
+            <ControlRow title={capitalize(interaction.on)}>
+              <ControlRowWide>
+                <InputSelect
+                  icon={
+                    event.mode === definition.eventMode.callback ? (
+                      <ActionIcon style={{ color: 'var(--text-color)' }} />
+                    ) : (
+                      <GoalIcon style={{ color: 'var(--text-color)' }} />
+                    )
+                  }
+                  color='var(--primary)'
+                  placeholder='Set event...'
+                  onReset={() => removeInteraction(index)}
+                  onClick={() => openInteraction(index)}
+                >
+                  {event?.name}
+                </InputSelect>
+              </ControlRowWide>
+            </ControlRow>
+          )}
+        </GraphValue>
       ))}
 
       {/*<AnimatedVisible visible={isVisible}>*/}

@@ -29,12 +29,33 @@ export const layerField = <T>(
     transform?: <TInput>(value: TInput) => TInput;
   }
 ) => {
-  const modifiedSchema = meta?.variable
-    ? v.union([schema, v.pipe(v.string(), linkValidator)])
-    : schema;
+  // const modifiedSchema = meta?.variable
+  //   ? v.union([schema, v.pipe(v.string(), linkValidator)])
+  //   : schema;
+  //
+  // return v.pipe(
+  //   v.optional(modifiedSchema),
+  //   v.transform(meta?.transform ?? ((v) => v)),
+  //   v.metadata(meta ?? {})
+  // );
+
+  const overridable = meta?.overridable ?? true;
+  const variable = meta?.variable ?? false;
+
+  const schemaParts = [schema];
+
+  if (variable) {
+    schemaParts.push(v.pipe(v.string(), linkValidator));
+    // schema = v.union([schema, v.pipe(v.string(), linkValidator)]);
+  }
+
+  if (overridable) {
+    schemaParts.push(v.any());
+    // schema = v.nullable(schema);
+  }
 
   return v.pipe(
-    v.optional(modifiedSchema),
+    v.optional(v.union(schemaParts)),
     v.transform(meta?.transform ?? ((v) => v)),
     v.metadata(meta ?? {})
   );

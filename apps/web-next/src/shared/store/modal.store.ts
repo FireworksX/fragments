@@ -7,7 +7,6 @@ export type ModalPanelMap = {
   createProject: CreateProjectModalContext
   createFragment: CreateFragmentModalContext
   aboutTemplate: unknown
-  createLanding: unknown
   componentVariables: unknown
 }
 
@@ -18,7 +17,13 @@ interface ModalStore extends GraphState {
   close(): void
 }
 
-export const modalStore = createState({
+interface AAModal {
+  _type: 'Modal'
+  name: string
+  onSubmit(): any
+}
+
+export const modalStore = createState<AAModal>({
   initialState: {
     name: null,
     context: null
@@ -48,4 +53,4 @@ export const modalStore = createState({
       return state
     }
   ]
-}) as ModalStore
+})
