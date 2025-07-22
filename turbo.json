@@ -5,8 +5,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**"],
-      "interruptible": true
+      "outputs": ["dist/**", ".next/**"]
     },
     "dev": {
       "cache": false,
