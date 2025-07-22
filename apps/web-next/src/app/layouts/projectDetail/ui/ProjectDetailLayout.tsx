@@ -37,7 +37,7 @@ export const ProjectDetailLayout: FC<PropsWithChildren> = ({ children }) => {
       const globalManager = createFragmentsClient({
         apiToken: data.accessToken,
         isSelf: true,
-        url: isDev ? 'http://localhost/graphql' : '/graphql'
+        backendEndpoint: isDev ? 'http://localhost/graphql' : '/graphql'
       })
       setGlobalManager(globalManager)
       window.globalManager = globalManager

@@ -1,6 +1,6 @@
 .root {
     background: var(--background);
-    z-index: var(--z-index-navigation);
+    z-index: var(--z-index-header);
     position: relative;
 }
 
