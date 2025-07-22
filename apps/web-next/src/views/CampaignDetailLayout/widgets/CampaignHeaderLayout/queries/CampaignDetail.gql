@@ -1,0 +1,27 @@
+query CampaignDetail($id: Int!) {
+    campaign(campaignId: $id) {
+        id
+        name
+        status
+        featureFlag {
+            id
+            releaseCondition {
+                id
+                conditionSets {
+                    id
+                    conditions {
+                        id
+                        filterData {
+                            ... on FilterDeviceTypeGet {
+                                deviceTypes
+                            }
+                            ... on FilterOSTypeGet {
+                                osTypes
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

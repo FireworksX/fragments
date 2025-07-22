@@ -1,4 +1,8 @@
-.root {}
+.root {
+    position: sticky;
+    top: var(--app-size-navigation);
+    padding-top: 12px;
+}
 
 .content {
     display: flex;

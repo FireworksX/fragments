@@ -28,21 +28,24 @@ const fetchTypeMap = {
   projectAssets: requestType.projectsUploadAssets
 }
 
-export const useUploadFile = (type: UploadFileType = 'projectAssets') => {
+export const useUploadFile = (targetId: number, type: UploadFileType = 'projectAssets') => {
   const [progress, setProgress] = useState(0)
   const [mockData, setMockData] = useState('')
   const [uploadAsset, { data, loading }] = useUploadAssetMutation()
 
   const onUpload = useCallback(
     async (file: File) => {
-      // const res = await uploadAsset({
-      //   variables: {
-      //     file,
-      //     type: MediaType.FragmentAsset
-      //   }
-      // })
+      const res = await uploadAsset({
+        variables: {
+          file,
+          type: MediaType.FragmentAsset,
+          targetId
+        }
+      })
 
-      setMockData('https://cdn.scores24.live/upload/team/w60-h60/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png')
+      if (res.data?.uploadAsset?.url) {
+        setMockData(res.data?.uploadAsset?.url)
+      }
       // console.log(res)
     },
     // trigger({

@@ -5,6 +5,10 @@
     gap: var(--gutter-medium);
 }
 
+.id {
+    display: flex;
+}
+
 .head {
     display: flex;
     flex-direction: column;
@@ -30,9 +34,7 @@
 .logo {
     width: 64px;
     height: 64px;
-    border-radius: var(--radius-second);
     background: var(--background-light);
-    border: 1px solid var(--border);
 }
 
 .info {

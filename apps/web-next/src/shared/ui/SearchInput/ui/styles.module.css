@@ -33,6 +33,7 @@
     font-weight: 500;
     padding-left: 7px;
     border-radius: var(--radius-second);
+    background: transparent;
 
     &::placeholder {
         color: var(--secondary);
@@ -44,6 +45,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-inline: 10px;
+    padding-left: 10px;
     color: var(--secondary);
 }

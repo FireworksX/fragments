@@ -1,4 +1,5 @@
 .root {
+    padding-left: 12px;
     &:hover {
         .aside {
             opacity: 1;

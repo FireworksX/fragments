@@ -1,7 +1,0 @@
-mutation UpdateCampaign($campaignSlug: Int!, $name: String, $description: String) {
-    updateCampaign(cmp: { id: $campaignSlug, name: $name, description: $description }) {
-        id
-        name
-        description
-    }
-}

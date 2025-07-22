@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22">
+    <path d="M 0 4 C 0 1.791 1.791 0 4 0 L 18 0 C 20.209 0 22 1.791 22 4 L 22 18 C 22 20.209 20.209 22 18 22 L 4 22 C 1.791 22 0 20.209 0 18 Z"
+          fill="currentColor"></path>
+    <circle stroke="white" fill="transparent" stroke-width="2" cx="11" cy="11" r="6"/>
+    <circle stroke="white" stroke-width="2" cx="11" cy="11" r="1"/>
+</svg>

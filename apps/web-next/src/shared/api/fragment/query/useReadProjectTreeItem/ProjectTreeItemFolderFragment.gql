@@ -1,0 +1,6 @@
+fragment FolderTreeItem on ProjectDirectoryGet {
+    name
+    parentId
+    hasSubdirectories
+    hasFragments
+}

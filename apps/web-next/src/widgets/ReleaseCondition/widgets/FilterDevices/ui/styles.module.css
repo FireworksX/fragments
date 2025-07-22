@@ -1,0 +1,11 @@
+.chip {
+    flex-wrap: wrap;
+}
+
+.chipPart {
+    white-space: nowrap;
+
+    &:first-child {
+        color: var(--secondary);
+    }
+}

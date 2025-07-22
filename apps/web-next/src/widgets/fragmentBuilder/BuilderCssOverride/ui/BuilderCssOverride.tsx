@@ -17,14 +17,15 @@ interface BuilderCssOverrideProps {
 
 const BuilderCssOverride: FC<BuilderCssOverrideProps> = ({ className }) => {
   const { cssOverride, setCssOverride, onClickHeader } = useBuilderCssOverride()
+  const isOpen = typeof cssOverride === 'string'
 
   return (
     <Panel
       className={className}
       title='CSS Override'
-      aside={<PanelHeadAside isOpen={!!cssOverride} onClick={onClickHeader} />}
+      aside={<PanelHeadAside isOpen={isOpen} onClick={onClickHeader} />}
     >
-      {!!cssOverride && (
+      {isOpen && (
         <Panel>
           <Textarea value={cssOverride} onChangeValue={setCssOverride} />
         </Panel>

@@ -1,13 +1,13 @@
 import { FC, PropsWithChildren, useContext } from 'react'
 import ModalComp from 'react-modal'
-import { modalStore } from '@/shared/store/modal.store'
 
 interface ModalProps extends PropsWithChildren {
   isOpen?: boolean
   className?: string
+  onClose?: () => void
 }
 
-const Modal: FC<ModalProps> = ({ className, children, isOpen = false }) => {
+const Modal: FC<ModalProps> = ({ className, children, isOpen = false, onClose }) => {
   return (
     <ModalComp
       className={className}
@@ -15,7 +15,7 @@ const Modal: FC<ModalProps> = ({ className, children, isOpen = false }) => {
       shouldCloseOnOverlayClick
       shouldCloseOnEsc
       overlayClassName='modalOverlay'
-      onRequestClose={modalStore.close}
+      onRequestClose={onClose}
     >
       {children}
     </ModalComp>

@@ -1,0 +1,9 @@
+.root {
+    display: flex;
+    gap: 8px;
+}
+
+.emptyChip {
+    background: var(--secondary-bg);
+    color: var(--secondary);
+}

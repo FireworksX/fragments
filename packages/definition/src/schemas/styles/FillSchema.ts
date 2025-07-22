@@ -9,6 +9,6 @@ export const FillSchema = v.object({
   solidFill: layerField(v.string(), { fallback: "#fff" }),
   imageFill: layerField(v.string()),
   imageSize: layerField(v.picklist(Object.keys(imagePaintScaleModes)), {
-    fallback: imagePaintScaleModes.Fill,
+    fallback: imagePaintScaleModes.Auto,
   }),
 });

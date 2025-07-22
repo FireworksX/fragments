@@ -5,24 +5,30 @@ import { InputSelect } from '@/shared/ui/InputSelect'
 import { popoutsStore } from '@/shared/store/popouts.store'
 import { popoutNames } from '@/shared/data'
 import { objectToColorString } from '@fragmentsx/utils'
+import { BuilderControlRowProps } from '@/shared/ui/ControlRow/ui/default/ControlRow'
 
-interface InstancePropertyFillProps {
+interface InstancePropertyFillProps extends Pick<BuilderControlRowProps, 'variable' | 'hasConnector'> {
   name: string
   value: string
   className?: string
   onChange(value: string): void
 }
 
-const InstancePropertyColor: FC<InstancePropertyFillProps> = ({ className, name, value, onChange }) => {
+const InstancePropertyColor: FC<InstancePropertyFillProps> = ({
+  className,
+  name,
+  value,
+  onChange,
+  ...controlRowProps
+}) => {
   return (
-    <ControlRow className={className} title={name}>
+    <ControlRow className={className} title={name} {...controlRowProps}>
       <ControlRowWide>
         <InputSelect
           hasIcon
           color={value}
           onClick={() => {
             popoutsStore.open(popoutNames.colorPicker, {
-              initial: true,
               position: 'right',
               context: {
                 value,

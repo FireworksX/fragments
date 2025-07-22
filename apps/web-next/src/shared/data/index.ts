@@ -6,11 +6,19 @@ export const popoutNames = createConstants(
   'stackSolidPaintStyle',
   'colorPicker',
   'stackStringProperty',
+  'stackEnumProperty',
+  'stackLinkProperty',
   'stackNumberProperty',
+  'stackEventProperty',
   'stackBooleanProperty',
   'stackColorProperty',
+  'stackGoalProperty',
   'stackVariableTransform',
-  'stackEvent'
+  'stackInteraction',
+  'stackGoals',
+  'stackEvents',
+  'stackCreateGoal',
+  'stackFragmentProps'
 )
 
 export const droppableAreas = createConstants('builderPlaceholder', 'builderCanvas', 'builderCanvasNode')
@@ -28,7 +36,10 @@ export const modalNames = createConstants(
   'configureStream',
   'projectTree',
   'createCustomBreakpoint',
-  'goalView'
+  'goalView',
+  'configureFeatureFlagVariant',
+  'configureFragmentVariant',
+  'configureCampaign'
 )
 
 export const booleanTabsSelectorItems: TabsSelectorItem[] = [

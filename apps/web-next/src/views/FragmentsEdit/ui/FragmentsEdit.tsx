@@ -52,6 +52,13 @@ import { BuilderFragmentTabs } from '@/views/FragmentsBuilder/widgets/BuilderFra
 import BuilderInteractions from '@/widgets/fragmentBuilder/BuilderInteractions/ui/BuilderInteractions'
 import BuilderStackPanelEvent from '../../../widgets/fragmentBuilder/BuilderStackPanelEvent/ui/BuilderStackPanelEvent'
 import { BuilderCssOverride } from '@/widgets/fragmentBuilder/BuilderCssOverride'
+import StackInteraction from '@/features/popouts/StackInteraction/ui/StackInteraction'
+import StackEventProperty from '@/features/popouts/StackEventProperty/ui/StackEventProperty'
+import StackGoals from '@/features/popouts/StackGoals/ui/StackGoals'
+import StackCreateGoal from '@/features/popouts/StackCreateGoal/ui/StackCreateGoal'
+import StackLinkProperty from '../../../features/popouts/StackLinkProperty/ui/StackLinkProperty'
+import StackEnumProperty from '@/features/popouts/StackEnumProperty/ui/StackEnumProperty'
+import { withModalCollector } from '@/shared/hocs/withModalCollector'
 
 const FragmentsEditInitial = () => {
   // const { setRenderTarget } = useRenderTarget()
@@ -97,10 +104,15 @@ const FragmentsEditInitial = () => {
                   <StackPanelCssOverride name='cssOverride' title='CSS override' />
                   <StackSolidPaintStyle name={popoutNames.stackSolidPaintStyle} title='Color Variable' />
                   <StackStringProperty name={popoutNames.stackStringProperty} title='String Property' />
+                  <StackEnumProperty name={popoutNames.stackEnumProperty} title='Option Property' />
+                  <StackLinkProperty name={popoutNames.stackLinkProperty} title='Link Property' />
                   <StackNumberProperty name={popoutNames.stackNumberProperty} title='Number Property' />
+                  <StackEventProperty name={popoutNames.stackEventProperty} title='Event Property' />
                   <StackBooleanProperty name={popoutNames.stackBooleanProperty} title='Boolean Property' />
                   <StackColorProperty name={popoutNames.stackColorProperty} title='Color Property' />
-                  <BuilderStackPanelEvent name={popoutNames.stackEvent} title='Event' />
+                  <StackInteraction name={popoutNames.stackInteraction} title='Interaction' />
+                  <StackGoals name={popoutNames.stackGoals} title='Goals' />
+                  <StackCreateGoal name={popoutNames.stackCreateGoal} title='Create Goal' />
                   {/*<StackPanelCssOverrideList name='cssOverrideList' title='CSS overrides' />*/}
                   {/*<StackLoopEffect name='loopEffect' title='Loop Effect' />*/}
 
@@ -136,8 +148,11 @@ const FragmentsEditInitial = () => {
   )
 }
 
-export const FragmentsEdit = () => (
-  <BuilderProvider>
-    <FragmentsEditInitial />
-  </BuilderProvider>
+export const FragmentsEdit = withModalCollector(
+  () => (
+    <BuilderProvider>
+      <FragmentsEditInitial />
+    </BuilderProvider>
+  ),
+  {}
 )

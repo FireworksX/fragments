@@ -5,10 +5,8 @@
     gap: var(--gutter-medium);
     font-weight: 500;
     transition: var(--animation-transition-default);
-    padding: 4px 8px;
+    padding: 0 8px 0 24px;
     border-radius: var(--radius-small);
-
-
 }
 
 .before {

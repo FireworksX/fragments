@@ -1,7 +1,7 @@
 {
   "name": "@fragmentsx/render-react",
   "private": false,
-  "version": "0.0.4",
+  "version": "0.0.5",
   "type": "module",
   "files": [
     "dist"
@@ -30,7 +30,7 @@
   "dependencies": {
     "@fragmentsx/definition": "workspace:*",
     "@graph-state/checkers": "^0.1.2",
-    "@graph-state/core": "^0.11.1",
+    "@graph-state/core": "^0.11.4",
     "@graph-state/react": "^0.6.3",
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.1.2",

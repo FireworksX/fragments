@@ -7,8 +7,8 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
+    "build": "turbo run build --filter=!./playgrounds/*",
+    "dev": "turbo run dev --filter=!./playgrounds/*",
     "changeset": "changeset",
     "changeset:version": "changeset version",
     "lint": "turbo run lint",

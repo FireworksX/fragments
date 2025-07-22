@@ -5,7 +5,8 @@ import { InputNumber } from '@/shared/ui/InputNumber'
 import { Slider } from '@/shared/ui/Slider'
 import { ControlRow } from '@/shared/ui/ControlRow'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
-import { useLayerVariables } from '@/shared/hooks/fragmentBuilder/useLayerVariables'
+import { useLayerVariables } from '../../../../../../shared/hooks/fragmentBuilder/useLayerVariable'
+import { useLayerPropertyValue } from '@/shared/hooks/fragmentBuilder/useLayerPropertyVariable'
 
 interface BuilderOpacityControlProps {
   className?: string
@@ -13,7 +14,7 @@ interface BuilderOpacityControlProps {
 
 export const BuilderOpacityControl: FC<BuilderOpacityControlProps> = memo(({ className }) => {
   const [, setOpacity, opacityInfo] = useLayerValue('opacity')
-  const { disabled, actions, variableLink, resetVariable, editVariable } = useLayerVariables('opacity')
+  const { disabled, actions, variableLink, resetVariable, editVariable } = useLayerPropertyValue('opacity')
 
   return (
     <ControlRow

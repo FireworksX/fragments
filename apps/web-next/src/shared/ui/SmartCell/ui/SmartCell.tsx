@@ -27,6 +27,7 @@ interface SmartCellProps {
   collapsed?: boolean
   ref?: ForwardedRef<ComponentRef<'div'>>
   icon?: ReactNode
+  after?: ReactNode
   selected?: boolean
   isLoading?: boolean
   onEdit?(value: string): void
@@ -40,6 +41,7 @@ const SmartCell: FC<SmartCellProps> = ({
   children,
   selected,
   icon,
+  after,
   ref,
   collapsed,
   isLoading,
@@ -93,7 +95,11 @@ const SmartCell: FC<SmartCellProps> = ({
 
   return (
     <Cell
-      className={cn(className, styles.root, { [styles.open]: !collapsed, [styles.selected]: !!selected })}
+      className={cn(className, styles.root, {
+        [styles.open]: !collapsed,
+        [styles.selected]: !!selected,
+        [styles.hasCollapsable]: isCollapsable
+      })}
       effect='none'
       before={
         <div className={styles.before}>
@@ -101,7 +107,7 @@ const SmartCell: FC<SmartCellProps> = ({
             {isLoading && <Spinner className={styles.loading} color='var(--text-color-accent-secondary)' size={12} />}
             {hasCollapsedCaret && (
               <Touchable className={styles.caret} style={{ opacity: isCollapsable && !isLoading ? 1 : 0 }}>
-                <CaretRight width={10} />
+                <CaretRight width={12} />
               </Touchable>
             )}
           </div>
@@ -109,6 +115,7 @@ const SmartCell: FC<SmartCellProps> = ({
           {icon && <div className={styles.icon}>{icon}</div>}
         </div>
       }
+      after={after}
       onClick={handleClickCell}
     >
       <div className={styles.label}>

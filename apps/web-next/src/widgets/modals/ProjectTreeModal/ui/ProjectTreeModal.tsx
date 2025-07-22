@@ -7,20 +7,28 @@ import { useGraph } from '@graph-state/react'
 import { modalStore } from '@/shared/store/modal.store'
 import { modalNames } from '@/shared/data'
 import { ProjectTree } from '@/widgets/ProjectTree'
+import { useModal } from '@/shared/hooks/useModal'
+import { ProjectTreeItem } from '@/widgets/ProjectTree/ui/ProjectTree'
+
+export interface ProjectTreeModalContext {
+  onSelect: (item: ProjectTreeItem) => void
+}
 
 interface ProjectTreeModalProps {
   className?: string
 }
 
 export const ProjectTreeModal: FC<ProjectTreeModalProps> = ({ className }) => {
-  const [modal] = useGraph(modalStore, modalStore.key)
-  const context = modal?.context
+  const { readContext } = useModal()
+  const context = readContext(modalNames.projectTree)
 
   return (
-    <Modal className={cn(styles.root, className)} isOpen={modal.name === modalNames.projectTree}>
-      <ModalContainer title='Project Tree'>
-        <ProjectTree onClick={context?.onClick} />
-      </ModalContainer>
-    </Modal>
+    <ModalContainer
+      title='Project Tree'
+      description='Select the fragment you need. You can also organize them into folders or create new ones.'
+      width={300}
+    >
+      <ProjectTree onClick={context.onSelect} />
+    </ModalContainer>
   )
 }

@@ -12,6 +12,7 @@ export type InitialsAvatarTextGradients = 'red' | 'pink' | 'orange' | 'yellow' |
 
 export interface InitialsAvatarProps extends Pick<AvatarProps, 'size'>, PropsWithChildren {
   className?: string
+  withRadius?: boolean
   gradientColor?: InitialsAvatarNumberGradients | InitialsAvatarTextGradients
 }
 
@@ -24,7 +25,7 @@ const COLORS_NUMBER_TO_TEXT_MAP: Record<InitialsAvatarNumberGradients, InitialsA
   6: 'violet'
 }
 
-const InitialsAvatar: FC<InitialsAvatarProps> = ({ className, gradientColor, size, children }) => {
+const InitialsAvatar: FC<InitialsAvatarProps> = ({ className, gradientColor, withRadius, size, children }) => {
   const gradientName =
     typeof gradientColor === 'string' ? gradientColor : gradientColor && COLORS_NUMBER_TO_TEXT_MAP[gradientColor]
 
@@ -36,7 +37,7 @@ const InitialsAvatar: FC<InitialsAvatarProps> = ({ className, gradientColor, siz
 
   return (
     <div
-      className={cn(styles.root, className, styles[gradientName ?? 'red'])}
+      className={cn(styles.root, className, styles[gradientName ?? 'red'], { [styles.withRadius]: withRadius })}
       style={{
         '--size': `${size}px`,
         '--font-size': `${getInitialsFontSize(size)}px`

@@ -31,9 +31,29 @@ export function makeApolloClient() {
       typePolicies: {
         Mutation: {
           fields: {
+            deleteProjectGoal: {
+              merge(_, _incoming, { cache, variables }) {
+                cache.evict({ id: `ProjectGoalGet:${variables?.id}` })
+              }
+            },
+            deleteVariant: {
+              merge(_, _incoming, { cache, variables }) {
+                cache.evict({ id: `VariantGet:${variables?.id}` })
+              }
+            },
             deleteFragment: {
               merge(_, _incoming, { cache, variables }) {
                 cache.evict({ id: `FragmentGet:${variables?.id}` })
+              }
+            },
+            deleteCampaign: {
+              merge(_, _incoming, { cache, variables }) {
+                cache.evict({ id: `CampaignGet:${variables?.id}` })
+              }
+            },
+            deleteArea: {
+              merge(_, _incoming, { cache, variables }) {
+                cache.evict({ id: `AreaGet:${variables?.id}` })
               }
             },
             deleteDirectory: {
@@ -54,6 +74,9 @@ export function makeApolloClient() {
                   cache.modify({
                     id: `ProjectDirectoryGet:${parentId}`, // Родительский объект
                     fields: {
+                      hasFragments() {
+                        return true
+                      },
                       fragments(existingFragments = []) {
                         return [...existingFragments, incoming]
                       }
@@ -95,6 +118,30 @@ export function makeApolloClient() {
               }
             },
 
+            createArea: {
+              merge(outcome, incoming, { cache, variables }) {
+                cache.modify({
+                  fields: {
+                    area(list = []) {
+                      return [...list, incoming]
+                    }
+                  }
+                })
+              }
+            },
+
+            createProjectGoal: {
+              merge(outcome, incoming, { cache, variables }) {
+                cache.modify({
+                  fields: {
+                    projectGoals(list = []) {
+                      return [...list, incoming]
+                    }
+                  }
+                })
+              }
+            },
+
             createCampaign: {
               merge(outcome, incoming, { cache, variables }) {
                 cache.modify({
@@ -107,33 +154,29 @@ export function makeApolloClient() {
               }
             },
 
-            createLanding: {
-              merge(outcome, incoming, { cache, variables }) {
-                cache.modify({
-                  fields: {
-                    landing(list = []) {
-                      return [...list, incoming]
-                    }
-                  }
-                })
-              }
-            },
-
-            createStream: {
-              merge(outcome, incoming, { cache, variables }) {
-                cache.modify({
-                  fields: {
-                    stream(list = []) {
-                      return [...list, incoming]
-                    }
-                  }
-                })
-              }
-            },
-
             createProject: {
               merge(_, _incoming, { cache }) {
                 cache.evict({ id: 'ROOT_QUERY', fieldName: 'project' })
+              }
+            },
+
+            createVariant: {
+              merge(_, incoming, { cache, variables }) {
+                const featureFlagId = variables?.featureFlagId
+
+                if (featureFlagId) {
+                  cache.modify({
+                    id: cache.identify({
+                      __typename: 'FeatureFlagGet',
+                      id: featureFlagId
+                    }),
+                    fields: {
+                      variants(list = []) {
+                        return [...list, incoming]
+                      }
+                    }
+                  })
+                }
               }
             }
           }

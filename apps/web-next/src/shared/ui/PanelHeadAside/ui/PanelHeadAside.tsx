@@ -12,12 +12,12 @@ interface BuilderPanelHeadAsideProps {
   onClick?: () => void
 }
 
-const PanelHeadAside: FC<BuilderPanelHeadAsideProps> = animated(({ className, isOpen, onClick }) => {
+const PanelHeadAside: FC<BuilderPanelHeadAsideProps> = ({ className, isOpen, onClick }) => {
   return (
     <Touchable className={cn(styles.root, className)} TagName='button' onClick={onClick}>
       {isOpen ? <Minus width={14} height={14} /> : <Plus width={14} height={14} />}
     </Touchable>
   )
-})
+}
 
 export default PanelHeadAside

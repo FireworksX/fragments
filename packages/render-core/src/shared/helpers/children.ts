@@ -4,6 +4,9 @@ import { createLayer } from "@/shared/helpers/createLayer";
 import { getOverrider } from "@/shared/helpers/getOverrider";
 import { definition } from "@fragmentsx/definition";
 import { setKey } from "@/shared/helpers/keys";
+import { pick } from "@fragmentsx/utils";
+import { cloneLayer } from "@/shared/helpers/cloneLayer";
+import { duplicateLayer } from "@/shared/helpers/duplicateLayer";
 
 /**
  * Метод добавляет слой в массив children. Но есть дополнительная логика.
@@ -36,7 +39,13 @@ export const appendChildren = (
   (primaryTarget?.overrides ?? []).forEach((override) => {
     const overridesChildren = resolveChildren
       .map((child) => {
-        const nextChild = createLayer(child, true);
+        const nextChild = createLayer(
+          {
+            ...pick(child, "parent", "_type"),
+            overrideFrom: setKey(manager.keyOfEntity(child)),
+          },
+          true
+        );
 
         if (!isPrimaryTarget) {
           nextChild.visible = true;
@@ -60,6 +69,7 @@ export const appendChildren = (
     });
   });
 
+  // TODO Должен скрываться со всех других экранов, не только с primary
   manager.mutate(manager.keyOfEntity(primaryTarget), {
     children: resolveChildren.map((child) => ({
       ...child,
@@ -72,7 +82,7 @@ export const appendChildren = (
 
 export const insertChildren = (
   manager: GraphState,
-  target: LinkKey,
+  target: Entity,
   index: number,
   ...layerKeys: Entity[]
 ) => {
@@ -112,4 +122,16 @@ export const removeChildren = (manager: GraphState, ...layerKeys: Entity[]) => {
       });
     }
   });
+};
+
+export const moveChildren = (
+  manager: GraphState,
+  targetKey: Entity,
+  toKey: Entity,
+  index: number
+) => {
+  const targetClone = duplicateLayer(manager, targetKey, true);
+
+  insertChildren(manager, toKey, index, targetClone);
+  removeChildren(manager, targetKey);
 };

@@ -1,8 +1,0 @@
-query CampaignsList($projectId: Int!) {
-    campaign(projectId: $projectId) {
-        id
-        name
-        active
-        description
-    }
-}

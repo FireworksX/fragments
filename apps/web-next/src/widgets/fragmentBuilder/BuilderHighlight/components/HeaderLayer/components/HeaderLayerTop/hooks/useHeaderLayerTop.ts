@@ -6,6 +6,8 @@ import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDoc
 import { pick } from '@fragmentsx/utils'
 import { useModal } from '@/shared/hooks/useModal'
 import { modalNames } from '@/shared/data'
+import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
+import { useRootLayerAuto } from '@/shared/hooks/fragmentBuilder/useRootLayerAuto'
 
 export const useHeaderLayerTop = (layerKey: LinkKey) => {
   const { openModal, closeModal } = useModal()
@@ -13,6 +15,7 @@ export const useHeaderLayerTop = (layerKey: LinkKey) => {
   const [layerGraph] = useGraph(documentManager, layerKey, {
     selector: data => (data ? pick(data, 'name', '_id', 'width') : data)
   })
+  const { canCreateBreakpoint } = useRootLayerAuto()
   const { selection } = useBuilderSelection()
   const { allowedBreakpoints, addBreakpoint, getBreakpointRangeLabel } = useBreakpoints()
 
@@ -26,6 +29,7 @@ export const useHeaderLayerTop = (layerKey: LinkKey) => {
   }
 
   return {
+    canCreateBreakpoint,
     name: layerGraph?.name ?? layerGraph?._id,
     selected: selection === layerKey,
     allowedBreakpoints,

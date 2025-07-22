@@ -15,8 +15,8 @@ export const useBuilderPosition = () => {
   const childOfBreakpoint = parent?._type === definition.nodes.Breakpoint
 
   const [position, setPosition] = useLayerValue('position')
-  const [top, setTop, { value$: top$ }] = useLayerValue('top')
-  const [left, setLeft] = useLayerValue('left')
+  const [, setTop, { value$: top$ }] = useLayerValue('top')
+  const [, setLeft, { value$: left$ }] = useLayerValue('left')
 
   const disabledFlags = useMemo(() => {
     const hasLayout = parent?.layerMode === definition.layerMode.flex
@@ -45,7 +45,7 @@ export const useBuilderPosition = () => {
       ]
     },
     left: {
-      value: left,
+      value: left$,
       update: setLeft
     },
     top: {

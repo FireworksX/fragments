@@ -24,8 +24,6 @@ export const FragmentInstance: FC<DocumentRenderer> = ({ layerKey, renderParents
   // const instanceFragmentKey = getFieldValue(instanceGraph, 'fragment', documentManager)
   // const instanceDocumentManager = builderManager.$documents.getDocumentManager(instanceFragmentKey)
 
-  console.log(layerKey)
-
   return null
 
   return (

@@ -1,0 +1,49 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.header {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.editableCell {
+    padding: 4px;
+}
+
+.innerCell {
+    display: flex;
+    align-items: center;
+    gap: var(--gutter-small);
+}
+
+.preview {
+    width: 80px;
+    height: 80px;
+    background: var(--background-secondary);
+    border-radius: var(--radius-second);
+}
+
+.rotationSpan {
+    color: var(--secondary);
+}
+
+.rollout {
+    min-width: 40px;
+    position: relative;
+
+    &.rolloutLoading {
+        &:after {
+            content: '';
+            display: block;
+            position: absolute;
+            inset: 0;
+            background: rgba(var(--background-secondary--rgb), .4);
+            border-radius: var(--radius-small);
+            backdrop-filter: blur(5px);
+        }
+    }
+}

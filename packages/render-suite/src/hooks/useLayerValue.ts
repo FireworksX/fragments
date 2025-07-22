@@ -24,7 +24,7 @@ export const useLayerValue = (
     initialValue: coreValue,
     manager,
     onFinish: setCoreValue,
-    onChange: options?.onChange,
+    onChange: (value) => options?.onChange?.(value),
   });
 
   return [

@@ -4,7 +4,7 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
-import { CustomRender, Fragment } from '@fragmentsx/render-suite'
+import { CustomRender, Fragment, Instance } from '@fragmentsx/render-suite'
 import { useDroppable } from '@dnd-kit/core'
 import { droppableAreas } from '@/shared/data'
 

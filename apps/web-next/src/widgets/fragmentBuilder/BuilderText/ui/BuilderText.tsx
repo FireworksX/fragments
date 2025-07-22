@@ -24,8 +24,6 @@ const BuilderText: FC<BuilderTextProps> = ({ className }) => {
     useBuilderTextBase()
   const { getColor, getNameColor } = useDisplayColor()
 
-  console.log(whiteSpace)
-
   return (
     <Panel className={className} title='Text'>
       {/*<BuilderControlRow title='Styles'>*/}

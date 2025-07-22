@@ -9,10 +9,10 @@ interface TextProps {
 }
 
 export const Text: FC<TextProps> = memo(({ layerKey }) => {
-  const { styles, content } = useTextAttributes(layerKey);
+  const { hash, styles, content } = useTextAttributes(layerKey);
 
   return (
-    <animated.div style={styles} data-key={layerKey}>
+    <animated.div style={styles} className={hash} data-key={layerKey}>
       <div
         className={cssStyles.text}
         dangerouslySetInnerHTML={{ __html: content }}

@@ -1,0 +1,18 @@
+# import ../../../../../shared/api/fragments/ReleaseCondition.gql
+
+query ListCampaigns($areaId: Int!) {
+    campaign(areaId: $areaId) {
+        id
+        name
+        status
+#        default
+        logo {
+            publicPath
+        }
+        featureFlag {
+            releaseCondition {
+                ...ReleaseCondition
+            }
+        }
+    }
+}

@@ -23,7 +23,7 @@ export const ProjectTreeSortableItem: FC<ProjectTreeSortableItemProps> = ({
   type,
   className,
   deepIndex = 0,
-  indentationWidth = 20,
+  indentationWidth = 12,
   children,
   ghost
 }) => {

@@ -1,0 +1,16 @@
+.chip {
+    flex-wrap: wrap;
+}
+
+.chipPart {
+    white-space: nowrap;
+
+    &:first-child {
+        color: var(--secondary);
+    }
+}
+
+
+.option {
+    white-space: normal;
+}

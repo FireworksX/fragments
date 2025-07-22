@@ -8,12 +8,16 @@
     border-radius: var(--radius-small);
 
     &:hover {
-        background: var(--background-secondary);
+        background: rgba(var(--border--rgb), .3);
     }
 }
 
 .active {
-    background: var(--background-secondary);
+    background: rgba(var(--border--rgb), .5);
+
+    &:hover {
+        background: rgba(var(--border--rgb), .5);
+    }
 }
 
 .header {
@@ -25,15 +29,15 @@
 .logo {
     width: 24px;
     height: 24px;
-    background: var(--secondary-bg);
-    border-radius: var(--radius-small);
-    border: 1px solid var(--border);
 }
 
 .name {
     font-weight: 500;
     color: var(--text-color-accent);
     flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .status {
@@ -41,9 +45,6 @@
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    position: absolute;
-    top: 2px;
-    left: 28px;
 
     &.status_active {
         background: var(--success);

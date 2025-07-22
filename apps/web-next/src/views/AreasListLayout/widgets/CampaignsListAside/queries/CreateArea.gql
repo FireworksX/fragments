@@ -1,0 +1,13 @@
+mutation CreateArea($name: String!, $description: String, $projectId: Int!, $areaCode: String!) {
+    createArea(area: { defaultCampaignName: $name, description: $description, projectId: $projectId, areaCode: $areaCode }
+    ) {
+        areaCode
+        description
+        defaultCampaign {
+            id
+            status
+            name
+        }
+    }
+}
+

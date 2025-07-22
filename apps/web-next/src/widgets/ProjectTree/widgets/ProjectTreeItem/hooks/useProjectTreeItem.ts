@@ -9,6 +9,7 @@ import { ProjectTreeContext } from '../../../ui/ProjectTree'
 import { PROJECT_TREE_DIRECTORY_FRAGMENT, PROJECT_TREE_FRAGMENT_FRAGMENT } from '../lib/ProjectTreeItemFragment'
 import { useProject } from '@/shared/hooks/useProject'
 import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
+import { useReadProjectTreeItem } from '@/shared/api/fragment/query/useReadProjectTreeItem'
 
 interface Options {
   itemId: number
@@ -32,11 +33,9 @@ export const useProjectTreeItem = ({ itemId, type, parentId, onClick }: Options)
   const cellRef = useRef(null)
   const creatingRef = useRef(null)
   const [creatingNew, setCreatingNew] = useState<FileSystemItemType | null>(null)
-  const __typename = type === projectItemType.directory ? 'ProjectDirectoryGet' : 'FragmentGet'
-  const { data: itemData } = useFragment({
-    fragment: type === projectItemType.fragment ? PROJECT_TREE_FRAGMENT_FRAGMENT : PROJECT_TREE_DIRECTORY_FRAGMENT,
-    from: `${__typename}:${itemId}`
-  })
+
+  const itemData = useReadProjectTreeItem({ type, id: itemId })
+
   const isOpen = openedIds?.includes(itemId)
   const hasChildren = type === projectItemType.directory && (itemData.hasSubdirectories || itemData.hasFragments)
   const resultParentId = parentId ?? itemData?.parentId

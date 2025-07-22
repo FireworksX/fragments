@@ -1,0 +1,7 @@
+mutation CreateGoal($projectSlug: Int!, $name: String!, $code: String!) {
+    createProjectGoal(goal: {projectId: $projectSlug, name: $name, targetAction: $code}) {
+        id
+        name
+        code: targetAction
+    }
+}

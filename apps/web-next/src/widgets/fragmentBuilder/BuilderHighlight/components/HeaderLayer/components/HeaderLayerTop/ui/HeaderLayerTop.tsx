@@ -15,8 +15,15 @@ interface HeaderLayerTopProps {
 }
 
 export const HeaderLayerTop: FC<HeaderLayerTopProps> = memo(({ layerKey }) => {
-  const { name, selected, handleCreateCustomBreakpoint, allowedBreakpoints, thresholdLabel, addBreakpoint } =
-    useHeaderLayerTop(layerKey)
+  const {
+    name,
+    selected,
+    canCreateBreakpoint,
+    handleCreateCustomBreakpoint,
+    allowedBreakpoints,
+    thresholdLabel,
+    addBreakpoint
+  } = useHeaderLayerTop(layerKey)
 
   return (
     <div
@@ -32,31 +39,33 @@ export const HeaderLayerTop: FC<HeaderLayerTopProps> = memo(({ layerKey }) => {
         <div className={styles.threshold}>{thresholdLabel}</div>
       </div>
 
-      <Dropdown
-        trigger='click'
-        options={
-          <>
-            <DropdownGroup>
-              {allowedBreakpoints.map(breakpoint => (
-                <DropdownOption
-                  key={breakpoint.width}
-                  description={`${breakpoint.width}px`}
-                  onClick={() => addBreakpoint(breakpoint.name, breakpoint.width)}
-                >
-                  {breakpoint.name}
-                </DropdownOption>
-              ))}
-            </DropdownGroup>
-            <DropdownGroup>
-              <DropdownOption onClick={handleCreateCustomBreakpoint}>Custom</DropdownOption>
-            </DropdownGroup>
-          </>
-        }
-      >
-        <Touchable className={styles.addButton}>
-          <PlusIcon />
-        </Touchable>
-      </Dropdown>
+      {canCreateBreakpoint && (
+        <Dropdown
+          trigger='click'
+          options={
+            <>
+              <DropdownGroup>
+                {allowedBreakpoints.map(breakpoint => (
+                  <DropdownOption
+                    key={breakpoint.width}
+                    description={`${breakpoint.width}px`}
+                    onClick={() => addBreakpoint(breakpoint.name, breakpoint.width)}
+                  >
+                    {breakpoint.name}
+                  </DropdownOption>
+                ))}
+              </DropdownGroup>
+              <DropdownGroup>
+                <DropdownOption onClick={handleCreateCustomBreakpoint}>Custom</DropdownOption>
+              </DropdownGroup>
+            </>
+          }
+        >
+          <Touchable className={styles.addButton}>
+            <PlusIcon />
+          </Touchable>
+        </Dropdown>
+      )}
     </div>
   )
 })

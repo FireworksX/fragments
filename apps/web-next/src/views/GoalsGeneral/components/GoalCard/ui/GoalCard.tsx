@@ -2,35 +2,30 @@ import { FC } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { Button } from '@/shared/ui/Button'
-import EditIcon from '@/shared/icons/next/pencil.svg'
+import RemoveIcon from '@/shared/icons/next/trash.svg'
 import { ContentEditable } from '@/shared/ui/ContentEditable'
 
 interface GoalCardProps {
+  id: number
+  name: string
+  code: string
   className?: string
   onEdit?: (options: { name?: string; code?: string }) => void
+  onRemove?: () => void
 }
 
-export const GoalCard: FC<GoalCardProps> = ({ className, onEdit }) => {
+export const GoalCard: FC<GoalCardProps> = ({ className, id, name, code, onEdit, onRemove }) => {
   return (
     <div className={cn(styles.root, className)}>
       <div className={styles.info}>
         <div className={styles.infoBody}>
           <div className={styles.title}>
-            1.
-            <ContentEditable
-              className={styles.editable}
-              value='Шапка матча: клик на кэф'
-              onSubmit={name => onEdit?.({ name })}
-            />
+            {id}.
+            <ContentEditable className={styles.editable} value={name} onSubmit={name => onEdit?.({ name })} />
           </div>
 
           <div className={styles.goalCode}>
-            Code:{' '}
-            <ContentEditable
-              className={styles.editable}
-              value='match-header-odd-click'
-              onSubmit={code => onEdit?.({ code })}
-            />
+            Code: <ContentEditable className={styles.editable} value={code} onSubmit={code => onEdit?.({ code })} />
           </div>
         </div>
 
@@ -48,6 +43,10 @@ export const GoalCard: FC<GoalCardProps> = ({ className, onEdit }) => {
             <div className={styles.rowValue}>39 167</div>
           </div>
         </div>
+      </div>
+
+      <div className={styles.actions}>
+        <Button mode='tertiary' icon={<RemoveIcon />} onClick={() => onRemove()} />
       </div>
     </div>
   )

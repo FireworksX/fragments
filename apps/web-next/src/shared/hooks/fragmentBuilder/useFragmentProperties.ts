@@ -22,7 +22,8 @@ interface EditPropertyOptions {
 
 export const useFragmentProperties = () => {
   const { documentManager } = useBuilderDocument()
-  const [properties] = useLayerValue('properties', documentManager.$fragment.root)
+  console.log(documentManager)
+  const [properties] = useLayerValue('properties', documentManager?.$fragment?.root)
 
   // const { allowVariables, openVariable } = useBuilderVariableCreator()
   // const { getTransformsByType, createComputedValue } = useBuilderVariableTransforms()
@@ -46,8 +47,10 @@ export const useFragmentProperties = () => {
         [definition.variableType.Boolean]: popoutNames.stackBooleanProperty,
         // [builderVariableType.Object]: stackObjectVariableName,
         [definition.variableType.String]: popoutNames.stackStringProperty,
-        [definition.variableType.Color]: popoutNames.stackColorProperty
-        // [definition.variableType.Event]: popoutNames.stackEvent
+        [definition.variableType.Color]: popoutNames.stackColorProperty,
+        [definition.variableType.Link]: popoutNames.stackLinkProperty,
+        [definition.variableType.Enum]: popoutNames.stackEnumProperty,
+        [definition.variableType.Event]: popoutNames.stackEventProperty
       }[type]
 
       popoutsStore.open(popoutName, {

@@ -25,6 +25,31 @@ export type AllFiltersGet = {
   osTypes: Array<OsType>;
 };
 
+export type AreaGet = {
+  __typename?: 'AreaGet';
+  areaCode: Scalars['String']['output'];
+  author: UserGet;
+  campaigns: Array<CampaignGet>;
+  defaultCampaign: CampaignGet;
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  logo: MediaGet;
+  projectId: Scalars['Int']['output'];
+};
+
+export type AreaPatch = {
+  areaCode?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+};
+
+export type AreaPost = {
+  areaCode: Scalars['String']['input'];
+  defaultCampaignName: Scalars['String']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  projectId: Scalars['Int']['input'];
+};
+
 export type AuthPayload = {
   __typename?: 'AuthPayload';
   accessToken: Scalars['String']['output'];
@@ -34,30 +59,134 @@ export type AuthPayload = {
 
 export type CampaignGet = {
   __typename?: 'CampaignGet';
-  active: Scalars['Boolean']['output'];
+  areaId: Scalars['Int']['output'];
   author: UserGet;
-  deleted: Scalars['Boolean']['output'];
   description?: Maybe<Scalars['String']['output']>;
+  experiment?: Maybe<ExperimentGet>;
+  featureFlag: FeatureFlagGet;
   id: Scalars['Int']['output'];
-  logo?: Maybe<Scalars['String']['output']>;
+  logo: MediaGet;
   name: Scalars['String']['output'];
-  projectId: Scalars['Int']['output'];
+  status: CampaignStatus;
 };
 
 export type CampaignPatch = {
-  active?: InputMaybe<Scalars['Boolean']['input']>;
-  deleted?: InputMaybe<Scalars['Boolean']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  experimentId?: InputMaybe<Scalars['Int']['input']>;
+  id: Scalars['Int']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<CampaignStatus>;
+};
+
+export type CampaignPost = {
+  areaId: Scalars['Int']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  experimentId?: InputMaybe<Scalars['Int']['input']>;
+  name: Scalars['String']['input'];
+  status: CampaignStatus;
+};
+
+export enum CampaignStatus {
+  Active = 'ACTIVE',
+  Archived = 'ARCHIVED',
+  Inactive = 'INACTIVE'
+}
+
+export type ClientGet = {
+  __typename?: 'ClientGet';
+  createdAt: Scalars['String']['output'];
+  history: Array<ClientHistoryGet>;
+  id: Scalars['Int']['output'];
+  lastVisitedAt?: Maybe<Scalars['String']['output']>;
+  updatedAt: Scalars['String']['output'];
+};
+
+export enum ClientHistoryEventType {
+  Contribute = 'CONTRIBUTE',
+  Feedback = 'FEEDBACK',
+  Init = 'INIT',
+  Release = 'RELEASE',
+  View = 'VIEW'
+}
+
+export type ClientHistoryGet = {
+  __typename?: 'ClientHistoryGet';
+  area?: Maybe<AreaGet>;
+  browser?: Maybe<Scalars['String']['output']>;
+  city?: Maybe<Scalars['String']['output']>;
+  clientId: Scalars['Int']['output'];
+  country?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['String']['output'];
+  deviceType?: Maybe<Scalars['Int']['output']>;
+  domain?: Maybe<Scalars['String']['output']>;
+  eventType: ClientHistoryEventType;
+  id: Scalars['Int']['output'];
+  language?: Maybe<Scalars['String']['output']>;
+  osType?: Maybe<Scalars['Int']['output']>;
+  pageLoadTime?: Maybe<Scalars['Float']['output']>;
+  referrer?: Maybe<Scalars['String']['output']>;
+  region?: Maybe<Scalars['String']['output']>;
+  screenHeight?: Maybe<Scalars['Int']['output']>;
+  screenWidth?: Maybe<Scalars['Int']['output']>;
+  subdomain?: Maybe<Scalars['String']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
+  variant?: Maybe<VariantGet>;
+};
+
+export type ClientMetricPost = {
+  metricType: ClientMetricType;
+  metricValue?: InputMaybe<Scalars['String']['input']>;
+};
+
+export enum ClientMetricType {
+  InitSession = 'INIT_SESSION',
+  ReachProjectGoal = 'REACH_PROJECT_GOAL',
+  ReleaseSession = 'RELEASE_SESSION'
+}
+
+export type ClientProjectGoalGet = {
+  __typename?: 'ClientProjectGoalGet';
+  client: ClientGet;
+  createdAt: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  project: ProjectGet;
+  projectGoal: ProjectGoalGet;
+};
+
+export type ConditionGet = {
+  __typename?: 'ConditionGet';
+  filterData?: Maybe<FilterPageGetFilterDeviceTypeGetFilterOsTypeGetFilterTimeFramesGetFilterGeoLocationsGet>;
+  id: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+};
+
+export type ConditionPatch = {
+  filterData?: InputMaybe<FilterPost>;
   id: Scalars['Int']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type CampaignPost = {
-  active: Scalars['Boolean']['input'];
-  deleted: Scalars['Boolean']['input'];
-  description?: InputMaybe<Scalars['String']['input']>;
+export type ConditionPost = {
+  filterData: FilterPost;
   name: Scalars['String']['input'];
-  projectId: Scalars['Int']['input'];
+};
+
+export type ConditionSetGet = {
+  __typename?: 'ConditionSetGet';
+  conditions: Array<ConditionGet>;
+  id: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+};
+
+export type ConditionSetPatch = {
+  conditions?: InputMaybe<Array<ConditionPost>>;
+  id: Scalars['Int']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ConditionSetPost = {
+  conditions: Array<ConditionPost>;
+  name: Scalars['String']['input'];
 };
 
 export type CountryGet = {
@@ -71,6 +200,48 @@ export enum DeviceType {
   Mobile = 'MOBILE',
   Tablet = 'TABLET'
 }
+
+export type ExperimentGet = {
+  __typename?: 'ExperimentGet';
+  description?: Maybe<Scalars['String']['output']>;
+  featureFlag: FeatureFlagGet;
+  id: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+  status: ExperimentStatus;
+};
+
+export enum ExperimentStatus {
+  Active = 'ACTIVE',
+  Archived = 'ARCHIVED',
+  Inactive = 'INACTIVE'
+}
+
+export type FeatureFlagGet = {
+  __typename?: 'FeatureFlagGet';
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+  releaseCondition: ReleaseConditionGet;
+  rotationType: RotationType;
+  variants: Array<VariantGet>;
+};
+
+export type FeatureFlagPatch = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  releaseCondition?: InputMaybe<ReleaseConditionPatch>;
+  rotationType?: InputMaybe<RotationType>;
+  variants?: InputMaybe<Array<VariantPatch>>;
+};
+
+export type FeatureFlagPost = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  releaseCondition: ReleaseConditionPost;
+  rotationType: RotationType;
+  variants: Array<VariantPost>;
+};
 
 export type FeedbackGet = {
   __typename?: 'FeedbackGet';
@@ -121,11 +292,19 @@ export type FilterOsTypeGet = {
   osTypes: Array<OsType>;
 };
 
-export type FilterOsTypeGetFilterDeviceTypeGetFilterPageGetFilterGeoLocationsGetFilterTimeFramesGet = FilterDeviceTypeGet | FilterGeoLocationsGet | FilterOsTypeGet | FilterPageGet | FilterTimeFramesGet;
-
 export type FilterPageGet = {
   __typename?: 'FilterPageGet';
   pages: Array<Scalars['String']['output']>;
+};
+
+export type FilterPageGetFilterDeviceTypeGetFilterOsTypeGetFilterTimeFramesGetFilterGeoLocationsGet = FilterDeviceTypeGet | FilterGeoLocationsGet | FilterOsTypeGet | FilterPageGet | FilterTimeFramesGet;
+
+export type FilterPost = {
+  deviceTypes?: InputMaybe<Array<DeviceType>>;
+  geoLocations?: InputMaybe<Array<FilterGeoLocationPost>>;
+  osTypes?: InputMaybe<Array<OsType>>;
+  pages?: InputMaybe<Array<Scalars['String']['input']>>;
+  timeFrames?: InputMaybe<Array<FilterTimeFramePost>>;
 };
 
 export type FilterTimeFrameGet = {
@@ -144,17 +323,9 @@ export type FilterTimeFramesGet = {
   timeFrames: Array<FilterTimeFrameGet>;
 };
 
-export type FiltersPost = {
-  deviceTypes: Array<DeviceType>;
-  geolocations: Array<FilterGeoLocationPost>;
-  osTypes: Array<OsType>;
-  pages: Array<Scalars['String']['input']>;
-  timeFrames: Array<FilterTimeFramePost>;
-};
-
 export type FragmentGet = {
   __typename?: 'FragmentGet';
-  assets: Array<FragmentMediaGet>;
+  assets: Array<MediaGet>;
   author: UserGet;
   directoryId: Scalars['Int']['output'];
   document: Scalars['JSON']['output'];
@@ -162,12 +333,6 @@ export type FragmentGet = {
   linkedFragments?: Maybe<Array<FragmentGet>>;
   name: Scalars['String']['output'];
   props?: Maybe<Scalars['JSON']['output']>;
-};
-
-export type FragmentMediaGet = {
-  __typename?: 'FragmentMediaGet';
-  id: Scalars['Int']['output'];
-  publicPath: Scalars['String']['output'];
 };
 
 export type FragmentPatch = {
@@ -188,36 +353,20 @@ export type FragmentPost = {
   props?: InputMaybe<Scalars['JSON']['input']>;
 };
 
-export type LandingGet = {
-  __typename?: 'LandingGet';
-  active: Scalars['Boolean']['output'];
-  deleted: Scalars['Boolean']['output'];
-  fragment?: Maybe<FragmentGet>;
-  id: Scalars['Int']['output'];
-  name: Scalars['String']['output'];
+export type FragmentVariantGet = {
+  __typename?: 'FragmentVariantGet';
+  fragment: FragmentGet;
   props?: Maybe<Scalars['JSON']['output']>;
-  stream: StreamGet;
-  weight?: Maybe<Scalars['Float']['output']>;
 };
 
-export type LandingPatch = {
-  active?: InputMaybe<Scalars['Boolean']['input']>;
-  deleted?: InputMaybe<Scalars['Boolean']['input']>;
-  fragmentId?: InputMaybe<Scalars['Int']['input']>;
-  id: Scalars['Int']['input'];
-  name?: InputMaybe<Scalars['String']['input']>;
+export type FragmentVariantPatch = {
+  fragmentId: Scalars['Int']['input'];
   props?: InputMaybe<Scalars['JSON']['input']>;
-  weight?: InputMaybe<Scalars['Float']['input']>;
 };
 
-export type LandingPost = {
-  active?: InputMaybe<Scalars['Boolean']['input']>;
-  deleted?: InputMaybe<Scalars['Boolean']['input']>;
-  fragmentId?: InputMaybe<Scalars['Int']['input']>;
-  name: Scalars['String']['input'];
+export type FragmentVariantPost = {
+  fragmentId: Scalars['Int']['input'];
   props?: InputMaybe<Scalars['JSON']['input']>;
-  streamId: Scalars['Int']['input'];
-  weight?: InputMaybe<Scalars['Float']['input']>;
 };
 
 export type MediaDelete = {
@@ -240,6 +389,7 @@ export type MediaPost = {
 };
 
 export enum MediaType {
+  AreaLogo = 'AREA_LOGO',
   CampaignLogo = 'CAMPAIGN_LOGO',
   FragmentAsset = 'FRAGMENT_ASSET',
   ProjectLogo = 'PROJECT_LOGO',
@@ -248,35 +398,57 @@ export enum MediaType {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addClientMetric?: Maybe<Scalars['Void']['output']>;
   addProjectPublicKey: ProjectGet;
   addUserToProject?: Maybe<Scalars['Void']['output']>;
   changeProjectPrivateKey: ProjectGet;
   changeUserRole?: Maybe<Scalars['Void']['output']>;
+  createArea: AreaGet;
   createCampaign: CampaignGet;
+  createCondition: ConditionGet;
+  createConditionSet: ConditionSetGet;
   createDirectory: Array<ProjectDirectoryGet>;
+  createFeatureFlag: FeatureFlagGet;
   createFragment: FragmentGet;
-  createLanding: LandingGet;
   createProject: ProjectGet;
-  createStream: StreamGet;
+  createProjectGoal: ProjectGoalGet;
+  createReleaseCondition: ReleaseConditionGet;
+  createVariant: VariantGet;
+  deleteArea?: Maybe<Scalars['Void']['output']>;
   deleteAsset?: Maybe<Scalars['Void']['output']>;
   deleteCampaign?: Maybe<Scalars['Void']['output']>;
+  deleteCondition?: Maybe<Scalars['Void']['output']>;
+  deleteConditionSet?: Maybe<Scalars['Void']['output']>;
   deleteDirectory?: Maybe<Scalars['Void']['output']>;
+  deleteFeatureFlag?: Maybe<Scalars['Void']['output']>;
   deleteFragment?: Maybe<Scalars['Void']['output']>;
-  deleteLanding?: Maybe<Scalars['Void']['output']>;
   deleteProject?: Maybe<Scalars['Void']['output']>;
+  deleteProjectGoal?: Maybe<Scalars['Void']['output']>;
   deleteProjectPublicKey?: Maybe<Scalars['Void']['output']>;
-  deleteStream?: Maybe<Scalars['Void']['output']>;
+  deleteReleaseCondition?: Maybe<Scalars['Void']['output']>;
+  deleteVariant?: Maybe<Scalars['Void']['output']>;
   feedback: FeedbackGet;
   login: AuthPayload;
+  normalizeVariantsRolloutPercentage?: Maybe<Scalars['Void']['output']>;
   refresh: AuthPayload;
   signup: AuthPayload;
+  updateArea: AreaGet;
   updateCampaign: CampaignGet;
+  updateCondition: ConditionGet;
+  updateConditionSet: ConditionSetGet;
   updateDirectory: Array<ProjectDirectoryGet>;
+  updateFeatureFlag: FeatureFlagGet;
   updateFragment: FragmentGet;
-  updateLanding: LandingGet;
   updateProject: ProjectGet;
-  updateStream: StreamGet;
+  updateProjectGoal: ProjectGoalGet;
+  updateReleaseCondition: ReleaseConditionGet;
+  updateVariant: VariantGet;
   uploadAsset: MediaGet;
+};
+
+
+export type MutationAddClientMetricArgs = {
+  metric: ClientMetricPost;
 };
 
 
@@ -305,8 +477,25 @@ export type MutationChangeUserRoleArgs = {
 };
 
 
+export type MutationCreateAreaArgs = {
+  area: AreaPost;
+};
+
+
 export type MutationCreateCampaignArgs = {
   cmp: CampaignPost;
+};
+
+
+export type MutationCreateConditionArgs = {
+  condition: ConditionPost;
+  conditionSetId: Scalars['Int']['input'];
+};
+
+
+export type MutationCreateConditionSetArgs = {
+  conditionSet: ConditionSetPost;
+  releaseConditionId: Scalars['Int']['input'];
 };
 
 
@@ -315,13 +504,13 @@ export type MutationCreateDirectoryArgs = {
 };
 
 
-export type MutationCreateFragmentArgs = {
-  fg: FragmentPost;
+export type MutationCreateFeatureFlagArgs = {
+  featureFlag: FeatureFlagPost;
 };
 
 
-export type MutationCreateLandingArgs = {
-  landings: LandingPost;
+export type MutationCreateFragmentArgs = {
+  fg: FragmentPost;
 };
 
 
@@ -330,8 +519,23 @@ export type MutationCreateProjectArgs = {
 };
 
 
-export type MutationCreateStreamArgs = {
-  stream: StreamPost;
+export type MutationCreateProjectGoalArgs = {
+  goal: ProjectGoalPost;
+};
+
+
+export type MutationCreateReleaseConditionArgs = {
+  releaseCondition: ReleaseConditionPost;
+};
+
+
+export type MutationCreateVariantArgs = {
+  variant: VariantPost;
+};
+
+
+export type MutationDeleteAreaArgs = {
+  areaId: Scalars['Int']['input'];
 };
 
 
@@ -345,8 +549,23 @@ export type MutationDeleteCampaignArgs = {
 };
 
 
+export type MutationDeleteConditionArgs = {
+  conditionId: Scalars['Int']['input'];
+};
+
+
+export type MutationDeleteConditionSetArgs = {
+  conditionSetId: Scalars['Int']['input'];
+};
+
+
 export type MutationDeleteDirectoryArgs = {
   directoryId: Scalars['Int']['input'];
+};
+
+
+export type MutationDeleteFeatureFlagArgs = {
+  featureFlagId: Scalars['Int']['input'];
 };
 
 
@@ -355,13 +574,13 @@ export type MutationDeleteFragmentArgs = {
 };
 
 
-export type MutationDeleteLandingArgs = {
-  landingId: Scalars['Int']['input'];
+export type MutationDeleteProjectArgs = {
+  projectId: Scalars['Int']['input'];
 };
 
 
-export type MutationDeleteProjectArgs = {
-  projectId: Scalars['Int']['input'];
+export type MutationDeleteProjectGoalArgs = {
+  goalId: Scalars['Int']['input'];
 };
 
 
@@ -371,8 +590,13 @@ export type MutationDeleteProjectPublicKeyArgs = {
 };
 
 
-export type MutationDeleteStreamArgs = {
-  streamId: Scalars['Int']['input'];
+export type MutationDeleteReleaseConditionArgs = {
+  releaseConditionId: Scalars['Int']['input'];
+};
+
+
+export type MutationDeleteVariantArgs = {
+  variantId: Scalars['Int']['input'];
 };
 
 
@@ -387,6 +611,11 @@ export type MutationLoginArgs = {
 };
 
 
+export type MutationNormalizeVariantsRolloutPercentageArgs = {
+  featureFlagId: Scalars['Int']['input'];
+};
+
+
 export type MutationSignupArgs = {
   email: Scalars['String']['input'];
   firstName: Scalars['String']['input'];
@@ -395,8 +624,23 @@ export type MutationSignupArgs = {
 };
 
 
+export type MutationUpdateAreaArgs = {
+  area: AreaPatch;
+};
+
+
 export type MutationUpdateCampaignArgs = {
   cmp: CampaignPatch;
+};
+
+
+export type MutationUpdateConditionArgs = {
+  condition: ConditionPatch;
+};
+
+
+export type MutationUpdateConditionSetArgs = {
+  conditionSet: ConditionSetPatch;
 };
 
 
@@ -405,13 +649,13 @@ export type MutationUpdateDirectoryArgs = {
 };
 
 
-export type MutationUpdateFragmentArgs = {
-  fg: FragmentPatch;
+export type MutationUpdateFeatureFlagArgs = {
+  featureFlag: FeatureFlagPatch;
 };
 
 
-export type MutationUpdateLandingArgs = {
-  landing: LandingPatch;
+export type MutationUpdateFragmentArgs = {
+  fg: FragmentPatch;
 };
 
 
@@ -420,8 +664,18 @@ export type MutationUpdateProjectArgs = {
 };
 
 
-export type MutationUpdateStreamArgs = {
-  stream: StreamPatch;
+export type MutationUpdateProjectGoalArgs = {
+  goal: ProjectGoalPatch;
+};
+
+
+export type MutationUpdateReleaseConditionArgs = {
+  releaseCondition: ReleaseConditionPatch;
+};
+
+
+export type MutationUpdateVariantArgs = {
+  variant: VariantPatch;
 };
 
 
@@ -463,15 +717,34 @@ export type ProjectDirectoryPatch = {
 
 export type ProjectGet = {
   __typename?: 'ProjectGet';
-  campaigns: Array<CampaignGet>;
+  areas: Array<AreaGet>;
   id: Scalars['Int']['output'];
-  logo?: Maybe<Scalars['String']['output']>;
+  logo: MediaGet;
   members: Array<UserRoleGet>;
   name: Scalars['String']['output'];
   owner: UserGet;
   privateKey?: Maybe<ProjectKeyGet>;
   publicKeys: Array<ProjectKeyGet>;
   rootDirectoryId: Scalars['Int']['output'];
+};
+
+export type ProjectGoalGet = {
+  __typename?: 'ProjectGoalGet';
+  id: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+  targetAction: Scalars['String']['output'];
+};
+
+export type ProjectGoalPatch = {
+  id: Scalars['Int']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  targetAction?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ProjectGoalPost = {
+  name: Scalars['String']['input'];
+  projectId: Scalars['Int']['input'];
+  targetAction: Scalars['String']['input'];
 };
 
 export type ProjectKeyGet = {
@@ -493,34 +766,51 @@ export type ProjectPost = {
 
 export type Query = {
   __typename?: 'Query';
+  area: Array<AreaGet>;
   campaign: Array<CampaignGet>;
-  campaignByName: Array<CampaignGet>;
+  client: Array<ClientGet>;
+  clientArea?: Maybe<VariantGet>;
   clientFragment?: Maybe<FragmentGet>;
-  clientLanding?: Maybe<LandingGet>;
+  clientHistory: Array<ClientHistoryGet>;
+  condition: ConditionGet;
+  conditionSet: ConditionSetGet;
+  contributionsToProjectGoal: Array<ClientProjectGoalGet>;
   directory: Array<ProjectDirectoryGet>;
+  featureFlag: FeatureFlagGet;
   filter: AllFiltersGet;
   fragment: Array<FragmentGet>;
-  landing: Array<LandingGet>;
   profile: AuthPayload;
   project: Array<ProjectGet>;
-  stream: Array<StreamGet>;
+  projectGoals: Array<ProjectGoalGet>;
+  releaseCondition: ReleaseConditionGet;
+  variant: Array<VariantGet>;
 };
 
 
-export type QueryCampaignArgs = {
-  active?: InputMaybe<Scalars['Boolean']['input']>;
-  campgainId?: InputMaybe<Scalars['Int']['input']>;
-  deleted?: InputMaybe<Scalars['Boolean']['input']>;
+export type QueryAreaArgs = {
+  areaId?: InputMaybe<Scalars['Int']['input']>;
   projectId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
-export type QueryCampaignByNameArgs = {
-  active?: InputMaybe<Scalars['Boolean']['input']>;
-  deleted?: InputMaybe<Scalars['Boolean']['input']>;
+export type QueryCampaignArgs = {
+  areaId?: InputMaybe<Scalars['Int']['input']>;
+  campaignId?: InputMaybe<Scalars['Int']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
-  name: Scalars['String']['input'];
-  projectId: Scalars['Int']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<CampaignStatus>;
+  withoutDefault?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type QueryClientArgs = {
+  clientId?: InputMaybe<Scalars['Int']['input']>;
+  projectId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryClientAreaArgs = {
+  areaCode: Scalars['String']['input'];
 };
 
 
@@ -529,8 +819,34 @@ export type QueryClientFragmentArgs = {
 };
 
 
+export type QueryClientHistoryArgs = {
+  clientId: Scalars['Int']['input'];
+};
+
+
+export type QueryConditionArgs = {
+  conditionId: Scalars['Int']['input'];
+};
+
+
+export type QueryConditionSetArgs = {
+  conditionSetId: Scalars['Int']['input'];
+};
+
+
+export type QueryContributionsToProjectGoalArgs = {
+  projectGoalId: Scalars['Int']['input'];
+  projectId: Scalars['Int']['input'];
+};
+
+
 export type QueryDirectoryArgs = {
   directoryId: Scalars['Int']['input'];
+};
+
+
+export type QueryFeatureFlagArgs = {
+  featureFlagId: Scalars['Int']['input'];
 };
 
 
@@ -546,28 +862,49 @@ export type QueryFragmentArgs = {
 };
 
 
-export type QueryLandingArgs = {
-  landingId?: InputMaybe<Scalars['Int']['input']>;
-  streamId?: InputMaybe<Scalars['Int']['input']>;
-};
-
-
 export type QueryProjectArgs = {
   projectId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
-export type QueryStreamArgs = {
-  active?: InputMaybe<Scalars['Boolean']['input']>;
-  campaignId?: InputMaybe<Scalars['Int']['input']>;
-  deleted?: InputMaybe<Scalars['Boolean']['input']>;
-  streamId?: InputMaybe<Scalars['Int']['input']>;
+export type QueryProjectGoalsArgs = {
+  projectId: Scalars['Int']['input'];
+};
+
+
+export type QueryReleaseConditionArgs = {
+  releaseConditionId: Scalars['Int']['input'];
+};
+
+
+export type QueryVariantArgs = {
+  featureFlagId?: InputMaybe<Scalars['Int']['input']>;
+  variantId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type RegionGet = {
   __typename?: 'RegionGet';
   cities: Array<Scalars['String']['output']>;
   region: Scalars['String']['output'];
+};
+
+export type ReleaseConditionGet = {
+  __typename?: 'ReleaseConditionGet';
+  conditionSets: Array<ConditionSetGet>;
+  id: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+};
+
+export type ReleaseConditionPatch = {
+  conditionSets?: InputMaybe<Array<ConditionSetPost>>;
+  id: Scalars['Int']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ReleaseConditionPost = {
+  conditionSets: Array<ConditionSetPost>;
+  name: Scalars['String']['input'];
+  projectId: Scalars['Int']['input'];
 };
 
 export enum RoleGet {
@@ -577,34 +914,10 @@ export enum RoleGet {
   Owner = 'OWNER'
 }
 
-export type StreamGet = {
-  __typename?: 'StreamGet';
-  active: Scalars['Boolean']['output'];
-  campaignId: Scalars['Int']['output'];
-  deleted: Scalars['Boolean']['output'];
-  filters: Array<FilterOsTypeGetFilterDeviceTypeGetFilterPageGetFilterGeoLocationsGetFilterTimeFramesGet>;
-  id: Scalars['Int']['output'];
-  name: Scalars['String']['output'];
-  weight: Scalars['Float']['output'];
-};
-
-export type StreamPatch = {
-  active?: InputMaybe<Scalars['Boolean']['input']>;
-  deleted?: InputMaybe<Scalars['Boolean']['input']>;
-  filters?: InputMaybe<FiltersPost>;
-  id: Scalars['Int']['input'];
-  name?: InputMaybe<Scalars['String']['input']>;
-  weight?: InputMaybe<Scalars['Float']['input']>;
-};
-
-export type StreamPost = {
-  active: Scalars['Boolean']['input'];
-  campaignId: Scalars['Int']['input'];
-  deleted: Scalars['Boolean']['input'];
-  filters?: InputMaybe<FiltersPost>;
-  name: Scalars['String']['input'];
-  weight: Scalars['Float']['input'];
-};
+export enum RotationType {
+  Keep = 'KEEP',
+  Rotate = 'ROTATE'
+}
 
 export type UserGet = {
   __typename?: 'UserGet';
@@ -612,7 +925,7 @@ export type UserGet = {
   firstName: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   lastName?: Maybe<Scalars['String']['output']>;
-  logo?: Maybe<Scalars['String']['output']>;
+  logo: MediaGet;
 };
 
 export type UserRoleGet = {
@@ -621,6 +934,36 @@ export type UserRoleGet = {
   firstName: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   lastName?: Maybe<Scalars['String']['output']>;
-  logo?: Maybe<Scalars['String']['output']>;
+  logo: MediaGet;
   role: RoleGet;
 };
+
+export type VariantGet = {
+  __typename?: 'VariantGet';
+  fragment?: Maybe<FragmentVariantGet>;
+  id: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+  rolloutPercentage: Scalars['Float']['output'];
+  status: VariantStatus;
+};
+
+export type VariantPatch = {
+  fragment?: InputMaybe<FragmentVariantPatch>;
+  id: Scalars['Int']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  rolloutPercentage?: InputMaybe<Scalars['Float']['input']>;
+  status?: InputMaybe<VariantStatus>;
+};
+
+export type VariantPost = {
+  featureFlagId: Scalars['Int']['input'];
+  fragment: FragmentVariantPost;
+  name: Scalars['String']['input'];
+  rolloutPercentage: Scalars['Float']['input'];
+  status: VariantStatus;
+};
+
+export enum VariantStatus {
+  Active = 'ACTIVE',
+  Inactive = 'INACTIVE'
+}

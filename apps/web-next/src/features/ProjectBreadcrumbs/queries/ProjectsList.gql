@@ -2,6 +2,8 @@ query ProjectsList {
     project {
         id
         name
-        logo
+        logo {
+            url: publicPath
+        }
     }
 }

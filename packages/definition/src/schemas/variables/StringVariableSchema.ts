@@ -4,6 +4,7 @@ import { variableType } from "@/constants";
 import { GraphFieldSchema } from "@/schemas/GraphFieldSchema";
 
 export const StringVariableSchema = v.object({
+  nodePropertyControlReference: layerField(v.string(), { fallback: null }),
   name: layerField(v.string(), {
     fallback: "String",
     overridable: false,

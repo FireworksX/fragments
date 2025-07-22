@@ -1,0 +1,41 @@
+query Campaign($areaId: Int, $id: Int) {
+    campaign(areaId: $areaId, campaignId: $id) {
+        id
+        name
+        status
+        logo {
+            url: publicPath
+        }
+#        default
+        featureFlag {
+            id
+            name
+            releaseCondition {
+                id
+                conditionSets {
+                    conditions {
+                        id
+                        name
+                        filterData {
+                            ... on FilterDeviceTypeGet {
+                                deviceTypes
+                            }
+                            ... on FilterOSTypeGet {
+                                osTypes
+                            }
+                        }
+                    }
+                }
+            }
+            variants {
+                rolloutPercentage
+                fragment {
+                    fragment {
+                        id
+                    }
+                    props
+                }
+            }
+        }
+    }
+}

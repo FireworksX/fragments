@@ -8,10 +8,10 @@ interface TextProps {
 }
 
 export const Text: FC<TextProps> = ({ layerKey }) => {
-  const { styles, content } = useTextAttributes(layerKey);
+  const { hash, content } = useTextAttributes(layerKey);
 
   return (
-    <div style={styles} data-key={layerKey}>
+    <div className={hash} data-key={layerKey}>
       <div
         className={cssStyles.text}
         dangerouslySetInnerHTML={{ __html: content }}

@@ -1,0 +1,7 @@
+query GoalsList($projectSlug: Int!) {
+    projectGoals(projectId: $projectSlug) {
+        id
+        name
+        code: targetAction
+    }
+}

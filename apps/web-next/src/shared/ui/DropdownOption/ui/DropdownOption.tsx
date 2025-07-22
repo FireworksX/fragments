@@ -9,10 +9,13 @@ import { Touchable, TouchableProps } from '@/shared/ui/Touchable'
 export interface DropdownOptionProps extends PropsWithChildren, TouchableProps {
   size?: 'large' | 'medium'
   mode?: 'danger' | 'success' | 'warning'
+  direction?: 'row' | 'column'
   icon?: ReactNode
   description?: string
   indicator?: string | number
   className?: string
+  gap?: number
+  bodyClassName?: string
   disabled?: boolean
   fetching?: boolean
   hasNested?: boolean
@@ -22,8 +25,11 @@ export interface DropdownOptionProps extends PropsWithChildren, TouchableProps {
 
 const DropdownOption: FC<DropdownOptionProps> = ({
   className,
+  bodyClassName,
   size = 'medium',
+  direction = 'row',
   icon,
+  gap,
   indicator,
   disabled,
   hasNested,
@@ -38,17 +44,18 @@ const DropdownOption: FC<DropdownOptionProps> = ({
     <Touchable
       TagName='button'
       disabled={disabled}
-      className={cn(styles.root, className, styles[size], styles[mode], {
+      className={cn(styles.root, className, styles[size], styles[mode], styles[direction], {
         [styles.disabled]: disabled
       })}
+      style={{ gap }}
       {...touchableProps}
     >
       {icon && <div className={styles.icon}>{icon}</div>}
 
-      <div className={styles.body}>
+      <div className={cn(styles.body, bodyClassName)}>
         {children} <div className={styles.description}>{indicator}</div>
       </div>
-      {description && <div className={styles.description}>{description}</div>}
+      {description && <div className={styles.bottomDescription}>{description}</div>}
 
       {(suffix || hasNested || fetching) && (
         <div>

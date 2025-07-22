@@ -22,7 +22,7 @@ export const createFetcher = (
     query: string,
     variables: Record<string, unknown> = {},
     options: RequestInit = {}
-  ): Promise<T> => {
+  ): Promise<{ data: T }> => {
     const cacheKey = getCacheKey(query, variables, options);
 
     if (cache.has(cacheKey)) {
@@ -37,6 +37,7 @@ export const createFetcher = (
       ...options,
       method: "POST",
       body: JSON.stringify({ query, variables }),
+      credentials: "include",
       headers: {
         ...BASE_HEADERS,
         ...defaultHeaders,
@@ -46,7 +47,11 @@ export const createFetcher = (
       .then(async (res) => {
         if (!res.ok) throw new Error(`Fetch error: ${res.status}`);
         const data = await res.json();
-        cache.set(cacheKey, data);
+
+        if (!query.includes("mutation")) {
+          cache.set(cacheKey, data);
+        }
+
         return data;
       })
       .finally(() => {

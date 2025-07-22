@@ -1,0 +1,7 @@
+mutation UpdateFeatureFlag($id: Int!, $name: String, $rotationType: RotationType) {
+    updateFeatureFlag(featureFlag: { id: $id, name: $name, rotationType: $rotationType }) {
+        id
+        name
+        rotationType
+    }
+}

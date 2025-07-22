@@ -1,1 +1,1 @@
-export { StreamsTable } from './ui/StreamsTable';
+export { default as StreamsTable } from './ui/StreamsTable'

@@ -19,7 +19,8 @@ interface BuilderSizeProps {
 const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
   const {
     aspectRatio,
-    hugContentEnabled,
+    canHugContentHeight,
+    canHugContentWidth,
     fillContentEnabled,
     widthType,
     heightType,
@@ -30,13 +31,13 @@ const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
     canRelativeSize
   } = useBuilderSize()
 
-  const Options = (
+  const Options = (type: 'width' | 'height') => (
     <>
       <option value={definition.sizing.Relative} disabled={!canRelativeSize}>
         Rel
       </option>
       <option value={definition.sizing.Fixed}>Fixed</option>
-      <option value={definition.sizing.Hug} disabled={!hugContentEnabled}>
+      <option value={definition.sizing.Hug} disabled={!(type === 'width' ? canHugContentWidth : canHugContentHeight)}>
         Hug
       </option>
       <option value={definition.sizing.Fill} disabled={!fillContentEnabled}>
@@ -68,7 +69,7 @@ const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
       >
         <InputNumber value={width.value} disabled={!isAllowResizeWidth} onChange={width.update} />
         <Select value={widthType.value} onChange={widthType.update}>
-          {Options}
+          {Options('width')}
         </Select>
       </ControlRow>
       <ControlRow
@@ -83,7 +84,7 @@ const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
       >
         <InputNumber value={height.value} disabled={!isAllowResizeHeight} onChange={height.update} />
         <Select value={heightType.value} onChange={heightType.update}>
-          {Options}
+          {Options('height')}
         </Select>
       </ControlRow>
 

@@ -1,67 +1,66 @@
-import { ComponentRef, useImperativeHandle, useRef, useState } from 'react'
-import useClickOutside from '@/shared/hooks/useClickOutside'
-import { nextTick } from '@/shared/utils/nextTick'
-import { useListSteamsQuery } from '../queries/ListStreams.generated'
 import { useParams } from 'next/navigation'
+import { useDeleteCampaignMutation } from '@/shared/api/stream/mutation/DeleteCampaign.generated'
 import {
-  UpdateStreamMutationVariables,
-  useUpdateStreamMutation
-} from '@/shared/api/stream/mutation/UpdateStream.generated'
-import { useDeleteStreamMutation } from '@/shared/api/stream/mutation/DeleteStream.generated'
+  UpdateCampaignMutationVariables,
+  useUpdateCampaignMutation
+} from '@/shared/api/stream/mutation/UpdateCampaign.generated'
+import { useListCampaignsQuery } from '@/views/AreasStreamsPage/widgets/StreamsTable/queries/ListCampaigns.generated'
+import { useModal } from '@/shared/hooks/useModal'
+import { modalNames } from '@/shared/data'
+import { useCreateCampaignMutation } from '@/views/AreasStreamsPage/widgets/StreamsTable/queries/CreateCampaign.generated'
+import { CampaignStatus } from '@/__generated__/types'
+import { useAreaDetailQuery } from '@/shared/api/area/query/AreaDetail.generated'
 
-export const useStreamsTable = (ref: unknown, onCreate: unknown) => {
+export const useStreamsTable = () => {
+  const { open: openModal, close: closeModal } = useModal()
   const { areaSlug } = useParams()
-  const [creatingName, setCreatingName] = useState<null | string>(null)
-  const creatingInputRef = useRef<ComponentRef<'input'>>(null)
-  const creatingRowRef = useRef<ComponentRef<'tr'>>(null)
-  const isCreating = typeof creatingName === 'string'
 
-  const [handleUpdateUpdateStream] = useUpdateStreamMutation()
-  const [handleDeleteStream] = useDeleteStreamMutation()
+  const [handleUpdateUpdateCampaignMutation] = useUpdateCampaignMutation()
+  const [handleDeleteCampaignMutation] = useDeleteCampaignMutation()
+  const [handleCreateCampaignMutation] = useCreateCampaignMutation()
 
-  const { data: listStreams } = useListSteamsQuery({
+  const { data: areaData } = useAreaDetailQuery({
     variables: {
-      campaignSlug: +areaSlug
-    }
+      id: +areaSlug
+    },
+    fetchPolicy: 'cache-only'
   })
 
-  useClickOutside({
-    ref: creatingRowRef,
-    onClickOutside: () => {
-      setCreatingName(null)
+  const { data: campaignsData } = useListCampaignsQuery({
+    variables: {
+      areaId: +areaSlug
     }
   })
+  const campaigns = (campaignsData?.campaign ?? []).filter(el => el.id !== areaData?.area?.at(0)?.defaultCampaign?.id)
 
-  useImperativeHandle(ref, () => ({
-    createNew: () => {
-      setCreatingName('')
-      nextTick(() => {
-        creatingInputRef?.current?.focus()
-      })
-    }
-  }))
-
-  const updateStream = (variables: UpdateStreamMutationVariables) => {
-    handleUpdateUpdateStream({
+  const updateStream = (variables: UpdateCampaignMutationVariables) => {
+    handleUpdateUpdateCampaignMutation({
       variables
+    })
+  }
+
+  const handleCreateCampaign = () => {
+    openModal(modalNames.configureCampaign, {
+      countCampaigns: campaigns?.length,
+      onSubmit: async nextCampaign => {
+        await handleCreateCampaignMutation({
+          variables: {
+            areaId: +areaSlug,
+            name: nextCampaign.name,
+            status: CampaignStatus.Inactive
+          }
+        })
+
+        closeModal()
+      }
     })
   }
 
   return {
     areaSlug,
-    list: listStreams?.stream ?? [],
-    creatingRowRef,
-    isCreating,
-    creatingInputRef,
-    handleCreate: e => {
-      e?.preventDefault()
-      e?.stopPropagation()
-      onCreate?.(creatingName)
-      setCreatingName(null)
-    },
-    creatingName,
-    setCreatingName,
+    list: campaigns,
     updateStream,
-    handleDeleteStream
+    handleDeleteCampaignMutation,
+    handleCreateCampaign
   }
 }

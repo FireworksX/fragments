@@ -1,0 +1,14 @@
+query AreasList($projectId: Int!) {
+    area(projectId: $projectId) {
+        id
+        description
+        defaultCampaign {
+            id
+            name
+            logo {
+                url: publicPath
+            }
+            status
+        }
+    }
+}

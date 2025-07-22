@@ -3,6 +3,10 @@
     background: var(--background);
     border-bottom-right-radius: var(--radius-second);
     border-bottom-left-radius: var(--radius-second);
+    position: sticky;
+    top: 0;
+    z-index: var(--z-index-navigation);
+    box-shadow: var(--shadow-basic);
 }
 
 .tab {
