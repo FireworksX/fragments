@@ -15,25 +15,42 @@ import { noop } from '@fragmentsx/utils'
 interface StreamFilterOperationalsProps {
   value?: OsType[]
   className?: string
+  editable?: boolean
   onChange?: (nextValue: OsType[]) => void
 }
 
-export const FilterOperationals: FC<StreamFilterOperationalsProps> = ({ className, value = [], onChange = noop }) => {
+export const FilterOperationals: FC<StreamFilterOperationalsProps> = ({
+  className,
+  value = [],
+  editable,
+  onChange = noop
+}) => {
   const [local, setLocal] = useState(value)
   const [executeQuery, { data, loading }] = useStreamOperationalsFilterLazyQuery()
   const list = data?.filter?.osTypes ?? []
-  const t = (value: string) => capitalize(value.toLowerCase())
+
+  const t = (value: string, index: number, arr: unknown[]) => (
+    <span className={Array.isArray(arr) ? styles.chipPart : ''}>
+      {capitalize(value.toLowerCase())}
+      {Array.isArray(arr) && index !== arr?.length - 1 ? ', ' : ''}
+    </span>
+  )
+  const hasReset = value?.length > 0 && list?.length > 0
 
   const toggleValue = (valueType: OsType) => {
     const nextValue = local.includes(valueType) ? local.filter(v => v !== valueType) : [...local, valueType]
     setLocal(nextValue)
   }
 
+  if (!editable && !value?.length) return null
+
   return (
     <Dropdown
       trigger='click'
       placement='bottom-end'
       isLoading={loading}
+      width={120}
+      disabled={!editable}
       onShow={() => executeQuery()}
       onHide={() => onChange(local)}
       options={
@@ -45,14 +62,19 @@ export const FilterOperationals: FC<StreamFilterOperationalsProps> = ({ classNam
               </DropdownOptionSelect>
             ))}
           </DropdownGroup>
-          <DropdownGroup>
-            <DropdownOption mode='danger'>Remove filter</DropdownOption>
-          </DropdownGroup>
+          {hasReset && (
+            <DropdownGroup>
+              <DropdownOption mode='danger' onClick={() => setLocal([])}>
+                Remove filter
+              </DropdownOption>
+            </DropdownGroup>
+          )}
         </>
       }
     >
-      <Chip className={className} prefix='OS type:'>
-        {(local?.length ? local : ['Any']).map(t).join(', ')}
+      <Chip className={cn(className, styles.chip)}>
+        <span className={styles.chipPart}>OS type:</span>
+        {(local?.length ? local : ['Any']).map(t)}
       </Chip>
     </Dropdown>
   )

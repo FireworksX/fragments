@@ -300,11 +300,11 @@ export type FilterPageGet = {
 export type FilterPageGetFilterDeviceTypeGetFilterOsTypeGetFilterTimeFramesGetFilterGeoLocationsGet = FilterDeviceTypeGet | FilterGeoLocationsGet | FilterOsTypeGet | FilterPageGet | FilterTimeFramesGet;
 
 export type FilterPost = {
-  deviceTypes: Array<DeviceType>;
-  geoLocations: Array<FilterGeoLocationPost>;
-  osTypes: Array<OsType>;
-  pages: Array<Scalars['String']['input']>;
-  timeFrames: Array<FilterTimeFramePost>;
+  deviceTypes?: InputMaybe<Array<DeviceType>>;
+  geoLocations?: InputMaybe<Array<FilterGeoLocationPost>>;
+  osTypes?: InputMaybe<Array<OsType>>;
+  pages?: InputMaybe<Array<Scalars['String']['input']>>;
+  timeFrames?: InputMaybe<Array<FilterTimeFramePost>>;
 };
 
 export type FilterTimeFrameGet = {
@@ -799,6 +799,7 @@ export type QueryCampaignArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<CampaignStatus>;
+  withoutDefault?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 

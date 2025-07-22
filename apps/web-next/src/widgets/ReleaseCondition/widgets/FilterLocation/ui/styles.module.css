@@ -1,5 +1,16 @@
-.root {}
+.chip {
+    flex-wrap: wrap;
+}
 
-.editIcon {
-    margin-left: 4px;
+.chipPart {
+    white-space: nowrap;
+
+    &:first-child {
+        color: var(--secondary);
+    }
+}
+
+
+.option {
+    white-space: normal;
 }

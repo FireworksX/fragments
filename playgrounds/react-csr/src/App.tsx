@@ -2,10 +2,11 @@ import { RenderNode } from "./RenderNode.tsx";
 import { createFragmentsClient, ssrPlugin } from "@fragmentsx/client-core";
 import { GlobalManager } from "@fragmentsx/render-react";
 import { useEffect } from "react";
+import { BaseRenderNode } from "./BaseRenderNode.tsx";
 
 const globalManager = createFragmentsClient({
   apiToken:
-    "2-c27ab3aa225aa808f17bd6533bad353a-c2741dc2d86797e13f00efe902d6211fe7d07d0f5a6ef3c65ab1424ea5d6b8b8",
+    "1-f1b8febcd84b4482513888393a82cc99-8e026b36977ead522dfe698118b6f652d1bd8c1dd499bce4223835f356d18a72",
   isSelf: false,
 });
 
@@ -21,6 +22,8 @@ function App() {
   return (
     <GlobalManager value={globalManager}>
       <RenderNode />
+      <hr />
+      <BaseRenderNode />
     </GlobalManager>
   );
 }

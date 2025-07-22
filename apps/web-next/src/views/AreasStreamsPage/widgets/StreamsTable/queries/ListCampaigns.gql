@@ -1,3 +1,5 @@
+# import ../../../../../shared/api/fragments/ReleaseCondition.gql
+
 query ListCampaigns($areaId: Int!) {
     campaign(areaId: $areaId) {
         id
@@ -9,14 +11,7 @@ query ListCampaigns($areaId: Int!) {
         }
         featureFlag {
             releaseCondition {
-                id
-                conditionSets {
-                    id
-                    name
-                    conditions {
-                        id
-                    }
-                }
+                ...ReleaseCondition
             }
         }
     }

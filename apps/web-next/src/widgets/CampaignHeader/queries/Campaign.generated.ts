@@ -9,7 +9,7 @@ export type CampaignQueryVariables = Types.Exact<{
 }>;
 
 
-export type CampaignQuery = { __typename?: 'Query', campaign: Array<{ __typename?: 'CampaignGet', id: number, name: string, status: Types.CampaignStatus, logo: { __typename?: 'MediaGet', url: string }, featureFlag: { __typename?: 'FeatureFlagGet', id: number, name: string, releaseCondition: { __typename?: 'ReleaseConditionGet', id: number, conditionSets: Array<{ __typename?: 'ConditionSetGet', conditions: Array<{ __typename?: 'ConditionGet', filterData?: { __typename?: 'FilterDeviceTypeGet', deviceTypes: Array<Types.DeviceType> } | { __typename?: 'FilterGeoLocationsGet' } | { __typename?: 'FilterOSTypeGet' } | { __typename?: 'FilterPageGet' } | { __typename?: 'FilterTimeFramesGet' } | null }> }> }, variants: Array<{ __typename?: 'VariantGet', rolloutPercentage: number, fragment?: { __typename?: 'FragmentVariantGet', props?: any | null, fragment: { __typename?: 'FragmentGet', id: number } } | null }> } }> };
+export type CampaignQuery = { __typename?: 'Query', campaign: Array<{ __typename?: 'CampaignGet', id: number, name: string, status: Types.CampaignStatus, logo: { __typename?: 'MediaGet', url: string }, featureFlag: { __typename?: 'FeatureFlagGet', id: number, name: string, releaseCondition: { __typename?: 'ReleaseConditionGet', id: number, conditionSets: Array<{ __typename?: 'ConditionSetGet', conditions: Array<{ __typename?: 'ConditionGet', id: number, name: string, filterData?: { __typename?: 'FilterDeviceTypeGet', deviceTypes: Array<Types.DeviceType> } | { __typename?: 'FilterGeoLocationsGet' } | { __typename?: 'FilterOSTypeGet', osTypes: Array<Types.OsType> } | { __typename?: 'FilterPageGet' } | { __typename?: 'FilterTimeFramesGet' } | null }> }> }, variants: Array<{ __typename?: 'VariantGet', rolloutPercentage: number, fragment?: { __typename?: 'FragmentVariantGet', props?: any | null, fragment: { __typename?: 'FragmentGet', id: number } } | null }> } }> };
 
 
 export const CampaignDocument = gql`
@@ -28,9 +28,14 @@ export const CampaignDocument = gql`
         id
         conditionSets {
           conditions {
+            id
+            name
             filterData {
               ... on FilterDeviceTypeGet {
                 deviceTypes
+              }
+              ... on FilterOSTypeGet {
+                osTypes
               }
             }
           }

@@ -56,6 +56,7 @@ const Button: FC<ButtonProps> = ({
   cancelable,
   cancelDuration = 3000,
   ref,
+  type = 'button',
   onClick,
   ...touchProps
 }) => {
@@ -93,6 +94,7 @@ const Button: FC<ButtonProps> = ({
     <Touchable
       ref={ref}
       disabled={disabled}
+      type={type}
       className={cn(styles.root, className, styles[mode], styles[size], {
         [styles.stretched]: stretched,
         [styles.loading]: loading,

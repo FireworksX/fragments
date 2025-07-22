@@ -1,4 +1,4 @@
-import { createState, Plugin } from "@graph-state/core";
+import { createState, LinkKey, Plugin } from "@graph-state/core";
 import {
   isGraph,
   isHtmlContent,
@@ -12,9 +12,33 @@ import { fragmentStylesheetPlugin } from "@/plugins/styleSheet";
 import { autoInjector } from "@/plugins/styleSheet/utils/autoInjector";
 import { PLUGIN_TYPES } from "@/fragmentsClient";
 
+declare module "@graph-state/core" {
+  interface GraphState {
+    $fragments: {
+      key: LinkKey;
+      createFragmentManager: (
+        fragmentId: number,
+        initialDocument?: unknown
+      ) => void;
+      getManager: (fragmentId: number) => GraphState;
+      getManagers: () => Record<number, GraphState>;
+    };
+  }
+}
+
 export const fragmentsPlugin: Plugin = (state) => {
   const createFragmentManager = (fragmentId: number, initialDocument = {}) => {
     if (!fragmentId || !initialDocument) return null;
+
+    const fragmentLayerId =
+      initialDocument?._type === definition.nodes.Fragment
+        ? initialDocument?._id
+        : null;
+
+    if (!fragmentLayerId) {
+      console.error("Cannot find fragment layer id");
+      return;
+    }
 
     const cacheManager = state.resolve(state.$fragments.key)?.managers?.[
       fragmentId
@@ -41,7 +65,7 @@ export const fragmentsPlugin: Plugin = (state) => {
       plugins: [
         (state) => {
           state.$fragment = {
-            root: `${definition.nodes.Fragment}:${fragmentId}`,
+            root: `${definition.nodes.Fragment}:${fragmentLayerId}`,
             temp: "Temp:root",
           };
         },

@@ -28,7 +28,8 @@ import { CampaignHeader } from '@/widgets/CampaignHeader'
 interface CampaignDetailPageProps {}
 
 export const AreasDetailLayout: FC<CampaignDetailPageProps> = ({ children }) => {
-  const { areaSlug, isCampaignRoute, area, editDescription, editCode, projectSlug } = useAreaDetail()
+  const { areaSlug, isCampaignRoute, deleteLoading, area, editDescription, editCode, projectSlug, handleDelete } =
+    useAreaDetail()
 
   return (
     <div className={styles.root}>
@@ -39,6 +40,18 @@ export const AreasDetailLayout: FC<CampaignDetailPageProps> = ({ children }) => 
             <div className={styles.id}>
               ID: <ContentEditable className={styles.editable} value={area?.code} onSubmit={editCode} />
             </div>
+          }
+          DeleteButton={
+            <Button
+              mode='danger-outline'
+              preventDefault
+              loading={deleteLoading}
+              icon={<DeleteIcon />}
+              cancelable
+              onClick={handleDelete}
+            >
+              Delete
+            </Button>
           }
           footer={
             <>

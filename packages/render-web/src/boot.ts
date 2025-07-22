@@ -1,5 +1,5 @@
 import { createFragmentsClient } from "@fragmentsx/client-core";
-import { Instance, render, h } from "@fragmentsx/render-core";
+import { Instance, Area, render, h } from "@fragmentsx/render-core";
 import { isBrowser } from "@fragmentsx/utils";
 
 export const boot = () => {
@@ -29,6 +29,19 @@ export const boot = () => {
     );
   };
 
+  const renderArea = (target: HTMLElement, areaCode: string) => {
+    if (!clientInstance) {
+      throw new Error("GlobalManager not init. User .init() before render.");
+    }
+    render(
+      h(Area, {
+        areaCode,
+        globalManager: clientInstance,
+      }),
+      target
+    );
+  };
+
   const autoRender = () => {
     if (!clientInstance) {
       throw new Error("GlobalManager not init. User .init() before render.");
@@ -39,7 +52,9 @@ export const boot = () => {
 
       for (const target of allWidgets) {
         if (target instanceof HTMLElement) {
-          const id = +target.attributes.getNamedItem("data-fgx")?.value;
+          const id = target.attributes.getNamedItem("data-fgx")?.value;
+          const type =
+            target.attributes.getNamedItem("data-fgx-type")?.value ?? "area";
           const props = Array.from(target.attributes)
             .filter((attr) => attr.name.startsWith("data-fgx-prop"))
             .reduce((acc, attr) => {
@@ -48,7 +63,11 @@ export const boot = () => {
               return acc;
             }, {});
 
-          renderInstance(target, id, props);
+          if (type === "instance") {
+            renderInstance(target, +id, props);
+          } else {
+            renderArea(target, id);
+          }
         }
       }
     }
@@ -58,6 +77,7 @@ export const boot = () => {
     getInstance: () => clientInstance,
     init,
     renderInstance,
+    renderArea,
     autoRender,
   };
 };

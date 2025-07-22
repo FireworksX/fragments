@@ -1,14 +1,23 @@
 import { Plugin } from "@graph-state/core";
 import { isObject } from "@fragmentsx/utils";
 
+declare module "@graph-state/core" {
+  interface GraphState {
+    $ssr: {
+      extractData: () => unknown;
+      restoreData: (input: unknown) => void;
+    };
+  }
+}
+
 export const ssrPlugin: Plugin = (state) => {
   if (!["$fragments"].every((field) => field in state)) {
     console.error("SSRPlugin depends from Fragments plugin");
     return state;
   }
 
-  const cacheDocuments = state?.$fetch?.cacheDocuments as Map<any, any>;
-  const cacheLinks = state?.$fetch?.cacheLinks;
+  const cacheDocuments = state?.$fetch?.cacheDocuments;
+  const cacheAreas = state?.$fetch?.cacheAreaDocuments;
   const createManager = state?.$fragments?.createFragmentManager;
 
   const fromMap = (map) => {
@@ -20,11 +29,11 @@ export const ssrPlugin: Plugin = (state) => {
 
   const extractData = () => {
     const documents = fromMap(cacheDocuments.entries());
-    const links = fromMap(cacheLinks.entries());
+    const areas = fromMap(cacheAreas.entries());
 
     return {
       documents,
-      links,
+      areas,
     };
   };
 
@@ -39,10 +48,9 @@ export const ssrPlugin: Plugin = (state) => {
       });
     }
 
-    if ("cacheLinks" in input && isObject(input.cacheLinks)) {
-      Object.entries(input.cacheLinks).forEach(([fragmentId, doc]) => {
-        cacheLinks.set(+fragmentId, doc);
-        createManager(+fragmentId, doc);
+    if ("areas" in input && isObject(input.areas)) {
+      Object.entries(input.areas).forEach(([areaCode, entity]) => {
+        cacheAreas.set(areaCode, entity);
       });
     }
   };

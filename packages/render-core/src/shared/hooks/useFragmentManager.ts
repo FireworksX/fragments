@@ -13,6 +13,8 @@ export const useFragmentManager = (
   } = useGlobalManager(inputGlobalManager);
   const [loading, setLoading] = useState(false);
 
+  const manager = getFragmentManager(fragmentId);
+
   // const loadFragmentManager = async (id: string) => {
   //   if (id) {
   //     const queryResult = await queryFragmentManager(id);
@@ -32,7 +34,7 @@ export const useFragmentManager = (
 
   useEffect(() => {
     (async () => {
-      if (fragmentsGraph && !getFragmentManager(fragmentId)) {
+      if (fragmentsGraph && !getFragmentManager(fragmentId) && !!fragmentId) {
         setLoading(true);
         await queryFragmentManager(fragmentId);
         setLoading(false);
@@ -42,7 +44,8 @@ export const useFragmentManager = (
 
   return {
     loading,
-    manager: getFragmentManager(fragmentId),
+    manager: manager,
+    fragmentLayerKey: manager?.$fragment?.root,
     queryFragmentManager,
     // loadFragmentManager,
   };

@@ -1,36 +1,39 @@
 import { FC } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { FilterDevices } from '@/widgets/ReleaseCondition/widgets/FilterDevices'
-import { Dropdown } from '@/shared/ui/Dropdown'
-import { DropdownGroup } from '@/shared/ui/DropdownGroup'
-import { DropdownOption } from '@/shared/ui/DropdownOption'
-import { Chip } from '@/shared/ui/Chip'
-import PlusIcon from '@/shared/icons/next/Plus.svg'
-import { FilterOperationals } from '@/widgets/ReleaseCondition/widgets/FilterOperationals'
+import { FilterLocation } from '../widgets/FilterLocation'
+import { FilterDevices } from '../widgets/FilterDevices'
+import { FilterOperationals } from '../widgets/FilterOperationals'
 import { ConditionGet, ConditionSetGet, ReleaseConditionGet, ReleaseConditionPost } from '@/__generated__/types'
-import { useReleaseCondition } from '@/widgets/ReleaseCondition/hooks/useReleaseCondition'
+import { useReleaseCondition } from '../hooks/useReleaseCondition'
+import { Chip } from '@/shared/ui/Chip'
 
 interface ReleaseConditionProps {
+  editable?: boolean
   releaseCondition: ReleaseConditionGet
   className?: string
 }
 
-export const ReleaseCondition: FC<ReleaseConditionProps> = ({ className, releaseCondition }) => {
-  const { devices, updateDevices, osTypes } = useReleaseCondition(releaseCondition)
-  // if (conditionSet.filterData?.__typename === 'FilterDeviceTypeGet') {
-  //   conditionSet.filterData.deviceTypes
-  // }
+export const ReleaseCondition: FC<ReleaseConditionProps> = ({ className, editable, releaseCondition }) => {
+  const { currentFilters, updateFilter } = useReleaseCondition(releaseCondition)
+
+  if (!editable && !releaseCondition?.conditionSets?.length) {
+    return <Chip className={styles.emptyChip}>Without filters</Chip>
+  }
 
   return (
     <div className={cn(styles.root, className)}>
       <FilterDevices
-        value={devices}
-        onChange={next => {
-          updateDevices(next)
-        }}
+        editable={editable}
+        value={currentFilters.deviceTypes}
+        onChange={next => updateFilter('deviceTypes', next)}
       />
-      <FilterOperationals value={osTypes} />
+      <FilterOperationals
+        editable={editable}
+        value={currentFilters.osTypes}
+        onChange={next => updateFilter('osTypes', next)}
+      />
+      <FilterLocation editable={editable} />
 
       {/*{condition.deviceTypes && <FilterDevices value={condition.deviceTypes} />}*/}
       {/*<FilterDevices />*/}

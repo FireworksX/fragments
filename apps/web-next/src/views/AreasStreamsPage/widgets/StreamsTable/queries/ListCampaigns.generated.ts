@@ -1,6 +1,7 @@
 import * as Types from '../../../../../__generated__/types';
 
 import { gql } from '@apollo/client';
+import { ReleaseConditionFragmentDoc } from '../../../../../shared/api/fragments/ReleaseConditionFragment.generated';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type ListCampaignsQueryVariables = Types.Exact<{
@@ -8,7 +9,7 @@ export type ListCampaignsQueryVariables = Types.Exact<{
 }>;
 
 
-export type ListCampaignsQuery = { __typename?: 'Query', campaign: Array<{ __typename?: 'CampaignGet', id: number, name: string, status: Types.CampaignStatus, logo: { __typename?: 'MediaGet', publicPath: string }, featureFlag: { __typename?: 'FeatureFlagGet', releaseCondition: { __typename?: 'ReleaseConditionGet', id: number, conditionSets: Array<{ __typename?: 'ConditionSetGet', id: number, name: string, conditions: Array<{ __typename?: 'ConditionGet', id: number }> }> } } }> };
+export type ListCampaignsQuery = { __typename?: 'Query', campaign: Array<{ __typename?: 'CampaignGet', id: number, name: string, status: Types.CampaignStatus, logo: { __typename?: 'MediaGet', publicPath: string }, featureFlag: { __typename?: 'FeatureFlagGet', releaseCondition: { __typename?: 'ReleaseConditionGet', id: number, name: string, conditionSets: Array<{ __typename?: 'ConditionSetGet', id: number, name: string, conditions: Array<{ __typename?: 'ConditionGet', id: number, name: string, filterData?: { __typename?: 'FilterDeviceTypeGet', deviceTypes: Array<Types.DeviceType> } | { __typename?: 'FilterGeoLocationsGet', geoLocations: Array<{ __typename?: 'FilterGeoLocationGet', country: string, region?: string | null, city?: string | null }> } | { __typename?: 'FilterOSTypeGet', osTypes: Array<Types.OsType> } | { __typename?: 'FilterPageGet', pages: Array<string> } | { __typename?: 'FilterTimeFramesGet', timeFrames: Array<{ __typename?: 'FilterTimeFrameGet', fromTime: any, toTime: any }> } | null }> }> } } }> };
 
 
 export const ListCampaignsDocument = gql`
@@ -22,19 +23,12 @@ export const ListCampaignsDocument = gql`
     }
     featureFlag {
       releaseCondition {
-        id
-        conditionSets {
-          id
-          name
-          conditions {
-            id
-          }
-        }
+        ...ReleaseCondition
       }
     }
   }
 }
-    `;
+    ${ReleaseConditionFragmentDoc}`;
 
 /**
  * __useListCampaignsQuery__

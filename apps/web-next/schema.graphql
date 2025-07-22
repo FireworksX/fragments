@@ -484,11 +484,11 @@ input FilterGeoLocationPost {
 }
 
 input FilterPost {
-    deviceTypes: [DeviceType!]!
-    geoLocations: [FilterGeoLocationPost!]!
-    osTypes: [OSType!]!
-    pages: [String!]!
-    timeFrames: [FilterTimeFramePost!]!
+    deviceTypes: [DeviceType!]
+    geoLocations: [FilterGeoLocationPost!]
+    osTypes: [OSType!]
+    pages: [String!]
+    timeFrames: [FilterTimeFramePost!]
 }
 
 input FilterTimeFramePost {

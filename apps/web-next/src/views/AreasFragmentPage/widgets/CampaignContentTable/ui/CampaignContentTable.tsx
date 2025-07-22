@@ -29,7 +29,7 @@ import { ContentEditable } from '@/shared/ui/ContentEditable'
 import { ConfigureFeatureFlagVariant } from '@/widgets/modals/ConfigureFeatureFlagVariant'
 import { ConfigureFragmentVariant } from '@/widgets/modals/ConfigureFragmentVariant'
 import { statusToIndicatorMap } from '@/shared/data/constants'
-import { RotationType, VariantStatus } from '@/__generated__/types'
+import { CampaignStatus, RotationType, VariantStatus } from '@/__generated__/types'
 import { Spinner } from '@/shared/ui/Spinner'
 import { InputSelect } from '@/shared/ui/InputSelect'
 import { capitalize } from '@/shared/utils/capitalize'
@@ -54,6 +54,7 @@ const CampaignContentTable: FC<CampaignContentTableProps> = ({ className, campai
     creatingVariant,
     removeVariant,
     handleAddVariant,
+    toggleVariantStatus,
     handleSetRotationType,
     handleEditFragment,
     handleEditVariant
@@ -217,6 +218,14 @@ const CampaignContentTable: FC<CampaignContentTableProps> = ({ className, campai
             </TableCell>
             <TableCell>
               <div className={styles.innerCell}>
+                <Button
+                  size='small'
+                  mode={variant.status === VariantStatus.Active ? 'warning-outline' : 'success-outline'}
+                  icon={variant.status === VariantStatus.Active ? <PauseIcon /> : <PlayIcon />}
+                  onClick={() => toggleVariantStatus(variant.id)}
+                >
+                  {variant.status === VariantStatus.Active ? 'Pause' : 'Run'}
+                </Button>
                 <Button size='small' mode='outline' icon={<EditIcon />} onClick={() => handleEditVariant(variant.id)}>
                   Edit
                 </Button>

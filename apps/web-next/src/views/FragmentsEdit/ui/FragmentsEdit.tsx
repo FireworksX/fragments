@@ -58,6 +58,7 @@ import StackGoals from '@/features/popouts/StackGoals/ui/StackGoals'
 import StackCreateGoal from '@/features/popouts/StackCreateGoal/ui/StackCreateGoal'
 import StackLinkProperty from '../../../features/popouts/StackLinkProperty/ui/StackLinkProperty'
 import StackEnumProperty from '@/features/popouts/StackEnumProperty/ui/StackEnumProperty'
+import { withModalCollector } from '@/shared/hocs/withModalCollector'
 
 const FragmentsEditInitial = () => {
   // const { setRenderTarget } = useRenderTarget()
@@ -147,8 +148,11 @@ const FragmentsEditInitial = () => {
   )
 }
 
-export const FragmentsEdit = () => (
-  <BuilderProvider>
-    <FragmentsEditInitial />
-  </BuilderProvider>
+export const FragmentsEdit = withModalCollector(
+  () => (
+    <BuilderProvider>
+      <FragmentsEditInitial />
+    </BuilderProvider>
+  ),
+  {}
 )

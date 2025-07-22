@@ -9,24 +9,26 @@ import { useContext } from "preact/compat";
 import { FragmentContext } from "@/components/Fragment/FragmentContext";
 
 export const useFragment = (fragmentId: string, globalManager?: GraphState) => {
-  const layerKey = `${definition.nodes.Fragment}:${fragmentId}`;
   const fragmentContext = useFragmentManager(fragmentId);
   const { isDocument } = useRenderTarget(globalManager);
   const { setRef, children, isResize, primary } =
     useFragmentChildren(fragmentId);
-  const hash = useHash(layerKey, fragmentContext.manager);
+  const hash = useHash(
+    fragmentContext.fragmentLayerKey,
+    fragmentContext.manager
+  );
 
   const { addLayerStyle } = useStyleSheet(fragmentContext.manager);
 
   if (fragmentContext.manager) {
     addLayerStyle(
-      layerKey,
+      fragmentContext.fragmentLayerKey,
       {
         width: "100%",
         height: "100%",
         "container-type": children?.length === 1 ? "normal" : "inline-size",
       },
-      fragmentContext.manager?.resolve(layerKey),
+      fragmentContext.manager?.resolve(fragmentContext.fragmentLayerKey),
       fragmentContext.manager?.key
     );
   }

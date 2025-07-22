@@ -20,7 +20,7 @@ export const ModalCollector: FC<ModalCollectorProps> = ({ className, children, m
     <ModalStoreContext.Provider value={modalStore}>
       {children}
 
-      <Modal className={styles.modal} isOpen={!!ModalNode}>
+      <Modal className={styles.modal} isOpen={!!ModalNode} onClose={modalStore.close}>
         {ModalNode}
       </Modal>
     </ModalStoreContext.Provider>

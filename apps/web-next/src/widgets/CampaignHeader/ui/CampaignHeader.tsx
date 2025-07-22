@@ -19,11 +19,13 @@ interface CampaignHeaderProps {
   meta?: ReactNode
   previewLink?: string
   className?: string
+  DeleteButton?: ReactNode
 }
 
 export const CampaignHeader: FC<CampaignHeaderProps> = ({
   className,
   campaignID,
+  DeleteButton,
   previewLink,
   header,
   footer,
@@ -66,16 +68,7 @@ export const CampaignHeader: FC<CampaignHeaderProps> = ({
             onClick={toggleActive}
           />
 
-          <Button
-            mode='danger-outline'
-            preventDefault
-            // loading={loadingUpdateStream}
-            icon={<DeleteIcon />}
-            cancelable
-            // onClick={toggleActive}
-          >
-            Delete
-          </Button>
+          {DeleteButton}
         </div>
       </div>
 

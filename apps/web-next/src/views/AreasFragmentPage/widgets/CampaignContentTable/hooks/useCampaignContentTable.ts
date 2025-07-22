@@ -1,9 +1,9 @@
 import { useCampaignContentQuery } from '../queries/CampaignContent.generated'
 import { useModal } from '@/shared/hooks/useModal'
 import { modalNames } from '@/shared/data'
-import { RotationType } from '@/__generated__/types'
+import { RotationType, VariantStatus } from '@/__generated__/types'
 import { useVariantsRolloutQuery } from '@/views/AreasFragmentPage/widgets/CampaignContentTable/queries/VariantsRollout.generated'
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useUpdateFeatureFlagMutation } from '@/shared/api/fatureFlag/mutation/UpdateFeatureFlag.generated'
 import { useCreateFeatureFlagVariantMutation } from '@/shared/api/featureFlagVariant/mutations/CreateFeatureFlagVariant.generated'
 import { useRemoveFeatureFlagVariantMutation } from '@/shared/api/featureFlagVariant/mutations/RemoveFeatureFlagVariant.generated'
@@ -129,6 +129,20 @@ export const useCampaignContentTable = (campaignId: number) => {
     })
   }
 
+  const toggleVariantStatus = useCallback(
+    (variantId: number) => {
+      const variant = variants?.find(el => el.id === variantId)
+
+      updateVariant({
+        variables: {
+          id: variant?.id,
+          status: variant?.status === VariantStatus.Active ? VariantStatus.Inactive : VariantStatus.Active
+        }
+      })
+    },
+    [variants]
+  )
+
   useEffect(() => {
     refetch()
   }, [refetch, variants.length])
@@ -140,6 +154,7 @@ export const useCampaignContentTable = (campaignId: number) => {
     variants,
     loadingVariants: loading,
     creatingVariant,
+    toggleVariantStatus,
     removeVariant,
     removingVariant,
     handleAddVariant,

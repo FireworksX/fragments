@@ -11,6 +11,7 @@ export interface DropdownProps extends PropsWithChildren {
   isLoading?: boolean
   className?: string
   disabled?: boolean
+  header?: ReactNode
   width?: number | 'contentSize'
   trigger?: PopoverProps['trigger']
   appendTo?: PopoverProps['appendTo']
@@ -26,6 +27,7 @@ export interface DropdownProps extends PropsWithChildren {
 const Dropdown: FC<DropdownProps> = ({
   className,
   children,
+  header,
   isLoading,
   placement,
   width,
@@ -60,14 +62,17 @@ const Dropdown: FC<DropdownProps> = ({
       appendTo={appendTo}
       arrow={arrow}
       content={
-        <div className={styles.options} style={{ width: optionsWidth }}>
-          {isLoading ? (
-            <div className={styles.loadingContainer}>
-              <Spinner size={14} color='var(--text-color-accent)' />
-            </div>
-          ) : (
-            options
-          )}
+        <div className={styles.content}>
+          {header && !isLoading && <div className={styles.header}>{header}</div>}
+          <div className={styles.options} style={{ width: optionsWidth }}>
+            {isLoading ? (
+              <div className={styles.loadingContainer}>
+                <Spinner size={14} color='var(--text-color-accent)' />
+              </div>
+            ) : (
+              options
+            )}
+          </div>
         </div>
       }
       hideOnClick={hideOnClick}

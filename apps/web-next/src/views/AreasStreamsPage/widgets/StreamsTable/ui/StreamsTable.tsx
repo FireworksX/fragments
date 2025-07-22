@@ -6,6 +6,7 @@ import HashIcon from '@/shared/icons/next/hash.svg'
 import StatusIcon from '@/shared/icons/next/circle-fading-plus.svg'
 import FilterIcon from '@/shared/icons/next/funnel.svg'
 import ActionsIcon from '@/shared/icons/next/zap.svg'
+import EditIcon from '@/shared/icons/next/pencil.svg'
 import WeightIcon from '@/shared/icons/next/weight.svg'
 import DeleteIcon from '@/shared/icons/next/trash.svg'
 import PauseIcon from '@/shared/icons/next/pause.svg'
@@ -34,6 +35,8 @@ import { CommonLogo } from '@/shared/ui/CommonLogo'
 import { CampaignStatus } from '@/__generated__/types'
 import { withModalCollector } from '@/shared/hocs/withModalCollector'
 import { modalNames } from '@/shared/data'
+import { ReleaseCondition } from '@/widgets/ReleaseCondition'
+import { SearchInput } from '@/shared/ui/SearchInput'
 
 interface StreamsTableProps {
   className?: string
@@ -45,7 +48,7 @@ const StreamsTable: FC<StreamsTableProps> = ({ className }) => {
   return (
     <div className={styles.root}>
       <div className={styles.header}>
-        <InputText className={styles.search} placeholder='Search' />
+        <SearchInput className={styles.search} mode='tiny' placeholder='Search' />
         <Button mode='secondary' icon={<SettingsIcon />}>
           Customize
         </Button>
@@ -87,8 +90,8 @@ const StreamsTable: FC<StreamsTableProps> = ({ className }) => {
               <TableCell className={styles.cell} colSpan={6}>
                 <Placeholder
                   icon={<LogoIcon width={24} height={24} />}
-                  title='Empty list of streams'
-                  description='Create new stream for control user flow'
+                  title='Empty list of campaigns'
+                  description='Create new campaign for control user flow'
                   actions={
                     <Button icon={<PlusIcon />} onClick={handleCreateCampaign}>
                       Create Campaign
@@ -115,13 +118,19 @@ const StreamsTable: FC<StreamsTableProps> = ({ className }) => {
               </TableCell>
               <TableCell>
                 <div className={cn(styles.innerCell, styles.filtersCell)}>
-                  <Chip prefix='Location:'>Russia</Chip>
-                  <Chip prefix='Device'>Mobile</Chip>
-                  <Chip prefix='URL:'>/sportbooks/*</Chip>
+                  {stream?.featureFlag?.releaseCondition && (
+                    <ReleaseCondition releaseCondition={stream.featureFlag?.releaseCondition} />
+                  )}
                 </div>
               </TableCell>
               <TableCell>
                 <div className={styles.innerCell}>
+                  <Link type='campaign' campaignSlug={stream.id}>
+                    <Button size='small' mode='outline' icon={<EditIcon />}>
+                      Edit
+                    </Button>
+                  </Link>
+
                   {stream.status === CampaignStatus.Active ? (
                     <Button
                       size='small'

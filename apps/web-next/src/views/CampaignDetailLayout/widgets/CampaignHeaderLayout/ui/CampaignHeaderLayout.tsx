@@ -52,7 +52,7 @@ export const CampaignHeaderLayout: FC<StreamHeaderProps> = ({ className }) => {
           </Touchable>
         </Link>
       }
-      meta={<ReleaseCondition releaseCondition={releaseCondition} />}
+      meta={releaseCondition && <ReleaseCondition editable releaseCondition={releaseCondition} />}
       footer={
         <>
           <Tabs>

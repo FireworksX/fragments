@@ -64,6 +64,15 @@ export const globalStylesheetPlugin: Plugin = (state) => {
   state.$globalStylesheet = {
     key: KEY,
     addStyle,
+
+    extractStyles: () => {
+      const allFragments = state.$fragments.getManagers();
+      const styles = Object.entries(allFragments)
+        .filter(([, value]) => !!value?.resolve)
+        .map(([, manager]) => manager.$styleSheet.extract(true));
+
+      return styles.join("");
+    },
   };
 
   addStyle(globalCss);

@@ -38,7 +38,7 @@ const FragmentInternal: FC<FragmentProps> = ({ fragmentId }) => {
     // <FragmentContext.Provider value={{ manager }}>
     <div
       // ref={setRef}
-      data-key={`${definition.nodes.Fragment}:${fragmentId}`}
+      data-key={fragmentContext.fragmentLayerKey}
       className={hash}
     >
       {children.map((childLink) => {

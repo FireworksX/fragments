@@ -1,6 +1,7 @@
 import { useCampaignQuery } from '../queries/Campaign.generated'
 import { useUpdateCampaignMutation } from '@/shared/api/stream/mutation/UpdateCampaign.generated'
 import { CampaignStatus } from '@/__generated__/types'
+import { useDeleteCampaignMutation } from '@/shared/api/stream/mutation/DeleteCampaign.generated'
 
 export const useCampaignHeader = (campaignID: number) => {
   const { data } = useCampaignQuery({

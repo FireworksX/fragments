@@ -25,7 +25,7 @@ export const FragmentsEditPlaceholder: FC<FragmentsEditPlaceholderProps> = ({ cl
     data: { area: 'builderPlaceholder' }
   })
 
-  const { open: openModal, close: closeModal } = useModal()
+  // const { open: openModal, close: closeModal } = useModal()
   const { createProjectFragment, projectSlug } = useProjectFiles()
   const { openFragment } = useBuilder()
 
@@ -54,25 +54,25 @@ export const FragmentsEditPlaceholder: FC<FragmentsEditPlaceholderProps> = ({ cl
               <p className={styles.description}>Select fragment form project or create new.</p>
             </div>
             <Button
-              onClick={() =>
-                openModal(modalNames.createFragment, {
-                  creating: false,
-                  onCreate: async ({ name }) => {
-                    // updateContext({ creating: true })
-
-                    await createProjectFragment({
-                      variables: {
-                        projectSlug,
-                        name,
-                        parentId: null
-                      }
-                    })
-
-                    // updateContext({ creating: false })
-                    closeModal()
-                  }
-                })
-              }
+            // onClick={() =>
+            // openModal(modalNames.createFragment, {
+            //   creating: false,
+            //   onCreate: async ({ name }) => {
+            //     // updateContext({ creating: true })
+            //
+            //     await createProjectFragment({
+            //       variables: {
+            //         projectSlug,
+            //         name,
+            //         parentId: null
+            //       }
+            //     })
+            //
+            //     // updateContext({ creating: false })
+            //     closeModal()
+            //   }
+            // })
+            // }
             >
               Create Fragment
             </Button>

@@ -4,9 +4,19 @@ import { fetchPlugin } from "@/plugins/fetch";
 import { fragmentsPlugin } from "@/plugins/fragments";
 import { metricsPlugin } from "@/plugins/metrics";
 import { createConstants, isBrowser } from "@fragmentsx/utils";
-import { loadFragmentPlugin } from "@/plugins/loadFragment";
+import { loadPlugin } from "@/plugins/load";
 import { globalStylesheetPlugin } from "@/plugins/styleSheet";
 import { allowTypes } from "@graph-state/checkers";
+import { globalManagerLifeCyclePlugin } from "@/plugins/lifecycle/globalManagerLifeCycle";
+
+declare module "@graph-state/core" {
+  interface GraphState {
+    env: {
+      isSelf: boolean;
+      apiToken: string;
+    };
+  }
+}
 
 interface Options {
   apiToken: string;
@@ -35,38 +45,19 @@ export const createFragmentsClient = (options: Options) => {
       (state) => {
         state.env = {
           isSelf: options?.isSelf ?? false,
-          url: options?.url,
           apiToken: options?.apiToken,
         };
 
         state.$global = {
           status: null, // init, release
         };
-
-        state.extractStyles = async () => {
-          const allFragments = state.$fragments.getManagers();
-          const extractors = Object.entries(allFragments)
-            .filter(([, value]) => !!value?.resolve)
-            .map(([, manager]) => manager.$styleSheet.extract());
-
-          const extractedStyles = await Promise.all(extractors);
-
-          return Object.values(
-            extractedStyles.reduce((acc, extrected) => {
-              Object.entries(extrected).forEach(([key, styleTag]) => {
-                acc[key] = styleTag;
-              });
-
-              return acc;
-            }, {})
-          );
-        };
       },
       fetchPlugin,
       fragmentsPlugin,
-      loadFragmentPlugin,
+      loadPlugin,
       metricsPlugin,
       globalStylesheetPlugin,
+      globalManagerLifeCyclePlugin,
 
       (state) => {
         if (isBrowser && !inited) {

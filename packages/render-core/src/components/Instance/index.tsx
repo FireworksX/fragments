@@ -60,7 +60,7 @@ const InstanceInitial: FC<InstanceProps> = (instanceProps) => {
   );
 };
 
-export const Instance = (props) => {
+export const Instance: FC<InstanceProps> = (props) => {
   return "globalManager" in props ? (
     <GlobalManager value={props.globalManager}>
       <InstanceInitial {...props} />

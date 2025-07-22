@@ -1,7 +1,10 @@
-import { Instance } from "@fragmentsx/render-react";
 import prepass from "react-ssr-prepass";
 import { renderToString } from "react-dom/server";
-import { useGlobalManager, GlobalManager } from "@fragmentsx/render-react";
+import {
+  useGlobalManager,
+  GlobalManager,
+  Area,
+} from "@fragmentsx/render-react";
 import { useEffect, useRef } from "react";
 import save from "./save.json";
 
@@ -15,16 +18,7 @@ export const RenderNode = () => {
 
   const Node = (
     <GlobalManager value={globalManager}>
-      <Instance
-        fragmentId={+2}
-        props={{
-          ade177f5ef56: "Записаться",
-          e037940040d198: () => {
-            console.log("call");
-          },
-        }}
-        options={{ ssr: true }}
-      />
+      <Area areaCode="596645ec098f6" options={{ ssr: true }} />
     </GlobalManager>
   );
 

@@ -53,6 +53,9 @@ export { GlobalManager } from "@/providers/GlobalManager";
 export * from "@/providers/StyleSheetProvider";
 export * from "@/providers/RenderTargetProvider";
 export { InstanceContext, Instance } from "@/components/Instance";
+export { Area } from "@/components/Area";
+export type { AreaProps } from "@/components/Area";
+export { useArea } from "@/components/Area/hooks/useArea";
 export { FragmentContext } from "@/components/Fragment/FragmentContext";
 
 export { createElement, render, hydrate, cloneElement, h } from "preact";

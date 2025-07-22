@@ -14,6 +14,7 @@ import { createReactComponent } from "@/reactAdapter";
 
 export { collectStyles } from "@/helpers/collectStyles";
 export { Instance } from "@/components/Instance";
+export { Area } from "@/components/Area";
 
 export { GlobalManager } from "@/components/GlobalManager";
 

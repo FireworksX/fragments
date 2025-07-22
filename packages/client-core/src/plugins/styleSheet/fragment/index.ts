@@ -151,7 +151,18 @@ export const fragmentStylesheetPlugin: Plugin = (state) => {
   state.$styleSheet = {
     key: KEY,
     addStyle,
-    extract: () => [],
+    extract: (withTag?: boolean) => {
+      const graph = state.resolve(KEY);
+      const styles: string[] = extractStyleSheet(graph?.styles, state.resolve);
+      const resultStyle = styles.join("\n");
+
+      if (withTag) {
+        const id = state.entityOfKey(state.$fragment?.root);
+        return `<style id="fragment-${id._id}">${resultStyle}</style>`;
+      }
+
+      return resultStyle;
+    },
   };
 
   return state;
