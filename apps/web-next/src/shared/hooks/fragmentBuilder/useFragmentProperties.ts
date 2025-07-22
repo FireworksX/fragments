@@ -22,7 +22,6 @@ interface EditPropertyOptions {
 
 export const useFragmentProperties = () => {
   const { documentManager } = useBuilderDocument()
-  console.log(documentManager)
   const [properties] = useLayerValue('properties', documentManager?.$fragment?.root)
 
   // const { allowVariables, openVariable } = useBuilderVariableCreator()

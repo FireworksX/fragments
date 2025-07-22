@@ -30,6 +30,7 @@ export const fragmentsPlugin: Plugin = (state) => {
   const createFragmentManager = (fragmentId: number, initialDocument = {}) => {
     if (!fragmentId || !initialDocument) return null;
 
+    console.log(fragmentId, initialDocument);
     const fragmentLayerId =
       initialDocument?._type === definition.nodes.Fragment
         ? initialDocument?._id
