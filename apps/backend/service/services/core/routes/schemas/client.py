@@ -1,8 +1,19 @@
-
+from datetime import datetime
 from typing import List, Optional
-
+from enum import Enum
 import strawberry
 
+from services.core.routes.schemas.area import AreaGet
+from services.core.routes.schemas.feature_flag import VariantGet
+from services.core.routes.schemas.release_condition import DeviceType, OSType
+
+@strawberry.enum
+class ClientHistoryEventType(Enum):
+    INIT = 1
+    RELEASE = 2
+    CONTRIBUTE = 3
+    FEEDBACK = 4
+    VIEW = 5
 
 @strawberry.type
 class ClientHistoryGet:
@@ -23,7 +34,9 @@ class ClientHistoryGet:
     subdomain: Optional[str]
     page_load_time: Optional[float]
     created_at: str
-
+    event_type: ClientHistoryEventType
+    area: Optional[AreaGet]
+    variant: Optional[VariantGet]
 
 @strawberry.type
 class ClientGet:
@@ -33,15 +46,12 @@ class ClientGet:
     last_visited_at: Optional[str]
     history: List[ClientHistoryGet]
 
+
+
 @strawberry.input
-class ClientHistoryInput:
-    client_id: int
-    device_type: int
-    os_type: int
-    browser: str
-    language: str
-    screen_width: int
-    screen_height: int
-    country: str
-    region: str
-    city: str
+class ClientInfo:
+    os_type: Optional[OSType]
+    device_type: Optional[DeviceType]
+    time_frame: Optional[datetime]
+    page: Optional[str]
+    ip_address: Optional[str]

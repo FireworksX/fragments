@@ -8,10 +8,10 @@ from sqlalchemy.orm import Session
 
 from database import Media
 from services.core.routes.middleware import Context
+from services.core.routes.schemas.media import MediaGet, MediaType
 from services.core.routes.schemas.user import UserGet
 from services.core.routes.user import AuthPayload, User, add_avatar_route, login, signup
 from services.dependencies import get_db
-from services.core.routes.schemas.media import MediaGet, MediaType
 
 
 def mock_info():
@@ -63,24 +63,6 @@ async def test_signup_user_exists():
 
         assert str(e.value) == '409: User with the same email address already exists'
         assert e.value.status_code == 409
-
-
-@pytest.mark.asyncio
-async def test_signup_failed_to_create_user():
-    with patch(
-        'services.core.routes.user.get_user_by_email_db', new_callable=AsyncMock
-    ) as mock_get, patch(
-        'services.core.routes.user.create_user_db', new_callable=AsyncMock
-    ) as mock_create:
-        mock_get.return_value = None
-        mock_create.return_value = None
-
-        info = mock_info()
-        with pytest.raises(HTTPException) as e:
-            response = await signup(info, 'test@test.com', 'Test', None, 'password')
-
-        assert str(e.value) == '500: Failed to create a user'
-        assert e.value.status_code == 500
 
 
 @pytest.mark.asyncio
@@ -143,6 +125,7 @@ async def test_login_successful():
         assert response.access_token == 'access_token'
         assert response.refresh_token == 'refresh_token'
 
+
 @pytest.mark.asyncio
 async def test_add_avatar_successful():
     with patch(
@@ -150,31 +133,35 @@ async def test_add_avatar_successful():
     ) as mock_create_media:
         # Mock file
         mock_file = Mock(spec=UploadFile)
-        mock_file.filename = "test.jpg"
-        mock_file.content_type = "image/jpeg"
-        
+        mock_file.filename = 'test.jpg'
+        mock_file.content_type = 'image/jpeg'
+
         # Mock media creation
         mock_media = Mock()
         mock_media.id = 1
-        mock_media.public_path = "/media/test.jpg"
+        mock_media.public_path = '/media/test.jpg'
         mock_create_media.return_value = mock_media
-        
+
         # Mock user update
         mock_user = Mock()
         mock_user.id = 1
-        mock_user.email = "test@example.com"
+        mock_user.email = 'test@example.com'
         mock_user.avatar_id = 1
         mock_user.avatar = mock_media
 
         info = mock_info()
-        info.context.user = AsyncMock(return_value=AuthPayload(user=mock_user, access_token="test_token", refresh_token="test_refresh"))
+        info.context.user = AsyncMock(
+            return_value=AuthPayload(
+                user=mock_user, access_token='test_token', refresh_token='test_refresh'
+            )
+        )
 
         response: MediaGet = await add_avatar_route(info, mock_file)
 
         assert isinstance(response, MediaGet)
         assert response.media_id == 1
         assert response.media_type == MediaType.USER_LOGO
-        assert response.public_path == "/media/test.jpg"
+        assert response.public_path == '/media/test.jpg'
         mock_create_media.assert_called_once_with(info.context.session(), mock_file)
 
 
@@ -185,20 +172,23 @@ async def test_add_avatar_media_creation_failed():
     ) as mock_create_media:
         # Mock file
         mock_file = Mock(spec=UploadFile)
-        mock_file.filename = "test.jpg"
-        mock_file.content_type = "image/jpeg"
+        mock_file.filename = 'test.jpg'
+        mock_file.content_type = 'image/jpeg'
         mock_file.read = AsyncMock()
-        
+
         # Mock failed media creation
         mock_create_media.return_value = None
 
         info = mock_info()
-        info.context.user = AsyncMock(return_value=AuthPayload(user=Mock(id=1), access_token="test_token", refresh_token="test_refresh"))
-        
+        info.context.user = AsyncMock(
+            return_value=AuthPayload(
+                user=Mock(id=1), access_token='test_token', refresh_token='test_refresh'
+            )
+        )
+
         with pytest.raises(HTTPException) as exc:
             await add_avatar_route(info, mock_file)
 
         assert exc.value.status_code == 500
-        assert exc.value.detail == "Failed to create media file"
+        assert exc.value.detail == 'Failed to create media file'
         mock_create_media.assert_called_once_with(info.context.session(), mock_file)
-

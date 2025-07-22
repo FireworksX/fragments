@@ -17,6 +17,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && apt-get install -y \
+    libcairo2 \
+    libpango-1.0-0 \
+    libpangocairo-1.0-0 \
+    libgirepository1.0-dev \
+    libgdk-pixbuf2.0-0 \
+    libffi-dev \
+    shared-mime-info \
+    python3-dev \
+    libcairo2-dev \
+    gir1.2-rsvg-2.0 \
+    python3-gi \
+    libglib2.0-dev \
+    pkg-config \
+    librsvg2-bin \
+    && rm -rf /var/lib/apt/lists/*
 RUN pip install "poetry==$POETRY_VERSION" \
     && poetry config virtualenvs.create false
 

@@ -1,3 +1,5 @@
+import datetime
+
 from sqlalchemy import (
     JSON,
     Boolean,
@@ -9,6 +11,7 @@ from sqlalchemy import (
     LargeBinary,
     String,
     Table,
+    UniqueConstraint,
     func,
     orm,
 )
@@ -16,7 +19,7 @@ from sqlalchemy.orm import relationship
 
 from conf import service_settings
 from database import Base
-import datetime
+
 
 class ProjectGoal(Base):
     __tablename__ = 'project_goal'
@@ -24,9 +27,15 @@ class ProjectGoal(Base):
     created_at = Column('created_at', DateTime, default=datetime.datetime.now(datetime.UTC))
     name = Column('name', String, nullable=False)
     target_action = Column('target_action', String, nullable=False)
-    
-    project_id = Column('project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False)
+    __table_args__ = (
+        UniqueConstraint('project_id', 'target_action', name='unique_project_target_action'),
+    )
+
+    project_id = Column(
+        'project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False
+    )
     project = relationship('Project', back_populates='goals')
+
 
 class ProjectMemberRole(Base):
     __tablename__ = 'project_members_role'
@@ -35,22 +44,6 @@ class ProjectMemberRole(Base):
     role = Column('role', Integer, nullable=False)
     project = relationship('Project', back_populates='members')
     user = relationship('User', back_populates='projects')
-
-
-class ProjectCampaign(Base):
-    __tablename__ = 'project_camnpaign'
-    campaign_id = Column(ForeignKey('campaign.id'), primary_key=True)
-    project_id = Column(ForeignKey('project.id'), primary_key=True)
-    project = relationship('Project', back_populates='campaigns')
-    campaign = relationship('Campaign')
-
-
-class CampaignStream(Base):
-    __tablename__ = 'campaign_stream'
-    campaign_id = Column(ForeignKey('campaign.id'), primary_key=True)
-    stream_id = Column(ForeignKey('stream.id'), primary_key=True)
-    stream = relationship('Stream')
-    campaign = relationship('Campaign', back_populates='streams')
 
 
 class User(Base):
@@ -63,12 +56,8 @@ class User(Base):
 
     projects = relationship('ProjectMemberRole', back_populates='user')
 
-    avatar_id = Column('avatar_id', Integer, ForeignKey('media.id'))
+    avatar_id = Column('avatar_id', Integer, ForeignKey('media.id', ondelete='CASCADE'))
     avatar = relationship('Media')
-
-    @orm.reconstructor
-    def init(self) -> None:
-        self.logo = None if self.avatar is None else self.avatar.public_path
 
 
 class ProjectApiKey(Base):
@@ -84,17 +73,38 @@ class ProjectApiKey(Base):
     project = relationship('Project', back_populates='public_keys', foreign_keys=[project_id])
 
 
+class Area(Base):
+    __tablename__ = 'area'
+    id = Column('id', Integer, primary_key=True, index=True)
+    description = Column('description', String)
+    area_code = Column('area_code', String, nullable=False)
+    author_id = Column('author_id', Integer, ForeignKey('user.id'))
+    author = relationship('User')
+    project_id = Column('project_id', Integer, ForeignKey('project.id'), nullable=False)
+    deleted_at = Column('deleted_at', DateTime, nullable=True)
+    logo_id = Column('logo_id', Integer, ForeignKey('media.id', ondelete='CASCADE'))
+    logo = relationship('Media')
+
+    # Relationship to Project
+    project = relationship('Project')
+
+    # One-to-Many relationship with Campaign
+    campaigns = relationship('Campaign', back_populates='area')
+
 class Project(Base):
     __tablename__ = 'project'
     id = Column('id', Integer, primary_key=True, index=True)
     name = Column('name', String)
-    logo_id = Column('logo_id', Integer, ForeignKey('media.id'))
+    logo_id = Column('logo_id', Integer, ForeignKey('media.id', ondelete='CASCADE'))
     logo = relationship('Media')
 
     owner_id = Column('owner_id', Integer, ForeignKey('user.id'))
     owner = relationship('User')
+
     members = relationship('ProjectMemberRole', back_populates='project')
-    campaigns = relationship('ProjectCampaign', back_populates='project')
+
+    areas = relationship('Area', back_populates='project', cascade='all, delete-orphan')
+
     goals = relationship('ProjectGoal', back_populates='project', cascade='all, delete-orphan')
 
     root_directory_id = Column('directory_id', Integer, ForeignKey('filesystem_directory.id'))
@@ -156,18 +166,63 @@ class Campaign(Base):
     project_id = Column(
         'project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False
     )
+    project = relationship('Project')
+
+    area_id = Column('area_id', Integer, ForeignKey('area.id', ondelete='CASCADE'), nullable=False)
+    area = relationship('Area', back_populates='campaigns')
+
     name = Column('name', String)
     description = Column('description', String)
-    active = Column('active', Boolean, default=True)
-    deleted = Column('deleted', Boolean, default=False)
 
     author_id = Column('author_id', Integer, ForeignKey('user.id'))
     author = relationship('User')
 
-    streams = relationship('CampaignStream', back_populates='campaign')
-
-    logo_id = Column('logo_id', Integer, ForeignKey('media.id'))
+    logo_id = Column('logo_id', Integer, ForeignKey('media.id', ondelete='CASCADE'))
     logo = relationship('Media')
+
+    status = Column('status', Integer, nullable=False, default=1)
+    default = Column('default', Boolean, nullable=False, default=False)
+    deleted_at = Column('deleted_at', DateTime, nullable=True)
+    feature_flag_id = Column(
+        'feature_flag_id', Integer, ForeignKey('feature_flag.id', ondelete='CASCADE'), nullable=False
+    )
+    feature_flag = relationship('FeatureFlag')
+
+    experiment_id = Column('experiment_id', Integer, ForeignKey('experiment.id'), nullable=True)
+    experiment = relationship('Experiment')
+
+
+class ReleaseCondition(Base):
+    __tablename__ = 'release_condition'
+    id = Column('id', Integer, primary_key=True, index=True)
+    name = Column('name', String, nullable=False)
+    project_id = Column('project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False)
+    project = relationship('Project')
+
+    condition_sets = relationship(
+        'ConditionSet',
+        back_populates='release_condition',
+        cascade='save-update, merge, delete, delete-orphan',
+    )
+
+
+class ConditionSet(Base):
+    __tablename__ = 'condition_set'
+    id = Column('id', Integer, primary_key=True, index=True)
+    name = Column('name', String, nullable=False)
+    release_condition_id = Column(
+        'release_condition_id',
+        Integer,
+        ForeignKey('release_condition.id', ondelete='CASCADE'),
+        nullable=False,
+    )
+    release_condition = relationship('ReleaseCondition', back_populates='condition_sets')
+
+    conditions = relationship(
+        'Condition',
+        back_populates='condition_set',
+        cascade='save-update, merge, delete, delete-orphan',
+    )
 
 
 class GeoLocation(Base):
@@ -178,94 +233,123 @@ class GeoLocation(Base):
     city = Column('city', String, nullable=False)
 
 
-class StreamGeoLocationFilter(Base):
-    __tablename__ = 'stream_geo_location_filter'
+class GeoLocationFilter(Base):
+    __tablename__ = 'geo_location_filter'
     id = Column('id', Integer, primary_key=True, index=True)
-    stream_id = Column(ForeignKey('stream.id'))
-
-    stream = relationship('Stream', back_populates='geo_locations_filter')
     country = Column('country', String, nullable=False)
     region = Column('region', String)
     city = Column('city', String, nullable=False)
 
+    condition_id = Column('condition_id', Integer, ForeignKey('condition.id', ondelete='CASCADE'), nullable=False)
+    condition = relationship('Condition', back_populates='geo_location_filters')
 
-class StreamTimeFrameFilter(Base):
-    __tablename__ = 'stream_time_frame_filter'
+class TimeFrameFilter(Base):
+    __tablename__ = 'time_frame_filter'
     id = Column('id', Integer, primary_key=True, index=True)
-    stream_id = Column(ForeignKey('stream.id'))
-
-    stream = relationship('Stream', back_populates='time_frames_filter')
     from_time = Column('from_time', DateTime, nullable=False)
     to_time = Column('to_time', DateTime, nullable=False)
 
-
-class StreamOSTypeFilter(Base):
-    __tablename__ = 'stream_os_type_filter'
+    condition_id = Column('condition_id', Integer, ForeignKey('condition.id', ondelete='CASCADE'), nullable=False)
+    condition = relationship('Condition', back_populates='time_frame_filters')
+class OSTypeFilter(Base):
+    __tablename__ = 'os_type_filter'
     id = Column('id', Integer, primary_key=True, index=True)
-    stream_id = Column(ForeignKey('stream.id'))
-
-    stream = relationship('Stream', back_populates='os_types_filter')
     os_type = Column('os_type', Integer, nullable=False)
 
+    condition_id = Column('condition_id', Integer, ForeignKey('condition.id', ondelete='CASCADE'), nullable=False)
+    condition = relationship('Condition', back_populates='os_type_filters')
 
-class StreamDeviceTypeFilter(Base):
-    __tablename__ = 'stream_device_type_filter'
+
+class DeviceTypeFilter(Base):
+    __tablename__ = 'device_type_filter'
     id = Column('id', Integer, primary_key=True, index=True)
-    stream_id = Column(ForeignKey('stream.id'))
-
-    stream = relationship('Stream', back_populates='device_types_filter')
     device_type = Column('device_type', Integer, nullable=False)
 
+    condition_id = Column('condition_id', Integer, ForeignKey('condition.id', ondelete='CASCADE'), nullable=False)
+    condition = relationship('Condition', back_populates='device_type_filters')
 
-class StreamPageFilter(Base):
-    __tablename__ = 'stream_page_filter'
+
+class PageFilter(Base):
+    __tablename__ = 'page_filter'
     id = Column('id', Integer, primary_key=True, index=True)
-    stream_id = Column(ForeignKey('stream.id'))
-
-    stream = relationship('Stream', back_populates='pages_filter')
     page = Column('page', String, nullable=False)
 
+    condition_id = Column('condition_id', Integer, ForeignKey('condition.id', ondelete='CASCADE'), nullable=False)
+    condition = relationship('Condition', back_populates='page_filters')
 
-class Stream(Base):
-    __tablename__ = 'stream'
+class Condition(Base):
+    __tablename__ = 'condition'
     id = Column('id', Integer, primary_key=True, index=True)
-    campaign_id = Column(
-        'campaign_id', Integer, ForeignKey('campaign.id', ondelete='CASCADE'), nullable=False
+    name = Column('name', String, nullable=False)
+    condition_set_id = Column(
+        'condition_set_id',
+        Integer,
+        ForeignKey('condition_set.id', ondelete='CASCADE'),
+        nullable=False,
     )
-    campaign = relationship('Campaign')
+    condition_set = relationship('ConditionSet', back_populates='conditions')
+
+    # Relationships to filter tables
+    page_filters = relationship('PageFilter', back_populates='condition', cascade='save-update, merge, delete, delete-orphan')
+    device_type_filters = relationship('DeviceTypeFilter', back_populates='condition', cascade='save-update, merge, delete, delete-orphan')
+    os_type_filters = relationship('OSTypeFilter', back_populates='condition', cascade='save-update, merge, delete, delete-orphan')
+    time_frame_filters = relationship('TimeFrameFilter', back_populates='condition', cascade='save-update, merge, delete, delete-orphan')
+    geo_location_filters = relationship('GeoLocationFilter', back_populates='condition', cascade='save-update, merge, delete, delete-orphan')
+
+
+class FeatureFlag(Base):
+    __tablename__ = 'feature_flag'
+    id = Column('id', Integer, primary_key=True, index=True)
+    name = Column('name', String, nullable=False)
+    description = Column('description', String)
     project_id = Column(
         'project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False
     )
     project = relationship('Project')
-    active = Column('active', Boolean, default=True)
-    deleted = Column('deleted', Boolean, default=False)
-    name = Column('name', String, nullable=False)
-    weight = Column('weight', Float, nullable=False)
+    release_condition_id = Column(
+        'release_condition_id',
+        Integer,
+        ForeignKey('release_condition.id', ondelete='CASCADE'),
+        nullable=False,
+    )
+    release_condition = relationship('ReleaseCondition')
+    variants = relationship('Variant', back_populates='feature_flag', cascade='all, delete-orphan')
+    rotation_type = Column('rotation_type', Integer, nullable=False, default=1)
+    deleted_at = Column('deleted_at', DateTime, nullable=True)
 
-    pages_filter = relationship(
-        'StreamPageFilter',
-        back_populates='stream',
-        cascade='save-update, merge, ' 'delete, delete-orphan',
+
+class Variant(Base):
+    __tablename__ = 'variant'
+    id = Column('id', Integer, primary_key=True, index=True)
+    feature_flag_id = Column(
+        'feature_flag_id',
+        Integer,
+        ForeignKey('feature_flag.id', ondelete='CASCADE'),
+        nullable=False,
     )
-    device_types_filter = relationship(
-        'StreamDeviceTypeFilter',
-        back_populates='stream',
-        cascade='save-update, merge, ' 'delete, delete-orphan',
+
+    feature_flag = relationship('FeatureFlag')
+    name = Column('name', String, nullable=False)
+    rollout_percentage = Column('rollout_percentage', Float, nullable=False, default=0)
+    fragment_id = Column('fragment_id', Integer, ForeignKey('fragment.id', ondelete='CASCADE'))
+    fragment = relationship('Fragment')
+    props = Column('props', JSON, nullable=True)
+    status = Column('status', Integer, nullable=False, default=1)
+    deleted_at = Column('deleted_at', DateTime, nullable=True)
+
+class Experiment(Base):
+    __tablename__ = 'experiment'
+    id = Column('id', Integer, primary_key=True, index=True)
+    name = Column('name', String, nullable=False, unique=True)
+    description = Column('description', String)
+    feature_flag_id = Column(
+        'feature_flag_id', Integer, ForeignKey('feature_flag.id', ondelete='CASCADE')
     )
-    os_types_filter = relationship(
-        'StreamOSTypeFilter',
-        back_populates='stream',
-        cascade='save-update, merge, ' 'delete, delete-orphan',
-    )
-    time_frames_filter = relationship(
-        'StreamTimeFrameFilter',
-        back_populates='stream',
-        cascade='save-update, merge, ' 'delete, delete-orphan',
-    )
-    geo_locations_filter = relationship(
-        'StreamGeoLocationFilter',
-        back_populates='stream',
-        cascade='save-update, merge, ' 'delete, delete-orphan',
+    feature_flag = relationship('FeatureFlag')
+
+    created_at = Column('created_at', DateTime, nullable=False, default=func.now())
+    updated_at = Column(
+        'updated_at', DateTime, nullable=False, default=func.now(), onupdate=func.now()
     )
 
 
@@ -339,26 +423,6 @@ class Fragment(Base):
     )
 
 
-class Landing(Base):
-    __tablename__ = 'landing'
-    id = Column('id', Integer, primary_key=True, index=True)
-    project_id = Column(
-        'project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False
-    )
-    project = relationship('Project')
-    stream_id = Column(
-        'stream_id', Integer, ForeignKey('stream.id', ondelete='CASCADE'), nullable=False
-    )
-    stream = relationship('Stream')
-    fragment_id = Column('fragment_id', Integer, ForeignKey('fragment.id', ondelete='CASCADE'))
-    fragment = relationship('Fragment')
-    props = Column('props', JSON)
-    weight = Column('weight', Float)
-    name = Column('name', String, nullable=False)
-    active = Column('active', Boolean, default=True)
-    deleted = Column('deleted', Boolean, default=False)
-
-
 class Media(Base):
     __tablename__ = 'media'
     id = Column('id', Integer, primary_key=True, index=True)
@@ -380,50 +444,18 @@ class Media(Base):
     def public_path(self):
         return f'{service_settings.STATIC_SERVER_URL}/{self.filename}'
 
-class LandingMetric(Base):
-    __tablename__ = 'landing_metric'
-    id = Column('id', Integer, primary_key=True, index=True)
-    
-    # Foreign keys
-    landing_id = Column('landing_id', Integer, ForeignKey('landing.id'))
-    campaign_id = Column('campaign_id', Integer, ForeignKey('campaign.id'))
-    
-    # Page info
-    url = Column('url', String)
-    referrer = Column('referrer', String)
-    domain = Column('domain', String)
-    subdomain = Column('subdomain', String)
-    page_load_time = Column('page_load_time', Float)  # in milliseconds
-    
-    # Device info
-    device_type = Column('device_type', Integer)
-    os_type = Column('os_type', Integer)
-    browser = Column('browser', String)
-    language = Column('language', String)
-    screen_width = Column('screen_width', Integer)
-    screen_height = Column('screen_height', Integer)
-    
-    # Geolocation
-    country = Column('country', String)
-    region = Column('region', String)
-    city = Column('city', String)
-    
-    # Timestamps
-    created_at = Column('created_at', DateTime, default=datetime.datetime.now(datetime.UTC))
-    
-    # Relationships
-    landing = relationship('Landing')
-    campaign = relationship('Campaign')
-
-    # Custom event
-    event = Column('event', String)
 
 class Client(Base):
     __tablename__ = 'client'
     id = Column('id', Integer, primary_key=True, index=True)
     project_id = Column('project_id', Integer, ForeignKey('project.id'))
     created_at = Column('created_at', DateTime, default=datetime.datetime.now(datetime.UTC))
-    updated_at = Column('updated_at', DateTime, default=datetime.datetime.now(datetime.UTC), onupdate=datetime.datetime.now(datetime.UTC))
+    updated_at = Column(
+        'updated_at',
+        DateTime,
+        default=datetime.datetime.now(datetime.UTC),
+        onupdate=datetime.datetime.now(datetime.UTC),
+    )
     last_visited_at = Column('last_visited_at', DateTime, nullable=True)
 
     # Relationships
@@ -437,17 +469,19 @@ class ClientProjectGoal(Base):
     project_goal_id = Column('project_goal_id', Integer, ForeignKey('project_goal.id'))
     project_id = Column('project_id', Integer, ForeignKey('project.id'))
     created_at = Column('created_at', DateTime, default=datetime.datetime.now(datetime.UTC))
-    
+
     # Relationships
     client = relationship('Client')
     project_goal = relationship('ProjectGoal')
     project = relationship('Project')
+
+
 class ClientHistory(Base):
     __tablename__ = 'client_history'
     id = Column('id', Integer, primary_key=True, index=True)
     client_id = Column('client_id', Integer, ForeignKey('client.id'))
     created_at = Column('created_at', DateTime, default=datetime.datetime.now(datetime.UTC))
-    
+
     # Device info
     device_type = Column('device_type', Integer)
     os_type = Column('os_type', Integer)
@@ -462,7 +496,7 @@ class ClientHistory(Base):
     domain = Column('domain', String)
     subdomain = Column('subdomain', String)
     page_load_time = Column('page_load_time', Float)  # in milliseconds
-    
+
     # Geolocation
     country = Column('country', String)
     region = Column('region', String)
@@ -470,3 +504,12 @@ class ClientHistory(Base):
 
     # Relationships
     client = relationship('Client', back_populates='history')
+
+    area_id = Column('area_id', Integer, ForeignKey('area.id'), nullable=True)
+    campaign_id = Column('campaign_id', Integer, ForeignKey('campaign.id'), nullable=True)
+    campaign = relationship('Campaign')
+    area = relationship('Area')
+    variant_id = Column('variant_id', Integer, ForeignKey('variant.id'), nullable=True)
+    variant = relationship('Variant')
+
+    event_type = Column('event_type', Integer, nullable=False)

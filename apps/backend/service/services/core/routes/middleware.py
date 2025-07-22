@@ -8,23 +8,39 @@ from strawberry.fastapi import BaseContext
 from user_agents import parse as user_agent_parser
 
 from conf.settings import service_settings
+from crud.client import create_client_db, get_client_by_id_db
 from crud.project import get_project_by_id_db, validate_project_public_api_key
 from crud.user import get_user_by_email_db
 from database import Session
-from database.models import Project, User, Client
+from database.models import Client, Project, User
 from services.core.utils import create_access_token, create_refresh_token
 from services.dependencies import get_db
-from crud.client import get_client_by_id_db, create_client_db
-from .schemas.filter import DeviceType, OSType
-from .schemas.landing import ClientInfo
-from .schemas.user import AuthPayload
 
+from .schemas.client import ClientInfo
+from .schemas.media import MediaGet, MediaType
+from .schemas.release_condition import DeviceType, OSType
+from .schemas.user import AuthPayload, UserGet
+from conf.settings import logger
 
 credentials_exception = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
     detail='Could not validate credentials',
     headers={'Authorization': 'token'},
 )
+
+
+def user_db_to_user(user: User) -> UserGet:
+    return UserGet(
+        id=user.id,
+        email=user.email,
+        first_name=user.first_name,
+        last_name=user.last_name,
+        logo=MediaGet(
+            media_id=user.avatar_id,
+            media_type=MediaType.USER_LOGO,
+            public_path=user.avatar.public_path,
+        ),
+    )
 
 
 class UserAgentInfo:
@@ -40,7 +56,7 @@ class UserAgentInfo:
         elif user_agent_info.is_pc:
             self.device_type = DeviceType.DESKTOP
         else:
-            print('unknown device type', user_agent_info)
+            logger.warning('Unknown device type: %s', user_agent_info)
             self.device_type = None
 
         if user_agent_info.os.family == 'Android':
@@ -54,19 +70,21 @@ class UserAgentInfo:
         elif user_agent_info.device.family in ['iPhone', 'iOS-Device']:
             self.os_type = OSType.IOS
         else:
-            print('unknown OS type', user_agent_info)
+            logger.warning('Unknown OS type: %s', user_agent_info)
             self.os_type = None
 
 
 class Context(BaseContext):
     async def user(self) -> AuthPayload | None:
         if not self.request:
+            logger.warning('No request object provided')
             return None
 
         authorization = self.request.headers.get('Authorization', None)
         refresh = self.request.headers.get('Refresh', None)
 
         if authorization is None:
+            logger.warning('No authorization header provided')
             raise credentials_exception
 
         try:
@@ -78,36 +96,49 @@ class Context(BaseContext):
             )
             email: str = payload.get('sub')
             if email is None:
+                logger.error('No email in token payload')
                 raise credentials_exception
         except InvalidTokenError:
+            logger.error('Invalid token provided')
             raise credentials_exception
         except IndexError:
+            logger.error('Malformed authorization header')
             raise credentials_exception
         user: User = await get_user_by_email_db(self.session(), email)
         if user is None:
+            logger.error('User not found: %s', email)
             raise credentials_exception
         if refresh is None:
             refresh = create_refresh_token(data={'sub': user.email})
-        return AuthPayload(user=user, access_token=authorization, refresh_token=refresh)
+        logger.info('User authenticated: %s', email)
+        return AuthPayload(
+            user=user_db_to_user(user), access_token=authorization, refresh_token=refresh
+        )
 
     async def project(self) -> Project | None:
         if not self.request:
+            logger.warning('No request object provided')
             return None
 
         authorization = self.request.headers.get('Authorization', None)
         if authorization is None:
+            logger.warning('No authorization header provided')
             raise credentials_exception
 
         try:
             public_key = authorization.split(' ')[1]  # format is 'Bearer token'
             project: Project = await validate_project_public_api_key(self.session(), public_key)
             if project is None:
+                logger.error('Invalid project public key: %s', public_key)
                 raise credentials_exception
         except IndexError:
+            logger.error('Malformed authorization header')
             raise credentials_exception
         except ValueError:
+            logger.error('Invalid public key format')
             raise credentials_exception
         else:
+            logger.info('Project authenticated: %s', project.id)
             return project
 
     async def client_info(self) -> ClientInfo:
@@ -120,8 +151,13 @@ class Context(BaseContext):
         page: Optional[str] = self.request.headers.get('Referrer', None)
         gmt_time = datetime.now(timezone.utc)
 
-        print(
-            f'os_type={user_agent.os_type}, device_type={user_agent.device_type}, time_frame={gmt_time}, page={page}, ip_address={user_ip}'
+        logger.info(
+            'Client info - os_type=%s, device_type=%s, time_frame=%s, page=%s, ip_address=%s',
+            user_agent.os_type,
+            user_agent.device_type,
+            gmt_time,
+            page,
+            user_ip
         )
         return ClientInfo(
             os_type=user_agent.os_type,
@@ -130,26 +166,27 @@ class Context(BaseContext):
             page=page,
             ip_address=user_ip,
         )
-    
+
     async def client(self) -> Client:
         project: Project = await self.project()
         if project is None:
-            raise credentials_exception    
+            logger.error('No project context available')
+            raise credentials_exception
 
         user_id: Optional[str] = None
         if self.request.cookies:
             user_id = self.request.cookies.get('user_id')
-            
+
         if user_id is None:
+            logger.info('Creating new client for project %s', project.id)
             return await create_client_db(self.session(), project_id=project.id)
         else:
             try:
+                logger.info('Getting existing client %s', user_id)
                 return await get_client_by_id_db(self.session(), int(user_id))
             except:
-                raise HTTPException(status_code=400, detail="Invalid user_id format")
-        
-        
-        
+                logger.error('Invalid user_id format: %s', user_id)
+                raise HTTPException(status_code=400, detail='Invalid user_id format')
 
     async def refresh_user(self) -> AuthPayload | None:
         if not self.request:
@@ -164,14 +201,18 @@ class Context(BaseContext):
             )
             email: str = payload.get('sub')
             if email is None:
+                logger.error('No email in refresh token payload')
                 raise credentials_exception
         except InvalidTokenError:
+            logger.error('Invalid refresh token')
             raise credentials_exception
         user: User = await get_user_by_email_db(self.session(), email)
         if user is None:
+            logger.error('User not found: %s', email)
             raise credentials_exception
+        logger.info('User refreshed: %s', email)
         return AuthPayload(
-            user=user,
+            user=user_db_to_user(user),
             access_token=create_access_token(data={'sub': user.email}),
             refresh_token=refresh,
         )

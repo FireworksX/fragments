@@ -32,6 +32,11 @@ tenacity = "^6.2.0"
 PyJWT= "2.9.0"
 passlib = "1.7.4"
 
+# image generator
+svgwrite = "^1.4.3"
+pycairo = "1.25.0"
+PyGObject = "3.46.0"
+
 # Postgres
 SQLAlchemy = "1.4.46"
 SQLAlchemy-serializer = "1.4.1"
