@@ -39,6 +39,7 @@ export const ProjectSettingsTokens: FC<ProjectSettingsTokensProps> = ({ classNam
   return (
     <div className={cn(styles.root, className)}>
       <InfoSection
+        loading={loading}
         header={
           <InfoSectionHeader
             title='Publishable key'
@@ -46,49 +47,47 @@ export const ProjectSettingsTokens: FC<ProjectSettingsTokensProps> = ({ classNam
           />
         }
       >
-        {loading ? (
-          <div className={styles.loader}>
-            <Spinner size={16} color='var(--text-color-accent)' />
-          </div>
-        ) : (
-          <>
-            {publicTokens.map(token => (
-              <InfoSectionCell key={token.id} className={styles.tokenRow} title={token.name ?? 'default'}>
-                <InputText value={token.value} />
-                <Button icon={<RemoveIcon />} mode='secondary' onClick={() => removePublicToken(token.id)}>
-                  Remove
-                </Button>
-              </InfoSectionCell>
-            ))}
+        {publicTokens.map(token => (
+          <InfoSectionCell key={token.id} className={styles.tokenRow} title={token.name ?? 'default'}>
+            <InputText classNameInput={styles.input} value={token.value} />
+            <Button icon={<RemoveIcon />} mode='secondary' onClick={() => removePublicToken(token.id)}>
+              Remove
+            </Button>
+          </InfoSectionCell>
+        ))}
 
-            <InfoSectionCell className={styles.tokenRow}>
-              {isCreatingToken ? (
-                <>
-                  <InputText ref={creatingInputRef} value={creatingName} onChangeValue={setCreatingName} />
-                  <Button
-                    icon={<CheckIcon />}
-                    loading={creatingPublicToken}
-                    disabled={creatingName?.length <= 2}
-                    mode='success'
-                    onClick={handleCreatePublicToken}
-                  >
-                    Done
-                  </Button>
-                  <Button icon={<CloseIcon />} mode='secondary' onClick={() => setIsCreatingToken(false)}>
-                    Cancel
-                  </Button>
-                </>
-              ) : (
-                <Button icon={<PlusIcon />} onClick={() => setIsCreatingToken(true)}>
-                  Add token
-                </Button>
-              )}
-            </InfoSectionCell>
-          </>
-        )}
+        <InfoSectionCell className={styles.tokenRow}>
+          {isCreatingToken ? (
+            <>
+              <InputText
+                ref={creatingInputRef}
+                classNameInput={styles.input}
+                value={creatingName}
+                onChangeValue={setCreatingName}
+              />
+              <Button
+                icon={<CheckIcon />}
+                loading={creatingPublicToken}
+                disabled={creatingName?.length <= 2}
+                mode='success'
+                onClick={handleCreatePublicToken}
+              >
+                Done
+              </Button>
+              <Button icon={<CloseIcon />} mode='secondary' onClick={() => setIsCreatingToken(false)}>
+                Cancel
+              </Button>
+            </>
+          ) : (
+            <Button icon={<PlusIcon />} onClick={() => setIsCreatingToken(true)}>
+              Add token
+            </Button>
+          )}
+        </InfoSectionCell>
       </InfoSection>
 
       <InfoSection
+        loading={loading}
         header={
           <InfoSectionHeader
             title='Secret keys'
@@ -96,25 +95,17 @@ export const ProjectSettingsTokens: FC<ProjectSettingsTokensProps> = ({ classNam
           />
         }
       >
-        {loading ? (
-          <div className={styles.loader}>
-            <Spinner size={16} color='var(--text-color-accent)' />
-          </div>
-        ) : (
-          <>
-            <InfoSectionCell className={styles.tokenRow} title='Secret key'>
-              <InputText value={privateKey?.value} />
-              <Button
-                loading={refreshingPrivateToken}
-                icon={<RefreshIcon />}
-                mode='secondary'
-                onClick={handleRefreshPrivateToken}
-              >
-                Refresh
-              </Button>
-            </InfoSectionCell>
-          </>
-        )}
+        <InfoSectionCell className={styles.tokenRow} title='Secret key'>
+          <InputText classNameInput={styles.input} value={privateKey?.value} />
+          <Button
+            loading={refreshingPrivateToken}
+            icon={<RefreshIcon />}
+            mode='secondary'
+            onClick={handleRefreshPrivateToken}
+          >
+            Refresh
+          </Button>
+        </InfoSectionCell>
       </InfoSection>
     </div>
   )

@@ -1,0 +1,17 @@
+.user {
+    padding-block: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-color-accent);
+}
+
+.email {
+    font-size: 12px;
+    color: var(--secondary);
+}

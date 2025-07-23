@@ -52,7 +52,7 @@ export const useUploadFile = (targetId: number, type: UploadFileType = 'projectA
     //   file,
     //   onUpdateProgress: setProgress
     // })
-    [uploadAsset]
+    [targetId, uploadAsset]
   )
 
   return {

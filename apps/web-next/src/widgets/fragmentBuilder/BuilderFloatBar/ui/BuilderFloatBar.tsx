@@ -28,14 +28,15 @@ import { definition } from '@fragmentsx/definition'
 import { Spinner } from '@/shared/ui/Spinner'
 import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
 import { BuilderFragmentPublish } from '@/widgets/fragmentBuilder/BuilderFragmentPublish'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 interface BuilderFloatBarProps {
   className?: string
 }
 
 export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
+  const { saveFragment } = useBuilderDocument()
   const { creator, manager } = useBuilderCreator()
-  const { openPreview } = useBuilder()
   const createType = creator.createType
 
   return (
@@ -70,8 +71,10 @@ export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
 
       <div className={styles.delimiter} />
 
-      <Dropdown className={styles.publishDropdown} trigger='click' options={<BuilderFragmentPublish />}>
-        <Button glowing>Publish</Button>
+      <Dropdown className={styles.publishDropdown} disabled trigger='click' options={<BuilderFragmentPublish />}>
+        <Button glowing onClick={saveFragment}>
+          Save
+        </Button>
       </Dropdown>
     </div>
   )

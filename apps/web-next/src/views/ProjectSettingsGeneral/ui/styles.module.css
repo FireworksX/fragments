@@ -1,8 +1,28 @@
 .root {
-
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .row {
     display: flex;
     gap: 12px;
+}
+
+.input {
+    background: var(--background);
+}
+
+.uploadLabel {
+    position: absolute;
+    inset: 0;
+
+    .uploadInput {
+        visibility: hidden;
+        width: 0;
+        height: 0;
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+    }
 }

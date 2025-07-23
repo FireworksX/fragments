@@ -7,12 +7,14 @@ import { ConfigureFragmentVariantContext } from '@/widgets/modals/ConfigureFragm
 import { nextTick } from '@/shared/utils/nextTick'
 import { useForceUpdate } from '@/shared/hooks/useForceUpdate'
 import { ConfigureCampaignContext } from '@/widgets/modals/ConfigureCampaign/ui/ConfigureCampaign'
+import { GoalViewModalContext } from '@/widgets/modals/GoalViewModal/ui/GoalViewModal'
 
 interface ModalContextMap {
   [modalNames.configureFeatureFlagVariant]: ConfigureFeatureFlagVariantContext
   [modalNames.projectTree]: ProjectTreeModalContext
   [modalNames.configureFragmentVariant]: ConfigureFragmentVariantContext
   [modalNames.configureCampaign]: ConfigureCampaignContext
+  [modalNames.goalView]: GoalViewModalContext
 }
 
 type ModalName = keyof typeof modalNames

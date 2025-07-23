@@ -5,19 +5,15 @@ import { Touchable } from '@/shared/ui/Touchable'
 import { Avatar } from '@/shared/ui/Avatar'
 import { CurrentProfileDropdown } from './CurrentProfileDropdown'
 import { useCurrentUser } from '@/shared/hooks/useCurrentUser'
+import { CommonLogo } from '@/shared/ui/CommonLogo'
 
 export const CurrentProfileTarget: FC = () => {
   const { data } = useCurrentUser()
 
   return (
-    <Dropdown trigger='click' options={<CurrentProfileDropdown />}>
+    <Dropdown trigger='click' placement='bottom-end' options={<CurrentProfileDropdown />}>
       <Touchable TagName='button'>
-        <Avatar
-          size={34}
-          uniqueId={data?.profile?.user?.email}
-          firstName={data?.profile?.user?.firstName}
-          lastName={data?.profile?.user?.lastName}
-        />
+        <CommonLogo size={34} withRadius src={data?.profile.user?.logo?.publicPath} />
       </Touchable>
     </Dropdown>
   )

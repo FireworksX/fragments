@@ -1,7 +1,7 @@
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 
 export const useBuilderCssOverride = () => {
-  const [cssOverride, setCssOverride] = useLayerValue('cssOverride')
+  const [cssOverride, setCssOverride, { rawValue }] = useLayerValue('cssOverride')
 
   const onClickHeader = () => {
     if (cssOverride) {
@@ -12,6 +12,7 @@ export const useBuilderCssOverride = () => {
   }
 
   return {
+    rawValue,
     cssOverride,
     setCssOverride,
     onClickHeader

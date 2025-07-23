@@ -17,16 +17,15 @@ export const CurrentProfileDropdown: FC<CurrentProfileDropdownProps> = ({ classN
   const { trigger } = useSignOut()
   const { data, loading, error } = useCurrentUser()
 
-  if (!loading || error) return
+  if (loading || error) return
 
   return (
     <div className={cn(styles.root, className)} data-testid='CurrentProfileDropdown'>
       <DropdownGroup>
-        <Container className={styles.user}>
+        <Container className={styles.user} gutterSize={12}>
           <div className={styles.name}>
             {data?.profile.user.firstName} {data?.profile.user.firstName}
           </div>
-          <div className={styles.email}>{data?.profile.user.email}</div>
         </Container>
 
         <DropdownOption>Account Settings</DropdownOption>

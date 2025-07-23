@@ -11,6 +11,16 @@
         }
     }
 
+    .head {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .center {
+        flex: 1;
+    }
+
     .title {
         font-weight: 500;
         font-size: 14px;

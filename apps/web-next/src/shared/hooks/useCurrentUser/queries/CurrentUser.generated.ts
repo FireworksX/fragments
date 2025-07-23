@@ -6,7 +6,7 @@ const defaultOptions = {} as const;
 export type CurrentUserQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type CurrentUserQuery = { __typename?: 'Query', profile: { __typename?: 'AuthPayload', accessToken: string, refreshToken: string, user: { __typename?: 'UserGet', id: number, email: string, firstName: string, lastName?: string | null } } };
+export type CurrentUserQuery = { __typename?: 'Query', profile: { __typename?: 'AuthPayload', accessToken: string, refreshToken: string, user: { __typename?: 'UserGet', id: number, email: string, firstName: string, lastName?: string | null, logo: { __typename?: 'MediaGet', publicPath: string } } } };
 
 
 export const CurrentUserDocument = gql`
@@ -17,6 +17,9 @@ export const CurrentUserDocument = gql`
       email
       firstName
       lastName
+      logo {
+        publicPath
+      }
     }
     accessToken
     refreshToken

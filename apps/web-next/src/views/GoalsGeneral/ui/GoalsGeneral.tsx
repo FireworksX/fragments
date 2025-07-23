@@ -16,15 +16,17 @@ import { useGoalsListQuery } from '@/shared/api/goals/GoalsList.generated'
 import { useCreateGoalMutation } from '@/shared/api/goals/CreateGoal.generated'
 import { useUpdateGoalMutation } from '@/shared/api/goals/UpdateGoal.generated'
 import { useDeleteGoalMutation } from '@/shared/api/goals/DeleteGoal.generated'
+import { withModalCollector } from '@/shared/hocs/withModalCollector'
+import { SpinnerBlock } from '@/shared/ui/SpinnerBlock'
 
 interface GoalsGeneralProps {
   className?: string
 }
 
-export const GoalsGeneral: FC<GoalsGeneralProps> = ({ className }) => {
-  const { openModal, closeModal } = useModal()
+const GoalsGeneral: FC<GoalsGeneralProps> = ({ className }) => {
+  const { open, close } = useModal()
   const { project, projectSlug } = useProject()
-  const { data } = useGoalsListQuery({
+  const { data, loading } = useGoalsListQuery({
     variables: {
       projectSlug
     }
@@ -37,7 +39,6 @@ export const GoalsGeneral: FC<GoalsGeneralProps> = ({ className }) => {
 
   return (
     <Container mode='hug' className={cn(styles.root, className)}>
-      <GoalViewModal />
       <PageHeading
         description='A catalog of your project goals.'
         actions={
@@ -45,9 +46,9 @@ export const GoalsGeneral: FC<GoalsGeneralProps> = ({ className }) => {
             loading={loadingCreate}
             icon={<CreateIcon />}
             onClick={() =>
-              openModal(modalNames.goalView, {
+              open(modalNames.goalView, {
                 onSubmit: goal => {
-                  closeModal()
+                  close()
                   createGoal({
                     variables: {
                       projectSlug,
@@ -67,6 +68,7 @@ export const GoalsGeneral: FC<GoalsGeneralProps> = ({ className }) => {
       </PageHeading>
 
       <div className={styles.body}>
+        {loading && <SpinnerBlock />}
         {goals.map(goal => (
           <GoalCard
             key={goal.id}
@@ -94,3 +96,7 @@ export const GoalsGeneral: FC<GoalsGeneralProps> = ({ className }) => {
     </Container>
   )
 }
+
+export default withModalCollector(GoalsGeneral, {
+  [modalNames.goalView]: <GoalViewModal />
+})
