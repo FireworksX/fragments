@@ -7,7 +7,6 @@ import { InfoSectionCell } from '@/components/InfoSection/components/InfoSection
 import { InputText } from '@/shared/ui/InputText'
 import { InfoSectionHeader } from '@/components/InfoSection/components/InfoSectionHeader'
 import { useProject } from '@/shared/hooks/useProject'
-import { useUpdateProjectInfoMutation } from '@/views/ProjectSettingsGeneral/queries/UpdateProjectInfo.generated'
 import { Button } from '@/shared/ui/Button'
 import CheckIcon from '@/shared/icons/next/check.svg'
 import { Table } from '@/shared/ui/Table'
@@ -16,6 +15,7 @@ import { TableHeader } from '@/shared/ui/Table/components/TableHeader'
 import { times } from '@fragmentsx/utils'
 import { PageHeading } from '@/shared/ui/PageHeading/PageHeading'
 import { TableCell } from '@/shared/ui/Table/components/TableCell'
+import { useUpdateProjectInfoMutation } from '@/views/UsersGeneral/queries/UpdateProjectInfo.generated'
 
 interface UsersGeneralProps {
   className?: string
