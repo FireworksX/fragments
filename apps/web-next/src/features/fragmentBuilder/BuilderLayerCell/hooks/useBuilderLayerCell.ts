@@ -11,7 +11,6 @@ export const useBuilderLayerCell = (layerKey: LinkKey) => {
   const { documentManager } = useBuilderDocument()
   const layerInfo = useLayerInfo(layerKey)
 
-  const [layerGraph] = useGraph(documentManager, layerKey)
   const [name, rename] = useLayerValue('name', layerKey)
   const { select, selection } = useBuilderSelection()
   const selected = selection === layerKey

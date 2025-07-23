@@ -1,0 +1,43 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    min-height: 100vh;
+    gap: 24px;
+}
+
+.header {
+    height: 100px;
+    background: var(--background-secondary);
+    border-radius: var(--radius-main);
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    gap: 24px;
+}
+
+.left {
+    width: 150px;
+    background: var(--background-secondary);
+    border-radius: var(--radius-main);
+}
+
+.center {
+    background: var(--background-secondary);
+    border-radius: var(--radius-main);
+    flex: 1;
+}
+
+.right {
+    width: 150px;
+    background: var(--background-secondary);
+    border-radius: var(--radius-main);
+}
+
+.footer {
+    min-height: 150px;
+    background: var(--background-secondary);
+    border-radius: var(--radius-main);
+}

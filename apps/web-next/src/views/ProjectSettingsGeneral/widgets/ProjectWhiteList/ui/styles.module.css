@@ -1,0 +1,12 @@
+.root {}
+
+.row {
+    white-space: nowrap;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+}
+
+.input {
+    background: var(--background);
+}

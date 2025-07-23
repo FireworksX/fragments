@@ -1,4 +1,4 @@
-mutation UpdateProjectInfo($projectSlug: Int!, $name: String) {
+mutation UpdateProject($projectSlug: Int!, $name: String) {
     updateProject(pr: {id: $projectSlug, name: $name}) {
         id
         name

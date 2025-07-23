@@ -10,14 +10,25 @@ import { ProjectTree } from '@/widgets/ProjectTree'
 import { Button } from '@/shared/ui/Button'
 import { InputText } from '@/shared/ui/InputText'
 import { InputNumber } from '@/shared/ui/InputNumber'
+import { useModal } from '@/shared/hooks/useModal'
+
+interface Goal {
+  name: string
+  code: string
+}
+
+export interface GoalViewModalContext {
+  currentGoal?: Goal
+  onSubmit: (goal: Goal) => void
+}
 
 interface GoalViewModalProps {
   className?: string
 }
 
 export const GoalViewModal: FC<GoalViewModalProps> = ({ className }) => {
-  const [modal] = useGraph(modalStore, modalStore.key)
-  const context = modal?.context
+  const { readContext } = useModal()
+  const context = readContext(modalNames.goalView)
   const currentGoal = context?.currentGoal
   const isEdit = !!currentGoal
   const [name, setName] = useState(currentGoal?.name ?? '')
@@ -30,25 +41,24 @@ export const GoalViewModal: FC<GoalViewModalProps> = ({ className }) => {
   }
 
   return (
-    <Modal className={cn(styles.root, className)} isOpen={modal.name === modalNames.goalView}>
-      <ModalContainer
-        title={isEdit ? 'Goal View' : 'Create Goal'}
-        footer={
-          <>
-            <Button mode='secondary' stretched onClick={modalStore.close}>
-              Cancel
-            </Button>
-            <Button stretched onClick={() => handleSubmit({ name, code })}>
-              {isEdit ? 'Edit' : 'Create'}
-            </Button>
-          </>
-        }
-      >
-        <div className={styles.body}>
-          <InputText placeholder='Name' value={name} autoFocus onChangeValue={setName} />
-          <InputText placeholder='Code' value={code} onChangeValue={setCode} />
-        </div>
-      </ModalContainer>
-    </Modal>
+    <ModalContainer
+      width={300}
+      title={isEdit ? 'Goal View' : 'Create Goal'}
+      footer={
+        <>
+          <Button mode='secondary' stretched onClick={modalStore.close}>
+            Cancel
+          </Button>
+          <Button type='submit' stretched onClick={() => handleSubmit({ name, code })}>
+            {isEdit ? 'Edit' : 'Create'}
+          </Button>
+        </>
+      }
+    >
+      <form className={styles.body}>
+        <InputText placeholder='Name' value={name} autoFocus onChangeValue={setName} />
+        <InputText placeholder='Code' value={code} onChangeValue={setCode} />
+      </form>
+    </ModalContainer>
   )
 }

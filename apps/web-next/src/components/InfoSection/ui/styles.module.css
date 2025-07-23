@@ -9,3 +9,10 @@
     border-radius: var(--radius-main);
     border: 1px solid var(--border);
 }
+
+.loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60px;
+}

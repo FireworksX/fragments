@@ -3,5 +3,8 @@ query Project($projectSlug: Int!) {
         id
         name
         rootDirectoryId
+        logo {
+            publicPath
+        }
     }
 }

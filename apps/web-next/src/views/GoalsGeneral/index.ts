@@ -1,1 +1,1 @@
-export { GoalsGeneral } from './ui/GoalsGeneral'
+export { default as GoalsGeneral } from './ui/GoalsGeneral'

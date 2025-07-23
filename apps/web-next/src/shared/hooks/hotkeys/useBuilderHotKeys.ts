@@ -9,15 +9,7 @@ export const useBuilderHotKeys = () => {
   const layerFlags = useBuilderLayerFlags(selection)
   const { saveFragment } = useBuilderDocument()
 
-  useHotkeys(
-    'meta+s',
-    keyboardEvent => {
-      keyboardEvent.preventDefault()
-
-      saveFragment()
-    },
-    { scopes: [hotKeysScope.builder] }
-  )
+  useHotkeys('meta+s, ctrl+s', saveFragment, { scopes: [hotKeysScope.builder], preventDefault: true })
 
   useHotkeys(
     'meta+d',

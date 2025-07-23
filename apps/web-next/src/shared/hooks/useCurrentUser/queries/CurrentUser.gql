@@ -5,6 +5,9 @@ query CurrentUser {
             email
             firstName
             lastName
+            logo {
+                publicPath
+            }
         }
         accessToken
         refreshToken
