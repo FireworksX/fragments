@@ -1,12 +1,15 @@
 import json
-from typing import List, Optional
+from typing import Optional, List
+from functools import lru_cache
 
 import pycountry
 
 from database import GeoLocation, Session
 from conf.settings import logger
+from utils.lru_cache import CustomLRUCache
 
 
+@lru_cache(maxsize=128)
 def get_country_name(country_code: str):
     logger.debug(f"Getting country name for code: {country_code}")
     try:
@@ -18,11 +21,26 @@ def get_country_name(country_code: str):
         return 'Invalid country code'
 
 
+# Global cache instance
+geo_cache = CustomLRUCache(maxsize=128)
+
 def get_geo_locations(
     db: Session, countries_filter: Optional[List[str]], regions_filter: Optional[List[str]]
 ) -> List[GeoLocation]:
     logger.info("Getting geo locations")
     logger.debug(f"Filters - countries: {countries_filter}, regions: {regions_filter}")
+    
+    # Create cache key from the filter values
+    cache_key = (
+        tuple(countries_filter) if countries_filter else None,
+        tuple(regions_filter) if regions_filter else None
+    )
+    
+    # Try to get from cache
+    cached_results = geo_cache.get(cache_key)
+    if cached_results is not None:
+        logger.debug("Returning cached geo locations")
+        return cached_results
     
     geo_locations: List[GeoLocation] = db.query(GeoLocation).all()
     if not geo_locations:
@@ -57,4 +75,8 @@ def get_geo_locations(
     # Execute the query and return the results
     results = query.all()
     logger.debug(f"Returning {len(results)} geo locations")
+    
+    # Cache the results before returning
+    geo_cache.put(cache_key, results)
+    
     return results
