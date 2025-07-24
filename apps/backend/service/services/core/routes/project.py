@@ -6,6 +6,7 @@ from fastapi import HTTPException, UploadFile, status
 from crud.campaign import get_campaign_by_id_db
 from crud.media import create_media_db, delete_media_by_id_db, generate_default_media
 from crud.project import (
+    add_project_allowed_origin_db,
     add_project_public_api_key,
     add_user_to_project_db,
     change_project_private_api_key,
@@ -21,6 +22,7 @@ from crud.project import (
     get_user_project_role,
     update_project_by_id_db,
     update_project_goal_db,
+    delete_project_allowed_origin_db,
 )
 from crud.user import get_user_by_id_db
 from database import Media, Session
@@ -40,6 +42,7 @@ from .schemas.project import (
     ProjectKeyGet,
     ProjectPatch,
     ProjectPost,
+    ProjectAllowedOriginGet,
 )
 from .schemas.user import AuthPayload, RoleGet, UserRoleGet
 from .user import user_db_to_user
@@ -110,6 +113,11 @@ async def project_db_to_project(
                 ProjectKeyGet(value=public_key.key, name=public_key.name, id=public_key.id)
                 for public_key in project.public_keys
             ]
+        ),
+        allowed_origins=(
+            []
+            if project.allowed_origins is None
+            else [ProjectAllowedOriginGet(id=origin.id, name=origin.name, origin=origin.origin) for origin in project.allowed_origins]
         ),
     )
 
@@ -485,3 +493,52 @@ async def delete_project_goal_route(info: strawberry.Info[Context], goal_id: int
 
     await delete_project_goal_db(db, goal_id)
     logger.info(f"Deleted goal {goal_id}")
+
+
+async def add_project_allowed_origin_route(
+    info: strawberry.Info[Context], project_id: int, origin: str, name: str
+) -> ProjectGet:
+    logger.info(f"Adding allowed origin {origin} to project {project_id}")
+    user: AuthPayload = await info.context.user()
+    db: Session = info.context.session()
+
+    project: Project = await get_project_by_id_db(db, project_id)
+    if project is None:
+        logger.error(f"Project {project_id} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
+
+    permission: bool = await write_permission(db, user.user.id, project_id)
+    if not permission:
+        logger.warning(f"User {user.user.id} unauthorized to add allowed origin to project {project_id}")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to add allowed origins'
+        )
+    
+    if origin == '*':
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Allowed origin cannot be *')
+
+    project: Project = await add_project_allowed_origin_db(db, project_id, origin, name)
+    logger.info(f"Added allowed origin {origin} to project {project_id}")
+    return await project_db_to_project(info, db, project)
+
+
+async def delete_project_allowed_origin_route(
+    info: strawberry.Info[Context], project_id: int, allowed_origin_id: int
+) -> None:
+    logger.info(f"Deleting allowed origin {allowed_origin_id} from project {project_id}")
+    user: AuthPayload = await info.context.user()
+    db: Session = info.context.session()
+
+    project: Project = await get_project_by_id_db(db, project_id)
+    if project is None:
+        logger.error(f"Project {project_id} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
+
+    permission: bool = await write_permission(db, user.user.id, project_id)
+    if not permission:
+        logger.warning(f"User {user.user.id} unauthorized to delete allowed origin from project {project_id}")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to delete allowed origins'
+        )
+
+    await delete_project_allowed_origin_db(db, project_id, allowed_origin_id)

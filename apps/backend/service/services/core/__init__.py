@@ -3,12 +3,17 @@ from typing import Any, Callable, Dict, List
 import ujson
 from fastapi.exceptions import RequestValidationError
 from fastapi.openapi.utils import get_openapi
-from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response, StreamingResponse
 
+from starlette.middleware.base import BaseHTTPMiddleware
+
+from conf.settings import logger
 from conf import APP_NAME, APP_VERSION, DEBUG
 from services.api import Error, make_app
+from crud.project import get_all_allowed_origins_db
+from database import Session
+from crud.project import validate_project_public_api_key, Project
 
 app = make_app()
 
@@ -96,11 +101,37 @@ def json_api_schema() -> Dict[Any, Any]:
 
 app.openapi = json_api_schema
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=['*'],
-    allow_credentials=True,
-    allow_methods=['*'],
-    allow_headers=['*'],
-    expose_headers=['*'],
-)
+class DynamicCORSMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        response = await call_next(request)
+
+        origin = request.headers.get("origin")
+
+        authorization = request.headers.get('Authorization', None)
+        if authorization is None:
+            logger.warning('No authorization header provided')
+            return response
+
+        db = Session()
+        try:
+            public_key = authorization.split(' ')[1]  # format is 'Bearer token'
+            project: Project = await validate_project_public_api_key(db, public_key)
+        except IndexError:
+            logger.debug('Malformed authorization header')
+            return response
+        except ValueError:
+            logger.debug('Invalid public key format')
+            return response
+
+        allowed_origins = [origin.origin for origin in project.allowed_origins]
+        logger.debug(f"Allowed origins: {allowed_origins}, origin: {origin}")
+            
+        if origin in allowed_origins:
+            response.headers["Access-Control-Allow-Origin"] = origin
+            response.headers["Access-Control-Allow-Credentials"] = "true"
+            response.headers["Access-Control-Allow-Methods"] = "*"
+            response.headers["Access-Control-Allow-Headers"] = "*"
+            response.headers["Access-Control-Expose-Headers"] = "*"
+        return response
+
+app.add_middleware(DynamicCORSMiddleware)

@@ -82,10 +82,20 @@ def client_db_to_client(client: Client, history: List[ClientHistory]) -> ClientG
         history=[client_history_db_to_history(h) for h in history],
     )
 
+def set_user_id_cookie(info: strawberry.Info[Context], client: Client, max_age: int = 3600) -> None:
+    logger.debug(f"Setting user_id cookie for client {client.id}")
+    info.context.response.set_cookie(
+        key='user_id',  # Cookie name to identify the client
+        value=str(client.id),  # Client ID converted to string
+        httponly=False,  # Prevents JavaScript access for security if True
+        max_age=max_age,  # Cookie expires in 1 hour (3600 seconds)
+        samesite='Lax',  # Moderate CSRF protection while allowing normal navigation
+    )
 
 async def init_client_session_route(info: strawberry.Info[Context]) -> None:
     logger.info("Initializing client session")
     client: Client = await info.context.client()
+    set_user_id_cookie(info, client, 3600)
     db: Session = info.context.session()
     client_info = await info.context.client_info()
     location = get_location_by_ip(client_info.ip_address)
@@ -112,19 +122,11 @@ async def init_client_session_route(info: strawberry.Info[Context]) -> None:
         variant_id=None,
     )
 
-    logger.debug(f"Setting user_id cookie for client {client.id}")
-    info.context.response.set_cookie(
-        key='user_id',  # Cookie name to identify the client
-        value=str(client.id),  # Client ID converted to string
-        httponly=False,  # Prevents JavaScript access for security if True
-        max_age=3600,  # Cookie expires in 1 hour (3600 seconds)
-        samesite='Lax',  # Moderate CSRF protection while allowing normal navigation
-    )
-
 
 async def release_client_session_route(info: strawberry.Info[Context]) -> None:
     logger.info("Releasing client session")
     client: Client = await info.context.client()
+    set_user_id_cookie(info, client, 3600)
     db: Session = info.context.session()
     client_info = await info.context.client_info()
     location = get_location_by_ip(client_info.ip_address)
@@ -151,15 +153,6 @@ async def release_client_session_route(info: strawberry.Info[Context]) -> None:
         variant_id=None,
     )
 
-    logger.debug(f"Setting user_id cookie for client {client.id}")
-    info.context.response.set_cookie(
-        key='user_id',  # Cookie name to identify the client
-        value=str(client.id),  # Client ID converted to string
-        httponly=False,  # Prevents JavaScript access for security if True
-        max_age=3600,  # Cookie expires in 1 hour (3600 seconds)
-        samesite='Lax',  # Moderate CSRF protection while allowing normal navigation
-    )
-
 
 async def contribute_to_project_goal_route(
     info: strawberry.Info[Context], target_action: str
@@ -167,6 +160,7 @@ async def contribute_to_project_goal_route(
     logger.info(f"Contributing to project goal with target action: {target_action}")
     db: Session = info.context.session()
     client: Client = await info.context.client()
+    set_user_id_cookie(info, client, 3600)
     client_info: ClientInfo = await info.context.client_info()
     location = get_location_by_ip(client_info.ip_address)
     project: Project = await info.context.project()
@@ -311,6 +305,7 @@ async def client_area_route(
     db: Session = info.context.session()
 
     client: Client = await info.context.client()
+    set_user_id_cookie(info, client, 3600)
     project: Project = await info.context.project()
 
     client_info: ClientInfo = await info.context.client_info()

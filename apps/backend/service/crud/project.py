@@ -9,7 +9,7 @@ from conf.settings import service_settings, logger
 from crud.filesystem import create_directory_db
 from crud.media import generate_default_media
 from database import FilesystemDirectory
-from database.models import Project, ProjectApiKey, ProjectGoal, ProjectMemberRole, User
+from database.models import Project, ProjectApiKey, ProjectGoal, ProjectMemberRole, ProjectAllowedOrigin, User
 
 
 def generate_api_key(project_id: int) -> str:
@@ -289,3 +289,38 @@ async def delete_project_goal_db(db: Session, goal_id: int) -> None:
     db.query(ProjectGoal).filter(ProjectGoal.id == goal_id).delete()
     db.commit()
     logger.debug(f"Deleted goal {goal_id}")
+
+
+async def add_project_allowed_origin_db(db: Session, project_id: int, origin: str, name: str) -> Project:
+    logger.info(f"Adding allowed origin {origin} to project {project_id}")
+    allowed_origin: ProjectAllowedOrigin = ProjectAllowedOrigin(project_id=project_id, origin=origin, name=name)
+    db.add(allowed_origin)
+    db.commit()
+    db.refresh(allowed_origin)
+    project: Project = await get_project_by_id_db(db, project_id)
+    project.allowed_origins.append(allowed_origin)
+    db.commit()
+    db.refresh(project)
+    logger.debug(f"Added allowed origin {origin} to project {project_id}")
+    return project
+
+
+async def delete_project_allowed_origin_db(db: Session, project_id: int, allowed_origin_id: int) -> None:
+    logger.info(f"Deleting allowed origin {allowed_origin_id} from project {project_id}")
+    allowed_origin: ProjectAllowedOrigin = db.query(ProjectAllowedOrigin).filter(ProjectAllowedOrigin.id == allowed_origin_id).first()
+    if allowed_origin is None:
+        logger.error(f"Allowed origin {allowed_origin_id} not found")
+        raise ValueError(f"Allowed origin {allowed_origin_id} not found")
+    if allowed_origin.project_id != project_id:
+        logger.error(f"Cannot remove unrelated origin {allowed_origin_id} from project {project_id}")
+        raise ValueError("Can't remove unrelated origin")
+    db.delete(allowed_origin)
+    db.commit()
+    logger.debug(f"Deleted allowed origin {allowed_origin_id} from project {project_id}")
+
+
+async def get_all_allowed_origins_db(db: Session) -> List[str]:
+    logger.info(f"Getting all allowed origins")
+    allowed_origins = db.query(ProjectAllowedOrigin).all()
+    logger.debug(f"Found {len(allowed_origins)} allowed origins")
+    return [origin.origin for origin in allowed_origins]
