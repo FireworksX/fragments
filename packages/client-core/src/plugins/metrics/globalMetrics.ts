@@ -35,7 +35,7 @@ export const globalMetricsPlugin: Plugin = (state) => {
     sendMetric(types.REACH_PROJECT_GOAL, goal);
   };
 
-  if (isBrowser) {
+  if (isBrowser && !state?.env?.isSelf) {
     sendMetric(types.INIT_SESSION);
 
     window.addEventListener("beforeunload", () => {

@@ -22,7 +22,6 @@ declare module "@graph-state/core" {
 interface Options {
   apiToken: string;
   isSelf?: boolean;
-  backendEndpoint?: string;
 }
 
 export const PLUGIN_TYPES = createConstants(
@@ -31,12 +30,11 @@ export const PLUGIN_TYPES = createConstants(
   "FragmentStylesheet"
 );
 
-const BACKEND_TARGET =
-  import.meta.env.mode === "production"
-    ? "http://85.192.29.65/graphql"
-    : "http://localhost:3000/graphql";
-
 export const createFragmentsClient = (options: Options) => {
+  const BACKEND_TARGET = options?.isSelf
+    ? "/graphql"
+    : "http://85.192.29.65/graphql";
+
   return createState({
     _type: "GlobalManager",
     initialState: {},
