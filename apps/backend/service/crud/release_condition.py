@@ -4,6 +4,7 @@ from typing import List, Optional
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
+from conf.settings import logger
 from database.models import (
     Condition,
     ConditionSet,
@@ -23,8 +24,6 @@ from services.core.routes.schemas.release_condition import (
     ReleaseConditionPatch,
     ReleaseConditionPost,
 )
-
-from conf.settings import logger
 
 
 async def create_release_condition_db(
@@ -53,12 +52,16 @@ async def get_release_condition_by_id_db(
 
 
 async def get_release_conditions_db(db: Session) -> List[ReleaseCondition]:
-    logger.info("Getting all release conditions")
+    logger.info('Getting all release conditions')
     return db.query(ReleaseCondition).all()
 
 
-async def create_condition_set_db(db: Session, release_condition_id: int, condition_set: ConditionSetPost) -> ConditionSet:
-    logger.info(f"Creating condition set with name: {condition_set.name} for release condition: {release_condition_id}")
+async def create_condition_set_db(
+    db: Session, release_condition_id: int, condition_set: ConditionSetPost
+) -> ConditionSet:
+    logger.info(
+        f"Creating condition set with name: {condition_set.name} for release condition: {release_condition_id}"
+    )
     condition_set_db = ConditionSet(
         name=condition_set.name,
         release_condition_id=release_condition_id,
@@ -92,12 +95,13 @@ async def update_release_condition_db(
     return release_condition
 
 
-async def create_condition_db(db: Session, condition_set_id: int, condition: ConditionPost) -> Condition:
-    logger.info(f"Creating condition with name: {condition.name} for condition set: {condition_set_id}")
-    condition_db = Condition(
-        name=condition.name,
-        condition_set_id=condition_set_id
+async def create_condition_db(
+    db: Session, condition_set_id: int, condition: ConditionPost
+) -> Condition:
+    logger.info(
+        f"Creating condition with name: {condition.name} for condition set: {condition_set_id}"
     )
+    condition_db = Condition(name=condition.name, condition_set_id=condition_set_id)
     db.add(condition_db)
     db.commit()
     db.refresh(condition_db)
@@ -106,7 +110,7 @@ async def create_condition_db(db: Session, condition_set_id: int, condition: Con
             logger.warning(f"Condition {condition.id} has no pages")
             db.delete(condition_db)
             db.commit()
-            raise HTTPException(status_code=400, detail="Condition has no pages")
+            raise HTTPException(status_code=400, detail='Condition has no pages')
         for page in condition.filter_data.pages:
             page_filter = PageFilter(
                 page=page,
@@ -120,7 +124,7 @@ async def create_condition_db(db: Session, condition_set_id: int, condition: Con
             logger.warning(f"Condition {condition.id} has no device types")
             db.delete(condition_db)
             db.commit()
-            raise HTTPException(status_code=400, detail="Condition has no device types")
+            raise HTTPException(status_code=400, detail='Condition has no device types')
         for device_type in condition.filter_data.device_types:
             device_type_filter = DeviceTypeFilter(
                 device_type=int(device_type.value),
@@ -134,7 +138,7 @@ async def create_condition_db(db: Session, condition_set_id: int, condition: Con
             logger.warning(f"Condition {condition.id} has no OS types")
             db.delete(condition_db)
             db.commit()
-            raise HTTPException(status_code=400, detail="Condition has no OS types")
+            raise HTTPException(status_code=400, detail='Condition has no OS types')
         for os_type in condition.filter_data.os_types:
             os_type_filter = OSTypeFilter(
                 os_type=int(os_type.value),
@@ -148,7 +152,7 @@ async def create_condition_db(db: Session, condition_set_id: int, condition: Con
             logger.warning(f"Condition {condition.id} has no time frames")
             db.delete(condition_db)
             db.commit()
-            raise HTTPException(status_code=400, detail="Condition has no time frames")
+            raise HTTPException(status_code=400, detail='Condition has no time frames')
         for time_frame in condition.filter_data.time_frames:
             time_frame_filter = TimeFrameFilter(
                 from_time=time_frame.from_time,
@@ -163,7 +167,7 @@ async def create_condition_db(db: Session, condition_set_id: int, condition: Con
             logger.warning(f"Condition {condition.id} has no geo locations")
             db.delete(condition_db)
             db.commit()
-            raise HTTPException(status_code=400, detail="Condition has no geo locations")
+            raise HTTPException(status_code=400, detail='Condition has no geo locations')
         for geo_location in condition.filter_data.geo_locations:
             geo_location_filter = GeoLocationFilter(
                 country=geo_location.country,
@@ -213,7 +217,7 @@ async def update_condition_db(
         condition_db.geo_location_filters.clear()
         if len(condition.filter_data.pages) == 0:
             logger.warning(f"Condition {condition.id} has no pages")
-            raise HTTPException(status_code=400, detail="Condition has no pages")
+            raise HTTPException(status_code=400, detail='Condition has no pages')
         for page in condition.filter_data.pages:
             page_filter = PageFilter(
                 page=page,
@@ -230,7 +234,7 @@ async def update_condition_db(
         condition_db.geo_location_filters.clear()
         if len(condition.filter_data.device_types) == 0:
             logger.warning(f"Condition {condition.id} has no device types")
-            raise HTTPException(status_code=400, detail="Condition has no device types")
+            raise HTTPException(status_code=400, detail='Condition has no device types')
         for device_type in condition.filter_data.device_types:
             device_type_filter = DeviceTypeFilter(
                 device_type=int(device_type.value),
@@ -247,7 +251,7 @@ async def update_condition_db(
         condition_db.geo_location_filters.clear()
         if len(condition.filter_data.os_types) == 0:
             logger.warning(f"Condition {condition.id} has no OS types")
-            raise HTTPException(status_code=400, detail="Condition has no OS types")
+            raise HTTPException(status_code=400, detail='Condition has no OS types')
         for os_type in condition.filter_data.os_types:
             os_type_filter = OSTypeFilter(
                 os_type=int(os_type.value),
@@ -264,7 +268,7 @@ async def update_condition_db(
         condition_db.geo_location_filters.clear()
         if len(condition.filter_data.time_frames) == 0:
             logger.warning(f"Condition {condition.id} has no time frames")
-            raise HTTPException(status_code=400, detail="Condition has no time frames")
+            raise HTTPException(status_code=400, detail='Condition has no time frames')
         for time_frame in condition.filter_data.time_frames:
             time_frame_filter = TimeFrameFilter(
                 from_time=time_frame.from_time,
@@ -282,7 +286,7 @@ async def update_condition_db(
         condition_db.geo_location_filters.clear()
         if len(condition.filter_data.geo_locations) == 0:
             logger.warning(f"Condition {condition.id} has no geo locations")
-            raise HTTPException(status_code=400, detail="Condition has no geo locations")
+            raise HTTPException(status_code=400, detail='Condition has no geo locations')
         for geo_location in condition.filter_data.geo_locations:
             geo_location_filter = GeoLocationFilter(
                 country=geo_location.country,

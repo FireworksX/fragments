@@ -5,11 +5,18 @@ from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
-from conf.settings import service_settings, logger
+from conf.settings import logger, service_settings
 from crud.filesystem import create_directory_db
 from crud.media import generate_default_media
 from database import FilesystemDirectory
-from database.models import Project, ProjectApiKey, ProjectGoal, ProjectMemberRole, ProjectAllowedOrigin, User
+from database.models import (
+    Project,
+    ProjectAllowedOrigin,
+    ProjectApiKey,
+    ProjectGoal,
+    ProjectMemberRole,
+    User,
+)
 
 
 def generate_api_key(project_id: int) -> str:
@@ -137,7 +144,7 @@ async def validate_project_public_api_key(db: Session, public_api_key: str) -> P
         db.query(ProjectApiKey).filter(ProjectApiKey.key == public_api_key).first()
     )
     if public_api_key is None:
-        logger.error("Invalid public key")
+        logger.error('Invalid public key')
         raise ValueError('Invalid public key')
     logger.debug(f"Validated public API key for project {public_api_key.project_id}")
     return public_api_key.project
@@ -291,9 +298,13 @@ async def delete_project_goal_db(db: Session, goal_id: int) -> None:
     logger.debug(f"Deleted goal {goal_id}")
 
 
-async def add_project_allowed_origin_db(db: Session, project_id: int, origin: str, name: str) -> Project:
+async def add_project_allowed_origin_db(
+    db: Session, project_id: int, origin: str, name: str
+) -> Project:
     logger.info(f"Adding allowed origin {origin} to project {project_id}")
-    allowed_origin: ProjectAllowedOrigin = ProjectAllowedOrigin(project_id=project_id, origin=origin, name=name)
+    allowed_origin: ProjectAllowedOrigin = ProjectAllowedOrigin(
+        project_id=project_id, origin=origin, name=name
+    )
     db.add(allowed_origin)
     db.commit()
     db.refresh(allowed_origin)
@@ -305,14 +316,20 @@ async def add_project_allowed_origin_db(db: Session, project_id: int, origin: st
     return project
 
 
-async def delete_project_allowed_origin_db(db: Session, project_id: int, allowed_origin_id: int) -> None:
+async def delete_project_allowed_origin_db(
+    db: Session, project_id: int, allowed_origin_id: int
+) -> None:
     logger.info(f"Deleting allowed origin {allowed_origin_id} from project {project_id}")
-    allowed_origin: ProjectAllowedOrigin = db.query(ProjectAllowedOrigin).filter(ProjectAllowedOrigin.id == allowed_origin_id).first()
+    allowed_origin: ProjectAllowedOrigin = (
+        db.query(ProjectAllowedOrigin).filter(ProjectAllowedOrigin.id == allowed_origin_id).first()
+    )
     if allowed_origin is None:
         logger.error(f"Allowed origin {allowed_origin_id} not found")
         raise ValueError(f"Allowed origin {allowed_origin_id} not found")
     if allowed_origin.project_id != project_id:
-        logger.error(f"Cannot remove unrelated origin {allowed_origin_id} from project {project_id}")
+        logger.error(
+            f"Cannot remove unrelated origin {allowed_origin_id} from project {project_id}"
+        )
         raise ValueError("Can't remove unrelated origin")
     db.delete(allowed_origin)
     db.commit()

@@ -3,6 +3,7 @@ from typing import List, Tuple
 import strawberry
 from fastapi import HTTPException, status
 
+from conf.settings import logger
 from crud.filesystem import (
     create_directory_db,
     delete_directory_db,
@@ -17,7 +18,6 @@ from .middleware import Context
 from .schemas.filesystem import ProjectDirectory, ProjectDirectoryGet, ProjectDirectoryPatch
 from .schemas.user import AuthPayload, RoleGet
 from .utils import get_user_role_in_project
-from conf.settings import logger
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
@@ -93,7 +93,9 @@ async def create_directory_route(
 
     permission: bool = await write_permission(db, user.user.id, directory.project_id)
     if not permission:
-        logger.warning(f"User {user.user.id} unauthorized to create directory in project {directory.project_id}")
+        logger.warning(
+            f"User {user.user.id} unauthorized to create directory in project {directory.project_id}"
+        )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=f'User is not allowed to create directories',

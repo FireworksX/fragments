@@ -25,6 +25,7 @@ from .campaign import (
     update_campaign_route,
 )
 from .client import (
+    client_area_route,
     contribute_to_project_goal_route,
     get_client_history_route,
     get_client_route,
@@ -32,7 +33,6 @@ from .client import (
     get_contributions_to_project_goal_route,
     init_client_session_route,
     release_client_session_route,
-    client_area_route
 )
 from .feature_flag import (
     FeatureFlagGet,
@@ -62,13 +62,18 @@ from .fragment import (
     update_fragment_route,
 )
 from .middleware import Context
-from .project import add_project_logo_route, add_project_public_key_route, add_project_allowed_origin_route, delete_project_allowed_origin_route
+from .project import (
+    add_project_allowed_origin_route,
+    add_project_logo_route,
+    add_project_public_key_route,
+)
 from .project import add_user_to_project as add_user_to_project_route
 from .project import change_project_private_key_route
 from .project import change_user_role as change_user_role_route
 from .project import (
     create_project_goal_route,
     create_project_route,
+    delete_project_allowed_origin_route,
     delete_project_goal_route,
     delete_project_logo_route,
     delete_project_public_key_route,
@@ -96,6 +101,7 @@ from .release_condition import (
 from .schemas.area import AreaGet, AreaPatch, AreaPost
 from .schemas.campaign import CampaignGet, CampaignPatch, CampaignPost, CampaignStatus
 from .schemas.client import ClientGet, ClientHistoryGet
+from .schemas.feature_flag import VariantGet
 from .schemas.feedback import FeedbackGet, FeedbackPost
 from .schemas.filesystem import ProjectDirectory, ProjectDirectoryGet, ProjectDirectoryPatch
 from .schemas.fragment import FragmentGet, FragmentPatch, FragmentPost
@@ -122,7 +128,6 @@ from .schemas.release_condition import (
     ReleaseConditionPatch,
     ReleaseConditionPost,
 )
-from .schemas.feature_flag import VariantGet
 from .schemas.user import AuthPayload, RoleGet, UserGet
 from .user import add_avatar_route, delete_avatar_route, login, profile, refresh, signup
 from .variant import (
@@ -325,11 +330,15 @@ class ProjectMutation:
         await delete_project_goal_route(info, goal_id)
 
     @strawberry.mutation
-    async def add_project_allowed_origin(self, info: strawberry.Info[Context], project_id: int, origin: str, name: str) -> ProjectGet:
+    async def add_project_allowed_origin(
+        self, info: strawberry.Info[Context], project_id: int, origin: str, name: str
+    ) -> ProjectGet:
         return await add_project_allowed_origin_route(info, project_id, origin, name)
-    
+
     @strawberry.mutation
-    async def delete_project_allowed_origin(self, info: strawberry.Info[Context], project_id: int, allowed_origin_id: int) -> None:
+    async def delete_project_allowed_origin(
+        self, info: strawberry.Info[Context], project_id: int, allowed_origin_id: int
+    ) -> None:
         await delete_project_allowed_origin_route(info, project_id, allowed_origin_id)
 
 
@@ -458,7 +467,10 @@ class ReleaseConditionMutation:
 
     @strawberry.mutation
     async def create_condition_set(
-        self, info: strawberry.Info[Context], release_condition_id: int, condition_set: ConditionSetPost
+        self,
+        info: strawberry.Info[Context],
+        release_condition_id: int,
+        condition_set: ConditionSetPost,
     ) -> ConditionSetGet:
         return await create_condition_set_route(info, release_condition_id, condition_set)
 

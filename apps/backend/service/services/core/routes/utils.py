@@ -1,9 +1,9 @@
 from typing import List
 
+from conf.settings import logger
 from crud.campaign import get_campaign_by_id_db
 from crud.project import get_user_project_role
 from database import Project, Session
-from conf.settings import logger
 
 from .schemas.campaign import CampaignGet
 from .schemas.user import RoleGet, UserGet, UserRoleGet

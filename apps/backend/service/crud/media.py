@@ -8,11 +8,10 @@ from fastapi import UploadFile
 from sqlalchemy.orm import Session
 
 from conf import service_settings
+from conf.settings import logger
 from database import Media
 
 from .image_generator import generate_image
-
-from conf.settings import logger
 
 
 async def create_media_db(

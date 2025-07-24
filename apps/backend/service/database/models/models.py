@@ -83,6 +83,7 @@ class ProjectAllowedOrigin(Base):
 
     project = relationship('Project', back_populates='allowed_origins', foreign_keys=[project_id])
 
+
 class Area(Base):
     __tablename__ = 'area'
     id = Column('id', Integer, primary_key=True, index=True)
@@ -100,6 +101,7 @@ class Area(Base):
 
     # One-to-Many relationship with Campaign
     campaigns = relationship('Campaign', back_populates='area')
+
 
 class Project(Base):
     __tablename__ = 'project'
@@ -135,7 +137,9 @@ class Project(Base):
     )
     private_key = relationship('ProjectApiKey', foreign_keys=[private_key_id], post_update=True)
 
-    allowed_origins = relationship('ProjectAllowedOrigin', back_populates='project', cascade='all, delete-orphan')
+    allowed_origins = relationship(
+        'ProjectAllowedOrigin', back_populates='project', cascade='all, delete-orphan'
+    )
 
 
 class FilesystemDirectory(Base):
@@ -196,7 +200,10 @@ class Campaign(Base):
     default = Column('default', Boolean, nullable=False, default=False)
     deleted_at = Column('deleted_at', DateTime, nullable=True)
     feature_flag_id = Column(
-        'feature_flag_id', Integer, ForeignKey('feature_flag.id', ondelete='CASCADE'), nullable=False
+        'feature_flag_id',
+        Integer,
+        ForeignKey('feature_flag.id', ondelete='CASCADE'),
+        nullable=False,
     )
     feature_flag = relationship('FeatureFlag')
 
@@ -208,7 +215,9 @@ class ReleaseCondition(Base):
     __tablename__ = 'release_condition'
     id = Column('id', Integer, primary_key=True, index=True)
     name = Column('name', String, nullable=False)
-    project_id = Column('project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False)
+    project_id = Column(
+        'project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False
+    )
     project = relationship('Project')
 
     condition_sets = relationship(
@@ -252,8 +261,11 @@ class GeoLocationFilter(Base):
     region = Column('region', String)
     city = Column('city', String, nullable=False)
 
-    condition_id = Column('condition_id', Integer, ForeignKey('condition.id', ondelete='CASCADE'), nullable=False)
+    condition_id = Column(
+        'condition_id', Integer, ForeignKey('condition.id', ondelete='CASCADE'), nullable=False
+    )
     condition = relationship('Condition', back_populates='geo_location_filters')
+
 
 class TimeFrameFilter(Base):
     __tablename__ = 'time_frame_filter'
@@ -261,14 +273,20 @@ class TimeFrameFilter(Base):
     from_time = Column('from_time', DateTime, nullable=False)
     to_time = Column('to_time', DateTime, nullable=False)
 
-    condition_id = Column('condition_id', Integer, ForeignKey('condition.id', ondelete='CASCADE'), nullable=False)
+    condition_id = Column(
+        'condition_id', Integer, ForeignKey('condition.id', ondelete='CASCADE'), nullable=False
+    )
     condition = relationship('Condition', back_populates='time_frame_filters')
+
+
 class OSTypeFilter(Base):
     __tablename__ = 'os_type_filter'
     id = Column('id', Integer, primary_key=True, index=True)
     os_type = Column('os_type', Integer, nullable=False)
 
-    condition_id = Column('condition_id', Integer, ForeignKey('condition.id', ondelete='CASCADE'), nullable=False)
+    condition_id = Column(
+        'condition_id', Integer, ForeignKey('condition.id', ondelete='CASCADE'), nullable=False
+    )
     condition = relationship('Condition', back_populates='os_type_filters')
 
 
@@ -277,7 +295,9 @@ class DeviceTypeFilter(Base):
     id = Column('id', Integer, primary_key=True, index=True)
     device_type = Column('device_type', Integer, nullable=False)
 
-    condition_id = Column('condition_id', Integer, ForeignKey('condition.id', ondelete='CASCADE'), nullable=False)
+    condition_id = Column(
+        'condition_id', Integer, ForeignKey('condition.id', ondelete='CASCADE'), nullable=False
+    )
     condition = relationship('Condition', back_populates='device_type_filters')
 
 
@@ -286,8 +306,11 @@ class PageFilter(Base):
     id = Column('id', Integer, primary_key=True, index=True)
     page = Column('page', String, nullable=False)
 
-    condition_id = Column('condition_id', Integer, ForeignKey('condition.id', ondelete='CASCADE'), nullable=False)
+    condition_id = Column(
+        'condition_id', Integer, ForeignKey('condition.id', ondelete='CASCADE'), nullable=False
+    )
     condition = relationship('Condition', back_populates='page_filters')
+
 
 class Condition(Base):
     __tablename__ = 'condition'
@@ -302,11 +325,31 @@ class Condition(Base):
     condition_set = relationship('ConditionSet', back_populates='conditions')
 
     # Relationships to filter tables
-    page_filters = relationship('PageFilter', back_populates='condition', cascade='save-update, merge, delete, delete-orphan')
-    device_type_filters = relationship('DeviceTypeFilter', back_populates='condition', cascade='save-update, merge, delete, delete-orphan')
-    os_type_filters = relationship('OSTypeFilter', back_populates='condition', cascade='save-update, merge, delete, delete-orphan')
-    time_frame_filters = relationship('TimeFrameFilter', back_populates='condition', cascade='save-update, merge, delete, delete-orphan')
-    geo_location_filters = relationship('GeoLocationFilter', back_populates='condition', cascade='save-update, merge, delete, delete-orphan')
+    page_filters = relationship(
+        'PageFilter',
+        back_populates='condition',
+        cascade='save-update, merge, delete, delete-orphan',
+    )
+    device_type_filters = relationship(
+        'DeviceTypeFilter',
+        back_populates='condition',
+        cascade='save-update, merge, delete, delete-orphan',
+    )
+    os_type_filters = relationship(
+        'OSTypeFilter',
+        back_populates='condition',
+        cascade='save-update, merge, delete, delete-orphan',
+    )
+    time_frame_filters = relationship(
+        'TimeFrameFilter',
+        back_populates='condition',
+        cascade='save-update, merge, delete, delete-orphan',
+    )
+    geo_location_filters = relationship(
+        'GeoLocationFilter',
+        back_populates='condition',
+        cascade='save-update, merge, delete, delete-orphan',
+    )
 
 
 class FeatureFlag(Base):
@@ -348,6 +391,7 @@ class Variant(Base):
     props = Column('props', JSON, nullable=True)
     status = Column('status', Integer, nullable=False, default=1)
     deleted_at = Column('deleted_at', DateTime, nullable=True)
+
 
 class Experiment(Base):
     __tablename__ = 'experiment'

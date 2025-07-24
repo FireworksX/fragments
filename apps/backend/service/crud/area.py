@@ -1,13 +1,13 @@
-from typing import List, Optional
 from datetime import datetime, timezone
+from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
+from conf.settings import logger
 from crud.campaign import create_campaign_db
 from crud.media import generate_default_media
 from database.models import Area
 from services.core.routes.schemas.campaign import CampaignStatus
-from conf.settings import logger
 
 
 async def create_area_db(
@@ -77,11 +77,13 @@ async def get_area_by_code_and_project_id_db(
     db: Session, project_id: int, area_code: str
 ) -> Optional[Area]:
     logger.info(f"Getting area by code {area_code} in project {project_id}")
-    area = db.query(Area).filter(
-        Area.project_id == project_id, 
-        Area.area_code == area_code,
-        Area.deleted_at.is_(None)
-    ).first()
+    area = (
+        db.query(Area)
+        .filter(
+            Area.project_id == project_id, Area.area_code == area_code, Area.deleted_at.is_(None)
+        )
+        .first()
+    )
     if area:
         logger.debug(f"Found area {area.id}")
     else:
@@ -109,7 +111,9 @@ async def update_area_by_id_db(db: Session, values: dict) -> Area:
             db, area.project_id, values['area_code']
         )
         if existing_area and existing_area.id != area.id:
-            logger.error(f"Area code {values['area_code']} already exists in project {area.project_id}")
+            logger.error(
+                f"Area code {values['area_code']} already exists in project {area.project_id}"
+            )
             raise ValueError(f"Area code {values['area_code']} already exists in project")
         area.area_code = values['area_code']
     db.merge(area)

@@ -1,43 +1,39 @@
-from typing import List, Optional
 import datetime
-import re
 import random
+import re
+from typing import List, Optional
 
 import strawberry
 from fastapi import HTTPException, status
 
+from conf.settings import logger
+from crud.area import get_area_by_code_db
 from crud.client import (
     create_client_history_db,
     create_client_project_goal_db,
-    get_last_viewed_variant_in_area_db,
     get_client_by_id_db,
     get_client_history_db,
     get_client_project_goals_by_project_and_goal_db,
     get_clients_by_project_id_db,
+    get_last_viewed_variant_in_area_db,
 )
-from crud.variant import get_variant_by_id_db
 from crud.ipgetter import get_location_by_ip
-from crud.project import (
-    get_project_by_id_db,
-    get_project_goal_by_target_action_db,
-)
+from crud.project import get_project_by_id_db, get_project_goal_by_target_action_db
+from crud.variant import get_variant_by_id_db
 from database import Area, Campaign, Client, ClientHistory, ClientProjectGoal, ProjectGoal, Session
 from database.models import Project
 
-from crud.area import get_area_by_code_db
-
-from .campaign import get_campaigns_by_area_id_db, CampaignStatus
+from .area import area_db_to_area
+from .campaign import CampaignStatus, get_campaigns_by_area_id_db
+from .fragment import fragment_db_to_fragment
 from .middleware import ClientInfo, Context
 from .project import get_user_role_in_project, project_db_to_project, project_goal_db_to_goal
-from .schemas.client import ClientGet, ClientHistoryGet, ClientHistoryEventType
+from .schemas.client import ClientGet, ClientHistoryEventType, ClientHistoryGet
 from .schemas.feature_flag import FragmentVariantGet, RotationType, VariantGet, VariantStatus
 from .schemas.project import ClientProjectGoalGet
-from .schemas.user import AuthPayload, RoleGet
 from .schemas.release_condition import FilterType
-from .fragment import fragment_db_to_fragment
+from .schemas.user import AuthPayload, RoleGet
 from .variant import variant_db_to_variant
-from .area import area_db_to_area
-from conf.settings import logger
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
@@ -67,8 +63,8 @@ def client_history_db_to_history(history: ClientHistory) -> ClientHistoryGet:
         page_load_time=history.page_load_time,
         created_at=history.created_at.isoformat(),
         event_type=ClientHistoryEventType(history.event_type),
-        area = area_db_to_area(history.area) if history.area else None,
-        variant = variant_db_to_variant(history.variant) if history.variant else None
+        area=area_db_to_area(history.area) if history.area else None,
+        variant=variant_db_to_variant(history.variant) if history.variant else None,
     )
 
 
@@ -82,6 +78,7 @@ def client_db_to_client(client: Client, history: List[ClientHistory]) -> ClientG
         history=[client_history_db_to_history(h) for h in history],
     )
 
+
 def set_user_id_cookie(info: strawberry.Info[Context], client: Client, max_age: int = 3600) -> None:
     logger.debug(f"Setting user_id cookie for client {client.id}")
     info.context.response.set_cookie(
@@ -92,8 +89,9 @@ def set_user_id_cookie(info: strawberry.Info[Context], client: Client, max_age: 
         samesite='Lax',  # Moderate CSRF protection while allowing normal navigation
     )
 
+
 async def init_client_session_route(info: strawberry.Info[Context]) -> None:
-    logger.info("Initializing client session")
+    logger.info('Initializing client session')
     client: Client = await info.context.client()
     set_user_id_cookie(info, client, 3600)
     db: Session = info.context.session()
@@ -124,7 +122,7 @@ async def init_client_session_route(info: strawberry.Info[Context]) -> None:
 
 
 async def release_client_session_route(info: strawberry.Info[Context]) -> None:
-    logger.info("Releasing client session")
+    logger.info('Releasing client session')
     client: Client = await info.context.client()
     set_user_id_cookie(info, client, 3600)
     db: Session = info.context.session()
@@ -172,7 +170,7 @@ async def contribute_to_project_goal_route(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Project goal does not exist'
         )
-    
+
     logger.debug(f"Creating contribute history record for client {client.id}")
     await create_client_history_db(
         db=db,
@@ -194,7 +192,7 @@ async def contribute_to_project_goal_route(
         area_id=None,
         variant_id=None,
     )
-    
+
     logger.debug(f"Creating client project goal record for client {client.id}")
     await create_client_project_goal_db(db, client.id, project_goal.id, project.id)
 
@@ -213,7 +211,9 @@ async def get_contributions_to_project_goal_route(
 
     permission: bool = await read_permission(db, user.user.id, project_id)
     if not permission:
-        logger.warning(f"User {user.user.id} unauthorized to view client goals for project {project_id}")
+        logger.warning(
+            f"User {user.user.id} unauthorized to view client goals for project {project_id}"
+        )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail='User is not allowed to view client goals',
@@ -298,9 +298,7 @@ async def get_client_history_route(
     return [client_history_db_to_history(h) for h in history]
 
 
-async def client_area_route(
-    info: strawberry.Info[Context], area_code: str
-) -> Optional[VariantGet]:
+async def client_area_route(info: strawberry.Info[Context], area_code: str) -> Optional[VariantGet]:
     logger.info(f"Getting area variant for area code {area_code}")
     db: Session = info.context.session()
 
@@ -324,15 +322,19 @@ async def client_area_route(
         )
 
     logger.debug(f"Getting active campaigns for area {area.id}")
-    campaigns: List[Campaign] = await get_campaigns_by_area_id_db(db, area.id, CampaignStatus.ACTIVE)
+    campaigns: List[Campaign] = await get_campaigns_by_area_id_db(
+        db, area.id, CampaignStatus.ACTIVE
+    )
     best_campaign = None
     max_matched_filters = -1
-    logger.debug("Starting campaign selection process")
+    logger.debug('Starting campaign selection process')
 
     for campaign in campaigns:
         logger.debug(f"Evaluating campaign {campaign.id}")
         if not campaign.feature_flag or not campaign.feature_flag.release_condition:
-            logger.debug(f"Campaign {campaign.id} has no feature flag or release condition, skipping")
+            logger.debug(
+                f"Campaign {campaign.id} has no feature flag or release condition, skipping"
+            )
             continue
 
         has_active_variant = False
@@ -349,7 +351,7 @@ async def client_area_route(
         if campaign.default is True:
             logger.debug(f"Campaign {campaign.id} is default, setting as fallback")
             best_campaign = campaign
-        
+
         for condition_set in campaign.feature_flag.release_condition.condition_sets:
             matched_filters = 0
             all_conditions_met = True
@@ -362,14 +364,18 @@ async def client_area_route(
                     if client_info.page:
                         for page_filter in condition.page_filters:
                             if re.match(page_filter.page, client_info.page):
-                                logger.debug(f"Page condition met: {client_info.page} matches {page_filter.page}")
+                                logger.debug(
+                                    f"Page condition met: {client_info.page} matches {page_filter.page}"
+                                )
                                 condition_met = True
                                 break
                 if condition.device_type_filters:
                     if client_info.device_type:
                         for device_type_filter in condition.device_type_filters:
                             if int(client_info.device_type.value) == device_type_filter.device_type:
-                                logger.debug(f"Device type condition met: {client_info.device_type.value}")
+                                logger.debug(
+                                    f"Device type condition met: {client_info.device_type.value}"
+                                )
                                 condition_met = True
                                 break
                 if condition.os_type_filters:
@@ -381,10 +387,20 @@ async def client_area_route(
                                 break
                 if condition.geo_location_filters:
                     for geo_location_filter in condition.geo_location_filters:
-                        if (location.country == geo_location_filter.country and
-                            (not geo_location_filter.region or location.region == geo_location_filter.region) and
-                            (not geo_location_filter.city or location.city == geo_location_filter.city)):
-                            logger.debug(f"Geo location condition met: {location.country}/{location.region}/{location.city}")
+                        if (
+                            location.country == geo_location_filter.country
+                            and (
+                                not geo_location_filter.region
+                                or location.region == geo_location_filter.region
+                            )
+                            and (
+                                not geo_location_filter.city
+                                or location.city == geo_location_filter.city
+                            )
+                        ):
+                            logger.debug(
+                                f"Geo location condition met: {location.country}/{location.region}/{location.city}"
+                            )
                             condition_met = True
                             break
                 if condition.time_frame_filters:
@@ -400,40 +416,53 @@ async def client_area_route(
                     logger.debug(f"Condition met, matched filters now: {matched_filters}")
                 else:
                     all_conditions_met = False
-                    logger.debug("Condition not met, breaking condition evaluation")
+                    logger.debug('Condition not met, breaking condition evaluation')
                     break
 
             if all_conditions_met and matched_filters > max_matched_filters:
-                logger.debug(f"New best campaign found: {campaign.id} with {matched_filters} matched filters")
+                logger.debug(
+                    f"New best campaign found: {campaign.id} with {matched_filters} matched filters"
+                )
                 max_matched_filters = matched_filters
                 best_campaign = campaign
 
-    if not best_campaign or not best_campaign.feature_flag or not best_campaign.feature_flag.variants:
-        logger.debug("No suitable campaign found")
+    if (
+        not best_campaign
+        or not best_campaign.feature_flag
+        or not best_campaign.feature_flag.variants
+    ):
+        logger.debug('No suitable campaign found')
         return None
-    
+
     variantFragment: Optional[VariantGet] = None
 
     if best_campaign.feature_flag.rotation_type == int(RotationType.KEEP.value):
-        logger.debug("Using KEEP rotation type - checking last viewed variant")
-        last_viewed_variant = await get_last_viewed_variant_in_area_db(db, client.id, area.id, best_campaign.id)
+        logger.debug('Using KEEP rotation type - checking last viewed variant')
+        last_viewed_variant = await get_last_viewed_variant_in_area_db(
+            db, client.id, area.id, best_campaign.id
+        )
         if last_viewed_variant:
             variant = await get_variant_by_id_db(db, last_viewed_variant.variant_id)
             if variant:
                 variantFragment = variant_db_to_variant(variant)
-    
 
     if variantFragment is None:
-        logger.debug("Selecting random variant based on weights")
-        active_variants = [v for v in best_campaign.feature_flag.variants if v.status == int(VariantStatus.ACTIVE.value)]
+        logger.debug('Selecting random variant based on weights')
+        active_variants = [
+            v
+            for v in best_campaign.feature_flag.variants
+            if v.status == int(VariantStatus.ACTIVE.value)
+        ]
         weights = [v.rollout_percentage for v in active_variants]
 
         if active_variants:
             variant = random.choices(active_variants, weights=weights, k=1)[0]
             variantFragment = variant_db_to_variant(variant)
-    
+
     if variantFragment:
-        logger.debug(f"Creating view history record for client {client.id} and variant {variantFragment.id}")
+        logger.debug(
+            f"Creating view history record for client {client.id} and variant {variantFragment.id}"
+        )
         await create_client_history_db(
             db=db,
             client_id=client.id,
@@ -453,7 +482,7 @@ async def client_area_route(
             subdomain='',
             area_id=area.id,
             variant_id=variantFragment.id,
-            campaign_id=best_campaign.id
+            campaign_id=best_campaign.id,
         )
-        
+
     return variantFragment

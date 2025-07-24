@@ -4,6 +4,7 @@ from typing import Optional
 import strawberry
 from fastapi import HTTPException, UploadFile, status
 
+from conf.settings import logger
 from crud.media import create_media_db, delete_media_by_id_db, generate_default_media
 from crud.user import create_user_db, get_user_by_email_db
 from database import Media, Session
@@ -14,7 +15,6 @@ from services.core.utils import (
     get_password_hash,
     verify_password,
 )
-from conf.settings import logger
 
 from .middleware import Context
 from .schemas.media import MediaGet, MediaType
@@ -128,7 +128,7 @@ async def delete_avatar_route(info: strawberry.Info[Context]) -> UserGet:
 async def profile(info: strawberry.Info[Context]) -> AuthPayload:
     user = await info.context.user()
     if user is None:
-        logger.warning("Profile access attempt with unauthorized user")
+        logger.warning('Profile access attempt with unauthorized user')
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     logger.info(f"Profile accessed for user {user.user.email}")
     return user
@@ -137,7 +137,7 @@ async def profile(info: strawberry.Info[Context]) -> AuthPayload:
 async def refresh(info: strawberry.Info[Context]) -> AuthPayload:
     user = await info.context.refresh_user()
     if user is None:
-        logger.warning("Token refresh attempt with unauthorized user")
+        logger.warning('Token refresh attempt with unauthorized user')
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     logger.info(f"Token refreshed for user {user.user.email}")
     return user

@@ -1,11 +1,11 @@
-from typing import List, Optional
 from datetime import datetime, timezone
+from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
+from conf.settings import logger
 from database.models import FeatureFlag, Variant
 from services.core.routes.schemas.feature_flag import FeatureFlagPost, VariantPost
-from conf.settings import logger
 
 from .release_condition import create_release_condition_db
 from .variant import create_variant_db
@@ -38,10 +38,11 @@ async def create_feature_flag_db(
 
 async def get_feature_flag_by_id_db(db: Session, feature_flag_id: int) -> Optional[FeatureFlag]:
     logger.info(f"Getting feature flag by id {feature_flag_id}")
-    feature_flag = db.query(FeatureFlag).filter(
-        FeatureFlag.id == feature_flag_id,
-        FeatureFlag.deleted_at.is_(None)
-    ).first()
+    feature_flag = (
+        db.query(FeatureFlag)
+        .filter(FeatureFlag.id == feature_flag_id, FeatureFlag.deleted_at.is_(None))
+        .first()
+    )
     if feature_flag:
         logger.debug(f"Found feature flag {feature_flag.id}")
     else:
@@ -51,10 +52,11 @@ async def get_feature_flag_by_id_db(db: Session, feature_flag_id: int) -> Option
 
 async def get_feature_flag_by_name_db(db: Session, name: str) -> Optional[FeatureFlag]:
     logger.info(f"Getting feature flag by name {name}")
-    feature_flag = db.query(FeatureFlag).filter(
-        FeatureFlag.name == name,
-        FeatureFlag.deleted_at.is_(None)
-    ).first()
+    feature_flag = (
+        db.query(FeatureFlag)
+        .filter(FeatureFlag.name == name, FeatureFlag.deleted_at.is_(None))
+        .first()
+    )
     if feature_flag:
         logger.debug(f"Found feature flag {feature_flag.id}")
     else:
@@ -63,7 +65,7 @@ async def get_feature_flag_by_name_db(db: Session, name: str) -> Optional[Featur
 
 
 async def get_feature_flags_db(db: Session) -> List[FeatureFlag]:
-    logger.info("Getting all feature flags")
+    logger.info('Getting all feature flags')
     feature_flags = db.query(FeatureFlag).filter(FeatureFlag.deleted_at.is_(None)).all()
     logger.debug(f"Found {len(feature_flags)} feature flags")
     return feature_flags

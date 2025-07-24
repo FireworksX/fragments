@@ -2,10 +2,10 @@ from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
+from conf.settings import logger
 from crud.media import get_media_by_id_db
 from database import FragmentMedia
 from database.models import Fragment
-from conf.settings import logger
 
 
 async def create_fragment_db(
@@ -94,10 +94,10 @@ async def update_fragment_by_id_db(
         logger.debug(f"Updating name to {values['name']}")
         fragment.name = values['name']
     if values.get('document') is not None:
-        logger.debug("Updating document")
+        logger.debug('Updating document')
         fragment.document = values['document']
     if values.get('props') is not None:
-        logger.debug("Updating props")
+        logger.debug('Updating props')
         fragment.props = values['props']
     if values.get('directory_id') is not None:
         logger.debug(f"Updating directory_id to {values['directory_id']}")

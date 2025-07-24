@@ -47,14 +47,17 @@ class FilterGeoLocationGet:
 class FilterTimeFrameGet:
     from_time: datetime.datetime
     to_time: datetime.datetime
-    
+
+
 @strawberry.type
 class FilterTimeFramesGet:
     time_frames: List[FilterTimeFrameGet]
 
+
 @strawberry.type
 class FilterGeoLocationsGet:
     geo_locations: List[FilterGeoLocationGet]
+
 
 @strawberry.type
 class RegionGet:
@@ -101,7 +104,15 @@ class FilterType(Enum):
 class ConditionGet:
     id: int
     name: str
-    filter_data: Union[None,FilterPageGet, FilterDeviceTypeGet, FilterOSTypeGet, FilterTimeFramesGet, FilterGeoLocationsGet]
+    filter_data: Union[
+        None,
+        FilterPageGet,
+        FilterDeviceTypeGet,
+        FilterOSTypeGet,
+        FilterTimeFramesGet,
+        FilterGeoLocationsGet,
+    ]
+
 
 @strawberry.type
 class ConditionSetGet:
@@ -125,6 +136,7 @@ class FilterPost:
     time_frames: Optional[List[FilterTimeFramePost]] = None
     geo_locations: Optional[List[FilterGeoLocationPost]] = None
 
+
 @strawberry.input
 class ConditionPost:
     name: str
@@ -142,6 +154,7 @@ class ReleaseConditionPost:
     name: str
     condition_sets: List[ConditionSetPost]
     project_id: int
+
 
 @strawberry.input
 class ReleaseConditionPatch:
