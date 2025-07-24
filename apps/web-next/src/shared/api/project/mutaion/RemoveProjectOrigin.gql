@@ -1,0 +1,3 @@
+mutation RemoveProjectOrigin($id: Int!, $projectId: Int!) {
+    deleteProjectAllowedOrigin(allowedOriginId: $id, projectId: $projectId)
+}

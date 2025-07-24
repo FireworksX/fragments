@@ -41,6 +41,11 @@ export function makeApolloClient() {
                 cache.evict({ id: `VariantGet:${variables?.id}` })
               }
             },
+            deleteProjectAllowedOrigin: {
+              merge(_, _incoming, { cache, variables }) {
+                cache.evict({ id: `ProjectAllowedOriginGet:${variables?.id}` })
+              }
+            },
             deleteFragment: {
               merge(_, _incoming, { cache, variables }) {
                 cache.evict({ id: `FragmentGet:${variables?.id}` })

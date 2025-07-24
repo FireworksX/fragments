@@ -399,6 +399,7 @@ export enum MediaType {
 export type Mutation = {
   __typename?: 'Mutation';
   addClientMetric?: Maybe<Scalars['Void']['output']>;
+  addProjectAllowedOrigin: ProjectGet;
   addProjectPublicKey: ProjectGet;
   addUserToProject?: Maybe<Scalars['Void']['output']>;
   changeProjectPrivateKey: ProjectGet;
@@ -423,6 +424,7 @@ export type Mutation = {
   deleteFeatureFlag?: Maybe<Scalars['Void']['output']>;
   deleteFragment?: Maybe<Scalars['Void']['output']>;
   deleteProject?: Maybe<Scalars['Void']['output']>;
+  deleteProjectAllowedOrigin?: Maybe<Scalars['Void']['output']>;
   deleteProjectGoal?: Maybe<Scalars['Void']['output']>;
   deleteProjectPublicKey?: Maybe<Scalars['Void']['output']>;
   deleteReleaseCondition?: Maybe<Scalars['Void']['output']>;
@@ -449,6 +451,13 @@ export type Mutation = {
 
 export type MutationAddClientMetricArgs = {
   metric: ClientMetricPost;
+};
+
+
+export type MutationAddProjectAllowedOriginArgs = {
+  name: Scalars['String']['input'];
+  origin: Scalars['String']['input'];
+  projectId: Scalars['Int']['input'];
 };
 
 
@@ -579,6 +588,12 @@ export type MutationDeleteProjectArgs = {
 };
 
 
+export type MutationDeleteProjectAllowedOriginArgs = {
+  allowedOriginId: Scalars['Int']['input'];
+  projectId: Scalars['Int']['input'];
+};
+
+
 export type MutationDeleteProjectGoalArgs = {
   goalId: Scalars['Int']['input'];
 };
@@ -692,6 +707,13 @@ export enum OsType {
   Windows = 'WINDOWS'
 }
 
+export type ProjectAllowedOriginGet = {
+  __typename?: 'ProjectAllowedOriginGet';
+  id: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+  origin: Scalars['String']['output'];
+};
+
 export type ProjectDirectory = {
   name: Scalars['String']['input'];
   parentId: Scalars['Int']['input'];
@@ -717,6 +739,7 @@ export type ProjectDirectoryPatch = {
 
 export type ProjectGet = {
   __typename?: 'ProjectGet';
+  allowedOrigins: Array<ProjectAllowedOriginGet>;
   areas: Array<AreaGet>;
   id: Scalars['Int']['output'];
   logo: MediaGet;

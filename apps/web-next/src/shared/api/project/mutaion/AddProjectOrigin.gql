@@ -1,0 +1,9 @@
+mutation AddProjectOrigin($projectSlug: Int!, $origin: String!) {
+    addProjectAllowedOrigin(name: "Origin", origin: $origin, projectId: $projectSlug) {
+        id
+        allowedOrigins {
+            id
+            origin
+        }
+    }
+}

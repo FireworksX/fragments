@@ -1,6 +1,8 @@
 .root {}
 
 .row {
+    width: 100%;
+    display: flex;
     white-space: nowrap;
     flex-direction: row;
     align-items: center;

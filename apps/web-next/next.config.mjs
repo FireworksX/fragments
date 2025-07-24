@@ -13,8 +13,8 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/backend/:path*',
-        destination: 'http://localhost:6000/:path*' // Proxy to Backend
+        source: '/graphql',
+        destination: 'http://localhost/graphql' // Proxy to Backend
       }
     ]
   },
