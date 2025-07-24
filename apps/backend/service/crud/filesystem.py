@@ -1,7 +1,7 @@
 from typing import List, Optional, Tuple, Union
 
-from database import FilesystemDirectory, Fragment, Session
 from conf.settings import logger
+from database import FilesystemDirectory, Fragment, Session
 
 
 async def create_directory_db(

@@ -1,16 +1,16 @@
-from typing import List, Optional
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
+from conf.settings import logger
 from crud.feature_flag import create_feature_flag_db
 from crud.media import generate_default_media
 from database.models import Campaign
 from services.core.routes.schemas.campaign import CampaignStatus
 from services.core.routes.schemas.feature_flag import FeatureFlagPost, RotationType
 from services.core.routes.schemas.release_condition import ReleaseConditionPost
-from conf.settings import logger
 
 
 async def create_campaign_db(
@@ -35,8 +35,10 @@ async def create_campaign_db(
                 name=f'{name}_default_feature_flag',
                 description=f'Default feature flag for {name}',
                 rotation_type=RotationType.KEEP,
-                release_condition=ReleaseConditionPost(project_id=project_id,
-                    name=f'{name}_default_release_condition', condition_sets=[]
+                release_condition=ReleaseConditionPost(
+                    project_id=project_id,
+                    name=f'{name}_default_release_condition',
+                    condition_sets=[],
                 ),
                 variants=[],
             ),
@@ -50,8 +52,10 @@ async def create_campaign_db(
                 name=f'{name}_{uuid.uuid4()}_default_feature_flag',
                 description=f'Default feature flag for {name}',
                 rotation_type=RotationType.KEEP,
-                release_condition=ReleaseConditionPost(project_id=project_id,
-                    name=f'{name}_{uuid.uuid4()}_default_release_condition', condition_sets=[]
+                release_condition=ReleaseConditionPost(
+                    project_id=project_id,
+                    name=f'{name}_{uuid.uuid4()}_default_release_condition',
+                    condition_sets=[],
                 ),
                 variants=[],
             ),
@@ -80,7 +84,9 @@ async def create_campaign_db(
 
 async def get_campaign_by_id_db(db: Session, campaign_id: int) -> Optional[Campaign]:
     logger.info(f"Getting campaign by id {campaign_id}")
-    campaign = db.query(Campaign).filter(Campaign.id == campaign_id, Campaign.deleted_at.is_(None)).first()
+    campaign = (
+        db.query(Campaign).filter(Campaign.id == campaign_id, Campaign.deleted_at.is_(None)).first()
+    )
     if campaign:
         logger.debug(f"Found campaign {campaign.id}")
     else:
@@ -135,7 +141,11 @@ async def get_default_campaign_by_project_id_db(db: Session, project_id: int) ->
     logger.info(f"Getting default campaign for project {project_id}")
     campaign = (
         db.query(Campaign)
-        .filter(Campaign.project_id == project_id, Campaign.default == True, Campaign.deleted_at.is_(None))
+        .filter(
+            Campaign.project_id == project_id,
+            Campaign.default == True,
+            Campaign.deleted_at.is_(None),
+        )
         .first()
     )
     if campaign:

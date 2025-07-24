@@ -7,7 +7,7 @@ from jwt.exceptions import InvalidTokenError
 from strawberry.fastapi import BaseContext
 from user_agents import parse as user_agent_parser
 
-from conf.settings import service_settings
+from conf.settings import logger, service_settings
 from crud.client import create_client_db, get_client_by_id_db
 from crud.project import get_project_by_id_db, validate_project_public_api_key
 from crud.user import get_user_by_email_db
@@ -20,7 +20,6 @@ from .schemas.client import ClientInfo
 from .schemas.media import MediaGet, MediaType
 from .schemas.release_condition import DeviceType, OSType
 from .schemas.user import AuthPayload, UserGet
-from conf.settings import logger
 
 credentials_exception = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
@@ -157,7 +156,7 @@ class Context(BaseContext):
             user_agent.device_type,
             gmt_time,
             page,
-            user_ip
+            user_ip,
         )
         return ClientInfo(
             os_type=user_agent.os_type,

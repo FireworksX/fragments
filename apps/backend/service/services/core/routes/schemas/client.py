@@ -1,11 +1,13 @@
 from datetime import datetime
-from typing import List, Optional
 from enum import Enum
+from typing import List, Optional
+
 import strawberry
 
 from services.core.routes.schemas.area import AreaGet
 from services.core.routes.schemas.feature_flag import VariantGet
 from services.core.routes.schemas.release_condition import DeviceType, OSType
+
 
 @strawberry.enum
 class ClientHistoryEventType(Enum):
@@ -14,6 +16,7 @@ class ClientHistoryEventType(Enum):
     CONTRIBUTE = 3
     FEEDBACK = 4
     VIEW = 5
+
 
 @strawberry.type
 class ClientHistoryGet:
@@ -38,6 +41,7 @@ class ClientHistoryGet:
     area: Optional[AreaGet]
     variant: Optional[VariantGet]
 
+
 @strawberry.type
 class ClientGet:
     id: int
@@ -45,7 +49,6 @@ class ClientGet:
     updated_at: str
     last_visited_at: Optional[str]
     history: List[ClientHistoryGet]
-
 
 
 @strawberry.input

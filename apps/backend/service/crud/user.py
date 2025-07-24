@@ -2,10 +2,9 @@ from typing import Optional
 
 from sqlalchemy.orm import Session
 
+from conf.settings import logger
 from crud.media import generate_default_media
 from database.models import User
-
-from conf.settings import logger
 
 
 async def create_user_db(

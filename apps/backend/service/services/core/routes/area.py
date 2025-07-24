@@ -3,6 +3,7 @@ from typing import List
 import strawberry
 from fastapi import HTTPException, UploadFile, status
 
+from conf.settings import logger
 from crud.area import (
     create_area_db,
     delete_area_by_id_db,
@@ -21,7 +22,6 @@ from .schemas.media import MediaGet, MediaType
 from .schemas.user import AuthPayload, RoleGet
 from .user import user_db_to_user
 from .utils import get_user_role_in_project
-from conf.settings import logger
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
@@ -76,7 +76,9 @@ async def create_area_route(info: strawberry.Info[Context], area: AreaPost) -> A
 
     permission: bool = await write_permission(db, user.user.id, area.project_id)
     if not permission:
-        logger.warning(f"User {user.user.id} unauthorized to create areas in project {area.project_id}")
+        logger.warning(
+            f"User {user.user.id} unauthorized to create areas in project {area.project_id}"
+        )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to create areas'
         )

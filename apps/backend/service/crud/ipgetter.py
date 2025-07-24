@@ -1,4 +1,5 @@
 import requests
+
 from conf.settings import logger
 
 
@@ -23,7 +24,9 @@ def get_location_by_ip(ip_address: str) -> GeoLocation:
         location = GeoLocation(
             city=data.get('city'), region=data.get('regionName'), country=data.get('country')
         )
-        logger.info(f"Found location: city={location.city}, region={location.region}, country={location.country}")
+        logger.info(
+            f"Found location: city={location.city}, region={location.region}, country={location.country}"
+        )
         return location
 
     except requests.RequestException as e:

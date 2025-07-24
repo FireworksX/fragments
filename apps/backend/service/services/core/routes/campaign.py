@@ -6,6 +6,7 @@ from fastapi import HTTPException, UploadFile, status
 from thefuzz import fuzz, process
 
 from conf import service_settings
+from conf.settings import logger
 from crud.area import get_area_by_id_db
 from crud.campaign import (
     create_campaign_db,
@@ -26,7 +27,6 @@ from .schemas.media import MediaGet, MediaType
 from .schemas.user import AuthPayload, RoleGet
 from .user import user_db_to_user
 from .utils import get_user_role_in_project
-from conf.settings import logger
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
@@ -88,6 +88,7 @@ async def campaigns_in_area(
     for cp in campaigns:
         out.append(campaign_db_to_campaign(cp))
     return out
+
 
 async def campaigns_in_area_without_default(
     info: strawberry.Info[Context],
@@ -155,7 +156,9 @@ async def create_campaign_route(info: strawberry.Info[Context], cmp: CampaignPos
 
     permission: bool = await write_permission(db, user.user.id, area.project_id)
     if not permission:
-        logger.warning(f"User {user.user.id} unauthorized to create campaigns in area {cmp.area_id}")
+        logger.warning(
+            f"User {user.user.id} unauthorized to create campaigns in area {cmp.area_id}"
+        )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=f'User is not allowed to create campaigns',
@@ -292,7 +295,9 @@ async def delete_campaign_logo_route(
 
     permission: bool = await write_permission(db, user.user.id, project.id)
     if not permission:
-        logger.warning(f"User {user.user.id} unauthorized to delete logo from campaign {campaign_id}")
+        logger.warning(
+            f"User {user.user.id} unauthorized to delete logo from campaign {campaign_id}"
+        )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=f'User is not allowed to change campaign',

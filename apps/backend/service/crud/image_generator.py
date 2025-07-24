@@ -4,12 +4,13 @@ from typing import Any, Dict, List, Optional, Union
 
 import cairo
 import gi
-gi.require_version('Rsvg', '2.0')
 import svgwrite
 from gi.repository import Gio, Rsvg
 from svgwrite.drawing import Drawing
 
 from conf.settings import logger
+
+gi.require_version('Rsvg', '2.0')
 
 
 AVAILABLE_COLORS: List[str] = [
@@ -47,7 +48,7 @@ def generate_rectangle_svg(
     fill_value = fill
 
     if fill_type == 'gradient':
-        logger.debug("Generating gradient for rectangle")
+        logger.debug('Generating gradient for rectangle')
         x1, y1 = x, y + height / 2
         x2, y2 = x + width, y + height / 2
         stop1_color = random.choice(AVAILABLE_COLORS)
@@ -97,7 +98,7 @@ def generate_shape(index: int) -> Dict[str, Union[Dict[str, Any], Dict[str, Unio
     }
 
     if random.random() < 0.2:
-        logger.debug("Adding gradient to shape")
+        logger.debug('Adding gradient to shape')
         shape['fill_type'] = 'gradient'
         shape['gradient'] = {
             'type': 'linear',
@@ -111,7 +112,7 @@ def generate_shape(index: int) -> Dict[str, Union[Dict[str, Any], Dict[str, Unio
 
 
 def generate_gradient_config() -> Dict[str, Any]:
-    logger.info("Generating gradient configuration")
+    logger.info('Generating gradient configuration')
     shape_counts = [1, 2, 3, 4, 5, 6]
     config: List[Dict[str, Any]] = []
 
@@ -151,7 +152,7 @@ def generate_gradient_config() -> Dict[str, Any]:
 
 
 def generate_svg(config: Dict[str, Any]) -> svgwrite.Drawing:
-    logger.info("Generating SVG from config")
+    logger.info('Generating SVG from config')
     # Disable profile to allow custom filters
     dwg = svgwrite.Drawing(
         'noisy_gradient.svg',
@@ -164,7 +165,7 @@ def generate_svg(config: Dict[str, Any]) -> svgwrite.Drawing:
     defs = dwg.defs
 
     # Background layers
-    logger.debug("Adding background layers")
+    logger.debug('Adding background layers')
     dwg.add(dwg.rect(insert=(0, 0), size=('1600px', '1600px'), fill=config['light_dark_mode']))
     dwg.add(
         dwg.rect(
@@ -213,7 +214,7 @@ def generate_svg(config: Dict[str, Any]) -> svgwrite.Drawing:
 
     dwg.add(g)
 
-    logger.debug("Adding filters and patterns")
+    logger.debug('Adding filters and patterns')
     turb_filter = dwg.defs.add(
         dwg.filter(
             id='feTurb02',
@@ -268,7 +269,7 @@ def generate_svg(config: Dict[str, Any]) -> svgwrite.Drawing:
 
 
 def convert_svg_to_png(dwg: Drawing) -> BytesIO:
-    logger.info("Converting SVG to PNG")
+    logger.info('Converting SVG to PNG')
     # Convert SVG to UTF-8 bytes
     svg_content = dwg.tostring()
     svg_bytes = svg_content.encode('utf-8')
@@ -293,14 +294,14 @@ def convert_svg_to_png(dwg: Drawing) -> BytesIO:
     png_io = BytesIO()
     surface.write_to_png(png_io)
     png_io.seek(0)
-    logger.debug("Successfully converted SVG to PNG")
+    logger.debug('Successfully converted SVG to PNG')
     return png_io
 
 
 def generate_image() -> BytesIO:
-    logger.info("Starting image generation")
+    logger.info('Starting image generation')
     config = generate_gradient_config()
     dwg = generate_svg(config)
     png_bytes = convert_svg_to_png(dwg)
-    logger.info("Completed image generation")
+    logger.info('Completed image generation')
     return png_bytes

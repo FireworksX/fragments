@@ -3,6 +3,7 @@ from typing import List, Optional
 import strawberry
 from fastapi import HTTPException, status
 
+from conf.settings import logger
 from crud.feature_flag import (
     create_feature_flag_db,
     delete_feature_flag_db,
@@ -18,7 +19,6 @@ from .schemas.feature_flag import FeatureFlagGet, FeatureFlagPatch, FeatureFlagP
 from .schemas.user import AuthPayload, RoleGet
 from .utils import get_user_role_in_project
 from .variant import variant_db_to_variant
-from conf.settings import logger
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
@@ -41,7 +41,11 @@ def feature_flag_db_to_feature_flag(feature_flag: FeatureFlag) -> FeatureFlagGet
         description=feature_flag.description,
         release_condition=release_condition_db_to_release_condition(feature_flag.release_condition),
         rotation_type=RotationType(feature_flag.rotation_type),
-        variants=[variant_db_to_variant(variant) for variant in feature_flag.variants if variant.deleted_at is None],
+        variants=[
+            variant_db_to_variant(variant)
+            for variant in feature_flag.variants
+            if variant.deleted_at is None
+        ],
     )
 
 
@@ -55,7 +59,9 @@ async def feature_flags(
 
     permission: bool = await read_permission(db, user.user.id, project_id)
     if not permission:
-        logger.warning(f"User {user.user.id} unauthorized to view feature flags in project {project_id}")
+        logger.warning(
+            f"User {user.user.id} unauthorized to view feature flags in project {project_id}"
+        )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=f'User is not allowed to view feature flags',
@@ -100,7 +106,9 @@ async def create_feature_flag_route(
 
     permission: bool = await write_permission(db, user.user.id, project_id)
     if not permission:
-        logger.warning(f"User {user.user.id} unauthorized to create feature flags in project {project_id}")
+        logger.warning(
+            f"User {user.user.id} unauthorized to create feature flags in project {project_id}"
+        )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=f'User is not allowed to create feature flags',

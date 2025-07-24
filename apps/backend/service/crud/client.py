@@ -1,9 +1,8 @@
 from datetime import UTC, datetime
 from typing import List, Optional
 
-from database import Client, ClientHistory, ClientProjectGoal, Session
-
 from conf.settings import logger
+from database import Client, ClientHistory, ClientProjectGoal, Session
 
 
 async def create_client_db(db: Session, project_id: int) -> Client:
@@ -87,7 +86,10 @@ async def create_client_history_db(
     logger.debug(f"Created client history with id={history.id}")
     return history
 
-async def get_last_viewed_variant_in_area_db(db: Session, client_id: int, area_id: int, campaign_id: int) -> Optional[ClientHistory]:
+
+async def get_last_viewed_variant_in_area_db(
+    db: Session, client_id: int, area_id: int, campaign_id: int
+) -> Optional[ClientHistory]:
     logger.debug(f"Getting last viewed variant for client_id={client_id} in area_id={area_id}")
     return (
         db.query(ClientHistory)
@@ -95,7 +97,7 @@ async def get_last_viewed_variant_in_area_db(db: Session, client_id: int, area_i
             ClientHistory.client_id == client_id,
             ClientHistory.area_id == area_id,
             ClientHistory.campaign_id == campaign_id,
-            ClientHistory.variant_id.isnot(None)
+            ClientHistory.variant_id.isnot(None),
         )
         .order_by(ClientHistory.created_at.desc())
         .first()
@@ -115,7 +117,9 @@ async def get_client_history_by_id_db(db: Session, history_id: int) -> Optional[
 async def create_client_project_goal_db(
     db: Session, client_id: int, project_goal_id: int, project_id: int
 ) -> ClientProjectGoal:
-    logger.info(f"Creating project goal for client_id={client_id}, project_id={project_id}, goal_id={project_goal_id}")
+    logger.info(
+        f"Creating project goal for client_id={client_id}, project_id={project_id}, goal_id={project_goal_id}"
+    )
     goal = ClientProjectGoal(
         client_id=client_id, project_goal_id=project_goal_id, project_id=project_id
     )

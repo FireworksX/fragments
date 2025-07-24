@@ -3,6 +3,7 @@ from typing import List, Optional
 import strawberry
 from fastapi import HTTPException, UploadFile, status
 
+from conf.settings import logger
 from crud.campaign import get_campaign_by_id_db
 from crud.media import create_media_db, delete_media_by_id_db, generate_default_media
 from crud.project import (
@@ -13,6 +14,7 @@ from crud.project import (
     change_user_role_db,
     create_project_db,
     create_project_goal_db,
+    delete_project_allowed_origin_db,
     delete_project_by_id_db,
     delete_project_goal_db,
     delete_project_public_api_key,
@@ -22,7 +24,6 @@ from crud.project import (
     get_user_project_role,
     update_project_by_id_db,
     update_project_goal_db,
-    delete_project_allowed_origin_db,
 )
 from crud.user import get_user_by_id_db
 from database import Media, Session
@@ -35,6 +36,7 @@ from .schemas.campaign import CampaignGet
 from .schemas.fragment import FragmentGet
 from .schemas.media import MediaGet, MediaType
 from .schemas.project import (
+    ProjectAllowedOriginGet,
     ProjectGet,
     ProjectGoalGet,
     ProjectGoalPatch,
@@ -42,12 +44,10 @@ from .schemas.project import (
     ProjectKeyGet,
     ProjectPatch,
     ProjectPost,
-    ProjectAllowedOriginGet,
 )
 from .schemas.user import AuthPayload, RoleGet, UserRoleGet
 from .user import user_db_to_user
 from .utils import get_user_role_in_project
-from conf.settings import logger
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
@@ -100,7 +100,11 @@ async def project_db_to_project(
             )
             for member in project.members
         ],
-        areas=[] if project.areas is None else [area_db_to_area(area) for area in project.areas if area.deleted_at is None],
+        areas=(
+            []
+            if project.areas is None
+            else [area_db_to_area(area) for area in project.areas if area.deleted_at is None]
+        ),
         private_key=(
             ProjectKeyGet(value=project.private_key.key, name='private', id=project.private_key.id)
             if permission
@@ -117,13 +121,16 @@ async def project_db_to_project(
         allowed_origins=(
             []
             if project.allowed_origins is None
-            else [ProjectAllowedOriginGet(id=origin.id, name=origin.name, origin=origin.origin) for origin in project.allowed_origins]
+            else [
+                ProjectAllowedOriginGet(id=origin.id, name=origin.name, origin=origin.origin)
+                for origin in project.allowed_origins
+            ]
         ),
     )
 
 
 async def projects(info: strawberry.Info[Context]) -> List[ProjectGet]:
-    logger.info("Getting all projects for user")
+    logger.info('Getting all projects for user')
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
     prs: List[Project] = await get_projects_by_user_id_db(db, user.user.id)
@@ -177,7 +184,9 @@ async def change_project_private_key_route(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
 
     if not permission:
-        logger.warning(f"User {user.user.id} unauthorized to change private key for project {project_id}")
+        logger.warning(
+            f"User {user.user.id} unauthorized to change private key for project {project_id}"
+        )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=f'User is not allowed to change private key',
@@ -202,7 +211,9 @@ async def add_project_public_key_route(
 
     permission: bool = await write_permission(db, user.user.id, project_id)
     if not permission:
-        logger.warning(f"User {user.user.id} unauthorized to add public key to project {project_id}")
+        logger.warning(
+            f"User {user.user.id} unauthorized to add public key to project {project_id}"
+        )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=f'User is not allowed to add public keys',
@@ -227,7 +238,9 @@ async def delete_project_public_key_route(
 
     permission: bool = await write_permission(db, user.user.id, project_id)
     if not permission:
-        logger.warning(f"User {user.user.id} unauthorized to delete public key from project {project_id}")
+        logger.warning(
+            f"User {user.user.id} unauthorized to delete public key from project {project_id}"
+        )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=f'User is not allowed to delete public keys',
@@ -409,7 +422,9 @@ async def create_project_goal_route(
 
     permission: bool = await write_permission(db, user.user.id, goal.project_id)
     if not permission:
-        logger.warning(f"User {user.user.id} unauthorized to create goal in project {goal.project_id}")
+        logger.warning(
+            f"User {user.user.id} unauthorized to create goal in project {goal.project_id}"
+        )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to create goals'
         )
@@ -509,13 +524,18 @@ async def add_project_allowed_origin_route(
 
     permission: bool = await write_permission(db, user.user.id, project_id)
     if not permission:
-        logger.warning(f"User {user.user.id} unauthorized to add allowed origin to project {project_id}")
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to add allowed origins'
+        logger.warning(
+            f"User {user.user.id} unauthorized to add allowed origin to project {project_id}"
         )
-    
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail='User is not allowed to add allowed origins',
+        )
+
     if origin == '*':
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Allowed origin cannot be *')
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail='Allowed origin cannot be *'
+        )
 
     project: Project = await add_project_allowed_origin_db(db, project_id, origin, name)
     logger.info(f"Added allowed origin {origin} to project {project_id}")
@@ -536,9 +556,12 @@ async def delete_project_allowed_origin_route(
 
     permission: bool = await write_permission(db, user.user.id, project_id)
     if not permission:
-        logger.warning(f"User {user.user.id} unauthorized to delete allowed origin from project {project_id}")
+        logger.warning(
+            f"User {user.user.id} unauthorized to delete allowed origin from project {project_id}"
+        )
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to delete allowed origins'
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail='User is not allowed to delete allowed origins',
         )
 
     await delete_project_allowed_origin_db(db, project_id, allowed_origin_id)
