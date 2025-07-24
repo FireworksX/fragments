@@ -2,7 +2,10 @@ import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
 import path from "path";
 
-export default defineConfig({
+const isWatch = process.argv.includes("-w");
+
+export default defineConfig((config) => ({
+  mode: isWatch ? "development" : "production",
   plugins: [dts()],
   resolve: {
     alias: {
@@ -18,4 +21,4 @@ export default defineConfig({
       fileName: (format) => `index.${format}.js`,
     },
   },
-});
+}));

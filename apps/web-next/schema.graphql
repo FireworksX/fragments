@@ -176,6 +176,7 @@ type MediaGet {
 
 type Mutation {
     addClientMetric(metric: ClientMetricPost!): Void
+    addProjectAllowedOrigin(name: String!, origin: String!, projectId: Int!): ProjectGet!
     addProjectPublicKey(projectId: Int!, publicKeyName: String): ProjectGet!
     addUserToProject(projectId: Int!, role: Int!, userId: Int!): Void
     changeProjectPrivateKey(projectId: Int!): ProjectGet!
@@ -200,6 +201,7 @@ type Mutation {
     deleteFeatureFlag(featureFlagId: Int!): Void
     deleteFragment(fragmentId: Int!): Void
     deleteProject(projectId: Int!): Void
+    deleteProjectAllowedOrigin(allowedOriginId: Int!, projectId: Int!): Void
     deleteProjectGoal(goalId: Int!): Void
     deleteProjectPublicKey(projectId: Int!, publicKeyId: Int!): Void
     deleteReleaseCondition(releaseConditionId: Int!): Void
@@ -223,6 +225,12 @@ type Mutation {
     uploadAsset(file: Upload!, media: MediaPost!): MediaGet!
 }
 
+type ProjectAllowedOriginGet {
+    id: Int!
+    name: String!
+    origin: String!
+}
+
 type ProjectDirectoryGet {
     fragments: [FragmentGet!]!
     hasFragments: Boolean!
@@ -234,6 +242,7 @@ type ProjectDirectoryGet {
 }
 
 type ProjectGet {
+    allowedOrigins: [ProjectAllowedOriginGet!]!
     areas: [AreaGet!]!
     id: Int!
     logo: MediaGet!
@@ -259,7 +268,7 @@ type ProjectKeyGet {
 
 type Query {
     area(areaId: Int, projectId: Int): [AreaGet!]!
-    campaign(areaId: Int, campaignId: Int, limit: Int = 5, name: String, status: CampaignStatus): [CampaignGet!]!
+    campaign(areaId: Int, campaignId: Int, limit: Int = 5, name: String, status: CampaignStatus, withoutDefault: Boolean = true): [CampaignGet!]!
     client(clientId: Int, projectId: Int): [ClientGet!]!
     clientArea(areaCode: String!): VariantGet
     clientFragment(fragmentId: Int!): FragmentGet

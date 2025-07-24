@@ -3,6 +3,10 @@ query Project($projectSlug: Int!) {
         id
         name
         rootDirectoryId
+        allowedOrigins {
+            id
+            origin
+        }
         logo {
             publicPath
         }

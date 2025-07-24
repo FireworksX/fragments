@@ -25,18 +25,16 @@ interface Options {
   backendEndpoint?: string;
 }
 
-let inited = false;
-
 export const PLUGIN_TYPES = createConstants(
   "FragmentsPlugin",
   "GlobalStylesheet",
   "FragmentStylesheet"
 );
 
-const BACKEND_TARGET = import.meta.env.PROD
-  ? "http://localhost/graphql"
-  : // ? "http://85.192.29.65/graphql"
-    "http://localhost/graphql";
+const BACKEND_TARGET =
+  import.meta.env.mode === "production"
+    ? "http://85.192.29.65/graphql"
+    : "http://localhost:3000/graphql";
 
 export const createFragmentsClient = (options: Options) => {
   return createState({
