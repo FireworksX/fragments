@@ -9,7 +9,7 @@ from conf.settings import service_settings, logger
 from crud.filesystem import create_directory_db
 from crud.media import generate_default_media
 from database import FilesystemDirectory
-from database.models import Project, ProjectApiKey, ProjectGoal, ProjectMemberRole, User
+from database.models import Project, ProjectApiKey, ProjectGoal, ProjectMemberRole, ProjectAllowedHost, User
 
 
 def generate_api_key(project_id: int) -> str:
@@ -289,3 +289,31 @@ async def delete_project_goal_db(db: Session, goal_id: int) -> None:
     db.query(ProjectGoal).filter(ProjectGoal.id == goal_id).delete()
     db.commit()
     logger.debug(f"Deleted goal {goal_id}")
+
+
+async def add_project_allowed_host_db(db: Session, project_id: int, host: str, name: str) -> Project:
+    logger.info(f"Adding allowed host {host} to project {project_id}")
+    allowed_host: ProjectAllowedHost = ProjectAllowedHost(project_id=project_id, host=host, name=name)
+    db.add(allowed_host)
+    db.commit()
+    db.refresh(allowed_host)
+    project: Project = await get_project_by_id_db(db, project_id)
+    project.allowed_hosts.append(allowed_host)
+    db.commit()
+    db.refresh(project)
+    logger.debug(f"Added allowed host {host} to project {project_id}")
+    return project
+
+
+async def delete_project_allowed_host_db(db: Session, project_id: int, allowed_host_id: int) -> None:
+    logger.info(f"Deleting allowed host {allowed_host_id} from project {project_id}")
+    allowed_host: ProjectAllowedHost = db.query(ProjectAllowedHost).filter(ProjectAllowedHost.id == allowed_host_id).first()
+    if allowed_host is None:
+        logger.error(f"Allowed host {allowed_host_id} not found")
+        raise ValueError(f"Allowed host {allowed_host_id} not found")
+    if allowed_host.project_id != project_id:
+        logger.error(f"Cannot remove unrelated host {allowed_host_id} from project {project_id}")
+        raise ValueError("Can't remove unrelated host")
+    db.delete(allowed_host)
+    db.commit()
+    logger.debug(f"Deleted allowed host {allowed_host_id} from project {project_id}")
