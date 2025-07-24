@@ -259,7 +259,7 @@ class GeoLocationFilter(Base):
     id = Column('id', Integer, primary_key=True, index=True)
     country = Column('country', String, nullable=False)
     region = Column('region', String)
-    city = Column('city', String, nullable=False)
+    city = Column('city', String)
 
     condition_id = Column(
         'condition_id', Integer, ForeignKey('condition.id', ondelete='CASCADE'), nullable=False
