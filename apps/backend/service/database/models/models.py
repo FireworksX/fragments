@@ -73,15 +73,15 @@ class ProjectApiKey(Base):
     project = relationship('Project', back_populates='public_keys', foreign_keys=[project_id])
 
 
-class ProjectAllowedHost(Base):
-    __tablename__ = 'project_allowed_host'
+class ProjectAllowedOrigin(Base):
+    __tablename__ = 'project_allowed_origin'
     id = Column('id', Integer, primary_key=True, index=True)
-    host = Column('host', String, unique=False, nullable=False)
+    origin = Column('origin', String, unique=False, nullable=False)
     name = Column('name', String, unique=False, nullable=False)
 
     project_id = Column(Integer, ForeignKey('project.id', ondelete='CASCADE'), nullable=False)
 
-    project = relationship('Project', back_populates='allowed_hosts', foreign_keys=[project_id])
+    project = relationship('Project', back_populates='allowed_origins', foreign_keys=[project_id])
 
 class Area(Base):
     __tablename__ = 'area'
@@ -135,7 +135,7 @@ class Project(Base):
     )
     private_key = relationship('ProjectApiKey', foreign_keys=[private_key_id], post_update=True)
 
-    allowed_hosts = relationship('ProjectAllowedHost', back_populates='project', cascade='all, delete-orphan')
+    allowed_origins = relationship('ProjectAllowedOrigin', back_populates='project', cascade='all, delete-orphan')
 
 
 class FilesystemDirectory(Base):

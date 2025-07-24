@@ -62,7 +62,7 @@ from .fragment import (
     update_fragment_route,
 )
 from .middleware import Context
-from .project import add_project_logo_route, add_project_public_key_route
+from .project import add_project_logo_route, add_project_public_key_route, add_project_allowed_origin_route, delete_project_allowed_origin_route
 from .project import add_user_to_project as add_user_to_project_route
 from .project import change_project_private_key_route
 from .project import change_user_role as change_user_role_route
@@ -323,6 +323,14 @@ class ProjectMutation:
     @strawberry.mutation
     async def delete_project_goal(self, info: strawberry.Info[Context], goal_id: int) -> None:
         await delete_project_goal_route(info, goal_id)
+
+    @strawberry.mutation
+    async def add_project_allowed_origin(self, info: strawberry.Info[Context], project_id: int, origin: str, name: str) -> ProjectGet:
+        return await add_project_allowed_origin_route(info, project_id, origin, name)
+    
+    @strawberry.mutation
+    async def delete_project_allowed_origin(self, info: strawberry.Info[Context], project_id: int, allowed_origin_id: int) -> None:
+        await delete_project_allowed_origin_route(info, project_id, allowed_origin_id)
 
 
 @strawberry.type

@@ -18,10 +18,10 @@ class ProjectKeyGet:
 
 
 @strawberry.type
-class ProjectAllowedHostGet:
+class ProjectAllowedOriginGet:
     id: int
     name: str
-    host: str
+    origin: str
 
 
 @strawberry.type
@@ -56,7 +56,7 @@ class ProjectGet:
     root_directory_id: int
     private_key: Optional[ProjectKeyGet]
     public_keys: List[ProjectKeyGet]
-    allowed_hosts: List[ProjectAllowedHostGet]
+    allowed_origins: List[ProjectAllowedOriginGet]
 
 
 @strawberry.input
