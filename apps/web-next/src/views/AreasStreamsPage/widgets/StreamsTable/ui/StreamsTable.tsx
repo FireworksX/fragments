@@ -48,6 +48,7 @@ const StreamsTable: FC<StreamsTableProps> = ({ className }) => {
   return (
     <div className={styles.root}>
       <div className={styles.header}>
+        <h2 className={styles.title}>Campaigns</h2>
         <SearchInput className={styles.search} mode='tiny' placeholder='Search' />
         <Button mode='secondary' icon={<SettingsIcon />}>
           Customize

@@ -1,11 +1,5 @@
 import { useParams } from 'next/navigation'
-import { useMemo } from 'react'
-import {
-  UpdateCampaignMutationVariables,
-  useUpdateCampaignMutation
-} from '@/shared/api/stream/mutation/UpdateCampaign.generated'
-import { useDeleteCampaignMutation } from '@/shared/api/stream/mutation/DeleteCampaign.generated'
-import { useCampaignDetailQuery } from '@/views/CampaignDetailLayout/widgets/CampaignHeaderLayout/queries/CampaignDetail.generated'
+import { useCampaignDetailQuery } from '@/shared/api/campaign/query/CampaignDetail.generated'
 
 export const useCampaignHeader = () => {
   const { campaignSlug, areaSlug, projectSlug } = useParams()

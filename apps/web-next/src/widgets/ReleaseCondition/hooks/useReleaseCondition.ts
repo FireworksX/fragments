@@ -1,15 +1,7 @@
-import {
-  ConditionGet,
-  ConditionSetGet,
-  DeviceType,
-  FilterDeviceTypeGet,
-  FilterOsTypeGet,
-  OsType,
-  FilterPost,
-  ReleaseConditionGet
-} from '@/__generated__/types'
+import { DeviceType, OsType, FilterPost, ReleaseConditionGet } from '@/__generated__/types'
 import { useCallback, useMemo } from 'react'
-import { useUpdateReleaseConditionMutation } from '@/widgets/ReleaseCondition/queries/UpdateReleaseCondition.generated'
+import { useUpdateReleaseConditionMutation } from '@/shared/api/releaseCondition/mutation/UpdateReleaseCondition.generated'
+import { isObject, omit } from '@fragmentsx/utils'
 
 export const useReleaseCondition = (releaseCondition: ReleaseConditionGet) => {
   const [updateReleaseCondition] = useUpdateReleaseConditionMutation()
@@ -25,10 +17,15 @@ export const useReleaseCondition = (releaseCondition: ReleaseConditionGet) => {
       ?.conditions?.find(cond => cond.filterData?.__typename === 'FilterOSTypeGet')?.filterData?.osTypes ??
       []) as OsType[]
 
+    const geoLocations = (releaseCondition?.conditionSets
+      ?.at(0)
+      ?.conditions?.find(cond => cond.filterData?.__typename === 'FilterGeoLocationsGet')?.filterData?.geoLocations ??
+      []) as OsType[]
+
     return {
       deviceTypes,
       osTypes,
-      geoLocations: [],
+      geoLocations,
       pages: [],
       timeFrames: []
     }
@@ -38,16 +35,20 @@ export const useReleaseCondition = (releaseCondition: ReleaseConditionGet) => {
     async (filterData: FilterPost) => {
       const conditionsFromFilterData = Object.entries(filterData)
         .map(([field, value]) => {
+          const cleanValue = Array.isArray(value)
+            ? value.map(el => (isObject(el) ? omit(el, '__typename') : el))
+            : value
+
           return {
             name: field,
-            filterData: Array.isArray(value)
-              ? value.length > 0
+            filterData: Array.isArray(cleanValue)
+              ? cleanValue.length > 0
                 ? {
-                    [field]: value
+                    [field]: cleanValue
                   }
                 : null
               : {
-                  [field]: value
+                  [field]: cleanValue
                 }
           }
         })

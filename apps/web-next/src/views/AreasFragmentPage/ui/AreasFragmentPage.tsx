@@ -18,6 +18,7 @@ import { DropdownGroup } from '@/shared/ui/DropdownGroup'
 import { DropdownOption } from '@/shared/ui/DropdownOption'
 import { useAreaDetailQuery } from '@/shared/api/area/query/AreaDetail.generated'
 import { useParams } from 'next/navigation'
+import { StreamsTable } from '@/views/AreasStreamsPage/widgets/StreamsTable'
 
 interface CampaignDetailPageProps {}
 
@@ -31,6 +32,8 @@ export const AreasFragmentPage: FC<CampaignDetailPageProps> = () => {
   return (
     <div className={styles.root}>
       <CampaignContentTable campaignId={campaignId} />
+
+      <StreamsTable />
 
       {/*{fragmentId ? (*/}
       {/*  <div className={styles.content}>*/}

@@ -1,6 +1,7 @@
-import * as Types from '../../../__generated__/types';
+import * as Types from '../../../../__generated__/types';
 
 import { gql } from '@apollo/client';
+import { ReleaseConditionFragmentDoc } from '../../fragments/ReleaseConditionFragment.generated';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type UpdateReleaseConditionMutationVariables = Types.Exact<{
@@ -9,7 +10,7 @@ export type UpdateReleaseConditionMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateReleaseConditionMutation = { __typename?: 'Mutation', updateReleaseCondition: { __typename?: 'ReleaseConditionGet', id: number, conditionSets: Array<{ __typename?: 'ConditionSetGet', id: number, conditions: Array<{ __typename?: 'ConditionGet', id: number, name: string, filterData?: { __typename?: 'FilterDeviceTypeGet', deviceTypes: Array<Types.DeviceType> } | { __typename?: 'FilterGeoLocationsGet' } | { __typename?: 'FilterOSTypeGet', osTypes: Array<Types.OsType> } | { __typename?: 'FilterPageGet' } | { __typename?: 'FilterTimeFramesGet' } | null }> }> } };
+export type UpdateReleaseConditionMutation = { __typename?: 'Mutation', updateReleaseCondition: { __typename?: 'ReleaseConditionGet', id: number, name: string, conditionSets: Array<{ __typename?: 'ConditionSetGet', id: number, name: string, conditions: Array<{ __typename?: 'ConditionGet', id: number, name: string, filterData?: { __typename?: 'FilterDeviceTypeGet', deviceTypes: Array<Types.DeviceType> } | { __typename?: 'FilterGeoLocationsGet', geoLocations: Array<{ __typename?: 'FilterGeoLocationGet', country: string, region?: string | null, city?: string | null }> } | { __typename?: 'FilterOSTypeGet', osTypes: Array<Types.OsType> } | { __typename?: 'FilterPageGet', pages: Array<string> } | { __typename?: 'FilterTimeFramesGet', timeFrames: Array<{ __typename?: 'FilterTimeFrameGet', fromTime: any, toTime: any }> } | null }> }> } };
 
 
 export const UpdateReleaseConditionDocument = gql`
@@ -17,25 +18,10 @@ export const UpdateReleaseConditionDocument = gql`
   updateReleaseCondition(
     releaseCondition: {id: $id, conditionSets: [{name: "default", conditions: $conditions}]}
   ) {
-    id
-    conditionSets {
-      id
-      conditions {
-        id
-        name
-        filterData {
-          ... on FilterDeviceTypeGet {
-            deviceTypes
-          }
-          ... on FilterOSTypeGet {
-            osTypes
-          }
-        }
-      }
-    }
+    ...ReleaseCondition
   }
 }
-    `;
+    ${ReleaseConditionFragmentDoc}`;
 export type UpdateReleaseConditionMutationFn = Apollo.MutationFunction<UpdateReleaseConditionMutation, UpdateReleaseConditionMutationVariables>;
 
 /**

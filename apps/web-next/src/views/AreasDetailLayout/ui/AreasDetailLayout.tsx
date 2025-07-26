@@ -83,18 +83,6 @@ export const AreasDetailLayout: FC<CampaignDetailPageProps> = ({ children }) => 
                     </TabItem>
                   )}
                 </Link>
-                <Link type='areaCampaigns' areaSlug={areaSlug} projectSlug={projectSlug}>
-                  {({ isActive }) => (
-                    <TabItem
-                      name='areaStreams'
-                      badge={<TabItemBadge>8</TabItemBadge>}
-                      icon={<StreamsIcon />}
-                      isActive={isActive}
-                    >
-                      Campaings
-                    </TabItem>
-                  )}
-                </Link>
                 <Link type='areaIntegration' areaSlug={areaSlug} projectSlug={projectSlug}>
                   {({ isActive }) => (
                     <TabItem name='areaIntegration' icon={<IntegrationIcon />} isActive={isActive}>

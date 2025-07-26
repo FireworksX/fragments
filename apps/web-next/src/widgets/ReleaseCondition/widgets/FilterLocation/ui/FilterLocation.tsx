@@ -10,7 +10,7 @@ import { DropdownOption } from '@/shared/ui/DropdownOption'
 import { Chip } from '@/shared/ui/Chip'
 import EditIcon from '@/shared/icons/next/pencil.svg'
 import { useStreamLocationFilterLazyQuery } from '../queries/StreamLocationFilter.generated'
-import { noop } from '@fragmentsx/utils'
+import { noop, omit } from '@fragmentsx/utils'
 import { SearchInput } from '@/shared/ui/SearchInput'
 
 interface StreamFilterLocationProps {
@@ -23,8 +23,8 @@ interface StreamFilterLocationProps {
 export const FilterLocation: FC<StreamFilterLocationProps> = ({ className, value = [], editable, onChange = noop }) => {
   const [local, setLocal] = useState(value)
   const [executeQuery, { data, loading }] = useStreamLocationFilterLazyQuery()
-  const list = data?.filter?.geoLocations ?? []
-  const t = (value: string, index: number, arr: unknown[]) => (
+  const list = (data?.filter?.geoLocations ?? []).map(el => omit(el, '__typename'))
+  const t = (value: string, index: number, arr?: unknown[]) => (
     <span className={Array.isArray(arr) ? styles.chipPart : ''}>
       {capitalize(value.toLowerCase())}
       {Array.isArray(arr) && index !== arr?.length - 1 ? ', ' : ''}
@@ -39,10 +39,12 @@ export const FilterLocation: FC<StreamFilterLocationProps> = ({ className, value
     [differedSearch, list]
   )
 
-  const toggleValue = (valueType: OsType) => {
-    const nextValue = value.includes(valueType) ? value.filter(v => v !== valueType) : [...value, valueType]
-    onChange?.(nextValue)
+  const toggleValue = (item: { country: string }) => {
+    const nextValue = checkIsActive(item) ? local.filter(v => v !== item) : [...local, item]
+    setLocal(nextValue)
   }
+
+  const checkIsActive = item => local.findIndex(el => el.country === item.country) !== -1
 
   if (!editable && !value?.length) return null
 
@@ -51,7 +53,7 @@ export const FilterLocation: FC<StreamFilterLocationProps> = ({ className, value
       trigger='click'
       placement='bottom-end'
       isLoading={loading}
-      header={<SearchInput value={search} placeholder='Search' mode='tiny' onChange={setSearch} />}
+      header={!!list?.length && <SearchInput value={search} placeholder='Search' mode='tiny' onChange={setSearch} />}
       onShow={() => executeQuery()}
       onHide={() => onChange(local)}
       width={230}
@@ -62,10 +64,10 @@ export const FilterLocation: FC<StreamFilterLocationProps> = ({ className, value
               <DropdownOptionSelect
                 key={item?.country}
                 className={styles.option}
-                isActive={local.includes(item?.country)}
-                onClick={() => toggleValue(item?.country)}
+                isActive={checkIsActive(item)}
+                onClick={() => toggleValue(item)}
               >
-                {t(item?.country)}
+                {t(item?.country, 0)}
               </DropdownOptionSelect>
             ))}
           </DropdownGroup>
@@ -79,8 +81,8 @@ export const FilterLocation: FC<StreamFilterLocationProps> = ({ className, value
         </>
       }
     >
-      <Chip className={className} prefix='Location:'>
-        {(value?.length ? value : ['Any']).map(t)}
+      <Chip className={cn(className, styles.chip)} prefix='Location:'>
+        {(local?.length ? local : [{ country: 'Any' }]).map((item, index, arr) => t(item.country, index, arr))}
       </Chip>
     </Dropdown>
   )
