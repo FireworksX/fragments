@@ -45,7 +45,7 @@ export const CampaignHeaderLayout: FC<StreamHeaderProps> = ({ className }) => {
     <CampaignHeader
       campaignID={+campaignSlug}
       header={
-        <Link type='areaCampaigns'>
+        <Link type='area'>
           <Touchable className={styles.backAction} effect='none'>
             <ArrowLeftIcon />
             Back to area
@@ -56,7 +56,7 @@ export const CampaignHeaderLayout: FC<StreamHeaderProps> = ({ className }) => {
       footer={
         <>
           <Tabs>
-            <Link type='area' areaSlug={areaSlug} projectSlug={projectSlug}>
+            <Link type='campaign' areaSlug={areaSlug} projectSlug={projectSlug}>
               {({ isActive }) => (
                 <TabItem name='overview' icon={<OverviewIcon />} isActive={isActive}>
                   Overview
