@@ -29,13 +29,13 @@ export const FilterOperationals: FC<StreamFilterOperationalsProps> = ({
   const [executeQuery, { data, loading }] = useStreamOperationalsFilterLazyQuery()
   const list = data?.filter?.osTypes ?? []
 
-  const t = (value: string, index: number, arr: unknown[]) => (
+  const t = (value: string, index: number, arr?: unknown[]) => (
     <span className={Array.isArray(arr) ? styles.chipPart : ''}>
       {capitalize(value.toLowerCase())}
       {Array.isArray(arr) && index !== arr?.length - 1 ? ', ' : ''}
     </span>
   )
-  const hasReset = value?.length > 0 && list?.length > 0
+  const hasReset = local?.length > 0 && list?.length > 0
 
   const toggleValue = (valueType: OsType) => {
     const nextValue = local.includes(valueType) ? local.filter(v => v !== valueType) : [...local, valueType]
@@ -58,7 +58,7 @@ export const FilterOperationals: FC<StreamFilterOperationalsProps> = ({
           <DropdownGroup>
             {list.map(type => (
               <DropdownOptionSelect key={type} isActive={local.includes(type)} onClick={() => toggleValue(type)}>
-                {t(type)}
+                {t(type, 100)}
               </DropdownOptionSelect>
             ))}
           </DropdownGroup>

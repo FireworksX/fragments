@@ -8,6 +8,7 @@ import { useUpdateFeatureFlagMutation } from '@/shared/api/fatureFlag/mutation/U
 import { useCreateFeatureFlagVariantMutation } from '@/shared/api/featureFlagVariant/mutations/CreateFeatureFlagVariant.generated'
 import { useRemoveFeatureFlagVariantMutation } from '@/shared/api/featureFlagVariant/mutations/RemoveFeatureFlagVariant.generated'
 import { useUpdateFeatureFlagVariantMutation } from '@/shared/api/featureFlagVariant/mutations/UpdateFeatureFlagVariant.generated'
+import { useEqualizeRolloutMutation } from '@/views/AreasFragmentPage/widgets/CampaignContentTable/queries/EqualizeRollout.generated'
 
 export const useCampaignContentTable = (campaignId: number) => {
   const { open: openModal, close: closeModal } = useModal()
@@ -16,6 +17,7 @@ export const useCampaignContentTable = (campaignId: number) => {
   const [removeVariant, { loading: removingVariant }] = useRemoveFeatureFlagVariantMutation()
   const [updateVariant] = useUpdateFeatureFlagVariantMutation()
   const [updateFeatureFlag] = useUpdateFeatureFlagMutation()
+  const [equalizeRollout, { loading: equalizeRolloutLoading }] = useEqualizeRolloutMutation()
 
   const { data, loading } = useCampaignContentQuery({
     variables: {
@@ -41,7 +43,7 @@ export const useCampaignContentTable = (campaignId: number) => {
 
   const handleAddVariant = () => {
     openModal(modalNames.configureFeatureFlagVariant, {
-      countVariants: campaign?.featureFlag?.variants?.length,
+      countVariants: variants?.length,
       onSubmit: async nextVariant => {
         await createVariant({
           variables: {
@@ -67,8 +69,10 @@ export const useCampaignContentTable = (campaignId: number) => {
     if (variant) {
       openModal(modalNames.configureFeatureFlagVariant, {
         isEdit: true,
+        countVariants: variants.length,
         initialState: {
           ...variant,
+          rollout: variant.rolloutPercentage,
           fragment: {
             id: variant.fragment?.fragment.id,
             props: variant?.fragment?.props
@@ -87,6 +91,8 @@ export const useCampaignContentTable = (campaignId: number) => {
               }
             }
           })
+
+          refetch()
 
           closeModal()
         }
@@ -129,6 +135,15 @@ export const useCampaignContentTable = (campaignId: number) => {
     })
   }
 
+  const handleEqualizeRollout = async () => {
+    await equalizeRollout({
+      variables: {
+        featureFlagId: featureFlag?.id
+      }
+    })
+    refetch()
+  }
+
   const toggleVariantStatus = useCallback(
     (variantId: number) => {
       const variant = variants?.find(el => el.id === variantId)
@@ -153,6 +168,7 @@ export const useCampaignContentTable = (campaignId: number) => {
     loadingVariantsRollout,
     variants,
     loadingVariants: loading,
+    equalizeRolloutLoading,
     creatingVariant,
     toggleVariantStatus,
     removeVariant,
@@ -160,6 +176,7 @@ export const useCampaignContentTable = (campaignId: number) => {
     handleAddVariant,
     handleSetRotationType,
     handleEditFragment,
-    handleEditVariant
+    handleEditVariant,
+    handleEqualizeRollout
   }
 }

@@ -33,7 +33,11 @@ export const ReleaseCondition: FC<ReleaseConditionProps> = ({ className, editabl
         value={currentFilters.osTypes}
         onChange={next => updateFilter('osTypes', next)}
       />
-      <FilterLocation editable={editable} />
+      <FilterLocation
+        value={currentFilters.geoLocations}
+        editable={editable}
+        onChange={next => updateFilter('geoLocations', next)}
+      />
 
       {/*{condition.deviceTypes && <FilterDevices value={condition.deviceTypes} />}*/}
       {/*<FilterDevices />*/}

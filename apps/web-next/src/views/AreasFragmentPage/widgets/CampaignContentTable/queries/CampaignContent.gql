@@ -8,6 +8,7 @@ query CampaignContent($id: Int!) {
                 id
                 name
                 status
+                rolloutPercentage
                 fragment {
                     fragment {
                         id

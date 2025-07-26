@@ -1,0 +1,3 @@
+mutation EqualizeRollout($featureFlagId: Int!) {
+    normalizeVariantsRolloutPercentage(featureFlagId: $featureFlagId)
+}

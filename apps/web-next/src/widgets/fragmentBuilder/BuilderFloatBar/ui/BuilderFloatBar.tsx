@@ -35,6 +35,7 @@ interface BuilderFloatBarProps {
 }
 
 export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
+  const { openPreview } = useBuilder()
   const { saveFragment } = useBuilderDocument()
   const { creator, manager } = useBuilderCreator()
   const createType = creator.createType
@@ -71,6 +72,9 @@ export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
 
       <div className={styles.delimiter} />
 
+      <Button mode='outline' onClick={openPreview}>
+        Preview
+      </Button>
       <Dropdown className={styles.publishDropdown} disabled trigger='click' options={<BuilderFragmentPublish />}>
         <Button glowing onClick={saveFragment}>
           Save

@@ -13,6 +13,7 @@ import DeleteIcon from '@/shared/icons/next/trash.svg'
 import PauseIcon from '@/shared/icons/next/pause.svg'
 import PlayIcon from '@/shared/icons/next/play.svg'
 import Logo from '@/shared/icons/next/logo.svg'
+import ScaleIcon from '@/shared/icons/next/scale.svg'
 import { TableRow } from '@/shared/ui/Table/components/TableRow'
 import { TableCell } from '@/shared/ui/Table/components/TableCell'
 import { StatusBadge } from '@/shared/ui/StatusBadge'
@@ -55,14 +56,17 @@ const CampaignContentTable: FC<CampaignContentTableProps> = ({ className, campai
     removeVariant,
     handleAddVariant,
     toggleVariantStatus,
+    equalizeRolloutLoading,
     handleSetRotationType,
     handleEditFragment,
-    handleEditVariant
+    handleEditVariant,
+    handleEqualizeRollout
   } = useCampaignContentTable(campaignId)
 
   return (
     <div className={styles.root}>
       <div className={styles.header}>
+        <h2 className={styles.title}>Content</h2>
         {variants.length > 1 && (
           <>
             <SearchInput mode='tiny' placeholder='Search...' />
@@ -97,6 +101,15 @@ const CampaignContentTable: FC<CampaignContentTableProps> = ({ className, campai
                 {capitalize(featureFlag?.rotationType?.toLowerCase())}
               </SelectMimicry>
             </Dropdown>
+
+            <Button
+              icon={<ScaleIcon />}
+              mode='secondary'
+              loading={equalizeRolloutLoading}
+              onClick={handleEqualizeRollout}
+            >
+              Equalize
+            </Button>
           </>
         )}
 

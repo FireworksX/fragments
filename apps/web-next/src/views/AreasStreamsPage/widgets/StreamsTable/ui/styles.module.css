@@ -12,6 +12,14 @@
     justify-content: flex-end;
 }
 
+.title {
+    font-size: 22px;
+    color: var(--text-color-accent);
+    font-weight: bold;
+    margin: 0;
+    flex: 1;
+}
+
 .search {
     flex-basis: 30%;
 }

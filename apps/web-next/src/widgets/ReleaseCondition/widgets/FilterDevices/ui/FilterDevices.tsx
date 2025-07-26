@@ -23,13 +23,13 @@ export const FilterDevices: FC<StreamFilterDevicesProps> = ({ className, value =
   const [local, setLocal] = useState(value)
   const [executeQuery, { data, loading }] = useStreamDevicesFilterLazyQuery()
   const list = data?.filter?.deviceTypes ?? []
-  const t = (value: string, index: number, arr: unknown[]) => (
+  const t = (value: string, index: number, arr?: unknown[]) => (
     <span className={Array.isArray(arr) ? styles.chipPart : ''}>
       {capitalize(value.toLowerCase())}
       {Array.isArray(arr) && index !== arr?.length - 1 ? ', ' : ''}
     </span>
   )
-  const hasReset = value?.length > 0 && list?.length > 0
+  const hasReset = local?.length > 0 && list?.length > 0
 
   const toggleValue = (valueType: DeviceType) => {
     const nextValue = local.includes(valueType) ? local.filter(v => v !== valueType) : [...local, valueType]
@@ -46,15 +46,13 @@ export const FilterDevices: FC<StreamFilterDevicesProps> = ({ className, value =
       disabled={!editable}
       width={120}
       onShow={() => executeQuery()}
-      onHide={() => {
-        onChange?.(local)
-      }}
+      onHide={() => onChange?.(local)}
       options={
         <>
           <DropdownGroup>
             {list.map(type => (
               <DropdownOptionSelect key={type} isActive={local.includes(type)} onClick={() => toggleValue(type)}>
-                {t(type, 100, [])}
+                {t(type, 100)}
               </DropdownOptionSelect>
             ))}
           </DropdownGroup>

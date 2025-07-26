@@ -1,0 +1,17 @@
+# import "../../fragments/ReleaseConditionFragment.gql"
+
+mutation UpdateReleaseCondition($id: Int!, $conditions: [ConditionPost!]!) {
+    updateReleaseCondition(
+        releaseCondition: {
+            id: $id
+            conditionSets: [
+                {
+                    name: "default"
+                    conditions: $conditions
+                }
+            ]
+        }
+    ) {
+        ...ReleaseCondition
+    }
+}

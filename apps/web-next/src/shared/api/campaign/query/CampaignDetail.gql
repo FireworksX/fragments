@@ -1,0 +1,15 @@
+# import "../../fragments/ReleaseConditionFragment.gql"
+
+query CampaignDetail($id: Int!) {
+    campaign(campaignId: $id) {
+        id
+        name
+        status
+        featureFlag {
+            id
+            releaseCondition {
+                ...ReleaseCondition
+            }
+        }
+    }
+}
