@@ -100,7 +100,7 @@ from .release_condition import (
 )
 from .schemas.area import AreaGet, AreaPatch, AreaPost
 from .schemas.campaign import CampaignGet, CampaignPatch, CampaignPost, CampaignStatus
-from .schemas.client import ClientGet, ClientHistoryGet
+from .schemas.client import ClientAreaGet, ClientGet, ClientHistoryGet
 from .schemas.feature_flag import VariantGet
 from .schemas.feedback import FeedbackGet, FeedbackPost
 from .schemas.filesystem import ProjectDirectory, ProjectDirectoryGet, ProjectDirectoryPatch
@@ -613,7 +613,7 @@ class ClientQuery:
     @strawberry.field
     async def client_area(
         self, info: strawberry.Info[Context], area_code: str
-    ) -> Optional[VariantGet]:
+    ) -> Optional[ClientAreaGet]:
         return await client_area_route(info, area_code)
 
 

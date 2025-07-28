@@ -28,7 +28,7 @@ from .campaign import CampaignStatus, get_campaigns_by_area_id_db
 from .fragment import fragment_db_to_fragment
 from .middleware import ClientInfo, Context
 from .project import get_user_role_in_project, project_db_to_project, project_goal_db_to_goal
-from .schemas.client import ClientGet, ClientHistoryEventType, ClientHistoryGet
+from .schemas.client import ClientAreaGet, ClientGet, ClientHistoryEventType, ClientHistoryGet
 from .schemas.feature_flag import FragmentVariantGet, RotationType, VariantGet, VariantStatus
 from .schemas.project import ClientProjectGoalGet
 from .schemas.release_condition import FilterType
@@ -298,7 +298,7 @@ async def get_client_history_route(
     return [client_history_db_to_history(h) for h in history]
 
 
-async def client_area_route(info: strawberry.Info[Context], area_code: str) -> Optional[VariantGet]:
+async def client_area_route(info: strawberry.Info[Context], area_code: str) -> Optional[ClientAreaGet]:
     logger.info(f"Getting area variant for area code {area_code}")
     db: Session = info.context.session()
 
@@ -485,4 +485,7 @@ async def client_area_route(info: strawberry.Info[Context], area_code: str) -> O
             campaign_id=best_campaign.id,
         )
 
-    return variantFragment
+    return ClientAreaGet(
+        variant=variantFragment,
+        area_properties=area.properties,
+    )

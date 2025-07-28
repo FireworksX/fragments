@@ -61,6 +61,7 @@ def area_db_to_area(area: Area) -> AreaGet:
         logo=MediaGet(
             media_id=area.logo_id, media_type=MediaType.AREA_LOGO, public_path=area.logo.public_path
         ),
+        properties=area.properties,
     )
 
 
@@ -85,11 +86,8 @@ async def create_area_route(info: strawberry.Info[Context], area: AreaPost) -> A
 
     area_db: Area = await create_area_db(
         db,
-        area.default_campaign_name,
-        area.project_id,
         user.user.id,
-        area.area_code,
-        area.description,
+        area
     )
     logger.debug(f"Created area {area_db.id}")
     return area_db_to_area(area_db)
@@ -159,7 +157,7 @@ async def update_area_route(info: strawberry.Info[Context], area: AreaPatch) -> 
             status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to update areas'
         )
 
-    area_db: Area = await update_area_by_id_db(db, area.__dict__)
+    area_db: Area = await update_area_by_id_db(db, area)
     logger.debug(f"Updated area {area_db.id}")
     return area_db_to_area(area_db)
 
