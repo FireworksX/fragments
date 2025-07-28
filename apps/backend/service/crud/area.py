@@ -102,6 +102,9 @@ async def update_area_by_id_db(db: Session, area: AreaPatch) -> Area:
     if area.description is not None:
         logger.debug(f"Updating description for area {area.id}")
         area_db.description = area.description
+    if area.properties is not None:
+        logger.debug(f"Updating properties for area {area.id}")
+        area_db.properties = area.properties
     if area.area_code is not None:
         logger.debug(f"Updating area code for area {area.id} to {area.area_code}")
         # Check if area code already exists in project
