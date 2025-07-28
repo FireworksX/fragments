@@ -17,7 +17,7 @@ class AreaGet:
     campaigns: List[CampaignGet]
     default_campaign: CampaignGet
     logo: MediaGet
-
+    properties: Optional[strawberry.scalars.JSON] = None
 
 @strawberry.input
 class AreaPost:
@@ -25,6 +25,7 @@ class AreaPost:
     area_code: str
     default_campaign_name: str
     description: Optional[str] = None
+    properties: Optional[strawberry.scalars.JSON] = None
 
 
 @strawberry.input
@@ -32,3 +33,4 @@ class AreaPatch:
     id: int
     area_code: Optional[str] = None
     description: Optional[str] = None
+    properties: Optional[strawberry.scalars.JSON] = None

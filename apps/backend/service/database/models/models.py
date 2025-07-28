@@ -102,6 +102,8 @@ class Area(Base):
     # One-to-Many relationship with Campaign
     campaigns = relationship('Campaign', back_populates='area')
 
+    properties = Column('properties', JSON, nullable=True)
+
 
 class Project(Base):
     __tablename__ = 'project'
