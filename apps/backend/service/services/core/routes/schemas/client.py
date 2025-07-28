@@ -58,3 +58,9 @@ class ClientInfo:
     time_frame: Optional[datetime]
     page: Optional[str]
     ip_address: Optional[str]
+
+
+@strawberry.type
+class ClientAreaGet:
+    variant: VariantGet
+    area_properties: Optional[strawberry.scalars.JSON] = None
