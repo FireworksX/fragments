@@ -13,6 +13,7 @@ from services.core.routes.schemas.campaign import CampaignStatus
 
 async def create_area_db(
     db: Session,
+    author_id: int,
     area: AreaPost,
 ) -> Area:
     logger.info(f"Creating area with code {area.area_code} in project {area.project_id}")
@@ -24,7 +25,7 @@ async def create_area_db(
     default_media = await generate_default_media(db, f"{area.area_code}.png")
     area_db = Area(
         project_id=area.project_id,
-        author_id=area.author_id,
+        author_id=author_id,
         description=area.description,
         area_code=area.area_code,
         logo_id=default_media.id,
@@ -37,13 +38,13 @@ async def create_area_db(
 
     default_campaign = await create_campaign_db(
         db,
-        name=area_db.default_campaign_name,
+        name=area.default_campaign_name,
         description=f'Default campaign for {area_db.area_code}',
         project_id=area_db.project_id,
         area_id=area_db.id,
         default=True,
         status=CampaignStatus.ACTIVE,
-        author_id=area_db.author_id,
+        author_id=author_id,
         experiment_id=None,
     )
     logger.debug(f"Created default campaign {default_campaign.id} for area {area_db.id}")

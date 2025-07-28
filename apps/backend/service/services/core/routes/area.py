@@ -86,6 +86,7 @@ async def create_area_route(info: strawberry.Info[Context], area: AreaPost) -> A
 
     area_db: Area = await create_area_db(
         db,
+        user.user.id,
         area
     )
     logger.debug(f"Created area {area_db.id}")
