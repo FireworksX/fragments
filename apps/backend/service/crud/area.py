@@ -1,3 +1,4 @@
+import json
 from datetime import datetime, timezone
 from typing import List, Optional
 
@@ -29,7 +30,7 @@ async def create_area_db(
         description=area.description,
         area_code=area.area_code,
         logo_id=default_media.id,
-        properties=area.properties,
+        properties=json.dumps(area.properties) if area.properties else None,
     )
     db.add(area_db)
     db.commit()
@@ -105,7 +106,7 @@ async def update_area_by_id_db(db: Session, area: AreaPatch) -> Area:
         area_db.description = area.description
     if area.properties is not None:
         logger.debug(f"Updating properties for area {area.id}")
-        area_db.properties = area.properties
+        area_db.properties = json.dumps(area.properties) if area.properties else None
     if area.area_code is not None:
         logger.debug(f"Updating area code for area {area.id} to {area.area_code}")
         # Check if area code already exists in project

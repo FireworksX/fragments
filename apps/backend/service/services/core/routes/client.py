@@ -1,4 +1,5 @@
 import datetime
+import json
 import random
 import re
 from typing import List, Optional
@@ -487,5 +488,5 @@ async def client_area_route(info: strawberry.Info[Context], area_code: str) -> O
 
     return ClientAreaGet(
         variant=variantFragment,
-        area_properties=area.properties,
+        area_properties=json.loads(area.properties) if area.properties else None,
     )

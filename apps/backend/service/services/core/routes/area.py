@@ -1,3 +1,4 @@
+import json
 from typing import List
 
 import strawberry
@@ -61,7 +62,7 @@ def area_db_to_area(area: Area) -> AreaGet:
         logo=MediaGet(
             media_id=area.logo_id, media_type=MediaType.AREA_LOGO, public_path=area.logo.public_path
         ),
-        properties=area.properties,
+        properties=json.loads(area.properties) if area.properties else None,
     )
 
 
