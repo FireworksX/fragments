@@ -33,7 +33,7 @@ async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
     return role is not None and role is not RoleGet.DESIGNER
 
 
-def feature_flag_db_to_feature_flag(feature_flag: FeatureFlag) -> FeatureFlagGet:
+async def feature_flag_db_to_feature_flag(db: Session, feature_flag: FeatureFlag) -> FeatureFlagGet:
     logger.debug(f"Converting feature flag {feature_flag.id} to schema")
     return FeatureFlagGet(
         id=feature_flag.id,
@@ -42,7 +42,7 @@ def feature_flag_db_to_feature_flag(feature_flag: FeatureFlag) -> FeatureFlagGet
         release_condition=release_condition_db_to_release_condition(feature_flag.release_condition),
         rotation_type=RotationType(feature_flag.rotation_type),
         variants=[
-            variant_db_to_variant(variant)
+            await variant_db_to_variant(db, variant)
             for variant in feature_flag.variants
             if variant.deleted_at is None
         ],
@@ -69,7 +69,7 @@ async def feature_flags(
 
     feature_flags: List[FeatureFlag] = await get_feature_flags_db(db)
     logger.debug(f"Found {len(feature_flags)} feature flags")
-    return [feature_flag_db_to_feature_flag(ff) for ff in feature_flags]
+    return [await feature_flag_db_to_feature_flag(db, ff) for ff in feature_flags]
 
 
 async def feature_flag_by_id(
@@ -94,7 +94,7 @@ async def feature_flag_by_id(
             detail=f'User is not allowed to view feature flags',
         )
 
-    return feature_flag_db_to_feature_flag(feature_flag)
+    return await feature_flag_db_to_feature_flag(db, feature_flag)
 
 
 async def create_feature_flag_route(
@@ -116,7 +116,7 @@ async def create_feature_flag_route(
 
     feature_flag: FeatureFlag = await create_feature_flag_db(db, project_id, ff)
     logger.info(f"Successfully created feature flag {feature_flag.id}")
-    return feature_flag_db_to_feature_flag(feature_flag)
+    return await feature_flag_db_to_feature_flag(db, feature_flag)
 
 
 async def update_feature_flag_route(
@@ -145,7 +145,7 @@ async def update_feature_flag_route(
         db, feature_flag_id=ff.id, values=ff.__dict__, variants=ff.variants
     )
     logger.info(f"Successfully updated feature flag {feature_flag.id}")
-    return feature_flag_db_to_feature_flag(feature_flag)
+    return await feature_flag_db_to_feature_flag(db, feature_flag)
 
 
 async def delete_feature_flag_route(info: strawberry.Info[Context], feature_flag_id: int) -> None:
