@@ -63,4 +63,4 @@ class ClientInfo:
 @strawberry.type
 class ClientAreaGet:
     variant: VariantGet
-    area_properties: Optional[strawberry.scalars.JSON] = None
+    area_properties: Optional[List[strawberry.scalars.JSON]] = None
