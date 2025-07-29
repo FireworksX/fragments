@@ -1,1 +1,1 @@
-export { default as StackNumberProperty } from './ui/StackNumberProperty'
+export { StackNumberProperty } from './ui/StackNumberProperty'

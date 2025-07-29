@@ -37,9 +37,10 @@ const BuilderText: FC<BuilderTextProps> = ({ className }) => {
         hasConnector={!content.disabled}
         value={content.value}
         variable={{
-          link: content.variableLink,
+          data: content.variableData,
           actions: content.actions,
-          onReset: content.resetVariable
+          onReset: content.resetVariable,
+          onClick: content.editVariable
         }}
       >
         <ControlRowWide>

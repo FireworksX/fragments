@@ -22,6 +22,7 @@ type AreaGet {
     id: Int!
     logo: MediaGet!
     projectId: Int!
+    properties: [JSON!]
 }
 
 type AuthPayload {
@@ -40,6 +41,11 @@ type CampaignGet {
     logo: MediaGet!
     name: String!
     status: CampaignStatus!
+}
+
+type ClientAreaGet {
+    areaProperties: [JSON!]
+    variant: VariantGet!
 }
 
 type ClientGet {
@@ -270,7 +276,7 @@ type Query {
     area(areaId: Int, projectId: Int): [AreaGet!]!
     campaign(areaId: Int, campaignId: Int, limit: Int = 5, name: String, status: CampaignStatus, withoutDefault: Boolean = true): [CampaignGet!]!
     client(clientId: Int, projectId: Int): [ClientGet!]!
-    clientArea(areaCode: String!): VariantGet
+    clientArea(areaCode: String!): ClientAreaGet
     clientFragment(fragmentId: Int!): FragmentGet
     clientHistory(clientId: Int!): [ClientHistoryGet!]!
     condition(conditionId: Int!): ConditionGet!
@@ -411,6 +417,7 @@ input AreaPatch {
     areaCode: String
     description: String
     id: Int!
+    properties: [JSON!]
 }
 
 input AreaPost {
@@ -418,6 +425,7 @@ input AreaPost {
     defaultCampaignName: String!
     description: String
     projectId: Int!
+    properties: [JSON!]
 }
 
 input CampaignPatch {

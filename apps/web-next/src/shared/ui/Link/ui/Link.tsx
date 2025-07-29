@@ -5,27 +5,29 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import { linkConfig, LinkType } from '../lib/linkConfig'
 import { useLink } from '@/shared/ui/Link/hooks/useLink'
+import { Touchable, TouchableProps } from '@/shared/ui/Touchable'
 
 interface LinkProps {
   className?: string
-  type: LinkType
+  type?: LinkType
   partial?: boolean
   children: ReactNode | (({ isActive }: { isActive: boolean }) => ReactNode)
+  onClick?: TouchableProps['onClick']
 }
 
-export const Link: FC<LinkProps> = ({ className, children, ...inputLinkData }) => {
+export const Link: FC<LinkProps> = ({ className, children, onClick, ...inputLinkData }) => {
   const { href, isActive } = useLink(inputLinkData)
 
   if (isActive || !href) {
     return (
-      <div className={cn(styles.root, className)}>
+      <Touchable TagName='div' className={cn(styles.root, className)} onClick={onClick}>
         {typeof children === 'function' ? children({ isActive }) : children}
-      </div>
+      </Touchable>
     )
   }
 
   return (
-    <NextLink className={cn(styles.root, className)} href={href}>
+    <NextLink className={cn(styles.root, className)} href={href} onClick={onClick}>
       {typeof children === 'function' ? children({ isActive }) : children}
     </NextLink>
   )

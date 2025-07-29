@@ -54,7 +54,7 @@ const requiredControls: TabsSelectorItem[] = [
   }
 ]
 
-const StackGoals: FC<StackNumberVariableProps> = ({ className }) => {
+export const StackGoals: FC<StackNumberVariableProps> = ({ className }) => {
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackGoals}`)
   const context = popout?.context ?? {}
   const { list } = useStackGoals()
@@ -102,5 +102,3 @@ const StackGoals: FC<StackNumberVariableProps> = ({ className }) => {
     </div>
   )
 }
-
-export default StackGoals

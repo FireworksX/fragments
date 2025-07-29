@@ -26,7 +26,7 @@ export const useStreamsTable = () => {
     fetchPolicy: 'cache-only'
   })
 
-  const { data: campaignsData } = useListCampaignsQuery({
+  const { data: campaignsData, loading } = useListCampaignsQuery({
     variables: {
       areaId: +areaSlug
     }
@@ -57,6 +57,7 @@ export const useStreamsTable = () => {
   }
 
   return {
+    loading,
     areaSlug,
     list: campaigns,
     updateStream,

@@ -46,7 +46,7 @@ const requiredControls: TabsSelectorItem[] = [
   }
 ]
 
-const StackEventProperty: FC<StackNumberVariableProps> = ({ className }) => {
+export const StackEventProperty: FC<StackNumberVariableProps> = ({ className }) => {
   const { documentManager } = useBuilderDocument()
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackEventProperty}`)
   const context = popout?.context ?? {}
@@ -100,5 +100,3 @@ const StackEventProperty: FC<StackNumberVariableProps> = ({ className }) => {
     </div>
   )
 }
-
-export default StackEventProperty

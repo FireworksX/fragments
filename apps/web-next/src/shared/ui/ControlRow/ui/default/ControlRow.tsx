@@ -26,7 +26,13 @@ export interface BuilderControlRowProps extends PropsWithChildren {
     onRestOverride: () => void
   }
   variable?: {
-    link?: LinkKey
+    data?: {
+      _id?: string
+      _type?: keyof typeof definition.nodes
+      name?: string
+      type: keyof typeof definition.variableType
+      mode?: keyof typeof definition.eventMode
+    }
     actions: DropdownRenderOption[][]
     onReset?: () => void
     onClick?: () => void
@@ -92,21 +98,18 @@ const ControlRow: FC<BuilderControlRowProps> = ({
         </div>
       </RenderDropdown>
 
-      {variable?.link ? (
-        <GraphValue graphState={documentManager} field={variable.link}>
-          {variableValue => (
-            <ControlRowWide>
-              <InputSelectVariable
-                kind={variableValue._type === definition.nodes.Variable ? 'variable' : 'computed'}
-                {...variableValue}
-                onClick={variable?.onClick}
-                onReset={variable?.onReset}
-              >
-                {variableValue.name ?? variableValue._id}
-              </InputSelectVariable>
-            </ControlRowWide>
-          )}
-        </GraphValue>
+      {variable?.data?.type ? (
+        <ControlRowWide>
+          <InputSelectVariable
+            kind={variable.data._type === definition.nodes.Variable ? 'variable' : 'computed'}
+            type={variable.data.type}
+            mode={variable.data.mode}
+            onClick={variable?.onClick}
+            onReset={variable?.onReset}
+          >
+            {variable.data.name ?? variable.data._id}
+          </InputSelectVariable>
+        </ControlRowWide>
       ) : (
         children
       )}

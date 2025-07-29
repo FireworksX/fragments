@@ -10,10 +10,11 @@ import FragmentIcon from '@/shared/icons/next/component.svg'
 import { Spinner } from '@/shared/ui/Spinner'
 
 interface BuilderFragmentTabsProps {
+  isPreview?: boolean
   className?: string
 }
 
-export const BuilderFragmentTabs: FC<BuilderFragmentTabsProps> = ({ className }) => {
+export const BuilderFragmentTabs: FC<BuilderFragmentTabsProps> = ({ className, isPreview }) => {
   const { tabs, selectTab, closeTab } = useBuilderTabs()
 
   if (!tabs.length) {
@@ -21,7 +22,12 @@ export const BuilderFragmentTabs: FC<BuilderFragmentTabsProps> = ({ className })
   }
 
   return (
-    <Container className={cn(styles.root, className)} data-testid='BuilderFragmentTabs'>
+    <Container
+      className={cn(styles.root, className, {
+        [styles.preview]: isPreview
+      })}
+      data-testid='BuilderFragmentTabs'
+    >
       {tabs.map((tab, index) => (
         <Touchable
           key={tab.key}

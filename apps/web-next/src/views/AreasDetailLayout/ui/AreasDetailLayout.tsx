@@ -10,6 +10,7 @@ import VisualIcon from '@/shared/icons/next/component.svg'
 import StreamsIcon from '@/shared/icons/next/podcast.svg'
 import DeleteIcon from '@/shared/icons/next/trash.svg'
 import IntegrationIcon from '@/shared/icons/next/blocks.svg'
+import SettingsIcon from '@/shared/icons/next/settings.svg'
 import { useAreaDetail } from '@/views/AreasDetailLayout/hooks/useAreaDetail'
 import Tabs from '../../../shared/ui/Tabs/ui'
 import { TabItem } from '@/shared/ui/TabItem'
@@ -83,10 +84,10 @@ export const AreasDetailLayout: FC<CampaignDetailPageProps> = ({ children }) => 
                     </TabItem>
                   )}
                 </Link>
-                <Link type='areaIntegration' areaSlug={areaSlug} projectSlug={projectSlug}>
+                <Link type='areaSettings' areaSlug={areaSlug} projectSlug={projectSlug}>
                   {({ isActive }) => (
-                    <TabItem name='areaIntegration' icon={<IntegrationIcon />} isActive={isActive}>
-                      Integration
+                    <TabItem name='areaSettings' icon={<SettingsIcon />} isActive={isActive}>
+                      Configure
                     </TabItem>
                   )}
                 </Link>

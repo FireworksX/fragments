@@ -14,7 +14,7 @@ const overflowOptions = Object.keys(definition.overflow)
 
 export const BuilderOverflowControl: FC<BuilderOverflowControlProps> = memo(({ className }) => {
   const [value, setValue, valueInfo] = useLayerValue('overflow')
-  const { disabled, actions, variableLink, resetVariable, editVariable } = useLayerPropertyValue('overflow')
+  const { disabled, actions, variableData, resetVariable, editVariable } = useLayerPropertyValue('overflow')
 
   return (
     <ControlRow
@@ -26,7 +26,7 @@ export const BuilderOverflowControl: FC<BuilderOverflowControlProps> = memo(({ c
       }}
       hasConnector={!disabled}
       variable={{
-        link: variableLink,
+        data: variableData,
         actions,
         onClick: editVariable,
         onReset: resetVariable

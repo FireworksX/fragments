@@ -1,1 +1,1 @@
-export { default as StackStringProperty } from './ui/StackStringProperty'
+export { StackStringProperty } from './ui/StackStringProperty'

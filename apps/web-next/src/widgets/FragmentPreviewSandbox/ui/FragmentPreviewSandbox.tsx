@@ -8,18 +8,19 @@ import { PreviewSandboxProps } from '../widgets/PreviewSandboxProps'
 import { useFragmentPreviewSandbox } from '@/widgets/FragmentPreviewSandbox/hooks/useFragmentPreviewSandbox'
 import { Instance } from '@fragmentsx/render-react'
 import { StackCollector } from '@/widgets/StackCollector'
-import StackFragmentProps from '@/features/popouts/StackFragmentProps/ui/StackFragmentProps'
 import { popoutNames } from '@/shared/data'
 import { Button } from '@/shared/ui/Button'
 import { popoutsStore } from '@/shared/store/popouts.store'
 import { StackPanelColorPicker } from '@/features/popouts/StackPanelColorPicker'
-import StackGoals from '@/features/popouts/StackGoals/ui/StackGoals'
-import StackCreateGoal from '@/features/popouts/StackCreateGoal/ui/StackCreateGoal'
+import { StackGoals } from '@/features/popouts/StackGoals'
+import { StackCreateGoal } from '@/features/popouts/StackCreateGoal'
+import { StackFragmentProps } from '@/features/popouts/StackFragmentProps'
 
 interface FragmentPreviewSandboxProps {
   initialProps?: unknown
   fragmentId: unknown
   className?: string
+  areaProperties?: unknown
   onChangeProps?: () => void
 }
 
@@ -27,9 +28,10 @@ export const FragmentPreviewSandbox: FC<FragmentPreviewSandboxProps> = ({
   className,
   fragmentId,
   initialProps,
+  areaProperties,
   onChangeProps
 }) => {
-  const { props, setProps } = useFragmentPreviewSandbox(initialProps, onChangeProps)
+  const { props, setProps } = useFragmentPreviewSandbox(initialProps, onChangeProps, areaProperties)
   // const { loading } = useFragmentManager(fragmentId)
 
   return (
@@ -56,6 +58,7 @@ export const FragmentPreviewSandbox: FC<FragmentPreviewSandboxProps> = ({
                   context: {
                     fragmentId,
                     props,
+                    areaProperties,
                     onChange: setProps
                   }
                 })

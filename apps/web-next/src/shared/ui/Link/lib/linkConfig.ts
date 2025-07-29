@@ -75,6 +75,10 @@ export const linkConfig = {
     path: ({ areaSlug, projectSlug }) => `/project/${projectSlug}/areas/${areaSlug}/integration`,
     params: ['areaSlug', 'projectSlug']
   },
+  areaSettings: {
+    path: ({ areaSlug, projectSlug }) => `/project/${projectSlug}/areas/${areaSlug}/settings`,
+    params: ['areaSlug', 'projectSlug']
+  },
   campaign: {
     path: ({ areaSlug, projectSlug, campaignSlug }) =>
       `/project/${projectSlug}/areas/${areaSlug}/campaigns/${campaignSlug}`,

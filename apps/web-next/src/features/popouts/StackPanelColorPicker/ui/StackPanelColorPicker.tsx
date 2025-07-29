@@ -24,7 +24,7 @@ interface StackPanelColorPickerProps extends StackPanel {
   className?: string
 }
 
-const StackPanelColorPicker: FC<StackPanelColorPickerProps> = ({ className }) => {
+export const StackPanelColorPicker: FC<StackPanelColorPickerProps> = ({ className }) => {
   const { documentManager } = useBuilderDocument()
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.colorPicker}`)
   const context = popout.context ?? {}
@@ -76,5 +76,3 @@ const StackPanelColorPicker: FC<StackPanelColorPickerProps> = ({ className }) =>
     </div>
   )
 }
-
-export default StackPanelColorPicker

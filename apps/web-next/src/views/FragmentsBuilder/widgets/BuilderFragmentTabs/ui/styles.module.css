@@ -7,6 +7,12 @@
     min-height: var(--app-size-tabs-height);
     border-bottom: 1px solid var(--border);
     z-index: var(--z-index-builder-tabs);
+    overflow: auto;
+    width: calc(100vw - var(--builder-size-left-bar) - var(--builder-size-right-bar));
+}
+
+.preview {
+    width: 100%;
 }
 
 .beforeSlot {

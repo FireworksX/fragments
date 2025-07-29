@@ -38,6 +38,8 @@ import { ProjectTreeModal } from '@/widgets/modals/ProjectTreeModal'
 import { ModalCollector } from '@/widgets/ModalCollector'
 import { withModalCollector } from '@/shared/hocs/withModalCollector'
 import { modalNames } from '@/shared/data'
+import { Touchable } from '@/shared/ui/Touchable'
+import { Link } from '@/shared/ui/Link'
 
 interface CampaignContentTableProps {
   campaignId: number
@@ -210,7 +212,9 @@ const CampaignContentTable: FC<CampaignContentTableProps> = ({ className, campai
         {variants.map((variant, index) => (
           <TableRow key={variant.id}>
             <TableCell className={styles.idCell}>{variant.id}</TableCell>
-            <TableCell>{variant.name}</TableCell>
+            <TableCell>
+              <Link onClick={() => handleEditVariant(variant.id)}>{variant.name}</Link>
+            </TableCell>
             <TableCell>
               <StatusBadge status={statusToIndicatorMap[variant.status]} />
             </TableCell>

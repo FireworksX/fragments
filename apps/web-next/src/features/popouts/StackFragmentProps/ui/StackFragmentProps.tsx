@@ -11,8 +11,8 @@ interface StackNumberVariableProps {
   className?: string
 }
 
-const StackFragmentProps: FC<StackNumberVariableProps> = ({ className }) => {
-  const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackFragmentProps}`)
+export const StackFragmentProps: FC<StackNumberVariableProps> = ({ className }) => {
+  const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackFragmentProps}`, { deep: true })
   const context = popout?.context ?? {}
 
   const { definitions, manager } = useStackFragmentProps(context)
@@ -20,10 +20,22 @@ const StackFragmentProps: FC<StackNumberVariableProps> = ({ className }) => {
   return (
     <div className={cn(styles.root, className)}>
       {definitions.map(def => (
-        <InstancePropertyGeneric value={def.value} property={def.link} manager={manager} onChange={def.setValue} />
+        <InstancePropertyGeneric
+          key={def}
+          value={def.value}
+          property={def.link}
+          manager={manager}
+          variable={{
+            // link: variableLink,
+            data: def.variable.data,
+            actions: def.variable.actions
+            // onClick: editVariable,
+            // onReset: resetVariable
+          }}
+          hasConnector={def.hasConnector}
+          onChange={def.setValue}
+        />
       ))}
     </div>
   )
 }
-
-export default StackFragmentProps

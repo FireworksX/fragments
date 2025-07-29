@@ -1,5 +1,6 @@
 import React, { FC, useContext, useMemo, useState } from 'react'
 import cn from 'classnames'
+import { entityOfKey } from '@graph-state/core'
 import styles from './styles.module.css'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
@@ -13,6 +14,7 @@ import { InputText, InputTextAnimated } from '@/shared/ui/InputText'
 import { Textarea, TextareaAnimated } from '@/shared/ui/Textarea'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { PropertyContentString } from '@/entities/properyContent/PropertyContentString'
 
 interface StackStringVariableProps {
   className?: string
@@ -29,11 +31,10 @@ const controls: TabsSelectorItem[] = [
   }
 ]
 
-const StackStringProperty: FC<StackStringVariableProps> = ({ className }) => {
-  const { documentManager } = useBuilderDocument()
+export const StackStringProperty: FC<StackStringVariableProps> = ({ className }) => {
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackStringProperty}`)
   const context = popout?.context ?? {}
-  const id = documentManager.entityOfKey(context.propertyLink)?._id
+  const id = entityOfKey(context.propertyLink)?._id
   const [name, setName] = useLayerValue('name', context?.propertyLink)
   const [required, setRequired] = useLayerValue('required', context?.propertyLink)
   const [placeholder, setPlaceholder] = useLayerValue('placeholder', context?.propertyLink)
@@ -42,42 +43,29 @@ const StackStringProperty: FC<StackStringVariableProps> = ({ className }) => {
 
   return (
     <div className={cn(styles.root, className)}>
-      <ControlRow title='ID'>
-        <ControlRowWide>
-          <InputText value={id} disabled />
-        </ControlRowWide>
-      </ControlRow>
-      <ControlRow title='Name'>
-        <ControlRowWide>
-          <InputText value={name} onChangeValue={setName} />
-        </ControlRowWide>
-      </ControlRow>
-      <ControlRow title='Required'>
-        <ControlRowWide>
-          <TabsSelector items={controls} value={required} onChange={({ name }) => setRequired(name)} />
-        </ControlRowWide>
-      </ControlRow>
-      <ControlRow title='Placeholder'>
-        <ControlRowWide>
-          <InputText value={placeholder} onChangeValue={setPlaceholder} />
-        </ControlRowWide>
-      </ControlRow>
-      <ControlRow title='Default Value'>
-        <ControlRowWide>
-          {isTextarea ? (
-            <Textarea value={defaultValue} onChangeValue={setDefaultValue} />
-          ) : (
-            <InputText value={defaultValue} onChangeValue={setDefaultValue} />
-          )}
-        </ControlRowWide>
-      </ControlRow>
-      <ControlRow title='Textarea'>
-        <ControlRowWide>
-          <TabsSelector items={controls} value={isTextarea} onChange={({ name }) => setIsTextarea(name)} />
-        </ControlRowWide>
-      </ControlRow>
+      <PropertyContentString
+        id={id}
+        name={{
+          value: name,
+          onChange: setName
+        }}
+        required={{
+          value: required,
+          onChange: setRequired
+        }}
+        placeholder={{
+          value: placeholder,
+          onChange: setPlaceholder
+        }}
+        isTextarea={{
+          value: isTextarea,
+          onChange: setIsTextarea
+        }}
+        defaultValue={{
+          value: defaultValue,
+          onChange: setDefaultValue
+        }}
+      />
     </div>
   )
 }
-
-export default StackStringProperty

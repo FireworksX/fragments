@@ -21,6 +21,10 @@
     padding: 4px;
 }
 
+.nameCell {
+    color: var(--primary);
+}
+
 .innerCell {
     display: flex;
     align-items: center;

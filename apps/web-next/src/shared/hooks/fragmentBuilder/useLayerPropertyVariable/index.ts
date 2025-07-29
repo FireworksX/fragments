@@ -3,14 +3,18 @@ import { useCallback, useMemo } from 'react'
 import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { useLayerVariable, UseLayerVariableOptions } from '../useLayerVariable'
+import { useGraph } from '@graph-state/react'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 interface Options extends Pick<UseLayerVariableOptions, 'setName' | 'createName' | 'onSetValue'> {
   editAfterCreate?: boolean
 }
 
 export const useLayerPropertyValue = (field: keyof typeof fieldsConfig, options?: Options) => {
+  const { documentManager } = useBuilderDocument()
   const fieldEntity = fieldsConfig[field]
   const [fieldValue, setFieldValue, fieldInfo] = useLayerValue(field)
+  const [variableData] = useGraph(documentManager, fieldInfo?.isVariable ? fieldInfo?.resultValue : null)
   const disabled = !fieldEntity
   const { editProperty } = useFragmentProperties()
 
@@ -48,7 +52,7 @@ export const useLayerPropertyValue = (field: keyof typeof fieldsConfig, options?
     editVariable: () => {
       fieldInfo?.isVariable && editProperty(fieldInfo?.rawValue)
     },
-    variableLink: fieldInfo?.isVariable ? fieldInfo?.resultValue : null,
+    variableData: fieldInfo?.isVariable ? variableData : null,
     actions,
     allowVariables
   }

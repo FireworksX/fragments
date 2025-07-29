@@ -1,1 +1,1 @@
-export { default as StackStringProperty } from './ui/StackEnumProperty'
+export { StackEnumProperty } from './ui/StackEnumProperty'

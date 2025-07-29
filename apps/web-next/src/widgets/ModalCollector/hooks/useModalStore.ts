@@ -8,6 +8,9 @@ import { nextTick } from '@/shared/utils/nextTick'
 import { useForceUpdate } from '@/shared/hooks/useForceUpdate'
 import { ConfigureCampaignContext } from '@/widgets/modals/ConfigureCampaign/ui/ConfigureCampaign'
 import { GoalViewModalContext } from '@/widgets/modals/GoalViewModal/ui/GoalViewModal'
+import { PropertyStringContext } from '@/widgets/modals/PropertyString/ui/PropertyString'
+import { PropertyColorContext } from '@/widgets/modals/PropertyColor/ui/PropertyColor'
+import { ColorPickerContext } from '@/widgets/modals/ColorPicker/ui/ColorPicker'
 
 interface ModalContextMap {
   [modalNames.configureFeatureFlagVariant]: ConfigureFeatureFlagVariantContext
@@ -15,6 +18,9 @@ interface ModalContextMap {
   [modalNames.configureFragmentVariant]: ConfigureFragmentVariantContext
   [modalNames.configureCampaign]: ConfigureCampaignContext
   [modalNames.goalView]: GoalViewModalContext
+  [modalNames.propertyString]: PropertyStringContext
+  [modalNames.propertyColor]: PropertyColorContext
+  [modalNames.colorPicker]: ColorPickerContext
 }
 
 type ModalName = keyof typeof modalNames

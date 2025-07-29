@@ -23,6 +23,7 @@ import { StatusDot } from '@/shared/ui/StatusDot'
 import { capitalize } from '@/shared/utils/capitalize'
 import { FragmentPreviewSandbox } from '@/widgets/FragmentPreviewSandbox'
 import { noop, omit } from '@fragmentsx/utils'
+import { useAreaProperties } from '@/shared/hooks/useAreaProperties'
 
 interface CreateCustomBreakpointProps {
   className?: string
@@ -39,6 +40,7 @@ export interface ConfigureFragmentVariantContext {
 export const ConfigureFragmentVariant: FC<CreateCustomBreakpointProps> = ({ className }) => {
   const { close: closeModal, readContext } = useModal()
   const context = readContext(modalNames.configureFragmentVariant)
+  const { properties } = useAreaProperties()
 
   const [props, setProps] = useState(context?.initialProps ?? {})
 
@@ -58,7 +60,12 @@ export const ConfigureFragmentVariant: FC<CreateCustomBreakpointProps> = ({ clas
       }
     >
       <div className={styles.preview}>
-        <FragmentPreviewSandbox fragmentId={context?.fragmentId} initialProps={props} onChangeProps={setProps} />
+        <FragmentPreviewSandbox
+          fragmentId={context?.fragmentId}
+          areaProperties={properties}
+          initialProps={props}
+          onChangeProps={setProps}
+        />
       </div>
     </ModalContainer>
   )

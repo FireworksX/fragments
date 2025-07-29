@@ -16,6 +16,7 @@ import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDoc
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { InputSelect } from '@/shared/ui/InputSelect'
 import { objectToColorString } from '@fragmentsx/utils'
+import { PropertyContentColor } from '@/entities/properyContent/PropertyContentColor'
 
 interface StackColorPropertyProps {
   className?: string
@@ -32,7 +33,7 @@ const controls: TabsSelectorItem[] = [
   }
 ]
 
-const StackColorProperty: FC<StackColorPropertyProps> = ({ className }) => {
+export const StackColorProperty: FC<StackColorPropertyProps> = ({ className }) => {
   const { documentManager } = useBuilderDocument()
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackColorProperty}`)
   const context = popout?.context ?? {}
@@ -54,30 +55,22 @@ const StackColorProperty: FC<StackColorPropertyProps> = ({ className }) => {
 
   return (
     <div className={cn(styles.root, className)}>
-      <ControlRow title='ID'>
-        <ControlRowWide>
-          <InputText value={id} disabled />
-        </ControlRowWide>
-      </ControlRow>
-      <ControlRow title='Name'>
-        <ControlRowWide>
-          <InputText value={name} onChangeValue={setName} />
-        </ControlRowWide>
-      </ControlRow>
-      <ControlRow title='Required'>
-        <ControlRowWide>
-          <TabsSelector items={controls} value={required} onChange={({ name }) => setRequired(name)} />
-        </ControlRowWide>
-      </ControlRow>
-      <ControlRow title='Color'>
-        <ControlRowWide>
-          <InputSelect hasIcon color={defaultValue} onClick={openColorPicker}>
-            {defaultValue}
-          </InputSelect>
-        </ControlRowWide>
-      </ControlRow>
+      <PropertyContentColor
+        id={id}
+        name={{
+          value: name,
+          onChange: setName
+        }}
+        defaultValue={{
+          value: defaultValue,
+          onChange: setDefaultValue
+        }}
+        required={{
+          value: required,
+          onChange: setRequired
+        }}
+        openColorPicker={openColorPicker}
+      />
     </div>
   )
 }
-
-export default StackColorProperty
