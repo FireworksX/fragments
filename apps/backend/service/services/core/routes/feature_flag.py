@@ -43,7 +43,7 @@ async def feature_flag_db_to_feature_flag(db: Session, feature_flag: FeatureFlag
         rotation_type=RotationType(feature_flag.rotation_type),
         variants=[
             await variant_db_to_variant(db, variant)
-            for variant in feature_flag.variants
+            for variant in sorted(feature_flag.variants, key=lambda x: x.id)
             if variant.deleted_at is None
         ],
     )
