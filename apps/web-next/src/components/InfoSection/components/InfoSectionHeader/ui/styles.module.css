@@ -1,8 +1,15 @@
 .root {
     padding: 12px;
     display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.content {
+    display: flex;
     flex-direction: column;
-    gap: 2px
+    gap: 2px;
+    flex: 1;
 }
 
 .title {

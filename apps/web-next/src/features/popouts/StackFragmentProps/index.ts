@@ -1,1 +1,1 @@
-export { default as StackNumberProperty } from './ui/StackFragmentProps'
+export { StackFragmentProps } from './ui/StackFragmentProps'

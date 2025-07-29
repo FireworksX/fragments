@@ -7,7 +7,6 @@ import { createConstants, isBrowser } from "@fragmentsx/utils";
 import { loadPlugin } from "@/plugins/load";
 import { globalStylesheetPlugin } from "@/plugins/styleSheet";
 import { allowTypes } from "@graph-state/checkers";
-import { globalManagerLifeCyclePlugin } from "@/plugins/lifecycle/globalManagerLifeCycle";
 
 declare module "@graph-state/core" {
   interface GraphState {

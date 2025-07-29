@@ -37,13 +37,14 @@ import { withModalCollector } from '@/shared/hocs/withModalCollector'
 import { modalNames } from '@/shared/data'
 import { ReleaseCondition } from '@/widgets/ReleaseCondition'
 import { SearchInput } from '@/shared/ui/SearchInput'
+import { Spinner } from '@/shared/ui/Spinner'
 
 interface StreamsTableProps {
   className?: string
 }
 
 const StreamsTable: FC<StreamsTableProps> = ({ className }) => {
-  const { list, updateStream, handleDeleteCampaignMutation, handleCreateCampaign } = useStreamsTable()
+  const { list, loading, updateStream, handleDeleteCampaignMutation, handleCreateCampaign } = useStreamsTable()
 
   return (
     <div className={styles.root}>
@@ -86,7 +87,15 @@ const StreamsTable: FC<StreamsTableProps> = ({ className }) => {
             </TableHeader>
           }
         >
-          {list.length === 0 && (
+          {loading && (
+            <TableRow className={styles.row}>
+              <TableCell className={styles.cell} colSpan={6}>
+                <Placeholder stretched actions={<Spinner size={16} color='var(--text-color-accent)' />} />
+              </TableCell>
+            </TableRow>
+          )}
+
+          {list.length === 0 && !loading && (
             <TableRow className={styles.row}>
               <TableCell className={styles.cell} colSpan={6}>
                 <Placeholder

@@ -1,4 +1,5 @@
-import { FC } from 'react'
+'use client'
+import { FC, useEffect, useRef, useState } from 'react'
 import '../lib/css/main.css'
 import '../lib/css/entry.CAV5u_-6.css'
 import '../lib/css/NavContent.BvzaB8yA.css'
@@ -29,14 +30,23 @@ import '../lib/css/ColumnLinksBlock.dBeGckAc.css'
 import '../lib/css/AppModal.zAet4Ooa.css'
 import '../lib/css/CheckboxRadio.DgIPpdAd.css'
 import '../lib/css/StatisticBar.CCjX7TCD.css'
+import { createFragmentsClient } from '@fragmentsx/client-core'
+import { Area, GlobalManager } from '@fragmentsx/render-react'
 
 interface DemoProps {
   className?: string
 }
 
 export const Demo: FC<DemoProps> = ({ className }) => {
+  const fragmentsClient = useRef(
+    createFragmentsClient({
+      apiToken: '1-f1b8febcd84b4482513888393a82cc99-8e026b36977ead522dfe698118b6f652d1bd8c1dd499bce4223835f356d18a72',
+      isSelf: true
+    })
+  )
+
   return (
-    <>
+    <GlobalManager value={fragmentsClient.current}>
       <div className='default' data-v-2af4a11a=''>
         <div className='sidebar-hidden wrapper' data-v-2af4a11a=''>
           <div className='header-container header' data-v-2af4a11a='' data-v-b0a820b1=''>
@@ -103,6 +113,7 @@ export const Demo: FC<DemoProps> = ({ className }) => {
               <div className='main-wrapper' data-v-2af4a11a=''>
                 <div className='MainPage' data-v-4050c876=''>
                   <section className='MainPageHeader' data-v-4050c876='' data-v-afa77ffb=''>
+                    <Area areaCode='33545410cf252' options={{ ssr: false }} />
                     <div className='ContentImage loading logo relative' data-v-afa77ffb='' data-v-13b18673=''>
                       <div className='image-placeholder' data-v-13b18673=''></div>
                     </div>
@@ -910,45 +921,41 @@ export const Demo: FC<DemoProps> = ({ className }) => {
                               <div className='image-placeholder' data-v-13b18673=''></div>
                             </div>
 
-                            <div className='inner' data-v-53c72fa4=''>
-                              <div className='params' data-v-53c72fa4=''>
-                                <span className='params-item params-item--prize' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> 30 000 ₽
-                                </span>
-                                <span className='params-item params-item--prizePlaces' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> 15 призовых
-                                </span>
-                              </div>
-                              <div className='header' data-v-53c72fa4=''>
-                                <div className='header-info' data-v-53c72fa4=''>
-                                  <h2 className='header-title text-h3' data-v-53c72fa4=''>
-                                    Евротур
-                                  </h2>
-                                  <div className='header-date text-slogan' data-v-53c72fa4=''>
-                                    22 июл - 24 июл
-                                  </div>
-                                </div>
-                              </div>
-                              <div className='footer' data-v-53c72fa4=''>
-                                <div className='contest-link' data-v-53c72fa4=''>
-                                  <span className='contest-link-text' data-v-53c72fa4=''>
-                                    {' '}
-                                    Участвовать{' '}
-                                  </span>
-                                  <span data-v-53c72fa4=''></span>
-                                </div>
-                              </div>
-                            </div>
-                          </a>
-                          <a
-                            href='/cup/kingofthemountain-six'
-                            className='ContestsItem--small ContestsItem--started ContestsItem item'
-                            data-v-bf65f25b=''
-                            data-v-53c72fa4=''
-                          >
-                            <div className='ContentImage loading cover' data-v-53c72fa4='' data-v-13b18673=''>
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
+                            {/*              <div className='NavigationLinks--single NavigationLinks' data-v-781aa78c=''>*/}
+                            {/*                <a href='/bookmakers' className='link link--all link--single' data-v-781aa78c=''>*/}
+                            {/*                  Все рейтинги БК*/}
+                            {/*                  <span data-v-781aa78c=''></span>*/}
+                            {/*                </a>*/}
+                            {/*              </div>*/}
+                            {/*            </div>*/}
+                            {/*          </section>*/}
+                            {/*          <div className='SocialPollContainer' data-v-4050c876='' data-v-dff4d117=''></div>*/}
+                            {/*          <section*/}
+                            {/*            className='MainPageContainer MainPageContainer--bonuses MainPageContainer--full'*/}
+                            {/*            data-v-4050c876=''*/}
+                            {/*            data-v-8a768e31=''*/}
+                            {/*          >*/}
+                            {/*            <div className='pluses' data-v-8a768e31=''></div>*/}
+                            {/*            <h2 className='text-h1 title' data-v-8a768e31=''>*/}
+                            {/*              {' '}*/}
+                            {/*              Находи эксклюзивные*/}
+                            {/*              <br data-v-4050c876='' />*/}
+                            {/*              <a href='/promo/sets' className='marked--pink with-icon with-icon--heart' data-v-4050c876=''>*/}
+                            {/*                {' '}*/}
+                            {/*                бонусы в коллекциях{' '}*/}
+                            {/*              </a>*/}
+                            {/*            </h2>*/}
+                            {/*            <div className='advantages' data-v-8a768e31=''>*/}
+                            {/*              <div className='advantage' data-v-8a768e31=''>*/}
+                            {/*                <span data-v-8a768e31=''></span> Подробные разборы*/}
+                            {/*              </div>*/}
+                            {/*              <div className='advantage' data-v-8a768e31=''>*/}
+                            {/*                <span data-v-8a768e31=''></span> Личное и честное мнение*/}
+                            {/*              </div>*/}
+                            {/*              <div className='advantage' data-v-8a768e31=''>*/}
+                            {/*                <span data-v-8a768e31=''></span> Эксклюзивные бонусы*/}
+                            {/*              </div>*/}
+                            {/*            </div>*/}
 
                             <div className='inner' data-v-53c72fa4=''>
                               <div className='params' data-v-53c72fa4=''>
@@ -4234,6 +4241,6 @@ export const Demo: FC<DemoProps> = ({ className }) => {
           </div>
         </div>
       </div>
-    </>
+    </GlobalManager>
   )
 }

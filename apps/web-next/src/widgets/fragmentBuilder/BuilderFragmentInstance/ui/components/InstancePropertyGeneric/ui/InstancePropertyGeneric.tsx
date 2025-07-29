@@ -29,7 +29,6 @@ export interface InstancePropertyGenericProps extends BuilderControlRowProps {
   value: unknown
   property: LinkKey
   manager: GraphState
-  instanceManager: GraphState
   className?: string
   onChange(value: boolean): void
 }
@@ -39,7 +38,6 @@ export const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({
   manager,
   value,
   property,
-  instanceManager,
   onChange,
   ...controlRowProps
 }) => {

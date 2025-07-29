@@ -1,0 +1,17 @@
+.root {
+    flex: 1;
+    background: var(--background);
+    border-radius: var(--radius-main);
+    padding: var(--gutter-default);
+    position: relative;
+}
+
+.section {
+    background: var(--background-secondary);
+}
+
+.popouts {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}

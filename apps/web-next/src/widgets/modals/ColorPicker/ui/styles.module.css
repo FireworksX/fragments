@@ -1,0 +1,18 @@
+.root {
+  width: 260px;
+}
+
+.body {
+  display: flex;
+  gap: 12px;
+}
+
+.relative {
+  position: relative;
+}
+
+.statusRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}

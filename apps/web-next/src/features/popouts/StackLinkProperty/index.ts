@@ -1,1 +1,1 @@
-export { default as StackLinkProperty } from './ui/StackLinkProperty'
+export { StackLinkProperty } from './ui/StackLinkProperty'

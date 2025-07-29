@@ -4,8 +4,8 @@ import styles from './styles.module.css'
 import { Button } from '@/shared/ui/Button'
 import { usePreviewSandboxProps } from '../hooks/usePreviewSandboxProps'
 import { Dropdown } from '@/shared/ui/Dropdown'
-import InstancePropertyGeneric from '../../../../fragmentBuilder/BuilderFragmentInstance/ui/components/InstancePropertyGeneric/ui/InstancePropertyGeneric'
 import { Panel } from '@/shared/ui/Panel'
+import { InstancePropertyGeneric } from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/components/InstancePropertyGeneric'
 
 interface PreviewSandboxPropsProps {
   fragmentId: number

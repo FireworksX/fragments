@@ -30,7 +30,7 @@ const controls: TabsSelectorItem[] = [
   }
 ]
 
-const StackEnumProperty: FC<StackEnumPropertyProps> = ({ className }) => {
+export const StackEnumProperty: FC<StackEnumPropertyProps> = ({ className }) => {
   const { documentManager } = useBuilderDocument()
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackEnumProperty}`)
   const context = popout?.context ?? {}
@@ -65,5 +65,3 @@ const StackEnumProperty: FC<StackEnumPropertyProps> = ({ className }) => {
     </div>
   )
 }
-
-export default StackEnumProperty

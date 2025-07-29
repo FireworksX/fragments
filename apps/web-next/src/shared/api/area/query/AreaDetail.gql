@@ -7,5 +7,6 @@ query AreaDetail($id: Int!) {
         defaultCampaign {
             id
         }
+        properties
     }
 }

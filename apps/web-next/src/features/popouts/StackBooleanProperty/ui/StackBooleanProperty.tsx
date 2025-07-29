@@ -27,7 +27,7 @@ const controls: TabsSelectorItem[] = [
   }
 ]
 
-const StackBooleanProperty: FC<StackBooleanVariableProps> = ({ className }) => {
+export const StackBooleanProperty: FC<StackBooleanVariableProps> = ({ className }) => {
   const { documentManager } = useBuilderDocument()
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackBooleanProperty}`)
   const context = popout?.context ?? {}
@@ -63,5 +63,3 @@ const StackBooleanProperty: FC<StackBooleanVariableProps> = ({ className }) => {
     </div>
   )
 }
-
-export default StackBooleanProperty

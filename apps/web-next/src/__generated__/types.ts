@@ -35,12 +35,14 @@ export type AreaGet = {
   id: Scalars['Int']['output'];
   logo: MediaGet;
   projectId: Scalars['Int']['output'];
+  properties?: Maybe<Array<Scalars['JSON']['output']>>;
 };
 
 export type AreaPatch = {
   areaCode?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['Int']['input'];
+  properties?: InputMaybe<Array<Scalars['JSON']['input']>>;
 };
 
 export type AreaPost = {
@@ -48,6 +50,7 @@ export type AreaPost = {
   defaultCampaignName: Scalars['String']['input'];
   description?: InputMaybe<Scalars['String']['input']>;
   projectId: Scalars['Int']['input'];
+  properties?: InputMaybe<Array<Scalars['JSON']['input']>>;
 };
 
 export type AuthPayload = {
@@ -91,6 +94,12 @@ export enum CampaignStatus {
   Archived = 'ARCHIVED',
   Inactive = 'INACTIVE'
 }
+
+export type ClientAreaGet = {
+  __typename?: 'ClientAreaGet';
+  areaProperties?: Maybe<Array<Scalars['JSON']['output']>>;
+  variant: VariantGet;
+};
 
 export type ClientGet = {
   __typename?: 'ClientGet';
@@ -792,7 +801,7 @@ export type Query = {
   area: Array<AreaGet>;
   campaign: Array<CampaignGet>;
   client: Array<ClientGet>;
-  clientArea?: Maybe<VariantGet>;
+  clientArea?: Maybe<ClientAreaGet>;
   clientFragment?: Maybe<FragmentGet>;
   clientHistory: Array<ClientHistoryGet>;
   condition: ConditionGet;

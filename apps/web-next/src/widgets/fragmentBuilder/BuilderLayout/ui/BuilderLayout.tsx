@@ -30,7 +30,7 @@ const BuilderLayout: FC<BuilderLayoutProps> = ({ className }) => {
         title='Direction'
         hasConnector={!direction.variable.disabled}
         variable={{
-          link: direction.variable.variableLink,
+          data: direction.variable.variableData,
           actions: direction.variable.actions,
           onClick: direction.variable.editVariable,
           onReset: direction.variable.resetVariable
@@ -49,7 +49,7 @@ const BuilderLayout: FC<BuilderLayoutProps> = ({ className }) => {
         title='Align'
         hasConnector={!align.variable.disabled}
         variable={{
-          link: align.variable.variableLink,
+          data: align.variable.variableData,
           actions: align.variable.actions,
           onClick: align.variable.editVariable,
           onReset: align.variable.resetVariable
@@ -64,7 +64,7 @@ const BuilderLayout: FC<BuilderLayoutProps> = ({ className }) => {
         title='Distribute'
         hasConnector={!distribute.variable.disabled}
         variable={{
-          link: distribute.variable.variableLink,
+          data: distribute.variable.variableData,
           actions: distribute.variable.actions,
           onClick: distribute.variable.editVariable,
           onReset: distribute.variable.resetVariable
@@ -85,7 +85,7 @@ const BuilderLayout: FC<BuilderLayoutProps> = ({ className }) => {
         title='Wrap'
         hasConnector={!wrap.variable.disabled}
         variable={{
-          link: wrap.variable.variableLink,
+          data: wrap.variable.variableData,
           actions: wrap.variable.actions,
           onClick: wrap.variable.editVariable,
           onReset: wrap.variable.resetVariable
@@ -100,7 +100,7 @@ const BuilderLayout: FC<BuilderLayoutProps> = ({ className }) => {
         title='Gap'
         hasConnector={!gap.variable.disabled}
         variable={{
-          link: gap.variable.variableLink,
+          data: gap.variable.variableData,
           actions: gap.variable.actions,
           onClick: gap.variable.editVariable,
           onReset: gap.variable.resetVariable

@@ -29,7 +29,7 @@ const controls: TabsSelectorItem[] = [
   }
 ]
 
-const StackLinkProperty: FC<StackLinkPropertyProps> = ({ className }) => {
+export const StackLinkProperty: FC<StackLinkPropertyProps> = ({ className }) => {
   const { documentManager } = useBuilderDocument()
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackLinkProperty}`)
   const context = popout?.context ?? {}
@@ -63,5 +63,3 @@ const StackLinkProperty: FC<StackLinkPropertyProps> = ({ className }) => {
     </div>
   )
 }
-
-export default StackLinkProperty

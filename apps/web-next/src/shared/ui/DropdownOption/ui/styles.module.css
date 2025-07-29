@@ -48,6 +48,7 @@
 
     .icon {
         display: inline-flex;
+        color: var(--secondary);
     }
 
     .body {

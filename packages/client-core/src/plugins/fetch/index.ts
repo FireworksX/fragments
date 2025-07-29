@@ -111,22 +111,23 @@ export const fetchPlugin: Plugin = (state) => {
 
     if (area) {
       state.$fetch.cacheDocuments.set(
-        area.fragment.fragment.id,
-        area.fragment.fragment.document
+        area.variant.fragment.fragment.id,
+        area.variant.fragment.fragment.document
       );
 
-      if (Array.isArray(area.fragment.fragment.linkedFragments)) {
-        area.fragment.fragment.linkedFragments.forEach((linkedFragment) =>
-          state.$fetch.cacheDocuments.set(
-            linkedFragment.id,
-            linkedFragment.document
-          )
+      if (Array.isArray(area.variant.fragment.fragment.linkedFragments)) {
+        area.variant.fragment.fragment.linkedFragments.forEach(
+          (linkedFragment) =>
+            state.$fetch.cacheDocuments.set(
+              linkedFragment.id,
+              linkedFragment.document
+            )
         );
       }
 
       const entity = {
-        fragmentId: area.fragment.fragment.id,
-        props: area.fragment.props,
+        fragmentId: area.variant.fragment.fragment.id,
+        props: area.variant.fragment.props,
       };
       state.$fetch.cacheAreaDocuments.set(areaCode, entity);
 

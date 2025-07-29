@@ -1,1 +1,1 @@
-export { default as StackBooleanProperty } from './ui/StackBooleanProperty'
+export { StackBooleanProperty } from './ui/StackBooleanProperty'

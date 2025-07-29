@@ -1,1 +1,1 @@
-export { default as StackNumberProperty } from './ui/StackInteraction'
+export { StackInteraction } from './ui/StackInteraction'

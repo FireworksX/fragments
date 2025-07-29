@@ -1,1 +1,1 @@
-export { default as StackPanelColorPicker } from './ui/StackPanelColorPicker'
+export { StackPanelColorPicker } from './ui/StackPanelColorPicker'

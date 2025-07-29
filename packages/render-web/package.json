@@ -31,7 +31,7 @@
     "@fragmentsx/render-core": "workspace:*",
     "@fragmentsx/utils": "workspace:*",
     "@graph-state/checkers": "^0.1.2",
-    "@graph-state/core": "^0.11.4"
+    "@graph-state/core": "^0.11.7"
   },
   "devDependencies": {
     "@graph-state/plugin-logger": "^0.3.0",

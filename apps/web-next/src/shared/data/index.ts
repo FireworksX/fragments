@@ -39,7 +39,11 @@ export const modalNames = createConstants(
   'goalView',
   'configureFeatureFlagVariant',
   'configureFragmentVariant',
-  'configureCampaign'
+  'configureCampaign',
+  'colorPicker',
+
+  'propertyString',
+  'propertyColor'
 )
 
 export const booleanTabsSelectorItems: TabsSelectorItem[] = [

@@ -18,7 +18,7 @@ export const BuilderFillControl: FC<BuilderFillControlProps> = memo(({ className
   const [fillType, setFillType] = useLayerValue('fillType')
   const [solidValue, , solidValueInfo] = useLayerValue('solidFill')
   const [imageValue, , imageValueInfo] = useLayerValue('imageFill')
-  const { disabled, actions, editVariable, variableLink, resetVariable } = useLayerPropertyValue('solidFill')
+  const { disabled, actions, editVariable, variableData, resetVariable } = useLayerPropertyValue('solidFill')
 
   const result = useMemo(() => {
     if (fillType === definition.paintMode.Solid) {
@@ -49,7 +49,7 @@ export const BuilderFillControl: FC<BuilderFillControlProps> = memo(({ className
         onRestOverride: solidValue?.resetOverride
       }}
       variable={{
-        link: variableLink,
+        data: variableData,
         actions,
         onClick: editVariable,
         onReset: resetVariable

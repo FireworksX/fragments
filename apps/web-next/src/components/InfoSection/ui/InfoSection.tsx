@@ -5,11 +5,12 @@ import { Spinner } from '@/shared/ui/Spinner'
 
 interface InfoSectionProps extends PropsWithChildren {
   header?: ReactNode
+  footer?: ReactNode
   loading?: boolean
   className?: string
 }
 
-export const InfoSection: FC<InfoSectionProps> = ({ className, loading, header, children }) => {
+export const InfoSection: FC<InfoSectionProps> = ({ className, loading, header, footer, children }) => {
   return (
     <div className={cn(styles.root, className)}>
       {header}
@@ -23,6 +24,8 @@ export const InfoSection: FC<InfoSectionProps> = ({ className, loading, header, 
           children
         )}
       </div>
+
+      {footer}
     </div>
   )
 }

@@ -1,1 +1,1 @@
-export { default as StackNumberProperty } from './ui/StackEventProperty'
+export { StackEventProperty } from './ui/StackEventProperty'

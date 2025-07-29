@@ -1,7 +1,7 @@
 import { InstanceContext, InstanceProps } from "@/components/Instance";
 import { useContext, useMemo } from "preact/compat";
 import { FragmentContext } from "@/components/Fragment/FragmentContext";
-import { omit } from "@fragmentsx/utils";
+import { isObject, omit } from "@fragmentsx/utils";
 import { useGraph, useGraphStack } from "@graph-state/react";
 import { isVariableLink } from "@/shared/helpers/checks";
 import { useReadVariable } from "@/shared/hooks/useReadVariable";
@@ -37,6 +37,13 @@ export const useInstanceProps = (instanceProps: InstanceProps) => {
 
   const mergedProps = useMemo(() => {
     let base = instanceLayerProps;
+
+    if (isTopInstance && isObject(base) && isObject(instanceProps?.props)) {
+      base = {
+        ...base,
+        ...instanceProps?.props,
+      };
+    }
 
     if (isTopInstance && fragmentManager) {
       const defs =

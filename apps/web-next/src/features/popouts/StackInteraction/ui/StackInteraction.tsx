@@ -20,7 +20,7 @@ interface StackNumberVariableProps {
   className?: string
 }
 
-const StackInteraction: FC<StackNumberVariableProps> = ({ className }) => {
+export const StackInteraction: FC<StackNumberVariableProps> = ({ className }) => {
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackInteraction}`)
   const { on, event, onChangeOn } = popout?.context ?? {}
 
@@ -59,5 +59,3 @@ const StackInteraction: FC<StackNumberVariableProps> = ({ className }) => {
     </div>
   )
 }
-
-export default StackInteraction

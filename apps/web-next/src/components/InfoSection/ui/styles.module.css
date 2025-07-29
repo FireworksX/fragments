@@ -1,18 +1,22 @@
-.root {
-    padding: 4px;
-    background: var(--background);
-    border-radius: var(--radius-main);
-}
+@layer {
 
-.body {
-    background: var(--secondary-bg);
-    border-radius: var(--radius-main);
-    border: 1px solid var(--border);
-}
+    .root {
+        padding: 4px;
+        background: var(--background);
+        border-radius: var(--radius-main);
+    }
 
-.loader {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 60px;
+    .body {
+        background: var(--secondary-bg);
+        border-radius: var(--radius-main);
+        border: 1px solid var(--border);
+    }
+
+    .loader {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 60px;
+    }
+
 }
