@@ -572,4 +572,7 @@ class ClientHistory(Base):
     variant_id = Column('variant_id', Integer, ForeignKey('variant.id'), nullable=True)
     variant = relationship('Variant')
 
+    feature_flag_id = Column('feature_flag_id', Integer, ForeignKey('feature_flag.id'), nullable=True)
+    feature_flag = relationship('FeatureFlag')
+
     event_type = Column('event_type', Integer, nullable=False)
