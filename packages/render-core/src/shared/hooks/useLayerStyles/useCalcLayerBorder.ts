@@ -13,13 +13,36 @@ export const useCalcLayerBorder = (layerKey: LinkKey) => {
     fragmentManager
   );
 
-  return (width: number, color: string) => {
-    let value = "";
+  return (width: string, color: string) => {
+    let value = {
+      borderTop: ``,
+      borderRight: ``,
+      borderBottom: ``,
+      borderLeft: ``,
+    };
     if (
       typeof borderTypeValue === "string" &&
       borderTypeValue !== definition.borderType.None
     ) {
-      value = `${toPx(width)} ${borderTypeValue.toLowerCase()} ${color}`;
+      const staticPart = `${borderTypeValue.toLowerCase()} ${color}`;
+      const widthSides = width?.split(" ");
+
+      if (widthSides.length === 1) {
+        const widthValue = widthSides?.at(0);
+        value = {
+          borderTop: `${widthValue} ${staticPart}`,
+          borderRight: `${widthValue} ${staticPart}`,
+          borderBottom: `${widthValue} ${staticPart}`,
+          borderLeft: `${widthValue} ${staticPart}`,
+        };
+      } else {
+        value = {
+          borderTop: `${widthSides?.at(0)} ${staticPart}`,
+          borderRight: `${widthSides?.at(1)} ${staticPart}`,
+          borderBottom: `${widthSides?.at(2)} ${staticPart}`,
+          borderLeft: `${widthSides?.at(3)} ${staticPart}`,
+        };
+      }
     }
 
     return value;

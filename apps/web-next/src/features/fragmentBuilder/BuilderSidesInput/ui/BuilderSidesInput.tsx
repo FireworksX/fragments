@@ -6,14 +6,14 @@ import { InputGroup } from '@/shared/ui/InputGroup'
 import { InputNumber } from '@/shared/ui/InputNumber'
 import { animated } from '@react-spring/web'
 
-interface BuilderLayoutPaddingsProps {
+interface BuilderSidesInputProps {
   values: [number, number, number, number]
   className?: string
   focusSide(sideIndex?: number): void
   onChange(sideIndex: number, value: number): void
 }
 
-const BuilderLayoutPaddings: FC<BuilderLayoutPaddingsProps> = ({ className, values, focusSide, onChange }) => (
+export const BuilderSidesInput: FC<BuilderSidesInputProps> = ({ className, values, focusSide, onChange }) => (
   <ControlRow className={className}>
     <ControlRowWide>
       <InputGroup>
@@ -31,5 +31,3 @@ const BuilderLayoutPaddings: FC<BuilderLayoutPaddingsProps> = ({ className, valu
     </ControlRowWide>
   </ControlRow>
 )
-
-export default BuilderLayoutPaddings

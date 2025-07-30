@@ -40,7 +40,8 @@ interface DemoProps {
 export const Demo: FC<DemoProps> = ({ className }) => {
   const fragmentsClient = useRef(
     createFragmentsClient({
-      apiToken: '6-c06fee66a75ec9c54c3ec822ce5977a9-605d45ac9a41b570981aa31a4919c5ab849cbba15300513e2340efb377ab12f8'
+      apiToken: '6-c06fee66a75ec9c54c3ec822ce5977a9-605d45ac9a41b570981aa31a4919c5ab849cbba15300513e2340efb377ab12f8',
+      isSelf: true
     })
   )
 
@@ -108,34 +109,18 @@ export const Demo: FC<DemoProps> = ({ className }) => {
             </header>
           </div>
           <div className='content' data-v-2af4a11a=''>
+            <div className='leftNav' style={{ gridArea: 'nav', marginRight: 12 }}>
+              <Area areaCode='7eebc2c48c0268' options={{ ssr: false }} />
+            </div>
             <div className='grid-main' data-v-2af4a11a=''>
               <div className='main-wrapper' data-v-2af4a11a=''>
                 <div className='MainPage' data-v-4050c876=''>
-                  <section className='MainPageHeader' data-v-4050c876='' data-v-afa77ffb=''>
+                  <div className='header' style={{ marginInline: -24 }}>
                     <Area areaCode='80976154971018' options={{ ssr: false }} />
-                    <div className='ContentImage loading logo relative' data-v-afa77ffb='' data-v-13b18673=''>
-                      <div className='image-placeholder' data-v-13b18673=''></div>
-                    </div>
-                    <div className='relative' data-v-afa77ffb=''>
-                      <h1 className='title' data-v-afa77ffb=''>
-                        СТАВКА TV — все для любителей ставок в одном месте
-                      </h1>
-                      <p className='subtitle' data-v-afa77ffb=''>
-                        {' '}
-                        Проект для начинающих поклонников беттинга. Наша миссия — научить людей делать ставки через
-                        бесплатный игровой процесс{' '}
-                      </p>
-                    </div>
-                    <button
-                      className='StvButton StvButton--design-dark StvButton--size-small StvButton--uppercase StvButton--rounded relative'
-                      type='button'
-                      data-v-afa77ffb=''
-                      data-v-91c12806=''
-                    >
-                      {' '}
-                      Зарегистрироваться
-                    </button>
-                  </section>
+                  </div>
+
+                  <Area areaCode='82e99a8607c17' options={{ ssr: false }} />
+
                   <section
                     className='MainPageContainer MainPageContainer--top-matches MainPageContainer--grid'
                     data-v-4050c876=''

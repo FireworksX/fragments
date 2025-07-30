@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import DirectionVertical from '@/shared/icons/direction-vertical.svg'
 import DirectionHorizontal from '@/shared/icons/direction-horizontal.svg'
 import AlignTop from '@/shared/icons/align-top.svg'
@@ -52,9 +52,15 @@ export const useBuilderLayout = () => {
   const { selection, selectionGraph } = useBuilderSelection()
   const [padding, setPadding] = useLayerValue('padding')
   const paddingSides = padding?.split(' ')?.map(fromPx)
-  const [paddingMode, setPaddingMode] = useState(() => (paddingSides?.length > 1 ? 'sides' : 'plain'))
+  const initialPaddingMode = paddingSides?.length > 1 ? 'sides' : 'plain'
+
+  const [paddingMode, setPaddingMode] = useState(initialPaddingMode)
   const [paddingSide, setPaddingSide] = useState<number | undefined>()
   // const paddingInvoker = layerInvoker('padding')
+
+  useEffect(() => {
+    setPaddingMode(initialPaddingMode)
+  }, [initialPaddingMode])
 
   const [layerMode, setLayerMode] = useLayerValue('layerMode')
 

@@ -8,7 +8,12 @@ import { useStyleSheet } from "@/shared/hooks/useStyleSheet";
 import { useLayerInteractions } from "@/shared/hooks/useLayerInteractions";
 import { useLayerLink } from "@/shared/hooks/useLayerLink";
 
-export const useFrame = (layerKey: LinkKey) => {
+interface Options {
+  collectStyle?: boolean;
+}
+
+export const useFrame = (layerKey: LinkKey, options?: Options) => {
+  const collectStyle = options?.collectStyle ?? true;
   const { manager: fragmentManager } = useContext(FragmentContext);
   const layer = fragmentManager.entityOfKey(layerKey);
   const styles = useLayerStyles(layerKey);
@@ -18,7 +23,9 @@ export const useFrame = (layerKey: LinkKey) => {
   const events = useLayerInteractions(layerKey);
   const link = useLayerLink(layerKey);
 
-  addLayerStyle(layerKey, styles, fragmentManager.resolve(layerKey));
+  if (collectStyle) {
+    addLayerStyle(layerKey, styles, fragmentManager.resolve(layerKey));
+  }
 
   return {
     Tag: link?.isLink ? "a" : "div",

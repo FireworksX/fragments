@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect } from 'react'
+import { FC, useContext, useEffect, useMemo, useState } from 'react'
 import { popoutsStore } from '@/shared/store/popouts.store'
 import { isObject, objectToColorString, omit } from '@fragmentsx/utils'
 import { isLinkKey } from '@graph-state/core'
@@ -16,6 +16,12 @@ import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
 import { getRandomColor } from '@/shared/utils/random'
 import { popoutNames } from '@/shared/data'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
+import { fromPx } from '@/shared/utils/fromPx'
+import { TabsSelector } from '@/shared/ui/TabsSelector'
+import Rectangle from '@/shared/icons/rectangle.svg'
+import { BoxSizingSides } from '@/shared/ui/BoxSizingSides'
+import { toPx } from '@/shared/utils/toPx'
+import { BuilderSidesInput } from '@/features/fragmentBuilder/BuilderSidesInput'
 
 export interface StackPanelBorderOptions {
   value?: BorderData
@@ -30,6 +36,37 @@ const StackPanelBorder: FC<StackPanelBorderProps> = ({ className }) => {
   const [borderType, setBorderType] = useLayerValue('borderType')
   const [borderColor, setBorderColor] = useLayerValue('borderColor')
   const [borderWidth, setBorderWidth] = useLayerValue('borderWidth')
+
+  const resultWidth = fromPx(borderWidth)
+  const sides = borderWidth?.split(' ')?.map(fromPx)
+  const initialMode = sides?.length > 1 ? 'sides' : 'plain'
+
+  const [mode, setMode] = useState(initialMode)
+  const [side, setSide] = useState<number | undefined>()
+
+  const sideByIndex = useMemo(() => {
+    if (side === 0) return 'top'
+    if (side === 1) return 'right'
+    if (side === 2) return 'bottom'
+    if (side === 3) return 'left'
+  }, [side])
+
+  const selectMode = mode => {
+    if (mode === 'sides') {
+      const value = borderWidth ?? '0px'
+      setBorderWidth([value, value, value, value].join(' '))
+    } else {
+      const value = borderWidth?.split(' ')?.at(0) ?? '0px'
+      setBorderWidth(value)
+    }
+
+    setMode(mode)
+  }
+
+  const setSideValue = (sideIndex, value) => {
+    sides[sideIndex] = value
+    setBorderWidth(sides.map(toPx).join(' '))
+  }
 
   useEffect(() => {
     if (borderType === definition.borderType.None) {
@@ -60,9 +97,31 @@ const StackPanelBorder: FC<StackPanelBorderProps> = ({ className }) => {
       </ControlRow>
 
       <ControlRow title='Width'>
-        <InputNumber value={borderWidth} min={0} onChange={width => setBorderWidth(+width)} />
-        <Stepper value={borderWidth} min={0} onChange={width => setBorderWidth(+width)} />
+        <InputNumber
+          value={resultWidth}
+          disabled={mode === 'sides'}
+          empty={mode === 'sides'}
+          min={0}
+          onChange={width => setBorderWidth(toPx(width))}
+        />
+        <TabsSelector
+          items={[
+            {
+              name: 'plain',
+              label: <Rectangle width={10} height={10} />
+            },
+            {
+              name: 'sides',
+              label: <BoxSizingSides side={sideByIndex} />
+            }
+          ]}
+          value={mode}
+          onChange={({ name }) => selectMode(name)}
+        />
       </ControlRow>
+      {mode === 'sides' && (
+        <BuilderSidesInput values={sides} focusSide={setSide} onChange={(side, value) => setSideValue(side, value)} />
+      )}
 
       <ControlRow title='Style'>
         <ControlRowWide>
