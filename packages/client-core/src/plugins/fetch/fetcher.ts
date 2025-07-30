@@ -1,3 +1,5 @@
+import { isBrowser } from "@fragmentsx/utils";
+
 type Cache = Map<string, any>;
 type InflightRequests = Map<string, Promise<any>>;
 

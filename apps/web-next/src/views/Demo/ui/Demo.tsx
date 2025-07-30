@@ -40,8 +40,7 @@ interface DemoProps {
 export const Demo: FC<DemoProps> = ({ className }) => {
   const fragmentsClient = useRef(
     createFragmentsClient({
-      apiToken: '1-f1b8febcd84b4482513888393a82cc99-8e026b36977ead522dfe698118b6f652d1bd8c1dd499bce4223835f356d18a72',
-      isSelf: true
+      apiToken: '6-c06fee66a75ec9c54c3ec822ce5977a9-605d45ac9a41b570981aa31a4919c5ab849cbba15300513e2340efb377ab12f8'
     })
   )
 
@@ -113,7 +112,7 @@ export const Demo: FC<DemoProps> = ({ className }) => {
               <div className='main-wrapper' data-v-2af4a11a=''>
                 <div className='MainPage' data-v-4050c876=''>
                   <section className='MainPageHeader' data-v-4050c876='' data-v-afa77ffb=''>
-                    <Area areaCode='33545410cf252' options={{ ssr: false }} />
+                    <Area areaCode='80976154971018' options={{ ssr: false }} />
                     <div className='ContentImage loading logo relative' data-v-afa77ffb='' data-v-13b18673=''>
                       <div className='image-placeholder' data-v-13b18673=''></div>
                     </div>
