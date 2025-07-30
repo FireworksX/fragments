@@ -48,8 +48,8 @@ def generate_api_key(project_id: int) -> str:
 
     # Compute the HMAC-SHA256 signature of the message using the secret key.
     signature = hmac.new(
-        secret_key.encode('utf-8'), message, hashlib.sha256
-    ).hexdigest()  # pylint: disable=no-member
+        secret_key.encode('utf-8'), message, hashlib.sha256  # pylint: disable=E1101
+    ).hexdigest()
 
     # Combine all parts into the final API key.
     api_key = f"{project_id}-{random_hex}-{signature}"

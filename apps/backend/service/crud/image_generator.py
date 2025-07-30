@@ -283,8 +283,8 @@ def convert_svg_to_png(dwg: Drawing) -> BytesIO:
 
     # Create a Cairo surface and context
     width, height = 300, 300
-    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
-    ctx = cairo.Context(surface)
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)  # pylint: disable=E1101
+    ctx = cairo.Context(surface)  # pylint: disable=E1101
 
     # Render the SVG to the context
     rect = Rsvg.Rectangle()

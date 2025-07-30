@@ -6,7 +6,7 @@ import pycountry
 
 from conf.settings import logger
 from database import GeoLocation, Session
-from utils.lru_cache import CustomLRUCache
+from utils.custom_lru_cache import CustomLRUCache
 
 
 @lru_cache(maxsize=128)

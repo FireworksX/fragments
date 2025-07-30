@@ -6,7 +6,7 @@ from conf.settings import logger
 from crud.geolocation import get_geo_locations
 from database import Session
 from services.core.routes.middleware import Context
-from utils.lru_cache import CustomLRUCache
+from utils.custom_lru_cache import CustomLRUCache
 
 from .schemas.release_condition import AllFiltersGet, CountryGet, DeviceType, OSType, RegionGet
 from .schemas.user import AuthPayload

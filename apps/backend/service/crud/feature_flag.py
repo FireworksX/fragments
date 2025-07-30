@@ -84,7 +84,7 @@ async def update_feature_flag_db(
             raise ValueError(f"Feature flag with name {values['name']} already exists")
         feature_flag.name = values['name']
     if values.get('description') is not None:
-        logger.debug(f"Updating description")
+        logger.debug('Updating description')
         feature_flag.description = values['description']
     if values.get('release_condition_id'):
         logger.debug(f"Updating release condition to {values['release_condition_id']}")
@@ -93,7 +93,7 @@ async def update_feature_flag_db(
         logger.debug(f"Updating rotation type to {values['rotation_type']}")
         feature_flag.rotation_type = int(values['rotation_type'].value)
     if variants is not None:
-        logger.debug(f"Updating variants")
+        logger.debug('Updating variants')
         feature_flag.variants.clear()
         for variant in variants:
             variant = await create_variant_db(db, variant)
