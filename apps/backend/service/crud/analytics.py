@@ -13,7 +13,7 @@ from services.core.routes.schemas.variant import VariantStatsGet
 
 async def get_variant_stats_db(
     db: Session,
-    area_id: int,
+    feature_flag_id: int,
     variant_id: int,
     from_ts: Optional[datetime] = None,
     to_ts: Optional[datetime] = None
@@ -21,7 +21,7 @@ async def get_variant_stats_db(
     """
     Get view statistics for a variant in an area between timestamps
     Returns VariantStatsGet
-    
+
     Args:
         from_ts: Start timestamp, defaults to 24h ago
         to_ts: End timestamp, defaults to now
@@ -32,13 +32,13 @@ async def get_variant_stats_db(
         from_ts = to_ts - timedelta(hours=24)
 
     logger.debug(
-        f"Getting stats for variant {variant_id} in area {area_id} "
+        f"Getting stats for variant {variant_id} in feature flag {feature_flag_id} "
         f"from {from_ts} to {to_ts}"
     )
 
     # Get total views for all variants in this area
     total_views = db.query(ClientHistory).filter(
-        ClientHistory.area_id == area_id,
+        ClientHistory.feature_flag_id == feature_flag_id,
         ClientHistory.event_type == int(ClientHistoryEventType.VIEW.value),
         ClientHistory.created_at >= from_ts,
         ClientHistory.created_at <= to_ts
@@ -53,7 +53,7 @@ async def get_variant_stats_db(
 
     # Get views for this variant in the period
     views_period = db.query(ClientHistory).filter(
-        ClientHistory.area_id == area_id,
+        ClientHistory.feature_flag_id == feature_flag_id,
         ClientHistory.variant_id == variant_id,
         ClientHistory.event_type == int(ClientHistoryEventType.VIEW.value),
         ClientHistory.created_at >= from_ts,
@@ -103,7 +103,7 @@ async def get_campaign_stats_db(
             total_views=0,
             percentage=0.0
         )
-    
+
     views_period = db.query(ClientHistory).filter(
         ClientHistory.area_id == area_id,
         ClientHistory.campaign_id == campaign_id,
@@ -111,9 +111,9 @@ async def get_campaign_stats_db(
         ClientHistory.created_at >= from_ts,
         ClientHistory.created_at <= to_ts
     ).count()
-    
+
     percentage = (views_period / total_views) * 100
-    
+
     logger.debug(
         f"Campaign {campaign_id} stats: views={views_period}, "
         f"total views={total_views}, percentage={percentage:.1f}%"
