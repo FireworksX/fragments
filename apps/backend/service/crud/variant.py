@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from conf.settings import logger
 from database.models.models import Variant
-from services.core.routes.schemas.feature_flag import VariantPatch, VariantPost, VariantStatus
+from services.core.routes.schemas.variant import VariantPatch, VariantPost, VariantStatus
 
 
 async def recalculate_variants_rollout_percentage_db(

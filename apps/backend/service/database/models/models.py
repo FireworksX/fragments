@@ -394,6 +394,8 @@ class Variant(Base):
     status = Column('status', Integer, nullable=False, default=1)
     deleted_at = Column('deleted_at', DateTime, nullable=True)
 
+    
+
 
 class Experiment(Base):
     __tablename__ = 'experiment'
