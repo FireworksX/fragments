@@ -46,7 +46,7 @@ async def variant_db_to_variant(db: Session, variant: Variant) -> VariantGet:
             else None
         ),
         status=variant.status,
-        stats=await get_variant_stats_db(db, variant.area_id, variant.id)
+        stats=await get_variant_stats_db(db, variant.feature_flag.id, variant.id)
     )
 
 

@@ -485,6 +485,7 @@ async def client_area_route(info: strawberry.Info[Context], area_code: str) -> O
             area_id=area.id,
             variant_id=variantFragment.id,
             campaign_id=best_campaign.id,
+            feature_flag_id=best_campaign.feature_flag.id,
         )
 
     return ClientAreaGet(
