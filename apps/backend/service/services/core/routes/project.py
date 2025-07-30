@@ -103,7 +103,7 @@ async def project_db_to_project(
         areas=(
             []
             if project.areas is None
-            else [area_db_to_area(area) for area in project.areas if area.deleted_at is None]
+            else [await area_db_to_area(db, area) for area in project.areas if area.deleted_at is None]
         ),
         private_key=(
             ProjectKeyGet(value=project.private_key.key, name='private', id=project.private_key.id)
