@@ -9,8 +9,8 @@ import { Select } from '@/shared/ui/Select'
 import { InputNumber } from '@/shared/ui/InputNumber'
 import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
 import { Slider } from '@/shared/ui/Slider'
-import { BuilderLayoutPaddings } from '@/features/fragmentBuilder/BuilderLayoutPaddings'
 import { useInterpolation } from '@/shared/hooks/useInterpolation'
+import { BuilderSidesInput } from '@/features/fragmentBuilder/BuilderSidesInput'
 
 interface BuilderLayoutProps {
   className?: string
@@ -125,7 +125,7 @@ const BuilderLayout: FC<BuilderLayoutProps> = ({ className }) => {
         />
       </ControlRow>
       {padding.mode === 'sides' && (
-        <BuilderLayoutPaddings
+        <BuilderSidesInput
           values={padding.sidesValues}
           focusSide={padding.setPaddingSide}
           onChange={(side, value) => padding.setSideValue(side, value)}

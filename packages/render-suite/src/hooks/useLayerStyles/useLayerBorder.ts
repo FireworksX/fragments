@@ -11,7 +11,7 @@ export const useLayerBorder = (layerKey: LinkKey) => {
   const calcBorder = useCalcLayerBorder(layerKey);
 
   return useMemo(
-    () => ({ border: calcBorder(borderWidth, borderColor) }),
+    () => calcBorder(borderWidth, borderColor),
     [borderTypeValue, borderWidth, borderColor]
   );
 };

@@ -41,7 +41,7 @@ const ImageSelector: FC<ImageSelectorProps> = ({
       <input
         className={styles.target}
         type='file'
-        accept='.jpg,.png,.gif'
+        accept='.jpg,.png,.gif,.svg'
         onChange={({ target: { files } }) => onChange(files[0])}
       />
 

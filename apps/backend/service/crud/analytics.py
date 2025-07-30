@@ -21,7 +21,7 @@ async def get_variant_stats_db(
     """
     Get view statistics for a variant in an area between timestamps
     Returns VariantStatsGet
-    
+
     Args:
         from_ts: Start timestamp, defaults to 24h ago
         to_ts: End timestamp, defaults to now
@@ -103,7 +103,7 @@ async def get_campaign_stats_db(
             total_views=0,
             percentage=0.0
         )
-    
+
     views_period = db.query(ClientHistory).filter(
         ClientHistory.area_id == area_id,
         ClientHistory.campaign_id == campaign_id,
@@ -111,9 +111,9 @@ async def get_campaign_stats_db(
         ClientHistory.created_at >= from_ts,
         ClientHistory.created_at <= to_ts
     ).count()
-    
+
     percentage = (views_period / total_views) * 100
-    
+
     logger.debug(
         f"Campaign {campaign_id} stats: views={views_period}, "
         f"total views={total_views}, percentage={percentage:.1f}%"

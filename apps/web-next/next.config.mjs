@@ -14,7 +14,7 @@ const nextConfig = {
     return [
       {
         source: '/graphql',
-        destination: 'http://localhost/graphql' // Proxy to Backend
+        destination: `${process.env.BACKEND_ENDPOINT}/graphql` // Proxy to Backend
       }
     ]
   },

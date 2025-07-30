@@ -10,8 +10,13 @@ import { useLayerStyles } from "@/hooks/useLayerStyles";
 
 export const useFrame = (layerKey: LinkKey) => {
   const { manager } = useContext(FragmentContext);
-  const { layerKey: instanceLayerKey } = useContext(InstanceContext);
-  const frameCore = useFrameCore(layerKey);
+  const { layerKey: instanceLayerKey, parentManager } =
+    useContext(InstanceContext);
+  const isNestedInstanceLayer = !!parentManager;
+
+  const frameCore = useFrameCore(layerKey, {
+    collectStyle: isNestedInstanceLayer,
+  });
   const layer = manager?.entityOfKey(layerKey);
   const styles = useLayerStyles(layerKey);
   const children = useLayerChildren(layerKey);
