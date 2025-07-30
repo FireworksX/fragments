@@ -71,7 +71,7 @@ async def signup(
             detail='User with the same email address already exists',
         )
     hashed_password: str = get_password_hash(password)
-    user: User = await create_user_db(db, email, first_name, last_name, hashed_password)
+    user = await create_user_db(db, email, first_name, last_name, hashed_password)
 
     access_token = create_access_token(data={'sub': user.email})
     refresh_token = create_refresh_token(data={'sub': user.email})
