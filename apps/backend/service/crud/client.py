@@ -56,6 +56,7 @@ async def create_client_history_db(
     area_id: int = None,
     variant_id: int = None,
     campaign_id: int = None,
+    feature_flag_id: int = None,
 ) -> ClientHistory:
     logger.info(f"Creating client history for client_id={client_id}")
     history = ClientHistory(
@@ -78,6 +79,7 @@ async def create_client_history_db(
         area_id=area_id,
         variant_id=variant_id,
         campaign_id=campaign_id,
+        feature_flag_id=feature_flag_id,
     )
     db.add(history)
     db.commit()
