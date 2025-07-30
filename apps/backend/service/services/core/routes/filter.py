@@ -20,12 +20,12 @@ async def get_all_filters(
     regions_filter: Optional[List[str]] = None,
 ) -> AllFiltersGet:
     logger.info('Getting all filters')
-    user: AuthPayload = await info.context.user()
+    user: AuthPayload = await info.context.user()  # pylint: disable=unused-variable
     db: Session = info.context.session()
 
     logger.debug('Getting OS types and device types')
-    os_types: List[OSType] = [v for v in OSType]
-    device_types: List[DeviceType] = [v for v in DeviceType]
+    os_types: List[OSType] = list(OSType)
+    device_types: List[DeviceType] = list(DeviceType)
 
     locations = get_geo_locations(db, countries_filter, regions_filter)
     logger.debug('Building country dictionary')

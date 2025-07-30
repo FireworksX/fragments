@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from conf.settings import logger
 from crud.media import get_media_by_id_db
 from database import FragmentMedia
-from database.models import Fragment
+from database.models import Fragment, ProjectGoal
 
 
 async def create_fragment_db(
@@ -17,6 +17,7 @@ async def create_fragment_db(
     props: str,
     linked_fragments: Optional[List[int]],
     directory_id: int,
+    linked_goals: Optional[List[int]],
 ) -> Fragment:
     logger.info(f"Creating fragment {name} for project {project_id}")
     fragment: Fragment = Fragment(
@@ -27,17 +28,26 @@ async def create_fragment_db(
         props=props,
         directory_id=directory_id,
     )
+    db.add(fragment)
+    db.commit()
+    db.refresh(fragment)
+
+    if linked_goals is not None:
+        logger.debug(f"Linking fragment {name} to goals {linked_goals}")
+        goals: List[ProjectGoal] = (
+            db.query(ProjectGoal).filter(ProjectGoal.id.in_(linked_goals)).all()
+        )
+        for goal in goals:
+            fragment.linked_goals.append(goal)
+
     if linked_fragments is not None:
-        db.add(fragment)
-        db.commit()
         logger.debug(f"Linking fragment {name} to fragments {linked_fragments}")
         fragments: List[Fragment] = (
             db.query(Fragment).filter(Fragment.id.in_(linked_fragments)).all()
         )
         for fr in fragments:
             fragment.linked_fragments.append(fr)
-    else:
-        db.add(fragment)
+
     db.commit()
     db.refresh(fragment)
     logger.debug(f"Created fragment {fragment.id}")
@@ -74,7 +84,7 @@ async def get_fragments_by_project_id_db(db: Session, project_id: int) -> List[F
 
 
 async def update_fragment_by_id_db(
-    db: Session, values: dict, linked_fragments: List[int]
+    db: Session, values: dict, linked_fragments: List[int], linked_goals: List[int]
 ) -> Fragment:
     fragment_id: int = values['id']
     logger.info(f"Updating fragment {fragment_id}")
@@ -88,7 +98,15 @@ async def update_fragment_by_id_db(
         )
         for fr in fragments:
             fragment.linked_fragments.append(fr)
-        db.commit()
+
+    if linked_goals is not None and len(linked_goals) > 0:
+        logger.debug(f"Updating linked goals to {linked_goals}")
+        fragment.linked_goals.clear()
+        goals: List[ProjectGoal] = (
+            db.query(ProjectGoal).filter(ProjectGoal.id.in_(linked_goals)).all()
+        )
+        for goal in goals:
+            fragment.linked_goals.append(goal)
 
     if values.get('name') is not None:
         logger.debug(f"Updating name to {values['name']}")

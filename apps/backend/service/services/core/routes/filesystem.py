@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List
 
 import strawberry
 from fastapi import HTTPException, status
@@ -11,7 +11,7 @@ from crud.filesystem import (
     update_directory_db,
 )
 from crud.project import get_project_by_id_db
-from database import FilesystemDirectory, Fragment, Project, Session
+from database import FilesystemDirectory, Project, Session
 
 from .fragment import fragment_db_to_fragment
 from .middleware import Context
@@ -98,7 +98,7 @@ async def create_directory_route(
         )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to create directories',
+            detail='User is not allowed to create directories',
         )
 
     directory_db: FilesystemDirectory = await create_directory_db(
@@ -133,7 +133,7 @@ async def get_directory(
         logger.warning(f"User {user.user.id} unauthorized to view directory {directory_id}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to observe directories',
+            detail='User is not allowed to observe directories',
         )
 
     logger.info(f"Successfully retrieved directory {directory_id}")
@@ -163,7 +163,7 @@ async def delete_directory_route(info: strawberry.Info[Context], directory_id: i
         logger.warning(f"User {user.user.id} unauthorized to delete directory {directory_id}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to delete directories',
+            detail='User is not allowed to delete directories',
         )
     if directory_id == project.root_directory_id:
         logger.warning(f"Attempted to delete root directory {directory_id}")
@@ -203,7 +203,7 @@ async def update_directory_route(
         logger.warning(f"User {user.user.id} unauthorized to update directory {directory.id}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to update directories',
+            detail='User is not allowed to update directories',
         )
 
     directory_db: FilesystemDirectory = await update_directory_db(db, directory.__dict__)

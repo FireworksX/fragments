@@ -9,7 +9,7 @@ from user_agents import parse as user_agent_parser
 
 from conf.settings import logger, service_settings
 from crud.client import create_client_db, get_client_by_id_db
-from crud.project import get_project_by_id_db, validate_project_public_api_key
+from crud.project import validate_project_public_api_key
 from crud.user import get_user_by_email_db
 from database import Session
 from database.models import Client, Project, User
@@ -136,9 +136,9 @@ class Context(BaseContext):
         except ValueError:
             logger.error('Invalid public key format')
             raise credentials_exception
-        else:
-            logger.info('Project authenticated: %s', project.id)
-            return project
+
+        logger.info('Project authenticated: %s', project.id)
+        return project
 
     async def client_info(self) -> ClientInfo:
         agent_header = self.request.headers.get('User-Agent', None)
@@ -179,13 +179,12 @@ class Context(BaseContext):
         if user_id is None:
             logger.info('Creating new client for project %s', project.id)
             return await create_client_db(self.session(), project_id=project.id)
-        else:
-            try:
-                logger.info('Getting existing client %s', user_id)
-                return await get_client_by_id_db(self.session(), int(user_id))
-            except:
-                logger.error('Invalid user_id format: %s', user_id)
-                raise HTTPException(status_code=400, detail='Invalid user_id format')
+        try:
+            logger.info('Getting existing client %s', user_id)
+            return await get_client_by_id_db(self.session(), int(user_id))
+        except ValueError:
+            logger.error('Invalid user_id format: %s', user_id)
+            raise HTTPException(status_code=400, detail='Invalid user_id format')
 
     async def refresh_user(self) -> AuthPayload | None:
         if not self.request:

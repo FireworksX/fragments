@@ -4,7 +4,6 @@ import strawberry
 from fastapi import HTTPException, UploadFile, status
 
 from conf.settings import logger
-from crud.campaign import get_campaign_by_id_db
 from crud.media import create_media_db, delete_media_by_id_db, generate_default_media
 from crud.project import (
     add_project_allowed_origin_db,
@@ -21,7 +20,6 @@ from crud.project import (
     get_project_by_id_db,
     get_project_goal_by_id_db,
     get_projects_by_user_id_db,
-    get_user_project_role,
     update_project_by_id_db,
     update_project_goal_db,
 )
@@ -30,10 +28,7 @@ from database import Media, Session
 from database.models import Project, ProjectGoal, User
 
 from .area import area_db_to_area
-from .filesystem import get_directory
 from .middleware import Context
-from .schemas.campaign import CampaignGet
-from .schemas.fragment import FragmentGet
 from .schemas.media import MediaGet, MediaType
 from .schemas.project import (
     ProjectAllowedOriginGet,
@@ -70,7 +65,13 @@ async def private_key_permission(db: Session, user_id: int, project_id: int) -> 
 
 def project_goal_db_to_goal(goal: ProjectGoal) -> ProjectGoalGet:
     logger.debug(f"Converting project goal {goal.id} to schema")
-    return ProjectGoalGet(id=goal.id, name=goal.name, target_action=goal.target_action)
+    return ProjectGoalGet(
+        id=goal.id,
+        name=goal.name,
+        target_action=goal.target_action,
+        success_level=goal.success_level,
+        failure_level=goal.failure_level,
+    )
 
 
 async def project_db_to_project(
@@ -103,7 +104,9 @@ async def project_db_to_project(
         areas=(
             []
             if project.areas is None
-            else [await area_db_to_area(db, area) for area in project.areas if area.deleted_at is None]
+            else [
+                await area_db_to_area(db, area) for area in project.areas if area.deleted_at is None
+            ]
         ),
         private_key=(
             ProjectKeyGet(value=project.private_key.key, name='private', id=project.private_key.id)
@@ -155,7 +158,7 @@ async def project_by_id(info: strawberry.Info[Context], project_id: int) -> Proj
         logger.warning(f"User {user.user.id} unauthorized to view project {project_id}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to obtain project',
+            detail='User is not allowed to obtain project',
         )
     logger.info(f"Successfully retrieved project {project_id}")
     return await project_db_to_project(info, db, project)
@@ -189,7 +192,7 @@ async def change_project_private_key_route(
         )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to change private key',
+            detail='User is not allowed to change private key',
         )
 
     project: Project = await change_project_private_api_key(db, project_id)
@@ -216,7 +219,7 @@ async def add_project_public_key_route(
         )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to add public keys',
+            detail='User is not allowed to add public keys',
         )
 
     project: Project = await add_project_public_api_key(db, project_id, public_key_name)
@@ -243,7 +246,7 @@ async def delete_project_public_key_route(
         )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to delete public keys',
+            detail='User is not allowed to delete public keys',
         )
     try:
         await delete_project_public_api_key(db, project_id, public_key_id)
@@ -268,7 +271,7 @@ async def add_user_to_project(
     if not permission:
         logger.warning(f"User {user.user.id} unauthorized to add users to project {project_id}")
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail=f'User is not allowed to add users'
+            status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to add users'
         )
 
     user_to_add: User = await get_user_by_id_db(db, user_id=user_id)
@@ -289,7 +292,7 @@ async def change_user_role(
     if not permission:
         logger.warning(f"User {user.user.id} unauthorized to change roles in project {project_id}")
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail=f'User is not allowed to change roles'
+            status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to change roles'
         )
 
     user_to_add: User = await get_user_by_id_db(db, user_id=user_id)
@@ -314,7 +317,7 @@ async def update_project_route(info: strawberry.Info[Context], pr: ProjectPatch)
     if not permission:
         logger.warning(f"User {user.user.id} unauthorized to update project {pr.id}")
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail=f'User is not allowed to add users'
+            status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to add users'
         )
 
     project: Project = await get_project_by_id_db(db, pr.id)
@@ -341,7 +344,7 @@ async def delete_project_route(info: strawberry.Info[Context], project_id: int) 
         logger.warning(f"User {user.user.id} unauthorized to delete project {project_id}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to obtain project',
+            detail='User is not allowed to obtain project',
         )
     await delete_project_by_id_db(db, project_id)
     logger.info(f"Deleted project {project_id}")
@@ -363,7 +366,7 @@ async def add_project_logo_route(
     if not permission:
         logger.warning(f"User {user.user.id} unauthorized to add logo to project {project_id}")
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail=f'User is not allowed to add users'
+            status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to add logo'
         )
 
     media: Media = await create_media_db(db, file)
@@ -397,7 +400,7 @@ async def delete_project_logo_route(info: strawberry.Info[Context], project_id: 
         logger.warning(f"User {user.user.id} unauthorized to delete logo from project {project_id}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to view fragments',
+            detail='User is not allowed to view fragments',
         )
 
     await delete_media_by_id_db(db, project.logo_id)
@@ -430,7 +433,7 @@ async def create_project_goal_route(
         )
 
     goal: ProjectGoal = await create_project_goal_db(
-        db, goal.project_id, goal.name, goal.target_action
+        db, goal.project_id, goal.name, goal.target_action, goal.success_level, goal.failure_level
     )
     logger.info(f"Created goal {goal.id} for project {goal.project_id}")
     return project_goal_db_to_goal(goal)
@@ -453,7 +456,7 @@ async def get_project_goals_route(
         logger.warning(f"User {user.user.id} unauthorized to view goals in project {project_id}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to view goals',
+            detail='User is not allowed to view goals',
         )
     if project.goals is None:
         logger.info(f"No goals found for project {project_id}")
@@ -483,7 +486,7 @@ async def update_project_goal_route(
         )
 
     updated_goal: ProjectGoal = await update_project_goal_db(
-        db, goal.id, goal.name, goal.target_action
+        db, goal.id, goal.name, goal.target_action, goal.success_level, goal.failure_level
     )
     logger.info(f"Updated goal {goal.id}")
     return project_goal_db_to_goal(updated_goal)

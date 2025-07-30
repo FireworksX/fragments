@@ -1,9 +1,9 @@
-from typing import Optional
 from enum import Enum
+from typing import Optional
 
 import strawberry
 
-from services.core.routes.schemas.fragment import FragmentGet   
+from services.core.routes.schemas.fragment import FragmentGet
 
 
 @strawberry.type
@@ -16,12 +16,6 @@ class FragmentVariantGet:
 class VariantStatus(Enum):
     ACTIVE = 1
     INACTIVE = 2
-
-
-@strawberry.type
-class FragmentVariantGet:
-    fragment: FragmentGet
-    props: Optional[strawberry.scalars.JSON] = None
 
 
 @strawberry.input
@@ -38,8 +32,8 @@ class FragmentVariantPatch:
 
 @strawberry.type
 class VariantStatsGet:
-    last_views: int # views in the last period
-    total_views: int # total views for all variants in the area
+    last_views: int  # views in the last period
+    total_views: int  # total views for all variants in the area
     percentage: float
 
 

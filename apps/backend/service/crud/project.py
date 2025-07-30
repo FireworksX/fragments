@@ -47,7 +47,9 @@ def generate_api_key(project_id: int) -> str:
     message = f"{project_id}:{random_hex}".encode('utf-8')
 
     # Compute the HMAC-SHA256 signature of the message using the secret key.
-    signature = hmac.new(secret_key.encode('utf-8'), message, hashlib.sha256).hexdigest()
+    signature = hmac.new(
+        secret_key.encode('utf-8'), message, hashlib.sha256
+    ).hexdigest()  # pylint: disable=no-member
 
     # Combine all parts into the final API key.
     api_key = f"{project_id}-{random_hex}-{signature}"
@@ -132,14 +134,13 @@ async def delete_project_public_api_key(db: Session, project_id: int, public_key
     if public_api_key.is_private:
         logger.error(f"Cannot remove private key {public_key_id}")
         raise ValueError("Can't remove private key")
-    else:
-        db.delete(public_api_key)
-        db.commit()
-        logger.debug(f"Deleted public API key {public_key_id}")
+    db.delete(public_api_key)
+    db.commit()
+    logger.debug(f"Deleted public API key {public_key_id}")
 
 
 async def validate_project_public_api_key(db: Session, public_api_key: str) -> Project:
-    logger.info(f"Validating public API key")
+    logger.info('Validating public API key')
     public_api_key: ProjectApiKey = (
         db.query(ProjectApiKey).filter(ProjectApiKey.key == public_api_key).first()
     )
@@ -224,10 +225,21 @@ async def update_project_by_id_db(db: Session, values: dict) -> Project:
 
 
 async def create_project_goal_db(
-    db: Session, project_id: int, name: str, target_action: str
+    db: Session,
+    project_id: int,
+    name: str,
+    target_action: str,
+    success_level: Optional[float] = None,
+    failure_level: Optional[float] = None,
 ) -> ProjectGoal:
     logger.info(f"Creating goal {name} for project {project_id}")
-    goal = ProjectGoal(project_id=project_id, name=name, target_action=target_action)
+    goal = ProjectGoal(
+        project_id=project_id,
+        name=name,
+        target_action=target_action,
+        success_level=success_level,
+        failure_level=failure_level,
+    )
     db.add(goal)
     db.commit()
     db.refresh(goal)
@@ -269,7 +281,12 @@ async def get_project_goals_db(db: Session, project_id: int) -> List[ProjectGoal
 
 
 async def update_project_goal_db(
-    db: Session, goal_id: int, name: Optional[str] = None, target_action: Optional[str] = None
+    db: Session,
+    goal_id: int,
+    name: Optional[str] = None,
+    target_action: Optional[str] = None,
+    success_level: Optional[float] = None,
+    failure_level: Optional[float] = None,
 ) -> ProjectGoal:
     logger.info(f"Updating goal {goal_id} with name {name} and target_action {target_action}")
     goal = await get_project_goal_by_id_db(db, goal_id)
@@ -284,6 +301,10 @@ async def update_project_goal_db(
             logger.error(f"Target action {target_action} already exists in project")
             raise ValueError(f"Target action {target_action} already exists in project")
         goal.target_action = target_action
+    if success_level is not None:
+        goal.success_level = success_level
+    if failure_level is not None:
+        goal.failure_level = failure_level
     db.merge(goal)
     db.commit()
     db.refresh(goal)
@@ -337,7 +358,7 @@ async def delete_project_allowed_origin_db(
 
 
 async def get_all_allowed_origins_db(db: Session) -> List[str]:
-    logger.info(f"Getting all allowed origins")
+    logger.info('Getting all allowed origins')
     allowed_origins = db.query(ProjectAllowedOrigin).all()
     logger.debug(f"Found {len(allowed_origins)} allowed origins")
     return [origin.origin for origin in allowed_origins]

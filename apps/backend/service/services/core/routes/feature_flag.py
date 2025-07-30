@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 
 import strawberry
 from fastapi import HTTPException, status
@@ -64,12 +64,12 @@ async def feature_flags(
         )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to view feature flags',
+            detail='User is not allowed to view feature flags',
         )
 
-    feature_flags: List[FeatureFlag] = await get_feature_flags_db(db)
-    logger.debug(f"Found {len(feature_flags)} feature flags")
-    return [await feature_flag_db_to_feature_flag(db, ff) for ff in feature_flags]
+    feature_flags_db: List[FeatureFlag] = await get_feature_flags_db(db)
+    logger.debug(f"Found {len(feature_flags_db)} feature flags")
+    return [await feature_flag_db_to_feature_flag(db, ff) for ff in feature_flags_db]
 
 
 async def feature_flag_by_id(
@@ -91,7 +91,7 @@ async def feature_flag_by_id(
         logger.warning(f"User {user.user.id} unauthorized to view feature flag {feature_flag_id}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to view feature flags',
+            detail='User is not allowed to view feature flags',
         )
 
     return await feature_flag_db_to_feature_flag(db, feature_flag)
@@ -111,7 +111,7 @@ async def create_feature_flag_route(
         )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to create feature flags',
+            detail='User is not allowed to create feature flags',
         )
 
     feature_flag: FeatureFlag = await create_feature_flag_db(db, project_id, ff)
@@ -138,7 +138,7 @@ async def update_feature_flag_route(
         logger.warning(f"User {user.user.id} unauthorized to update feature flag {ff.id}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to change feature flag',
+            detail='User is not allowed to change feature flag',
         )
 
     feature_flag: FeatureFlag = await update_feature_flag_db(
@@ -165,7 +165,7 @@ async def delete_feature_flag_route(info: strawberry.Info[Context], feature_flag
         logger.warning(f"User {user.user.id} unauthorized to delete feature flag {feature_flag_id}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to delete feature flag',
+            detail='User is not allowed to delete feature flag',
         )
 
     await delete_feature_flag_db(db, feature_flag_id)

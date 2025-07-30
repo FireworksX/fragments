@@ -18,8 +18,8 @@ from database import FeatureFlag, Session, Variant
 from .feature_flag import get_feature_flag_by_id_db
 from .fragment import fragment_db_to_fragment
 from .middleware import Context
-from .schemas.variant import FragmentVariantGet, VariantGet, VariantPatch, VariantPost
 from .schemas.user import AuthPayload, RoleGet
+from .schemas.variant import FragmentVariantGet, VariantGet, VariantPatch, VariantPost
 from .utils import get_user_role_in_project
 
 
@@ -46,7 +46,7 @@ async def variant_db_to_variant(db: Session, variant: Variant) -> VariantGet:
             else None
         ),
         status=variant.status,
-        stats=await get_variant_stats_db(db, variant.feature_flag.id, variant.id)
+        stats=await get_variant_stats_db(db, variant.feature_flag.id, variant.id),
     )
 
 
@@ -73,7 +73,7 @@ async def variants_by_feature_flag_id(
         )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to view variants',
+            detail='User is not allowed to view variants',
         )
 
     variants: List[Variant] = await get_variants_by_feature_flag_id_db(db, feature_flag_id)
@@ -98,7 +98,7 @@ async def variant_by_id(info: strawberry.Info[Context], variant_id: int) -> Vari
         logger.warning(f"User {user.user.id} unauthorized to view variant {variant_id}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to view variants',
+            detail='User is not allowed to view variants',
         )
 
     return await variant_db_to_variant(db, variant)
@@ -124,7 +124,7 @@ async def create_variant_route(info: strawberry.Info[Context], v: VariantPost) -
         )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to create variants',
+            detail='User is not allowed to create variants',
         )
 
     variant: Variant = await create_variant_db(db, v)
@@ -150,7 +150,7 @@ async def update_variant_route(info: strawberry.Info[Context], v: VariantPatch) 
         logger.warning(f"User {user.user.id} unauthorized to update variant {v.id}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to change variant',
+            detail='User is not allowed to change variant',
         )
 
     variant: Variant = await update_variant_db(db, v)
@@ -176,7 +176,7 @@ async def delete_variant_route(info: strawberry.Info[Context], variant_id: int) 
         logger.warning(f"User {user.user.id} unauthorized to delete variant {variant_id}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to delete variant',
+            detail='User is not allowed to delete variant',
         )
 
     await delete_variant_db(db, variant_id)
@@ -205,7 +205,7 @@ async def normalize_variants_rollout_percentage_route(
         )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to normalize variants rollout percentage',
+            detail='User is not allowed to normalize variants rollout percentage',
         )
 
     await normalize_variants_rollout_percentage_db(db, feature_flag_id)

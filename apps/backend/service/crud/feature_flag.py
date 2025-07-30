@@ -4,7 +4,7 @@ from typing import List, Optional
 from sqlalchemy.orm import Session
 
 from conf.settings import logger
-from database.models import FeatureFlag, Variant
+from database.models import FeatureFlag
 from services.core.routes.schemas.feature_flag import FeatureFlagPost, VariantPost
 
 from .release_condition import create_release_condition_db

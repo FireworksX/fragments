@@ -3,13 +3,12 @@ from typing import List, Optional
 
 import strawberry
 
-from services.core.routes.schemas.fragment import FragmentGet
 from services.core.routes.schemas.release_condition import (
     ReleaseConditionGet,
     ReleaseConditionPatch,
     ReleaseConditionPost,
 )
-from services.core.routes.schemas.variant import VariantGet, VariantPost, VariantPatch
+from services.core.routes.schemas.variant import VariantGet, VariantPatch, VariantPost
 
 
 @strawberry.enum

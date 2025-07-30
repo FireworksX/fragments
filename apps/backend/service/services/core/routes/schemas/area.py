@@ -19,6 +19,7 @@ class AreaGet:
     logo: MediaGet
     properties: Optional[List[strawberry.scalars.JSON]] = None
 
+
 @strawberry.input
 class AreaPost:
     project_id: int

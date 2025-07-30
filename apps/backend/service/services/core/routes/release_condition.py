@@ -1,4 +1,4 @@
-from typing import List, Optional, Union
+from typing import List
 
 import strawberry
 from fastapi import HTTPException, status
@@ -34,9 +34,7 @@ from services.core.routes.schemas.release_condition import (
     FilterGeoLocationsGet,
     FilterOSTypeGet,
     FilterPageGet,
-    FilterPost,
     FilterTimeFrameGet,
-    FilterType,
     ReleaseConditionGet,
     ReleaseConditionPatch,
     ReleaseConditionPost,
@@ -136,7 +134,7 @@ async def release_condition_by_id(
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to view release conditions',
+            detail='User is not allowed to view release conditions',
         )
 
     return release_condition_db_to_release_condition(release_condition)
@@ -158,7 +156,7 @@ async def create_release_condition_route(
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to create release conditions',
+            detail='User is not allowed to create release conditions',
         )
 
     release_condition: ReleaseCondition = await create_release_condition_db(db, rc)
@@ -182,7 +180,7 @@ async def update_release_condition_route(
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to change release condition',
+            detail='User is not allowed to change release condition',
         )
 
     release_condition: ReleaseCondition = await update_release_condition_db(
@@ -210,7 +208,7 @@ async def delete_release_condition_route(
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to delete release condition',
+            detail='User is not allowed to delete release condition',
         )
 
     await delete_release_condition_db(db, release_condition_id)
@@ -234,7 +232,7 @@ async def get_condition_sets_route(
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to view condition sets',
+            detail='User is not allowed to view condition sets',
         )
 
     condition_sets: List[ConditionSet] = await get_condition_sets_by_release_condition_id_db(
@@ -261,7 +259,7 @@ async def get_condition_set_route(
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to view condition set',
+            detail='User is not allowed to view condition set',
         )
 
     return condition_set_db_to_condition_set(condition_set)
@@ -285,7 +283,7 @@ async def create_condition_set_route(
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to create condition set',
+            detail='User is not allowed to create condition set',
         )
 
     condition_set: ConditionSet = await create_condition_set_db(db, release_condition_id, cs)
@@ -310,7 +308,7 @@ async def update_condition_set_route(
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to update condition set',
+            detail='User is not allowed to update condition set',
         )
 
     condition_set: ConditionSet = await update_condition_set_db(
@@ -336,7 +334,7 @@ async def delete_condition_set_route(info: strawberry.Info[Context], condition_s
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to delete condition set',
+            detail='User is not allowed to delete condition set',
         )
 
     await delete_condition_set_db(db, condition_set_id)
@@ -360,7 +358,7 @@ async def get_conditions_route(
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to view conditions',
+            detail='User is not allowed to view conditions',
         )
 
     conditions: List[Condition] = await get_conditions_by_condition_set_id_db(db, condition_set_id)
@@ -382,6 +380,12 @@ async def create_condition_route(
     permission: bool = await write_permission(
         db, user.user.id, condition_set.release_condition.project_id
     )
+    if not permission:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail='User is not allowed to create condition',
+        )
+
     return await create_condition_db(db, condition_set_id, condition)
 
 
@@ -401,7 +405,7 @@ async def get_condition_route(info: strawberry.Info[Context], condition_id: int)
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to view condition',
+            detail='User is not allowed to view condition',
         )
 
     return condition_db_to_condition(condition)
@@ -422,7 +426,7 @@ async def update_condition_route(info: strawberry.Info[Context], c: ConditionPat
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to update condition',
+            detail='User is not allowed to update condition',
         )
 
     condition: Condition = await update_condition_db(db, condition_id=c.id, condition=c)
@@ -446,7 +450,7 @@ async def delete_condition_route(info: strawberry.Info[Context], condition_id: i
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to delete condition',
+            detail='User is not allowed to delete condition',
         )
 
     await delete_condition_db(db, condition_id)

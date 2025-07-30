@@ -40,8 +40,8 @@ lint:
 	mypy $(PACKAGES)
 
 format:
-	isort --apply --recursive $(CODE)
-	black --line-length=100 --skip-string-normalization $(CODE)
+	isort --apply --recursive --skip alembic $(CODE)
+	black --line-length=100 --skip-string-normalization --exclude alembic $(CODE)
 	unify --in-place --recursive $(CODE)
 
 validate: lint test

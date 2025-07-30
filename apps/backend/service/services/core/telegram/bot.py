@@ -30,7 +30,7 @@ def send_feedback(fb: FeedbackGet) -> None:
     params = {'chat_id': CHAT_ID, 'text': message}
 
     # Send the request to Telegram
-    response = requests.post(url, params=params)
+    response = requests.post(url, params=params, timeout=10)
 
     # Check the response
     if response.status_code == 200:

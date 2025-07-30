@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import List, Optional
 
 from fastapi import HTTPException
@@ -20,7 +19,6 @@ from services.core.routes.schemas.release_condition import (
     ConditionPost,
     ConditionSetPatch,
     ConditionSetPost,
-    FilterType,
     ReleaseConditionPatch,
     ReleaseConditionPost,
 )

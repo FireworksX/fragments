@@ -1,10 +1,7 @@
-import datetime
 from enum import Enum
 from typing import Optional
 
 import strawberry
-
-from services.core.routes.schemas.release_condition import DeviceType, OSType
 
 
 @strawberry.enum

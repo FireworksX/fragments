@@ -1,5 +1,4 @@
-from functools import partial
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+from typing import Any, Callable, Dict, List, Optional, Union
 
 import ujson
 from fastapi import APIRouter, FastAPI, HTTPException
@@ -41,6 +40,7 @@ class Error(HTTPException):
     error_code: str = 'Error'
 
     def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         if self.error is None:
             if len(args) == 1 and not kwargs:
                 self.error = args[1]

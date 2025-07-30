@@ -85,11 +85,7 @@ async def create_area_route(info: strawberry.Info[Context], area: AreaPost) -> A
             status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to create areas'
         )
 
-    area_db: Area = await create_area_db(
-        db,
-        user.user.id,
-        area
-    )
+    area_db: Area = await create_area_db(db, user.user.id, area)
     logger.debug(f"Created area {area_db.id}")
     return await area_db_to_area(db, area_db)
 

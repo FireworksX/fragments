@@ -13,7 +13,6 @@ from sqlalchemy import (
     Table,
     UniqueConstraint,
     func,
-    orm,
 )
 from sqlalchemy.orm import relationship
 
@@ -27,6 +26,8 @@ class ProjectGoal(Base):
     created_at = Column('created_at', DateTime, default=datetime.datetime.now(datetime.UTC))
     name = Column('name', String, nullable=False)
     target_action = Column('target_action', String, nullable=False)
+    success_level = Column('success_level', Float, nullable=True)
+    failure_level = Column('failure_level', Float, nullable=True)
     __table_args__ = (
         UniqueConstraint('project_id', 'target_action', name='unique_project_target_action'),
     )
@@ -208,9 +209,6 @@ class Campaign(Base):
         nullable=False,
     )
     feature_flag = relationship('FeatureFlag')
-
-    experiment_id = Column('experiment_id', Integer, ForeignKey('experiment.id'), nullable=True)
-    experiment = relationship('Experiment')
 
 
 class ReleaseCondition(Base):
@@ -394,24 +392,6 @@ class Variant(Base):
     status = Column('status', Integer, nullable=False, default=1)
     deleted_at = Column('deleted_at', DateTime, nullable=True)
 
-    
-
-
-class Experiment(Base):
-    __tablename__ = 'experiment'
-    id = Column('id', Integer, primary_key=True, index=True)
-    name = Column('name', String, nullable=False, unique=True)
-    description = Column('description', String)
-    feature_flag_id = Column(
-        'feature_flag_id', Integer, ForeignKey('feature_flag.id', ondelete='CASCADE')
-    )
-    feature_flag = relationship('FeatureFlag')
-
-    created_at = Column('created_at', DateTime, nullable=False, default=func.now())
-    updated_at = Column(
-        'updated_at', DateTime, nullable=False, default=func.now(), onupdate=func.now()
-    )
-
 
 class Feedback(Base):
     __tablename__ = 'feedback'
@@ -437,6 +417,18 @@ fragment_usage = Table(
     Column('fragment_id', Integer, ForeignKey('fragment.id', ondelete='CASCADE'), primary_key=True),
     Column(
         'used_fragment_id', Integer, ForeignKey('fragment.id', ondelete='CASCADE'), primary_key=True
+    ),
+)
+
+fragment_project_goal_usage = Table(
+    'fragment_project_goal_usage',
+    Base.metadata,
+    Column('fragment_id', Integer, ForeignKey('fragment.id', ondelete='CASCADE'), primary_key=True),
+    Column(
+        'project_goal_id',
+        Integer,
+        ForeignKey('project_goal.id', ondelete='CASCADE'),
+        primary_key=True,
     ),
 )
 
@@ -480,6 +472,13 @@ class Fragment(Base):
         secondaryjoin=id == fragment_usage.c.used_fragment_id,
         # We do NOT define backref or symmetrical references here,
         # since we just want "Fragment has an array of fragments it is using."
+    )
+
+    linked_goals = relationship(
+        'ProjectGoal',
+        secondary=fragment_project_goal_usage,
+        primaryjoin=id == fragment_project_goal_usage.c.fragment_id,
+        secondaryjoin=id == fragment_project_goal_usage.c.project_goal_id,
     )
 
 
@@ -572,7 +571,9 @@ class ClientHistory(Base):
     variant_id = Column('variant_id', Integer, ForeignKey('variant.id'), nullable=True)
     variant = relationship('Variant')
 
-    feature_flag_id = Column('feature_flag_id', Integer, ForeignKey('feature_flag.id'), nullable=True)
+    feature_flag_id = Column(
+        'feature_flag_id', Integer, ForeignKey('feature_flag.id'), nullable=True
+    )
     feature_flag = relationship('FeatureFlag')
 
     event_type = Column('event_type', Integer, nullable=False)

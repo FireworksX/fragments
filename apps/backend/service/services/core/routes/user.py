@@ -1,4 +1,3 @@
-from copy import copy, deepcopy
 from typing import Optional
 
 import strawberry

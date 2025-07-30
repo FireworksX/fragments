@@ -26,15 +26,13 @@ from database.models import Project
 
 from .area import area_db_to_area
 from .campaign import CampaignStatus, get_campaigns_by_area_id_db
-from .fragment import fragment_db_to_fragment
 from .middleware import ClientInfo, Context
 from .project import get_user_role_in_project, project_db_to_project, project_goal_db_to_goal
 from .schemas.client import ClientAreaGet, ClientGet, ClientHistoryEventType, ClientHistoryGet
-from .schemas.variant import FragmentVariantGet, VariantGet, VariantStatus
 from .schemas.feature_flag import RotationType
 from .schemas.project import ClientProjectGoalGet
-from .schemas.release_condition import FilterType
 from .schemas.user import AuthPayload, RoleGet
+from .schemas.variant import VariantGet, VariantStatus
 from .variant import variant_db_to_variant
 
 
@@ -70,7 +68,9 @@ async def client_history_db_to_history(db: Session, history: ClientHistory) -> C
     )
 
 
-async def client_db_to_client(db: Session, client: Client, history: List[ClientHistory]) -> ClientGet:
+async def client_db_to_client(
+    db: Session, client: Client, history: List[ClientHistory]
+) -> ClientGet:
     logger.debug(f"Converting client {client.id} to schema with {len(history)} history records")
     return ClientGet(
         id=client.id,
@@ -262,12 +262,14 @@ async def get_clients_by_project_id_route(
         logger.warning(f"User {user.user.id} unauthorized to view clients for project {project_id}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to view clients',
+            detail='User is not allowed to view clients',
         )
 
     clients: List[Client] = await get_clients_by_project_id_db(db, project_id)
     logger.debug(f"Found {len(clients)} clients")
-    return [await client_db_to_client(db, c, await get_client_history_db(db, c.id)) for c in clients]
+    return [
+        await client_db_to_client(db, c, await get_client_history_db(db, c.id)) for c in clients
+    ]
 
 
 async def get_client_route(info: strawberry.Info[Context], client_id: int) -> ClientGet:
@@ -300,7 +302,9 @@ async def get_client_history_route(
     return [await client_history_db_to_history(db, h) for h in history]
 
 
-async def client_area_route(info: strawberry.Info[Context], area_code: str) -> Optional[ClientAreaGet]:
+async def client_area_route(
+    info: strawberry.Info[Context], area_code: str
+) -> Optional[ClientAreaGet]:
     logger.info(f"Getting area variant for area code {area_code}")
     db: Session = info.context.session()
 
@@ -320,7 +324,7 @@ async def client_area_route(info: strawberry.Info[Context], area_code: str) -> O
         logger.warning(f"Area {area_code} does not belong to project {project.id}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to view campaigns',
+            detail='User is not allowed to view campaigns',
         )
 
     logger.debug(f"Getting active campaigns for area {area.id}")
