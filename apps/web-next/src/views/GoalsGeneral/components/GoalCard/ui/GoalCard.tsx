@@ -4,6 +4,7 @@ import styles from './styles.module.css'
 import { Button } from '@/shared/ui/Button'
 import RemoveIcon from '@/shared/icons/next/trash.svg'
 import { ContentEditable } from '@/shared/ui/ContentEditable'
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 interface GoalCardProps {
   id: number
@@ -13,6 +14,27 @@ interface GoalCardProps {
   onEdit?: (options: { name?: string; code?: string }) => void
   onRemove?: () => void
 }
+
+const data = [
+  { time: '10:00', value: 80 },
+  { time: '11:00', value: 90 },
+  { time: '12:00', value: 110 },
+  { time: '13:00', value: 100 },
+  { time: '14:00', value: 70 },
+  { time: '15:00', value: 95 }
+]
+
+const MIN = 75
+const MAX = 105
+
+const computeOffset = val => {
+  // нормируем value в [0..1] внутри [MIN, MAX]
+  return (val - MIN) / (MAX - MIN)
+}
+
+// Находим оффсет порога (например для MIN и MAX)
+const minOffset = 0
+const maxOffset = 1
 
 export const GoalCard: FC<GoalCardProps> = ({ className, id, name, code, onEdit, onRemove }) => {
   return (
@@ -44,6 +66,28 @@ export const GoalCard: FC<GoalCardProps> = ({ className, id, name, code, onEdit,
           </div>
         </div>
       </div>
+
+      <ResponsiveContainer width='100%' height={300}>
+        <AreaChart data={data}>
+          <defs>
+            <linearGradient id='colorByValue' x1='0' y1='0' x2='0' y2='1'>
+              {/* Зона за пределом MAX */}
+              <stop offset={`${computeOffset(MAX)}%`} stopColor='green' stopOpacity={0.2} />
+              <stop offset={`${computeOffset(MAX)}%`} stopColor='red' stopOpacity={0.5} />
+              {/* Середина диапазона */}
+              <stop offset={`${computeOffset(MIN)}%`} stopColor='green' stopOpacity={0.5} />
+              <stop offset={`${computeOffset(MIN)}%`} stopColor='red' stopOpacity={0.5} />
+            </linearGradient>
+          </defs>
+
+          <CartesianGrid strokeDasharray='3 3' />
+          <XAxis dataKey='time' />
+          <YAxis domain={['auto', 'auto']} />
+          <Tooltip />
+
+          <Area type='monotone' dataKey='value' stroke='#8884d8' fill='url(#colorByValue)' />
+        </AreaChart>
+      </ResponsiveContainer>
 
       <div className={styles.actions}>
         <Button mode='tertiary' icon={<RemoveIcon />} onClick={() => onRemove()} />
