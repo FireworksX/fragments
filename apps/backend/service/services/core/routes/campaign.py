@@ -7,6 +7,7 @@ from thefuzz import fuzz, process
 
 from conf import service_settings
 from conf.settings import logger
+from crud.analytics import get_campaign_stats_db
 from crud.area import get_area_by_id_db
 from crud.campaign import (
     create_campaign_db,
@@ -41,7 +42,7 @@ async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
     return role is not None and role is not RoleGet.DESIGNER
 
 
-def campaign_db_to_campaign(campaign: Campaign) -> CampaignGet:
+async def campaign_db_to_campaign(db: Session, campaign: Campaign) -> CampaignGet:
     logger.debug(f"Converting campaign {campaign.id} to schema")
     return CampaignGet(
         id=campaign.id,
@@ -56,7 +57,8 @@ def campaign_db_to_campaign(campaign: Campaign) -> CampaignGet:
         ),
         author=user_db_to_user(campaign.author),
         experiment=campaign.experiment,
-        feature_flag=feature_flag_db_to_feature_flag(campaign.feature_flag),
+        feature_flag=await feature_flag_db_to_feature_flag(db, campaign.feature_flag),
+        stats=await get_campaign_stats_db(db, campaign.area_id, campaign.id),
     )
 
 
@@ -86,7 +88,7 @@ async def campaigns_in_area(
     logger.debug(f"Found {len(campaigns)} campaigns")
     out: List[CampaignGet] = []
     for cp in campaigns:
-        out.append(campaign_db_to_campaign(cp))
+        out.append(await campaign_db_to_campaign(db, cp))
     return out
 
 
@@ -118,7 +120,7 @@ async def campaigns_in_area_without_default(
     for cp in campaigns:
         if cp.default:
             continue
-        out.append(campaign_db_to_campaign(cp))
+        out.append(await campaign_db_to_campaign(db, cp))
     logger.debug(f"Returning {len(out)} non-default campaigns")
     return out
 
@@ -141,7 +143,7 @@ async def campaign_by_id(info: strawberry.Info[Context], campaign_id: int) -> Ca
             detail=f'User is not allowed to view campaigns',
         )
 
-    return campaign_db_to_campaign(campaign)
+    return await campaign_db_to_campaign(db, campaign)
 
 
 async def create_campaign_route(info: strawberry.Info[Context], cmp: CampaignPost) -> CampaignGet:
@@ -177,7 +179,7 @@ async def create_campaign_route(info: strawberry.Info[Context], cmp: CampaignPos
     )
     logger.debug(f"Created campaign {campaign.id}")
 
-    return campaign_db_to_campaign(campaign)
+    return await campaign_db_to_campaign(db, campaign)
 
 
 async def update_campaign_route(info: strawberry.Info[Context], cmp: CampaignPatch) -> CampaignGet:
@@ -206,7 +208,7 @@ async def update_campaign_route(info: strawberry.Info[Context], cmp: CampaignPat
     campaign: Campaign = await update_campaign_by_id_db(db, values=cmp.__dict__)
     logger.debug(f"Updated campaign {campaign.id}")
 
-    return campaign_db_to_campaign(campaign)
+    return await campaign_db_to_campaign(db, campaign)
 
 
 async def delete_campaign_route(info: strawberry.Info[Context], campaign_id: int) -> None:
@@ -308,7 +310,7 @@ async def delete_campaign_logo_route(
     campaign.logo_id = default_logo.id
     db.commit()
     logger.debug(f"Deleted logo from campaign {campaign_id} and set default logo {default_logo.id}")
-    return campaign_db_to_campaign(campaign)
+    return await campaign_db_to_campaign(db, campaign)
 
 
 async def campaign_by_name(
@@ -338,7 +340,7 @@ async def campaign_by_name(
     campaign: Campaign = await get_campaign_by_name_and_area_id_db(db, area_id, name)
     if campaign:
         logger.debug(f"Found exact match for campaign name '{name}'")
-        return [campaign_db_to_campaign(campaign)]
+        return [await campaign_db_to_campaign(db, campaign)]
 
     campaigns: list[CampaignGet] = await campaigns_in_area(info, area_id, status)
     scores = process.extractBests(name, [campaign.name for campaign in campaigns], limit=limit)
@@ -346,7 +348,8 @@ async def campaign_by_name(
     out: List[CampaignGet] = []
     for score in scores:
         out.append(
-            campaign_db_to_campaign(
+            await campaign_db_to_campaign(
+                db,
                 await get_campaign_by_name_and_area_id_db(db, area_id, score[0])
             )
         )
