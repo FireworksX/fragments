@@ -193,7 +193,7 @@ async def update_condition_set_db(
     if condition_set.conditions is not None:
         condition_set_db.conditions.clear()
         for condition in condition_set.conditions:
-            condition = await create_condition_db(db, condition.id, condition)
+            condition = await create_condition_db(db, condition_set_db.id, condition)
     db.commit()
     db.refresh(condition_set_db)
     logger.info(f"Updated condition set with id: {condition_set_id}")

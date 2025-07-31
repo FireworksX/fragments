@@ -4,7 +4,7 @@ from typing import List, Optional
 import strawberry
 from fastapi import HTTPException, UploadFile, status
 
-from .analytic import get_campaign_stats_route, get_variant_stats_route
+from .analytic import get_campaign_stats_route, get_goal_stats_route, get_variant_stats_route
 from .area import (
     add_area_logo_route,
     create_area_route,
@@ -98,7 +98,7 @@ from .release_condition import (
     update_condition_set_route,
     update_release_condition_route,
 )
-from .schemas.analytic import CampaignStatsGet, VariantStatsGet
+from .schemas.analytic import CampaignStatsGet, GoalStatsGet, VariantStatsGet
 from .schemas.area import AreaGet, AreaPatch, AreaPost
 from .schemas.campaign import CampaignGet, CampaignPatch, CampaignPost, CampaignStatus
 from .schemas.client import ClientAreaGet, ClientGet, ClientHistoryGet
@@ -659,6 +659,16 @@ class AnalyticQuery:
         to_ts: Optional[datetime] = None,
     ) -> CampaignStatsGet:
         return await get_campaign_stats_route(info, area_id, campaign_id, from_ts, to_ts)
+
+    @strawberry.field
+    async def goal_stats(
+        self,
+        info: strawberry.Info[Context],
+        goal_id: int,
+        from_ts: Optional[datetime] = None,
+        to_ts: Optional[datetime] = None,
+    ) -> GoalStatsGet:
+        return await get_goal_stats_route(info, goal_id, from_ts, to_ts)
 
 
 @strawberry.type

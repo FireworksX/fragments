@@ -577,3 +577,6 @@ class ClientHistory(Base):
     feature_flag = relationship('FeatureFlag')
 
     event_type = Column('event_type', Integer, nullable=False)
+
+    goal_id = Column('goal_id', Integer, ForeignKey('project_goal.id'), nullable=True)
+    goal = relationship('ProjectGoal')

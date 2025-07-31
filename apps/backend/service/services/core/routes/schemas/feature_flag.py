@@ -43,4 +43,4 @@ class FeatureFlagPatch:
     description: Optional[str] = None
     rotation_type: Optional[RotationType] = None
     release_condition: Optional[ReleaseConditionPatch] = None
-    variants: Optional[List[VariantPatch]] = None
+    variants: Optional[List[VariantPost]] = None

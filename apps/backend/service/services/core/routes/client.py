@@ -184,13 +184,14 @@ async def contribute_to_project_goal_route(
         country=location.country,
         region=location.region,
         city=location.city,
-        event_type=int(ClientHistoryEventType.CONTRIBUTE.value),
+        event_type=int(ClientHistoryEventType.GOAL_CONTRIBUTE.value),
         url='',
         referrer='',
         domain='',
         subdomain='',
         area_id=None,
         variant_id=None,
+        goal_id=project_goal.id,
     )
 
     logger.debug(f"Creating client project goal record for client {client.id}")
@@ -487,6 +488,35 @@ async def client_area_route(
             campaign_id=best_campaign.id,
             feature_flag_id=best_campaign.feature_flag.id,
         )
+
+        if variantFragment.fragment.linked_goals:
+            logger.debug(
+                f"Creating goal view history records for {len(variantFragment.fragment.linked_goals)} goals"
+            )
+            for goal_id in variantFragment.fragment.linked_goals:
+                await create_client_history_db(
+                    db=db,
+                    client_id=client.id,
+                    device_type=client_info.device_type.value if client_info.device_type else None,
+                    os_type=client_info.os_type.value if client_info.os_type else None,
+                    browser=None,
+                    language=None,
+                    screen_width=None,
+                    screen_height=None,
+                    country=location.country,
+                    region=location.region,
+                    city=location.city,
+                    event_type=int(ClientHistoryEventType.GOAL_VIEW.value),
+                    url='',
+                    referrer='',
+                    domain='',
+                    subdomain='',
+                    area_id=area.id,
+                    variant_id=variantFragment.id,
+                    campaign_id=best_campaign.id,
+                    feature_flag_id=best_campaign.feature_flag.id,
+                    goal_id=goal_id,
+                )
 
     return ClientAreaGet(
         variant=variantFragment,
