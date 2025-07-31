@@ -8,7 +8,7 @@ from services.core.routes.schemas.release_condition import (
     ReleaseConditionPatch,
     ReleaseConditionPost,
 )
-from services.core.routes.schemas.variant import VariantGet, VariantPatch, VariantPost
+from services.core.routes.schemas.variant import VariantGet, VariantPost
 
 
 @strawberry.enum
