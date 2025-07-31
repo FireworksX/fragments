@@ -46,7 +46,6 @@ async def create_area_db(
         default=True,
         status=CampaignStatus.ACTIVE,
         author_id=author_id,
-        experiment_id=None,
     )
     logger.debug(f"Created default campaign {default_campaign.id} for area {area_db.id}")
 
@@ -111,11 +110,11 @@ async def update_area_by_id_db(db: Session, area: AreaPatch) -> Area:
         logger.debug(f"Updating area code for area {area.id} to {area.area_code}")
         # Check if area code already exists in project
         existing_area = await get_area_by_code_and_project_id_db(
-            db, area.project_id, area.area_code
+            db, area_db.project_id, area.area_code
         )
         if existing_area and existing_area.id != area.id:
             logger.error(
-                f"Area code {area.area_code} already exists in project {area.project_id}"
+                f"Area code {area.area_code} already exists in project {area_db.project_id}"
             )
             raise ValueError(f"Area code {area.area_code} already exists in project")
         area_db.area_code = area.area_code

@@ -16,6 +16,7 @@ class FragmentPost:
     linked_fragments: Optional[List[int]] = None  # ids of fragments
 
     directory_id: int
+    linked_goals: Optional[List[int]] = None  # ids of goals
 
 
 @strawberry.input
@@ -28,6 +29,7 @@ class FragmentPatch:
     linked_fragments: Optional[List[int]] = None  # ids of fragments
 
     directory_id: Optional[int] = None
+    linked_goals: Optional[List[int]] = None  # ids of goals
 
 
 @strawberry.type
@@ -42,3 +44,4 @@ class FragmentGet:
     linked_fragments: Optional[List['FragmentGet']] = None  # flat list of fragments
 
     directory_id: int
+    linked_goals: Optional[List[int]] = None  # ids of goals

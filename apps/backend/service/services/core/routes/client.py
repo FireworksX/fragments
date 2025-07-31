@@ -26,25 +26,23 @@ from database.models import Project
 
 from .area import area_db_to_area
 from .campaign import CampaignStatus, get_campaigns_by_area_id_db
-from .fragment import fragment_db_to_fragment
 from .middleware import ClientInfo, Context
 from .project import get_user_role_in_project, project_db_to_project, project_goal_db_to_goal
 from .schemas.client import ClientAreaGet, ClientGet, ClientHistoryEventType, ClientHistoryGet
-from .schemas.variant import FragmentVariantGet, VariantGet, VariantStatus
 from .schemas.feature_flag import RotationType
 from .schemas.project import ClientProjectGoalGet
-from .schemas.release_condition import FilterType
 from .schemas.user import AuthPayload, RoleGet
+from .schemas.variant import VariantGet, VariantStatus
 from .variant import variant_db_to_variant
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
     logger.info(f"Checking read permission for user {user_id} in project {project_id}")
-    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None
 
 
-async def client_history_db_to_history(db: Session, history: ClientHistory) -> ClientHistoryGet:
+def client_history_db_to_history(history: ClientHistory) -> ClientHistoryGet:
     logger.debug(f"Converting client history {history.id} to schema")
     return ClientHistoryGet(
         id=history.id,
@@ -65,19 +63,19 @@ async def client_history_db_to_history(db: Session, history: ClientHistory) -> C
         page_load_time=history.page_load_time,
         created_at=history.created_at.isoformat(),
         event_type=ClientHistoryEventType(history.event_type),
-        area=await area_db_to_area(db, history.area) if history.area else None,
-        variant=await variant_db_to_variant(db, history.variant) if history.variant else None,
+        area=area_db_to_area(history.area) if history.area else None,
+        variant=variant_db_to_variant(history.variant) if history.variant else None,
     )
 
 
-async def client_db_to_client(db: Session, client: Client, history: List[ClientHistory]) -> ClientGet:
+def client_db_to_client(client: Client, history: List[ClientHistory]) -> ClientGet:
     logger.debug(f"Converting client {client.id} to schema with {len(history)} history records")
     return ClientGet(
         id=client.id,
         created_at=client.created_at.isoformat(),
         updated_at=client.updated_at.isoformat(),
         last_visited_at=client.last_visited_at.isoformat() if client.last_visited_at else None,
-        history=[await client_history_db_to_history(db, h) for h in history],
+        history=[client_history_db_to_history(h) for h in history],
     )
 
 
@@ -186,13 +184,14 @@ async def contribute_to_project_goal_route(
         country=location.country,
         region=location.region,
         city=location.city,
-        event_type=int(ClientHistoryEventType.CONTRIBUTE.value),
+        event_type=int(ClientHistoryEventType.GOAL_CONTRIBUTE.value),
         url='',
         referrer='',
         domain='',
         subdomain='',
         area_id=None,
         variant_id=None,
+        goal_id=project_goal.id,
     )
 
     logger.debug(f"Creating client project goal record for client {client.id}")
@@ -235,7 +234,7 @@ async def get_contributions_to_project_goal_route(
         result.append(
             ClientProjectGoalGet(
                 id=goal.id,
-                client=await client_db_to_client(db, client, client_history),
+                client=client_db_to_client(client, client_history),
                 project_goal=project_goal_db_to_goal(project_goal),
                 project=await project_db_to_project(info, db, project),
                 created_at=goal.created_at.isoformat(),
@@ -262,12 +261,12 @@ async def get_clients_by_project_id_route(
         logger.warning(f"User {user.user.id} unauthorized to view clients for project {project_id}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to view clients',
+            detail='User is not allowed to view clients',
         )
 
     clients: List[Client] = await get_clients_by_project_id_db(db, project_id)
     logger.debug(f"Found {len(clients)} clients")
-    return [await client_db_to_client(db, c, await get_client_history_db(db, c.id)) for c in clients]
+    return [client_db_to_client(c, await get_client_history_db(db, c.id)) for c in clients]
 
 
 async def get_client_route(info: strawberry.Info[Context], client_id: int) -> ClientGet:
@@ -281,7 +280,7 @@ async def get_client_route(info: strawberry.Info[Context], client_id: int) -> Cl
 
     history: List[ClientHistory] = await get_client_history_db(db, client_id)
     logger.debug(f"Found {len(history)} history records for client {client_id}")
-    return await client_db_to_client(db, client, history)
+    return client_db_to_client(client, history)
 
 
 async def get_client_history_route(
@@ -297,10 +296,12 @@ async def get_client_history_route(
 
     history: List[ClientHistory] = await get_client_history_db(db, client_id)
     logger.debug(f"Found {len(history)} history records")
-    return [await client_history_db_to_history(db, h) for h in history]
+    return [client_history_db_to_history(h) for h in history]
 
 
-async def client_area_route(info: strawberry.Info[Context], area_code: str) -> Optional[ClientAreaGet]:
+async def client_area_route(
+    info: strawberry.Info[Context], area_code: str
+) -> Optional[ClientAreaGet]:
     logger.info(f"Getting area variant for area code {area_code}")
     db: Session = info.context.session()
 
@@ -320,7 +321,7 @@ async def client_area_route(info: strawberry.Info[Context], area_code: str) -> O
         logger.warning(f"Area {area_code} does not belong to project {project.id}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to view campaigns',
+            detail='User is not allowed to view campaigns',
         )
 
     logger.debug(f"Getting active campaigns for area {area.id}")
@@ -446,7 +447,7 @@ async def client_area_route(info: strawberry.Info[Context], area_code: str) -> O
         if last_viewed_variant:
             variant = await get_variant_by_id_db(db, last_viewed_variant.variant_id)
             if variant:
-                variantFragment = await variant_db_to_variant(db, variant)
+                variantFragment = variant_db_to_variant(variant)
 
     if variantFragment is None:
         logger.debug('Selecting random variant based on weights')
@@ -459,7 +460,7 @@ async def client_area_route(info: strawberry.Info[Context], area_code: str) -> O
 
         if active_variants:
             variant = random.choices(active_variants, weights=weights, k=1)[0]
-            variantFragment = await variant_db_to_variant(db, variant)
+            variantFragment = variant_db_to_variant(variant)
 
     if variantFragment:
         logger.debug(
@@ -487,6 +488,35 @@ async def client_area_route(info: strawberry.Info[Context], area_code: str) -> O
             campaign_id=best_campaign.id,
             feature_flag_id=best_campaign.feature_flag.id,
         )
+
+        if variantFragment.fragment.linked_goals:
+            logger.debug(
+                f"Creating goal view history records for {len(variantFragment.fragment.linked_goals)} goals"
+            )
+            for goal_id in variantFragment.fragment.linked_goals:
+                await create_client_history_db(
+                    db=db,
+                    client_id=client.id,
+                    device_type=client_info.device_type.value if client_info.device_type else None,
+                    os_type=client_info.os_type.value if client_info.os_type else None,
+                    browser=None,
+                    language=None,
+                    screen_width=None,
+                    screen_height=None,
+                    country=location.country,
+                    region=location.region,
+                    city=location.city,
+                    event_type=int(ClientHistoryEventType.GOAL_VIEW.value),
+                    url='',
+                    referrer='',
+                    domain='',
+                    subdomain='',
+                    area_id=area.id,
+                    variant_id=variantFragment.id,
+                    campaign_id=best_campaign.id,
+                    feature_flag_id=best_campaign.feature_flag.id,
+                    goal_id=goal_id,
+                )
 
     return ClientAreaGet(
         variant=variantFragment,

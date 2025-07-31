@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Optional
 
 import strawberry
 from fastapi import HTTPException, status
@@ -11,7 +11,7 @@ from crud.filesystem import (
     update_directory_db,
 )
 from crud.project import get_project_by_id_db
-from database import FilesystemDirectory, Fragment, Project, Session
+from database import FilesystemDirectory, Project, Session
 
 from .fragment import fragment_db_to_fragment
 from .middleware import Context
@@ -22,13 +22,13 @@ from .utils import get_user_role_in_project
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
     logger.info(f"Checking read permission for user {user_id} in project {project_id}")
-    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None
 
 
 async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
     logger.info(f"Checking write permission for user {user_id} in project {project_id}")
-    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None and role is not RoleGet.DESIGNER
 
 
@@ -98,7 +98,7 @@ async def create_directory_route(
         )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to create directories',
+            detail='User is not allowed to create directories',
         )
 
     directory_db: FilesystemDirectory = await create_directory_db(
@@ -133,7 +133,7 @@ async def get_directory(
         logger.warning(f"User {user.user.id} unauthorized to view directory {directory_id}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to observe directories',
+            detail='User is not allowed to observe directories',
         )
 
     logger.info(f"Successfully retrieved directory {directory_id}")
@@ -163,7 +163,7 @@ async def delete_directory_route(info: strawberry.Info[Context], directory_id: i
         logger.warning(f"User {user.user.id} unauthorized to delete directory {directory_id}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to delete directories',
+            detail='User is not allowed to delete directories',
         )
     if directory_id == project.root_directory_id:
         logger.warning(f"Attempted to delete root directory {directory_id}")
@@ -174,9 +174,9 @@ async def delete_directory_route(info: strawberry.Info[Context], directory_id: i
     try:
         await delete_directory_db(db, directory_id)
         logger.info(f"Successfully deleted directory {directory_id}")
-    except ValueError as e:
-        logger.error(f"Failed to delete directory {directory_id}: {str(e)}")
-        raise HTTPException(status_code=409, detail=str(e))
+    except ValueError as exc:
+        logger.error(f"Failed to delete directory {directory_id}: {str(exc)}")
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
 async def update_directory_route(
@@ -203,9 +203,9 @@ async def update_directory_route(
         logger.warning(f"User {user.user.id} unauthorized to update directory {directory.id}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to update directories',
+            detail='User is not allowed to update directories',
         )
 
-    directory_db: FilesystemDirectory = await update_directory_db(db, directory.__dict__)
+    directory_db = await update_directory_db(db, directory.__dict__)
     logger.info(f"Successfully updated directory {directory.id}")
     return directory_db_to_directory_flat(directory_db)

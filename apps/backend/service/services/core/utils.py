@@ -8,7 +8,7 @@ from conf.settings import service_settings
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
 
-def create_refresh_token(data: dict, expiry_time: timedelta | None = None):
+def create_refresh_token(data: dict, expiry_time: timedelta | None = None) -> str:
     to_encode = data.copy()
     if expiry_time:
         expire = datetime.utcnow() + expiry_time
@@ -36,9 +36,9 @@ def create_access_token(data: dict, expiry_time: timedelta | None = None) -> str
     )
 
 
-def verify_password(plain_password: str, hashed_password: str):
+def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 
-def get_password_hash(password: str):
+def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)

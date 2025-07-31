@@ -1,12 +1,8 @@
-from typing import List
-
 from conf.settings import logger
-from crud.campaign import get_campaign_by_id_db
 from crud.project import get_user_project_role
-from database import Project, Session
+from database import Session
 
-from .schemas.campaign import CampaignGet
-from .schemas.user import RoleGet, UserGet, UserRoleGet
+from .schemas.user import RoleGet
 
 
 async def get_user_role_in_project(db: Session, user_id: int, project_id: int) -> RoleGet | None:

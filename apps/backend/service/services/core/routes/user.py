@@ -1,4 +1,3 @@
-from copy import copy, deepcopy
 from typing import Optional
 
 import strawberry
@@ -72,7 +71,7 @@ async def signup(
             detail='User with the same email address already exists',
         )
     hashed_password: str = get_password_hash(password)
-    user: User = await create_user_db(db, email, first_name, last_name, hashed_password)
+    user = await create_user_db(db, email, first_name, last_name, hashed_password)
 
     access_token = create_access_token(data={'sub': user.email})
     refresh_token = create_refresh_token(data={'sub': user.email})
@@ -92,12 +91,14 @@ async def add_avatar_route(info: strawberry.Info[Context], file: UploadFile) -> 
         logger.error(f"User {auth.user.email} not found when adding avatar")
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
-    media: Media = await create_media_db(db, file)
-    if media is None:
+    try:
+        media: Media = await create_media_db(db, file)
+    except Exception as exc:
         logger.error(f"Failed to create media file for user {auth.user.email}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='Failed to create media file'
-        )
+        ) from exc
+
     user.avatar_id = media.id
     db.commit()
     logger.info(f"Successfully added avatar for user {auth.user.email}")

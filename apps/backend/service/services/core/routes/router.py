@@ -1,9 +1,10 @@
+from datetime import datetime
 from typing import List, Optional
 
 import strawberry
-from fastapi import UploadFile
-from starlette import status
+from fastapi import HTTPException, UploadFile, status
 
+from .analytic import get_campaign_stats_route, get_goal_stats_route, get_variant_stats_route
 from .area import (
     add_area_logo_route,
     create_area_route,
@@ -57,7 +58,6 @@ from .fragment import (
     delete_fragment_asset_route,
     delete_fragment_route,
     fragments_by_ids,
-    fragments_in_project,
     get_client_fragment,
     update_fragment_route,
 )
@@ -98,6 +98,7 @@ from .release_condition import (
     update_condition_set_route,
     update_release_condition_route,
 )
+from .schemas.analytic import CampaignStatsGet, GoalStatsGet, VariantStatsGet
 from .schemas.area import AreaGet, AreaPatch, AreaPost
 from .schemas.campaign import CampaignGet, CampaignPatch, CampaignPost, CampaignStatus
 from .schemas.client import ClientAreaGet, ClientGet, ClientHistoryGet
@@ -128,7 +129,7 @@ from .schemas.release_condition import (
     ReleaseConditionPatch,
     ReleaseConditionPost,
 )
-from .schemas.user import AuthPayload, RoleGet, UserGet
+from .schemas.user import AuthPayload, RoleGet
 from .user import add_avatar_route, delete_avatar_route, login, profile, refresh, signup
 from .variant import (
     VariantPatch,
@@ -213,16 +214,16 @@ class CampaignQuery:
         name: Optional[str] = None,
         without_default: Optional[bool] = True,
         limit: Optional[int] = 5,
-        status: Optional[CampaignStatus] = None,
+        campaign_status: Optional[CampaignStatus] = None,
     ) -> List[CampaignGet]:
         if campaign_id is not None:
             return [await campaign_by_id(info, campaign_id)]
         if area_id is not None:
             if name is not None:
-                return await campaign_by_name(info, area_id, name, limit, status)
+                return await campaign_by_name(info, area_id, name, limit, campaign_status)
             if without_default:
-                return await campaigns_in_area_without_default(info, area_id, status)
-            return await campaigns_in_area(info, area_id, status)
+                return await campaigns_in_area_without_default(info, area_id, campaign_status)
+            return await campaigns_in_area(info, area_id, campaign_status)
         return []
 
 
@@ -253,8 +254,7 @@ class ProjectQuery:
     ) -> List[ProjectGet]:
         if project_id is not None:
             return [await project_by_id(info, project_id)]
-        else:
-            return await projects(info)
+        return await projects(info)
 
     @strawberry.field
     async def project_goals(
@@ -513,9 +513,9 @@ class FeatureFlagQuery:
 class FeatureFlagMutation:
     @strawberry.mutation
     async def create_feature_flag(
-        self, info: strawberry.Info[Context], feature_flag: FeatureFlagPost
+        self, info: strawberry.Info[Context], project_id: int, feature_flag: FeatureFlagPost
     ) -> FeatureFlagGet:
-        return await create_feature_flag_route(info, feature_flag)
+        return await create_feature_flag_route(info, project_id, feature_flag)
 
     @strawberry.mutation
     async def update_feature_flag(
@@ -560,26 +560,27 @@ class AssetMutation:
     ) -> MediaGet:
         if media.media_type == MediaType.PROJECT_LOGO:
             return await add_project_logo_route(info, file, media.target_id)
-        elif media.media_type == MediaType.FRAGMENT_ASSET:
+        if media.media_type == MediaType.FRAGMENT_ASSET:
             return await add_fragment_asset_route(info, file, media.target_id, media.directory_id)
-        elif media.media_type == MediaType.CAMPAIGN_LOGO:
+        if media.media_type == MediaType.CAMPAIGN_LOGO:
             return await add_campaign_logo_route(info, file, media.target_id)
-        elif media.media_type == MediaType.USER_LOGO:
+        if media.media_type == MediaType.USER_LOGO:
             return await add_avatar_route(info, file)
-        elif media.media_type == MediaType.AREA_LOGO:
+        if media.media_type == MediaType.AREA_LOGO:
             return await add_area_logo_route(info, file, media.target_id)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Invalid media type')
 
     @strawberry.mutation
     async def delete_asset(self, info: strawberry.Info[Context], media: MediaDelete) -> None:
         if media.media_type == MediaType.PROJECT_LOGO:
             await delete_project_logo_route(info, media.target_id)
-        elif media.media_type == MediaType.FRAGMENT_ASSET:
+        if media.media_type == MediaType.FRAGMENT_ASSET:
             await delete_fragment_asset_route(info, media.target_id, media.media_id)
-        elif media.media_type == MediaType.CAMPAIGN_LOGO:
+        if media.media_type == MediaType.CAMPAIGN_LOGO:
             await delete_campaign_logo_route(info, media.target_id)
-        elif media.media_type == MediaType.USER_LOGO:
+        if media.media_type == MediaType.USER_LOGO:
             await delete_avatar_route(info)
-        elif media.media_type == MediaType.AREA_LOGO:
+        if media.media_type == MediaType.AREA_LOGO:
             await delete_area_logo_route(info, media.target_id)
 
 
@@ -629,10 +630,45 @@ class ClientMutation:
     ) -> None:
         if metric.metric_type == ClientMetricType.INIT_SESSION:
             return await init_client_session_route(info)
-        elif metric.metric_type == ClientMetricType.RELEASE_SESSION:
+        if metric.metric_type == ClientMetricType.RELEASE_SESSION:
             return await release_client_session_route(info)
-        elif metric.metric_type == ClientMetricType.REACH_PROJECT_GOAL:
+        if metric.metric_type == ClientMetricType.REACH_PROJECT_GOAL:
             return await contribute_to_project_goal_route(info, metric.metric_value)
+
+
+@strawberry.type
+class AnalyticQuery:
+    @strawberry.field
+    async def variant_stats(
+        self,
+        info: strawberry.Info[Context],
+        feature_flag_id: int,
+        variant_id: int,
+        from_ts: Optional[datetime] = None,
+        to_ts: Optional[datetime] = None,
+    ) -> VariantStatsGet:
+        return await get_variant_stats_route(info, feature_flag_id, variant_id, from_ts, to_ts)
+
+    @strawberry.field
+    async def campaign_stats(
+        self,
+        info: strawberry.Info[Context],
+        area_id: int,
+        campaign_id: int,
+        from_ts: Optional[datetime] = None,
+        to_ts: Optional[datetime] = None,
+    ) -> CampaignStatsGet:
+        return await get_campaign_stats_route(info, area_id, campaign_id, from_ts, to_ts)
+
+    @strawberry.field
+    async def goal_stats(
+        self,
+        info: strawberry.Info[Context],
+        goal_id: int,
+        from_ts: Optional[datetime] = None,
+        to_ts: Optional[datetime] = None,
+    ) -> GoalStatsGet:
+        return await get_goal_stats_route(info, goal_id, from_ts, to_ts)
 
 
 @strawberry.type
@@ -646,6 +682,7 @@ class Query(
     ReleaseConditionQuery,
     FeatureFlagQuery,
     ClientQuery,
+    AnalyticQuery,
 ):
     pass
 

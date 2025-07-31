@@ -1,6 +1,4 @@
-import math
 import os
-from io import BytesIO
 from typing import Optional
 from uuid import uuid4
 

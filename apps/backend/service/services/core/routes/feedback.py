@@ -1,5 +1,3 @@
-from typing import List
-
 import strawberry
 from fastapi import HTTPException, status
 
@@ -9,9 +7,7 @@ from database import Session
 from services.core.telegram.bot import send_feedback
 
 from .middleware import Context
-from .schemas.campaign import CampaignGet
 from .schemas.feedback import FeedbackGet, FeedbackPost, FeelLevelGet
-from .schemas.fragment import FragmentGet
 from .schemas.user import AuthPayload
 
 

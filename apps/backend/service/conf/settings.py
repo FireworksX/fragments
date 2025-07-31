@@ -1,11 +1,13 @@
 # pylint: disable=W0401,C0413,W0614
 
-import os
 import logging
+import os
 from typing import Optional
 
-from pydantic_settings import BaseSettings
 from pydantic.fields import Field
+from pydantic_settings import BaseSettings
+
+from conf.envs.prod import *  # isort: ignore
 
 APP_NAME = os.getenv('APP_NAME', 'Server')
 APP_VERSION = os.getenv('APP_VERSION', '0.1.0')
@@ -18,7 +20,6 @@ class Level:
 
 RUN_LEVEL = os.getenv('RUN_LEVEL', Level.PROD)
 
-from conf.envs.prod import *  # isort: ignore
 
 if RUN_LEVEL == Level.DEV:
     from conf.envs.dev import *  # isort: ignore

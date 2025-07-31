@@ -20,14 +20,13 @@ async def get_client_by_id_db(db: Session, client_id: int) -> Optional[Client]:
     return db.query(Client).filter(Client.id == client_id).first()
 
 
-async def update_client_last_visited_db(db: Session, client_id: int) -> Client:
+async def update_client_last_visited_db(db: Session, client_id: int) -> None:
     logger.debug(f"Updating last_visited_at for client_id={client_id}")
     client = await get_client_by_id_db(db, client_id)
     if client:
         client.last_visited_at = datetime.now(UTC)
         db.commit()
         db.refresh(client)
-    return client
 
 
 async def get_clients_by_project_id_db(db: Session, project_id: int) -> List[Client]:
@@ -57,6 +56,7 @@ async def create_client_history_db(
     variant_id: int = None,
     campaign_id: int = None,
     feature_flag_id: int = None,
+    goal_id: int = None,
 ) -> ClientHistory:
     logger.info(f"Creating client history for client_id={client_id}")
     history = ClientHistory(
@@ -80,6 +80,7 @@ async def create_client_history_db(
         variant_id=variant_id,
         campaign_id=campaign_id,
         feature_flag_id=feature_flag_id,
+        goal_id=goal_id,
     )
     db.add(history)
     db.commit()

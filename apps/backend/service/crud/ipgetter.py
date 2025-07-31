@@ -16,7 +16,7 @@ def get_location_by_ip(ip_address: str) -> GeoLocation:
     logger.info(f"Getting geolocation for IP address: {ip_address}")
     try:
         logger.debug(f"Making request to ip-api.com for {ip_address}")
-        response = requests.get(f'http://ip-api.com/json/{ip_address}')
+        response = requests.get(f'http://ip-api.com/json/{ip_address}', timeout=10)
         response.raise_for_status()  # Raises an HTTPError for bad responses
         data = response.json()
         logger.debug(f"Received location data: {data}")

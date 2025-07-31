@@ -2,15 +2,16 @@ import random
 from io import BytesIO
 from typing import Any, Dict, List, Optional, Union
 
-import cairo
-import gi
+import cairo  # pylint: disable=E1101
 import svgwrite
-from gi.repository import Gio, Rsvg
 from svgwrite.drawing import Drawing
 
 from conf.settings import logger
 
-gi.require_version('Rsvg', '2.0')
+import gi  # pylint: disable=C0413  # isort:skip
+
+gi.require_version('Rsvg', '2.0')  # pylint: disable=C0413  # isort:skip
+from gi.repository import Gio, Rsvg  # pylint: disable=C0413  # isort:skip
 
 
 AVAILABLE_COLORS: List[str] = [
@@ -282,8 +283,8 @@ def convert_svg_to_png(dwg: Drawing) -> BytesIO:
 
     # Create a Cairo surface and context
     width, height = 300, 300
-    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
-    ctx = cairo.Context(surface)
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)  # pylint: disable=E1101
+    ctx = cairo.Context(surface)  # pylint: disable=E1101
 
     # Render the SVG to the context
     rect = Rsvg.Rectangle()

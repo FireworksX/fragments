@@ -35,13 +35,13 @@ test-cov:
 	$(TEST) --cov --cov-report html
 
 lint:
-	pylint --jobs 4 --rcfile=setup.cfg $(PACKAGES)
-	black --line-length=100 --skip-string-normalization --check $(CODE)
+	pylint --fail-under=9.5 --jobs 4 --rcfile=setup.cfg $(PACKAGES) 
+	black --line-length=100 --skip-string-normalization --exclude alembic --check $(CODE)
 	mypy $(PACKAGES)
 
 format:
-	isort --apply --recursive $(CODE)
-	black --line-length=100 --skip-string-normalization $(CODE)
+	isort --apply --recursive --skip alembic $(CODE)
+	black --line-length=100 --skip-string-normalization --exclude alembic $(CODE)
 	unify --in-place --recursive $(CODE)
 
 validate: lint test

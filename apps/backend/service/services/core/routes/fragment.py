@@ -35,7 +35,7 @@ async def check_read_permissions(db: Session, user_id: int, project_id: int) -> 
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to view this data',
+            detail='User is not allowed to view this data',
         )
 
 
@@ -93,6 +93,7 @@ def fragment_db_to_fragment(fragment: Fragment) -> FragmentGet:
             ]
         ),
         linked_fragments=[],  # We'll fill this below
+        linked_goals=[goal.id for goal in fragment.linked_goals] if fragment.linked_goals else None,
     )
 
     # If you want a single list of all "other" fragments in linked_fragments (excluding root):
@@ -122,6 +123,7 @@ def fragment_db_to_fragment(fragment: Fragment) -> FragmentGet:
             ),
             # no recursion on 'linked_fragments' here, because we already flattened them
             linked_fragments=[],
+            linked_goals=[goal.id for goal in f.linked_goals] if f.linked_goals else None,
         )
         for f in other_fragments
     ]
@@ -130,12 +132,12 @@ def fragment_db_to_fragment(fragment: Fragment) -> FragmentGet:
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
-    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None
 
 
 async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
-    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None and role is not RoleGet.ADMIN
 
 
@@ -150,7 +152,7 @@ async def create_fragment_route(info: strawberry.Info[Context], fg: FragmentPost
     permission: bool = await write_permission(db, user.user.id, fg.project_id)
     if not permission:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail=f'User is not allowed to add fragments'
+            status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to add fragments'
         )
 
     fragment: Fragment = await create_fragment_db(
@@ -162,6 +164,7 @@ async def create_fragment_route(info: strawberry.Info[Context], fg: FragmentPost
         fg.props,
         fg.linked_fragments,
         fg.directory_id,
+        fg.linked_goals,
     )
     return fragment_db_to_fragment(fragment)
 
@@ -214,14 +217,16 @@ async def add_fragment_asset_route(
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to view fragments',
+            detail='User is not allowed to view fragments',
         )
 
-    media: Media = await create_media_db(db, file, directory_id)
-    if media is None:
+    try:
+        media: Media = await create_media_db(db, file, directory_id)
+    except Exception as exc:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='Failed to create media file'
-        )
+        ) from exc
+
     await add_fragment_media_db(db, media.id, fragment_id)
     return MediaGet(
         media_id=media.id, media_type=MediaType.FRAGMENT_ASSET, public_path=media.public_path
@@ -248,7 +253,7 @@ async def delete_fragment_asset_route(
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to view fragments',
+            detail='User is not allowed to view fragments',
         )
 
     await delete_media_by_id_db(db, asset_id)
@@ -271,11 +276,11 @@ async def update_fragment_route(info: strawberry.Info[Context], fg: FragmentPatc
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to update fragments',
+            detail='User is not allowed to update fragments',
         )
 
-    fragment: Fragment = await update_fragment_by_id_db(
-        db, values=fg.__dict__, linked_fragments=fg.linked_fragments
+    fragment = await update_fragment_by_id_db(
+        db, values=fg.__dict__, linked_fragments=fg.linked_fragments, linked_goals=fg.linked_goals
     )
     return fragment_db_to_fragment(fragment)
 
@@ -297,12 +302,12 @@ async def delete_fragment_route(info: strawberry.Info[Context], fragment_id: int
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to delete fragments',
+            detail='User is not allowed to delete fragments',
         )
     try:
         await delete_fragment_by_id_db(db, fragment_id)
     except ValueError as e:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e)) from e
 
 
 async def fragment_by_id(info: strawberry.Info[Context], fragment_id: int) -> FragmentGet:

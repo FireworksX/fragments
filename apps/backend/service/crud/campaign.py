@@ -22,7 +22,6 @@ async def create_campaign_db(
     default: bool,
     status: CampaignStatus,
     author_id: int,
-    experiment_id: Optional[int],
 ) -> Campaign:
     logger.info(f"Creating campaign {name} in area {area_id}")
     default_campaign_logo = await generate_default_media(db, f"{name}_campaign.png")
@@ -71,7 +70,6 @@ async def create_campaign_db(
         author_id=author_id,
         logo_id=default_campaign_logo.id,
         feature_flag_id=default_campaign_feature_flag.id,
-        experiment_id=experiment_id,
     )
 
     db.add(campaign)
@@ -162,14 +160,11 @@ async def update_campaign_by_id_db(db: Session, values: dict) -> Campaign:
         logger.debug(f"Updating name to {values['name']}")
         campaign.name = values['name']
     if values.get('description') is not None:
-        logger.debug(f"Updating description")
+        logger.debug('Updating description')
         campaign.description = values['description']
     if values.get('status') is not None:
         logger.debug(f"Updating status to {values['status']}")
         campaign.status = int(values['status'].value)
-    if values.get('experiment_id') is not None:
-        logger.debug(f"Updating experiment_id to {values['experiment_id']}")
-        campaign.experiment_id = values['experiment_id']
     db.merge(campaign)
     db.commit()
     db.refresh(campaign)

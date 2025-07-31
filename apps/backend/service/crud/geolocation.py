@@ -6,11 +6,11 @@ import pycountry
 
 from conf.settings import logger
 from database import GeoLocation, Session
-from utils.lru_cache import CustomLRUCache
+from utils.custom_lru_cache import CustomLRUCache
 
 
 @lru_cache(maxsize=128)
-def get_country_name(country_code: str):
+def get_country_name(country_code: str) -> str:
     logger.debug(f"Getting country name for code: {country_code}")
     try:
         country_name = pycountry.countries.get(alpha_2=country_code.upper()).name
@@ -51,7 +51,7 @@ def get_geo_locations(
 
         # Convert JSON objects to instances of GeoLocationGet
         logger.debug(f"Converting {len(data)} locations from JSON")
-        geo_locations: List[GeoLocation] = [
+        geo_locations = [
             GeoLocation(
                 country=get_country_name(item.get('country', '')),
                 region=item.get('admin1', ''),

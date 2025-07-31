@@ -1,13 +1,10 @@
-from copy import deepcopy
-from typing import List, Optional, Union
+from typing import List, Optional
 
 import strawberry
 from fastapi import HTTPException, UploadFile, status
-from thefuzz import fuzz, process
+from thefuzz import process
 
-from conf import service_settings
 from conf.settings import logger
-from crud.analytics import get_campaign_stats_db
 from crud.area import get_area_by_id_db
 from crud.campaign import (
     create_campaign_db,
@@ -32,17 +29,17 @@ from .utils import get_user_role_in_project
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
     logger.info(f"Checking read permission for user {user_id} in project {project_id}")
-    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None
 
 
 async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
     logger.info(f"Checking write permission for user {user_id} in project {project_id}")
-    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None and role is not RoleGet.DESIGNER
 
 
-async def campaign_db_to_campaign(db: Session, campaign: Campaign) -> CampaignGet:
+def campaign_db_to_campaign(campaign: Campaign) -> CampaignGet:
     logger.debug(f"Converting campaign {campaign.id} to schema")
     return CampaignGet(
         id=campaign.id,
@@ -56,18 +53,16 @@ async def campaign_db_to_campaign(db: Session, campaign: Campaign) -> CampaignGe
             public_path=campaign.logo.public_path,
         ),
         author=user_db_to_user(campaign.author),
-        experiment=campaign.experiment,
-        feature_flag=await feature_flag_db_to_feature_flag(db, campaign.feature_flag),
-        stats=await get_campaign_stats_db(db, campaign.area_id, campaign.id),
+        feature_flag=feature_flag_db_to_feature_flag(campaign.feature_flag),
     )
 
 
 async def campaigns_in_area(
     info: strawberry.Info[Context],
     area_id: int,
-    status: Optional[CampaignStatus] = None,
+    campaign_status: Optional[CampaignStatus] = None,
 ) -> List[CampaignGet]:
-    logger.info(f"Getting campaigns for area {area_id} with status {status}")
+    logger.info(f"Getting campaigns for area {area_id} with status {campaign_status}")
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
@@ -81,23 +76,23 @@ async def campaigns_in_area(
         logger.warning(f"User {user.user.id} unauthorized to view campaigns in area {area_id}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to view campaigns',
+            detail='User is not allowed to view campaigns',
         )
 
-    campaigns: List[Campaign] = await get_campaigns_by_area_id_db(db, area_id, status)
+    campaigns: List[Campaign] = await get_campaigns_by_area_id_db(db, area_id, campaign_status)
     logger.debug(f"Found {len(campaigns)} campaigns")
     out: List[CampaignGet] = []
     for cp in campaigns:
-        out.append(await campaign_db_to_campaign(db, cp))
+        out.append(campaign_db_to_campaign(cp))
     return out
 
 
 async def campaigns_in_area_without_default(
     info: strawberry.Info[Context],
     area_id: int,
-    status: Optional[CampaignStatus] = None,
+    campaign_status: Optional[CampaignStatus] = None,
 ) -> List[CampaignGet]:
-    logger.info(f"Getting non-default campaigns for area {area_id} with status {status}")
+    logger.info(f"Getting non-default campaigns for area {area_id} with status {campaign_status}")
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
@@ -111,16 +106,16 @@ async def campaigns_in_area_without_default(
         logger.warning(f"User {user.user.id} unauthorized to view campaigns in area {area_id}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to view campaigns',
+            detail='User is not allowed to view campaigns',
         )
 
-    campaigns: List[Campaign] = await get_campaigns_by_area_id_db(db, area_id, status)
+    campaigns: List[Campaign] = await get_campaigns_by_area_id_db(db, area_id, campaign_status)
     logger.debug(f"Found {len(campaigns)} campaigns before filtering defaults")
     out: List[CampaignGet] = []
     for cp in campaigns:
         if cp.default:
             continue
-        out.append(await campaign_db_to_campaign(db, cp))
+        out.append(campaign_db_to_campaign(cp))
     logger.debug(f"Returning {len(out)} non-default campaigns")
     return out
 
@@ -140,10 +135,10 @@ async def campaign_by_id(info: strawberry.Info[Context], campaign_id: int) -> Ca
         logger.warning(f"User {user.user.id} unauthorized to view campaign {campaign_id}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to view campaigns',
+            detail='User is not allowed to view campaigns',
         )
 
-    return await campaign_db_to_campaign(db, campaign)
+    return campaign_db_to_campaign(campaign)
 
 
 async def create_campaign_route(info: strawberry.Info[Context], cmp: CampaignPost) -> CampaignGet:
@@ -163,7 +158,7 @@ async def create_campaign_route(info: strawberry.Info[Context], cmp: CampaignPos
         )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to create campaigns',
+            detail='User is not allowed to create campaigns',
         )
 
     campaign: Campaign = await create_campaign_db(
@@ -175,11 +170,10 @@ async def create_campaign_route(info: strawberry.Info[Context], cmp: CampaignPos
         False,
         cmp.status,
         user.user.id,
-        cmp.experiment_id,
     )
     logger.debug(f"Created campaign {campaign.id}")
 
-    return await campaign_db_to_campaign(db, campaign)
+    return campaign_db_to_campaign(campaign)
 
 
 async def update_campaign_route(info: strawberry.Info[Context], cmp: CampaignPatch) -> CampaignGet:
@@ -202,13 +196,13 @@ async def update_campaign_route(info: strawberry.Info[Context], cmp: CampaignPat
         logger.warning(f"User {user.user.id} unauthorized to update campaign {cmp.id}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to change campaign',
+            detail='User is not allowed to change campaign',
         )
 
-    campaign: Campaign = await update_campaign_by_id_db(db, values=cmp.__dict__)
+    campaign = await update_campaign_by_id_db(db, values=cmp.__dict__)
     logger.debug(f"Updated campaign {campaign.id}")
 
-    return await campaign_db_to_campaign(db, campaign)
+    return campaign_db_to_campaign(campaign)
 
 
 async def delete_campaign_route(info: strawberry.Info[Context], campaign_id: int) -> None:
@@ -231,7 +225,7 @@ async def delete_campaign_route(info: strawberry.Info[Context], campaign_id: int
         logger.warning(f"User {user.user.id} unauthorized to delete campaign {campaign_id}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to change campaign',
+            detail='User is not allowed to change campaign',
         )
 
     await delete_campaign_by_id_db(db, campaign_id)
@@ -260,15 +254,17 @@ async def add_campaign_logo_route(
         logger.warning(f"User {user.user.id} unauthorized to add logo to campaign {campaign_id}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to change campaign',
+            detail='User is not allowed to change campaign',
         )
 
-    media: Media = await create_media_db(db, file)
-    if media is None:
-        logger.error(f"Failed to create media file for campaign {campaign_id}")
+    try:
+        media: Media = await create_media_db(db, file)
+    except Exception as exc:
+        logger.error(f"Failed to create media file for campaign {campaign_id}: {exc}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='Failed to create media file'
-        )
+        ) from exc
+
     campaign.logo_id = media.id
     db.commit()
     logger.debug(f"Added logo {media.id} to campaign {campaign_id}")
@@ -302,7 +298,7 @@ async def delete_campaign_logo_route(
         )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to change campaign',
+            detail='User is not allowed to change campaign',
         )
 
     await delete_media_by_id_db(db, campaign.logo_id)
@@ -310,7 +306,7 @@ async def delete_campaign_logo_route(
     campaign.logo_id = default_logo.id
     db.commit()
     logger.debug(f"Deleted logo from campaign {campaign_id} and set default logo {default_logo.id}")
-    return await campaign_db_to_campaign(db, campaign)
+    return campaign_db_to_campaign(campaign)
 
 
 async def campaign_by_name(
@@ -318,7 +314,7 @@ async def campaign_by_name(
     area_id: int,
     name: str,
     limit: Optional[int] = 5,
-    status: Optional[CampaignStatus] = None,
+    campaign_status: Optional[CampaignStatus] = None,
 ) -> list[CampaignGet]:
     logger.info(f"Searching for campaigns with name '{name}' in area {area_id}")
     user: AuthPayload = await info.context.user()
@@ -334,22 +330,21 @@ async def campaign_by_name(
         logger.warning(f"User {user.user.id} unauthorized to search campaigns in area {area_id}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to view campaigns',
+            detail='User is not allowed to view campaigns',
         )
 
     campaign: Campaign = await get_campaign_by_name_and_area_id_db(db, area_id, name)
     if campaign:
         logger.debug(f"Found exact match for campaign name '{name}'")
-        return [await campaign_db_to_campaign(db, campaign)]
+        return [campaign_db_to_campaign(campaign)]
 
-    campaigns: list[CampaignGet] = await campaigns_in_area(info, area_id, status)
+    campaigns: list[CampaignGet] = await campaigns_in_area(info, area_id, campaign_status)
     scores = process.extractBests(name, [campaign.name for campaign in campaigns], limit=limit)
     logger.debug(f"Found {len(scores)} fuzzy matches for campaign name '{name}'")
     out: List[CampaignGet] = []
     for score in scores:
         out.append(
-            await campaign_db_to_campaign(
-                db,
+            campaign_db_to_campaign(
                 await get_campaign_by_name_and_area_id_db(db, area_id, score[0])
             )
         )

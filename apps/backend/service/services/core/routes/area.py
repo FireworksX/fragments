@@ -1,5 +1,5 @@
 import json
-from typing import List
+from typing import List, Optional
 
 import strawberry
 from fastapi import HTTPException, UploadFile, status
@@ -27,17 +27,17 @@ from .utils import get_user_role_in_project
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
     logger.info(f"Checking read permission for user {user_id} in project {project_id}")
-    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None
 
 
 async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
     logger.info(f"Checking write permission for user {user_id} in project {project_id}")
-    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None and role is not RoleGet.DESIGNER
 
 
-async def area_db_to_area(db: Session, area: Area) -> AreaGet:
+def area_db_to_area(area: Area) -> AreaGet:
     logger.debug(f"Converting area {area.id} to schema")
     # Find default campaign and remove it from campaigns list
     default_campaign = None
@@ -47,9 +47,9 @@ async def area_db_to_area(db: Session, area: Area) -> AreaGet:
         if campaign.deleted_at is not None:
             continue
         if campaign.default:
-            default_campaign = await campaign_db_to_campaign(db, campaign)
+            default_campaign = campaign_db_to_campaign(campaign)
         else:
-            campaigns.append(await campaign_db_to_campaign(db, campaign))
+            campaigns.append(campaign_db_to_campaign(campaign))
 
     return AreaGet(
         id=area.id,
@@ -85,13 +85,9 @@ async def create_area_route(info: strawberry.Info[Context], area: AreaPost) -> A
             status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to create areas'
         )
 
-    area_db: Area = await create_area_db(
-        db,
-        user.user.id,
-        area
-    )
+    area_db: Area = await create_area_db(db, user.user.id, area)
     logger.debug(f"Created area {area_db.id}")
-    return await area_db_to_area(db, area_db)
+    return area_db_to_area(area_db)
 
 
 async def get_areas_route(info: strawberry.Info[Context], project_id: int) -> List[AreaGet]:
@@ -113,7 +109,7 @@ async def get_areas_route(info: strawberry.Info[Context], project_id: int) -> Li
 
     areas: List[Area] = await get_areas_by_project_id_db(db, project_id)
     logger.debug(f"Found {len(areas)} areas")
-    return [await area_db_to_area(db, area) for area in areas]
+    return [area_db_to_area(area) for area in areas]
 
 
 async def get_area_by_id_route(info: strawberry.Info[Context], area_id: int) -> AreaGet:
@@ -138,7 +134,7 @@ async def get_area_by_id_route(info: strawberry.Info[Context], area_id: int) -> 
             status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to view areas'
         )
 
-    return await area_db_to_area(db, area)
+    return area_db_to_area(area)
 
 
 async def update_area_route(info: strawberry.Info[Context], area: AreaPatch) -> AreaGet:
@@ -158,9 +154,9 @@ async def update_area_route(info: strawberry.Info[Context], area: AreaPatch) -> 
             status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to update areas'
         )
 
-    area_db: Area = await update_area_by_id_db(db, area)
+    area_db = await update_area_by_id_db(db, area)
     logger.debug(f"Updated area {area_db.id}")
-    return await area_db_to_area(db, area_db)
+    return area_db_to_area(area_db)
 
 
 async def delete_area_route(info: strawberry.Info[Context], area_id: int) -> None:
