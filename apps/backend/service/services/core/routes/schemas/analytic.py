@@ -1,4 +1,5 @@
 from datetime import datetime
+from enum import Enum
 from typing import List
 
 import strawberry
@@ -35,8 +36,14 @@ class GoalStatsGet:
     graph: List[GraphPoint]
 
 
-@strawberry.input
-class GoalStatsIn:
-    goal_id: int
-    from_ts: datetime
-    to_ts: datetime
+@strawberry.enum
+class Trend(Enum):
+    UP = 1
+    DOWN = 2
+    FLAT = 3
+
+
+@strawberry.type
+class AverageConversionGet:
+    conversion: float
+    trend: Trend
