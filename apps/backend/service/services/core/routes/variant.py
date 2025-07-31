@@ -1,10 +1,9 @@
-from typing import List
+from typing import List, Optional
 
 import strawberry
 from fastapi import HTTPException, status
 
 from conf.settings import logger
-from crud.analytics import get_variant_stats_db
 from crud.variant import (
     create_variant_db,
     delete_variant_db,
@@ -24,16 +23,16 @@ from .utils import get_user_role_in_project
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
-    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None
 
 
 async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
-    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None and role is not RoleGet.DESIGNER
 
 
-async def variant_db_to_variant(db: Session, variant: Variant) -> VariantGet:
+def variant_db_to_variant(variant: Variant) -> VariantGet:
     return VariantGet(
         id=variant.id,
         name=variant.name,
@@ -46,7 +45,6 @@ async def variant_db_to_variant(db: Session, variant: Variant) -> VariantGet:
             else None
         ),
         status=variant.status,
-        stats=await get_variant_stats_db(db, variant.feature_flag.id, variant.id),
     )
 
 
@@ -78,7 +76,7 @@ async def variants_by_feature_flag_id(
 
     variants: List[Variant] = await get_variants_by_feature_flag_id_db(db, feature_flag_id)
     logger.info(f"Retrieved {len(variants)} variants for feature flag {feature_flag_id}")
-    return [await variant_db_to_variant(db, v) for v in variants]
+    return [variant_db_to_variant(v) for v in variants]
 
 
 async def variant_by_id(info: strawberry.Info[Context], variant_id: int) -> VariantGet:
@@ -101,7 +99,7 @@ async def variant_by_id(info: strawberry.Info[Context], variant_id: int) -> Vari
             detail='User is not allowed to view variants',
         )
 
-    return await variant_db_to_variant(db, variant)
+    return variant_db_to_variant(variant)
 
 
 async def create_variant_route(info: strawberry.Info[Context], v: VariantPost) -> VariantGet:
@@ -130,7 +128,7 @@ async def create_variant_route(info: strawberry.Info[Context], v: VariantPost) -
     variant: Variant = await create_variant_db(db, v)
     logger.info(f"Created variant {variant.id}")
 
-    return await variant_db_to_variant(db, variant)
+    return variant_db_to_variant(variant)
 
 
 async def update_variant_route(info: strawberry.Info[Context], v: VariantPatch) -> VariantGet:
@@ -153,10 +151,10 @@ async def update_variant_route(info: strawberry.Info[Context], v: VariantPatch) 
             detail='User is not allowed to change variant',
         )
 
-    variant: Variant = await update_variant_db(db, v)
+    variant = await update_variant_db(db, v)
     logger.info(f"Updated variant {variant.id}")
 
-    return await variant_db_to_variant(db, variant)
+    return variant_db_to_variant(variant)
 
 
 async def delete_variant_route(info: strawberry.Info[Context], variant_id: int) -> None:

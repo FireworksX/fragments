@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 import strawberry
 
@@ -41,7 +41,7 @@ async def get_all_filters(
         logger.debug('Returning cached country dictionary')
         country_dict = cached_results
     else:
-        country_dict: Dict[str, Dict[str, List[str]]] = {}
+        country_dict = {}
         for location in locations:
             if location.country not in country_dict and location.country is not None:
                 country_dict[location.country] = {}

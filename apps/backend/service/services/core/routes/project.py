@@ -47,19 +47,19 @@ from .utils import get_user_role_in_project
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
     logger.info(f"Checking read permission for user {user_id} in project {project_id}")
-    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None
 
 
 async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
     logger.info(f"Checking write permission for user {user_id} in project {project_id}")
-    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None and role is not RoleGet.DESIGNER
 
 
 async def private_key_permission(db: Session, user_id: int, project_id: int) -> bool:
     logger.info(f"Checking private key permission for user {user_id} in project {project_id}")
-    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None and role is RoleGet.OWNER or role is RoleGet.ADMIN
 
 
@@ -104,9 +104,7 @@ async def project_db_to_project(
         areas=(
             []
             if project.areas is None
-            else [
-                await area_db_to_area(db, area) for area in project.areas if area.deleted_at is None
-            ]
+            else [area_db_to_area(area) for area in project.areas if area.deleted_at is None]
         ),
         private_key=(
             ProjectKeyGet(value=project.private_key.key, name='private', id=project.private_key.id)
@@ -195,7 +193,7 @@ async def change_project_private_key_route(
             detail='User is not allowed to change private key',
         )
 
-    project: Project = await change_project_private_api_key(db, project_id)
+    project = await change_project_private_api_key(db, project_id)
     logger.info(f"Changed private key for project {project_id}")
     return await project_db_to_project(info, db, project)
 
@@ -222,7 +220,7 @@ async def add_project_public_key_route(
             detail='User is not allowed to add public keys',
         )
 
-    project: Project = await add_project_public_api_key(db, project_id, public_key_name)
+    project = await add_project_public_api_key(db, project_id, public_key_name)
     logger.info(f"Added public key to project {project_id}")
     return await project_db_to_project(info, db, project)
 
@@ -251,9 +249,9 @@ async def delete_project_public_key_route(
     try:
         await delete_project_public_api_key(db, project_id, public_key_id)
         logger.info(f"Deleted public key {public_key_id} from project {project_id}")
-    except ValueError as e:
-        logger.error(f"Failed to delete public key {public_key_id}: {str(e)}")
-        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+    except ValueError as exc:
+        logger.error(f"Failed to delete public key {public_key_id}: {str(exc)}")
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(exc)) from exc
 
 
 async def add_user_to_project(
@@ -284,7 +282,7 @@ async def add_user_to_project(
 
 async def change_user_role(
     info: strawberry.Info[Context], user_id: int, project_id: int, role_to_add: RoleGet
-):
+) -> None:
     logger.info(f"Changing role for user {user_id} in project {project_id} to {role_to_add}")
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
@@ -325,7 +323,7 @@ async def update_project_route(info: strawberry.Info[Context], pr: ProjectPatch)
         logger.error(f"Project {pr.id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
 
-    project: Project = await update_project_by_id_db(db, values=pr.__dict__)
+    project = await update_project_by_id_db(db, values=pr.__dict__)
     logger.info(f"Updated project {pr.id}")
     return await project_db_to_project(info, db, project)
 
@@ -369,12 +367,13 @@ async def add_project_logo_route(
             status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to add logo'
         )
 
-    media: Media = await create_media_db(db, file)
-    if media is None:
+    try:
+        media: Media = await create_media_db(db, file)
+    except Exception as exc:
         logger.error(f"Failed to create media file for project {project_id}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='Failed to create media file'
-        )
+        ) from exc
 
     project.logo_id = media.id
     db.commit()
@@ -432,11 +431,11 @@ async def create_project_goal_route(
             status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to create goals'
         )
 
-    goal: ProjectGoal = await create_project_goal_db(
+    goal_db: ProjectGoal = await create_project_goal_db(
         db, goal.project_id, goal.name, goal.target_action, goal.success_level, goal.failure_level
     )
-    logger.info(f"Created goal {goal.id} for project {goal.project_id}")
-    return project_goal_db_to_goal(goal)
+    logger.info(f"Created goal {goal_db.id} for project {goal.project_id}")
+    return project_goal_db_to_goal(goal_db)
 
 
 async def get_project_goals_route(
@@ -488,7 +487,7 @@ async def update_project_goal_route(
     updated_goal: ProjectGoal = await update_project_goal_db(
         db, goal.id, goal.name, goal.target_action, goal.success_level, goal.failure_level
     )
-    logger.info(f"Updated goal {goal.id}")
+    logger.info(f"Updated goal {updated_goal.id}")
     return project_goal_db_to_goal(updated_goal)
 
 
@@ -540,7 +539,7 @@ async def add_project_allowed_origin_route(
             status_code=status.HTTP_400_BAD_REQUEST, detail='Allowed origin cannot be *'
         )
 
-    project: Project = await add_project_allowed_origin_db(db, project_id, origin, name)
+    project = await add_project_allowed_origin_db(db, project_id, origin, name)
     logger.info(f"Added allowed origin {origin} to project {project_id}")
     return await project_db_to_project(info, db, project)
 

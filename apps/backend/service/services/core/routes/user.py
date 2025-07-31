@@ -91,12 +91,14 @@ async def add_avatar_route(info: strawberry.Info[Context], file: UploadFile) -> 
         logger.error(f"User {auth.user.email} not found when adding avatar")
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
-    media: Media = await create_media_db(db, file)
-    if media is None:
+    try:
+        media: Media = await create_media_db(db, file)
+    except Exception as exc:
         logger.error(f"Failed to create media file for user {auth.user.email}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='Failed to create media file'
-        )
+        ) from exc
+
     user.avatar_id = media.id
     db.commit()
     logger.info(f"Successfully added avatar for user {auth.user.email}")

@@ -31,20 +31,12 @@ class FragmentVariantPatch:
 
 
 @strawberry.type
-class VariantStatsGet:
-    last_views: int  # views in the last period
-    total_views: int  # total views for all variants in the area
-    percentage: float
-
-
-@strawberry.type
 class VariantGet:
     id: int
     name: str
     rollout_percentage: float
     fragment: Optional[FragmentVariantGet] = None
     status: VariantStatus
-    stats: VariantStatsGet
 
 
 @strawberry.input

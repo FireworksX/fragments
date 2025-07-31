@@ -105,7 +105,7 @@ async def create_condition_db(
     db.refresh(condition_db)
     if condition.filter_data.pages is not None:
         if len(condition.filter_data.pages) == 0:
-            logger.warning(f"Condition {condition.id} has no pages")
+            logger.warning(f"Condition {condition_db.id} has no pages")
             db.delete(condition_db)
             db.commit()
             raise HTTPException(status_code=400, detail='Condition has no pages')
@@ -119,7 +119,7 @@ async def create_condition_db(
             condition_db.page_filters.append(page_filter)
     elif condition.filter_data.device_types is not None:
         if len(condition.filter_data.device_types) == 0:
-            logger.warning(f"Condition {condition.id} has no device types")
+            logger.warning(f"Condition {condition_db.id} has no device types")
             db.delete(condition_db)
             db.commit()
             raise HTTPException(status_code=400, detail='Condition has no device types')
@@ -133,7 +133,7 @@ async def create_condition_db(
             condition_db.device_type_filters.append(device_type_filter)
     elif condition.filter_data.os_types is not None:
         if len(condition.filter_data.os_types) == 0:
-            logger.warning(f"Condition {condition.id} has no OS types")
+            logger.warning(f"Condition {condition_db.id} has no OS types")
             db.delete(condition_db)
             db.commit()
             raise HTTPException(status_code=400, detail='Condition has no OS types')
@@ -147,7 +147,7 @@ async def create_condition_db(
             condition_db.os_type_filters.append(os_type_filter)
     elif condition.filter_data.time_frames is not None:
         if len(condition.filter_data.time_frames) == 0:
-            logger.warning(f"Condition {condition.id} has no time frames")
+            logger.warning(f"Condition {condition_db.id} has no time frames")
             db.delete(condition_db)
             db.commit()
             raise HTTPException(status_code=400, detail='Condition has no time frames')
@@ -162,7 +162,7 @@ async def create_condition_db(
             condition_db.time_frame_filters.append(time_frame_filter)
     elif condition.filter_data.geo_locations is not None:
         if len(condition.filter_data.geo_locations) == 0:
-            logger.warning(f"Condition {condition.id} has no geo locations")
+            logger.warning(f"Condition {condition_db.id} has no geo locations")
             db.delete(condition_db)
             db.commit()
             raise HTTPException(status_code=400, detail='Condition has no geo locations')
@@ -187,17 +187,17 @@ async def update_condition_set_db(
     db: Session, condition_set_id: int, condition_set: ConditionSetPatch
 ) -> ConditionSet:
     logger.info(f"Updating condition set with id: {condition_set_id}")
-    condition_set = db.query(ConditionSet).filter(ConditionSet.id == condition_set_id).first()
+    condition_set_db = db.query(ConditionSet).filter(ConditionSet.id == condition_set_id).first()
     if condition_set.name is not None:
-        condition_set.name = condition_set.name
+        condition_set_db.name = condition_set.name
     if condition_set.conditions is not None:
-        condition_set.conditions.clear()
+        condition_set_db.conditions.clear()
         for condition in condition_set.conditions:
             condition = await create_condition_db(db, condition.id, condition)
     db.commit()
-    db.refresh(condition_set)
+    db.refresh(condition_set_db)
     logger.info(f"Updated condition set with id: {condition_set_id}")
-    return condition_set
+    return condition_set_db
 
 
 async def update_condition_db(
@@ -207,94 +207,95 @@ async def update_condition_db(
     condition_db = db.query(Condition).filter(Condition.id == condition_id).first()
     if condition.name is not None:
         condition_db.name = condition.name
-    if condition.filter_data.pages is not None:
-        condition_db.page_filters.clear()
-        condition_db.device_type_filters.clear()
-        condition_db.os_type_filters.clear()
-        condition_db.time_frame_filters.clear()
-        condition_db.geo_location_filters.clear()
-        if len(condition.filter_data.pages) == 0:
-            logger.warning(f"Condition {condition.id} has no pages")
-            raise HTTPException(status_code=400, detail='Condition has no pages')
-        for page in condition.filter_data.pages:
-            page_filter = PageFilter(
-                page=page,
-                condition_id=condition_db.id,
-            )
-            db.add(page_filter)
-            db.commit()
-            condition_db.page_filters.append(page_filter)
-    elif condition.filter_data.device_types is not None:
-        condition_db.page_filters.clear()
-        condition_db.device_type_filters.clear()
-        condition_db.os_type_filters.clear()
-        condition_db.time_frame_filters.clear()
-        condition_db.geo_location_filters.clear()
-        if len(condition.filter_data.device_types) == 0:
-            logger.warning(f"Condition {condition.id} has no device types")
-            raise HTTPException(status_code=400, detail='Condition has no device types')
-        for device_type in condition.filter_data.device_types:
-            device_type_filter = DeviceTypeFilter(
-                device_type=int(device_type.value),
-                condition_id=condition_db.id,
-            )
-            db.add(device_type_filter)
-            db.commit()
-            condition_db.device_type_filters.append(device_type_filter)
-    elif condition.filter_data.os_types is not None:
-        condition_db.page_filters.clear()
-        condition_db.device_type_filters.clear()
-        condition_db.os_type_filters.clear()
-        condition_db.time_frame_filters.clear()
-        condition_db.geo_location_filters.clear()
-        if len(condition.filter_data.os_types) == 0:
-            logger.warning(f"Condition {condition.id} has no OS types")
-            raise HTTPException(status_code=400, detail='Condition has no OS types')
-        for os_type in condition.filter_data.os_types:
-            os_type_filter = OSTypeFilter(
-                os_type=int(os_type.value),
-                condition_id=condition_db.id,
-            )
-            db.add(os_type_filter)
-            db.commit()
-            condition_db.os_type_filters.append(os_type_filter)
-    elif condition.filter_data.time_frames is not None:
-        condition_db.page_filters.clear()
-        condition_db.device_type_filters.clear()
-        condition_db.os_type_filters.clear()
-        condition_db.time_frame_filters.clear()
-        condition_db.geo_location_filters.clear()
-        if len(condition.filter_data.time_frames) == 0:
-            logger.warning(f"Condition {condition.id} has no time frames")
-            raise HTTPException(status_code=400, detail='Condition has no time frames')
-        for time_frame in condition.filter_data.time_frames:
-            time_frame_filter = TimeFrameFilter(
-                from_time=time_frame.from_time,
-                to_time=time_frame.to_time,
-                condition_id=condition_db.id,
-            )
-            db.add(time_frame_filter)
-            db.commit()
-            condition_db.time_frame_filters.append(time_frame_filter)
-    elif condition.filter_data.geo_locations is not None:
-        condition_db.page_filters.clear()
-        condition_db.device_type_filters.clear()
-        condition_db.os_type_filters.clear()
-        condition_db.time_frame_filters.clear()
-        condition_db.geo_location_filters.clear()
-        if len(condition.filter_data.geo_locations) == 0:
-            logger.warning(f"Condition {condition.id} has no geo locations")
-            raise HTTPException(status_code=400, detail='Condition has no geo locations')
-        for geo_location in condition.filter_data.geo_locations:
-            geo_location_filter = GeoLocationFilter(
-                country=geo_location.country,
-                region=geo_location.region,
-                city=geo_location.city,
-                condition_id=condition_db.id,
-            )
-            db.add(geo_location_filter)
-            db.commit()
-            condition_db.geo_location_filters.append(geo_location_filter)
+    if condition.filter_data is not None:
+        if condition.filter_data.pages is not None:
+            condition_db.page_filters.clear()
+            condition_db.device_type_filters.clear()
+            condition_db.os_type_filters.clear()
+            condition_db.time_frame_filters.clear()
+            condition_db.geo_location_filters.clear()
+            if len(condition.filter_data.pages) == 0:
+                logger.warning(f"Condition {condition_db.id} has no pages")
+                raise HTTPException(status_code=400, detail='Condition has no pages')
+            for page in condition.filter_data.pages:
+                page_filter = PageFilter(
+                    page=page,
+                    condition_id=condition_db.id,
+                )
+                db.add(page_filter)
+                db.commit()
+                condition_db.page_filters.append(page_filter)
+        elif condition.filter_data.device_types is not None:
+            condition_db.page_filters.clear()
+            condition_db.device_type_filters.clear()
+            condition_db.os_type_filters.clear()
+            condition_db.time_frame_filters.clear()
+            condition_db.geo_location_filters.clear()
+            if len(condition.filter_data.device_types) == 0:
+                logger.warning(f"Condition {condition_db.id} has no device types")
+                raise HTTPException(status_code=400, detail='Condition has no device types')
+            for device_type in condition.filter_data.device_types:
+                device_type_filter = DeviceTypeFilter(
+                    device_type=int(device_type.value),
+                    condition_id=condition_db.id,
+                )
+                db.add(device_type_filter)
+                db.commit()
+                condition_db.device_type_filters.append(device_type_filter)
+        elif condition.filter_data.os_types is not None:
+            condition_db.page_filters.clear()
+            condition_db.device_type_filters.clear()
+            condition_db.os_type_filters.clear()
+            condition_db.time_frame_filters.clear()
+            condition_db.geo_location_filters.clear()
+            if len(condition.filter_data.os_types) == 0:
+                logger.warning(f"Condition {condition_db.id} has no OS types")
+                raise HTTPException(status_code=400, detail='Condition has no OS types')
+            for os_type in condition.filter_data.os_types:
+                os_type_filter = OSTypeFilter(
+                    os_type=int(os_type.value),
+                    condition_id=condition_db.id,
+                )
+                db.add(os_type_filter)
+                db.commit()
+                condition_db.os_type_filters.append(os_type_filter)
+        elif condition.filter_data.time_frames is not None:
+            condition_db.page_filters.clear()
+            condition_db.device_type_filters.clear()
+            condition_db.os_type_filters.clear()
+            condition_db.time_frame_filters.clear()
+            condition_db.geo_location_filters.clear()
+            if len(condition.filter_data.time_frames) == 0:
+                logger.warning(f"Condition {condition_db.id} has no time frames")
+                raise HTTPException(status_code=400, detail='Condition has no time frames')
+            for time_frame in condition.filter_data.time_frames:
+                time_frame_filter = TimeFrameFilter(
+                    from_time=time_frame.from_time,
+                    to_time=time_frame.to_time,
+                    condition_id=condition_db.id,
+                )
+                db.add(time_frame_filter)
+                db.commit()
+                condition_db.time_frame_filters.append(time_frame_filter)
+        elif condition.filter_data.geo_locations is not None:
+            condition_db.page_filters.clear()
+            condition_db.device_type_filters.clear()
+            condition_db.os_type_filters.clear()
+            condition_db.time_frame_filters.clear()
+            condition_db.geo_location_filters.clear()
+            if len(condition.filter_data.geo_locations) == 0:
+                logger.warning(f"Condition {condition_db.id} has no geo locations")
+                raise HTTPException(status_code=400, detail='Condition has no geo locations')
+            for geo_location in condition.filter_data.geo_locations:
+                geo_location_filter = GeoLocationFilter(
+                    country=geo_location.country,
+                    region=geo_location.region,
+                    city=geo_location.city,
+                    condition_id=condition_db.id,
+                )
+                db.add(geo_location_filter)
+                db.commit()
+                condition_db.geo_location_filters.append(geo_location_filter)
     db.commit()
     db.refresh(condition_db)
     logger.info(f"Updated condition with id: {condition_id}")

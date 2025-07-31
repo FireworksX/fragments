@@ -71,7 +71,7 @@ async def get_fragments_by_ids_db(
     return fragments
 
 
-async def get_fragment_by_id_db(db: Session, fragment_id: int) -> Fragment:
+async def get_fragment_by_id_db(db: Session, fragment_id: int) -> Optional[Fragment]:
     logger.debug(f"Getting fragment with id={fragment_id}")
     return db.query(Fragment).filter(Fragment.id == fragment_id).first()
 
@@ -126,7 +126,7 @@ async def update_fragment_by_id_db(
     return fragment
 
 
-async def add_fragment_media_db(db, media_id: int, fragment_id: int) -> Fragment:
+async def add_fragment_media_db(db: Session, media_id: int, fragment_id: int) -> Fragment:
     logger.info(f"Adding media {media_id} to fragment {fragment_id}")
     fragment_media: FragmentMedia = FragmentMedia(media_id=media_id, fragment_id=fragment_id)
     fragment: Fragment = await get_fragment_by_id_db(db, fragment_id)

@@ -1,9 +1,8 @@
-from typing import List
+from typing import List, Optional
 
 import strawberry
 from fastapi import HTTPException, status
 
-from crud.feature_flag import get_feature_flag_by_id_db
 from crud.release_condition import (
     create_condition_db,
     create_condition_set_db,
@@ -20,7 +19,7 @@ from crud.release_condition import (
     update_condition_set_db,
     update_release_condition_db,
 )
-from database import Condition, ConditionSet, FeatureFlag, ReleaseCondition, Session
+from database import Condition, ConditionSet, ReleaseCondition, Session
 from services.core.routes.middleware import Context
 from services.core.routes.schemas.release_condition import (
     ConditionGet,
@@ -35,6 +34,7 @@ from services.core.routes.schemas.release_condition import (
     FilterOSTypeGet,
     FilterPageGet,
     FilterTimeFrameGet,
+    FilterTimeFramesGet,
     ReleaseConditionGet,
     ReleaseConditionPatch,
     ReleaseConditionPost,
@@ -44,12 +44,12 @@ from services.core.routes.utils import get_user_role_in_project
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
-    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None
 
 
 async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
-    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None and role is not RoleGet.DESIGNER
 
 
@@ -69,7 +69,7 @@ def condition_db_to_condition(condition: Condition) -> ConditionGet:
                     FilterOSTypeGet(os_types=[os.os_type for os in condition.os_type_filters])
                     if condition.os_type_filters
                     else (
-                        FilterTimeFrameGet(
+                        FilterTimeFramesGet(
                             time_frames=[
                                 FilterTimeFrameGet(from_time=tf.from_time, to_time=tf.to_time)
                                 for tf in condition.time_frame_filters
@@ -146,12 +146,6 @@ async def create_release_condition_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    feature_flag: FeatureFlag = await get_feature_flag_by_id_db(db, rc.feature_flag_id)
-    if not feature_flag:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail='Feature flag does not exist'
-        )
-
     permission: bool = await write_permission(db, user.user.id, rc.project_id)
     if not permission:
         raise HTTPException(
@@ -183,9 +177,7 @@ async def update_release_condition_route(
             detail='User is not allowed to change release condition',
         )
 
-    release_condition: ReleaseCondition = await update_release_condition_db(
-        db, release_condition_id=rc.id, rc=rc
-    )
+    release_condition = await update_release_condition_db(db, release_condition_id=rc.id, rc=rc)
 
     return release_condition_db_to_release_condition(release_condition)
 
@@ -311,9 +303,7 @@ async def update_condition_set_route(
             detail='User is not allowed to update condition set',
         )
 
-    condition_set: ConditionSet = await update_condition_set_db(
-        db, condition_set_id=cs.id, condition_set=cs
-    )
+    condition_set = await update_condition_set_db(db, condition_set_id=cs.id, condition_set=cs)
 
     return condition_set_db_to_condition_set(condition_set)
 
@@ -429,7 +419,7 @@ async def update_condition_route(info: strawberry.Info[Context], c: ConditionPat
             detail='User is not allowed to update condition',
         )
 
-    condition: Condition = await update_condition_db(db, condition_id=c.id, condition=c)
+    condition = await update_condition_db(db, condition_id=c.id, condition=c)
 
     return condition_db_to_condition(condition)
 

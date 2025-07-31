@@ -16,13 +16,6 @@ class CampaignStatus(Enum):
 
 
 @strawberry.type
-class CampaignStatsGet:
-    last_views: int
-    total_views: int
-    percentage: float
-
-
-@strawberry.type
 class CampaignGet:
     id: int
     area_id: int
@@ -32,7 +25,6 @@ class CampaignGet:
     description: Optional[str] = None
     status: CampaignStatus
     feature_flag: FeatureFlagGet
-    stats: CampaignStatsGet
 
 
 @strawberry.input

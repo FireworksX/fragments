@@ -20,14 +20,13 @@ async def get_client_by_id_db(db: Session, client_id: int) -> Optional[Client]:
     return db.query(Client).filter(Client.id == client_id).first()
 
 
-async def update_client_last_visited_db(db: Session, client_id: int) -> Client:
+async def update_client_last_visited_db(db: Session, client_id: int) -> None:
     logger.debug(f"Updating last_visited_at for client_id={client_id}")
     client = await get_client_by_id_db(db, client_id)
     if client:
         client.last_visited_at = datetime.now(UTC)
         db.commit()
         db.refresh(client)
-    return client
 
 
 async def get_clients_by_project_id_db(db: Session, project_id: int) -> List[Client]:

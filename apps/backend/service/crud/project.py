@@ -60,11 +60,11 @@ def generate_api_key(project_id: int) -> str:
 async def add_user_to_project_db(db: Session, user_id: int, project_id: int, role: int) -> None:
     logger.info(f"Adding user {user_id} to project {project_id} with role {role}")
     project: Project = db.query(Project).filter((Project.id == project_id)).first()
-    role: ProjectMemberRole = ProjectMemberRole(role=role)
+    member_role: ProjectMemberRole = ProjectMemberRole(role=role)
     user: User = db.query(User).filter((User.id == user_id)).first()
-    role.user = user
-    role.project = project
-    project.members.append(role)
+    member_role.user = user
+    member_role.project = project
+    project.members.append(member_role)
     db.commit()
     logger.debug(f"Added user {user_id} to project {project_id}")
 
@@ -141,14 +141,14 @@ async def delete_project_public_api_key(db: Session, project_id: int, public_key
 
 async def validate_project_public_api_key(db: Session, public_api_key: str) -> Project:
     logger.info('Validating public API key')
-    public_api_key: ProjectApiKey = (
+    public_api_key_db: ProjectApiKey = (
         db.query(ProjectApiKey).filter(ProjectApiKey.key == public_api_key).first()
     )
-    if public_api_key is None:
+    if public_api_key_db is None:
         logger.error('Invalid public key')
         raise ValueError('Invalid public key')
-    logger.debug(f"Validated public API key for project {public_api_key.project_id}")
-    return public_api_key.project
+    logger.debug(f"Validated public API key for project {public_api_key_db.project_id}")
+    return public_api_key_db.project
 
 
 async def create_project_db(db: Session, name: str, user_id: int) -> Project:

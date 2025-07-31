@@ -5,7 +5,6 @@ from fastapi import HTTPException, UploadFile, status
 from thefuzz import process
 
 from conf.settings import logger
-from crud.analytics import get_campaign_stats_db
 from crud.area import get_area_by_id_db
 from crud.campaign import (
     create_campaign_db,
@@ -30,17 +29,17 @@ from .utils import get_user_role_in_project
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
     logger.info(f"Checking read permission for user {user_id} in project {project_id}")
-    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None
 
 
 async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
     logger.info(f"Checking write permission for user {user_id} in project {project_id}")
-    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None and role is not RoleGet.DESIGNER
 
 
-async def campaign_db_to_campaign(db: Session, campaign: Campaign) -> CampaignGet:
+def campaign_db_to_campaign(campaign: Campaign) -> CampaignGet:
     logger.debug(f"Converting campaign {campaign.id} to schema")
     return CampaignGet(
         id=campaign.id,
@@ -54,8 +53,7 @@ async def campaign_db_to_campaign(db: Session, campaign: Campaign) -> CampaignGe
             public_path=campaign.logo.public_path,
         ),
         author=user_db_to_user(campaign.author),
-        feature_flag=await feature_flag_db_to_feature_flag(db, campaign.feature_flag),
-        stats=await get_campaign_stats_db(db, campaign.area_id, campaign.id),
+        feature_flag=feature_flag_db_to_feature_flag(campaign.feature_flag),
     )
 
 
@@ -85,7 +83,7 @@ async def campaigns_in_area(
     logger.debug(f"Found {len(campaigns)} campaigns")
     out: List[CampaignGet] = []
     for cp in campaigns:
-        out.append(await campaign_db_to_campaign(db, cp))
+        out.append(campaign_db_to_campaign(cp))
     return out
 
 
@@ -117,7 +115,7 @@ async def campaigns_in_area_without_default(
     for cp in campaigns:
         if cp.default:
             continue
-        out.append(await campaign_db_to_campaign(db, cp))
+        out.append(campaign_db_to_campaign(cp))
     logger.debug(f"Returning {len(out)} non-default campaigns")
     return out
 
@@ -140,7 +138,7 @@ async def campaign_by_id(info: strawberry.Info[Context], campaign_id: int) -> Ca
             detail='User is not allowed to view campaigns',
         )
 
-    return await campaign_db_to_campaign(db, campaign)
+    return campaign_db_to_campaign(campaign)
 
 
 async def create_campaign_route(info: strawberry.Info[Context], cmp: CampaignPost) -> CampaignGet:
@@ -175,7 +173,7 @@ async def create_campaign_route(info: strawberry.Info[Context], cmp: CampaignPos
     )
     logger.debug(f"Created campaign {campaign.id}")
 
-    return await campaign_db_to_campaign(db, campaign)
+    return campaign_db_to_campaign(campaign)
 
 
 async def update_campaign_route(info: strawberry.Info[Context], cmp: CampaignPatch) -> CampaignGet:
@@ -201,10 +199,10 @@ async def update_campaign_route(info: strawberry.Info[Context], cmp: CampaignPat
             detail='User is not allowed to change campaign',
         )
 
-    campaign: Campaign = await update_campaign_by_id_db(db, values=cmp.__dict__)
+    campaign = await update_campaign_by_id_db(db, values=cmp.__dict__)
     logger.debug(f"Updated campaign {campaign.id}")
 
-    return await campaign_db_to_campaign(db, campaign)
+    return campaign_db_to_campaign(campaign)
 
 
 async def delete_campaign_route(info: strawberry.Info[Context], campaign_id: int) -> None:
@@ -259,12 +257,14 @@ async def add_campaign_logo_route(
             detail='User is not allowed to change campaign',
         )
 
-    media: Media = await create_media_db(db, file)
-    if media is None:
-        logger.error(f"Failed to create media file for campaign {campaign_id}")
+    try:
+        media: Media = await create_media_db(db, file)
+    except Exception as exc:
+        logger.error(f"Failed to create media file for campaign {campaign_id}: {exc}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='Failed to create media file'
-        )
+        ) from exc
+
     campaign.logo_id = media.id
     db.commit()
     logger.debug(f"Added logo {media.id} to campaign {campaign_id}")
@@ -306,7 +306,7 @@ async def delete_campaign_logo_route(
     campaign.logo_id = default_logo.id
     db.commit()
     logger.debug(f"Deleted logo from campaign {campaign_id} and set default logo {default_logo.id}")
-    return await campaign_db_to_campaign(db, campaign)
+    return campaign_db_to_campaign(campaign)
 
 
 async def campaign_by_name(
@@ -336,7 +336,7 @@ async def campaign_by_name(
     campaign: Campaign = await get_campaign_by_name_and_area_id_db(db, area_id, name)
     if campaign:
         logger.debug(f"Found exact match for campaign name '{name}'")
-        return [await campaign_db_to_campaign(db, campaign)]
+        return [campaign_db_to_campaign(campaign)]
 
     campaigns: list[CampaignGet] = await campaigns_in_area(info, area_id, campaign_status)
     scores = process.extractBests(name, [campaign.name for campaign in campaigns], limit=limit)
@@ -344,8 +344,8 @@ async def campaign_by_name(
     out: List[CampaignGet] = []
     for score in scores:
         out.append(
-            await campaign_db_to_campaign(
-                db, await get_campaign_by_name_and_area_id_db(db, area_id, score[0])
+            campaign_db_to_campaign(
+                await get_campaign_by_name_and_area_id_db(db, area_id, score[0])
             )
         )
     return out

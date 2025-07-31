@@ -1,13 +1,22 @@
 from typing import Any, Callable
 
+from fastapi import FastAPI
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import Response, StreamingResponse
 
+from conf import DEBUG
 from conf.settings import logger
 from crud.project import Project, validate_project_public_api_key
 from database import Session
-from services.api import make_app
+
+
+def make_app(*args: Any, **kwargs: Any) -> FastAPI:
+    kwargs.setdefault('docs_url', '/api')
+    kwargs.setdefault('debug', DEBUG)
+    kwargs.setdefault('openapi_url', '/api/openapi.json')
+    return FastAPI(*args, **kwargs)
+
 
 app = make_app()
 

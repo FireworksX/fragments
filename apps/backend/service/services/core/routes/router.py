@@ -1,8 +1,10 @@
+from datetime import datetime
 from typing import List, Optional
 
 import strawberry
 from fastapi import HTTPException, UploadFile, status
 
+from .analytic import get_campaign_stats_route, get_variant_stats_route
 from .area import (
     add_area_logo_route,
     create_area_route,
@@ -96,6 +98,7 @@ from .release_condition import (
     update_condition_set_route,
     update_release_condition_route,
 )
+from .schemas.analytic import CampaignStatsGet, VariantStatsGet
 from .schemas.area import AreaGet, AreaPatch, AreaPost
 from .schemas.campaign import CampaignGet, CampaignPatch, CampaignPost, CampaignStatus
 from .schemas.client import ClientAreaGet, ClientGet, ClientHistoryGet
@@ -634,6 +637,31 @@ class ClientMutation:
 
 
 @strawberry.type
+class AnalyticQuery:
+    @strawberry.field
+    async def variant_stats(
+        self,
+        info: strawberry.Info[Context],
+        feature_flag_id: int,
+        variant_id: int,
+        from_ts: Optional[datetime] = None,
+        to_ts: Optional[datetime] = None,
+    ) -> VariantStatsGet:
+        return await get_variant_stats_route(info, feature_flag_id, variant_id, from_ts, to_ts)
+
+    @strawberry.field
+    async def campaign_stats(
+        self,
+        info: strawberry.Info[Context],
+        area_id: int,
+        campaign_id: int,
+        from_ts: Optional[datetime] = None,
+        to_ts: Optional[datetime] = None,
+    ) -> CampaignStatsGet:
+        return await get_campaign_stats_route(info, area_id, campaign_id, from_ts, to_ts)
+
+
+@strawberry.type
 class Query(
     AuthQuery,
     FragmentQuery,
@@ -644,6 +672,7 @@ class Query(
     ReleaseConditionQuery,
     FeatureFlagQuery,
     ClientQuery,
+    AnalyticQuery,
 ):
     pass
 

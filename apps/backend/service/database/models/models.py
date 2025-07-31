@@ -171,7 +171,7 @@ class FilesystemDirectory(Base):
     medias = relationship('Media', back_populates='directory', cascade='all, delete-orphan')
 
     @property
-    def items(self):
+    def items(self) -> list:
         """
         Return a combined list of subdirectories and fragments,
         e.g. for display in a file manager.
@@ -500,7 +500,7 @@ class Media(Base):
     directory = relationship('FilesystemDirectory', back_populates='medias')
 
     @property
-    def public_path(self):
+    def public_path(self) -> str:
         return f'{service_settings.STATIC_SERVER_URL}/{self.filename}'
 
 

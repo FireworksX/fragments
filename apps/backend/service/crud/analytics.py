@@ -5,9 +5,8 @@ from sqlalchemy.orm import Session
 
 from conf.settings import logger
 from database.models import ClientHistory
-from services.core.routes.schemas.campaign import CampaignStatsGet
+from services.core.routes.schemas.analytic import CampaignStatsGet, VariantStatsGet
 from services.core.routes.schemas.client import ClientHistoryEventType
-from services.core.routes.schemas.variant import VariantStatsGet
 
 
 async def get_variant_stats_db(

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 import strawberry
 from fastapi import HTTPException, status
@@ -23,17 +23,17 @@ from .variant import variant_db_to_variant
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
     logger.info(f"Checking read permission for user {user_id} in project {project_id}")
-    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None
 
 
 async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
     logger.info(f"Checking write permission for user {user_id} in project {project_id}")
-    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None and role is not RoleGet.DESIGNER
 
 
-async def feature_flag_db_to_feature_flag(db: Session, feature_flag: FeatureFlag) -> FeatureFlagGet:
+def feature_flag_db_to_feature_flag(feature_flag: FeatureFlag) -> FeatureFlagGet:
     logger.debug(f"Converting feature flag {feature_flag.id} to schema")
     return FeatureFlagGet(
         id=feature_flag.id,
@@ -42,7 +42,7 @@ async def feature_flag_db_to_feature_flag(db: Session, feature_flag: FeatureFlag
         release_condition=release_condition_db_to_release_condition(feature_flag.release_condition),
         rotation_type=RotationType(feature_flag.rotation_type),
         variants=[
-            await variant_db_to_variant(db, variant)
+            variant_db_to_variant(variant)
             for variant in sorted(feature_flag.variants, key=lambda x: x.id)
             if variant.deleted_at is None
         ],
@@ -69,7 +69,7 @@ async def feature_flags(
 
     feature_flags_db: List[FeatureFlag] = await get_feature_flags_db(db)
     logger.debug(f"Found {len(feature_flags_db)} feature flags")
-    return [await feature_flag_db_to_feature_flag(db, ff) for ff in feature_flags_db]
+    return [feature_flag_db_to_feature_flag(ff) for ff in feature_flags_db]
 
 
 async def feature_flag_by_id(
@@ -94,7 +94,7 @@ async def feature_flag_by_id(
             detail='User is not allowed to view feature flags',
         )
 
-    return await feature_flag_db_to_feature_flag(db, feature_flag)
+    return feature_flag_db_to_feature_flag(feature_flag)
 
 
 async def create_feature_flag_route(
@@ -116,7 +116,7 @@ async def create_feature_flag_route(
 
     feature_flag: FeatureFlag = await create_feature_flag_db(db, project_id, ff)
     logger.info(f"Successfully created feature flag {feature_flag.id}")
-    return await feature_flag_db_to_feature_flag(db, feature_flag)
+    return feature_flag_db_to_feature_flag(feature_flag)
 
 
 async def update_feature_flag_route(
@@ -141,11 +141,11 @@ async def update_feature_flag_route(
             detail='User is not allowed to change feature flag',
         )
 
-    feature_flag: FeatureFlag = await update_feature_flag_db(
+    feature_flag = await update_feature_flag_db(
         db, feature_flag_id=ff.id, values=ff.__dict__, variants=ff.variants
     )
     logger.info(f"Successfully updated feature flag {feature_flag.id}")
-    return await feature_flag_db_to_feature_flag(db, feature_flag)
+    return feature_flag_db_to_feature_flag(feature_flag)
 
 
 async def delete_feature_flag_route(info: strawberry.Info[Context], feature_flag_id: int) -> None:

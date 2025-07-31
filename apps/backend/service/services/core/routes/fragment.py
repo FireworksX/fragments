@@ -132,12 +132,12 @@ def fragment_db_to_fragment(fragment: Fragment) -> FragmentGet:
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
-    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None
 
 
 async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
-    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None and role is not RoleGet.ADMIN
 
 
@@ -220,11 +220,13 @@ async def add_fragment_asset_route(
             detail='User is not allowed to view fragments',
         )
 
-    media: Media = await create_media_db(db, file, directory_id)
-    if media is None:
+    try:
+        media: Media = await create_media_db(db, file, directory_id)
+    except Exception as exc:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='Failed to create media file'
-        )
+        ) from exc
+
     await add_fragment_media_db(db, media.id, fragment_id)
     return MediaGet(
         media_id=media.id, media_type=MediaType.FRAGMENT_ASSET, public_path=media.public_path
@@ -277,7 +279,7 @@ async def update_fragment_route(info: strawberry.Info[Context], fg: FragmentPatc
             detail='User is not allowed to update fragments',
         )
 
-    fragment: Fragment = await update_fragment_by_id_db(
+    fragment = await update_fragment_by_id_db(
         db, values=fg.__dict__, linked_fragments=fg.linked_fragments, linked_goals=fg.linked_goals
     )
     return fragment_db_to_fragment(fragment)
