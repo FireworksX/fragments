@@ -420,18 +420,13 @@ fragment_usage = Table(
     ),
 )
 
-fragment_project_goal_usage = Table(
-    'fragment_project_goal_usage',
+# linked goals
+fragment_goals = Table(
+    'fragment_goals',
     Base.metadata,
     Column('fragment_id', Integer, ForeignKey('fragment.id', ondelete='CASCADE'), primary_key=True),
-    Column(
-        'project_goal_id',
-        Integer,
-        ForeignKey('project_goal.id', ondelete='CASCADE'),
-        primary_key=True,
-    ),
+    Column('goal_id', Integer, ForeignKey('project_goal.id', ondelete='CASCADE'), primary_key=True),
 )
-
 
 class Fragment(Base):
     __tablename__ = 'fragment'
@@ -476,12 +471,12 @@ class Fragment(Base):
 
     linked_goals = relationship(
         'ProjectGoal',
-        secondary=fragment_project_goal_usage,
-        primaryjoin=id == fragment_project_goal_usage.c.fragment_id,
-        secondaryjoin=id == fragment_project_goal_usage.c.project_goal_id,
+        secondary=fragment_goals,  # use the association table
+        primaryjoin=id == fragment_goals.c.fragment_id,
+        secondaryjoin=ProjectGoal.id == fragment_goals.c.goal_id,
     )
 
-
+    
 class Media(Base):
     __tablename__ = 'media'
     id = Column('id', Integer, primary_key=True, index=True)
