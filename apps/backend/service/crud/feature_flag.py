@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 from typing import List, Optional
 
+from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from conf.settings import logger
@@ -75,7 +76,12 @@ async def update_feature_flag_db(
     db: Session, feature_flag_id: int, values: dict, variants: Optional[List[VariantPost]]
 ) -> FeatureFlag:
     logger.info(f"Updating feature flag {feature_flag_id}")
-    feature_flag = await get_feature_flag_by_id_db(db, feature_flag_id)
+    feature_flag: Optional[FeatureFlag] = await get_feature_flag_by_id_db(db, feature_flag_id)
+    if feature_flag is None:
+        logger.error(f"Feature flag {feature_flag_id} not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail='Feature flag does not exist'
+        )
     if values.get('name'):
         logger.debug(f"Updating name to {values['name']}")
         existing_feature_flag = await get_feature_flag_by_name_db(db, values['name'])

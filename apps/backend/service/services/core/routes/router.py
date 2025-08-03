@@ -107,7 +107,16 @@ from .release_condition import (
     update_condition_set_route,
     update_release_condition_route,
 )
-from .schemas.analytic import AverageConversionGet, CampaignStatsGet, GoalStatsGet, VariantStatsGet
+from .schemas.analytic import (
+    AreaAverageConversionGet,
+    CampaignAverageConversionGet,
+    CampaignStatsGet,
+    GoalAverageConversionGet,
+    GoalStatsGet,
+    ProjectAverageConversionGet,
+    VariantAverageConversionGet,
+    VariantStatsGet,
+)
 from .schemas.area import AreaGet, AreaPatch, AreaPost
 from .schemas.campaign import CampaignGet, CampaignPatch, CampaignPost, CampaignStatus
 from .schemas.client import ClientAreaGet, ClientGet, ClientHistoryGet
@@ -568,29 +577,40 @@ class AssetMutation:
         self, info: strawberry.Info[Context], media: MediaPost, file: UploadFile
     ) -> MediaGet:
         if media.media_type == MediaType.PROJECT_LOGO:
-            return await add_project_logo_route(info, file, media.target_id)
+            if media.target_id is not None:
+                return await add_project_logo_route(info, file, media.target_id)
         if media.media_type == MediaType.FRAGMENT_ASSET:
-            return await add_fragment_asset_route(info, file, media.target_id, media.directory_id)
+            if media.target_id is not None and media.directory_id is not None:
+                return await add_fragment_asset_route(
+                    info, file, media.target_id, media.directory_id
+                )
         if media.media_type == MediaType.CAMPAIGN_LOGO:
-            return await add_campaign_logo_route(info, file, media.target_id)
+            if media.target_id is not None:
+                return await add_campaign_logo_route(info, file, media.target_id)
         if media.media_type == MediaType.USER_LOGO:
             return await add_avatar_route(info, file)
         if media.media_type == MediaType.AREA_LOGO:
-            return await add_area_logo_route(info, file, media.target_id)
+            if media.target_id is not None:
+                return await add_area_logo_route(info, file, media.target_id)
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Invalid media type')
 
     @strawberry.mutation
     async def delete_asset(self, info: strawberry.Info[Context], media: MediaDelete) -> None:
         if media.media_type == MediaType.PROJECT_LOGO:
-            await delete_project_logo_route(info, media.target_id)
+            if media.target_id is not None:
+                await delete_project_logo_route(info, media.target_id)
         if media.media_type == MediaType.FRAGMENT_ASSET:
-            await delete_fragment_asset_route(info, media.target_id, media.media_id)
+            if media.target_id is not None and media.media_id is not None:
+                await delete_fragment_asset_route(info, media.target_id, media.media_id)
         if media.media_type == MediaType.CAMPAIGN_LOGO:
-            await delete_campaign_logo_route(info, media.target_id)
+            if media.target_id is not None:
+                await delete_campaign_logo_route(info, media.target_id)
         if media.media_type == MediaType.USER_LOGO:
             await delete_avatar_route(info)
         if media.media_type == MediaType.AREA_LOGO:
-            await delete_area_logo_route(info, media.target_id)
+            if media.target_id is not None:
+                await delete_area_logo_route(info, media.target_id)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Invalid media type')
 
 
 @strawberry.type
@@ -642,7 +662,9 @@ class ClientMutation:
         if metric.metric_type == ClientMetricType.RELEASE_SESSION:
             return await release_client_session_route(info)
         if metric.metric_type == ClientMetricType.REACH_PROJECT_GOAL:
-            return await contribute_to_project_goal_route(info, metric.metric_value)
+            if metric.metric_value is not None:
+                return await contribute_to_project_goal_route(info, metric.metric_value)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Invalid metric type')
 
 
 @strawberry.type
@@ -651,23 +673,21 @@ class AnalyticQuery:
     async def variant_stats(
         self,
         info: strawberry.Info[Context],
-        feature_flag_id: int,
         variant_id: int,
         from_ts: Optional[datetime] = None,
         to_ts: Optional[datetime] = None,
     ) -> VariantStatsGet:
-        return await get_variant_stats_route(info, feature_flag_id, variant_id, from_ts, to_ts)
+        return await get_variant_stats_route(info, variant_id, from_ts, to_ts)
 
     @strawberry.field
     async def campaign_stats(
         self,
         info: strawberry.Info[Context],
-        area_id: int,
         campaign_id: int,
         from_ts: Optional[datetime] = None,
         to_ts: Optional[datetime] = None,
     ) -> CampaignStatsGet:
-        return await get_campaign_stats_route(info, area_id, campaign_id, from_ts, to_ts)
+        return await get_campaign_stats_route(info, campaign_id, from_ts, to_ts)
 
     @strawberry.field
     async def goal_stats(
@@ -681,33 +701,42 @@ class AnalyticQuery:
 
     @strawberry.field
     async def variant_average_conversion(
-        self, info: strawberry.Info[Context], variant_id: int
-    ) -> AverageConversionGet:
-        return await get_variant_average_conversion_route(info, variant_id)
+        self, info: strawberry.Info[Context], variant_ids: List[int]
+    ) -> List[VariantAverageConversionGet]:
+        return [
+            await get_variant_average_conversion_route(info, variant_id)
+            for variant_id in variant_ids
+        ]
 
     @strawberry.field
     async def campaign_average_conversion(
-        self, info: strawberry.Info[Context], campaign_id: int
-    ) -> AverageConversionGet:
-        return await get_campaign_average_conversion_route(info, campaign_id)
+        self, info: strawberry.Info[Context], campaign_ids: List[int]
+    ) -> List[CampaignAverageConversionGet]:
+        return [
+            await get_campaign_average_conversion_route(info, campaign_id)
+            for campaign_id in campaign_ids
+        ]
 
     @strawberry.field
     async def area_average_conversion(
-        self, info: strawberry.Info[Context], area_id: int
-    ) -> AverageConversionGet:
-        return await get_area_average_conversion_route(info, area_id)
-
-    @strawberry.field
-    async def project_average_conversion(
-        self, info: strawberry.Info[Context], project_id: int
-    ) -> AverageConversionGet:
-        return await get_project_average_conversion_route(info, project_id)
+        self, info: strawberry.Info[Context], area_ids: List[int]
+    ) -> List[AreaAverageConversionGet]:
+        return [await get_area_average_conversion_route(info, area_id) for area_id in area_ids]
 
     @strawberry.field
     async def goal_average_conversion(
-        self, info: strawberry.Info[Context], goal_id: int
-    ) -> AverageConversionGet:
-        return await get_goal_average_conversion_route(info, goal_id)
+        self, info: strawberry.Info[Context], goal_ids: List[int]
+    ) -> List[GoalAverageConversionGet]:
+        return [await get_goal_average_conversion_route(info, goal_id) for goal_id in goal_ids]
+
+    @strawberry.field
+    async def project_average_conversion(
+        self, info: strawberry.Info[Context], project_ids: List[int]
+    ) -> List[ProjectAverageConversionGet]:
+        return [
+            await get_project_average_conversion_route(info, project_id)
+            for project_id in project_ids
+        ]
 
 
 @strawberry.type

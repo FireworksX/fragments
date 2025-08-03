@@ -34,8 +34,8 @@ app.include_router(api, tags=['api'])
 
 
 class DynamicCORSMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request, call_next):
-        response = await call_next(request)
+    async def dispatch(self, request: Request, call_next: Callable[[Request], Any]) -> Response:
+        response: Response = await call_next(request)
 
         origin = request.headers.get('origin')
 
@@ -58,7 +58,7 @@ class DynamicCORSMiddleware(BaseHTTPMiddleware):
         allowed_origins = [origin.origin for origin in project.allowed_origins]
         logger.debug(f"Allowed origins: {allowed_origins}, origin: {origin}")
 
-        if origin in allowed_origins:
+        if origin and origin in allowed_origins:
             response.headers['Access-Control-Allow-Origin'] = origin
             response.headers['Access-Control-Allow-Credentials'] = 'true'
             response.headers['Access-Control-Allow-Methods'] = '*'

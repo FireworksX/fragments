@@ -428,6 +428,7 @@ fragment_goals = Table(
     Column('goal_id', Integer, ForeignKey('project_goal.id', ondelete='CASCADE'), primary_key=True),
 )
 
+
 class Fragment(Base):
     __tablename__ = 'fragment'
 
@@ -476,7 +477,7 @@ class Fragment(Base):
         secondaryjoin=ProjectGoal.id == fragment_goals.c.goal_id,
     )
 
-    
+
 class Media(Base):
     __tablename__ = 'media'
     id = Column('id', Integer, primary_key=True, index=True)

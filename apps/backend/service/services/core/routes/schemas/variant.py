@@ -2,6 +2,7 @@ from enum import Enum
 from typing import Optional
 
 import strawberry
+from strawberry.scalars import JSON
 
 from services.core.routes.schemas.fragment import FragmentGet
 
@@ -9,7 +10,7 @@ from services.core.routes.schemas.fragment import FragmentGet
 @strawberry.type
 class FragmentVariantGet:
     fragment: FragmentGet
-    props: Optional[strawberry.scalars.JSON] = None
+    props: Optional[JSON] = None  # type: ignore[valid-type]
 
 
 @strawberry.enum
@@ -21,13 +22,13 @@ class VariantStatus(Enum):
 @strawberry.input
 class FragmentVariantPost:
     fragment_id: int
-    props: Optional[strawberry.scalars.JSON] = None
+    props: Optional[JSON] = None  # type: ignore[valid-type]
 
 
 @strawberry.input
 class FragmentVariantPatch:
     fragment_id: int
-    props: Optional[strawberry.scalars.JSON] = None
+    props: Optional[JSON] = None  # type: ignore[valid-type]
 
 
 @strawberry.type

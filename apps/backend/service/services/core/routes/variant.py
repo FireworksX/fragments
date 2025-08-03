@@ -57,7 +57,7 @@ async def variants_by_feature_flag_id(
 
     logger.info(f"Getting variants for feature flag {feature_flag_id}")
 
-    feature_flag: FeatureFlag = await get_feature_flag_by_id_db(db, feature_flag_id)
+    feature_flag: Optional[FeatureFlag] = await get_feature_flag_by_id_db(db, feature_flag_id)
     if not feature_flag:
         logger.error(f"Feature flag {feature_flag_id} not found")
         raise HTTPException(
@@ -85,12 +85,20 @@ async def variant_by_id(info: strawberry.Info[Context], variant_id: int) -> Vari
 
     logger.info(f"Getting variant {variant_id}")
 
-    variant: Variant = await get_variant_by_id_db(db, variant_id)
+    variant: Optional[Variant] = await get_variant_by_id_db(db, variant_id)
     if not variant:
         logger.error(f"Variant {variant_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Variant does not exist')
 
-    feature_flag: FeatureFlag = await get_feature_flag_by_id_db(db, variant.feature_flag_id)
+    feature_flag: Optional[FeatureFlag] = await get_feature_flag_by_id_db(
+        db, variant.feature_flag_id
+    )
+    if not feature_flag:
+        logger.error(f"Feature flag {variant.feature_flag_id} not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail='Feature flag does not exist'
+        )
+
     permission: bool = await read_permission(db, user.user.id, feature_flag.project_id)
     if not permission:
         logger.warning(f"User {user.user.id} unauthorized to view variant {variant_id}")
@@ -108,7 +116,7 @@ async def create_variant_route(info: strawberry.Info[Context], v: VariantPost) -
 
     logger.info(f"Creating new variant for feature flag {v.feature_flag_id}")
 
-    feature_flag: FeatureFlag = await get_feature_flag_by_id_db(db, v.feature_flag_id)
+    feature_flag: Optional[FeatureFlag] = await get_feature_flag_by_id_db(db, v.feature_flag_id)
     if not feature_flag:
         logger.error(f"Feature flag {v.feature_flag_id} not found")
         raise HTTPException(
@@ -137,12 +145,20 @@ async def update_variant_route(info: strawberry.Info[Context], v: VariantPatch) 
 
     logger.info(f"Updating variant {v.id}")
 
-    variant: Variant = await get_variant_by_id_db(db, v.id)
+    variant: Optional[Variant] = await get_variant_by_id_db(db, v.id)
     if not variant:
         logger.error(f"Variant {v.id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Variant does not exist')
 
-    feature_flag: FeatureFlag = await get_feature_flag_by_id_db(db, variant.feature_flag_id)
+    feature_flag: Optional[FeatureFlag] = await get_feature_flag_by_id_db(
+        db, variant.feature_flag_id
+    )
+    if not feature_flag:
+        logger.error(f"Feature flag {variant.feature_flag_id} not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail='Feature flag does not exist'
+        )
+
     permission: bool = await write_permission(db, user.user.id, feature_flag.project_id)
     if not permission:
         logger.warning(f"User {user.user.id} unauthorized to update variant {v.id}")
@@ -163,12 +179,20 @@ async def delete_variant_route(info: strawberry.Info[Context], variant_id: int) 
 
     logger.info(f"Deleting variant {variant_id}")
 
-    variant: Variant = await get_variant_by_id_db(db, variant_id)
+    variant: Optional[Variant] = await get_variant_by_id_db(db, variant_id)
     if not variant:
         logger.error(f"Variant {variant_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Variant does not exist')
 
-    feature_flag: FeatureFlag = await get_feature_flag_by_id_db(db, variant.feature_flag_id)
+    feature_flag: Optional[FeatureFlag] = await get_feature_flag_by_id_db(
+        db, variant.feature_flag_id
+    )
+    if not feature_flag:
+        logger.error(f"Feature flag {variant.feature_flag_id} not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail='Feature flag does not exist'
+        )
+
     permission: bool = await write_permission(db, user.user.id, feature_flag.project_id)
     if not permission:
         logger.warning(f"User {user.user.id} unauthorized to delete variant {variant_id}")
@@ -189,7 +213,7 @@ async def normalize_variants_rollout_percentage_route(
 
     logger.info(f"Normalizing variants rollout percentage for feature flag {feature_flag_id}")
 
-    feature_flag: FeatureFlag = await get_feature_flag_by_id_db(db, feature_flag_id)
+    feature_flag: Optional[FeatureFlag] = await get_feature_flag_by_id_db(db, feature_flag_id)
     if not feature_flag:
         logger.error(f"Feature flag {feature_flag_id} not found")
         raise HTTPException(

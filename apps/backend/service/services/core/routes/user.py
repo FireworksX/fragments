@@ -37,7 +37,7 @@ def user_db_to_user(user: User) -> UserGet:
 async def login(info: strawberry.Info[Context], email: str, password: str) -> AuthPayload:
     logger.info(f"Login attempt for user {email}")
     db: Session = info.context.session()
-    user: User = await get_user_by_email_db(db, email)
+    user: Optional[User] = await get_user_by_email_db(db, email)
     if user is None:
         logger.warning(f"Login failed - user {email} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='User does not exist')
@@ -63,7 +63,7 @@ async def signup(
 ) -> AuthPayload:
     logger.info(f"Signup attempt for user {email}")
     db: Session = info.context.session()
-    user: User = await get_user_by_email_db(db, email)
+    user: Optional[User] = await get_user_by_email_db(db, email)
     if user is not None:
         logger.warning(f"Signup failed - user {email} already exists")
         raise HTTPException(
@@ -86,7 +86,7 @@ async def add_avatar_route(info: strawberry.Info[Context], file: UploadFile) -> 
     db: Session = info.context.session()
 
     logger.info(f"Adding avatar for user {auth.user.email}")
-    user: User = await get_user_by_email_db(db, auth.user.email)
+    user: Optional[User] = await get_user_by_email_db(db, auth.user.email)
     if user is None:
         logger.error(f"User {auth.user.email} not found when adding avatar")
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
@@ -113,7 +113,7 @@ async def delete_avatar_route(info: strawberry.Info[Context]) -> UserGet:
     db: Session = info.context.session()
 
     logger.info(f"Deleting avatar for user {auth.user.email}")
-    user: User = await get_user_by_email_db(db, auth.user.email)
+    user: Optional[User] = await get_user_by_email_db(db, auth.user.email)
     if user is None:
         logger.error(f"User {auth.user.email} not found when deleting avatar")
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
@@ -128,17 +128,11 @@ async def delete_avatar_route(info: strawberry.Info[Context]) -> UserGet:
 
 async def profile(info: strawberry.Info[Context]) -> AuthPayload:
     user = await info.context.user()
-    if user is None:
-        logger.warning('Profile access attempt with unauthorized user')
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     logger.info(f"Profile accessed for user {user.user.email}")
     return user
 
 
 async def refresh(info: strawberry.Info[Context]) -> AuthPayload:
     user = await info.context.refresh_user()
-    if user is None:
-        logger.warning('Token refresh attempt with unauthorized user')
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     logger.info(f"Token refreshed for user {user.user.email}")
     return user

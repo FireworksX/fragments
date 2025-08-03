@@ -96,7 +96,11 @@ async def project_db_to_project(
                 email=member.user.email,
                 first_name=member.user.first_name,
                 last_name=member.user.last_name,
-                logo=member.user.avatar.public_path if member.user.avatar else None,
+                logo=MediaGet(
+                    media_id=member.user.avatar_id,
+                    media_type=MediaType.USER_LOGO,
+                    public_path=member.user.avatar.public_path,
+                ),
                 role=RoleGet(member.role),
             )
             for member in project.members
@@ -146,7 +150,7 @@ async def project_by_id(info: strawberry.Info[Context], project_id: int) -> Proj
     logger.info(f"Getting project {project_id}")
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
-    project: Project = await get_project_by_id_db(db, project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
     if project is None:
         logger.error(f"Project {project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
@@ -179,7 +183,7 @@ async def change_project_private_key_route(
     db: Session = info.context.session()
     permission: bool = await private_key_permission(db, user.user.id, project_id)
 
-    project: Project = await get_project_by_id_db(db, project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
     if project is None:
         logger.error(f"Project {project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
@@ -205,7 +209,7 @@ async def add_project_public_key_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    project: Project = await get_project_by_id_db(db, project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
     if project is None:
         logger.error(f"Project {project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
@@ -232,7 +236,7 @@ async def delete_project_public_key_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    project: Project = await get_project_by_id_db(db, project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
     if project is None:
         logger.error(f"Project {project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
@@ -260,7 +264,7 @@ async def add_user_to_project(
     logger.info(f"Adding user {user_id} to project {project_id} with role {role_to_add}")
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
-    project: Project = await get_project_by_id_db(db, project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
     if project is None:
         logger.error(f"Project {project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
@@ -272,7 +276,7 @@ async def add_user_to_project(
             status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to add users'
         )
 
-    user_to_add: User = await get_user_by_id_db(db, user_id=user_id)
+    user_to_add: Optional[User] = await get_user_by_id_db(db, user_id=user_id)
     if user_to_add is None:
         logger.error(f"User {user_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='User does not exist')
@@ -293,12 +297,12 @@ async def change_user_role(
             status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to change roles'
         )
 
-    user_to_add: User = await get_user_by_id_db(db, user_id=user_id)
+    user_to_add: Optional[User] = await get_user_by_id_db(db, user_id=user_id)
     if user_to_add is None:
         logger.error(f"User {user_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='User does not exist')
 
-    project: Project = await get_project_by_id_db(db, project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
     if project is None:
         logger.error(f"Project {project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
@@ -318,7 +322,7 @@ async def update_project_route(info: strawberry.Info[Context], pr: ProjectPatch)
             status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to add users'
         )
 
-    project: Project = await get_project_by_id_db(db, pr.id)
+    project: Optional[Project] = await get_project_by_id_db(db, pr.id)
     if project is None:
         logger.error(f"Project {pr.id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
@@ -332,7 +336,7 @@ async def delete_project_route(info: strawberry.Info[Context], project_id: int) 
     logger.info(f"Deleting project {project_id}")
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
-    project: Project = await get_project_by_id_db(db, project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
     if project is None:
         logger.error(f"Project {project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
@@ -355,7 +359,7 @@ async def add_project_logo_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    project: Project = await get_project_by_id_db(db, project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
     if project is None:
         logger.error(f"Project {project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
@@ -389,7 +393,7 @@ async def delete_project_logo_route(info: strawberry.Info[Context], project_id: 
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    project: Project = await get_project_by_id_db(db, project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
     if project is None:
         logger.error(f"Project {project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
@@ -417,7 +421,7 @@ async def create_project_goal_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    project: Project = await get_project_by_id_db(db, goal.project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, goal.project_id)
     if project is None:
         logger.error(f"Project {goal.project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
@@ -445,7 +449,7 @@ async def get_project_goals_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    project: Project = await get_project_by_id_db(db, project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
     if project is None:
         logger.error(f"Project {project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
@@ -472,7 +476,7 @@ async def update_project_goal_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    goal_db: ProjectGoal = await get_project_goal_by_id_db(db, goal.id)
+    goal_db: Optional[ProjectGoal] = await get_project_goal_by_id_db(db, goal.id)
     if goal_db is None:
         logger.error(f"Goal {goal.id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Goal does not exist')
@@ -496,7 +500,7 @@ async def delete_project_goal_route(info: strawberry.Info[Context], goal_id: int
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    goal: ProjectGoal = await get_project_goal_by_id_db(db, goal_id)
+    goal: Optional[ProjectGoal] = await get_project_goal_by_id_db(db, goal_id)
     if goal is None:
         logger.error(f"Goal {goal_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Goal does not exist')
@@ -519,7 +523,7 @@ async def add_project_allowed_origin_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    project: Project = await get_project_by_id_db(db, project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
     if project is None:
         logger.error(f"Project {project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
@@ -551,7 +555,7 @@ async def delete_project_allowed_origin_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    project: Project = await get_project_by_id_db(db, project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
     if project is None:
         logger.error(f"Project {project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')

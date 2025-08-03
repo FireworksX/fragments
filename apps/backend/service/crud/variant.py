@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 from typing import List, Optional
 
+from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from conf.settings import logger
@@ -134,6 +135,9 @@ async def get_variants_by_feature_flag_id_db(db: Session, feature_flag_id: int) 
 async def update_variant_db(db: Session, v: VariantPatch) -> Variant:
     logger.info(f"Updating variant {v.id}")
     variant = await get_variant_by_id_db(db, v.id)
+    if variant is None:
+        logger.error(f"Variant {v.id} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Variant not found')
     if v.name is not None:
         logger.debug(f"Updating variant name to {v.name}")
         variant.name = v.name
@@ -169,6 +173,8 @@ async def update_variant_db(db: Session, v: VariantPatch) -> Variant:
 async def delete_variant_db(db: Session, variant_id: int) -> None:
     logger.info(f"Deleting variant {variant_id}")
     variant = await get_variant_by_id_db(db, variant_id)
+    if variant is None:
+        return
     await recalculate_variants_rollout_percentage_db(
         db, variant.feature_flag_id, variant.id, variant.rollout_percentage, 0
     )

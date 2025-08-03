@@ -66,7 +66,7 @@ async def campaigns_in_area(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    area: Area = await get_area_by_id_db(db, area_id)
+    area: Optional[Area] = await get_area_by_id_db(db, area_id)
     if area is None:
         logger.error(f"Area {area_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Area does not exist')
@@ -96,7 +96,7 @@ async def campaigns_in_area_without_default(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    area: Area = await get_area_by_id_db(db, area_id)
+    area: Optional[Area] = await get_area_by_id_db(db, area_id)
     if area is None:
         logger.error(f"Area {area_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Area does not exist')
@@ -125,7 +125,7 @@ async def campaign_by_id(info: strawberry.Info[Context], campaign_id: int) -> Ca
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    campaign: Campaign = await get_campaign_by_id_db(db, campaign_id)
+    campaign: Optional[Campaign] = await get_campaign_by_id_db(db, campaign_id)
     if not campaign:
         logger.error(f"Campaign {campaign_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Campaign does not exist')
@@ -146,7 +146,7 @@ async def create_campaign_route(info: strawberry.Info[Context], cmp: CampaignPos
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    area: Area = await get_area_by_id_db(db, cmp.area_id)
+    area: Optional[Area] = await get_area_by_id_db(db, cmp.area_id)
     if area is None:
         logger.error(f"Area {cmp.area_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Area does not exist')
@@ -181,12 +181,12 @@ async def update_campaign_route(info: strawberry.Info[Context], cmp: CampaignPat
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    campaign: Campaign = await get_campaign_by_id_db(db, cmp.id)
+    campaign: Optional[Campaign] = await get_campaign_by_id_db(db, cmp.id)
     if not campaign:
         logger.error(f"Campaign {cmp.id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Campaign does not exist')
 
-    project: Project = await get_project_by_id_db(db, campaign.project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, campaign.project_id)
     if project is None:
         logger.error(f"Project {campaign.project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
@@ -210,12 +210,12 @@ async def delete_campaign_route(info: strawberry.Info[Context], campaign_id: int
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    campaign: Campaign = await get_campaign_by_id_db(db, campaign_id)
+    campaign: Optional[Campaign] = await get_campaign_by_id_db(db, campaign_id)
     if not campaign:
         logger.error(f"Campaign {campaign_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Campaign does not exist')
 
-    project: Project = await get_project_by_id_db(db, campaign.project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, campaign.project_id)
     if project is None:
         logger.error(f"Project {campaign.project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
@@ -239,12 +239,12 @@ async def add_campaign_logo_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    campaign: Campaign = await get_campaign_by_id_db(db, campaign_id)
+    campaign: Optional[Campaign] = await get_campaign_by_id_db(db, campaign_id)
     if not campaign:
         logger.error(f"Campaign {campaign_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Campaign does not exist')
 
-    project: Project = await get_project_by_id_db(db, campaign.project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, campaign.project_id)
     if project is None:
         logger.error(f"Project {campaign.project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
@@ -281,12 +281,12 @@ async def delete_campaign_logo_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    campaign: Campaign = await get_campaign_by_id_db(db, campaign_id)
+    campaign: Optional[Campaign] = await get_campaign_by_id_db(db, campaign_id)
     if not campaign:
         logger.error(f"Campaign {campaign_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Campaign does not exist')
 
-    project: Project = await get_project_by_id_db(db, campaign.project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, campaign.project_id)
     if project is None:
         logger.error(f"Project {campaign.project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
@@ -320,7 +320,7 @@ async def campaign_by_name(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    area: Area = await get_area_by_id_db(db, area_id)
+    area: Optional[Area] = await get_area_by_id_db(db, area_id)
     if area is None:
         logger.error(f"Area {area_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Area does not exist')
@@ -333,7 +333,7 @@ async def campaign_by_name(
             detail='User is not allowed to view campaigns',
         )
 
-    campaign: Campaign = await get_campaign_by_name_and_area_id_db(db, area_id, name)
+    campaign: Optional[Campaign] = await get_campaign_by_name_and_area_id_db(db, area_id, name)
     if campaign:
         logger.debug(f"Found exact match for campaign name '{name}'")
         return [campaign_db_to_campaign(campaign)]
@@ -343,9 +343,10 @@ async def campaign_by_name(
     logger.debug(f"Found {len(scores)} fuzzy matches for campaign name '{name}'")
     out: List[CampaignGet] = []
     for score in scores:
-        out.append(
-            campaign_db_to_campaign(
-                await get_campaign_by_name_and_area_id_db(db, area_id, score[0])
-            )
+        campaign_db: Optional[Campaign] = await get_campaign_by_name_and_area_id_db(
+            db, area_id, score[0]
         )
+        if campaign_db:
+            out.append(campaign_db_to_campaign(campaign_db))
+
     return out

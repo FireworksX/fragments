@@ -74,10 +74,10 @@ class UserAgentInfo:
 
 
 class Context(BaseContext):
-    async def user(self) -> AuthPayload | None:
+    async def user(self) -> AuthPayload:
         if not self.request:
             logger.warning('No request object provided')
-            return None
+            raise credentials_exception
 
         authorization = self.request.headers.get('Authorization', None)
         refresh = self.request.headers.get('Refresh', None)
@@ -103,7 +103,7 @@ class Context(BaseContext):
         except IndexError as exc:
             logger.error('Malformed authorization header')
             raise credentials_exception from exc
-        user: User = await get_user_by_email_db(self.session(), email)
+        user: Optional[User] = await get_user_by_email_db(self.session(), email)
         if user is None:
             logger.error('User not found: %s', email)
             raise credentials_exception
@@ -114,10 +114,10 @@ class Context(BaseContext):
             user=user_db_to_user(user), access_token=authorization, refresh_token=refresh
         )
 
-    async def project(self) -> Project | None:
+    async def project(self) -> Project:
         if not self.request:
             logger.warning('No request object provided')
-            return None
+            raise credentials_exception
 
         authorization = self.request.headers.get('Authorization', None)
         if authorization is None:
@@ -138,13 +138,23 @@ class Context(BaseContext):
         return project
 
     async def client_info(self) -> ClientInfo:
-        agent_header = self.request.headers.get('User-Agent', None)
-        user_agent: UserAgentInfo = UserAgentInfo(agent_header)
+        agent_header = self.request.headers.get('User-Agent', None) if self.request else None
+        user_agent: UserAgentInfo = UserAgentInfo(agent_header if agent_header else '')
 
-        user_ip: Optional[str] = self.request.headers.get('X-User-Ip', None)
+        user_ip: Optional[str] = (
+            self.request.headers.get('X-User-Ip', None) if self.request else None
+        )
         if user_ip is None:
-            user_ip = self.request.headers.get('X-Forwarded-For', self.request.client.host)
-        page: Optional[str] = self.request.headers.get('Referrer', None)
+            if (
+                self.request
+                and self.request.client
+                and self.request.client.host
+                and self.request.headers
+            ):
+                user_ip = self.request.headers.get('X-Forwarded-For', self.request.client.host)
+            else:
+                user_ip = ''
+        page: Optional[str] = self.request.headers.get('Referrer', None) if self.request else None
         gmt_time = datetime.now(timezone.utc)
 
         logger.info(
@@ -165,12 +175,9 @@ class Context(BaseContext):
 
     async def client(self) -> Client:
         project: Project = await self.project()
-        if project is None:
-            logger.error('No project context available')
-            raise credentials_exception
 
         user_id: Optional[str] = None
-        if self.request.cookies:
+        if self.request and self.request.cookies:
             user_id = self.request.cookies.get('user_id')
 
         if user_id is None:
@@ -178,16 +185,21 @@ class Context(BaseContext):
             return await create_client_db(self.session(), project_id=project.id)
         try:
             logger.info('Getting existing client %s', user_id)
-            return await get_client_by_id_db(self.session(), int(user_id))
+            client: Optional[Client] = await get_client_by_id_db(self.session(), int(user_id))
+            if client is None:
+                return await create_client_db(self.session(), project_id=project.id)
+            return client
         except ValueError as exc:
             logger.error('Invalid user_id format: %s', user_id)
             raise HTTPException(status_code=400, detail='Invalid user_id format') from exc
 
-    async def refresh_user(self) -> AuthPayload | None:
+    async def refresh_user(self) -> AuthPayload:
         if not self.request:
-            return None
+            raise credentials_exception
 
         refresh = self.request.headers.get('Refresh', None)
+        if refresh is None:
+            raise credentials_exception
         try:
             payload = jwt.decode(
                 refresh,
@@ -201,7 +213,7 @@ class Context(BaseContext):
         except InvalidTokenError as exc:
             logger.error('Invalid refresh token')
             raise credentials_exception from exc
-        user: User = await get_user_by_email_db(self.session(), email)
+        user: Optional[User] = await get_user_by_email_db(self.session(), email)
         if user is None:
             logger.error('User not found: %s', email)
             raise credentials_exception

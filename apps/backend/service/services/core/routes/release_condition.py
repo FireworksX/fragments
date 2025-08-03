@@ -122,7 +122,7 @@ async def release_condition_by_id(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    release_condition: ReleaseCondition = await get_release_condition_by_id_db(
+    release_condition: Optional[ReleaseCondition] = await get_release_condition_by_id_db(
         db, release_condition_id
     )
     if not release_condition:
@@ -164,7 +164,7 @@ async def update_release_condition_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    release_condition: ReleaseCondition = await get_release_condition_by_id_db(db, rc.id)
+    release_condition: Optional[ReleaseCondition] = await get_release_condition_by_id_db(db, rc.id)
     if not release_condition:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Release condition does not exist'
@@ -188,7 +188,7 @@ async def delete_release_condition_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    release_condition: ReleaseCondition = await get_release_condition_by_id_db(
+    release_condition: Optional[ReleaseCondition] = await get_release_condition_by_id_db(
         db, release_condition_id
     )
     if not release_condition:
@@ -212,7 +212,7 @@ async def get_condition_sets_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    release_condition: ReleaseCondition = await get_release_condition_by_id_db(
+    release_condition: Optional[ReleaseCondition] = await get_release_condition_by_id_db(
         db, release_condition_id
     )
     if not release_condition:
@@ -239,7 +239,7 @@ async def get_condition_set_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    condition_set: ConditionSet = await get_condition_set_by_id_db(db, condition_set_id)
+    condition_set: Optional[ConditionSet] = await get_condition_set_by_id_db(db, condition_set_id)
     if not condition_set:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Condition set does not exist'
@@ -263,7 +263,7 @@ async def create_condition_set_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    release_condition: ReleaseCondition = await get_release_condition_by_id_db(
+    release_condition: Optional[ReleaseCondition] = await get_release_condition_by_id_db(
         db, release_condition_id
     )
     if not release_condition:
@@ -289,7 +289,7 @@ async def update_condition_set_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    condition_set: ConditionSet = await get_condition_set_by_id_db(db, cs.id)
+    condition_set: Optional[ConditionSet] = await get_condition_set_by_id_db(db, cs.id)
     if not condition_set:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Condition set does not exist'
@@ -312,7 +312,7 @@ async def delete_condition_set_route(info: strawberry.Info[Context], condition_s
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    condition_set: ConditionSet = await get_condition_set_by_id_db(db, condition_set_id)
+    condition_set: Optional[ConditionSet] = await get_condition_set_by_id_db(db, condition_set_id)
     if not condition_set:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Condition set does not exist'
@@ -336,7 +336,7 @@ async def get_conditions_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    condition_set: ConditionSet = await get_condition_set_by_id_db(db, condition_set_id)
+    condition_set: Optional[ConditionSet] = await get_condition_set_by_id_db(db, condition_set_id)
     if not condition_set:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Condition set does not exist'
@@ -361,7 +361,7 @@ async def create_condition_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    condition_set: ConditionSet = await get_condition_set_by_id_db(db, condition_set_id)
+    condition_set: Optional[ConditionSet] = await get_condition_set_by_id_db(db, condition_set_id)
     if not condition_set:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Condition set does not exist'
@@ -383,7 +383,7 @@ async def get_condition_route(info: strawberry.Info[Context], condition_id: int)
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    condition: Condition = await get_condition_by_id_db(db, condition_id)
+    condition: Optional[Condition] = await get_condition_by_id_db(db, condition_id)
     if not condition:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Condition does not exist'
@@ -405,7 +405,7 @@ async def update_condition_route(info: strawberry.Info[Context], c: ConditionPat
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    condition: Condition = await get_condition_by_id_db(db, c.id)
+    condition: Optional[Condition] = await get_condition_by_id_db(db, c.id)
     if not condition:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Condition does not exist'
@@ -428,7 +428,7 @@ async def delete_condition_route(info: strawberry.Info[Context], condition_id: i
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    condition: Condition = await get_condition_by_id_db(db, condition_id)
+    condition: Optional[Condition] = await get_condition_by_id_db(db, condition_id)
     if not condition:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Condition does not exist'

@@ -79,7 +79,7 @@ async def feature_flag_by_id(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    feature_flag: FeatureFlag = await get_feature_flag_by_id_db(db, feature_flag_id)
+    feature_flag: Optional[FeatureFlag] = await get_feature_flag_by_id_db(db, feature_flag_id)
     if not feature_flag:
         logger.error(f"Feature flag {feature_flag_id} not found")
         raise HTTPException(
@@ -126,7 +126,7 @@ async def update_feature_flag_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    feature_flag: FeatureFlag = await get_feature_flag_by_id_db(db, ff.id)
+    feature_flag: Optional[FeatureFlag] = await get_feature_flag_by_id_db(db, ff.id)
     if not feature_flag:
         logger.error(f"Feature flag {ff.id} not found")
         raise HTTPException(
@@ -153,7 +153,7 @@ async def delete_feature_flag_route(info: strawberry.Info[Context], feature_flag
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    feature_flag: FeatureFlag = await get_feature_flag_by_id_db(db, feature_flag_id)
+    feature_flag: Optional[FeatureFlag] = await get_feature_flag_by_id_db(db, feature_flag_id)
     if not feature_flag:
         logger.error(f"Feature flag {feature_flag_id} not found")
         raise HTTPException(

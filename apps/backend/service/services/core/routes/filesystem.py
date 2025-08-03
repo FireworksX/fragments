@@ -86,7 +86,7 @@ async def create_directory_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    project: Project = await get_project_by_id_db(db, directory.project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, directory.project_id)
     if project is None:
         logger.error(f"Project {directory.project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
@@ -116,14 +116,14 @@ async def get_directory(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    directory_db: FilesystemDirectory = await get_directory_by_id_db(db, directory_id)
+    directory_db: Optional[FilesystemDirectory] = await get_directory_by_id_db(db, directory_id)
     if directory_db is None:
         logger.error(f"Directory {directory_id} not found")
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Directory does not exist'
         )
 
-    project: Project = await get_project_by_id_db(db, directory_db.project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, directory_db.project_id)
     if project is None:
         logger.error(f"Project {directory_db.project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
@@ -146,14 +146,14 @@ async def delete_directory_route(info: strawberry.Info[Context], directory_id: i
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    directory: FilesystemDirectory = await get_directory_by_id_db(db, directory_id)
+    directory: Optional[FilesystemDirectory] = await get_directory_by_id_db(db, directory_id)
     if directory is None:
         logger.error(f"Directory {directory_id} not found")
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Directory does not exist'
         )
 
-    project: Project = await get_project_by_id_db(db, directory.project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, directory.project_id)
     if project is None:
         logger.error(f"Project {directory.project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
@@ -186,14 +186,14 @@ async def update_directory_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    directory_db: FilesystemDirectory = await get_directory_by_id_db(db, directory.id)
+    directory_db: Optional[FilesystemDirectory] = await get_directory_by_id_db(db, directory.id)
     if directory_db is None:
         logger.error(f"Directory {directory.id} not found")
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Directory does not exist'
         )
 
-    project: Project = await get_project_by_id_db(db, directory_db.project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, directory_db.project_id)
     if project is None:
         logger.error(f"Project {directory_db.project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')

@@ -3,6 +3,7 @@ from enum import Enum
 from typing import List, Optional
 
 import strawberry
+from strawberry.scalars import JSON
 
 from services.core.routes.schemas.area import AreaGet
 from services.core.routes.schemas.feature_flag import VariantGet
@@ -64,4 +65,4 @@ class ClientInfo:
 @strawberry.type
 class ClientAreaGet:
     variant: VariantGet
-    area_properties: Optional[List[strawberry.scalars.JSON]] = None
+    area_properties: Optional[List[JSON]] = None  # type: ignore[valid-type]
