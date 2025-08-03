@@ -26,4 +26,22 @@
         margin-left: 2px;
         color: var(--secondary);
     }
+
+    .success {
+        background: var(--success-bg);
+        color: var(--success);
+
+        .prefix {
+            color: var(--success);
+        }
+    }
+
+    .danger {
+        background: var(--danger-bg);
+        color: var(--danger);
+
+        .prefix {
+            color: var(--danger);
+        }
+    }
 }

@@ -3,5 +3,7 @@ query GoalsList($projectSlug: Int!) {
         id
         name
         code: targetAction
+        min: failureLevel
+        max: successLevel
     }
 }

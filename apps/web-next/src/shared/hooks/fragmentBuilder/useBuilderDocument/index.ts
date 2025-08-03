@@ -33,7 +33,8 @@ export const useBuilderDocument = () => {
         variables: {
           fragmentSlug: +currentFragmentId,
           document: snapshot.document,
-          linkedFragments: snapshot.linkedFragments
+          linkedFragments: snapshot.linkedFragments,
+          linkedGoals: snapshot.linkedGoals
         }
       })
     }

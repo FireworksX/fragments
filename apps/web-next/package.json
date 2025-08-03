@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "cc": "pnpm dlx hygen new component",
-    "generate:watch": "graphql-codegen -w -c ./gql-codegen.json"
+    "generate:watch": "graphql-codegen -w --require dotenv/config -c ./gql-codegen.ts"
   },
   "dependencies": {
     "@apollo/client": "^3.11.8",

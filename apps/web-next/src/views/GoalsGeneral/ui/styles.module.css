@@ -1,5 +1,16 @@
 .root {
     padding-block: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.header {
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    background: var(--background);
 }
 
 .row {

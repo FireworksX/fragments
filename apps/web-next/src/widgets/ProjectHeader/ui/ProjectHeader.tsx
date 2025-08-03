@@ -9,7 +9,7 @@ import { FeedbackForm } from '@/features/FeedbackForm'
 export const ProjectHeader: FC = () => {
   return (
     <header className={styles.root}>
-      <Container className={styles.container}>
+      <Container className={styles.container} gutterSize={24}>
         <ProjectBreadcrumbs />
         <HeaderNav currentUserNode={<CurrentProfileTarget />} feedbackFormNode={<FeedbackForm />} />
       </Container>

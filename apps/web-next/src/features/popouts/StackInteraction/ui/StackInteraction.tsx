@@ -15,6 +15,7 @@ import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { InputSelect } from '@/shared/ui/InputSelect'
 import { interactions } from '@fragmentsx/definition/dist/constants'
 import { Select } from '@/shared/ui/Select'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 interface StackNumberVariableProps {
   className?: string
@@ -23,6 +24,8 @@ interface StackNumberVariableProps {
 export const StackInteraction: FC<StackNumberVariableProps> = ({ className }) => {
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackInteraction}`)
   const { on, event, onChangeOn } = popout?.context ?? {}
+  const { documentManager } = useBuilderDocument()
+  const [eventData] = useGraph(documentManager, event)
 
   return (
     <div className={cn(styles.root, className)}>
@@ -41,7 +44,7 @@ export const StackInteraction: FC<StackNumberVariableProps> = ({ className }) =>
         title='Event'
         hasConnector
         variable={{
-          link: event,
+          data: eventData,
           onClick: () => {
             popoutsStore.open(popoutNames.stackEventProperty, {
               initial: false,

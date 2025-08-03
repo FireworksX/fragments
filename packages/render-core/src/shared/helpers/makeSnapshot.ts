@@ -25,25 +25,26 @@ export function makeSnapshot(
     )
   );
 
-  // const goals = Array.from(
-  //   new Set(
-  //     targetFragment
-  //       .inspectFields(definition.nodes.Variable)
-  //       .filter((link) => {
-  //         const graph = targetFragment?.resolve(link);
-  //         return (
-  //           graph?.type === definition.variableType.Event &&
-  //           graph?.mode === definition.eventMode.goal
-  //         );
-  //       })
-  //       .map((link) => targetFragment.resolve(link)?.fragment)
-  //       .values()
-  //   )
-  // );
+  const linkedGoals = Array.from(
+    new Set(
+      targetFragment
+        .inspectFields(definition.nodes.Variable)
+        .map(targetFragment?.resolve)
+        .filter((graph) => {
+          return (
+            graph?.type === definition.variableType.Event &&
+            graph?.mode === definition.eventMode.goal
+          );
+        })
+        .map((graph) => graph?.defaultValue?.goalId)
+        .filter(Boolean)
+        .values()
+    )
+  );
 
   return {
     document: fragmentDocument,
     linkedFragments,
-    // goals,
+    linkedGoals,
   };
 }

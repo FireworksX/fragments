@@ -7,20 +7,24 @@ export type CreateGoalMutationVariables = Types.Exact<{
   projectSlug: Types.Scalars['Int']['input'];
   name: Types.Scalars['String']['input'];
   code: Types.Scalars['String']['input'];
+  max?: Types.InputMaybe<Types.Scalars['Float']['input']>;
+  min?: Types.InputMaybe<Types.Scalars['Float']['input']>;
 }>;
 
 
-export type CreateGoalMutation = { __typename?: 'Mutation', createProjectGoal: { __typename?: 'ProjectGoalGet', id: number, name: string, code: string } };
+export type CreateGoalMutation = { __typename?: 'Mutation', createProjectGoal: { __typename?: 'ProjectGoalGet', id: number, name: string, code: string, min?: number | null, max?: number | null } };
 
 
 export const CreateGoalDocument = gql`
-    mutation CreateGoal($projectSlug: Int!, $name: String!, $code: String!) {
+    mutation CreateGoal($projectSlug: Int!, $name: String!, $code: String!, $max: Float, $min: Float) {
   createProjectGoal(
-    goal: {projectId: $projectSlug, name: $name, targetAction: $code}
+    goal: {projectId: $projectSlug, name: $name, targetAction: $code, failureLevel: $min, successLevel: $max}
   ) {
     id
     name
     code: targetAction
+    min: failureLevel
+    max: successLevel
   }
 }
     `;
@@ -42,6 +46,8 @@ export type CreateGoalMutationFn = Apollo.MutationFunction<CreateGoalMutation, C
  *      projectSlug: // value for 'projectSlug'
  *      name: // value for 'name'
  *      code: // value for 'code'
+ *      max: // value for 'max'
+ *      min: // value for 'min'
  *   },
  * });
  */

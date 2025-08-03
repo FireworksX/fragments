@@ -8,7 +8,7 @@ export type GoalsListQueryVariables = Types.Exact<{
 }>;
 
 
-export type GoalsListQuery = { __typename?: 'Query', projectGoals: Array<{ __typename?: 'ProjectGoalGet', id: number, name: string, code: string }> };
+export type GoalsListQuery = { __typename?: 'Query', projectGoals: Array<{ __typename?: 'ProjectGoalGet', id: number, name: string, code: string, min?: number | null, max?: number | null }> };
 
 
 export const GoalsListDocument = gql`
@@ -17,6 +17,8 @@ export const GoalsListDocument = gql`
     id
     name
     code: targetAction
+    min: failureLevel
+    max: successLevel
   }
 }
     `;

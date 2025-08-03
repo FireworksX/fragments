@@ -94,7 +94,7 @@ export const StackGoals: FC<StackNumberVariableProps> = ({ className }) => {
               <InfoIcon />
             </Dropdown>
           }
-          onClick={() => context?.onSelect?.(pick(goal, 'name', 'code'))}
+          onClick={() => context?.onSelect?.({ goalId: goal.id, name: goal.name, code: goal.code })}
         >
           {goal.name}
         </Cell>

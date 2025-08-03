@@ -60,12 +60,17 @@ export type AuthPayload = {
   user: UserGet;
 };
 
+export type AverageConversionGet = {
+  __typename?: 'AverageConversionGet';
+  conversion: Scalars['Float']['output'];
+  trend: Trend;
+};
+
 export type CampaignGet = {
   __typename?: 'CampaignGet';
   areaId: Scalars['Int']['output'];
   author: UserGet;
   description?: Maybe<Scalars['String']['output']>;
-  experiment?: Maybe<ExperimentGet>;
   featureFlag: FeatureFlagGet;
   id: Scalars['Int']['output'];
   logo: MediaGet;
@@ -75,7 +80,6 @@ export type CampaignGet = {
 
 export type CampaignPatch = {
   description?: InputMaybe<Scalars['String']['input']>;
-  experimentId?: InputMaybe<Scalars['Int']['input']>;
   id: Scalars['Int']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<CampaignStatus>;
@@ -84,9 +88,15 @@ export type CampaignPatch = {
 export type CampaignPost = {
   areaId: Scalars['Int']['input'];
   description?: InputMaybe<Scalars['String']['input']>;
-  experimentId?: InputMaybe<Scalars['Int']['input']>;
   name: Scalars['String']['input'];
   status: CampaignStatus;
+};
+
+export type CampaignStatsGet = {
+  __typename?: 'CampaignStatsGet';
+  lastViews: Scalars['Int']['output'];
+  percentage: Scalars['Float']['output'];
+  totalViews: Scalars['Int']['output'];
 };
 
 export enum CampaignStatus {
@@ -111,8 +121,9 @@ export type ClientGet = {
 };
 
 export enum ClientHistoryEventType {
-  Contribute = 'CONTRIBUTE',
   Feedback = 'FEEDBACK',
+  GoalContribute = 'GOAL_CONTRIBUTE',
+  GoalView = 'GOAL_VIEW',
   Init = 'INIT',
   Release = 'RELEASE',
   View = 'VIEW'
@@ -210,21 +221,6 @@ export enum DeviceType {
   Tablet = 'TABLET'
 }
 
-export type ExperimentGet = {
-  __typename?: 'ExperimentGet';
-  description?: Maybe<Scalars['String']['output']>;
-  featureFlag: FeatureFlagGet;
-  id: Scalars['Int']['output'];
-  name: Scalars['String']['output'];
-  status: ExperimentStatus;
-};
-
-export enum ExperimentStatus {
-  Active = 'ACTIVE',
-  Archived = 'ARCHIVED',
-  Inactive = 'INACTIVE'
-}
-
 export type FeatureFlagGet = {
   __typename?: 'FeatureFlagGet';
   description?: Maybe<Scalars['String']['output']>;
@@ -241,7 +237,7 @@ export type FeatureFlagPatch = {
   name?: InputMaybe<Scalars['String']['input']>;
   releaseCondition?: InputMaybe<ReleaseConditionPatch>;
   rotationType?: InputMaybe<RotationType>;
-  variants?: InputMaybe<Array<VariantPatch>>;
+  variants?: InputMaybe<Array<VariantPost>>;
 };
 
 export type FeatureFlagPost = {
@@ -340,6 +336,7 @@ export type FragmentGet = {
   document: Scalars['JSON']['output'];
   id: Scalars['Int']['output'];
   linkedFragments?: Maybe<Array<FragmentGet>>;
+  linkedGoals?: Maybe<Array<Scalars['Int']['output']>>;
   name: Scalars['String']['output'];
   props?: Maybe<Scalars['JSON']['output']>;
 };
@@ -349,6 +346,7 @@ export type FragmentPatch = {
   document?: InputMaybe<Scalars['JSON']['input']>;
   id: Scalars['Int']['input'];
   linkedFragments?: InputMaybe<Array<Scalars['Int']['input']>>;
+  linkedGoals?: InputMaybe<Array<Scalars['Int']['input']>>;
   name?: InputMaybe<Scalars['String']['input']>;
   props?: InputMaybe<Scalars['JSON']['input']>;
 };
@@ -357,6 +355,7 @@ export type FragmentPost = {
   directoryId: Scalars['Int']['input'];
   document: Scalars['JSON']['input'];
   linkedFragments?: InputMaybe<Array<Scalars['Int']['input']>>;
+  linkedGoals?: InputMaybe<Array<Scalars['Int']['input']>>;
   name: Scalars['String']['input'];
   projectId: Scalars['Int']['input'];
   props?: InputMaybe<Scalars['JSON']['input']>;
@@ -376,6 +375,17 @@ export type FragmentVariantPatch = {
 export type FragmentVariantPost = {
   fragmentId: Scalars['Int']['input'];
   props?: InputMaybe<Scalars['JSON']['input']>;
+};
+
+export type GoalStatsGet = {
+  __typename?: 'GoalStatsGet';
+  graph: Array<GraphPoint>;
+};
+
+export type GraphPoint = {
+  __typename?: 'GraphPoint';
+  x: Scalars['DateTime']['output'];
+  y: Value;
 };
 
 export type MediaDelete = {
@@ -524,6 +534,7 @@ export type MutationCreateDirectoryArgs = {
 
 export type MutationCreateFeatureFlagArgs = {
   featureFlag: FeatureFlagPost;
+  projectId: Scalars['Int']['input'];
 };
 
 
@@ -762,20 +773,26 @@ export type ProjectGet = {
 
 export type ProjectGoalGet = {
   __typename?: 'ProjectGoalGet';
+  failureLevel?: Maybe<Scalars['Float']['output']>;
   id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
+  successLevel?: Maybe<Scalars['Float']['output']>;
   targetAction: Scalars['String']['output'];
 };
 
 export type ProjectGoalPatch = {
+  failureLevel?: InputMaybe<Scalars['Float']['input']>;
   id: Scalars['Int']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
+  successLevel?: InputMaybe<Scalars['Float']['input']>;
   targetAction?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type ProjectGoalPost = {
+  failureLevel?: InputMaybe<Scalars['Float']['input']>;
   name: Scalars['String']['input'];
   projectId: Scalars['Int']['input'];
+  successLevel?: InputMaybe<Scalars['Float']['input']>;
   targetAction: Scalars['String']['input'];
 };
 
@@ -799,7 +816,10 @@ export type ProjectPost = {
 export type Query = {
   __typename?: 'Query';
   area: Array<AreaGet>;
+  areaAverageConversion: AverageConversionGet;
   campaign: Array<CampaignGet>;
+  campaignAverageConversion: AverageConversionGet;
+  campaignStats: CampaignStatsGet;
   client: Array<ClientGet>;
   clientArea?: Maybe<ClientAreaGet>;
   clientFragment?: Maybe<FragmentGet>;
@@ -811,11 +831,16 @@ export type Query = {
   featureFlag: FeatureFlagGet;
   filter: AllFiltersGet;
   fragment: Array<FragmentGet>;
+  goalAverageConversion: AverageConversionGet;
+  goalStats: GoalStatsGet;
   profile: AuthPayload;
   project: Array<ProjectGet>;
+  projectAverageConversion: AverageConversionGet;
   projectGoals: Array<ProjectGoalGet>;
   releaseCondition: ReleaseConditionGet;
   variant: Array<VariantGet>;
+  variantAverageConversion: AverageConversionGet;
+  variantStats: VariantStatsGet;
 };
 
 
@@ -825,13 +850,31 @@ export type QueryAreaArgs = {
 };
 
 
+export type QueryAreaAverageConversionArgs = {
+  areaId: Scalars['Int']['input'];
+};
+
+
 export type QueryCampaignArgs = {
   areaId?: InputMaybe<Scalars['Int']['input']>;
   campaignId?: InputMaybe<Scalars['Int']['input']>;
+  campaignStatus?: InputMaybe<CampaignStatus>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  status?: InputMaybe<CampaignStatus>;
   withoutDefault?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type QueryCampaignAverageConversionArgs = {
+  campaignId: Scalars['Int']['input'];
+};
+
+
+export type QueryCampaignStatsArgs = {
+  areaId: Scalars['Int']['input'];
+  campaignId: Scalars['Int']['input'];
+  fromTs?: InputMaybe<Scalars['DateTime']['input']>;
+  toTs?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 
@@ -894,8 +937,25 @@ export type QueryFragmentArgs = {
 };
 
 
+export type QueryGoalAverageConversionArgs = {
+  goalId: Scalars['Int']['input'];
+};
+
+
+export type QueryGoalStatsArgs = {
+  fromTs?: InputMaybe<Scalars['DateTime']['input']>;
+  goalId: Scalars['Int']['input'];
+  toTs?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+
 export type QueryProjectArgs = {
   projectId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryProjectAverageConversionArgs = {
+  projectId: Scalars['Int']['input'];
 };
 
 
@@ -912,6 +972,19 @@ export type QueryReleaseConditionArgs = {
 export type QueryVariantArgs = {
   featureFlagId?: InputMaybe<Scalars['Int']['input']>;
   variantId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryVariantAverageConversionArgs = {
+  variantId: Scalars['Int']['input'];
+};
+
+
+export type QueryVariantStatsArgs = {
+  featureFlagId: Scalars['Int']['input'];
+  fromTs?: InputMaybe<Scalars['DateTime']['input']>;
+  toTs?: InputMaybe<Scalars['DateTime']['input']>;
+  variantId: Scalars['Int']['input'];
 };
 
 export type RegionGet = {
@@ -951,6 +1024,12 @@ export enum RotationType {
   Rotate = 'ROTATE'
 }
 
+export enum Trend {
+  Down = 'DOWN',
+  Flat = 'FLAT',
+  Up = 'UP'
+}
+
 export type UserGet = {
   __typename?: 'UserGet';
   email: Scalars['String']['output'];
@@ -968,6 +1047,12 @@ export type UserRoleGet = {
   lastName?: Maybe<Scalars['String']['output']>;
   logo: MediaGet;
   role: RoleGet;
+};
+
+export type Value = {
+  __typename?: 'Value';
+  achieved: Scalars['Int']['output'];
+  conversion: Scalars['Float']['output'];
 };
 
 export type VariantGet = {
@@ -993,6 +1078,13 @@ export type VariantPost = {
   name: Scalars['String']['input'];
   rolloutPercentage: Scalars['Float']['input'];
   status: VariantStatus;
+};
+
+export type VariantStatsGet = {
+  __typename?: 'VariantStatsGet';
+  lastViews: Scalars['Int']['output'];
+  percentage: Scalars['Float']['output'];
+  totalViews: Scalars['Int']['output'];
 };
 
 export enum VariantStatus {

@@ -1,18 +1,19 @@
-import { FC, PropsWithChildren } from 'react'
+import { FC, PropsWithChildren, ReactNode } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { Touchable, TouchableProps } from '@/shared/ui/Touchable'
 import RemoveIcon from '@/shared/icons/next/close-circle.svg'
 
 interface ChipProps extends PropsWithChildren, TouchableProps {
+  mode?: 'success' | 'danger'
   className?: string
-  prefix?: string
+  prefix?: ReactNode
   onRemove?(): void
 }
 
-export const Chip: FC<ChipProps> = ({ className, children, prefix, onRemove, ...touchableProps }) => {
+export const Chip: FC<ChipProps> = ({ className, mode, children, prefix, onRemove, ...touchableProps }) => {
   return (
-    <Touchable className={cn(styles.root, className)} {...touchableProps}>
+    <Touchable className={cn(styles.root, className, styles[mode])} {...touchableProps}>
       {prefix && <span className={styles.prefix}>{prefix}</span>}
       {children}
       {onRemove && (

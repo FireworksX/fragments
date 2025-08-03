@@ -11,10 +11,16 @@ import { Button } from '@/shared/ui/Button'
 import { InputText } from '@/shared/ui/InputText'
 import { InputNumber } from '@/shared/ui/InputNumber'
 import { useModal } from '@/shared/hooks/useModal'
+import { Panel } from '@/shared/ui/Panel'
+import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
+import { Stepper } from '@/shared/ui/Stepper'
+import { Slider } from '@/shared/ui/Slider'
 
 interface Goal {
   name: string
   code: string
+  min?: number | null
+  max?: number | null
 }
 
 export interface GoalViewModalContext {
@@ -33,11 +39,15 @@ export const GoalViewModal: FC<GoalViewModalProps> = ({ className }) => {
   const isEdit = !!currentGoal
   const [name, setName] = useState(currentGoal?.name ?? '')
   const [code, setCode] = useState(currentGoal?.code ?? '')
+  const [min, setMin] = useState(currentGoal?.min ?? 0)
+  const [max, setMax] = useState(currentGoal?.max ?? 0)
 
-  const handleSubmit = ({ name, code }) => {
-    context?.onSubmit?.({ name, code })
+  const handleSubmit = () => {
+    context?.onSubmit?.({ name, code, min, max })
     setName('')
     setCode('')
+    setMin(0)
+    setMax(0)
   }
 
   return (
@@ -49,15 +59,33 @@ export const GoalViewModal: FC<GoalViewModalProps> = ({ className }) => {
           <Button mode='secondary' stretched onClick={modalStore.close}>
             Cancel
           </Button>
-          <Button type='submit' stretched onClick={() => handleSubmit({ name, code })}>
+          <Button type='submit' stretched onClick={() => handleSubmit()}>
             {isEdit ? 'Edit' : 'Create'}
           </Button>
         </>
       }
     >
       <form className={styles.body}>
-        <InputText placeholder='Name' value={name} autoFocus onChangeValue={setName} />
-        <InputText placeholder='Code' value={code} onChangeValue={setCode} />
+        <Panel>
+          <ControlRow title='Name'>
+            <ControlRowWide>
+              <InputText placeholder='Name' value={name} autoFocus onChangeValue={setName} />
+            </ControlRowWide>
+          </ControlRow>
+          <ControlRow title='Code'>
+            <ControlRowWide>
+              <InputText placeholder='Code' value={code} onChangeValue={setCode} />
+            </ControlRowWide>
+          </ControlRow>
+          <ControlRow title='Min %'>
+            <InputNumber placeholder='Min' min={0} max={100} step={0.01} value={min} onChange={setMin} />
+            <Slider min={0} max={100} step={0.01} value={min} onChange={setMin} />
+          </ControlRow>
+          <ControlRow title='Max %'>
+            <InputText placeholder='Max' min={0} max={100} step={0.01} value={max} onChange={setMax} />
+            <Slider min={0} max={100} step={0.01} value={max} onChange={setMax} />
+          </ControlRow>
+        </Panel>
       </form>
     </ModalContainer>
   )

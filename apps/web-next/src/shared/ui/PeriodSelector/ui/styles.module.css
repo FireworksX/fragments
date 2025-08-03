@@ -1,0 +1,9 @@
+.root {
+    display: flex;
+    gap: 24px;
+}
+
+.group {
+    display: flex;
+    gap: 4px;
+}

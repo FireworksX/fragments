@@ -1,0 +1,11 @@
+query GoalsStatistics($goalId: Int!, $from: DateTime, $to: DateTime) {
+    goalStats(goalId: $goalId, fromTs: $from, toTs: $to) {
+        graph {
+            x
+            y {
+                achieved
+                conversion
+            }
+        }
+    }
+}
