@@ -8,12 +8,16 @@ from sqlalchemy.sql import case
 from conf.settings import logger
 from database.models import Area, Campaign, ClientHistory, Project, ProjectGoal, Variant
 from services.core.routes.schemas.analytic import (
-    AverageConversionGet,
+    AreaAverageConversionGet,
+    CampaignAverageConversionGet,
     CampaignStatsGet,
+    GoalAverageConversionGet,
     GoalStatsGet,
     GraphPoint,
+    ProjectAverageConversionGet,
     Trend,
     Value,
+    VariantAverageConversionGet,
     VariantStatsGet,
 )
 from services.core.routes.schemas.client import ClientHistoryEventType
@@ -204,13 +208,22 @@ async def get_goal_stats_db(
     )
 
     graph_points = []
+    all_views: int = 0
+    all_achieved: int = 0
     for point in stats:
         conversion = point.achieved / point.views if point.views > 0 else 0.0
         graph_points.append(
             GraphPoint(x=point.ts, y=Value(achieved=point.achieved, conversion=conversion))
         )
+        all_views += point.views
+        all_achieved += point.achieved
 
-    return GoalStatsGet(graph=graph_points)
+    return GoalStatsGet(
+        graph=graph_points,
+        average_conversion=float(all_achieved) / all_views if all_views > 0 else 0.0,
+        goal_achieved=all_achieved,
+        goal_views=all_views,
+    )
 
 
 async def get_variant_average_conversion_db(
@@ -218,7 +231,7 @@ async def get_variant_average_conversion_db(
     variant_id: int,
     from_ts: Optional[datetime] = None,
     to_ts: Optional[datetime] = None,
-) -> AverageConversionGet:
+) -> VariantAverageConversionGet:
     """
     Get variant conversion rate by averaging conversions across all linked goals
     """
@@ -230,7 +243,9 @@ async def get_variant_average_conversion_db(
     # Get variant and its linked goals
     variant = db.query(Variant).filter(Variant.id == variant_id).first()
     if not variant or not variant.fragment.linked_goals:
-        return AverageConversionGet(conversion=0.0, trend=Trend.FLAT)
+        return VariantAverageConversionGet(
+            variant_id=variant_id, conversion=0.0, trend=Trend.FLAT, goals=[]
+        )
 
     total_conversion = 0.0
     for goal in variant.fragment.linked_goals:
@@ -319,7 +334,12 @@ async def get_variant_average_conversion_db(
     elif current_conversion < prev_conversion:
         trend = Trend.DOWN
 
-    return AverageConversionGet(conversion=current_conversion, trend=trend)
+    goals = []
+    for goal in variant.fragment.linked_goals:
+        goals.append(await get_goal_average_conversion_db(db, goal.id, from_ts, to_ts))
+    return VariantAverageConversionGet(
+        variant_id=variant_id, conversion=current_conversion, trend=trend, goals=goals
+    )
 
 
 async def get_campaign_average_conversion_db(
@@ -327,7 +347,7 @@ async def get_campaign_average_conversion_db(
     campaign_id: int,
     from_ts: Optional[datetime] = None,
     to_ts: Optional[datetime] = None,
-) -> AverageConversionGet:
+) -> CampaignAverageConversionGet:
     """
     Get campaign conversion rate by averaging conversions across all variants
     """
@@ -338,7 +358,9 @@ async def get_campaign_average_conversion_db(
 
     campaign = db.query(Campaign).filter(Campaign.id == campaign_id).first()
     if not campaign or not campaign.feature_flag or not campaign.feature_flag.variants:
-        return AverageConversionGet(conversion=0.0, trend=Trend.FLAT)
+        return CampaignAverageConversionGet(
+            campaign_id=campaign_id, conversion=0.0, trend=Trend.FLAT, variants=[]
+        )
 
     total_conversion = 0.0
     for variant in campaign.feature_flag.variants:
@@ -353,10 +375,12 @@ async def get_campaign_average_conversion_db(
     prev_to = from_ts
     prev_from = prev_to - timedelta(hours=24)
     prev_total = 0.0
+    variants = []
     for variant in campaign.feature_flag.variants:
         variant_conversion = await get_variant_average_conversion_db(
             db, variant.id, prev_from, prev_to
         )
+        variants.append(variant_conversion)
         prev_total += variant_conversion.conversion
     prev_conversion = (
         prev_total / len(campaign.feature_flag.variants) if campaign.feature_flag.variants else 0.0
@@ -369,7 +393,9 @@ async def get_campaign_average_conversion_db(
         trend = Trend.DOWN
 
     # Return average conversion across all variants
-    return AverageConversionGet(conversion=current_conversion, trend=trend)
+    return CampaignAverageConversionGet(
+        campaign_id=campaign_id, conversion=current_conversion, trend=trend, variants=variants
+    )
 
 
 async def get_area_average_conversion_db(
@@ -377,7 +403,7 @@ async def get_area_average_conversion_db(
     area_id: int,
     from_ts: Optional[datetime] = None,
     to_ts: Optional[datetime] = None,
-) -> AverageConversionGet:
+) -> AreaAverageConversionGet:
     """
     Get area conversion rate by averaging conversions across all campaigns
     """
@@ -388,14 +414,18 @@ async def get_area_average_conversion_db(
 
     area = db.query(Area).filter(Area.id == area_id).first()
     if not area or not area.campaigns:
-        return AverageConversionGet(conversion=0.0, trend=Trend.FLAT)
+        return AreaAverageConversionGet(
+            area_id=area_id, conversion=0.0, trend=Trend.FLAT, campaigns=[]
+        )
 
     # Get current period conversion
+    campaigns = []
     total_conversion = 0.0
     for campaign in area.campaigns:
         campaign_conversion = await get_campaign_average_conversion_db(
             db, campaign.id, from_ts, to_ts
         )
+        campaigns.append(campaign_conversion)
         total_conversion += campaign_conversion.conversion
     current_conversion = total_conversion / len(area.campaigns) if area.campaigns else 0.0
 
@@ -417,7 +447,9 @@ async def get_area_average_conversion_db(
     elif current_conversion < prev_conversion:
         trend = Trend.DOWN
 
-    return AverageConversionGet(conversion=current_conversion, trend=trend)
+    return AreaAverageConversionGet(
+        area_id=area_id, conversion=current_conversion, trend=trend, campaigns=campaigns
+    )
 
 
 async def get_project_average_conversion_db(
@@ -425,7 +457,7 @@ async def get_project_average_conversion_db(
     project_id: int,
     from_ts: Optional[datetime] = None,
     to_ts: Optional[datetime] = None,
-) -> AverageConversionGet:
+) -> ProjectAverageConversionGet:
     """
     Get project conversion rate by averaging conversions across all areas
     """
@@ -436,12 +468,16 @@ async def get_project_average_conversion_db(
 
     project = db.query(Project).filter(Project.id == project_id).first()
     if not project or not project.areas:
-        return AverageConversionGet(conversion=0.0, trend=Trend.FLAT)
+        return ProjectAverageConversionGet(
+            project_id=project_id, conversion=0.0, trend=Trend.FLAT, areas=[]
+        )
 
     # Get current period conversion
+    areas = []
     total_conversion = 0.0
     for area in project.areas:
         area_conversion = await get_area_average_conversion_db(db, area.id, from_ts, to_ts)
+        areas.append(area_conversion)
         total_conversion += area_conversion.conversion
     current_conversion = total_conversion / len(project.areas) if project.areas else 0.0
 
@@ -461,7 +497,9 @@ async def get_project_average_conversion_db(
     elif current_conversion < prev_conversion:
         trend = Trend.DOWN
 
-    return AverageConversionGet(conversion=current_conversion, trend=trend)
+    return ProjectAverageConversionGet(
+        project_id=project_id, conversion=current_conversion, trend=trend, areas=areas
+    )
 
 
 async def get_goal_average_conversion_db(
@@ -469,7 +507,7 @@ async def get_goal_average_conversion_db(
     goal_id: int,
     from_ts: Optional[datetime] = None,
     to_ts: Optional[datetime] = None,
-) -> AverageConversionGet:
+) -> GoalAverageConversionGet:
     """
     Get goal conversion rate by averaging conversions across all variants
     """
@@ -480,7 +518,7 @@ async def get_goal_average_conversion_db(
 
     goal = db.query(ProjectGoal).filter(ProjectGoal.id == goal_id).first()
     if not goal:
-        return AverageConversionGet(conversion=0.0, trend=Trend.FLAT)
+        return GoalAverageConversionGet(goal_id=goal_id, conversion=0.0, trend=Trend.FLAT)
 
     # Get current period stats
     views = (
@@ -495,7 +533,7 @@ async def get_goal_average_conversion_db(
     )
 
     if views == 0:
-        return AverageConversionGet(conversion=0.0, trend=Trend.FLAT)
+        return GoalAverageConversionGet(goal_id=goal_id, conversion=0.0, trend=Trend.FLAT)
 
     achievements = (
         db.query(ClientHistory)
@@ -545,4 +583,4 @@ async def get_goal_average_conversion_db(
     elif current_conversion < prev_conversion:
         trend = Trend.DOWN
 
-    return AverageConversionGet(conversion=current_conversion, trend=trend)
+    return GoalAverageConversionGet(goal_id=goal_id, conversion=current_conversion, trend=trend)

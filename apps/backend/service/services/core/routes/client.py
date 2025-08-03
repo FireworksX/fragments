@@ -81,13 +81,14 @@ def client_db_to_client(client: Client, history: List[ClientHistory]) -> ClientG
 
 def set_user_id_cookie(info: strawberry.Info[Context], client: Client, max_age: int = 3600) -> None:
     logger.debug(f"Setting user_id cookie for client {client.id}")
-    info.context.response.set_cookie(
-        key='user_id',  # Cookie name to identify the client
-        value=str(client.id),  # Client ID converted to string
-        httponly=False,  # Prevents JavaScript access for security if True
-        max_age=max_age,  # Cookie expires in 1 hour (3600 seconds)
-        samesite='Lax',  # Moderate CSRF protection while allowing normal navigation
-    )
+    if info.context.response:
+        info.context.response.set_cookie(
+            key='user_id',  # Cookie name to identify the client
+            value=str(client.id),  # Client ID converted to string
+            httponly=False,  # Prevents JavaScript access for security if True
+            max_age=max_age,  # Cookie expires in 1 hour (3600 seconds)
+            samesite='lax',  # Moderate CSRF protection while allowing normal navigation
+        )
 
 
 async def init_client_session_route(info: strawberry.Info[Context]) -> None:
@@ -96,7 +97,7 @@ async def init_client_session_route(info: strawberry.Info[Context]) -> None:
     set_user_id_cookie(info, client, 3600)
     db: Session = info.context.session()
     client_info = await info.context.client_info()
-    location = get_location_by_ip(client_info.ip_address)
+    location = get_location_by_ip(client_info.ip_address if client_info.ip_address else '')
 
     logger.debug(f"Creating init history record for client {client.id}")
     await create_client_history_db(
@@ -127,7 +128,7 @@ async def release_client_session_route(info: strawberry.Info[Context]) -> None:
     set_user_id_cookie(info, client, 3600)
     db: Session = info.context.session()
     client_info = await info.context.client_info()
-    location = get_location_by_ip(client_info.ip_address)
+    location = get_location_by_ip(client_info.ip_address if client_info.ip_address else '')
 
     logger.debug(f"Creating release history record for client {client.id}")
     await create_client_history_db(
@@ -160,9 +161,9 @@ async def contribute_to_project_goal_route(
     client: Client = await info.context.client()
     set_user_id_cookie(info, client, 3600)
     client_info: ClientInfo = await info.context.client_info()
-    location = get_location_by_ip(client_info.ip_address)
+    location = get_location_by_ip(client_info.ip_address if client_info.ip_address else '')
     project: Project = await info.context.project()
-    project_goal: ProjectGoal = await get_project_goal_by_target_action_db(
+    project_goal: Optional[ProjectGoal] = await get_project_goal_by_target_action_db(
         db, project.id, target_action
     )
     if project_goal is None:
@@ -205,7 +206,7 @@ async def get_contributions_to_project_goal_route(
     db: Session = info.context.session()
     user: AuthPayload = await info.context.user()
 
-    project: Project = await get_project_by_id_db(db, project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
     if project is None:
         logger.error(f"Project {project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
@@ -251,7 +252,7 @@ async def get_clients_by_project_id_route(
     db: Session = info.context.session()
     user: AuthPayload = await info.context.user()
 
-    project: Project = await get_project_by_id_db(db, project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
     if project is None:
         logger.error(f"Project {project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
@@ -272,7 +273,7 @@ async def get_clients_by_project_id_route(
 async def get_client_route(info: strawberry.Info[Context], client_id: int) -> ClientGet:
     logger.info(f"Getting client {client_id}")
     db: Session = info.context.session()
-    client: Client = await get_client_by_id_db(db, client_id)
+    client: Optional[Client] = await get_client_by_id_db(db, client_id)
 
     if client is None:
         logger.error(f"Client {client_id} not found")
@@ -289,7 +290,7 @@ async def get_client_history_route(
     logger.info(f"Getting history for client {client_id}")
     db: Session = info.context.session()
 
-    client: Client = await get_client_by_id_db(db, client_id)
+    client: Optional[Client] = await get_client_by_id_db(db, client_id)
     if client is None:
         logger.error(f"Client {client_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Client not found')
@@ -309,10 +310,14 @@ async def client_area_route(
     set_user_id_cookie(info, client, 3600)
     project: Project = await info.context.project()
 
-    client_info: ClientInfo = await info.context.client_info()
-    location = get_location_by_ip(client_info.ip_address)
+    if project is None:
+        logger.error(f"Project not found for client {client.id}")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project not found')
 
-    area: Area = await get_area_by_code_db(db, area_code)
+    client_info: ClientInfo = await info.context.client_info()
+    location = get_location_by_ip(client_info.ip_address if client_info.ip_address else '')
+
+    area: Optional[Area] = await get_area_by_code_db(db, area_code)
     if area is None:
         logger.error(f"Area with code {area_code} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Area does not exist')
@@ -489,11 +494,15 @@ async def client_area_route(
             feature_flag_id=best_campaign.feature_flag.id,
         )
 
-        if variantFragment.fragment.linked_goals:
+        if (
+            variantFragment.fragment
+            and variantFragment.fragment.fragment
+            and variantFragment.fragment.fragment.linked_goals
+        ):
             logger.debug(
-                f"Creating goal view history records for {len(variantFragment.fragment.linked_goals)} goals"
+                f"Creating goal view history records for {len(variantFragment.fragment.fragment.linked_goals)} goals"
             )
-            for goal_id in variantFragment.fragment.linked_goals:
+            for goal_id in variantFragment.fragment.fragment.linked_goals:
                 await create_client_history_db(
                     db=db,
                     client_id=client.id,
@@ -518,7 +527,8 @@ async def client_area_route(
                     goal_id=goal_id,
                 )
 
-    return ClientAreaGet(
-        variant=variantFragment,
-        area_properties=json.loads(area.properties) if area.properties else None,
-    )
+        return ClientAreaGet(
+            variant=variantFragment,
+            area_properties=json.loads(area.properties) if area.properties else None,
+        )
+    return None

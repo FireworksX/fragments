@@ -1,5 +1,6 @@
 from typing import List, Optional
 
+from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from conf.settings import logger
@@ -14,7 +15,7 @@ async def create_fragment_db(
     author_id: int,
     project_id: int,
     document: str,
-    props: str,
+    props: Optional[str],
     linked_fragments: Optional[List[int]],
     directory_id: int,
     linked_goals: Optional[List[int]],
@@ -84,11 +85,17 @@ async def get_fragments_by_project_id_db(db: Session, project_id: int) -> List[F
 
 
 async def update_fragment_by_id_db(
-    db: Session, values: dict, linked_fragments: List[int], linked_goals: List[int]
+    db: Session,
+    values: dict,
+    linked_fragments: Optional[List[int]],
+    linked_goals: Optional[List[int]],
 ) -> Fragment:
     fragment_id: int = values['id']
     logger.info(f"Updating fragment {fragment_id}")
-    fragment: Fragment = db.query(Fragment).filter(Fragment.id == fragment_id).first()
+    fragment: Optional[Fragment] = db.query(Fragment).filter(Fragment.id == fragment_id).first()
+    if fragment is None:
+        logger.error(f"Fragment {fragment_id} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Fragment does not exist')
 
     if linked_fragments is not None and len(linked_fragments) > 0:
         logger.debug(f"Updating linked fragments to {linked_fragments}")
@@ -129,7 +136,10 @@ async def update_fragment_by_id_db(
 async def add_fragment_media_db(db: Session, media_id: int, fragment_id: int) -> Fragment:
     logger.info(f"Adding media {media_id} to fragment {fragment_id}")
     fragment_media: FragmentMedia = FragmentMedia(media_id=media_id, fragment_id=fragment_id)
-    fragment: Fragment = await get_fragment_by_id_db(db, fragment_id)
+    fragment: Optional[Fragment] = await get_fragment_by_id_db(db, fragment_id)
+    if fragment is None:
+        logger.error(f"Fragment {fragment_id} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Fragment does not exist')
     fragment_media.media = await get_media_by_id_db(db, media_id)
     fragment_media.fragment = fragment
     fragment.assets.append(fragment_media)

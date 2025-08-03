@@ -3,6 +3,7 @@ import hmac
 import secrets
 from typing import List, Optional
 
+from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from conf.settings import logger, service_settings
@@ -93,7 +94,10 @@ async def generate_project_public_api_key(project_id: int) -> ProjectApiKey:
 
 async def change_project_private_api_key(db: Session, project_id: int) -> Project:
     logger.info(f"Changing private API key for project {project_id}")
-    project: Project = await get_project_by_id_db(db, project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
+    if project is None:
+        logger.error(f"Project {project_id} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
     api_key: ProjectApiKey = await generate_project_private_api_key(project.id)
     db.add(api_key)
     db.commit()
@@ -109,7 +113,10 @@ async def add_project_public_api_key(
     db: Session, project_id: int, key_name: Optional[str] = None
 ) -> Project:
     logger.info(f"Adding public API key for project {project_id}")
-    project: Project = await get_project_by_id_db(db, project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
+    if project is None:
+        logger.error(f"Project {project_id} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
     api_key: ProjectApiKey = await generate_project_public_api_key(project.id)
     api_key.name = key_name
     db.add(api_key)
@@ -214,7 +221,10 @@ async def get_projects_by_user_id_db(db: Session, user_id: int) -> List[Project]
 
 async def update_project_by_id_db(db: Session, values: dict) -> Project:
     logger.info(f"Updating project {values['id']}")
-    project: Project = await get_project_by_id_db(db, values['id'])
+    project: Optional[Project] = await get_project_by_id_db(db, values['id'])
+    if project is None:
+        logger.error(f"Project {values['id']} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
     if values.get('name') is not None:
         project.name = values['name']
     db.merge(project)
@@ -289,7 +299,10 @@ async def update_project_goal_db(
     failure_level: Optional[float] = None,
 ) -> ProjectGoal:
     logger.info(f"Updating goal {goal_id} with name {name} and target_action {target_action}")
-    goal = await get_project_goal_by_id_db(db, goal_id)
+    goal: Optional[ProjectGoal] = await get_project_goal_by_id_db(db, goal_id)
+    if goal is None:
+        logger.error(f"Goal {goal_id} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Goal does not exist')
     if name is not None:
         goal.name = name
     if target_action is not None:
@@ -329,7 +342,10 @@ async def add_project_allowed_origin_db(
     db.add(allowed_origin)
     db.commit()
     db.refresh(allowed_origin)
-    project: Project = await get_project_by_id_db(db, project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
+    if project is None:
+        logger.error(f"Project {project_id} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
     project.allowed_origins.append(allowed_origin)
     db.commit()
     db.refresh(project)

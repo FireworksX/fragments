@@ -2,6 +2,7 @@ import uuid
 from datetime import datetime, timezone
 from typing import List, Optional
 
+from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from conf.settings import logger
@@ -18,9 +19,9 @@ async def create_campaign_db(
     name: str,
     project_id: int,
     area_id: int,
-    description: str,
+    description: Optional[str],
     default: bool,
-    status: CampaignStatus,
+    campaign_status: CampaignStatus,
     author_id: int,
 ) -> Campaign:
     logger.info(f"Creating campaign {name} in area {area_id}")
@@ -66,7 +67,7 @@ async def create_campaign_db(
         area_id=area_id,
         description=description,
         default=default,
-        status=int(status.value),
+        status=int(campaign_status.value),
         author_id=author_id,
         logo_id=default_campaign_logo.id,
         feature_flag_id=default_campaign_feature_flag.id,
@@ -124,12 +125,12 @@ async def get_campaign_by_name_and_area_id_db(
 
 
 async def get_campaigns_by_area_id_db(
-    db: Session, area_id: int, status: Optional[CampaignStatus] = None
+    db: Session, area_id: int, campaign_status: Optional[CampaignStatus] = None
 ) -> List[Campaign]:
-    logger.info(f"Getting campaigns for area {area_id} with status {status}")
+    logger.info(f"Getting campaigns for area {area_id} with status {campaign_status}")
     query = db.query(Campaign).filter(Campaign.area_id == area_id, Campaign.deleted_at.is_(None))
-    if status is not None:
-        query = query.filter(Campaign.status == int(status.value))
+    if campaign_status is not None:
+        query = query.filter(Campaign.status == int(campaign_status.value))
     campaigns = query.all()
     logger.debug(f"Found {len(campaigns)} campaigns")
     return campaigns
@@ -155,7 +156,10 @@ async def get_default_campaign_by_project_id_db(db: Session, project_id: int) ->
 
 async def update_campaign_by_id_db(db: Session, values: dict) -> Campaign:
     logger.info(f"Updating campaign {values['id']}")
-    campaign: Campaign = await get_campaign_by_id_db(db, values['id'])
+    campaign: Optional[Campaign] = await get_campaign_by_id_db(db, values['id'])
+    if campaign is None:
+        logger.error(f"Campaign {values['id']} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Campaign does not exist')
     if values.get('name') is not None:
         logger.debug(f"Updating name to {values['name']}")
         campaign.name = values['name']

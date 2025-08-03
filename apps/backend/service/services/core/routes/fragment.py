@@ -27,7 +27,7 @@ from .utils import get_user_role_in_project
 
 
 async def check_read_permissions(db: Session, user_id: int, project_id: int) -> None:
-    project: Project = await get_project_by_id_db(db, project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
     if project is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
 
@@ -145,7 +145,7 @@ async def create_fragment_route(info: strawberry.Info[Context], fg: FragmentPost
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    project: Project = await get_project_by_id_db(db, fg.project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, fg.project_id)
     if project is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
 
@@ -202,14 +202,14 @@ async def add_fragment_asset_route(
 ) -> MediaGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
-    fragment: Fragment = await get_fragment_by_id_db(db, fragment_id)
+    fragment: Optional[Fragment] = await get_fragment_by_id_db(db, fragment_id)
     if fragment is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f'Fragment with id {fragment_id} does not exist',
         )
     project_id: int = fragment.project_id
-    project: Project = await get_project_by_id_db(db, project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
     if project is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
 
@@ -238,14 +238,14 @@ async def delete_fragment_asset_route(
 ) -> FragmentGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
-    fragment: Fragment = await get_fragment_by_id_db(db, fragment_id)
+    fragment: Optional[Fragment] = await get_fragment_by_id_db(db, fragment_id)
     if fragment is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f'Fragment with id {fragment_id} does not exist',
         )
     project_id: int = fragment.project_id
-    project: Project = await get_project_by_id_db(db, project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
     if project is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
 
@@ -263,13 +263,13 @@ async def delete_fragment_asset_route(
 async def update_fragment_route(info: strawberry.Info[Context], fg: FragmentPatch) -> FragmentGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
-    fragment: Fragment = await get_fragment_by_id_db(db, fg.id)
+    fragment: Optional[Fragment] = await get_fragment_by_id_db(db, fg.id)
     if fragment is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=f'Fragment with id {fg.id} does not exist'
         )
     project_id: int = fragment.project_id
-    project: Project = await get_project_by_id_db(db, project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
     if project is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
     permission: bool = await write_permission(db, user.user.id, project_id)
@@ -288,14 +288,14 @@ async def update_fragment_route(info: strawberry.Info[Context], fg: FragmentPatc
 async def delete_fragment_route(info: strawberry.Info[Context], fragment_id: int) -> None:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
-    fragment: Fragment = await get_fragment_by_id_db(db, fragment_id)
+    fragment: Optional[Fragment] = await get_fragment_by_id_db(db, fragment_id)
     if fragment is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f'Fragment with id {fragment_id} does not exist',
         )
     project_id: int = fragment.project_id
-    project: Project = await get_project_by_id_db(db, project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
     if project is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
     permission: bool = await write_permission(db, user.user.id, project_id)
@@ -314,7 +314,7 @@ async def fragment_by_id(info: strawberry.Info[Context], fragment_id: int) -> Fr
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    fragment: Fragment = await get_fragment_by_id_db(db, fragment_id)
+    fragment: Optional[Fragment] = await get_fragment_by_id_db(db, fragment_id)
     if fragment is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -329,7 +329,7 @@ async def get_client_fragment(info: strawberry.Info[Context], fragment_id: int) 
     project: Project = await info.context.project()
     db: Session = info.context.session()
 
-    fragment: Fragment = await get_fragment_by_id_db(db, fragment_id)
+    fragment: Optional[Fragment] = await get_fragment_by_id_db(db, fragment_id)
     if fragment is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

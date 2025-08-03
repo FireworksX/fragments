@@ -2,6 +2,7 @@ import json
 from datetime import datetime, timezone
 from typing import List, Optional
 
+from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from conf.settings import logger
@@ -44,7 +45,7 @@ async def create_area_db(
         project_id=area_db.project_id,
         area_id=area_db.id,
         default=True,
-        status=CampaignStatus.ACTIVE,
+        campaign_status=CampaignStatus.ACTIVE,
         author_id=author_id,
     )
     logger.debug(f"Created default campaign {default_campaign.id} for area {area_db.id}")
@@ -99,7 +100,10 @@ async def get_areas_by_project_id_db(db: Session, project_id: int) -> List[Area]
 
 async def update_area_by_id_db(db: Session, area: AreaPatch) -> Area:
     logger.info(f"Updating area {area.id}")
-    area_db: Area = await get_area_by_id_db(db, area.id)
+    area_db: Optional[Area] = await get_area_by_id_db(db, area.id)
+    if area_db is None:
+        logger.error(f"Area {area.id} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Area does not exist')
     if area.description is not None:
         logger.debug(f"Updating description for area {area.id}")
         area_db.description = area.description

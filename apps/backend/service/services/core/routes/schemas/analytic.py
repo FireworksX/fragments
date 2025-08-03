@@ -31,11 +31,6 @@ class GraphPoint:
     y: Value
 
 
-@strawberry.type
-class GoalStatsGet:
-    graph: List[GraphPoint]
-
-
 @strawberry.enum
 class Trend(Enum):
     UP = 1
@@ -44,6 +39,47 @@ class Trend(Enum):
 
 
 @strawberry.type
-class AverageConversionGet:
+class GoalAverageConversionGet:
+    goal_id: int
     conversion: float
     trend: Trend
+
+
+@strawberry.type
+class GoalStatsGet:
+    graph: List[GraphPoint]
+    average_conversion: float
+    goal_achieved: int
+    goal_views: int
+
+
+@strawberry.type
+class VariantAverageConversionGet:
+    variant_id: int
+    conversion: float
+    trend: Trend
+    goals: List[GoalAverageConversionGet]
+
+
+@strawberry.type
+class CampaignAverageConversionGet:
+    campaign_id: int
+    conversion: float
+    trend: Trend
+    variants: List[VariantAverageConversionGet]
+
+
+@strawberry.type
+class AreaAverageConversionGet:
+    area_id: int
+    conversion: float
+    trend: Trend
+    campaigns: List[CampaignAverageConversionGet]
+
+
+@strawberry.type
+class ProjectAverageConversionGet:
+    project_id: int
+    conversion: float
+    trend: Trend
+    areas: List[AreaAverageConversionGet]

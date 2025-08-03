@@ -24,7 +24,16 @@ from database import Session
 from database.models import Area, Campaign, FeatureFlag, Project, ProjectGoal, Variant
 
 from .middleware import Context
-from .schemas.analytic import AverageConversionGet, CampaignStatsGet, GoalStatsGet, VariantStatsGet
+from .schemas.analytic import (
+    AreaAverageConversionGet,
+    CampaignAverageConversionGet,
+    CampaignStatsGet,
+    GoalAverageConversionGet,
+    GoalStatsGet,
+    ProjectAverageConversionGet,
+    VariantAverageConversionGet,
+    VariantStatsGet,
+)
 from .schemas.user import AuthPayload, RoleGet
 from .utils import get_user_role_in_project
 
@@ -43,41 +52,44 @@ async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
 
 async def get_variant_stats_route(
     info: strawberry.Info[Context],
-    feature_flag_id: int,
     variant_id: int,
     from_ts: Optional[datetime] = None,
     to_ts: Optional[datetime] = None,
 ) -> VariantStatsGet:
-    logger.info(
-        f"Getting variant stats for feature flag {feature_flag_id} and variant {variant_id}"
-    )
+    logger.info(f"Getting variant stats for variant {variant_id}")
     db: Session = info.context.session()
-    feature_flag: FeatureFlag = await get_feature_flag_by_id_db(db, feature_flag_id)
+    variant: Optional[Variant] = await get_variant_by_id_db(db, variant_id)
+    if variant is None:
+        logger.error(f"Variant {variant_id} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Variant not found')
+
+    feature_flag: Optional[FeatureFlag] = await get_feature_flag_by_id_db(
+        db, variant.feature_flag_id
+    )
     if feature_flag is None:
-        logger.error(f"Feature flag {feature_flag_id} not found")
+        logger.error(f"Feature flag {variant.feature_flag_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Feature flag not found')
 
     user: AuthPayload = await info.context.user()
-    permission: bool = await read_permission(db, user.user.id, feature_flag.project_id)
+    permission: bool = await read_permission(db, user.user.id, variant.feature_flag.project_id)
     if not permission:
         logger.warning(
-            f"User {user.user.id} unauthorized to view variant stats for feature flag {feature_flag_id} and variant {variant_id}"
+            f"User {user.user.id} unauthorized to view variant stats for variant {variant_id}"
         )
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Unauthorized')
 
-    return await get_variant_stats_db(db, feature_flag_id, variant_id, from_ts, to_ts)
+    return await get_variant_stats_db(db, variant.feature_flag_id, variant_id, from_ts, to_ts)
 
 
 async def get_campaign_stats_route(
     info: strawberry.Info[Context],
-    area_id: int,
     campaign_id: int,
     from_ts: Optional[datetime] = None,
     to_ts: Optional[datetime] = None,
 ) -> CampaignStatsGet:
-    logger.info(f"Getting campaign stats for area {area_id} and campaign {campaign_id}")
+    logger.info(f"Getting campaign stats for campaign {campaign_id}")
     db: Session = info.context.session()
-    campaign: Campaign = await get_campaign_by_id_db(db, campaign_id)
+    campaign: Optional[Campaign] = await get_campaign_by_id_db(db, campaign_id)
     if campaign is None:
         logger.error(f"Campaign {campaign_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Campaign not found')
@@ -86,11 +98,11 @@ async def get_campaign_stats_route(
     permission: bool = await read_permission(db, user.user.id, campaign.project_id)
     if not permission:
         logger.warning(
-            f"User {user.user.id} unauthorized to view campaign stats for area {area_id} and campaign {campaign_id}"
+            f"User {user.user.id} unauthorized to view campaign stats for campaign {campaign_id}"
         )
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Unauthorized')
 
-    return await get_campaign_stats_db(db, area_id, campaign_id, from_ts, to_ts)
+    return await get_campaign_stats_db(db, campaign.area_id, campaign_id, from_ts, to_ts)
 
 
 async def get_goal_stats_route(
@@ -102,7 +114,7 @@ async def get_goal_stats_route(
     logger.info(f"Getting goal stats for goal {goal_id}")
     db: Session = info.context.session()
     user: AuthPayload = await info.context.user()
-    goal: ProjectGoal = await get_project_goal_by_id_db(db, goal_id)
+    goal: Optional[ProjectGoal] = await get_project_goal_by_id_db(db, goal_id)
     if goal is None:
         logger.error(f"Goal {goal_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Goal not found')
@@ -120,11 +132,11 @@ async def get_variant_average_conversion_route(
     variant_id: int,
     from_ts: Optional[datetime] = None,
     to_ts: Optional[datetime] = None,
-) -> AverageConversionGet:
+) -> VariantAverageConversionGet:
     logger.info(f"Getting average variant conversion for variant {variant_id}")
     db: Session = info.context.session()
 
-    variant: Variant = await get_variant_by_id_db(db, variant_id)
+    variant: Optional[Variant] = await get_variant_by_id_db(db, variant_id)
     if variant is None:
         logger.error(f"Variant {variant_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Variant not found')
@@ -145,10 +157,10 @@ async def get_campaign_average_conversion_route(
     campaign_id: int,
     from_ts: Optional[datetime] = None,
     to_ts: Optional[datetime] = None,
-) -> AverageConversionGet:
+) -> CampaignAverageConversionGet:
     logger.info(f"Getting average campaign conversion for campaign {campaign_id}")
     db: Session = info.context.session()
-    campaign: Campaign = await get_campaign_by_id_db(db, campaign_id)
+    campaign: Optional[Campaign] = await get_campaign_by_id_db(db, campaign_id)
     if campaign is None:
         logger.error(f"Campaign {campaign_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Campaign not found')
@@ -169,10 +181,10 @@ async def get_area_average_conversion_route(
     area_id: int,
     from_ts: Optional[datetime] = None,
     to_ts: Optional[datetime] = None,
-) -> AverageConversionGet:
+) -> AreaAverageConversionGet:
     logger.info(f"Getting average area conversion for area {area_id}")
     db: Session = info.context.session()
-    area: Area = await get_area_by_id_db(db, area_id)
+    area: Optional[Area] = await get_area_by_id_db(db, area_id)
     if area is None:
         logger.error(f"Area {area_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Area not found')
@@ -193,10 +205,10 @@ async def get_project_average_conversion_route(
     project_id: int,
     from_ts: Optional[datetime] = None,
     to_ts: Optional[datetime] = None,
-) -> AverageConversionGet:
+) -> ProjectAverageConversionGet:
     logger.info(f"Getting average project conversion for project {project_id}")
     db: Session = info.context.session()
-    project: Project = await get_project_by_id_db(db, project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
     if project is None:
         logger.error(f"Project {project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project not found')
@@ -217,10 +229,10 @@ async def get_goal_average_conversion_route(
     goal_id: int,
     from_ts: Optional[datetime] = None,
     to_ts: Optional[datetime] = None,
-) -> AverageConversionGet:
+) -> GoalAverageConversionGet:
     logger.info(f"Getting average goal conversion for goal {goal_id}")
     db: Session = info.context.session()
-    goal: ProjectGoal = await get_project_goal_by_id_db(db, goal_id)
+    goal: Optional[ProjectGoal] = await get_project_goal_by_id_db(db, goal_id)
     if goal is None:
         logger.error(f"Goal {goal_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Goal not found')
