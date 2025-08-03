@@ -6,6 +6,8 @@ import { StatusDot } from '@/shared/ui/StatusDot'
 import CheckIcon from '@/shared/icons/next/check.svg'
 import { Link } from '@/shared/ui/Link'
 import { Avatar } from '@/shared/ui/Avatar'
+import ArrowUp from '@/shared/icons/next/arrow-up.svg'
+import { Chip } from '@/shared/ui/Chip'
 
 interface CampaignPreviewItemProps {
   name: string
@@ -31,16 +33,9 @@ export const CampaignPreviewItem: FC<CampaignPreviewItemProps> = ({ className, l
             <div className={styles.name}>{name}</div>
           </div>
 
-          {stats && (
-            <div className={styles.stats}>
-              {stats.map(stat => (
-                <div key={stat.label}>
-                  <div className={styles.statsTitle}>{stat.label}</div>
-                  <div>{stat.value}</div>
-                </div>
-              ))}
-            </div>
-          )}
+          <Chip mode={linkIsActive ? 'success' : 'danger'} prefix={<ArrowUp width={10} height={10} />} size='sm'>
+            1.4%
+          </Chip>
         </div>
       )}
     </Link>

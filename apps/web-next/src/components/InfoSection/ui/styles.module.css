@@ -1,5 +1,4 @@
 @layer {
-
     .root {
         padding: 4px;
         background: var(--background);
@@ -19,4 +18,12 @@
         height: 60px;
     }
 
+
+    .inverse {
+        background: var(--background-secondary);
+
+        .body {
+            background: var(--background);
+        }
+    }
 }

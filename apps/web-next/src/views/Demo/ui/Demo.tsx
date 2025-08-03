@@ -1,5 +1,5 @@
 'use client'
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState, Suspense } from 'react'
 import '../lib/css/main.css'
 import '../lib/css/entry.CAV5u_-6.css'
 import '../lib/css/NavContent.BvzaB8yA.css'
@@ -110,7 +110,9 @@ export const Demo: FC<DemoProps> = ({ className }) => {
           </div>
           <div className='content' data-v-2af4a11a=''>
             <div className='leftNav' style={{ gridArea: 'nav', marginRight: 12 }}>
-              <Area areaCode='7eebc2c48c0268' options={{ ssr: false }} />
+              <Suspense fallback={<h1>loading</h1>}>
+                <Area areaCode='7eebc2c48c0268' options={{ ssr: true }} />
+              </Suspense>
             </div>
             <div className='grid-main' data-v-2af4a11a=''>
               <div className='main-wrapper' data-v-2af4a11a=''>

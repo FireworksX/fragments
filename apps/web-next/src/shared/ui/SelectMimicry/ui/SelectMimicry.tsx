@@ -1,23 +1,26 @@
-import { FC, PropsWithChildren } from 'react'
+import { FC, PropsWithChildren, ReactNode } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import CaretDown from '@/shared/icons/caret-down.svg'
+import { Touchable } from '@/shared/ui/Touchable'
 
 interface SelectProps extends PropsWithChildren {
+  icon?: ReactNode
   className?: string
   disabled?: boolean
   classNameInner?: string
   onClick?: () => void
 }
 
-const SelectMimicry: FC<SelectProps> = ({ className, disabled, classNameInner, children, onClick }) => {
+const SelectMimicry: FC<SelectProps> = ({ className, icon, disabled, classNameInner, children, onClick }) => {
   return (
-    <div className={cn(styles.root, className, { [styles.disabled]: disabled })}>
-      <CaretDown className={styles.caret} width={11} />
-      <div className={cn(styles.inner, classNameInner)} onClick={onClick}>
+    <Touchable className={cn(styles.root, className, { [styles.disabled]: disabled })} onClick={onClick}>
+      <div className={cn(styles.inner, classNameInner)}>
+        {icon && <div className={styles.icon}>{icon}</div>}
         <div className={styles.content}>{children}</div>
       </div>
-    </div>
+      <CaretDown className={styles.caret} width={11} />
+    </Touchable>
   )
 }
 

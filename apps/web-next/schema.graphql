@@ -34,6 +34,10 @@ type AuthPayload {
 type AverageConversionGet {
     conversion: Float!
     trend: Trend!
+    graphs: {
+    lines: Point[]
+    flow
+}
 }
 
 type CampaignGet {

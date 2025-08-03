@@ -1,17 +1,18 @@
-import { FC } from 'react'
+'use client'
+import { FC, PropsWithChildren } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { Button } from '@/shared/ui/Button'
 
 type Period = 'today' | 'yesterday' | 'week' | 'month' | 'year'
 
-interface PeriodSelectorProps {
+interface PeriodSelectorProps extends PropsWithChildren {
   className?: string
   period: Period
   onChange?: (value: Period) => void
 }
 
-export const PeriodSelector: FC<PeriodSelectorProps> = ({ className, period, onChange }) => {
+export const PeriodSelector: FC<PeriodSelectorProps> = ({ className, children, period, onChange }) => {
   return (
     <div className={cn(styles.root, className)}>
       <div className={styles.group}>
@@ -31,6 +32,8 @@ export const PeriodSelector: FC<PeriodSelectorProps> = ({ className, period, onC
           Year
         </Button>
       </div>
+
+      {children}
     </div>
   )
 }

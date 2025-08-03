@@ -8,7 +8,7 @@ const nextConfig = {
   },
   output: 'standalone',
   images: {
-    domains: ['*', 'localhost', '85.192.29.65']
+    domains: ['*', 'localhost', '85.192.29.65', 'flagcdn.com']
   },
   async rewrites() {
     return process.env?.NODE_ENV === 'development' ? [

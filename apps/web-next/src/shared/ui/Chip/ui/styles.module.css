@@ -44,4 +44,10 @@
             color: var(--danger);
         }
     }
+
+    .sm {
+        padding: 2px 5px;
+        font-size: 9px;
+        gap: 2px;
+    }
 }
