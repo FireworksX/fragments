@@ -1,4 +1,5 @@
 import requests
+from functools import lru_cache
 
 from conf.settings import logger
 
@@ -12,6 +13,7 @@ class GeoLocation:
         self.country = country
 
 
+@lru_cache(maxsize=1000)
 def get_location_by_ip(ip_address: str) -> GeoLocation:
     logger.info(f"Getting geolocation for IP address: {ip_address}")
     try:
