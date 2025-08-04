@@ -68,7 +68,13 @@ async def get_variant_statistic_route(
         )
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Unauthorized')
 
-    return await get_variant_statistic_db(db, variant_id, from_ts, to_ts, prev_from_ts, prev_to_ts)
+    try:
+        return await get_variant_statistic_db(
+            db, variant_id, from_ts, to_ts, prev_from_ts, prev_to_ts
+        )
+    except ValueError as e:
+        logger.error(f"Error getting variant statistic for variant {variant_id}: {e}")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
 
 
 async def get_campaign_statistic_route(
@@ -94,9 +100,13 @@ async def get_campaign_statistic_route(
         )
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Unauthorized')
 
-    return await get_campaign_statistic_db(
-        db, campaign_id, from_ts, to_ts, prev_from_ts, prev_to_ts
-    )
+    try:
+        return await get_campaign_statistic_db(
+            db, campaign_id, from_ts, to_ts, prev_from_ts, prev_to_ts
+        )
+    except ValueError as e:
+        logger.error(f"Error getting campaign statistic for campaign {campaign_id}: {e}")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
 
 
 async def get_area_statistic_route(
@@ -120,9 +130,13 @@ async def get_area_statistic_route(
         logger.warning(f"User {user.user.id} unauthorized to view statistic for area {area_id}")
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Unauthorized')
 
-    return await get_area_average_conversion_db(
-        db, area_id, from_ts, to_ts, prev_from_ts, prev_to_ts
-    )
+    try:
+        return await get_area_average_conversion_db(
+            db, area_id, from_ts, to_ts, prev_from_ts, prev_to_ts
+        )
+    except ValueError as e:
+        logger.error(f"Error getting area statistic for area {area_id}: {e}")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
 
 
 async def get_project_statistic_route(
@@ -148,7 +162,13 @@ async def get_project_statistic_route(
         )
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Unauthorized')
 
-    return await get_project_statistic_db(db, project_id, from_ts, to_ts, prev_from_ts, prev_to_ts)
+    try:
+        return await get_project_statistic_db(
+            db, project_id, from_ts, to_ts, prev_from_ts, prev_to_ts
+        )
+    except ValueError as e:
+        logger.error(f"Error getting project statistic for project {project_id}: {e}")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
 
 
 async def get_goal_statistic_route(
@@ -172,4 +192,8 @@ async def get_goal_statistic_route(
         logger.warning(f"User {user.user.id} unauthorized to view statistic for goal {goal_id}")
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Unauthorized')
 
-    return await get_goal_statistic_db(db, goal_id, from_ts, to_ts, prev_from_ts, prev_to_ts)
+    try:
+        return await get_goal_statistic_db(db, goal_id, from_ts, to_ts, prev_from_ts, prev_to_ts)
+    except ValueError as e:
+        logger.error(f"Error getting goal statistic for goal {goal_id}: {e}")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e

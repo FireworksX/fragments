@@ -39,52 +39,60 @@ class DetalizationGraph:
 
 
 @strawberry.type
-class GoalStatisticGet:
-    goal_id: int
+class StatisticGet:
     conversion: float
     views: int
     achieved: int
+
+
+@strawberry.type
+class GoalStatisticGet:
+    goal_id: int
+    goal_name: str
     trend: Trend
+    current_statistic: StatisticGet
+    prev_statistic: StatisticGet
     detalization: DetalizationGraph
 
 
 @strawberry.type
 class VariantStatisticGet:
     variant_id: int
-    conversion: float
-    views: int
-    achieved: int
+    variant_name: str
     trend: Trend
+    current_statistic: StatisticGet
+    prev_statistic: StatisticGet
     goals: List[GoalStatisticGet]
 
 
 @strawberry.type
 class CampaignStatisticGet:
     campaign_id: int
-    conversion: float
-    views: int
-    achieved: int
+    campaign_name: str
     trend: Trend
+    current_statistic: StatisticGet
+    prev_statistic: StatisticGet
     variants: List[VariantStatisticGet]
 
 
 @strawberry.type
 class AreaStatisticGet:
     area_id: int
-    conversion: float
-    views: int
-    achieved: int
+    area_name: str
+    area_code: str
     trend: Trend
+    current_statistic: StatisticGet
+    prev_statistic: StatisticGet
     campaigns: List[CampaignStatisticGet]
 
 
 @strawberry.type
 class ProjectStatisticGet:
     project_id: int
-    conversion: float
-    views: int
-    achieved: int
+    project_name: str
     trend: Trend
+    current_statistic: StatisticGet
+    prev_statistic: StatisticGet
     areas: List[AreaStatisticGet]
 
 
