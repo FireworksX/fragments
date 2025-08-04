@@ -1,5 +1,6 @@
-import requests
 from functools import lru_cache
+
+import requests
 
 from conf.settings import logger
 

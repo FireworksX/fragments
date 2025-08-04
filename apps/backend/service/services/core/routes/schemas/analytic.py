@@ -5,32 +5,6 @@ from typing import List
 import strawberry
 
 
-@strawberry.type
-class VariantStatsGet:
-    last_views: int
-    total_views: int
-    percentage: float
-
-
-@strawberry.type
-class CampaignStatsGet:
-    last_views: int
-    total_views: int
-    percentage: float
-
-
-@strawberry.type
-class Value:
-    achieved: int
-    conversion: float  # achieved / views
-
-
-@strawberry.type
-class GraphPoint:
-    x: datetime
-    y: Value
-
-
 @strawberry.enum
 class Trend(Enum):
     UP = 1
@@ -38,48 +12,86 @@ class Trend(Enum):
     FLAT = 3
 
 
+@strawberry.enum
+class Detalization(Enum):
+    MINUTE = 1
+    HOUR = 2
+    DAY = 3
+
+
 @strawberry.type
-class GoalAverageConversionGet:
+class Value:
+    achieved: int
+    views: int
+    conversion: float  # achieved / views
+
+
+@strawberry.type
+class DetalizationGraphPoint:
+    time: datetime
+    value: Value
+
+
+@strawberry.type
+class DetalizationGraph:
+    detalization: Detalization
+    points: List[DetalizationGraphPoint]
+
+
+@strawberry.type
+class GoalStatisticGet:
     goal_id: int
     conversion: float
+    views: int
+    achieved: int
     trend: Trend
+    detalization: DetalizationGraph
 
 
 @strawberry.type
-class GoalStatsGet:
-    graph: List[GraphPoint]
-    average_conversion: float
-    goal_achieved: int
-    goal_views: int
-
-
-@strawberry.type
-class VariantAverageConversionGet:
+class VariantStatisticGet:
     variant_id: int
     conversion: float
+    views: int
+    achieved: int
     trend: Trend
-    goals: List[GoalAverageConversionGet]
+    goals: List[GoalStatisticGet]
 
 
 @strawberry.type
-class CampaignAverageConversionGet:
+class CampaignStatisticGet:
     campaign_id: int
     conversion: float
+    views: int
+    achieved: int
     trend: Trend
-    variants: List[VariantAverageConversionGet]
+    variants: List[VariantStatisticGet]
 
 
 @strawberry.type
-class AreaAverageConversionGet:
+class AreaStatisticGet:
     area_id: int
     conversion: float
+    views: int
+    achieved: int
     trend: Trend
-    campaigns: List[CampaignAverageConversionGet]
+    campaigns: List[CampaignStatisticGet]
 
 
 @strawberry.type
-class ProjectAverageConversionGet:
+class ProjectStatisticGet:
     project_id: int
     conversion: float
+    views: int
+    achieved: int
     trend: Trend
-    areas: List[AreaAverageConversionGet]
+    areas: List[AreaStatisticGet]
+
+
+@strawberry.input
+class StatisticFilter:
+    data_ids: List[int]
+    from_ts: datetime
+    to_ts: datetime
+    prev_from_ts: datetime
+    prev_to_ts: datetime
