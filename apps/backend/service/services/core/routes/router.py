@@ -1,18 +1,14 @@
-from datetime import datetime
 from typing import List, Optional
 
 import strawberry
 from fastapi import HTTPException, UploadFile, status
 
 from .analytic import (
-    get_area_average_conversion_route,
-    get_campaign_average_conversion_route,
-    get_campaign_stats_route,
-    get_goal_average_conversion_route,
-    get_goal_stats_route,
-    get_project_average_conversion_route,
-    get_variant_average_conversion_route,
-    get_variant_stats_route,
+    get_area_statistic_route,
+    get_campaign_statistic_route,
+    get_goal_statistic_route,
+    get_project_statistic_route,
+    get_variant_statistic_route,
 )
 from .area import (
     add_area_logo_route,
@@ -108,14 +104,12 @@ from .release_condition import (
     update_release_condition_route,
 )
 from .schemas.analytic import (
-    AreaAverageConversionGet,
-    CampaignAverageConversionGet,
-    CampaignStatsGet,
-    GoalAverageConversionGet,
-    GoalStatsGet,
-    ProjectAverageConversionGet,
-    VariantAverageConversionGet,
-    VariantStatsGet,
+    AreaStatisticGet,
+    CampaignStatisticGet,
+    GoalStatisticGet,
+    ProjectStatisticGet,
+    StatisticFilter,
+    VariantStatisticGet,
 )
 from .schemas.area import AreaGet, AreaPatch, AreaPost
 from .schemas.campaign import CampaignGet, CampaignPatch, CampaignPost, CampaignStatus
@@ -670,72 +664,83 @@ class ClientMutation:
 @strawberry.type
 class AnalyticQuery:
     @strawberry.field
-    async def variant_stats(
-        self,
-        info: strawberry.Info[Context],
-        variant_id: int,
-        from_ts: Optional[datetime] = None,
-        to_ts: Optional[datetime] = None,
-    ) -> VariantStatsGet:
-        return await get_variant_stats_route(info, variant_id, from_ts, to_ts)
-
-    @strawberry.field
-    async def campaign_stats(
-        self,
-        info: strawberry.Info[Context],
-        campaign_id: int,
-        from_ts: Optional[datetime] = None,
-        to_ts: Optional[datetime] = None,
-    ) -> CampaignStatsGet:
-        return await get_campaign_stats_route(info, campaign_id, from_ts, to_ts)
-
-    @strawberry.field
-    async def goal_stats(
-        self,
-        info: strawberry.Info[Context],
-        goal_id: int,
-        from_ts: Optional[datetime] = None,
-        to_ts: Optional[datetime] = None,
-    ) -> GoalStatsGet:
-        return await get_goal_stats_route(info, goal_id, from_ts, to_ts)
-
-    @strawberry.field
-    async def variant_average_conversion(
-        self, info: strawberry.Info[Context], variant_ids: List[int]
-    ) -> List[VariantAverageConversionGet]:
+    async def variant_statistic(
+        self, info: strawberry.Info[Context], statistic_filter: StatisticFilter
+    ) -> List[VariantStatisticGet]:
         return [
-            await get_variant_average_conversion_route(info, variant_id)
-            for variant_id in variant_ids
+            await get_variant_statistic_route(
+                info,
+                variant_id,
+                statistic_filter.from_ts,
+                statistic_filter.to_ts,
+                statistic_filter.prev_from_ts,
+                statistic_filter.prev_to_ts,
+            )
+            for variant_id in statistic_filter.data_ids
         ]
 
     @strawberry.field
-    async def campaign_average_conversion(
-        self, info: strawberry.Info[Context], campaign_ids: List[int]
-    ) -> List[CampaignAverageConversionGet]:
+    async def campaign_statistic(
+        self, info: strawberry.Info[Context], statistic_filter: StatisticFilter
+    ) -> List[CampaignStatisticGet]:
         return [
-            await get_campaign_average_conversion_route(info, campaign_id)
-            for campaign_id in campaign_ids
+            await get_campaign_statistic_route(
+                info,
+                campaign_id,
+                statistic_filter.from_ts,
+                statistic_filter.to_ts,
+                statistic_filter.prev_from_ts,
+                statistic_filter.prev_to_ts,
+            )
+            for campaign_id in statistic_filter.data_ids
         ]
 
     @strawberry.field
-    async def area_average_conversion(
-        self, info: strawberry.Info[Context], area_ids: List[int]
-    ) -> List[AreaAverageConversionGet]:
-        return [await get_area_average_conversion_route(info, area_id) for area_id in area_ids]
-
-    @strawberry.field
-    async def goal_average_conversion(
-        self, info: strawberry.Info[Context], goal_ids: List[int]
-    ) -> List[GoalAverageConversionGet]:
-        return [await get_goal_average_conversion_route(info, goal_id) for goal_id in goal_ids]
-
-    @strawberry.field
-    async def project_average_conversion(
-        self, info: strawberry.Info[Context], project_ids: List[int]
-    ) -> List[ProjectAverageConversionGet]:
+    async def area_statistic(
+        self, info: strawberry.Info[Context], statistic_filter: StatisticFilter
+    ) -> List[AreaStatisticGet]:
         return [
-            await get_project_average_conversion_route(info, project_id)
-            for project_id in project_ids
+            await get_area_statistic_route(
+                info,
+                area_id,
+                statistic_filter.from_ts,
+                statistic_filter.to_ts,
+                statistic_filter.prev_from_ts,
+                statistic_filter.prev_to_ts,
+            )
+            for area_id in statistic_filter.data_ids
+        ]
+
+    @strawberry.field
+    async def goal_statistic(
+        self, info: strawberry.Info[Context], statistic_filter: StatisticFilter
+    ) -> List[GoalStatisticGet]:
+        return [
+            await get_goal_statistic_route(
+                info,
+                goal_id,
+                statistic_filter.from_ts,
+                statistic_filter.to_ts,
+                statistic_filter.prev_from_ts,
+                statistic_filter.prev_to_ts,
+            )
+            for goal_id in statistic_filter.data_ids
+        ]
+
+    @strawberry.field
+    async def project_statistic(
+        self, info: strawberry.Info[Context], statistic_filter: StatisticFilter
+    ) -> List[ProjectStatisticGet]:
+        return [
+            await get_project_statistic_route(
+                info,
+                project_id,
+                statistic_filter.from_ts,
+                statistic_filter.to_ts,
+                statistic_filter.prev_from_ts,
+                statistic_filter.prev_to_ts,
+            )
+            for project_id in statistic_filter.data_ids
         ]
 
 
