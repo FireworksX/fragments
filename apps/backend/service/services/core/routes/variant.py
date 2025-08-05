@@ -167,7 +167,7 @@ async def update_variant_route(info: strawberry.Info[Context], v: VariantPatch) 
             detail='User is not allowed to change variant',
         )
 
-    variant = await update_variant_db(db, v)
+    variant = await update_variant_db(db, variant, v)
     logger.info(f"Updated variant {variant.id}")
 
     return variant_db_to_variant(variant)
@@ -195,14 +195,14 @@ async def delete_variant_route(info: strawberry.Info[Context], variant_id: int) 
 
     permission: bool = await write_permission(db, user.user.id, feature_flag.project_id)
     if not permission:
-        logger.warning(f"User {user.user.id} unauthorized to delete variant {variant_id}")
+        logger.warning(f"User {user.user.id} unauthorized to delete variant {variant.id}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail='User is not allowed to delete variant',
         )
 
-    await delete_variant_db(db, variant_id)
-    logger.info(f"Deleted variant {variant_id}")
+    await delete_variant_db(db, variant)
+    logger.info(f"Deleted variant {variant.id}")
 
 
 async def normalize_variants_rollout_percentage_route(

@@ -44,7 +44,6 @@ def feature_flag_db_to_feature_flag(feature_flag: FeatureFlag) -> FeatureFlagGet
         variants=[
             variant_db_to_variant(variant)
             for variant in sorted(feature_flag.variants, key=lambda x: x.id)
-            if variant.deleted_at is None
         ],
     )
 
@@ -142,7 +141,7 @@ async def update_feature_flag_route(
         )
 
     feature_flag = await update_feature_flag_db(
-        db, feature_flag_id=ff.id, values=ff.__dict__, variants=ff.variants
+        db, feature_flag_db=feature_flag, patch=ff, variants=ff.variants
     )
     logger.info(f"Successfully updated feature flag {feature_flag.id}")
     return feature_flag_db_to_feature_flag(feature_flag)

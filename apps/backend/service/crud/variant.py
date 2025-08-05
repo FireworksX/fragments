@@ -1,12 +1,24 @@
-from datetime import datetime, timezone
 from typing import List, Optional
 
-from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from conf.settings import logger
 from database.models.models import Variant
-from services.core.routes.schemas.variant import VariantPatch, VariantPost, VariantStatus
+from services.core.routes.schemas.variant import (
+    FragmentVariantPatch,
+    VariantPatch,
+    VariantPost,
+    VariantStatus,
+)
+
+
+def _update_variant_percentage(db: Session, variant: Variant, new_percentage: float) -> None:
+    """Helper function to update variant percentage and log the change."""
+    variant.rollout_percentage = round(new_percentage)
+    logger.debug(
+        f"Updating variant {variant.id} rollout percentage to {variant.rollout_percentage}"
+    )
+    db.merge(variant)
 
 
 async def recalculate_variants_rollout_percentage_db(
@@ -21,7 +33,6 @@ async def recalculate_variants_rollout_percentage_db(
         db.query(Variant)
         .filter(Variant.feature_flag_id == feature_flag_id)
         .filter(Variant.id != variant_id)
-        .filter(Variant.deleted_at.is_(None))
         .all()
     )
     if len(variants) == 0:
@@ -33,12 +44,10 @@ async def recalculate_variants_rollout_percentage_db(
         logger.debug(f"Adding new variant with percentage {new_variant_percentage}")
         scale_factor = new_variant_percentage / float(100)
         for variant in variants:
-            variant.rollout_percentage -= variant.rollout_percentage * scale_factor
-            variant.rollout_percentage = round(variant.rollout_percentage)
-            logger.debug(
-                f"Updating variant {variant.id} rollout percentage to {variant.rollout_percentage}"
+            new_percentage = variant.rollout_percentage - (
+                variant.rollout_percentage * scale_factor
             )
-            db.merge(variant)
+            _update_variant_percentage(db, variant, new_percentage)
     elif new_variant_percentage > old_variant_percentage:
         # increasing the percentage of a variant
         logger.debug(
@@ -46,12 +55,10 @@ async def recalculate_variants_rollout_percentage_db(
         )
         scale_factor = new_variant_percentage / float(100)
         for variant in variants:
-            variant.rollout_percentage -= variant.rollout_percentage * scale_factor
-            variant.rollout_percentage = round(variant.rollout_percentage)
-            logger.debug(
-                f"Updating variant {variant.id} rollout percentage to {variant.rollout_percentage}"
+            new_percentage = variant.rollout_percentage - (
+                variant.rollout_percentage * scale_factor
             )
-            db.merge(variant)
+            _update_variant_percentage(db, variant, new_percentage)
     else:
         # decreasing the percentage of a variant
         logger.debug(
@@ -59,12 +66,8 @@ async def recalculate_variants_rollout_percentage_db(
         )
         percents_to_add = (old_variant_percentage - new_variant_percentage) / float(len(variants))
         for variant in variants:
-            variant.rollout_percentage += percents_to_add
-            variant.rollout_percentage = round(variant.rollout_percentage)
-            logger.debug(
-                f"Updating variant {variant.id} rollout percentage to {variant.rollout_percentage}"
-            )
-            db.merge(variant)
+            new_percentage = variant.rollout_percentage + percents_to_add
+            _update_variant_percentage(db, variant, new_percentage)
 
     db.commit()
     logger.info('Successfully recalculated variant rollout percentages')
@@ -72,7 +75,7 @@ async def recalculate_variants_rollout_percentage_db(
 
 async def normalize_variants_rollout_percentage_db(db: Session, feature_flag_id: int) -> None:
     logger.info(f"Normalizing variant rollout percentages for feature flag {feature_flag_id}")
-    variants = await get_variants_by_feature_flag_id_db(db, feature_flag_id)
+    variants: List[Variant] = await get_variants_by_feature_flag_id_db(db, feature_flag_id)
     if len(variants) == 0:
         logger.debug('No variants found to normalize')
         return
@@ -91,7 +94,7 @@ async def normalize_variants_rollout_percentage_db(db: Session, feature_flag_id:
 
 async def create_variant_db(db: Session, variant: VariantPost) -> Variant:
     logger.info(f"Creating new variant for feature flag {variant.feature_flag_id}")
-    variants = await get_variants_by_feature_flag_id_db(db, variant.feature_flag_id)
+    variants: List[Variant] = await get_variants_by_feature_flag_id_db(db, variant.feature_flag_id)
     if len(variants) == 0:
         variant.rollout_percentage = 100
 
@@ -120,66 +123,74 @@ async def create_variant_db(db: Session, variant: VariantPost) -> Variant:
 
 async def get_variant_by_id_db(db: Session, variant_id: int) -> Optional[Variant]:
     logger.debug(f"Fetching variant with id {variant_id}")
-    return db.query(Variant).filter(Variant.id == variant_id, Variant.deleted_at.is_(None)).first()
+    return db.query(Variant).filter(Variant.id == variant_id).first()
 
 
 async def get_variants_by_feature_flag_id_db(db: Session, feature_flag_id: int) -> List[Variant]:
     logger.debug(f"Fetching variants for feature flag {feature_flag_id}")
-    return (
-        db.query(Variant)
-        .filter(Variant.feature_flag_id == feature_flag_id, Variant.deleted_at.is_(None))
-        .all()
-    )
+    return db.query(Variant).filter(Variant.feature_flag_id == feature_flag_id).all()
 
 
-async def update_variant_db(db: Session, v: VariantPatch) -> Variant:
-    logger.info(f"Updating variant {v.id}")
-    variant = await get_variant_by_id_db(db, v.id)
-    if variant is None:
-        logger.error(f"Variant {v.id} not found")
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Variant not found')
-    if v.name is not None:
-        logger.debug(f"Updating variant name to {v.name}")
-        variant.name = v.name
-    if v.rollout_percentage is not None:
-        logger.debug(f"Updating variant rollout percentage to {v.rollout_percentage}")
-        await recalculate_variants_rollout_percentage_db(
-            db,
-            variant.feature_flag_id,
-            variant.id,
-            variant.rollout_percentage,
-            v.rollout_percentage,
-        )
-        variant.rollout_percentage = v.rollout_percentage
-    if v.fragment is not None:
-        logger.debug(f"Updating variant fragment to {v.fragment.fragment_id}")
-        variant.fragment_id = v.fragment.fragment_id
-        variant.props = v.fragment.props
-    if v.status is not None:
-        logger.debug(f"Updating variant status to {v.status}")
-        variant.status = int(v.status.value)
-        if variant.status == int(VariantStatus.INACTIVE.value):
-            await recalculate_variants_rollout_percentage_db(
-                db, variant.feature_flag_id, variant.id, variant.rollout_percentage, 0
-            )
-
-            variant.rollout_percentage = 0
-    db.commit()
-    db.refresh(variant)
-    logger.info(f"Successfully updated variant {v.id}")
-    return variant
+def _update_variant_name(variant: Variant, name: str) -> None:
+    """Helper function to update variant name."""
+    logger.debug(f"Updating variant name to {name}")
+    variant.name = name
 
 
-async def delete_variant_db(db: Session, variant_id: int) -> None:
-    logger.info(f"Deleting variant {variant_id}")
-    variant = await get_variant_by_id_db(db, variant_id)
-    if variant is None:
-        return
+async def _update_variant_rollout_percentage(
+    db: Session, variant: Variant, new_percentage: float
+) -> None:
+    """Helper function to update variant rollout percentage."""
+    logger.debug(f"Updating variant rollout percentage to {new_percentage}")
     await recalculate_variants_rollout_percentage_db(
-        db, variant.feature_flag_id, variant.id, variant.rollout_percentage, 0
+        db, variant.feature_flag_id, variant.id, variant.rollout_percentage, new_percentage
     )
-    variant.deleted_at = datetime.now(timezone.utc)
-    variant.status = int(VariantStatus.INACTIVE.value)
-    db.merge(variant)
+    variant.rollout_percentage = new_percentage
+
+
+def _update_variant_fragment(variant: Variant, fragment: FragmentVariantPatch) -> None:
+    """Helper function to update variant fragment."""
+    logger.debug(f"Updating variant fragment to {fragment.fragment_id}")
+    if fragment.fragment_id is not None:
+        variant.fragment_id = fragment.fragment_id
+    if fragment.props is not None:
+        variant.props = fragment.props
+
+
+async def _update_variant_status(db: Session, variant: Variant, status: VariantStatus) -> None:
+    """Helper function to update variant status."""
+    logger.debug(f"Updating variant status to {status}")
+    variant.status = int(status.value)
+    if variant.status == int(VariantStatus.INACTIVE.value):
+        await recalculate_variants_rollout_percentage_db(
+            db, variant.feature_flag_id, variant.id, variant.rollout_percentage, 0
+        )
+        variant.rollout_percentage = 0
+
+
+async def update_variant_db(db: Session, variant_db: Variant, v: VariantPatch) -> Variant:
+    logger.info(f"Updating variant {variant_db.id}")
+
+    if v.name is not None:
+        _update_variant_name(variant_db, v.name)
+    if v.rollout_percentage is not None:
+        await _update_variant_rollout_percentage(db, variant_db, v.rollout_percentage)
+    if v.fragment is not None:
+        _update_variant_fragment(variant_db, v.fragment)
+    if v.status is not None:
+        await _update_variant_status(db, variant_db, v.status)
+
     db.commit()
-    logger.info(f"Successfully deleted variant {variant_id}")
+    db.refresh(variant_db)
+    logger.info(f"Successfully updated variant {variant_db.id}")
+    return variant_db
+
+
+async def delete_variant_db(db: Session, variant_db: Variant) -> None:
+    logger.info(f"Deleting variant {variant_db.id}")
+    await recalculate_variants_rollout_percentage_db(
+        db, variant_db.feature_flag_id, variant_db.id, variant_db.rollout_percentage, 0
+    )
+    db.delete(variant_db)
+    db.commit()
+    logger.info(f"Successfully deleted variant {variant_db.id}")

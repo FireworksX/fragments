@@ -7,6 +7,7 @@ from thefuzz import process
 from conf.settings import logger
 from crud.area import get_area_by_id_db
 from crud.campaign import (
+    add_campaign_logo_db,
     create_campaign_db,
     delete_campaign_by_id_db,
     get_campaign_by_id_db,
@@ -161,16 +162,7 @@ async def create_campaign_route(info: strawberry.Info[Context], cmp: CampaignPos
             detail='User is not allowed to create campaigns',
         )
 
-    campaign: Campaign = await create_campaign_db(
-        db,
-        cmp.name,
-        area.project_id,
-        cmp.area_id,
-        cmp.description,
-        False,
-        cmp.status,
-        user.user.id,
-    )
+    campaign: Campaign = await create_campaign_db(db, area.project_id, user.user.id, cmp)
     logger.debug(f"Created campaign {campaign.id}")
 
     return campaign_db_to_campaign(campaign)
@@ -199,7 +191,7 @@ async def update_campaign_route(info: strawberry.Info[Context], cmp: CampaignPat
             detail='User is not allowed to change campaign',
         )
 
-    campaign = await update_campaign_by_id_db(db, values=cmp.__dict__)
+    campaign = await update_campaign_by_id_db(db, campaign, cmp)
     logger.debug(f"Updated campaign {campaign.id}")
 
     return campaign_db_to_campaign(campaign)
@@ -228,8 +220,14 @@ async def delete_campaign_route(info: strawberry.Info[Context], campaign_id: int
             detail='User is not allowed to change campaign',
         )
 
-    await delete_campaign_by_id_db(db, campaign_id)
-    logger.debug(f"Deleted campaign {campaign_id}")
+    if campaign.default:
+        logger.error(f"Cannot delete default campaign {campaign_id}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail='Cannot delete default campaign'
+        )
+
+    await delete_campaign_by_id_db(db, campaign)
+    logger.debug(f"Deleted campaign {campaign.id}")
 
 
 async def add_campaign_logo_route(
@@ -265,8 +263,7 @@ async def add_campaign_logo_route(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='Failed to create media file'
         ) from exc
 
-    campaign.logo_id = media.id
-    db.commit()
+    campaign = await add_campaign_logo_db(db, campaign, media)
     logger.debug(f"Added logo {media.id} to campaign {campaign_id}")
 
     return MediaGet(
@@ -303,8 +300,7 @@ async def delete_campaign_logo_route(
 
     await delete_media_by_id_db(db, campaign.logo_id)
     default_logo = await generate_default_media(db, f"{campaign.name}.png")
-    campaign.logo_id = default_logo.id
-    db.commit()
+    campaign = await add_campaign_logo_db(db, campaign, default_logo)
     logger.debug(f"Deleted logo from campaign {campaign_id} and set default logo {default_logo.id}")
     return campaign_db_to_campaign(campaign)
 

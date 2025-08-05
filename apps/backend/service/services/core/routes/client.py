@@ -9,29 +9,19 @@ from fastapi import HTTPException, status
 
 from conf.settings import logger
 from crud.area import get_area_by_code_db
-from crud.client import (
-    create_client_history_db,
-    create_client_project_goal_db,
-    get_client_by_id_db,
-    get_client_history_db,
-    get_client_project_goals_by_project_and_goal_db,
-    get_clients_by_project_id_db,
-    get_last_viewed_variant_in_area_db,
-)
+from crud.client import create_client_history_db, get_last_viewed_variant_in_area_db
 from crud.ipgetter import get_location_by_ip
-from crud.project import get_project_by_id_db, get_project_goal_by_target_action_db
+from crud.project import get_project_goal_by_target_action_db
 from crud.variant import get_variant_by_id_db
-from database import Area, Campaign, Client, ClientHistory, ClientProjectGoal, ProjectGoal, Session
+from database import Area, Campaign, Client, ProjectGoal, Session
 from database.models import Project
 
-from .area import area_db_to_area
 from .campaign import CampaignStatus, get_campaigns_by_area_id_db
 from .middleware import ClientInfo, Context
-from .project import get_user_role_in_project, project_db_to_project, project_goal_db_to_goal
-from .schemas.client import ClientAreaGet, ClientGet, ClientHistoryEventType, ClientHistoryGet
+from .project import get_user_role_in_project
+from .schemas.client import ClientAreaGet, ClientHistoryEventType, ClientHistoryPost
 from .schemas.feature_flag import RotationType
-from .schemas.project import ClientProjectGoalGet
-from .schemas.user import AuthPayload, RoleGet
+from .schemas.user import RoleGet
 from .schemas.variant import VariantGet, VariantStatus
 from .variant import variant_db_to_variant
 
@@ -40,43 +30,6 @@ async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
     logger.info(f"Checking read permission for user {user_id} in project {project_id}")
     role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None
-
-
-def client_history_db_to_history(history: ClientHistory) -> ClientHistoryGet:
-    logger.debug(f"Converting client history {history.id} to schema")
-    return ClientHistoryGet(
-        id=history.id,
-        client_id=history.client_id,
-        device_type=history.device_type,
-        os_type=history.os_type,
-        browser=history.browser,
-        language=history.language,
-        screen_width=history.screen_width,
-        screen_height=history.screen_height,
-        country=history.country,
-        region=history.region,
-        city=history.city,
-        url=history.url,
-        referrer=history.referrer,
-        domain=history.domain,
-        subdomain=history.subdomain,
-        page_load_time=history.page_load_time,
-        created_at=history.created_at.isoformat(),
-        event_type=ClientHistoryEventType(history.event_type),
-        area=area_db_to_area(history.area) if history.area else None,
-        variant=variant_db_to_variant(history.variant) if history.variant else None,
-    )
-
-
-def client_db_to_client(client: Client, history: List[ClientHistory]) -> ClientGet:
-    logger.debug(f"Converting client {client.id} to schema with {len(history)} history records")
-    return ClientGet(
-        id=client.id,
-        created_at=client.created_at.isoformat(),
-        updated_at=client.updated_at.isoformat(),
-        last_visited_at=client.last_visited_at.isoformat() if client.last_visited_at else None,
-        history=[client_history_db_to_history(h) for h in history],
-    )
 
 
 def set_user_id_cookie(info: strawberry.Info[Context], client: Client, max_age: int = 3600) -> None:
@@ -102,23 +55,26 @@ async def init_client_session_route(info: strawberry.Info[Context]) -> None:
     logger.debug(f"Creating init history record for client {client.id}")
     await create_client_history_db(
         db=db,
-        client_id=client.id,
-        device_type=client_info.device_type.value if client_info.device_type else None,
-        os_type=client_info.os_type.value if client_info.os_type else None,
-        browser=None,
-        language=None,
-        screen_width=None,
-        screen_height=None,
-        country=location.country,
-        region=location.region,
-        city=location.city,
-        event_type=int(ClientHistoryEventType.INIT.value),
-        url='',
-        referrer='',
-        domain='',
-        subdomain='',
-        area_id=None,
-        variant_id=None,
+        client_history=ClientHistoryPost(
+            client_id=client.id,
+            device_type=client_info.device_type.value if client_info.device_type else None,
+            os_type=client_info.os_type.value if client_info.os_type else None,
+            browser=client_info.browser,
+            language=client_info.language,
+            screen_width=client_info.screen_width,
+            screen_height=client_info.screen_height,
+            country=location.country,
+            region=location.region,
+            city=location.city,
+            event_type=ClientHistoryEventType.INIT,
+            url='',
+            referrer='',
+            domain='',
+            subdomain='',
+            area_id=None,
+            variant_id=None,
+            page=client_info.page,
+        ),
     )
 
 
@@ -133,23 +89,26 @@ async def release_client_session_route(info: strawberry.Info[Context]) -> None:
     logger.debug(f"Creating release history record for client {client.id}")
     await create_client_history_db(
         db=db,
-        client_id=client.id,
-        device_type=client_info.device_type.value if client_info.device_type else None,
-        os_type=client_info.os_type.value if client_info.os_type else None,
-        browser=None,
-        language=None,
-        screen_width=None,
-        screen_height=None,
-        country=location.country,
-        region=location.region,
-        city=location.city,
-        event_type=int(ClientHistoryEventType.RELEASE.value),
-        url='',
-        referrer='',
-        domain='',
-        subdomain='',
-        area_id=None,
-        variant_id=None,
+        client_history=ClientHistoryPost(
+            client_id=client.id,
+            event_type=ClientHistoryEventType.RELEASE,
+            device_type=client_info.device_type.value if client_info.device_type else None,
+            os_type=client_info.os_type.value if client_info.os_type else None,
+            browser=client_info.browser,
+            language=client_info.language,
+            screen_width=client_info.screen_width,
+            screen_height=client_info.screen_height,
+            country=location.country,
+            region=location.region,
+            city=location.city,
+            url='',
+            referrer='',
+            domain='',
+            subdomain='',
+            area_id=None,
+            variant_id=None,
+            page=client_info.page,
+        ),
     )
 
 
@@ -175,129 +134,28 @@ async def contribute_to_project_goal_route(
     logger.debug(f"Creating contribute history record for client {client.id}")
     await create_client_history_db(
         db=db,
-        client_id=client.id,
-        device_type=client_info.device_type.value if client_info.device_type else None,
-        os_type=client_info.os_type.value if client_info.os_type else None,
-        browser=None,
-        language=None,
-        screen_width=None,
-        screen_height=None,
-        country=location.country,
-        region=location.region,
-        city=location.city,
-        event_type=int(ClientHistoryEventType.GOAL_CONTRIBUTE.value),
-        url='',
-        referrer='',
-        domain='',
-        subdomain='',
-        area_id=None,
-        variant_id=None,
-        goal_id=project_goal.id,
+        client_history=ClientHistoryPost(
+            client_id=client.id,
+            event_type=ClientHistoryEventType.GOAL_CONTRIBUTE,
+            device_type=client_info.device_type.value if client_info.device_type else None,
+            os_type=client_info.os_type.value if client_info.os_type else None,
+            browser=client_info.browser,
+            language=client_info.language,
+            screen_width=client_info.screen_width,
+            screen_height=client_info.screen_height,
+            country=location.country,
+            region=location.region,
+            city=location.city,
+            url='',
+            referrer='',
+            domain='',
+            subdomain='',
+            area_id=None,
+            variant_id=None,
+            goal_id=project_goal.id,
+            page=client_info.page,
+        ),
     )
-
-    logger.debug(f"Creating client project goal record for client {client.id}")
-    await create_client_project_goal_db(db, client.id, project_goal.id, project.id)
-
-
-async def get_contributions_to_project_goal_route(
-    info: strawberry.Info[Context], project_id: int, project_goal_id: int
-) -> List[ClientProjectGoalGet]:
-    logger.info(f"Getting contributions for project {project_id} and goal {project_goal_id}")
-    db: Session = info.context.session()
-    user: AuthPayload = await info.context.user()
-
-    project: Optional[Project] = await get_project_by_id_db(db, project_id)
-    if project is None:
-        logger.error(f"Project {project_id} not found")
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
-
-    permission: bool = await read_permission(db, user.user.id, project_id)
-    if not permission:
-        logger.warning(
-            f"User {user.user.id} unauthorized to view client goals for project {project_id}"
-        )
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail='User is not allowed to view client goals',
-        )
-
-    goals: List[ClientProjectGoal] = await get_client_project_goals_by_project_and_goal_db(
-        db, project_id, project_goal_id
-    )
-
-    logger.debug(f"Found {len(goals)} contributions")
-    result = []
-    for goal in goals:
-        client = goal.client
-        client_history = goal.client.history
-        project_goal = goal.project_goal
-
-        result.append(
-            ClientProjectGoalGet(
-                id=goal.id,
-                client=client_db_to_client(client, client_history),
-                project_goal=project_goal_db_to_goal(project_goal),
-                project=await project_db_to_project(info, db, project),
-                created_at=goal.created_at.isoformat(),
-            )
-        )
-
-    return result
-
-
-async def get_clients_by_project_id_route(
-    info: strawberry.Info[Context], project_id: int
-) -> List[ClientGet]:
-    logger.info(f"Getting clients for project {project_id}")
-    db: Session = info.context.session()
-    user: AuthPayload = await info.context.user()
-
-    project: Optional[Project] = await get_project_by_id_db(db, project_id)
-    if project is None:
-        logger.error(f"Project {project_id} not found")
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
-
-    permission: bool = await read_permission(db, user.user.id, project_id)
-    if not permission:
-        logger.warning(f"User {user.user.id} unauthorized to view clients for project {project_id}")
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail='User is not allowed to view clients',
-        )
-
-    clients: List[Client] = await get_clients_by_project_id_db(db, project_id)
-    logger.debug(f"Found {len(clients)} clients")
-    return [client_db_to_client(c, await get_client_history_db(db, c.id)) for c in clients]
-
-
-async def get_client_route(info: strawberry.Info[Context], client_id: int) -> ClientGet:
-    logger.info(f"Getting client {client_id}")
-    db: Session = info.context.session()
-    client: Optional[Client] = await get_client_by_id_db(db, client_id)
-
-    if client is None:
-        logger.error(f"Client {client_id} not found")
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Client not found')
-
-    history: List[ClientHistory] = await get_client_history_db(db, client_id)
-    logger.debug(f"Found {len(history)} history records for client {client_id}")
-    return client_db_to_client(client, history)
-
-
-async def get_client_history_route(
-    info: strawberry.Info[Context], client_id: int
-) -> List[ClientHistoryGet]:
-    logger.info(f"Getting history for client {client_id}")
-    db: Session = info.context.session()
-
-    client: Optional[Client] = await get_client_by_id_db(db, client_id)
-    if client is None:
-        logger.error(f"Client {client_id} not found")
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Client not found')
-
-    history: List[ClientHistory] = await get_client_history_db(db, client_id)
-    logger.debug(f"Found {len(history)} history records")
-    return [client_history_db_to_history(h) for h in history]
 
 
 async def client_area_route(
@@ -473,25 +331,28 @@ async def client_area_route(
         )
         await create_client_history_db(
             db=db,
-            client_id=client.id,
-            device_type=client_info.device_type.value if client_info.device_type else None,
-            os_type=client_info.os_type.value if client_info.os_type else None,
-            browser=None,
-            language=None,
-            screen_width=None,
-            screen_height=None,
-            country=location.country,
-            region=location.region,
-            city=location.city,
-            event_type=int(ClientHistoryEventType.VIEW.value),
-            url='',
-            referrer='',
-            domain='',
-            subdomain='',
-            area_id=area.id,
-            variant_id=variantFragment.id,
-            campaign_id=best_campaign.id,
-            feature_flag_id=best_campaign.feature_flag.id,
+            client_history=ClientHistoryPost(
+                client_id=client.id,
+                event_type=ClientHistoryEventType.VIEW,
+                device_type=client_info.device_type.value if client_info.device_type else None,
+                os_type=client_info.os_type.value if client_info.os_type else None,
+                browser=client_info.browser,
+                language=client_info.language,
+                screen_width=client_info.screen_width,
+                screen_height=client_info.screen_height,
+                country=location.country,
+                region=location.region,
+                city=location.city,
+                url='',
+                referrer='',
+                domain='',
+                subdomain='',
+                area_id=area.id,
+                variant_id=variantFragment.id,
+                campaign_id=best_campaign.id,
+                feature_flag_id=best_campaign.feature_flag.id,
+                page=client_info.page,
+            ),
         )
 
         if (
@@ -505,26 +366,31 @@ async def client_area_route(
             for goal_id in variantFragment.fragment.fragment.linked_goals:
                 await create_client_history_db(
                     db=db,
-                    client_id=client.id,
-                    device_type=client_info.device_type.value if client_info.device_type else None,
-                    os_type=client_info.os_type.value if client_info.os_type else None,
-                    browser=None,
-                    language=None,
-                    screen_width=None,
-                    screen_height=None,
-                    country=location.country,
-                    region=location.region,
-                    city=location.city,
-                    event_type=int(ClientHistoryEventType.GOAL_VIEW.value),
-                    url='',
-                    referrer='',
-                    domain='',
-                    subdomain='',
-                    area_id=area.id,
-                    variant_id=variantFragment.id,
-                    campaign_id=best_campaign.id,
-                    feature_flag_id=best_campaign.feature_flag.id,
-                    goal_id=goal_id,
+                    client_history=ClientHistoryPost(
+                        client_id=client.id,
+                        event_type=ClientHistoryEventType.GOAL_VIEW,
+                        device_type=(
+                            client_info.device_type.value if client_info.device_type else None
+                        ),
+                        os_type=client_info.os_type.value if client_info.os_type else None,
+                        browser=client_info.browser,
+                        language=client_info.language,
+                        screen_width=client_info.screen_width,
+                        screen_height=client_info.screen_height,
+                        country=location.country,
+                        region=location.region,
+                        city=location.city,
+                        url='',
+                        referrer='',
+                        domain='',
+                        subdomain='',
+                        area_id=area.id,
+                        variant_id=variantFragment.id,
+                        campaign_id=best_campaign.id,
+                        feature_flag_id=best_campaign.feature_flag.id,
+                        goal_id=goal_id,
+                        page=client_info.page,
+                    ),
                 )
 
         return ClientAreaGet(

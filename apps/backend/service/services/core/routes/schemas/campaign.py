@@ -41,3 +41,13 @@ class CampaignPatch:
     name: Optional[str] = None
     description: Optional[str] = None
     status: Optional[CampaignStatus] = None
+
+
+@strawberry.input
+class CampaignFilter:
+    campaign_id: Optional[int] = None
+    area_id: Optional[int] = None
+    name: Optional[str] = None
+    without_default: Optional[bool] = True
+    limit: Optional[int] = 5
+    campaign_status: Optional[CampaignStatus] = None

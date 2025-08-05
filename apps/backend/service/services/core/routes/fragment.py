@@ -155,17 +155,7 @@ async def create_fragment_route(info: strawberry.Info[Context], fg: FragmentPost
             status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to add fragments'
         )
 
-    fragment: Fragment = await create_fragment_db(
-        db,
-        fg.name,
-        user.user.id,
-        fg.project_id,
-        fg.document,
-        fg.props,
-        fg.linked_fragments,
-        fg.directory_id,
-        fg.linked_goals,
-    )
+    fragment: Fragment = await create_fragment_db(db, user.user.id, fg)
     return fragment_db_to_fragment(fragment)
 
 
@@ -227,7 +217,7 @@ async def add_fragment_asset_route(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='Failed to create media file'
         ) from exc
 
-    await add_fragment_media_db(db, media.id, fragment_id)
+    await add_fragment_media_db(db, fragment, media)
     return MediaGet(
         media_id=media.id, media_type=MediaType.FRAGMENT_ASSET, public_path=media.public_path
     )
@@ -279,9 +269,7 @@ async def update_fragment_route(info: strawberry.Info[Context], fg: FragmentPatc
             detail='User is not allowed to update fragments',
         )
 
-    fragment = await update_fragment_by_id_db(
-        db, values=fg.__dict__, linked_fragments=fg.linked_fragments, linked_goals=fg.linked_goals
-    )
+    fragment = await update_fragment_by_id_db(db, fragment, fg)
     return fragment_db_to_fragment(fragment)
 
 
@@ -305,7 +293,7 @@ async def delete_fragment_route(info: strawberry.Info[Context], fragment_id: int
             detail='User is not allowed to delete fragments',
         )
     try:
-        await delete_fragment_by_id_db(db, fragment_id)
+        await delete_fragment_by_id_db(db, fragment)
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e)) from e
 

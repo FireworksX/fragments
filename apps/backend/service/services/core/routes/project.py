@@ -105,11 +105,7 @@ async def project_db_to_project(
             )
             for member in project.members
         ],
-        areas=(
-            []
-            if project.areas is None
-            else [area_db_to_area(area) for area in project.areas if area.deleted_at is None]
-        ),
+        areas=([] if project.areas is None else [area_db_to_area(area) for area in project.areas]),
         private_key=(
             ProjectKeyGet(value=project.private_key.key, name='private', id=project.private_key.id)
             if permission
@@ -435,9 +431,7 @@ async def create_project_goal_route(
             status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to create goals'
         )
 
-    goal_db: ProjectGoal = await create_project_goal_db(
-        db, goal.project_id, goal.name, goal.target_action, goal.success_level, goal.failure_level
-    )
+    goal_db: ProjectGoal = await create_project_goal_db(db, goal)
     logger.info(f"Created goal {goal_db.id} for project {goal.project_id}")
     return project_goal_db_to_goal(goal_db)
 
@@ -488,9 +482,7 @@ async def update_project_goal_route(
             status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to update goals'
         )
 
-    updated_goal: ProjectGoal = await update_project_goal_db(
-        db, goal.id, goal.name, goal.target_action, goal.success_level, goal.failure_level
-    )
+    updated_goal: ProjectGoal = await update_project_goal_db(db, goal_db, goal)
     logger.info(f"Updated goal {updated_goal.id}")
     return project_goal_db_to_goal(updated_goal)
 
@@ -512,8 +504,8 @@ async def delete_project_goal_route(info: strawberry.Info[Context], goal_id: int
             status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to delete goals'
         )
 
-    await delete_project_goal_db(db, goal_id)
-    logger.info(f"Deleted goal {goal_id}")
+    await delete_project_goal_db(db, goal)
+    logger.info(f"Deleted goal {goal.id}")
 
 
 async def add_project_allowed_origin_route(

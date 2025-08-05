@@ -18,6 +18,7 @@ from database.models import (
     ProjectMemberRole,
     User,
 )
+from services.core.routes.schemas.project import ProjectGoalPatch, ProjectGoalPost
 
 
 def generate_api_key(project_id: int) -> str:
@@ -208,7 +209,11 @@ async def get_project_by_id_db(db: Session, project_id: int) -> Optional[Project
 
 async def delete_project_by_id_db(db: Session, project_id: int) -> None:
     logger.info(f"Deleting project {project_id}")
-    db.query(Project).filter(Project.id == project_id).delete()
+    project = db.query(Project).filter(Project.id == project_id).first()
+    if project is None:
+        return
+    db.delete(project)
+    db.commit()
     logger.debug(f"Deleted project {project_id}")
 
 
@@ -236,19 +241,15 @@ async def update_project_by_id_db(db: Session, values: dict) -> Project:
 
 async def create_project_goal_db(
     db: Session,
-    project_id: int,
-    name: str,
-    target_action: str,
-    success_level: Optional[float] = None,
-    failure_level: Optional[float] = None,
+    project_goal: ProjectGoalPost,
 ) -> ProjectGoal:
-    logger.info(f"Creating goal {name} for project {project_id}")
+    logger.info(f"Creating goal {project_goal.name} for project {project_goal.project_id}")
     goal = ProjectGoal(
-        project_id=project_id,
-        name=name,
-        target_action=target_action,
-        success_level=success_level,
-        failure_level=failure_level,
+        project_id=project_goal.project_id,
+        name=project_goal.name,
+        target_action=project_goal.target_action,
+        success_level=project_goal.success_level,
+        failure_level=project_goal.failure_level,
     )
     db.add(goal)
     db.commit()
@@ -292,44 +293,40 @@ async def get_project_goals_db(db: Session, project_id: int) -> List[ProjectGoal
 
 async def update_project_goal_db(
     db: Session,
-    goal_id: int,
-    name: Optional[str] = None,
-    target_action: Optional[str] = None,
-    success_level: Optional[float] = None,
-    failure_level: Optional[float] = None,
+    goal_db: ProjectGoal,
+    project_goal: ProjectGoalPatch,
 ) -> ProjectGoal:
-    logger.info(f"Updating goal {goal_id} with name {name} and target_action {target_action}")
-    goal: Optional[ProjectGoal] = await get_project_goal_by_id_db(db, goal_id)
-    if goal is None:
-        logger.error(f"Goal {goal_id} not found")
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Goal does not exist')
-    if name is not None:
-        goal.name = name
-    if target_action is not None:
+    logger.info(
+        f"Updating goal {goal_db.id} with name {project_goal.name} and target_action {project_goal.target_action}"
+    )
+    if project_goal.name is not None:
+        goal_db.name = project_goal.name
+    if project_goal.target_action is not None:
         # Check if target_action already exists for another goal in this project
         existing_goal = await get_project_goal_by_target_action_db(
-            db, goal.project_id, target_action
+            db, goal_db.project_id, project_goal.target_action
         )
-        if existing_goal and existing_goal.id != goal.id:
-            logger.error(f"Target action {target_action} already exists in project")
-            raise ValueError(f"Target action {target_action} already exists in project")
-        goal.target_action = target_action
-    if success_level is not None:
-        goal.success_level = success_level
-    if failure_level is not None:
-        goal.failure_level = failure_level
-    db.merge(goal)
+        if existing_goal and existing_goal.id != goal_db.id:
+            logger.error(f"Target action {project_goal.target_action} already exists in project")
+            raise ValueError(
+                f"Target action {project_goal.target_action} already exists in project"
+            )
+        goal_db.target_action = project_goal.target_action
+    if project_goal.success_level is not None:
+        goal_db.success_level = project_goal.success_level
+    if project_goal.failure_level is not None:
+        goal_db.failure_level = project_goal.failure_level
+    db.merge(goal_db)
     db.commit()
-    db.refresh(goal)
-    logger.debug(f"Updated goal {goal_id}")
-    return goal
+    db.refresh(goal_db)
+    logger.debug(f"Updated goal {goal_db.id}")
+    return goal_db
 
 
-async def delete_project_goal_db(db: Session, goal_id: int) -> None:
-    logger.info(f"Deleting goal {goal_id}")
-    db.query(ProjectGoal).filter(ProjectGoal.id == goal_id).delete()
+async def delete_project_goal_db(db: Session, goal_db: ProjectGoal) -> None:
+    logger.info(f"Deleting goal {goal_db.id}")
+    db.delete(goal_db)
     db.commit()
-    logger.debug(f"Deleted goal {goal_id}")
 
 
 async def add_project_allowed_origin_db(

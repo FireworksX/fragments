@@ -33,3 +33,11 @@ class AuthPayload:
     user: UserGet
     access_token: str
     refresh_token: str
+
+
+@strawberry.input
+class UserSignUp:
+    email: str
+    password: str
+    first_name: str
+    last_name: Optional[str] = None

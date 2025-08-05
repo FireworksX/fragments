@@ -5,7 +5,6 @@ from typing import List, Optional
 import strawberry
 from strawberry.scalars import JSON
 
-from services.core.routes.schemas.area import AreaGet
 from services.core.routes.schemas.feature_flag import VariantGet
 from services.core.routes.schemas.release_condition import DeviceType, OSType
 
@@ -21,36 +20,29 @@ class ClientHistoryEventType(Enum):
 
 
 @strawberry.type
-class ClientHistoryGet:
-    id: int
+class ClientHistoryPost:
     client_id: int
-    device_type: Optional[int]
-    os_type: Optional[int]
-    browser: Optional[str]
-    language: Optional[str]
-    screen_width: Optional[int]
-    screen_height: Optional[int]
-    country: Optional[str]
-    region: Optional[str]
-    city: Optional[str]
-    url: Optional[str]
-    referrer: Optional[str]
-    domain: Optional[str]
-    subdomain: Optional[str]
-    page_load_time: Optional[float]
-    created_at: str
     event_type: ClientHistoryEventType
-    area: Optional[AreaGet]
-    variant: Optional[VariantGet]
-
-
-@strawberry.type
-class ClientGet:
-    id: int
-    created_at: str
-    updated_at: str
-    last_visited_at: Optional[str]
-    history: List[ClientHistoryGet]
+    device_type: Optional[int] = None
+    os_type: Optional[int] = None
+    browser: Optional[str] = None
+    language: Optional[str] = None
+    screen_width: Optional[int] = None
+    screen_height: Optional[int] = None
+    country: Optional[str] = None
+    region: Optional[str] = None
+    city: Optional[str] = None
+    url: Optional[str] = None
+    referrer: Optional[str] = None
+    domain: Optional[str] = None
+    subdomain: Optional[str] = None
+    page_load_time: Optional[float] = None
+    area_id: Optional[int] = None
+    variant_id: Optional[int] = None
+    campaign_id: Optional[int] = None
+    feature_flag_id: Optional[int] = None
+    goal_id: Optional[int] = None
+    page: Optional[str] = None
 
 
 @strawberry.input
@@ -60,6 +52,10 @@ class ClientInfo:
     time_frame: Optional[datetime]
     page: Optional[str]
     ip_address: Optional[str]
+    browser: Optional[str]
+    language: Optional[str]
+    screen_width: Optional[int]
+    screen_height: Optional[int]
 
 
 @strawberry.type

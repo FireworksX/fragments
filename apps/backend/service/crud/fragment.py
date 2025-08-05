@@ -1,58 +1,49 @@
 from typing import List, Optional
 
-from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from conf.settings import logger
-from crud.media import get_media_by_id_db
 from database import FragmentMedia
-from database.models import Fragment, ProjectGoal
+from database.models import Fragment, Media, ProjectGoal
+from services.core.routes.schemas.fragment import FragmentPatch, FragmentPost
 
 
-async def create_fragment_db(
-    db: Session,
-    name: str,
-    author_id: int,
-    project_id: int,
-    document: str,
-    props: Optional[str],
-    linked_fragments: Optional[List[int]],
-    directory_id: int,
-    linked_goals: Optional[List[int]],
-) -> Fragment:
-    logger.info(f"Creating fragment {name} for project {project_id}")
-    fragment: Fragment = Fragment(
-        project_id=project_id,
-        name=name,
+async def create_fragment_db(db: Session, author_id: int, fragment: FragmentPost) -> Fragment:
+    logger.info(f"Creating fragment {fragment.name} for project {fragment.project_id}")
+    fragment_db: Fragment = Fragment(
+        project_id=fragment.project_id,
+        name=fragment.name,
         author_id=author_id,
-        document=document,
-        props=props,
-        directory_id=directory_id,
+        document=fragment.document,
+        props=fragment.props,
+        directory_id=fragment.directory_id,
     )
-    db.add(fragment)
+    db.add(fragment_db)
     db.commit()
-    db.refresh(fragment)
+    db.refresh(fragment_db)
 
-    if linked_goals is not None:
-        logger.debug(f"Linking fragment {name} to goals {linked_goals}")
+    if fragment.linked_goals is not None:
+        logger.debug(f"Linking fragment {fragment_db.name} to goals {fragment.linked_goals}")
         goals: List[ProjectGoal] = (
-            db.query(ProjectGoal).filter(ProjectGoal.id.in_(linked_goals)).all()
+            db.query(ProjectGoal).filter(ProjectGoal.id.in_(fragment_db.linked_goals)).all()
         )
         for goal in goals:
-            fragment.linked_goals.append(goal)
+            fragment_db.linked_goals.append(goal)
 
-    if linked_fragments is not None:
-        logger.debug(f"Linking fragment {name} to fragments {linked_fragments}")
+    if fragment_db.linked_fragments is not None:
+        logger.debug(
+            f"Linking fragment {fragment_db.name} to fragments {fragment.linked_fragments}"
+        )
         fragments: List[Fragment] = (
-            db.query(Fragment).filter(Fragment.id.in_(linked_fragments)).all()
+            db.query(Fragment).filter(Fragment.id.in_(fragment_db.linked_fragments)).all()
         )
         for fr in fragments:
-            fragment.linked_fragments.append(fr)
+            fragment_db.linked_fragments.append(fr)
 
     db.commit()
-    db.refresh(fragment)
-    logger.debug(f"Created fragment {fragment.id}")
-    return fragment
+    db.refresh(fragment_db)
+    logger.debug(f"Created fragment {fragment_db.id}")
+    return fragment_db
 
 
 async def get_fragments_by_ids_db(
@@ -85,101 +76,84 @@ async def get_fragments_by_project_id_db(db: Session, project_id: int) -> List[F
 
 
 async def update_fragment_by_id_db(
-    db: Session,
-    values: dict,
-    linked_fragments: Optional[List[int]],
-    linked_goals: Optional[List[int]],
+    db: Session, fragment_db: Fragment, fragment: FragmentPatch
 ) -> Fragment:
-    fragment_id: int = values['id']
-    logger.info(f"Updating fragment {fragment_id}")
-    fragment: Optional[Fragment] = db.query(Fragment).filter(Fragment.id == fragment_id).first()
-    if fragment is None:
-        logger.error(f"Fragment {fragment_id} not found")
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Fragment does not exist')
+    logger.info(f"Updating fragment {fragment_db.id}")
 
-    if linked_fragments is not None and len(linked_fragments) > 0:
-        logger.debug(f"Updating linked fragments to {linked_fragments}")
-        fragment.linked_fragments.clear()
+    await _update_fragment_links(db, fragment_db, fragment)
+    await _update_fragment_values(fragment_db, fragment)
+
+    db.commit()
+    db.refresh(fragment_db)
+    logger.debug(f"Updated fragment {fragment_db.id}")
+    return fragment_db
+
+
+async def _update_fragment_links(
+    db: Session, fragment_db: Fragment, fragment: FragmentPatch
+) -> None:
+    if fragment.linked_fragments is not None and len(fragment.linked_fragments) > 0:
+        logger.debug(f"Updating linked fragments to {fragment.linked_fragments}")
+        fragment_db.linked_fragments.clear()
         fragments: List[Fragment] = (
-            db.query(Fragment).filter(Fragment.id.in_(linked_fragments)).all()
+            db.query(Fragment).filter(Fragment.id.in_(fragment.linked_fragments)).all()
         )
         for fr in fragments:
-            fragment.linked_fragments.append(fr)
+            fragment_db.linked_fragments.append(fr)
 
-    if linked_goals is not None and len(linked_goals) > 0:
-        logger.debug(f"Updating linked goals to {linked_goals}")
-        fragment.linked_goals.clear()
+    if fragment.linked_goals is not None and len(fragment.linked_goals) > 0:
+        logger.debug(f"Updating linked goals to {fragment.linked_goals}")
+        fragment_db.linked_goals.clear()
         goals: List[ProjectGoal] = (
-            db.query(ProjectGoal).filter(ProjectGoal.id.in_(linked_goals)).all()
+            db.query(ProjectGoal).filter(ProjectGoal.id.in_(fragment.linked_goals)).all()
         )
         for goal in goals:
-            fragment.linked_goals.append(goal)
+            fragment_db.linked_goals.append(goal)
 
-    if values.get('name') is not None:
-        logger.debug(f"Updating name to {values['name']}")
-        fragment.name = values['name']
-    if values.get('document') is not None:
+
+async def _update_fragment_values(fragment_db: Fragment, fragment: FragmentPatch) -> None:
+    if fragment.name is not None:
+        logger.debug(f"Updating name to {fragment.name}")
+        fragment_db.name = fragment.name
+    if fragment.document is not None:
         logger.debug('Updating document')
-        fragment.document = values['document']
-    if values.get('props') is not None:
+        fragment_db.document = fragment.document
+    if fragment.props is not None:
         logger.debug('Updating props')
-        fragment.props = values['props']
-    if values.get('directory_id') is not None:
-        logger.debug(f"Updating directory_id to {values['directory_id']}")
-        fragment.directory_id = values['directory_id']
+        fragment_db.props = fragment.props
+    if fragment.directory_id is not None:
+        logger.debug(f"Updating directory_id to {fragment.directory_id}")
+        fragment_db.directory_id = fragment.directory_id
+
+
+async def add_fragment_media_db(db: Session, fragment_db: Fragment, media: Media) -> Fragment:
+    logger.info(f"Adding media {media.id} to fragment {fragment_db.id}")
+    fragment_media: FragmentMedia = FragmentMedia(media_id=media.id, fragment_id=fragment_db.id)
+    fragment_media.media = media
+    fragment_media.fragment = fragment_db
+    fragment_db.assets.append(fragment_media)
     db.commit()
-    db.refresh(fragment)
-    logger.debug(f"Updated fragment {fragment.id}")
-    return fragment
+    db.refresh(fragment_db)
+    logger.debug(f"Added media to fragment {fragment_db.id}")
+    return fragment_db
 
 
-async def add_fragment_media_db(db: Session, media_id: int, fragment_id: int) -> Fragment:
-    logger.info(f"Adding media {media_id} to fragment {fragment_id}")
-    fragment_media: FragmentMedia = FragmentMedia(media_id=media_id, fragment_id=fragment_id)
-    fragment: Optional[Fragment] = await get_fragment_by_id_db(db, fragment_id)
-    if fragment is None:
-        logger.error(f"Fragment {fragment_id} not found")
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Fragment does not exist')
-    fragment_media.media = await get_media_by_id_db(db, media_id)
-    fragment_media.fragment = fragment
-    fragment.assets.append(fragment_media)
-    db.commit()
-    db.refresh(fragment)
-    logger.debug(f"Added media to fragment {fragment.id}")
-    return fragment
+async def delete_fragment_by_id_db(db: Session, fragment_db: Fragment) -> None:
+    logger.info(f"Attempting to delete fragment {fragment_db.id}")
 
-
-async def delete_fragment_by_id_db(db: Session, fragment_id: int) -> None:
-    """
-    Deletes the Fragment with the given ID if (and only if) no other fragment
-    has this fragment in its 'linked_fragments' relationship.
-
-    Raises:
-        ValueError: if the fragment doesn't exist or if other fragments still reference it.
-    """
-    logger.info(f"Attempting to delete fragment {fragment_id}")
-    # 1) Get the fragment from the DB
-    fragment = db.query(Fragment).get(fragment_id)
-    if fragment is None:
-        logger.error(f"No fragment found with id={fragment_id}")
-        raise ValueError(f"No fragment found with id={fragment_id}")
-
-    # 2) Check if ANY other fragment references this fragment in its linked_fragments
     referencing_fragments = (
         db.query(Fragment)
-        .filter(Fragment.id != fragment_id)  # exclude the fragment itself
-        .filter(Fragment.linked_fragments.any(Fragment.id == fragment_id))
+        .filter(Fragment.id != fragment_db.id)  # exclude the fragment itself
+        .filter(Fragment.linked_fragments.any(Fragment.id == fragment_db.id))
         .all()
     )
 
     if referencing_fragments:
-        # At least one fragment references this fragment
         referencing_info = [(f.id, f.name) for f in referencing_fragments]
-        msg = f"Cannot delete fragment {fragment_id} because it is still linked by other fragments: {referencing_info}."
+        msg = f"Cannot delete fragment {fragment_db.id} because it is still linked by other fragments: {referencing_info}."
         logger.error(msg)
         raise ValueError(msg)
 
-    # 3) Otherwise, it's safe to delete
-    db.delete(fragment)
+    db.delete(fragment_db)
     db.commit()
-    logger.info(f"Deleted fragment {fragment_id}")
+    logger.info(f"Deleted fragment {fragment_db.id}")

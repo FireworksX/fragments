@@ -14,7 +14,7 @@ url = f'https://api.telegram.org/bot{BOT_TOKEN}/sendMessage'
 def send_feedback(fb: FeedbackGet) -> None:
     # Parameters for the API request
     message: str = (
-        f'Получили новый фидбек!{'\nПользователь:' if False else ''}\nСайт: {fb.page}{'\nСообщенние:' + fb.content if fb.content is not None else ''}'
+        f'Получили новый фидбек!\nСайт: {fb.page}{'\nСообщенние:' + fb.content if fb.content is not None else ''}'
     )
 
     if fb.feel == FeelLevelGet.ONE:

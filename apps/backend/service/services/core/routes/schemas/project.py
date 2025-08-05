@@ -3,7 +3,6 @@ from typing import List, Optional
 import strawberry
 
 from services.core.routes.schemas.area import AreaGet
-from services.core.routes.schemas.client import ClientGet
 from services.core.routes.schemas.media import MediaGet
 from services.core.routes.schemas.user import UserGet, UserRoleGet
 
@@ -73,12 +72,3 @@ class ProjectPost:
 class ProjectPatch:
     id: int
     name: Optional[str] = None
-
-
-@strawberry.type
-class ClientProjectGoalGet:
-    id: int
-    client: ClientGet
-    project_goal: ProjectGoalGet
-    project: ProjectGet
-    created_at: str

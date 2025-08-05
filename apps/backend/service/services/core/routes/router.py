@@ -4,6 +4,7 @@ import strawberry
 from fastapi import HTTPException, UploadFile, status
 
 from .analytic import (
+    get_area_statistic_rating_route,
     get_area_statistic_route,
     get_campaign_statistic_route,
     get_goal_statistic_route,
@@ -33,10 +34,6 @@ from .campaign import (
 from .client import (
     client_area_route,
     contribute_to_project_goal_route,
-    get_client_history_route,
-    get_client_route,
-    get_clients_by_project_id_route,
-    get_contributions_to_project_goal_route,
     init_client_session_route,
     release_client_session_route,
 )
@@ -105,15 +102,17 @@ from .release_condition import (
 )
 from .schemas.analytic import (
     AreaStatisticGet,
+    AreaStatisticRatingGet,
     CampaignStatisticGet,
     GoalStatisticGet,
     ProjectStatisticGet,
     StatisticFilter,
+    StatisticRatingFilter,
     VariantStatisticGet,
 )
 from .schemas.area import AreaGet, AreaPatch, AreaPost
-from .schemas.campaign import CampaignGet, CampaignPatch, CampaignPost, CampaignStatus
-from .schemas.client import ClientAreaGet, ClientGet, ClientHistoryGet
+from .schemas.campaign import CampaignFilter, CampaignGet, CampaignPatch, CampaignPost
+from .schemas.client import ClientAreaGet
 from .schemas.feature_flag import VariantGet
 from .schemas.feedback import FeedbackGet, FeedbackPost
 from .schemas.filesystem import ProjectDirectory, ProjectDirectoryGet, ProjectDirectoryPatch
@@ -121,7 +120,6 @@ from .schemas.fragment import FragmentGet, FragmentPatch, FragmentPost
 from .schemas.media import MediaDelete, MediaGet, MediaPost, MediaType
 from .schemas.metric import ClientMetricPost, ClientMetricType
 from .schemas.project import (
-    ClientProjectGoalGet,
     ProjectGet,
     ProjectGoalGet,
     ProjectGoalPatch,
@@ -141,8 +139,8 @@ from .schemas.release_condition import (
     ReleaseConditionPatch,
     ReleaseConditionPost,
 )
-from .schemas.user import AuthPayload, RoleGet
-from .user import add_avatar_route, delete_avatar_route, login, profile, refresh, signup
+from .schemas.user import AuthPayload, RoleGet, UserSignUp
+from .user import add_avatar_route, delete_avatar_route, login, profile, refresh, signup_route
 from .variant import (
     VariantPatch,
     VariantPost,
@@ -168,12 +166,9 @@ class AuthMutation:
     async def signup(
         self,
         info: strawberry.Info[Context],
-        email: str,
-        password: str,
-        first_name: str,
-        last_name: Optional[str] = None,
+        user_sign_up: UserSignUp,
     ) -> AuthPayload:
-        return await signup(info, email, first_name, last_name, password)
+        return await signup_route(info, user_sign_up)
 
     @strawberry.mutation
     async def login(self, info: strawberry.Info[Context], email: str, password: str) -> AuthPayload:
@@ -221,21 +216,26 @@ class CampaignQuery:
     async def campaign(
         self,
         info: strawberry.Info[Context],
-        campaign_id: Optional[int] = None,
-        area_id: Optional[int] = None,
-        name: Optional[str] = None,
-        without_default: Optional[bool] = True,
-        limit: Optional[int] = 5,
-        campaign_status: Optional[CampaignStatus] = None,
+        campaign_filter: CampaignFilter,
     ) -> List[CampaignGet]:
-        if campaign_id is not None:
-            return [await campaign_by_id(info, campaign_id)]
-        if area_id is not None:
-            if name is not None:
-                return await campaign_by_name(info, area_id, name, limit, campaign_status)
-            if without_default:
-                return await campaigns_in_area_without_default(info, area_id, campaign_status)
-            return await campaigns_in_area(info, area_id, campaign_status)
+        if campaign_filter.campaign_id is not None:
+            return [await campaign_by_id(info, campaign_filter.campaign_id)]
+        if campaign_filter.area_id is not None:
+            if campaign_filter.name is not None:
+                return await campaign_by_name(
+                    info,
+                    campaign_filter.area_id,
+                    campaign_filter.name,
+                    campaign_filter.limit,
+                    campaign_filter.campaign_status,
+                )
+            if campaign_filter.without_default:
+                return await campaigns_in_area_without_default(
+                    info, campaign_filter.area_id, campaign_filter.campaign_status
+                )
+            return await campaigns_in_area(
+                info, campaign_filter.area_id, campaign_filter.campaign_status
+            )
         return []
 
 
@@ -273,12 +273,6 @@ class ProjectQuery:
         self, info: strawberry.Info[Context], project_id: int
     ) -> List[ProjectGoalGet]:
         return await get_project_goals_route(info, project_id)
-
-    @strawberry.field
-    async def contributions_to_project_goal(
-        self, info: strawberry.Info[Context], project_id: int, project_goal_id: int
-    ) -> List[ClientProjectGoalGet]:
-        return await get_contributions_to_project_goal_route(info, project_id, project_goal_id)
 
 
 @strawberry.type
@@ -616,25 +610,6 @@ class ClientQuery:
         return await get_client_fragment(info, fragment_id)
 
     @strawberry.field
-    async def client(
-        self,
-        info: strawberry.Info[Context],
-        client_id: Optional[int] = None,
-        project_id: Optional[int] = None,
-    ) -> List[ClientGet]:
-        if client_id is not None:
-            return [await get_client_route(info, client_id)]
-        if project_id is not None:
-            return await get_clients_by_project_id_route(info, project_id)
-        return []
-
-    @strawberry.field
-    async def client_history(
-        self, info: strawberry.Info[Context], client_id: int
-    ) -> List[ClientHistoryGet]:
-        return await get_client_history_route(info, client_id)
-
-    @strawberry.field
     async def client_area(
         self, info: strawberry.Info[Context], area_code: str
     ) -> Optional[ClientAreaGet]:
@@ -741,6 +716,15 @@ class AnalyticQuery:
                 statistic_filter.prev_to_ts,
             )
             for project_id in statistic_filter.data_ids
+        ]
+
+    @strawberry.field
+    async def area_statistic_rating(
+        self, info: strawberry.Info[Context], statistic_rating_filter: StatisticRatingFilter
+    ) -> List[AreaStatisticRatingGet]:
+        return [
+            await get_area_statistic_rating_route(info, area_id, statistic_rating_filter)
+            for area_id in statistic_rating_filter.data_ids
         ]
 
 
