@@ -397,7 +397,6 @@ async def get_area_average_conversion_db(
         logger.info(f"No campaigns found for area {area_id}")
         return AreaStatisticGet(
             area_id=area_id,
-            area_name=area.name,
             area_code=area.code,
             current_statistic=StatisticGet(
                 conversion=0.0,
@@ -451,7 +450,6 @@ async def get_area_average_conversion_db(
 
     return AreaStatisticGet(
         area_id=area_id,
-        area_name=area.name,
         area_code=area.code,
         current_statistic=StatisticGet(
             conversion=current_conversion,
