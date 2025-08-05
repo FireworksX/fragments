@@ -78,7 +78,6 @@ class CampaignStatisticGet:
 @strawberry.type
 class AreaStatisticGet:
     area_id: int
-    area_name: str
     area_code: str
     trend: Trend
     current_statistic: StatisticGet
