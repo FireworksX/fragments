@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from typing import Optional
 
-from sqlalchemy import func
+from sqlalchemy import Interval, func
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import case
 
@@ -32,7 +32,7 @@ async def get_goal_detalization_graph_db(
 ) -> DetalizationGraph:
     """
     Get goal achievement statistics with granularity based on time range:
-    - 24 hours: by minute
+    - 24 hours: by 10 minutes
     - 7 days: by hour
     - 28-31 days: by day
     """
@@ -42,10 +42,13 @@ async def get_goal_detalization_graph_db(
     detalization = Detalization.MINUTE
     # Determine granularity based on time range
     if time_diff <= timedelta(days=1):
-        # By minute for 24 hours
+        # By 10 minutes for 24 hours
         detalization = Detalization.MINUTE
-        group_by = func.date_trunc('minute', ClientHistory.created_at)
-        logger.debug('Using minute detalization')
+        group_by = func.date_trunc('hour', ClientHistory.created_at) + (
+            func.floor(func.date_part('minute', ClientHistory.created_at) / 10)
+            * timedelta(minutes=10)
+        )
+        logger.debug('Using 10 minute detalization')
     elif time_diff <= timedelta(days=7):
         # By hour for 7 days
         detalization = Detalization.HOUR
@@ -98,7 +101,7 @@ async def get_goal_detalization_graph_db(
     all_views: int = 0
     all_achieved: int = 0
     for point in stats:
-        conversion = point.achieved / point.views if point.views > 0 else 0.0
+        conversion = round((point.achieved / point.views) * 100, 2) if point.views > 0 else 0.0
         graph_points.append(
             DetalizationGraphPoint(
                 time=point.ts,
@@ -191,15 +194,11 @@ async def get_variant_statistic_db(
         )
 
         # Calculate conversion rate for this goal
-        goal_conversion = (achievements / views) * 100 if views > 0 else 0.0
+        goal_conversion = round((achievements / views) * 100, 2) if views > 0 else 0.0
         logger.debug(f"Goal {goal.id} conversion: {goal_conversion}%")
         total_conversion += goal_conversion
 
-    current_conversion = (
-        total_conversion / len(variant.fragment.linked_goals)
-        if variant.fragment.linked_goals
-        else 0.0
-    )
+    current_conversion = round(total_conversion / len(variant.fragment.linked_goals), 2)
     logger.info(f"Current conversion for variant {variant_id}: {current_conversion}%")
 
     # Get previous day conversion
@@ -236,12 +235,16 @@ async def get_variant_statistic_db(
             .count()
         )
 
-        prev_goal_conversion = (prev_achievements / prev_views) * 100 if prev_views > 0 else 0.0
+        prev_goal_conversion = (
+            round((prev_achievements / prev_views) * 100, 2) if prev_views > 0 else 0.0
+        )
         logger.debug(f"Previous goal {goal.id} conversion: {prev_goal_conversion}%")
         prev_views_total += prev_views
         prev_achieved_total += prev_achievements
 
-    prev_conversion = prev_achieved_total / prev_views_total if prev_views_total > 0 else 0.0
+    prev_conversion = (
+        round(prev_achieved_total / prev_views_total, 2) if prev_views_total > 0 else 0.0
+    )
     logger.info(f"Previous conversion for variant {variant_id}: {prev_conversion}%")
 
     # Determine trend
@@ -327,11 +330,7 @@ async def get_campaign_statistic_db(
         current_views += variant_conversion.current_statistic.views
         current_achieved += variant_conversion.current_statistic.achieved
 
-    current_conversion = (
-        total_conversion / len(campaign.feature_flag.variants)
-        if campaign.feature_flag.variants
-        else 0.0
-    )
+    current_conversion = round(total_conversion / len(campaign.feature_flag.variants), 2)
     logger.info(f"Current conversion for campaign {campaign_id}: {current_conversion}%")
 
     # Get previous day conversion
@@ -345,7 +344,7 @@ async def get_campaign_statistic_db(
         variants.append(variant_conversion)
         prev_views += variant_conversion.current_statistic.views
         prev_achieved += variant_conversion.current_statistic.achieved
-    prev_conversion = prev_achieved / prev_views if prev_views > 0 else 0.0
+    prev_conversion = round(prev_achieved / prev_views, 2) if prev_views > 0 else 0.0
     logger.info(f"Previous conversion for campaign {campaign_id}: {prev_conversion}%")
 
     # Determine trend
@@ -397,7 +396,7 @@ async def get_area_average_conversion_db(
         logger.info(f"No campaigns found for area {area_id}")
         return AreaStatisticGet(
             area_id=area_id,
-            area_code=area.code,
+            area_code=area.area_code,
             current_statistic=StatisticGet(
                 conversion=0.0,
                 views=0,
@@ -425,7 +424,7 @@ async def get_area_average_conversion_db(
         current_achieved += campaign_conversion.current_statistic.achieved
         campaigns.append(campaign_conversion)
         total_conversion += campaign_conversion.current_statistic.conversion
-    current_conversion = total_conversion / len(area.campaigns) if area.campaigns else 0.0
+    current_conversion = round(total_conversion / len(area.campaigns), 2)
     logger.info(f"Current conversion for area {area_id}: {current_conversion}%")
 
     # Get previous day conversion
@@ -437,7 +436,7 @@ async def get_area_average_conversion_db(
         )
         prev_views += campaign_conversion.current_statistic.views
         prev_achieved += campaign_conversion.current_statistic.achieved
-    prev_conversion = prev_achieved / prev_views if prev_views > 0 else 0.0
+    prev_conversion = round(prev_achieved / prev_views, 2) if prev_views > 0 else 0.0
     logger.info(f"Previous conversion for area {area_id}: {prev_conversion}%")
 
     # Determine trend
@@ -450,7 +449,7 @@ async def get_area_average_conversion_db(
 
     return AreaStatisticGet(
         area_id=area_id,
-        area_code=area.code,
+        area_code=area.area_code,
         current_statistic=StatisticGet(
             conversion=current_conversion,
             views=current_views,
@@ -516,7 +515,7 @@ async def get_project_statistic_db(
         current_achieved += area_conversion.current_statistic.achieved
         areas.append(area_conversion)
         total_conversion += area_conversion.current_statistic.conversion
-    current_conversion = total_conversion / len(project.areas) if project.areas else 0.0
+    current_conversion = round(total_conversion / len(project.areas), 2)
     logger.info(f"Current conversion for project {project_id}: {current_conversion}%")
 
     # Get previous period conversion
@@ -528,7 +527,7 @@ async def get_project_statistic_db(
         )
         prev_views += area_conversion.current_statistic.views
         prev_achieved += area_conversion.current_statistic.achieved
-    prev_conversion = prev_achieved / prev_views if prev_views > 0 else 0.0
+    prev_conversion = round(prev_achieved / prev_views, 2) if prev_views > 0 else 0.0
     logger.info(f"Previous conversion for project {project_id}: {prev_conversion}%")
 
     # Determine trend
@@ -605,7 +604,8 @@ async def get_goal_statistic_db(
                 achieved=0,
             ),
             trend=Trend.FLAT,
-            detalization=DetalizationGraph(detalization=Detalization.MINUTE, points=[]),
+            currentGroupByDate=DetalizationGraph(detalization=Detalization.MINUTE, points=[]),
+            prevGroupByDate=DetalizationGraph(detalization=Detalization.MINUTE, points=[]),
         )
 
     achievements = (
@@ -620,7 +620,7 @@ async def get_goal_statistic_db(
         .count()
     )
 
-    current_conversion = (achievements / views) * 100 if views > 0 else 0.0
+    current_conversion = round((achievements / views) * 100, 2) if views > 0 else 0.0
     logger.info(f"Current conversion for goal {goal_id}: {current_conversion}%")
 
     # Get previous day stats
@@ -651,7 +651,7 @@ async def get_goal_statistic_db(
         .count()
     )
 
-    prev_conversion = (prev_achievements / prev_views) * 100 if prev_views > 0 else 0.0
+    prev_conversion = round((prev_achievements / prev_views) * 100, 2) if prev_views > 0 else 0.0
     logger.info(f"Previous conversion for goal {goal_id}: {prev_conversion}%")
 
     # Determine trend
@@ -676,5 +676,10 @@ async def get_goal_statistic_db(
             achieved=prev_achievements,
         ),
         trend=trend,
-        detalization=await get_goal_detalization_graph_db(db, goal_id, from_ts, to_ts, variant_id),
+        currentGroupByDate=await get_goal_detalization_graph_db(
+            db, goal_id, from_ts, to_ts, variant_id
+        ),
+        prevGroupByDate=await get_goal_detalization_graph_db(
+            db, goal_id, prev_from_ts, prev_to_ts, variant_id
+        ),
     )

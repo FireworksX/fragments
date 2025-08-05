@@ -4,6 +4,7 @@ import strawberry
 from fastapi import HTTPException, status
 
 from conf.settings import logger
+from crud.feature_flag import get_feature_flag_by_id_db
 from crud.variant import (
     create_variant_db,
     delete_variant_db,
@@ -14,7 +15,6 @@ from crud.variant import (
 )
 from database import FeatureFlag, Session, Variant
 
-from .feature_flag import get_feature_flag_by_id_db
 from .fragment import fragment_db_to_fragment
 from .middleware import Context
 from .schemas.user import AuthPayload, RoleGet
