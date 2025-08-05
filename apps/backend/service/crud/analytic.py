@@ -614,6 +614,7 @@ async def get_goal_statistic_db(
         db.query(ClientHistory)
         .filter(
             ClientHistory.goal_id == goal.id,
+            ClientHistory.variant_id == variant_id if variant_id else True,
             ClientHistory.event_type == int(ClientHistoryEventType.GOAL_CONTRIBUTE.value),
             ClientHistory.created_at >= from_ts,
             ClientHistory.created_at <= to_ts,
