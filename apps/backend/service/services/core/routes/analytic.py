@@ -14,7 +14,6 @@ from crud.analytic import (
 )
 from crud.area import get_area_by_id_db
 from crud.campaign import get_campaign_by_id_db
-from crud.feature_flag import get_feature_flag_by_id_db
 from crud.project import get_project_by_id_db, get_project_goal_by_id_db
 from crud.variant import get_variant_by_id_db
 from database import Session

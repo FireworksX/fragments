@@ -74,7 +74,8 @@ class UserAgentInfo:
 
 
 class Context(BaseContext):
-    async def user(self) -> AuthPayload:
+    def _extract_authorization_header(self) -> tuple[str, str]:
+        """Validate and extract authorization header and refresh token."""
         if not self.request:
             logger.warning('No request object provided')
             raise credentials_exception
@@ -86,10 +87,18 @@ class Context(BaseContext):
             logger.warning('No authorization header provided')
             raise credentials_exception
 
+        if refresh is None:
+            logger.warning('No refresh token provided')
+            raise credentials_exception
+
+        return authorization, refresh
+
+    def _decode_token(self, authorization: str) -> str:
+        """Decode JWT token and extract email."""
         try:
-            authorization = authorization.split(' ')[1]  # format is 'Bearer token'
+            token = authorization.split(' ')[1]  # format is 'Bearer token'
             payload = jwt.decode(
-                authorization,
+                token,
                 service_settings.ACCESS_TOKEN_SECRET_KEY,
                 algorithms=[service_settings.ALGORITHM],
             )
@@ -97,18 +106,26 @@ class Context(BaseContext):
             if email is None:
                 logger.error('No email in token payload')
                 raise credentials_exception
+            return email
         except InvalidTokenError as exc:
             logger.error('Invalid token provided')
             raise credentials_exception from exc
         except IndexError as exc:
             logger.error('Malformed authorization header')
             raise credentials_exception from exc
+
+    async def user(self) -> AuthPayload:
+        authorization, refresh = self._extract_authorization_header()
+        email = self._decode_token(authorization)
+
         user: Optional[User] = await get_user_by_email_db(self.session(), email)
         if user is None:
             logger.error('User not found: %s', email)
             raise credentials_exception
+
         if refresh is None:
             refresh = create_refresh_token(data={'sub': user.email})
+
         logger.info('User authenticated: %s', email)
         return AuthPayload(
             user=user_db_to_user(user), access_token=authorization, refresh_token=refresh

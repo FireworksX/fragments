@@ -52,7 +52,8 @@ class GoalStatisticGet:
     trend: Trend
     current_statistic: StatisticGet
     prev_statistic: StatisticGet
-    detalization: DetalizationGraph
+    currentGroupByDate: DetalizationGraph
+    prevGroupByDate: DetalizationGraph
 
 
 @strawberry.type
