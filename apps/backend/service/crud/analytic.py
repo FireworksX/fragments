@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Dict, List, Optional
 
-from sqlalchemy import Interval, func
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import case
 
@@ -9,13 +9,21 @@ from conf.settings import logger
 from database.models import Area, Campaign, ClientHistory, Project, ProjectGoal, Variant
 from services.core.routes.schemas.analytic import (
     AreaStatisticGet,
+    AreaStatisticRatingGet,
+    BrowserAnalytic,
     CampaignStatisticGet,
+    CountryAnalytic,
     Detalization,
     DetalizationGraph,
     DetalizationGraphPoint,
+    DeviceTypeAnalytic,
     GoalStatisticGet,
+    OSTypeAnalytic,
+    PageAnalytic,
+    PeriodAnalytics,
     ProjectStatisticGet,
     StatisticGet,
+    StatisticRatingFilter,
     Trend,
     Value,
     VariantStatisticGet,
@@ -44,9 +52,8 @@ async def get_goal_detalization_graph_db(
     if time_diff <= timedelta(days=1):
         # By 10 minutes for 24 hours
         detalization = Detalization.MINUTE
-        group_by = func.date_trunc('hour', ClientHistory.created_at) + (
-            func.floor(func.date_part('minute', ClientHistory.created_at) / 10)
-            * timedelta(minutes=10)
+        group_by = func.date_trunc('hour', ClientHistory.created_at) + func.make_interval(
+            minutes=func.floor(func.date_part('minute', ClientHistory.created_at) / 10) * 10
         )
         logger.debug('Using 10 minute detalization')
     elif time_diff <= timedelta(days=7):
@@ -681,5 +688,115 @@ async def get_goal_statistic_db(
         ),
         prevGroupByDate=await get_goal_detalization_graph_db(
             db, goal_id, prev_from_ts, prev_to_ts, variant_id
+        ),
+    )
+
+
+async def get_area_statistic_rating_db(
+    db: Session,
+    area: Area,
+    statistic_rating_filter: StatisticRatingFilter,
+) -> AreaStatisticRatingGet:
+    logger.info(f"Getting area statistic rating for area {area.id}")
+
+    # Get all client history records for this area in the time period
+    history: List[ClientHistory] = (
+        db.query(ClientHistory)
+        .filter(
+            ClientHistory.area_id == area.id,
+            ClientHistory.created_at >= statistic_rating_filter.from_ts,
+            ClientHistory.created_at <= statistic_rating_filter.to_ts,
+        )
+        .all()
+    )
+
+    total_views = len(history)
+
+    # Group by page
+    pages_dict: Dict[str, int] = {}
+    for record in history:
+        if record.page:
+            pages_dict[record.page] = pages_dict.get(record.page, 0) + 1
+
+    pages = [
+        PageAnalytic(
+            page=page,
+            percentage=round((count / total_views * 100), 2) if total_views > 0 else 0.0,
+            views=count,
+        )
+        for page, count in pages_dict.items()
+    ]
+
+    # Group by country
+    countries_dict: Dict[str, int] = {}
+    for record in history:
+        if record.country:
+            countries_dict[record.country] = countries_dict.get(record.country, 0) + 1
+
+    countries = [
+        CountryAnalytic(
+            name=country,
+            isocode=country,  # Would need mapping to ISO codes
+            percentage=round((count / total_views * 100), 2) if total_views > 0 else 0.0,
+            views=count,
+        )
+        for country, count in countries_dict.items()
+    ]
+
+    # Group by OS type
+    os_types_dict: Dict[int, int] = {}
+    for record in history:
+        if record.os_type:
+            os_types_dict[record.os_type] = os_types_dict.get(record.os_type, 0) + 1
+
+    os_types = [
+        OSTypeAnalytic(
+            name=str(os_type),
+            percentage=round((count / total_views * 100), 2) if total_views > 0 else 0.0,
+            views=count,
+        )
+        for os_type, count in os_types_dict.items()
+    ]
+
+    # Group by device type
+    device_types_dict: Dict[int, int] = {}
+    for record in history:
+        if record.device_type:
+            device_types_dict[record.device_type] = device_types_dict.get(record.device_type, 0) + 1
+
+    device_types = [
+        DeviceTypeAnalytic(
+            name=str(device_type),
+            percentage=round((count / total_views * 100), 2) if total_views > 0 else 0.0,
+            views=count,
+        )
+        for device_type, count in device_types_dict.items()
+    ]
+
+    # Group by browser
+    browsers_dict: Dict[str, int] = {}
+    for record in history:
+        if record.browser:
+            browsers_dict[record.browser] = browsers_dict.get(record.browser, 0) + 1
+
+    browsers = [
+        BrowserAnalytic(
+            name=browser,
+            slug=browser.lower(),
+            percentage=round((count / total_views * 100), 2) if total_views > 0 else 0.0,
+            views=count,
+        )
+        for browser, count in browsers_dict.items()
+    ]
+
+    return AreaStatisticRatingGet(
+        area_id=area.id,
+        area_code=area.area_code,
+        current_period=PeriodAnalytics(
+            pages=pages,
+            countries=countries,
+            os_types=os_types,
+            device_types=device_types,
+            browsers=browsers,
         ),
     )

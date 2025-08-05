@@ -153,7 +153,10 @@ async def create_release_condition_route(
             detail='User is not allowed to create release conditions',
         )
 
-    release_condition: ReleaseCondition = await create_release_condition_db(db, rc)
+    try:
+        release_condition: ReleaseCondition = await create_release_condition_db(db, rc)
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)) from e
 
     return release_condition_db_to_release_condition(release_condition)
 
@@ -177,7 +180,10 @@ async def update_release_condition_route(
             detail='User is not allowed to change release condition',
         )
 
-    release_condition = await update_release_condition_db(db, release_condition_id=rc.id, rc=rc)
+    try:
+        release_condition = await update_release_condition_db(db, release_condition, rc)
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)) from e
 
     return release_condition_db_to_release_condition(release_condition)
 
@@ -278,7 +284,10 @@ async def create_condition_set_route(
             detail='User is not allowed to create condition set',
         )
 
-    condition_set: ConditionSet = await create_condition_set_db(db, release_condition_id, cs)
+    try:
+        condition_set: ConditionSet = await create_condition_set_db(db, release_condition_id, cs)
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)) from e
 
     return condition_set_db_to_condition_set(condition_set)
 
@@ -303,7 +312,10 @@ async def update_condition_set_route(
             detail='User is not allowed to update condition set',
         )
 
-    condition_set = await update_condition_set_db(db, condition_set_id=cs.id, condition_set=cs)
+    try:
+        condition_set = await update_condition_set_db(db, condition_set, cs)
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)) from e
 
     return condition_set_db_to_condition_set(condition_set)
 
@@ -376,7 +388,11 @@ async def create_condition_route(
             detail='User is not allowed to create condition',
         )
 
-    return await create_condition_db(db, condition_set_id, condition)
+    try:
+        condition = await create_condition_db(db, condition_set.id, condition=condition)
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)) from e
+    return condition_db_to_condition(condition)
 
 
 async def get_condition_route(info: strawberry.Info[Context], condition_id: int) -> ConditionGet:
@@ -419,7 +435,10 @@ async def update_condition_route(info: strawberry.Info[Context], c: ConditionPat
             detail='User is not allowed to update condition',
         )
 
-    condition = await update_condition_db(db, condition_id=c.id, condition=c)
+    try:
+        condition = await update_condition_db(db, condition, c)
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)) from e
 
     return condition_db_to_condition(condition)
 

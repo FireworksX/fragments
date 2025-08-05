@@ -7,6 +7,7 @@ from fastapi import HTTPException, status
 from conf.settings import logger
 from crud.analytic import (
     get_area_average_conversion_db,
+    get_area_statistic_rating_db,
     get_campaign_statistic_db,
     get_goal_statistic_db,
     get_project_statistic_db,
@@ -22,9 +23,11 @@ from database.models import Area, Campaign, Project, ProjectGoal, Variant
 from .middleware import Context
 from .schemas.analytic import (
     AreaStatisticGet,
+    AreaStatisticRatingGet,
     CampaignStatisticGet,
     GoalStatisticGet,
     ProjectStatisticGet,
+    StatisticRatingFilter,
     VariantStatisticGet,
 )
 from .schemas.user import AuthPayload, RoleGet
@@ -69,7 +72,12 @@ async def get_variant_statistic_route(
 
     try:
         return await get_variant_statistic_db(
-            db, variant_id, from_ts, to_ts, prev_from_ts, prev_to_ts
+            db=db,
+            variant_id=variant_id,
+            from_ts=from_ts,
+            to_ts=to_ts,
+            prev_from_ts=prev_from_ts,
+            prev_to_ts=prev_to_ts,
         )
     except ValueError as e:
         logger.error(f"Error getting variant statistic for variant {variant_id}: {e}")
@@ -101,7 +109,12 @@ async def get_campaign_statistic_route(
 
     try:
         return await get_campaign_statistic_db(
-            db, campaign_id, from_ts, to_ts, prev_from_ts, prev_to_ts
+            db=db,
+            campaign_id=campaign_id,
+            from_ts=from_ts,
+            to_ts=to_ts,
+            prev_from_ts=prev_from_ts,
+            prev_to_ts=prev_to_ts,
         )
     except ValueError as e:
         logger.error(f"Error getting campaign statistic for campaign {campaign_id}: {e}")
@@ -131,7 +144,12 @@ async def get_area_statistic_route(
 
     try:
         return await get_area_average_conversion_db(
-            db, area_id, from_ts, to_ts, prev_from_ts, prev_to_ts
+            db=db,
+            area_id=area_id,
+            from_ts=from_ts,
+            to_ts=to_ts,
+            prev_from_ts=prev_from_ts,
+            prev_to_ts=prev_to_ts,
         )
     except ValueError as e:
         logger.error(f"Error getting area statistic for area {area_id}: {e}")
@@ -163,7 +181,12 @@ async def get_project_statistic_route(
 
     try:
         return await get_project_statistic_db(
-            db, project_id, from_ts, to_ts, prev_from_ts, prev_to_ts
+            db=db,
+            project_id=project_id,
+            from_ts=from_ts,
+            to_ts=to_ts,
+            prev_from_ts=prev_from_ts,
+            prev_to_ts=prev_to_ts,
         )
     except ValueError as e:
         logger.error(f"Error getting project statistic for project {project_id}: {e}")
@@ -192,7 +215,38 @@ async def get_goal_statistic_route(
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Unauthorized')
 
     try:
-        return await get_goal_statistic_db(db, goal_id, from_ts, to_ts, prev_from_ts, prev_to_ts)
+        return await get_goal_statistic_db(
+            db=db,
+            goal_id=goal_id,
+            from_ts=from_ts,
+            to_ts=to_ts,
+            prev_from_ts=prev_from_ts,
+            prev_to_ts=prev_to_ts,
+            variant_id=None,
+        )
     except ValueError as e:
         logger.error(f"Error getting goal statistic for goal {goal_id}: {e}")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+
+
+async def get_area_statistic_rating_route(
+    info: strawberry.Info[Context],
+    area_id: int,
+    statistic_rating_filter: StatisticRatingFilter,
+) -> AreaStatisticRatingGet:
+    logger.info(f"Getting statistic rating for area {area_id}")
+    db: Session = info.context.session()
+    area: Optional[Area] = await get_area_by_id_db(db, area_id)
+    if area is None:
+        logger.error(f"Area {area_id} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Area not found')
+
+    user: AuthPayload = await info.context.user()
+    permission: bool = await read_permission(db, user.user.id, area.project_id)
+    if not permission:
+        logger.warning(
+            f"User {user.user.id} unauthorized to view statistic rating for area {area_id}"
+        )
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Unauthorized')
+
+    return await get_area_statistic_rating_db(db, area, statistic_rating_filter)

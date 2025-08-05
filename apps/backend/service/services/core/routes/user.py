@@ -17,7 +17,7 @@ from services.core.utils import (
 
 from .middleware import Context
 from .schemas.media import MediaGet, MediaType
-from .schemas.user import AuthPayload, UserGet
+from .schemas.user import AuthPayload, UserGet, UserSignUp
 
 
 def user_db_to_user(user: User) -> UserGet:
@@ -54,28 +54,27 @@ async def login(info: strawberry.Info[Context], email: str, password: str) -> Au
     )
 
 
-async def signup(
+async def signup_route(
     info: strawberry.Info[Context],
-    email: str,
-    first_name: str,
-    last_name: Optional[str],
-    password: str,
+    user_sign_up: UserSignUp,
 ) -> AuthPayload:
-    logger.info(f"Signup attempt for user {email}")
+    logger.info(f"Signup attempt for user {user_sign_up.email}")
     db: Session = info.context.session()
-    user: Optional[User] = await get_user_by_email_db(db, email)
+    user: Optional[User] = await get_user_by_email_db(db, user_sign_up.email)
     if user is not None:
-        logger.warning(f"Signup failed - user {email} already exists")
+        logger.warning(f"Signup failed - user {user_sign_up.email} already exists")
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail='User with the same email address already exists',
         )
-    hashed_password: str = get_password_hash(password)
-    user = await create_user_db(db, email, first_name, last_name, hashed_password)
+    hashed_password: str = get_password_hash(user_sign_up.password)
+    user = await create_user_db(
+        db, user_sign_up.email, user_sign_up.first_name, user_sign_up.last_name, hashed_password
+    )
 
     access_token = create_access_token(data={'sub': user.email})
     refresh_token = create_refresh_token(data={'sub': user.email})
-    logger.info(f"Signup successful for user {email}")
+    logger.info(f"Signup successful for user {user_sign_up.email}")
     return AuthPayload(
         user=user_db_to_user(user), access_token=access_token, refresh_token=refresh_token
     )

@@ -45,6 +45,7 @@ def user_db_to_user(user: User) -> UserGet:
 class UserAgentInfo:
     device_type: Optional[DeviceType] = None
     os_type: Optional[OSType] = None
+    browser: Optional[str] = None
 
     def __init__(self, user_agent: str) -> None:
         user_agent_info = user_agent_parser(user_agent)
@@ -71,6 +72,8 @@ class UserAgentInfo:
         else:
             logger.warning('Unknown OS type: %s', user_agent_info)
             self.os_type = None
+
+        self.browser = user_agent_info.browser.family
 
 
 class Context(BaseContext):
@@ -174,13 +177,29 @@ class Context(BaseContext):
         page: Optional[str] = self.request.headers.get('Referrer', None) if self.request else None
         gmt_time = datetime.now(timezone.utc)
 
+        language = self.request.headers.get('Accept-Language', None) if self.request else None
+        try:
+            if self.request:
+                screen_width = int(self.request.headers.get('Screen-Width', None) or 0)
+                screen_height = int(self.request.headers.get('Screen-Height', None) or 0)
+            else:
+                screen_width = None
+                screen_height = None
+        except ValueError:
+            screen_width = None
+            screen_height = None
+        browser = user_agent.browser
         logger.info(
-            'Client info - os_type=%s, device_type=%s, time_frame=%s, page=%s, ip_address=%s',
+            'Client info - os_type=%s, device_type=%s, time_frame=%s, page=%s, ip_address=%s, browser=%s, language=%s, screen_width=%s, screen_height=%s',
             user_agent.os_type,
             user_agent.device_type,
             gmt_time,
             page,
             user_ip,
+            browser,
+            language,
+            screen_width,
+            screen_height,
         )
         return ClientInfo(
             os_type=user_agent.os_type,
@@ -188,6 +207,10 @@ class Context(BaseContext):
             time_frame=gmt_time,
             page=page,
             ip_address=user_ip,
+            browser=browser,
+            language=language,
+            screen_width=screen_width,
+            screen_height=screen_height,
         )
 
     async def client(self) -> Client:

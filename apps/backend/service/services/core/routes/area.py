@@ -43,8 +43,6 @@ def area_db_to_area(area: Area) -> AreaGet:
     campaigns = []
     default_campaign: Optional[CampaignGet] = None
     for campaign in area.campaigns:
-        if campaign.deleted_at is not None:
-            continue
         if campaign.default:
             default_campaign = campaign_db_to_campaign(campaign)
         else:

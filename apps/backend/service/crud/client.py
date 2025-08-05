@@ -1,8 +1,9 @@
 from datetime import UTC, datetime
-from typing import List, Optional
+from typing import Optional
 
 from conf.settings import logger
-from database import Client, ClientHistory, ClientProjectGoal, Session
+from database import Client, ClientHistory, Session
+from services.core.routes.schemas.client import ClientHistoryPost
 
 
 async def create_client_db(db: Session, project_id: int) -> Client:
@@ -29,63 +30,39 @@ async def update_client_last_visited_db(db: Session, client_id: int) -> None:
         db.refresh(client)
 
 
-async def get_clients_by_project_id_db(db: Session, project_id: int) -> List[Client]:
-    logger.debug(f"Getting all clients for project_id={project_id}")
-    return db.query(Client).filter(Client.project_id == project_id).all()
-
-
 async def create_client_history_db(
     db: Session,
-    client_id: int,
-    event_type: int,
-    device_type: Optional[int] = None,
-    os_type: Optional[int] = None,
-    browser: Optional[str] = None,
-    language: Optional[str] = None,
-    screen_width: Optional[int] = None,
-    screen_height: Optional[int] = None,
-    country: Optional[str] = None,
-    region: Optional[str] = None,
-    city: Optional[str] = None,
-    url: Optional[str] = None,
-    referrer: Optional[str] = None,
-    domain: Optional[str] = None,
-    subdomain: Optional[str] = None,
-    page_load_time: Optional[float] = None,
-    area_id: Optional[int] = None,
-    variant_id: Optional[int] = None,
-    campaign_id: Optional[int] = None,
-    feature_flag_id: Optional[int] = None,
-    goal_id: Optional[int] = None,
+    client_history: ClientHistoryPost,
 ) -> ClientHistory:
-    logger.info(f"Creating client history for client_id={client_id}")
+    logger.info(f"Creating client history for client_id={client_history.client_id}")
     history = ClientHistory(
-        client_id=client_id,
-        device_type=device_type,
-        os_type=os_type,
-        browser=browser,
-        language=language,
-        screen_width=screen_width,
-        screen_height=screen_height,
-        country=country,
-        region=region,
-        city=city,
-        event_type=event_type,
-        url=url,
-        referrer=referrer,
-        domain=domain,
-        subdomain=subdomain,
-        page_load_time=page_load_time,
-        area_id=area_id,
-        variant_id=variant_id,
-        campaign_id=campaign_id,
-        feature_flag_id=feature_flag_id,
-        goal_id=goal_id,
+        client_id=client_history.client_id,
+        device_type=client_history.device_type,
+        os_type=client_history.os_type,
+        browser=client_history.browser,
+        language=client_history.language,
+        screen_width=client_history.screen_width,
+        screen_height=client_history.screen_height,
+        country=client_history.country,
+        region=client_history.region,
+        city=client_history.city,
+        event_type=int(client_history.event_type.value),
+        url=client_history.url,
+        referrer=client_history.referrer,
+        domain=client_history.domain,
+        subdomain=client_history.subdomain,
+        page_load_time=client_history.page_load_time,
+        area_id=client_history.area_id,
+        variant_id=client_history.variant_id,
+        campaign_id=client_history.campaign_id,
+        feature_flag_id=client_history.feature_flag_id,
+        goal_id=client_history.goal_id,
+        page=client_history.page,
     )
     db.add(history)
     db.commit()
     db.refresh(history)
-    await update_client_last_visited_db(db, client_id)
+    await update_client_last_visited_db(db, client_history.client_id)
     logger.debug(f"Created client history with id={history.id}")
     return history
 
@@ -105,63 +82,3 @@ async def get_last_viewed_variant_in_area_db(
         .order_by(ClientHistory.created_at.desc())
         .first()
     )
-
-
-async def get_client_history_db(db: Session, client_id: int) -> List[ClientHistory]:
-    logger.debug(f"Getting all history for client_id={client_id}")
-    return db.query(ClientHistory).filter(ClientHistory.client_id == client_id).all()
-
-
-async def get_client_history_by_id_db(db: Session, history_id: int) -> Optional[ClientHistory]:
-    logger.debug(f"Getting client history with id={history_id}")
-    return db.query(ClientHistory).filter(ClientHistory.id == history_id).first()
-
-
-async def create_client_project_goal_db(
-    db: Session, client_id: int, project_goal_id: int, project_id: int
-) -> ClientProjectGoal:
-    logger.info(
-        f"Creating project goal for client_id={client_id}, project_id={project_id}, goal_id={project_goal_id}"
-    )
-    goal = ClientProjectGoal(
-        client_id=client_id, project_goal_id=project_goal_id, project_id=project_id
-    )
-    db.add(goal)
-    db.commit()
-    db.refresh(goal)
-    logger.debug(f"Created client project goal with id={goal.id}")
-    return goal
-
-
-async def get_client_project_goals_by_project_and_goal_db(
-    db: Session, project_id: int, project_goal_id: int
-) -> List[ClientProjectGoal]:
-    logger.debug(f"Getting project goals for project_id={project_id} and goal_id={project_goal_id}")
-    return (
-        db.query(ClientProjectGoal)
-        .filter(
-            ClientProjectGoal.project_id == project_id,
-            ClientProjectGoal.project_goal_id == project_goal_id,
-        )
-        .all()
-    )
-
-
-async def get_client_project_goals_db(db: Session, client_id: int) -> List[ClientProjectGoal]:
-    logger.debug(f"Getting all project goals for client_id={client_id}")
-    return db.query(ClientProjectGoal).filter(ClientProjectGoal.client_id == client_id).all()
-
-
-async def get_client_project_goal_by_id_db(
-    db: Session, goal_id: int
-) -> Optional[ClientProjectGoal]:
-    logger.debug(f"Getting project goal with id={goal_id}")
-    return db.query(ClientProjectGoal).filter(ClientProjectGoal.id == goal_id).first()
-
-
-async def delete_client_project_goal_db(db: Session, goal_id: int) -> None:
-    logger.info(f"Deleting project goal with id={goal_id}")
-    goal = await get_client_project_goal_by_id_db(db, goal_id)
-    if goal:
-        db.delete(goal)
-        db.commit()

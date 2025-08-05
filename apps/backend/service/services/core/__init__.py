@@ -7,7 +7,6 @@ from starlette.responses import Response, StreamingResponse
 
 from conf import DEBUG
 from conf.settings import logger
-from crud.project import Project, validate_project_public_api_key
 from database import Session
 
 
@@ -45,6 +44,8 @@ class DynamicCORSMiddleware(BaseHTTPMiddleware):
             return response
 
         db = Session()
+        from crud.project import Project, validate_project_public_api_key
+
         try:
             public_key = authorization.split(' ')[1]  # format is 'Bearer token'
             project: Project = await validate_project_public_api_key(db, public_key)

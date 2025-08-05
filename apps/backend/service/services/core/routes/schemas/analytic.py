@@ -103,3 +103,63 @@ class StatisticFilter:
     to_ts: datetime
     prev_from_ts: datetime
     prev_to_ts: datetime
+
+
+@strawberry.input
+class StatisticRatingFilter:
+    data_ids: List[int]
+    from_ts: datetime
+    to_ts: datetime
+
+
+@strawberry.type
+class PageAnalytic:
+    page: str
+    percentage: float
+    views: int
+
+
+@strawberry.type
+class CountryAnalytic:
+    name: str
+    isocode: str
+    percentage: float
+    views: int
+
+
+@strawberry.type
+class OSTypeAnalytic:
+    name: str
+    percentage: float
+    views: int
+
+
+@strawberry.type
+class DeviceTypeAnalytic:
+    name: str
+    percentage: float
+    views: int
+
+
+@strawberry.type
+class BrowserAnalytic:
+    name: str
+    slug: str
+    percentage: float
+    views: int
+
+
+@strawberry.type
+class PeriodAnalytics:
+    pages: List[PageAnalytic]
+    countries: List[CountryAnalytic]
+    os_types: List[OSTypeAnalytic]
+    device_types: List[DeviceTypeAnalytic]
+    browsers: List[BrowserAnalytic]
+
+
+@strawberry.type
+class AreaStatisticRatingGet:
+    area_id: int
+    area_code: str
+    current_period: PeriodAnalytics
