@@ -1,5 +1,5 @@
-query CampaignContent($id: Int!) {
-    campaign(campaignId: $id) {
+query CampaignContent($id: Int!, $fromTs: DateTime!, $toTs: DateTime!, $prevFromTs: DateTime!, $prevToTs: DateTime!) {
+    campaign(campaignFilter: {campaignId: $id}) {
         id
         featureFlag {
             id
@@ -15,6 +15,30 @@ query CampaignContent($id: Int!) {
                         name
                     }
                     props
+                }
+            }
+        }
+    }
+
+    campaignStatistic(statisticFilter: {dataIds: [$id], fromTs: $fromTs, toTs: $toTs, prevFromTs: $prevFromTs, prevToTs: $prevToTs}) {
+        variants {
+            variantId
+            currentStatistic {
+                conversion
+            }
+            prevStatistic {
+                conversion
+            }
+            trend
+            goals {
+                goalId
+                goalName
+                trend
+                currentStatistic {
+                    conversion
+                }
+                prevStatistic {
+                    conversion
                 }
             }
         }

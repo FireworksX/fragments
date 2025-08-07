@@ -1,5 +1,5 @@
 mutation AuthSignUp ($email: String!, $password: String!, $firstName: String!, $lastName: String) {
-    signup (email: $email, password: $password, firstName: $firstName, lastName: $lastName) {
+    signup (userSignUp: {lastName: $lastName, firstName: $firstName, email: $email, password: $password}) {
         accessToken
         refreshToken
     }

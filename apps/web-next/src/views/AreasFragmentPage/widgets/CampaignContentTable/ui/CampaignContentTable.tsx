@@ -46,6 +46,7 @@ import { Touchable } from '@/shared/ui/Touchable'
 import { Link } from '@/shared/ui/Link'
 import { Chip } from '@/shared/ui/Chip'
 import { GoalsConversionInfo } from '@/views/AreasFragmentPage/widgets/CampaignContentTable/components/GoalsConversionInfo'
+import { ChipTrend } from '@/shared/ui/ChipTrend'
 
 interface CampaignContentTableProps {
   campaignId: number
@@ -250,11 +251,17 @@ const CampaignContentTable: FC<CampaignContentTableProps> = ({ className, campai
               {/*<Button mode='tertiary'>{variant?.fragment?.fragment?.name}</Button>*/}
             </TableCell>
             <TableCell>
-              <div className={styles.innerCell} style={{ justifyContent: 'center' }}>
-                <Dropdown trigger='click' options={<GoalsConversionInfo />} width={230}>
-                  <Chip mode='danger' prefix={<ArrowUp />}>
-                    1.4%
-                  </Chip>
+              <div className={styles.innerCell}>
+                <Dropdown
+                  trigger='click'
+                  options={<GoalsConversionInfo goals={variant?.statistic?.goals ?? []} />}
+                  width={230}
+                >
+                  {variant.statistic && (
+                    <ChipTrend trend={variant.statistic?.trend}>
+                      {variant.statistic?.currentStatistic.conversion}%
+                    </ChipTrend>
+                  )}
                 </Dropdown>
               </div>
             </TableCell>

@@ -3,7 +3,7 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 
 interface InfoSectionHeaderProps {
-  title?: string
+  title?: ReactNode
   description?: string
   aside?: ReactNode
   className?: string

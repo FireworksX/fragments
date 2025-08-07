@@ -33,6 +33,8 @@ import { CommonLogo } from '@/shared/ui/CommonLogo'
 import { TabsSelector } from '@/shared/ui/TabsSelector'
 import { Chip } from '@/shared/ui/Chip'
 import { NodeProps } from 'recharts/types/chart/Sankey'
+import { AreaVisitorsStatistics } from '@/views/AreasDetailPage/widgets/AreaVisitorsStatistics'
+import { AreaConversionStatistics } from '@/views/AreasDetailPage/widgets/AreaConversionStatistics'
 
 interface CampaignDetailPageProps {}
 
@@ -61,27 +63,24 @@ const resultData = [
 ]
 
 const data = [
-  { time: '10:00', value: 80, value2: 30 },
-  { time: '11:00', value: 90, value2: 41 },
-  { time: '12:00', value: 110, value2: 60 },
-  { time: '13:00', value: 100, value2: 56 },
-  { time: '14:00', value: 70, value2: 33 },
-  { time: '15:00', value: 95, value2: 70 }
+  { xAxis: '00:01', value: 80 },
+  { xAxis: '00:02', value: 30 },
+  { xAxis: '00:03', value: 20 }
 ]
 
 const data0 = {
   nodes: [
-    { name: 'Начало' },
-    { name: 'Промежуточный этап' },
-    { name: 'Завершение A' },
-    { name: 'Завершение B' },
-    { name: 'Завершение C' }
+    { name: 'Area' },
+    { name: 'Campaign 1' },
+    { name: 'Campaign 2' },
+    { name: 'Variant A' },
+    { name: 'Variant B' }
   ],
   links: [
-    { source: 0, target: 1, value: 100 }, // 100 единиц из "Начало" в "Промежуточный этап"
-    { source: 1, target: 2, value: 40 }, // 40 единиц в "Завершение A"
-    { source: 1, target: 3, value: 30 }, // 30 единиц в "Завершение B"
-    { source: 1, target: 4, value: 30 } // 30 единиц в "Завершение C"
+    { source: 0, target: 1, value: 100 },
+    { source: 1, target: 2, value: 40 },
+    { source: 1, target: 3, value: 30 },
+    { source: 1, target: 4, value: 30 }
   ]
 }
 
@@ -222,83 +221,9 @@ export const AreasDetailPage: FC<CampaignDetailPageProps> = () => {
         {/*  $12,432*/}
         {/*</AnalyticsValueInfo>*/}
 
-        <InfoSection
-          className={styles.wide}
-          bodyClassName={styles.graphContainer}
-          colorMode='inverse'
-          header={
-            <InfoSectionHeader
-              title='Visitors'
-              description='Graph of visitiors on this area'
-              aside={
-                <>
-                  <Chip mode='success' prefix={<ArrowUp />}>
-                    12% vs yesterday
-                  </Chip>
-                  <TabsSelector
-                    className={styles.tabsSelector}
-                    cellClassName={styles.tabsSelectorCell}
-                    items={items}
-                    value='chart'
-                  />
-                </>
-              }
-            />
-          }
-        >
-          <ResponsiveContainer width='100%' height={320}>
-            <LineChart data={data}>
-              <CartesianGrid strokeDasharray='0' stroke='rgba(var(--secondary--rgb), .3)' />
-              <YAxis domain={['auto', 'auto']} stroke='var(--secondary)' />
-              <XAxis dataKey='time' stroke='var(--secondary)' />
-              <Tooltip />
-              <Line type='monotone' dataKey='value' stroke='#8884d8' fill='url(#colorByValue)' fillOpacity={1} />
-              <Line type='monotone' dataKey='value2' stroke='#8884d8' fill='url(#colorByValue)' fillOpacity={1} />
-              <Legend />
-            </LineChart>
-          </ResponsiveContainer>
-        </InfoSection>
+        <AreaVisitorsStatistics className={styles.wide} bodyClassName={styles.graphContainer} />
 
-        <InfoSection
-          className={styles.wide}
-          bodyClassName={styles.graphContainer}
-          colorMode='inverse'
-          header={
-            <InfoSectionHeader
-              title='Conversion'
-              description='Conversion of area'
-              aside={
-                <>
-                  <Chip mode='danger' prefix={<ArrowDown />}>
-                    -2% vs yesterday
-                  </Chip>
-                  <TabsSelector
-                    className={styles.tabsSelector}
-                    cellClassName={styles.tabsSelectorCell}
-                    items={items}
-                    value='flow'
-                  />
-                </>
-              }
-            />
-          }
-        >
-          <ResponsiveContainer width='100%' height={320}>
-            <Sankey
-              sort={false}
-              data={data0}
-              node={CustomNode}
-              link={CustomLink}
-              nodePadding={50}
-              margin={{
-                left: 200,
-                right: 200
-              }}
-            >
-              <Tooltip />
-            </Sankey>
-          </ResponsiveContainer>
-        </InfoSection>
+        <AreaConversionStatistics className={styles.wide} bodyClassName={styles.graphContainer} />
 
         <AnalyticsRating
           className={styles.part}

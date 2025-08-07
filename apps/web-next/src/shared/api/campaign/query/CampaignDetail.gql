@@ -1,7 +1,7 @@
 # import "../../fragments/ReleaseConditionFragment.gql"
 
 query CampaignDetail($id: Int!) {
-    campaign(campaignId: $id) {
+    campaign(campaignFilter: {campaignId: $id}) {
         id
         name
         status

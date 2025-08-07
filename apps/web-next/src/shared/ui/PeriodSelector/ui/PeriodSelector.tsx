@@ -28,9 +28,9 @@ export const PeriodSelector: FC<PeriodSelectorProps> = ({ className, children, p
         <Button mode={period === 'month' ? 'primary' : 'secondary'} onClick={() => onChange?.('month')}>
           Month
         </Button>
-        <Button mode={period === 'year' ? 'primary' : 'secondary'} onClick={() => onChange?.('year')}>
-          Year
-        </Button>
+        {/*<Button mode={period === 'year' ? 'primary' : 'secondary'} onClick={() => onChange?.('year')}>*/}
+        {/*  Year*/}
+        {/*</Button>*/}
       </div>
 
       {children}

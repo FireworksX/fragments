@@ -43,6 +43,7 @@
     "apollo-upload-client": "^18.0.1",
     "axios": "^1.7.2",
     "classnames": "^2.5.1",
+    "dayjs": "^1.11.13",
     "detect-passive-events": "^2.0.3",
     "dnd-kit-sortable-tree": "^0.1.73",
     "escape-html": "^1.0.3",

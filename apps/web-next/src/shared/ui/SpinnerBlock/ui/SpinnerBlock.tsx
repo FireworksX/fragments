@@ -5,12 +5,13 @@ import { Spinner } from '@/shared/ui/Spinner'
 
 interface SpinnerBlockProps {
   className?: string
+  size?: number
 }
 
-export const SpinnerBlock: FC<SpinnerBlockProps> = ({ className }) => {
+export const SpinnerBlock: FC<SpinnerBlockProps> = ({ className, size = 24 }) => {
   return (
     <div className={cn(styles.root, className)}>
-      <Spinner size={24} color='var(--secondary)' />
+      <Spinner size={size} color='var(--secondary)' />
     </div>
   )
 }

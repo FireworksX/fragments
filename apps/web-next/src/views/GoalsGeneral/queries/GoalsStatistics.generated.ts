@@ -4,24 +4,54 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type GoalsStatisticsQueryVariables = Types.Exact<{
-  goalId: Types.Scalars['Int']['input'];
-  from?: Types.InputMaybe<Types.Scalars['DateTime']['input']>;
-  to?: Types.InputMaybe<Types.Scalars['DateTime']['input']>;
+  goalsId: Array<Types.Scalars['Int']['input']> | Types.Scalars['Int']['input'];
+  fromTs: Types.Scalars['DateTime']['input'];
+  toTs: Types.Scalars['DateTime']['input'];
+  prevFromTs: Types.Scalars['DateTime']['input'];
+  prevToTs: Types.Scalars['DateTime']['input'];
 }>;
 
 
-export type GoalsStatisticsQuery = { __typename?: 'Query', goalStats: { __typename?: 'GoalStatsGet', graph: Array<{ __typename?: 'GraphPoint', x: any, y: { __typename?: 'Value', achieved: number, conversion: number } }> } };
+export type GoalsStatisticsQuery = { __typename?: 'Query', goalStatistic: Array<{ __typename?: 'GoalStatisticGet', goalId: number, currentGroupByDate: { __typename?: 'DetalizationGraph', detalization: Types.Detalization, points: Array<{ __typename?: 'DetalizationGraphPoint', time: any, value: { __typename?: 'Value', conversion: number, achieved: number, views: number } }> }, prevGroupByDate: { __typename?: 'DetalizationGraph', detalization: Types.Detalization, points: Array<{ __typename?: 'DetalizationGraphPoint', time: any, value: { __typename?: 'Value', conversion: number, achieved: number, views: number } }> }, currentStatistic: { __typename?: 'StatisticGet', conversion: number, achieved: number, views: number }, prevStatistic: { __typename?: 'StatisticGet', conversion: number, achieved: number, views: number } }> };
 
 
 export const GoalsStatisticsDocument = gql`
-    query GoalsStatistics($goalId: Int!, $from: DateTime, $to: DateTime) {
-  goalStats(goalId: $goalId, fromTs: $from, toTs: $to) {
-    graph {
-      x
-      y {
-        achieved
-        conversion
+    query GoalsStatistics($goalsId: [Int!]!, $fromTs: DateTime!, $toTs: DateTime!, $prevFromTs: DateTime!, $prevToTs: DateTime!) {
+  goalStatistic(
+    statisticFilter: {dataIds: $goalsId, fromTs: $fromTs, toTs: $toTs, prevFromTs: $prevFromTs, prevToTs: $prevToTs}
+  ) {
+    goalId
+    currentGroupByDate {
+      detalization
+      points {
+        time
+        value {
+          conversion
+          achieved
+          views
+        }
       }
+    }
+    prevGroupByDate {
+      detalization
+      points {
+        time
+        value {
+          conversion
+          achieved
+          views
+        }
+      }
+    }
+    currentStatistic {
+      conversion
+      achieved
+      views
+    }
+    prevStatistic {
+      conversion
+      achieved
+      views
     }
   }
 }
@@ -39,9 +69,11 @@ export const GoalsStatisticsDocument = gql`
  * @example
  * const { data, loading, error } = useGoalsStatisticsQuery({
  *   variables: {
- *      goalId: // value for 'goalId'
- *      from: // value for 'from'
- *      to: // value for 'to'
+ *      goalsId: // value for 'goalsId'
+ *      fromTs: // value for 'fromTs'
+ *      toTs: // value for 'toTs'
+ *      prevFromTs: // value for 'prevFromTs'
+ *      prevToTs: // value for 'prevToTs'
  *   },
  * });
  */

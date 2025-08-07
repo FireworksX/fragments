@@ -7,12 +7,14 @@ import { Container } from '@/shared/ui/Container'
 import { CampaignPreviewItem } from '../components/CampaignPreviewItem'
 import { CampaignCreateItem } from '@/views/AreasListLayout/widgets/CampaignsListAside/components/CampaignCreateItem'
 import { CampaignStatus } from '@/__generated__/types'
+import { withSuspense } from '@/shared/hocs/withSuspense'
+import { SpinnerBlock } from '@/shared/ui/SpinnerBlock'
 
 interface AreasListAsideProps {
   className?: string
 }
 
-export const AreasListAside: FC<AreasListAsideProps> = ({ className }) => {
+const Base: FC<AreasListAsideProps> = ({ className }) => {
   const { list, handleCreate } = useCampaignsListAside()
 
   return (
@@ -28,6 +30,7 @@ export const AreasListAside: FC<AreasListAsideProps> = ({ className }) => {
                 logo={item.defaultCampaign?.logo.url}
                 name={item.defaultCampaign?.name}
                 slug={item.id}
+                statistic={item.statistic}
                 isActive={item.defaultCampaign.status === CampaignStatus.Active}
               />
             ))}
@@ -37,3 +40,5 @@ export const AreasListAside: FC<AreasListAsideProps> = ({ className }) => {
     </div>
   )
 }
+
+export const AreasListAside = withSuspense(Base, <SpinnerBlock size={18} />)

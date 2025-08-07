@@ -25,19 +25,32 @@ type AreaGet {
     properties: [JSON!]
 }
 
+type AreaStatisticGet {
+    areaCode: String!
+    areaId: Int!
+    campaigns: [CampaignStatisticGet!]!
+    currentStatistic: StatisticGet!
+    prevStatistic: StatisticGet!
+    trend: Trend!
+}
+
+type AreaStatisticRatingGet {
+    areaCode: String!
+    areaId: Int!
+    currentPeriod: PeriodAnalytics!
+}
+
 type AuthPayload {
     accessToken: String!
     refreshToken: String!
     user: UserGet!
 }
 
-type AverageConversionGet {
-    conversion: Float!
-    trend: Trend!
-    graphs: {
-    lines: Point[]
-    flow
-}
+type BrowserAnalytic {
+    name: String!
+    percentage: Float!
+    slug: String!
+    views: Int!
 }
 
 type CampaignGet {
@@ -51,54 +64,18 @@ type CampaignGet {
     status: CampaignStatus!
 }
 
-type CampaignStatsGet {
-    lastViews: Int!
-    percentage: Float!
-    totalViews: Int!
+type CampaignStatisticGet {
+    campaignId: Int!
+    campaignName: String!
+    currentStatistic: StatisticGet!
+    prevStatistic: StatisticGet!
+    trend: Trend!
+    variants: [VariantStatisticGet!]!
 }
 
 type ClientAreaGet {
     areaProperties: [JSON!]
     variant: VariantGet!
-}
-
-type ClientGet {
-    createdAt: String!
-    history: [ClientHistoryGet!]!
-    id: Int!
-    lastVisitedAt: String
-    updatedAt: String!
-}
-
-type ClientHistoryGet {
-    area: AreaGet
-    browser: String
-    city: String
-    clientId: Int!
-    country: String
-    createdAt: String!
-    deviceType: Int
-    domain: String
-    eventType: ClientHistoryEventType!
-    id: Int!
-    language: String
-    osType: Int
-    pageLoadTime: Float
-    referrer: String
-    region: String
-    screenHeight: Int
-    screenWidth: Int
-    subdomain: String
-    url: String
-    variant: VariantGet
-}
-
-type ClientProjectGoalGet {
-    client: ClientGet!
-    createdAt: String!
-    id: Int!
-    project: ProjectGet!
-    projectGoal: ProjectGoalGet!
 }
 
 type ConditionGet {
@@ -113,9 +90,32 @@ type ConditionSetGet {
     name: String!
 }
 
+type CountryAnalytic {
+    isocode: String!
+    name: String!
+    percentage: Float!
+    views: Int!
+}
+
 type CountryGet {
     country: String!
     regions: [RegionGet!]!
+}
+
+type DetalizationGraph {
+    detalization: Detalization!
+    points: [DetalizationGraphPoint!]!
+}
+
+type DetalizationGraphPoint {
+    time: DateTime!
+    value: Value!
+}
+
+type DeviceTypeAnalytic {
+    name: String!
+    percentage: Float!
+    views: Int!
 }
 
 type FeatureFlagGet {
@@ -181,13 +181,14 @@ type FragmentVariantGet {
     props: JSON
 }
 
-type GoalStatsGet {
-    graph: [GraphPoint!]!
-}
-
-type GraphPoint {
-    x: DateTime!
-    y: Value!
+type GoalStatisticGet {
+    currentGroupByDate: DetalizationGraph!
+    currentStatistic: StatisticGet!
+    goalId: Int!
+    goalName: String!
+    prevGroupByDate: DetalizationGraph!
+    prevStatistic: StatisticGet!
+    trend: Trend!
 }
 
 type MediaGet {
@@ -232,7 +233,7 @@ type Mutation {
     login(email: String!, password: String!): AuthPayload!
     normalizeVariantsRolloutPercentage(featureFlagId: Int!): Void
     refresh: AuthPayload!
-    signup(email: String!, firstName: String!, lastName: String, password: String!): AuthPayload!
+    signup(userSignUp: UserSignUp!): AuthPayload!
     updateArea(area: AreaPatch!): AreaGet!
     updateCampaign(cmp: CampaignPatch!): CampaignGet!
     updateCondition(condition: ConditionPatch!): ConditionGet!
@@ -245,6 +246,26 @@ type Mutation {
     updateReleaseCondition(releaseCondition: ReleaseConditionPatch!): ReleaseConditionGet!
     updateVariant(variant: VariantPatch!): VariantGet!
     uploadAsset(file: Upload!, media: MediaPost!): MediaGet!
+}
+
+type OSTypeAnalytic {
+    name: String!
+    percentage: Float!
+    views: Int!
+}
+
+type PageAnalytic {
+    page: String!
+    percentage: Float!
+    views: Int!
+}
+
+type PeriodAnalytics {
+    browsers: [BrowserAnalytic!]!
+    countries: [CountryAnalytic!]!
+    deviceTypes: [DeviceTypeAnalytic!]!
+    osTypes: [OSTypeAnalytic!]!
+    pages: [PageAnalytic!]!
 }
 
 type ProjectAllowedOriginGet {
@@ -290,33 +311,37 @@ type ProjectKeyGet {
     value: String!
 }
 
+type ProjectStatisticGet {
+    areas: [AreaStatisticGet!]!
+    currentStatistic: StatisticGet!
+    prevStatistic: StatisticGet!
+    projectId: Int!
+    projectName: String!
+    trend: Trend!
+}
+
 type Query {
     area(areaId: Int, projectId: Int): [AreaGet!]!
-    areaAverageConversion(areaId: Int!): AverageConversionGet!
-    campaign(areaId: Int, campaignId: Int, campaignStatus: CampaignStatus, limit: Int = 5, name: String, withoutDefault: Boolean = true): [CampaignGet!]!
-    campaignAverageConversion(campaignId: Int!): AverageConversionGet!
-    campaignStats(areaId: Int!, campaignId: Int!, fromTs: DateTime, toTs: DateTime): CampaignStatsGet!
-    client(clientId: Int, projectId: Int): [ClientGet!]!
+    areaStatistic(statisticFilter: StatisticFilter!): [AreaStatisticGet!]!
+    areaStatisticRating(statisticRatingFilter: StatisticRatingFilter!): [AreaStatisticRatingGet!]!
+    campaign(campaignFilter: CampaignFilter!): [CampaignGet!]!
+    campaignStatistic(statisticFilter: StatisticFilter!): [CampaignStatisticGet!]!
     clientArea(areaCode: String!): ClientAreaGet
     clientFragment(fragmentId: Int!): FragmentGet
-    clientHistory(clientId: Int!): [ClientHistoryGet!]!
     condition(conditionId: Int!): ConditionGet!
     conditionSet(conditionSetId: Int!): ConditionSetGet!
-    contributionsToProjectGoal(projectGoalId: Int!, projectId: Int!): [ClientProjectGoalGet!]!
     directory(directoryId: Int!): [ProjectDirectoryGet!]!
     featureFlag(featureFlagId: Int!): FeatureFlagGet!
     filter(countries: [String!], regions: [String!]): AllFiltersGet!
     fragment(fragmentIds: [Int!], projectId: Int): [FragmentGet!]!
-    goalAverageConversion(goalId: Int!): AverageConversionGet!
-    goalStats(fromTs: DateTime, goalId: Int!, toTs: DateTime): GoalStatsGet!
+    goalStatistic(statisticFilter: StatisticFilter!): [GoalStatisticGet!]!
     profile: AuthPayload!
     project(projectId: Int): [ProjectGet!]!
-    projectAverageConversion(projectId: Int!): AverageConversionGet!
     projectGoals(projectId: Int!): [ProjectGoalGet!]!
+    projectStatistic(statisticFilter: StatisticFilter!): [ProjectStatisticGet!]!
     releaseCondition(releaseConditionId: Int!): ReleaseConditionGet!
     variant(featureFlagId: Int, variantId: Int): [VariantGet!]!
-    variantAverageConversion(variantId: Int!): AverageConversionGet!
-    variantStats(featureFlagId: Int!, fromTs: DateTime, toTs: DateTime, variantId: Int!): VariantStatsGet!
+    variantStatistic(statisticFilter: StatisticFilter!): [VariantStatisticGet!]!
 }
 
 type RegionGet {
@@ -328,6 +353,12 @@ type ReleaseConditionGet {
     conditionSets: [ConditionSetGet!]!
     id: Int!
     name: String!
+}
+
+type StatisticGet {
+    achieved: Int!
+    conversion: Float!
+    views: Int!
 }
 
 type UserGet {
@@ -350,6 +381,7 @@ type UserRoleGet {
 type Value {
     achieved: Int!
     conversion: Float!
+    views: Int!
 }
 
 type VariantGet {
@@ -360,10 +392,13 @@ type VariantGet {
     status: VariantStatus!
 }
 
-type VariantStatsGet {
-    lastViews: Int!
-    percentage: Float!
-    totalViews: Int!
+type VariantStatisticGet {
+    currentStatistic: StatisticGet!
+    goals: [GoalStatisticGet!]!
+    prevStatistic: StatisticGet!
+    trend: Trend!
+    variantId: Int!
+    variantName: String!
 }
 
 enum CampaignStatus {
@@ -372,19 +407,16 @@ enum CampaignStatus {
     INACTIVE
 }
 
-enum ClientHistoryEventType {
-    FEEDBACK
-    GOAL_CONTRIBUTE
-    GOAL_VIEW
-    INIT
-    RELEASE
-    VIEW
-}
-
 enum ClientMetricType {
     INIT_SESSION
     REACH_PROJECT_GOAL
     RELEASE_SESSION
+}
+
+enum Detalization {
+    DAY
+    HOUR
+    MINUTE
 }
 
 enum DeviceType {
@@ -464,6 +496,15 @@ input AreaPost {
     description: String
     projectId: Int!
     properties: [JSON!]
+}
+
+input CampaignFilter {
+    areaId: Int
+    campaignId: Int
+    campaignStatus: CampaignStatus
+    limit: Int = 5
+    name: String
+    withoutDefault: Boolean = true
 }
 
 input CampaignPatch {
@@ -639,6 +680,27 @@ input ReleaseConditionPost {
     conditionSets: [ConditionSetPost!]!
     name: String!
     projectId: Int!
+}
+
+input StatisticFilter {
+    dataIds: [Int!]!
+    fromTs: DateTime!
+    prevFromTs: DateTime!
+    prevToTs: DateTime!
+    toTs: DateTime!
+}
+
+input StatisticRatingFilter {
+    dataIds: [Int!]!
+    fromTs: DateTime!
+    toTs: DateTime!
+}
+
+input UserSignUp {
+    email: String!
+    firstName: String!
+    lastName: String
+    password: String!
 }
 
 input VariantPatch {

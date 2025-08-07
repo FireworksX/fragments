@@ -4,8 +4,8 @@ import styles from './styles.module.css'
 import { Touchable, TouchableProps } from '@/shared/ui/Touchable'
 import RemoveIcon from '@/shared/icons/next/close-circle.svg'
 
-interface ChipProps extends PropsWithChildren, TouchableProps {
-  mode?: 'success' | 'danger'
+export interface ChipProps extends PropsWithChildren, TouchableProps {
+  mode?: 'success' | 'danger' | 'gray'
   size?: 's'
   className?: string
   prefix?: ReactNode

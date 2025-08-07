@@ -9,6 +9,7 @@
         background: var(--secondary-bg);
         border-radius: var(--radius-main);
         border: 1px solid var(--border);
+        position: relative;
     }
 
     .loader {

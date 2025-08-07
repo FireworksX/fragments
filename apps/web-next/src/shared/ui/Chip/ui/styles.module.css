@@ -45,7 +45,16 @@
         }
     }
 
-    .sm {
+    .gray {
+        background: var(--secondary-bg);
+        color: var(--secondary);
+
+        .prefix {
+            color: var(--secondary);
+        }
+    }
+
+    .s {
         padding: 2px 5px;
         font-size: 9px;
         gap: 2px;

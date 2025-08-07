@@ -1,11 +1,37 @@
-query GoalsStatistics($goalId: Int!, $from: DateTime, $to: DateTime) {
-    goalStats(goalId: $goalId, fromTs: $from, toTs: $to) {
-        graph {
-            x
-            y {
-                achieved
-                conversion
+query GoalsStatistics($goalsId: [Int!]!, $fromTs: DateTime!, $toTs: DateTime!, $prevFromTs: DateTime!, $prevToTs: DateTime!) {
+    goalStatistic(statisticFilter: {dataIds: $goalsId, fromTs: $fromTs, toTs: $toTs, prevFromTs: $prevFromTs, prevToTs: $prevToTs}) {
+        goalId
+        currentGroupByDate {
+            detalization
+            points {
+                time
+                value {
+                    conversion
+                    achieved
+                    views
+                }
             }
+        }
+        prevGroupByDate {
+            detalization
+            points {
+                time
+                value {
+                    conversion
+                    achieved
+                    views
+                }
+            }
+        }
+        currentStatistic {
+            conversion
+            achieved
+            views
+        }
+        prevStatistic {
+            conversion
+            achieved
+            views
         }
     }
 }

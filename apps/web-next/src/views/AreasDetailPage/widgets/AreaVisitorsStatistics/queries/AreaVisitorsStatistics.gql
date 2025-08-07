@@ -1,0 +1,47 @@
+query AreaVisitorsStatistics($areaId: Int!, $fromTs: DateTime!, $toTs: DateTime!, $prevFromTs: DateTime!, $prevToTs: DateTime!) {
+    areaStatistic(statisticFilter:{dataIds: [$areaId], fromTs: $fromTs, toTs: $toTs, prevFromTs: $prevFromTs, prevToTs: $prevToTs}) {
+        areaId
+        areaCode
+        trend
+        currentStatistic {
+            conversion
+            achieved
+            views
+        }
+        prevStatistic {
+            conversion
+            achieved
+            views
+        }
+        campaigns {
+            campaignId
+            campaignName
+            trend
+            currentStatistic {
+                conversion
+                achieved
+                views
+            }
+            variants {
+                variantId
+                variantName
+                trend
+                currentStatistic {
+                    conversion
+                    achieved
+                    views
+                }
+                goals {
+                    goalId
+                    goalName
+                    trend
+                    currentStatistic {
+                        conversion
+                        achieved
+                        views
+                    }
+                }
+            }
+        }
+    }
+}

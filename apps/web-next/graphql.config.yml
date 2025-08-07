@@ -2,7 +2,7 @@ schema: ./schema.graphql
 extensions:
   endpoints:
     Default GraphQL Endpoint:
-      url: ${BACKEND}
+      url: http://85.192.29.65/graphql
       headers:
         user-agent: JS GraphQL
       introspect: false

@@ -11,6 +11,7 @@
     justify-content: space-between;
     gap: 12px;
     background: var(--background);
+    border-radius: var(--radius-main);
 }
 
 .row {

@@ -1,0 +1,11 @@
+.root {
+    display: inline-flex;
+    font-family: 'Graduate', 'Graduate Fallback';
+}
+
+.styled {
+    padding: 4px 8px;
+    background: var(--secondary-bg);
+    border-radius: var(--radius-second);
+    border: 1px solid var(--border-light);
+}
