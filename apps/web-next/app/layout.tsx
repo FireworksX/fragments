@@ -1,13 +1,30 @@
 import type { Metadata } from 'next'
 import { Graduate } from 'next/font/google'
+import localFont from 'next/font/local'
 import '@/shared/styles/globals.css'
 import { ApolloWrapper } from '@/app/providers/ApolloProvider/ApolloProvider'
+import cn from 'classnames'
 
 const graduate = Graduate({
   weight: ['400'],
   display: 'swap',
   subsets: ['latin']
 })
+
+// const customFont = localFont({
+//   src: [
+//     {
+//       path: '../fonts/CustomFont-Book.woff2',
+//       weight: '400',
+//       style: 'normal'
+//     },
+//     {
+//       path: '../fonts/CustomFont-Medium.woff2',
+//       weight: '500',
+//       style: 'normal'
+//     }
+//   ]
+// })
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -20,7 +37,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang='en' className={graduate.className}>
+    <html lang='en' className={cn(graduate.className)}>
       <body>
         <ApolloWrapper>{children}</ApolloWrapper>
       </body>

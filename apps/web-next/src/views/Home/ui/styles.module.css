@@ -1,0 +1,49 @@
+.root {
+    display: flex;
+    flex-direction: column;
+}
+
+.event {
+    padding: 8px 12px;
+    background: var(--background-accent);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--text-color);
+}
+
+.header {
+    background: var(--background);
+}
+
+.headerContainer {
+    display: flex;
+    gap: 36px;
+    padding: 12px 0;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 22px;
+    font-weight: 900;
+}
+
+.navigation {
+    display: flex;
+    gap: 12px;
+}
+
+.navigationItem {
+    padding: 12px 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-color-accent);
+}
+
