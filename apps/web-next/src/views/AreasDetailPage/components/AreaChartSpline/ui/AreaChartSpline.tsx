@@ -14,14 +14,15 @@ import {
   YAxis
 } from 'recharts'
 import { SplineChartPoint } from '@/shared/types'
-import { ChartTooltip } from '../../../../../shared/ui/charts/ChartTooltip'
+import { ChartTooltip } from '@/shared/ui/charts/ChartTooltip'
 
 interface AreaChartSplineProps {
   className?: string
   data: SplineChartPoint[]
+  nestedKeys?: string[]
 }
 
-export const AreaChartSpline: FC<AreaChartSplineProps> = ({ className, data }) => {
+export const AreaChartSpline: FC<AreaChartSplineProps> = ({ className, data, nestedKeys }) => {
   return (
     <ResponsiveContainer className={className} width='100%' height={320}>
       <ComposedChart data={data}>
@@ -64,6 +65,18 @@ export const AreaChartSpline: FC<AreaChartSplineProps> = ({ className, data }) =
           strokeWidth={2}
           fillOpacity={1}
         />
+
+        {nestedKeys?.map(key => (
+          <Line
+            key={key}
+            type='monotone'
+            dot={false}
+            dataKey={`nested.${key}.value`}
+            stroke='var(--danger)'
+            strokeWidth={2}
+            fillOpacity={1}
+          />
+        ))}
       </ComposedChart>
     </ResponsiveContainer>
   )

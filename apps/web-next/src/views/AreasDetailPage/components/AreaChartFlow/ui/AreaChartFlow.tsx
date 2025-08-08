@@ -94,6 +94,7 @@ export const AreaChartFlow: FC<AreaChartFlowProps> = ({ className, data }) => {
   return (
     <ResponsiveContainer width={1000} height={320}>
       <Sankey
+        layout='vertical'
         sort={false}
         data={data}
         node={CustomNode}

@@ -51,7 +51,7 @@ export const AreaConversionStatistics: FC<AreaConversionStatisticsProps> = ({ cl
       chart={'chart'}
       // onChangeChart={setChartMode}
     >
-      {'chart' === 'flow' ? <AreaChartFlow data={data0} /> : <AreaChartSpline data={data} />}
+      <AreaChartSpline data={data} />
     </AreaChartSection>
   )
 }

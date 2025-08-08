@@ -23,12 +23,60 @@ interface AreaVisitorsStatisticsProps {
 }
 
 const data: SplineChartPoint[] = [
-  { formatTime: '00:01', value: 80, prevValue: 17 },
-  { formatTime: '00:02', value: 30, prevValue: 40 },
-  { formatTime: '00:03', value: 20, prevValue: 25 },
-  { formatTime: '00:10', value: 80, prevValue: 80 },
-  { formatTime: '00:50', value: 30, prevValue: 91 },
-  { formatTime: '00:60', value: 20, prevValue: 34 }
+  {
+    formatTime: '00:01',
+    value: 80,
+    prevValue: 17,
+    nested: {
+      one: { value: 62 },
+      two: { value: 11 }
+    }
+  },
+  {
+    formatTime: '00:02',
+    value: 30,
+    prevValue: 40,
+    nested: {
+      one: { value: 3 },
+      two: { value: 63 }
+    }
+  },
+  {
+    formatTime: '00:03',
+    value: 20,
+    prevValue: 25,
+    nested: {
+      one: { value: 33 },
+      two: { value: 43 }
+    }
+  },
+  {
+    formatTime: '00:10',
+    value: 80,
+    prevValue: 80,
+    nested: {
+      one: { value: 63 },
+      two: { value: 31 }
+    }
+  },
+  {
+    formatTime: '00:50',
+    value: 30,
+    prevValue: 91,
+    nested: {
+      one: { value: 11 },
+      two: { value: 52 }
+    }
+  },
+  {
+    formatTime: '00:60',
+    value: 20,
+    prevValue: 34,
+    nested: {
+      one: { value: 12 },
+      two: { value: 56 }
+    }
+  }
 ]
 
 const data0 = {
