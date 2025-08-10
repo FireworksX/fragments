@@ -77,7 +77,7 @@ class UserAgentInfo:
 
 
 class Context(BaseContext):
-    def _extract_authorization_header(self) -> tuple[str, str]:
+    def _extract_authorization_header(self) -> tuple[str, Optional[str]]:
         """Validate and extract authorization header and refresh token."""
         if not self.request:
             logger.warning('No request object provided')
@@ -88,10 +88,6 @@ class Context(BaseContext):
 
         if authorization is None:
             logger.warning('No authorization header provided')
-            raise credentials_exception
-
-        if refresh is None:
-            logger.warning('No refresh token provided')
             raise credentials_exception
 
         return authorization, refresh
