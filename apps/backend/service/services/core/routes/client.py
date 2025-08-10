@@ -21,14 +21,14 @@ from .middleware import ClientInfo, Context
 from .project import get_user_role_in_project
 from .schemas.client import ClientAreaGet, ClientHistoryEventType, ClientHistoryPost
 from .schemas.feature_flag import RotationType
-from .schemas.user import RoleGet
+from .schemas.user import UserRole
 from .schemas.variant import VariantGet, VariantStatus
 from .variant import variant_db_to_variant
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
     logger.info(f"Checking read permission for user {user_id} in project {project_id}")
-    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[UserRole] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None
 
 

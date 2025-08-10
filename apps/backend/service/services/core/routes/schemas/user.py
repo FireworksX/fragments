@@ -7,7 +7,7 @@ from services.core.routes.schemas.media import MediaGet
 
 
 @strawberry.enum
-class RoleGet(Enum):
+class UserRole(Enum):
     OWNER = 1
     ADMIN = 2
     MANAGER = 3
@@ -25,7 +25,7 @@ class UserGet:
 
 @strawberry.type
 class UserRoleGet(UserGet):
-    role: RoleGet
+    role: UserRole
 
 
 @strawberry.type

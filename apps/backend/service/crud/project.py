@@ -19,6 +19,7 @@ from database.models import (
     User,
 )
 from services.core.routes.schemas.project import ProjectGoalPatch, ProjectGoalPost
+from services.core.routes.schemas.user import UserRole
 
 
 def generate_api_key(project_id: int) -> str:
@@ -59,10 +60,12 @@ def generate_api_key(project_id: int) -> str:
     return api_key
 
 
-async def add_user_to_project_db(db: Session, user_id: int, project_id: int, role: int) -> None:
+async def add_user_to_project_db(
+    db: Session, user_id: int, project_id: int, role: UserRole
+) -> None:
     logger.info(f"Adding user {user_id} to project {project_id} with role {role}")
     project: Project = db.query(Project).filter((Project.id == project_id)).first()
-    member_role: ProjectMemberRole = ProjectMemberRole(role=role)
+    member_role: ProjectMemberRole = ProjectMemberRole(role=int(role.value))
     user: User = db.query(User).filter((User.id == user_id)).first()
     member_role.user = user
     member_role.project = project
@@ -71,12 +74,12 @@ async def add_user_to_project_db(db: Session, user_id: int, project_id: int, rol
     logger.debug(f"Added user {user_id} to project {project_id}")
 
 
-async def change_user_role_db(db: Session, user_id: int, project_id: int, role: int) -> None:
+async def change_user_role_db(db: Session, user_id: int, project_id: int, role: UserRole) -> None:
     logger.info(f"Changing role for user {user_id} in project {project_id} to {role}")
     project: Project = db.query(Project).filter((Project.id == project_id)).first()
     for member in project.members:
         if member.user_id == user_id:
-            member.role = role
+            member.role = int(role.value)
     db.commit()
     logger.debug(f"Changed role for user {user_id} in project {project_id}")
 
@@ -173,7 +176,7 @@ async def create_project_db(db: Session, name: str, user_id: int) -> Project:
     db.refresh(api_key)
     project.private_key_id = api_key.id
 
-    await add_user_to_project_db(db, user_id, project.id, 1)  # 1 = owner
+    await add_user_to_project_db(db, user_id, project.id, UserRole.OWNER)
     root_directory: FilesystemDirectory = await create_directory_db(
         db=db, parent_id=None, name=name, project_id=project.id
     )

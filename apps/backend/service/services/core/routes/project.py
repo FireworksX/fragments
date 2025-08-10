@@ -40,27 +40,27 @@ from .schemas.project import (
     ProjectPatch,
     ProjectPost,
 )
-from .schemas.user import AuthPayload, RoleGet, UserRoleGet
+from .schemas.user import AuthPayload, UserRole, UserRoleGet
 from .user import user_db_to_user
 from .utils import get_user_role_in_project
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
     logger.info(f"Checking read permission for user {user_id} in project {project_id}")
-    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[UserRole] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None
 
 
 async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
     logger.info(f"Checking write permission for user {user_id} in project {project_id}")
-    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
-    return role is not None and role is not RoleGet.DESIGNER
+    role: Optional[UserRole] = await get_user_role_in_project(db, user_id, project_id)
+    return role is not None and role is not UserRole.DESIGNER
 
 
 async def private_key_permission(db: Session, user_id: int, project_id: int) -> bool:
     logger.info(f"Checking private key permission for user {user_id} in project {project_id}")
-    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
-    return role is not None and role is RoleGet.OWNER or role is RoleGet.ADMIN
+    role: Optional[UserRole] = await get_user_role_in_project(db, user_id, project_id)
+    return role is not None and role is UserRole.OWNER or role is UserRole.ADMIN
 
 
 def project_goal_db_to_goal(goal: ProjectGoal) -> ProjectGoalGet:
@@ -101,7 +101,7 @@ async def project_db_to_project(
                     media_type=MediaType.USER_LOGO,
                     public_path=member.user.avatar.public_path,
                 ),
-                role=RoleGet(member.role),
+                role=UserRole(member.role),
             )
             for member in project.members
         ],
@@ -255,7 +255,7 @@ async def delete_project_public_key_route(
 
 
 async def add_user_to_project(
-    info: strawberry.Info[Context], user_id: int, project_id: int, role_to_add: int
+    info: strawberry.Info[Context], user_id: int, project_id: int, role_to_add: UserRole
 ) -> None:
     logger.info(f"Adding user {user_id} to project {project_id} with role {role_to_add}")
     user: AuthPayload = await info.context.user()
@@ -281,7 +281,7 @@ async def add_user_to_project(
 
 
 async def change_user_role(
-    info: strawberry.Info[Context], user_id: int, project_id: int, role_to_add: RoleGet
+    info: strawberry.Info[Context], user_id: int, project_id: int, role_to_add: UserRole
 ) -> None:
     logger.info(f"Changing role for user {user_id} in project {project_id} to {role_to_add}")
     user: AuthPayload = await info.context.user()
@@ -303,7 +303,7 @@ async def change_user_role(
         logger.error(f"Project {project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
 
-    await change_user_role_db(db, user_id, project_id, int(role_to_add.value))
+    await change_user_role_db(db, user_id, project_id, role_to_add)
     logger.info(f"Changed role for user {user_id} in project {project_id}")
 
 

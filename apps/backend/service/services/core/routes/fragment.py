@@ -21,7 +21,7 @@ from database import Media, Project, Session
 from .middleware import Context
 from .schemas.fragment import FragmentGet, FragmentPatch, FragmentPost
 from .schemas.media import MediaGet, MediaType
-from .schemas.user import AuthPayload, RoleGet
+from .schemas.user import AuthPayload, UserRole
 from .user import user_db_to_user
 from .utils import get_user_role_in_project
 
@@ -132,13 +132,13 @@ def fragment_db_to_fragment(fragment: Fragment) -> FragmentGet:
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
-    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[UserRole] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None
 
 
 async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
-    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
-    return role is not None and role is not RoleGet.ADMIN
+    role: Optional[UserRole] = await get_user_role_in_project(db, user_id, project_id)
+    return role is not None and role is not UserRole.ADMIN
 
 
 async def create_fragment_route(info: strawberry.Info[Context], fg: FragmentPost) -> FragmentGet:
