@@ -14,8 +14,8 @@ export const HeaderNav: FC<HeaderNavProps> = ({ className, currentUserNode, feed
   return (
     <div className={cn(styles.root, className)} data-testid='HeaderNav'>
       <div className={styles.nav}>
-        <Dropdown trigger='click' options={feedbackFormNode}>
-          <Button className={styles.button} size='medium' mode='outline'>
+        <Dropdown className={styles.feedback} trigger='click' options={feedbackFormNode}>
+          <Button className={styles.button} mode='outline'>
             Feedback
           </Button>
         </Dropdown>

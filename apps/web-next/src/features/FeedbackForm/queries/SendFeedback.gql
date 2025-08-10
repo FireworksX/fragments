@@ -1,0 +1,5 @@
+mutation SendFeedback($page: String!, $content: String!, $feel: FeelLevelGet!) {
+    feedback(fd: {page: $page, content: $content, feel: $feel}) {
+        content
+    }
+}

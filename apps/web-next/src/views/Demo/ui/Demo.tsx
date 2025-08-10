@@ -1,4232 +1,4982 @@
-'use client'
-import { FC, useEffect, useRef, useState, Suspense } from 'react'
-import '../lib/css/main.css'
-import '../lib/css/entry.CAV5u_-6.css'
-import '../lib/css/NavContent.BvzaB8yA.css'
-import '../lib/css/Avatar.CaiqtWBM.css'
-import '../lib/css/useUIConnector.CNYft9xI.css'
-import '../lib/css/FullNameWithIcon.DOaLANlu.css'
-import '../lib/css/UserLevel.CaUr9TyZ.css'
-import '../lib/css/Dropdown.xzGScYNZ.css'
-import '../lib/css/notifications.9XSnvbyV.css'
-import '../lib/css/StvButton2.CBphoxHZ.css'
-import '../lib/css/Rate.C65GVIHI.css'
-import '../lib/css/StvButton.BYKIQDf_.css'
-import '../lib/css/ContestsSlider.C5jB7cYq.css'
-import '../lib/css/ContestsItem.DPuA7VVm.css'
-import '../lib/css/BookmakerRatingItem.BTXJ3foQ.css'
-import '../lib/css/BonusButton.CVsXNW4G.css'
-import '../lib/css/RoundIndicator.oNbFUwiq.css'
-import '../lib/css/BookmakerMultiPromoItem.B5x4inWo.css'
-import '../lib/css/ReviewItem.DdoqysOO.css'
-import '../lib/css/ReviewsScore.DjL3FD-O.css'
-import '../lib/css/LinkButton.C9w-izYF.css'
-import '../lib/css/SubscribeButton.CDXCBmyw.css'
-import '../lib/css/ArticlesList.XDQq9DXN.css'
-import '../lib/css/ViewCounter.VS5vaPP2.css'
-import '../lib/css/SeoBlock.BUi-x4uA.css'
-import '../lib/css/PageDivider.CbZM0dM6.css'
-import '../lib/css/ColumnLinksBlock.dBeGckAc.css'
-import '../lib/css/AppModal.zAet4Ooa.css'
-import '../lib/css/CheckboxRadio.DgIPpdAd.css'
-import '../lib/css/StatisticBar.CCjX7TCD.css'
-import { createFragmentsClient } from '@fragmentsx/client-core'
-import { Area, GlobalManager } from '@fragmentsx/render-react'
+import '../lib/css/scores24.css'
 
-interface DemoProps {
-  className?: string
-}
-
-export const Demo: FC<DemoProps> = ({ className }) => {
-  const fragmentsClient = useRef(
-    createFragmentsClient({
-      apiToken: '6-c06fee66a75ec9c54c3ec822ce5977a9-605d45ac9a41b570981aa31a4919c5ab849cbba15300513e2340efb377ab12f8',
-      isSelf: true
-    })
-  )
-
+export const Demo = () => {
   return (
-    <GlobalManager value={fragmentsClient.current}>
-      <div className='default' data-v-2af4a11a=''>
-        <div className='sidebar-hidden wrapper' data-v-2af4a11a=''>
-          <div className='header-container header' data-v-2af4a11a='' data-v-b0a820b1=''>
-            <header className='Header' data-v-b0a820b1=''>
-              <div className='left' data-v-b0a820b1=''>
-                <button className='menu-button' data-v-b0a820b1=''>
-                  <span className='menu-button-bar' data-v-b0a820b1=''></span>
-                  <span className='menu-button-bar' data-v-b0a820b1=''></span>
-                  <span className='menu-button-bar' data-v-b0a820b1=''></span>
+    <>
+      <div id='app'>
+        <div className='sc-1xsn000-3 czDNtf'>
+          <div className='sc-b8rrln-0 bUWSkZ sc-1xsn000-5 gUVGwW'>
+            <div className='sc-b8rrln-1 eRokCx'></div>
+          </div>
+
+          <div className='sc-1xsn000-4 cjDpEV js-sensor'></div>
+          <div className='sc-1xsn000-0 VayEz header-trigger-classname'>
+            <div
+              className='sc-cukopy-0 imOEFq sc-1xsn000-2 bOCiyW'
+              id='cookie-notification'
+              style={{ transform: 'initial' }}
+            >
+              <div className='sc-cukopy-1 dLRRmc'>
+                <span className='sc-cukopy-2 bAMJeV'>
+                  Мы используем <a href='/ru/p-rules'>cookies</a> для вашего удобства.
+                </span>
+                <button className='sc-cukopy-3 iimVNO' type='button'>
+                  OK
                 </button>
-                <a
-                  aria-current='page'
-                  href='/'
-                  className='router-link-active router-link-exact-active logo'
-                  data-v-b0a820b1=''
-                >
-                  <div className='ContentImage loading logo-image' data-v-b0a820b1='' data-v-13b18673=''>
-                    <div className='image-placeholder' data-v-13b18673=''></div>
-                  </div>
-                </a>
               </div>
-              <div className='center' data-v-b0a820b1=''>
-                <div className='Search header-search' data-v-b0a820b1='' data-v-8dd581d1=''>
-                  <div className='backdrop-layer' data-v-8dd581d1=''></div>
-                  <div className='top' data-v-8dd581d1=''>
-                    <button className='search-button' type='button' data-v-8dd581d1=''>
-                      <span data-v-8dd581d1=''></span>
+            </div>
+
+            <header className='sc-inssjx-0 cjBsXd sc-1xsn000-1 eUXaCS js-header' data-device-container='giftTemplate'>
+              <div className='sc-inssjx-1 fisXFn'>
+                <div className='sc-inssjx-2 blbgPU'>
+                  <div className='sc-inssjx-4 ikViiG'>
+                    <a className='link sc-d0h9pz-0 dYjoZu link--active' href='/ru'>
+                      <svg className='sc-i341db-0 ixrffO' direction='right' height='30' width='130'>
+                        <use fill='currentColor' href='#logo-scores24'></use>
+                      </svg>
+                    </a>
+                    <div className='sc-d0h9pz-4 gBophS'></div>
+                  </div>
+                  <div className='sc-inssjx-5 fdkrgL'>
+                    <div className='sc-inssjx-6 ebwjNE'>
+                      <nav className='sc-hkjphn-0 kExWUL'>
+                        <div className='sc-hkjphn-2 kIuffk'>
+                          <button
+                            aria-expanded='false'
+                            className='sc-hkjphn-4 fJfugy'
+                            id='header-nav-sports'
+                            type='button'
+                          >
+                            <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                              <use fill='currentColor' href='#bars'></use>
+                            </svg>
+                            Футбол
+                          </button>
+                          <div
+                            aria-labelledby='header-nav-sports'
+                            className='sc-1u9bgxl-0 nFnwL sc-hkjphn-8 eYiMrc'
+                            style={{
+                              position: 'absolute',
+                              top: 'calc(100% + 0px)',
+                              left: '-20px'
+                            }}
+                          >
+                            <div className='sc-1u9bgxl-1 biNLEy HeaderNavInner'>
+                              <a
+                                className='link sc-111o75k-5 dNxTfO sc-hkjphn-10 gnvHRd DropdownItem_active'
+                                href='/ru/soccer'
+                              >
+                                <span className='sc-111o75k-0 hCXZYg'>
+                                  <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                                    <use fill='currentColor' href='#soccer'></use>
+                                  </svg>
+                                </span>
+                                <span className='sc-111o75k-3 jlOBWm DropdownItemInner'>
+                                  <span className='sc-hkjphn-11 edIZPf'>Футбол</span>
+                                </span>
+                              </a>
+                              <a className='link sc-111o75k-5 dNxTfO sc-hkjphn-10 ffzxWm' href='/ru/basketball'>
+                                <span className='sc-111o75k-0 hCXZYg'>
+                                  <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                                    <use fill='currentColor' href='#basketball'></use>
+                                  </svg>
+                                </span>
+                                <span className='sc-111o75k-3 jlOBWm DropdownItemInner'>
+                                  <span className='sc-hkjphn-11 edIZPf'>Баскетбол</span>
+                                </span>
+                              </a>
+                              <a className='link sc-111o75k-5 dNxTfO sc-hkjphn-10 ffzxWm' href='/ru/tennis'>
+                                <span className='sc-111o75k-0 hCXZYg'>
+                                  <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                                    <use fill='currentColor' href='#tennis'></use>
+                                  </svg>
+                                </span>
+                                <span className='sc-111o75k-3 jlOBWm DropdownItemInner'>
+                                  <span className='sc-hkjphn-11 edIZPf'>Теннис</span>
+                                </span>
+                              </a>
+                              <a className='link sc-111o75k-5 dNxTfO sc-hkjphn-10 ffzxWm' href='/ru/ice-hockey'>
+                                <span className='sc-111o75k-0 hCXZYg'>
+                                  <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                                    <use fill='currentColor' href='#ice-hockey'></use>
+                                  </svg>
+                                </span>
+                                <span className='sc-111o75k-3 jlOBWm DropdownItemInner'>
+                                  <span className='sc-hkjphn-11 edIZPf'>Хоккей</span>
+                                </span>
+                              </a>
+                              <a className='link sc-111o75k-5 dNxTfO sc-hkjphn-10 ffzxWm' href='/ru/table-tennis'>
+                                <span className='sc-111o75k-0 hCXZYg'>
+                                  <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                                    <use fill='currentColor' href='#table-tennis'></use>
+                                  </svg>
+                                </span>
+                                <span className='sc-111o75k-3 jlOBWm DropdownItemInner'>
+                                  <span className='sc-hkjphn-11 edIZPf'>Настольный теннис</span>
+                                </span>
+                              </a>
+                              <a className='link sc-111o75k-5 dNxTfO sc-hkjphn-10 ffzxWm' href='/ru/volleyball'>
+                                <span className='sc-111o75k-0 hCXZYg'>
+                                  <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                                    <use fill='currentColor' href='#volleyball'></use>
+                                  </svg>
+                                </span>
+                                <span className='sc-111o75k-3 jlOBWm DropdownItemInner'>
+                                  <span className='sc-hkjphn-11 edIZPf'>Волейбол</span>
+                                </span>
+                              </a>
+                              <a className='link sc-111o75k-5 dNxTfO sc-hkjphn-10 ffzxWm' href='/ru/handball'>
+                                <span className='sc-111o75k-0 hCXZYg'>
+                                  <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                                    <use fill='currentColor' href='#handball'></use>
+                                  </svg>
+                                </span>
+                                <span className='sc-111o75k-3 jlOBWm DropdownItemInner'>
+                                  <span className='sc-hkjphn-11 edIZPf'>Гандбол</span>
+                                </span>
+                              </a>
+                              <a className='link sc-111o75k-5 dNxTfO sc-hkjphn-10 ffzxWm' href='/ru/baseball'>
+                                <span className='sc-111o75k-0 hCXZYg'>
+                                  <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                                    <use fill='currentColor' href='#baseball'></use>
+                                  </svg>
+                                </span>
+                                <span className='sc-111o75k-3 jlOBWm DropdownItemInner'>
+                                  <span className='sc-hkjphn-11 edIZPf'>Бейсбол</span>
+                                </span>
+                              </a>
+                              <a className='link sc-111o75k-5 dNxTfO sc-hkjphn-10 ffzxWm' href='/ru/american-football'>
+                                <span className='sc-111o75k-0 hCXZYg'>
+                                  <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                                    <use fill='currentColor' href='#american-football'></use>
+                                  </svg>
+                                </span>
+                                <span className='sc-111o75k-3 jlOBWm DropdownItemInner'>
+                                  <span className='sc-hkjphn-11 edIZPf'>Американский футбол</span>
+                                </span>
+                              </a>
+                              <a className='link sc-111o75k-5 dNxTfO sc-hkjphn-10 ffzxWm' href='/ru/rugby'>
+                                <span className='sc-111o75k-0 hCXZYg'>
+                                  <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                                    <use fill='currentColor' href='#rugby'></use>
+                                  </svg>
+                                </span>
+                                <span className='sc-111o75k-3 jlOBWm DropdownItemInner'>
+                                  <span className='sc-hkjphn-11 edIZPf'>Регби</span>
+                                </span>
+                              </a>
+                              <a className='link sc-111o75k-5 dNxTfO sc-hkjphn-10 ffzxWm' href='/ru/cricket'>
+                                <span className='sc-111o75k-0 hCXZYg'>
+                                  <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                                    <use fill='currentColor' href='#cricket'></use>
+                                  </svg>
+                                </span>
+                                <span className='sc-111o75k-3 jlOBWm DropdownItemInner'>
+                                  <span className='sc-hkjphn-11 edIZPf'>Крикет</span>
+                                </span>
+                              </a>
+                              <a className='link sc-111o75k-5 dNxTfO sc-hkjphn-10 ffzxWm' href='/ru/mma'>
+                                <span className='sc-111o75k-0 hCXZYg'>
+                                  <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                                    <use fill='currentColor' href='#mma'></use>
+                                  </svg>
+                                </span>
+                                <span className='sc-111o75k-3 jlOBWm DropdownItemInner'>
+                                  <span className='sc-hkjphn-11 edIZPf'>ММА</span>
+                                </span>
+                              </a>
+                              <a className='link sc-111o75k-5 dNxTfO sc-hkjphn-10 ffzxWm' href='/ru/boxing'>
+                                <span className='sc-111o75k-0 hCXZYg'>
+                                  <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                                    <use fill='currentColor' href='#boxing'></use>
+                                  </svg>
+                                </span>
+                                <span className='sc-111o75k-3 jlOBWm DropdownItemInner'>
+                                  <span className='sc-hkjphn-11 edIZPf'>Бокс</span>
+                                </span>
+                              </a>
+                              <a className='link sc-111o75k-5 dNxTfO sc-hkjphn-10 ffzxWm' href='/ru/snooker'>
+                                <span className='sc-111o75k-0 hCXZYg'>
+                                  <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                                    <use fill='currentColor' href='#snooker'></use>
+                                  </svg>
+                                </span>
+                                <span className='sc-111o75k-3 jlOBWm DropdownItemInner'>
+                                  <span className='sc-hkjphn-11 edIZPf'>Снукер</span>
+                                </span>
+                              </a>
+                              <a className='link sc-111o75k-5 dNxTfO sc-hkjphn-10 ffzxWm' href='/ru/futsal'>
+                                <span className='sc-111o75k-0 hCXZYg'>
+                                  <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                                    <use fill='currentColor' href='#futsal'></use>
+                                  </svg>
+                                </span>
+                                <span className='sc-111o75k-3 jlOBWm DropdownItemInner'>
+                                  <span className='sc-hkjphn-11 edIZPf'>Футзал</span>
+                                </span>
+                              </a>
+                              <a className='link sc-111o75k-5 dNxTfO sc-hkjphn-10 ffzxWm' href='/ru/waterpolo'>
+                                <span className='sc-111o75k-0 hCXZYg'>
+                                  <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                                    <use fill='currentColor' href='#waterpolo'></use>
+                                  </svg>
+                                </span>
+                                <span className='sc-111o75k-3 jlOBWm DropdownItemInner'>
+                                  <span className='sc-hkjphn-11 edIZPf'>Водное поло</span>
+                                </span>
+                              </a>
+                              <a className='link sc-111o75k-5 dNxTfO sc-hkjphn-10 ffzxWm' href='/ru/badminton'>
+                                <span className='sc-111o75k-0 hCXZYg'>
+                                  <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                                    <use fill='currentColor' href='#badminton'></use>
+                                  </svg>
+                                </span>
+                                <span className='sc-111o75k-3 jlOBWm DropdownItemInner'>
+                                  <span className='sc-hkjphn-11 edIZPf'>Бадминтон</span>
+                                </span>
+                              </a>
+                              <a className='link sc-111o75k-5 dNxTfO sc-hkjphn-10 ffzxWm' href='/ru/darts'>
+                                <span className='sc-111o75k-0 hCXZYg'>
+                                  <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                                    <use fill='currentColor' href='#darts'></use>
+                                  </svg>
+                                </span>
+                                <span className='sc-111o75k-3 jlOBWm DropdownItemInner'>
+                                  <span className='sc-hkjphn-11 edIZPf'>Дартс</span>
+                                </span>
+                              </a>
+                              <a className='link sc-111o75k-5 dNxTfO sc-hkjphn-10 ffzxWm' href='/ru/csgo'>
+                                <span className='sc-111o75k-0 hCXZYg'>
+                                  <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                                    <use fill='currentColor' href='#csgo'></use>
+                                  </svg>
+                                </span>
+                                <span className='sc-111o75k-3 jlOBWm DropdownItemInner'>
+                                  <span className='sc-hkjphn-11 edIZPf'>Counter-Strike</span>
+                                </span>
+                              </a>
+                              <a className='link sc-111o75k-5 dNxTfO sc-hkjphn-10 ffzxWm' href='/ru/dota2'>
+                                <span className='sc-111o75k-0 hCXZYg'>
+                                  <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                                    <use fill='currentColor' href='#dota2'></use>
+                                  </svg>
+                                </span>
+                                <span className='sc-111o75k-3 jlOBWm DropdownItemInner'>
+                                  <span className='sc-hkjphn-11 edIZPf'>Dota 2</span>
+                                </span>
+                              </a>
+                              <a className='link sc-111o75k-5 dNxTfO sc-hkjphn-10 ffzxWm' href='/ru/lol'>
+                                <span className='sc-111o75k-0 hCXZYg'>
+                                  <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                                    <use fill='currentColor' href='#lol'></use>
+                                  </svg>
+                                </span>
+                                <span className='sc-111o75k-3 jlOBWm DropdownItemInner'>
+                                  <span className='sc-hkjphn-11 edIZPf'>League of Legends</span>
+                                </span>
+                              </a>
+                              <a className='link sc-111o75k-5 dNxTfO sc-hkjphn-10 ffzxWm' href='/ru/horse-racing'>
+                                <span className='sc-111o75k-0 hCXZYg'>
+                                  <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                                    <use fill='currentColor' href='#horse-racing'></use>
+                                  </svg>
+                                </span>
+                                <span className='sc-111o75k-3 jlOBWm DropdownItemInner'>
+                                  <span className='sc-hkjphn-11 edIZPf'>Скачки</span>
+                                </span>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                        <div className='sc-hkjphn-7 gpcNlA'></div>
+                        <div className='sc-1810s67-0 cgcLJU sc-hkjphn-1 gA-dPiR'>
+                          <div className='sc-1810s67-1 eAMuAQ hide-scrollbars' style={{ height: '50px' }}>
+                            <a className='link sc-hkjphn-5 gfiLxv' href='/ru/trends'>
+                              <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                                <use fill='currentColor' href='#fire'></use>
+                              </svg>
+                              Тренды
+                            </a>
+                            <a className='link sc-hkjphn-5 gfiLxv' href='/ru/predictions'>
+                              <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                                <use fill='currentColor' href='#bet-stacked'></use>
+                              </svg>
+                              Прогнозы
+                            </a>
+                            <a className='link sc-hkjphn-5 gfiLxv' href='/ru/accumulators'>
+                              <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                                <use fill='currentColor' href='#calculator'></use>
+                              </svg>
+                              Экспрессы
+                            </a>
+                            <a className='link sc-hkjphn-5 gfiLxv' href='/ru/sportbooks'>
+                              <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                                <use fill='currentColor' href='#bookmakers-rating'></use>
+                              </svg>
+                              Букмекеры
+                            </a>
+                            <a className='link sc-hkjphn-5 gfiLxv' href='/ru/articles'>
+                              <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                                <use fill='currentColor' href='#news'></use>
+                              </svg>
+                              Статьи
+                            </a>
+                          </div>
+                          <div className='sc-1810s67-2 jVfXyq HeaderNavShowMore'>
+                            <div className='sc-1t0r7hb-0 llvRLu'>
+                              <button
+                                aria-expanded='false'
+                                aria-label='ShowMore'
+                                className='sc-1810s67-4 clDzWV'
+                                id='showMoreHeaderNav'
+                                type='button'
+                              >
+                                <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                                  <use fill='currentColor' href='#ellipsis'></use>
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </nav>
+                    </div>
+                    <div className='sc-inssjx-7 ioaHga'>
+                      <div className='sc-1bhqq9-0 btnUSa HeaderSearch'>
+                        <div className='sc-1do6qmg-0 fZoceK'>
+                          <input
+                            autoComplete='one-time-code'
+                            className='sc-1do6qmg-1 koCOaF'
+                            placeholder='Поиск'
+                            type='text'
+                            value=''
+                          />
+                          <button aria-label='Search' className='sc-1do6qmg-3 cPFJwO' type='button'>
+                            <svg className='sc-i341db-0 ixrffO' direction='right' height='16' width='16'>
+                              <use fill='currentColor' href='#search'></use>
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className='sc-inssjx-8 eWcIzu'>
+                    <div className='sc-10wthie-1 kATIvv'>
+                      <button className='sc-xkaft1-4 kJcxug sc-10wthie-2 kMZWVV' type='button'>
+                        <svg
+                          className='sc-i341db-0 ixrffO sc-xkaft1-1 iIFIMH icon'
+                          direction='right'
+                          height='16'
+                          width='16'
+                        >
+                          <use fill='currentColor' href='#online'></use>
+                        </svg>
+                        <span className='sc-xkaft1-5 jqDLGl buttonText'>
+                          <span className='sc-xkaft1-3 eKEprw'>RU</span>
+                        </span>
+                        <svg
+                          className='sc-i341db-0 ixrffO sc-xkaft1-2 eJvZds chevron'
+                          direction='right'
+                          height='16'
+                          width='16'
+                        >
+                          <use fill='currentColor' href='#arrow-caret'></use>
+                        </svg>
+                      </button>
+                      <div
+                        className='sc-1u9bgxl-0 nFnwL fade-in dropdown_autoheight dropdown_hidden'
+                        style={{ position: 'absolute', top: 'calc(100% + 5px)', right: '-0px' }}
+                      >
+                        <div className='sc-1u9bgxl-1 biNLEy'>
+                          <a
+                            className='link sc-111o75k-5 dNxTfO sc-10wthie-3 jzddLS'
+                            href='/en/soccer/m-10-08-2025-chelsea-milan-prediction'
+                          >
+                            <span className='sc-111o75k-3 jlOBWm body'>
+                              <span className='sc-10wthie-4 fKFYzo'>EN</span>{' '}
+                              <span className='sc-10wthie-0 dnTSgG'></span> English
+                            </span>
+                          </a>
+                          <a
+                            className='link sc-111o75k-5 dNxTfO sc-10wthie-3 jzddLS'
+                            href='/es/soccer/m-10-08-2025-chelsea-milan-prediction'
+                          >
+                            <span className='sc-111o75k-3 jlOBWm body'>
+                              <span className='sc-10wthie-4 fKFYzo'>ES</span>{' '}
+                              <span className='sc-10wthie-0 dnTSgG'></span> Español
+                            </span>
+                          </a>
+                          <span className='link sc-111o75k-5 dNxTfO sc-10wthie-3 jzddLS DropdownItem_active DropdownItem_active pointer'>
+                            <span className='sc-111o75k-3 jlOBWm body'>
+                              <span className='sc-10wthie-4 fKFYzo'>RU</span>{' '}
+                              <span className='sc-10wthie-0 dnTSgG'></span> Русский
+                            </span>
+                          </span>
+                          <a
+                            className='link sc-111o75k-5 dNxTfO sc-10wthie-3 jzddLS'
+                            href='/it/soccer/m-10-08-2025-chelsea-milan-prediction'
+                          >
+                            <span className='sc-111o75k-3 jlOBWm body'>
+                              <span className='sc-10wthie-4 fKFYzo'>IT</span>{' '}
+                              <span className='sc-10wthie-0 dnTSgG'></span> Italiano
+                            </span>
+                          </a>
+                          <a
+                            className='link sc-111o75k-5 dNxTfO sc-10wthie-3 jzddLS'
+                            href='/fr/soccer/m-10-08-2025-chelsea-milan-prediction'
+                          >
+                            <span className='sc-111o75k-3 jlOBWm body'>
+                              <span className='sc-10wthie-4 fKFYzo'>FR</span>{' '}
+                              <span className='sc-10wthie-0 dnTSgG'></span> Français
+                            </span>
+                          </a>
+                          <a
+                            className='link sc-111o75k-5 dNxTfO sc-10wthie-3 jzddLS'
+                            href='/pt/soccer/m-10-08-2025-chelsea-milan-prediction'
+                          >
+                            <span className='sc-111o75k-3 jlOBWm body'>
+                              <span className='sc-10wthie-4 fKFYzo'>PT</span>{' '}
+                              <span className='sc-10wthie-0 dnTSgG'></span> Português
+                            </span>
+                          </a>
+                          <a
+                            className='link sc-111o75k-5 dNxTfO sc-10wthie-3 jzddLS'
+                            href='/de/soccer/m-10-08-2025-chelsea-milan-prediction'
+                          >
+                            <span className='sc-111o75k-3 jlOBWm body'>
+                              <span className='sc-10wthie-4 fKFYzo'>DE</span>{' '}
+                              <span className='sc-10wthie-0 dnTSgG'></span> Deutsch
+                            </span>
+                          </a>
+                          <a
+                            className='link sc-111o75k-5 dNxTfO sc-10wthie-3 jzddLS'
+                            href='/pl/soccer/m-10-08-2025-chelsea-milan-prediction'
+                          >
+                            <span className='sc-111o75k-3 jlOBWm body'>
+                              <span className='sc-10wthie-4 fKFYzo'>PL</span>{' '}
+                              <span className='sc-10wthie-0 dnTSgG'></span> Polski
+                            </span>
+                          </a>
+                          <a
+                            className='link sc-111o75k-5 dNxTfO sc-10wthie-3 jzddLS'
+                            href='/hu/soccer/m-10-08-2025-chelsea-milan-prediction'
+                          >
+                            <span className='sc-111o75k-3 jlOBWm body'>
+                              <span className='sc-10wthie-4 fKFYzo'>HU</span>{' '}
+                              <span className='sc-10wthie-0 dnTSgG'></span> Magyar
+                            </span>
+                          </a>
+                          <a
+                            className='link sc-111o75k-5 dNxTfO sc-10wthie-3 jzddLS'
+                            href='/ja/soccer/m-10-08-2025-chelsea-milan-prediction'
+                          >
+                            <span className='sc-111o75k-3 jlOBWm body'>
+                              <span className='sc-10wthie-4 fKFYzo'>JP</span>{' '}
+                              <span className='sc-10wthie-0 dnTSgG'></span> 日本語
+                            </span>
+                          </a>
+                          <a
+                            className='link sc-111o75k-5 dNxTfO sc-10wthie-3 jzddLS'
+                            href='/id/soccer/m-10-08-2025-chelsea-milan-prediction'
+                          >
+                            <span className='sc-111o75k-3 jlOBWm body'>
+                              <span className='sc-10wthie-4 fKFYzo'>ID</span>{' '}
+                              <span className='sc-10wthie-0 dnTSgG'></span> Indonesia
+                            </span>
+                          </a>
+                          <a
+                            className='link sc-111o75k-5 dNxTfO sc-10wthie-3 jzddLS'
+                            href='/gr/soccer/m-10-08-2025-chelsea-milan-prediction'
+                          >
+                            <span className='sc-111o75k-3 jlOBWm body'>
+                              <span className='sc-10wthie-4 fKFYzo'>GR</span>{' '}
+                              <span className='sc-10wthie-0 dnTSgG'></span> Ελληνικά
+                            </span>
+                          </a>
+                          <a
+                            className='link sc-111o75k-5 dNxTfO sc-10wthie-3 jzddLS'
+                            href='/cn/soccer/m-10-08-2025-chelsea-milan-prediction'
+                          >
+                            <span className='sc-111o75k-3 jlOBWm body'>
+                              <span className='sc-10wthie-4 fKFYzo'>CN</span>{' '}
+                              <span className='sc-10wthie-0 dnTSgG'></span> 中国语
+                            </span>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className='sc-d0h9pz-9 gAvJSa'>
+                      <div className='sc-d0h9pz-5 jjHChH'>
+                        <svg className='sc-i341db-0 ixrffO sc-d0h9pz-6 dvgmcX' direction='right' height='30' width='30'>
+                          <use fill='currentColor' href='#profile-avatar'></use>
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <svg
+                className='sc-inssjx-9 sc-inssjx-10 iLyA-Dg eEEXHJ'
+                height='20px'
+                preserveAspectRatio='none'
+                viewBox='0 0 20 20'
+                width='20px'
+                xmlns='http://www.w3.org/2000/svg'
+              >
+                <path d='M20,0 H0 V20 Q0,4 16,0 Z' fill='currentColor'></path>
+              </svg>
+              <svg
+                className='sc-inssjx-9 sc-inssjx-11 iLyA-Dg kWZyYE'
+                height='20px'
+                preserveAspectRatio='none'
+                viewBox='0 0 20 20'
+                width='20px'
+                xmlns='http://www.w3.org/2000/svg'
+              >
+                <path d='M0,0 H20 V20 Q20,4 4,0 Z' fill='currentColor'></path>
+              </svg>
+            </header>
+          </div>
+
+          <div className='sc-b8rrln-0 bUWSkZ sc-1xsn000-6 fbZGcb'>
+            <div className='sc-b8rrln-1 eRokCx'></div>
+          </div>
+
+          <div className='clever-core-ads'></div>
+          <main className='sc-1f6wkge-3 dVpqMC sc-1xsn000-7 kUxPYB'>
+            <aside className='sc-1f6wkge-0 hyREvX'>
+              <div className='sticky-outer-wrapper'>
+                <div className='sticky-inner-wrapper inner-name' style={{ position: 'relative', top: '0px' }}>
+                  <div className='sc-15xowze-0 jzyPYa' style={{ paddingBottom: 0 }}>
+                    <div className='sc-gsavkd-0 lnxYIu'>
+                      <div className='sc-1c7kzop-0 ijOoKt'>
+                        <ul className='sc-1c7kzop-1 laovTb'>
+                          <li className='sc-1c7kzop-2 eRHTJe'>
+                            <div className='sc-14qtqh-1 gdiJJi'>Футбол</div>
+                          </li>
+                          <li className='sc-1c7kzop-2 eRHTJe'>
+                            <div className='sc-1oygpd3-1 gLmPSg'>
+                              <a className='link sc-1oygpd3-2 ffxPKC' href='/ru/soccer'>
+                                <svg
+                                  className='sc-i341db-0 ixrffO sc-1oygpd3-0 fHOXXs'
+                                  direction='right'
+                                  height='20'
+                                  width='20'
+                                >
+                                  <use fill='currentColor' href='#faults'></use>
+                                </svg>
+                                <span>Матчи</span>
+                              </a>
+                            </div>
+                          </li>
+                          <li className='sc-1c7kzop-2 eRHTJe'>
+                            <div className='sc-1oygpd3-1 gLmPSg'>
+                              <a className='link sc-1oygpd3-2 ffxPKC' href='/ru/predictions/soccer'>
+                                <svg
+                                  className='sc-i341db-0 ixrffO sc-1oygpd3-0 fHOXXs'
+                                  direction='right'
+                                  height='20'
+                                  width='20'
+                                >
+                                  <use fill='currentColor' href='#bet-stacked'></use>
+                                </svg>
+                                <span>Прогнозы</span>
+                              </a>
+                            </div>
+                          </li>
+                          <li className='sc-1c7kzop-2 eRHTJe'>
+                            <div className='sc-1oygpd3-1 gLmPSg'>
+                              <a className='link sc-1oygpd3-2 ffxPKC' href='/ru/trends/soccer'>
+                                <svg
+                                  className='sc-i341db-0 ixrffO sc-1oygpd3-0 fHOXXs'
+                                  direction='right'
+                                  height='20'
+                                  width='20'
+                                >
+                                  <use fill='currentColor' href='#fire'></use>
+                                </svg>
+                                <span>Тренды</span>
+                              </a>
+                            </div>
+                          </li>
+                          <li className='sc-1c7kzop-2 eRHTJe'>
+                            <div className='sc-1oygpd3-1 gLmPSg'>
+                              <a className='link sc-1oygpd3-2 ffxPKC' href='/ru/accumulators/soccer'>
+                                <svg
+                                  className='sc-i341db-0 ixrffO sc-1oygpd3-0 fHOXXs'
+                                  direction='right'
+                                  height='20'
+                                  width='20'
+                                >
+                                  <use fill='currentColor' href='#calculator'></use>
+                                </svg>
+                                <span>Экспрессы</span>
+                              </a>
+                            </div>
+                          </li>
+                          <li className='sc-1c7kzop-2 eRHTJe'>
+                            <div className='sc-1oygpd3-1 gLmPSg'>
+                              <a className='link sc-1oygpd3-2 ffxPKC' href='/ru/soccer/countries'>
+                                <svg
+                                  className='sc-i341db-0 ixrffO sc-1oygpd3-0 fHOXXs'
+                                  direction='right'
+                                  height='20'
+                                  width='20'
+                                >
+                                  <use fill='currentColor' href='#cup'></use>
+                                </svg>
+                                <span>Турниры</span>
+                              </a>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+
+                      <div className='sc-15kg99g-0 cHXUNI sc-17qciki-0 lfYpni'>
+                        <div className='sc-1n1dofm-0 dsUkMS'>
+                          <div className='sc-1n1dofm-1 gvKteO'>Мои матчи</div>
+                          <div className='sc-1n1dofm-2 iyyYVs'>
+                            <svg className='sc-i341db-0 llDTjH' direction='down' height='16' width='16'>
+                              <use fill='currentColor' href='#arrow-caret'></use>
+                            </svg>
+                          </div>
+                        </div>
+                        <div className='sc-jrv2fx-0 fhEluS open' open=''>
+                          <div className='sc-15kg99g-1 ldCvGU'>
+                            <div className='sc-1vxyfb0-0 jUgDpx'>
+                              Нажмите
+                              <svg
+                                className='sc-i341db-0 ixrffO sc-1vxyfb0-1 cUeXyZ'
+                                direction='right'
+                                height='16'
+                                width='16'
+                              >
+                                <use fill='currentColor' href='#bell'></use>
+                              </svg>
+                              напротив матча, чтобы получать уведомления
+                            </div>
+                          </div>
+                          <div className='sc-15kg99g-2 jZcQfw'></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </aside>
+            <section className='sc-1f6wkge-1 eZXjvs'>
+              <section className='sc-1xsn000-9 iTuKvM'>
+                <div className='sc-18u0541-0 iGcyqB'></div>
+                <div>
+                  <div className='sc-qt1qbt-0 kzzMRu'>
+                    <div>
+                      <div>
+                        <div className='sc-1ioo4eh-0 flFKrK' data-testid='MatchHeader'>
+                          <div className='sc-13fposn-0 RYPTo'>
+                            <div className='sc-1810s67-0 cgcLJU sc-13fposn-1 hPEmnM'>
+                              <div className='sc-1810s67-1 fgxnql hide-scrollbars' style={{ height: '16px' }}>
+                                <div className='sc-ed0wb2-0 lmXJtI'>
+                                  <div className='sc-ed0wb2-1 ljMZEO'>
+                                    <a className='link sc-ed0wb2-3 hGsFNy link--active' href='/ru'>
+                                      Главная
+                                      <svg
+                                        className='sc-i341db-0 ixrffO sc-ed0wb2-2 fbRKwm'
+                                        direction='right'
+                                        height='16'
+                                        width='16'
+                                      >
+                                        <use fill='currentColor' href='#arrow-chevron-small'></use>
+                                      </svg>
+                                    </a>
+                                    <a className='link sc-ed0wb2-3 hGsFNy' href='/ru/predictions'>
+                                      Прогнозы
+                                      <svg
+                                        className='sc-i341db-0 ixrffO sc-ed0wb2-2 fbRKwm'
+                                        direction='right'
+                                        height='16'
+                                        width='16'
+                                      >
+                                        <use fill='currentColor' href='#arrow-chevron-small'></use>
+                                      </svg>
+                                    </a>
+                                    <a className='link sc-ed0wb2-3 hGsFNy' href='/ru/predictions/soccer'>
+                                      Футбол
+                                      <svg
+                                        className='sc-i341db-0 ixrffO sc-ed0wb2-2 fbRKwm'
+                                        direction='right'
+                                        height='16'
+                                        width='16'
+                                      >
+                                        <use fill='currentColor' href='#arrow-chevron-small'></use>
+                                      </svg>
+                                    </a>
+                                    <a
+                                      className='link sc-ed0wb2-3 hGsFNy'
+                                      href='/ru/soccer/l-international-clubs-club-friendly-games/predictions'
+                                    >
+                                      Клубные товарищеские матчи
+                                      <svg
+                                        className='sc-i341db-0 ixrffO sc-ed0wb2-2 fbRKwm'
+                                        direction='right'
+                                        height='16'
+                                        width='16'
+                                      >
+                                        <use fill='currentColor' href='#arrow-chevron-small'></use>
+                                      </svg>
+                                    </a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className='sc-13fposn-2 gNkGFj'>
+                              <div className='sc-1y5i3gt-0 iXaAmN'>
+                                <button aria-label='SubscribeButton' className='sc-o7yq8p-0 guXtYE' type='button'>
+                                  <svg
+                                    className='sc-i341db-0 ixrffO sc-o7yq8p-1 ezqmNo'
+                                    direction='right'
+                                    height='20'
+                                    width='20'
+                                  >
+                                    <use fill='currentColor' href='#star-sharp'></use>
+                                  </svg>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                          <div className='sc-1ioo4eh-1 cLROOp'>
+                            <div className='sc-1ioo4eh-2 duPWBJ'>
+                              <div className='sc-1ioo4eh-3 hTaxJd'>
+                                <div className='sc-1ioo4eh-4 eEmBuS'>
+                                  <div className='sc-wboo8m-0 fyNHcR'>
+                                    <a className='link sc-wboo8m-2 dVfgnQ' href='/ru/soccer/t-chelsea-fc'>
+                                      Челси
+                                    </a>
+                                  </div>
+                                </div>
+                                <div className='sc-1ioo4eh-5 juzZOG'>-</div>
+                                <div className='sc-1ioo4eh-4 eEmBuS'>
+                                  <div className='sc-wboo8m-0 fyNHcR'>
+                                    <a className='link sc-wboo8m-2 dVfgnQ' href='/ru/soccer/t-ac-milan-2'>
+                                      Милан
+                                    </a>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className='sc-1u3j2wh-0 iuactv'>
+                                <span data-testid='MatchHeaderHeadDate'>10.08.25</span>
+                                <div className='sc-1u3j2wh-1 kHgDCb'></div>
+                                <span data-testid='MatchHeaderHeadTime'>14:00</span>
+                              </div>
+                            </div>
+                            <div className='sc-1ioo4eh-6 cPBhYc'>
+                              <div className='sc-1ioo4eh-11 hZWaIU'>
+                                <div className='sc-6dcylu-0 sc-1ioo4eh-12 imMxPT'>
+                                  <div className='sc-6dcylu-1 lnPHoy' data-testid='MatchHeaderLogo'>
+                                    <div className='sc-13yy778-0 jACzoa' data-testid='MatchBoardLogo'>
+                                      <a
+                                        className='link sc-13yy778-3'
+                                        data-testid='MatchBoardLogoLink'
+                                        href='/ru/soccer/t-chelsea-fc'
+                                      >
+                                        <span
+                                          className='sc-11tt6ib-0 iQOaaC sc-13yy778-4 iAzNpS'
+                                          data-testid='MatchBoardLogoContainer'
+                                          size='60'
+                                        >
+                                          <img
+                                            alt='Челси'
+                                            className='lazyload sc-11tt6ib-2 mzpSx'
+                                            data-src='https://cdn.scores24.live/upload/team/w60-h60/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png'
+                                            data-srcset='https://cdn.scores24.live/upload/team/w60-h60/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png 1x, https://cdn.scores24.live/upload/team/w120-h120/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png 2x'
+                                            src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                          />
+                                        </span>
+                                      </a>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div
+                                  className='sc-1tryk2s-0 bjsAWl sc-1ioo4eh-13 rWYrB'
+                                  data-testid='DisplayPhysicalForm'
+                                >
+                                  <div className='sc-1tryk2s-1 fpzAk'>
+                                    <div className='sc-1tryk2s-2 bsVXQ' data-testid='DisplayPhysicalFormWrapper'>
+                                      <div
+                                        className='sc-1tryk2s-4 hNxsWs'
+                                        data-testid='DisplayPhysicalFormItem'
+                                        mode='gray'
+                                      >
+                                        <span className='link pointer sc-1tryk2s-5 fuipjo'></span>
+                                      </div>
+                                      <div
+                                        className='sc-1tryk2s-4 hNxsWs'
+                                        data-testid='DisplayPhysicalFormItem'
+                                        mode='gray'
+                                      >
+                                        <span className='link pointer sc-1tryk2s-5 fuipjo'></span>
+                                      </div>
+                                      <div
+                                        className='sc-1tryk2s-4 hNxsWs'
+                                        data-testid='DisplayPhysicalFormItem'
+                                        mode='gray'
+                                      >
+                                        <span className='link pointer sc-1tryk2s-5 fuipjo'></span>
+                                      </div>
+                                      <div
+                                        className='sc-1tryk2s-4 hNxsWs'
+                                        data-testid='DisplayPhysicalFormItem'
+                                        mode='gray'
+                                      >
+                                        <span className='link pointer sc-1tryk2s-5 fuipjo'></span>
+                                      </div>
+                                      <div
+                                        className='sc-1tryk2s-4 dsQacB'
+                                        data-testid='DisplayPhysicalFormItem'
+                                        mode='gray'
+                                      >
+                                        <span className='link pointer sc-1tryk2s-5 fuipjo'></span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className='sc-1ioo4eh-8 hfYoiR'>
+                                <div>
+                                  <div className='sc-1ioo4eh-9 jEJkvF'>
+                                    <div data-testid='MatchHeaderBodyTimeWrapper'>
+                                      <div className='sc-nbom0p-1 jCwmVa'>
+                                        <div className='sc-1ue4xdi-2 iswicc' data-testid='MatchHeaderTimer'>
+                                          <div className='sc-1ue4xdi-0 dMryWh' data-testid='MatchHeaderTimerHour'>
+                                            04
+                                          </div>
+                                          <div className='sc-1ue4xdi-1 cZqGFB'>:</div>
+                                          <div className='sc-1ue4xdi-0 dMryWh' data-testid='MatchHeaderTimerMinute'>
+                                            54
+                                          </div>
+                                          <div className='sc-1ue4xdi-1 lcroqe'>:</div>
+                                          <div className='sc-1ue4xdi-0 kbfhMY' data-testid='MatchHeaderTimerSecond'>
+                                            02
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className='sc-1ioo4eh-11 hZWaIU'>
+                                <div className='sc-6dcylu-0 sc-1ioo4eh-12 imMxPT'>
+                                  <div className='sc-6dcylu-1 lnPHoy' data-testid='MatchHeaderLogo'>
+                                    <div className='sc-13yy778-0 jACzoa' data-testid='MatchBoardLogo'>
+                                      <a
+                                        className='link sc-13yy778-3'
+                                        data-testid='MatchBoardLogoLink'
+                                        href='/ru/soccer/t-ac-milan-2'
+                                      >
+                                        <span
+                                          className='sc-11tt6ib-0 iQOaaC sc-13yy778-4 iAzNpS'
+                                          data-testid='MatchBoardLogoContainer'
+                                          size='60'
+                                        >
+                                          <img
+                                            alt='Милан'
+                                            className='lazyload sc-11tt6ib-2 mzpSx'
+                                            data-src='https://cdn.scores24.live/upload/team/w60-h60/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png'
+                                            data-srcset='https://cdn.scores24.live/upload/team/w60-h60/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png 1x, https://cdn.scores24.live/upload/team/w120-h120/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png 2x'
+                                            src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                          />
+                                        </span>
+                                      </a>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div
+                                  className='sc-1tryk2s-0 bjsAWl sc-1ioo4eh-13 rWYrB'
+                                  data-testid='DisplayPhysicalForm'
+                                >
+                                  <div className='sc-1tryk2s-1 fpzAk'>
+                                    <div className='sc-1tryk2s-2 bsVXQ' data-testid='DisplayPhysicalFormWrapper'>
+                                      <div
+                                        className='sc-1tryk2s-4 hNxsWs'
+                                        data-testid='DisplayPhysicalFormItem'
+                                        mode='gray'
+                                      >
+                                        <span className='link pointer sc-1tryk2s-5 fuipjo'></span>
+                                      </div>
+                                      <div
+                                        className='sc-1tryk2s-4 hNxsWs'
+                                        data-testid='DisplayPhysicalFormItem'
+                                        mode='gray'
+                                      >
+                                        <span className='link pointer sc-1tryk2s-5 fuipjo'></span>
+                                      </div>
+                                      <div
+                                        className='sc-1tryk2s-4 hNxsWs'
+                                        data-testid='DisplayPhysicalFormItem'
+                                        mode='gray'
+                                      >
+                                        <span className='link pointer sc-1tryk2s-5 fuipjo'></span>
+                                      </div>
+                                      <div
+                                        className='sc-1tryk2s-4 hNxsWs'
+                                        data-testid='DisplayPhysicalFormItem'
+                                        mode='gray'
+                                      >
+                                        <span className='link pointer sc-1tryk2s-5 fuipjo'></span>
+                                      </div>
+                                      <div
+                                        className='sc-1tryk2s-4 dsQacB'
+                                        data-testid='DisplayPhysicalFormItem'
+                                        mode='gray'
+                                      >
+                                        <span className='link pointer sc-1tryk2s-5 fuipjo'></span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className='sc-7qcxog-0 kuDffG'></div>
+                          </div>
+                        </div>
+                        <div className='sc-1fgmmbh-0 dndkCZ'>
+                          <div className='sc-1fgmmbh-1 gkARcj'>
+                            <div className='sc-1810s67-0 fyEwee sc-1fgmmbh-3 cLVDmQ'>
+                              <div
+                                className='sc-1810s67-1 fgxnql ListWrapper hide-scrollbars'
+                                style={{ height: '46px' }}
+                              >
+                                <div
+                                  className='sc-1fgmmbh-2 cDzsEY'
+                                  style={{ height: 0, width: 0, transform: 'translate(0px, 0px)' }}
+                                ></div>
+                                <div className='sc-1eqhv54-0 jfQGQa' data-active='false'>
+                                  <a className='link sc-1eqhv54-1 iZhYBh' href='/ru/soccer/m-10-08-2025-chelsea-milan'>
+                                    <svg
+                                      className='sc-i341db-0 ixrffO sc-1eqhv54-2 gFWeJv'
+                                      direction='right'
+                                      height='16'
+                                      width='16'
+                                    >
+                                      <use fill='currentColor' href='#interface'></use>
+                                    </svg>
+                                    Обзор
+                                  </a>
+                                </div>
+                                <div className='sc-1eqhv54-0 jfQGQa' data-active='true'>
+                                  <a
+                                    className='link sc-1eqhv54-1 fmYzlQ link--active'
+                                    href='/ru/soccer/m-10-08-2025-chelsea-milan-prediction'
+                                  >
+                                    <svg
+                                      className='sc-i341db-0 ixrffO sc-1eqhv54-2 gFWeJv'
+                                      direction='right'
+                                      height='16'
+                                      width='16'
+                                    >
+                                      <use fill='currentColor' href='#bet-stacked'></use>
+                                    </svg>
+                                    Прогноз
+                                  </a>
+                                </div>
+                                <div className='sc-1eqhv54-0 jfQGQa' data-active='false'>
+                                  <a
+                                    className='link sc-1eqhv54-1 iZhYBh'
+                                    href='/ru/soccer/m-10-08-2025-chelsea-milan#trends'
+                                  >
+                                    <svg
+                                      className='sc-i341db-0 ixrffO sc-1eqhv54-2 gFWeJv'
+                                      direction='right'
+                                      height='16'
+                                      width='16'
+                                    >
+                                      <use fill='currentColor' href='#fire'></use>
+                                    </svg>
+                                    Тренды
+                                  </a>
+                                </div>
+                                <div className='sc-1eqhv54-0 jfQGQa' data-active='false'>
+                                  <a
+                                    className='link sc-1eqhv54-1 iZhYBh'
+                                    href='/ru/soccer/m-10-08-2025-chelsea-milan-h2h'
+                                  >
+                                    <svg
+                                      className='sc-i341db-0 ixrffO sc-1eqhv54-2 gFWeJv'
+                                      direction='right'
+                                      height='16'
+                                      width='16'
+                                    >
+                                      <use fill='currentColor' href='#shield-separated'></use>
+                                    </svg>
+                                    Стат.
+                                  </a>
+                                </div>
+                                <div className='sc-1eqhv54-0 jlqUtq' data-active='false'>
+                                  <a
+                                    className='link sc-1eqhv54-1 iZhYBh'
+                                    href='/ru/soccer/m-10-08-2025-chelsea-milan#chat'
+                                  >
+                                    <svg
+                                      className='sc-i341db-0 ixrffO sc-1eqhv54-2 gFWeJv'
+                                      direction='right'
+                                      height='16'
+                                      width='16'
+                                    >
+                                      <use fill='currentColor' href='#comments'></use>
+                                    </svg>
+                                    Чат
+                                  </a>
+                                </div>
+                                <div className='sc-1eqhv54-0 jfQGQa' data-active='false'>
+                                  <a
+                                    className='link sc-1eqhv54-1 iZhYBh'
+                                    href='/ru/soccer/m-10-08-2025-chelsea-milan#odds'
+                                  >
+                                    <svg
+                                      className='sc-i341db-0 ixrffO sc-1eqhv54-2 gFWeJv'
+                                      direction='right'
+                                      height='16'
+                                      width='16'
+                                    >
+                                      <use fill='currentColor' href='#one-two-stacked'></use>
+                                    </svg>
+                                    Кэфы
+                                  </a>
+                                </div>
+                              </div>
+                              <div className='sc-1810s67-8 ghwVrb'>
+                                <svg className='sc-i341db-0 ixrffO' direction='right' height='16' width='16'>
+                                  <use fill='currentColor' href='#arrow-chevron-small'></use>
+                                </svg>
+                              </div>
+                              <div className='sc-1810s67-9 bfFHpO'>
+                                <svg className='sc-i341db-0 ixrffO' direction='right' height='16' width='16'>
+                                  <use fill='currentColor' href='#arrow-chevron-small'></use>
+                                </svg>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className='sc-958ogn-0 jXHTgF' data-testid='CommonDelimeter'></div>
+
+                  <div className='sc-165q7m8-0 gRVzLM' data-testid='MatchPredictionHead'>
+                    <h2 className='sc-4y75cf-0 hoRCwP' data-testid='Headline'>
+                      Челси - Милан прогноз
+                    </h2>
+                  </div>
+                  <div className='sc-7s74tu-0 bvsCVq sc-4u32b4-0 aHuDe'>
+                    <div className='sc-1810s67-0 cgcLJU'>
+                      <ul
+                        className='sc-1810s67-1 fgxnql pageAnchorsList hide-scrollbars'
+                        style={{ height: '30px' }}
+                      ></ul>
+                    </div>
+                  </div>
+                  <div className='sc-958ogn-0 jXHTgF' data-testid='CommonDelimeter'></div>
+
+                  <div className='sc-958ogn-0 jXHTgF' data-testid='CommonDelimeter'></div>
+                  <div>
+                    <div className='sc-2cxzjp-0 cfqqTg' data-anchor='prediction' data-testid='PageAnchorContainer'>
+                      <div className='sc-494x2g-0 gvBCgg'>
+                        <div className='sc-494x2g-2 hSGGEC'>
+                          <p>
+                            Будут ли игроки выкладываться на полную в предстоящей встрече? Товарищеский матч между
+                            командами Челси и Милан состоится 10 августа в 14:00. Чтобы лучше спрогнозировать исход
+                            игры, предлагаем ознакомиться со статистическими данными по коллективам.
+                          </p>
+                        </div>
+                        <div>
+                          <div className='sc-111vqmd-0 fiNJGr sc-494x2g-1 bvTyEo'>
+                            <div className='sc-111vqmd-1 huPwvB'>
+                              <div className='sc-111vqmd-2 dRkomU'>
+                                <h2 className='sc-4y75cf-0 hoRCwP sc-111vqmd-5 grXjBn' data-testid='Headline'>
+                                  Личные встречи
+                                </h2>
+                              </div>
+                            </div>
+                          </div>
+                          <div>
+                            <p>
+                              Последний официальный матч между командами состоялся 11 октября 2022 и завершился со
+                              счётом 0:2. Приведём сравнительную статистику той встречи (хозяева поля – Милан):
+                            </p>
+                            <ul>
+                              <li>процент владения мячом: 29% vs 71%;</li>
+                              <li>угловые удары: 2 vs 5;</li>
+                              <li>фолы: 11 vs 17;</li>
+                              <li>жёлтые карточки: 6 vs 3;</li>
+                              <li>удары в створ ворот: 1 vs 4.</li>
+                            </ul>
+                            <p>
+                              Начнём с истории личных встреч, в которой насчитывается 4 игры. Нынешним хозяевам поля
+                              удалось выиграть 4 раза, гости же одержали верх в 0 матчах.
+                            </p>
+                            <p>
+                              Что касается голов, то команда Челси поразила ворота соперника 10 раз. Коллектив Милан
+                              ответил 1 голом. Таким образом, средний тотал в очных встречах составляет 2.75.
+                            </p>
+                          </div>
+                        </div>
+                        <div className='sc-494x2g-2 sc-494x2g-3 hSGGEC iHOJZP'>
+                          <div className='sc-2cxzjp-0 cfqqTg' data-anchor='h2h' data-testid='PageAnchorContainer'>
+                            <div className='sc-1b1ga3p-0 fGiQFA' data-testid='MatchH2HWidget'>
+                              <div className='sc-1v24ncn-0 esABlP' data-testid='Container'>
+                                <div className='sc-111vqmd-0 hDSIKb sc-1b1ga3p-1 kGrClf'>
+                                  <div className='sc-111vqmd-1 huPwvB'>
+                                    <div className='sc-111vqmd-2 dRkomU'>
+                                      <h3 className='sc-4y75cf-0 fAPWyp sc-111vqmd-5 grXjBn' data-testid='Headline'>
+                                        Челси - Милан очные встречи и последние результаты
+                                      </h3>
+                                    </div>
+                                  </div>
+                                  <div className='sc-111vqmd-6 FuFnE'>
+                                    <div className='sc-1b1ga3p-3 kREMpv'>
+                                      <button className='sc-2dzn45-6 cVLSuC' data-testid='Chip'>
+                                        <div className='sc-2dzn45-1 ixyoiX'>
+                                          <div className='sc-2d1xt9-0 A-DEsR'>
+                                            <input className='sc-2d1xt9-1 bwkLHw' type='checkbox' />
+                                            <div className='sc-2d1xt9-2 fwWaeg'>
+                                              <svg
+                                                className='sc-i341db-0 ixrffO sc-2d1xt9-3 UuTht'
+                                                direction='right'
+                                                height='20'
+                                                width='20'
+                                              >
+                                                <use fill='currentColor' href='#check'></use>
+                                              </svg>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div className='sc-2dzn45-4 kVkqIr'>Дом/Выезд </div>
+                                        <div className='sc-2dzn45-2 bWbFCd'></div>
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className='sc-1v24ncn-0 esABlP' data-testid='Container'>
+                                <div className='sc-1g2gfht-0 dCXAxu' data-testid='MatchH2HChart'>
+                                  <div className='sc-1g2gfht-1 bgQNFH'>
+                                    <div className='sc-1g2gfht-2 cJDUWh'></div>
+                                    <div className='sc-1g2gfht-2 hOeego'></div>
+                                    <div className='sc-1g2gfht-2 hOeego'></div>
+                                  </div>
+                                  <div className='sc-1g2gfht-3 oURsR'>
+                                    <div className='sc-1g2gfht-6 dpbXln'>
+                                      <span className='sc-11tt6ib-0 fdYpUu' size='30'>
+                                        <img
+                                          className='lazyload sc-11tt6ib-2 mzpSx'
+                                          data-src='https://cdn.scores24.live/upload/team/w30-h30/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png'
+                                          data-srcset='https://cdn.scores24.live/upload/team/w30-h30/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png 1x, https://cdn.scores24.live/upload/team/w60-h60/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png 2x'
+                                          src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                        />
+                                      </span>
+                                      <div>
+                                        <div className='sc-1g2gfht-4 zcUMK'>100%</div>
+                                        <div className='sc-1g2gfht-5 hbICwL'>4 Победы</div>
+                                      </div>
+                                    </div>
+                                    <div className='sc-1g2gfht-6 dpbXln'>
+                                      <div>
+                                        <div className='sc-1g2gfht-4 zcUMK'>0%</div>
+                                        <div className='sc-1g2gfht-5 hbICwL'>0 Ничьих</div>
+                                      </div>
+                                    </div>
+                                    <div className='sc-1g2gfht-6 dpbXln'>
+                                      <div>
+                                        <div className='sc-1g2gfht-4 zcUMK'>0%</div>
+                                        <div className='sc-1g2gfht-5 hbICwL'>0 Побед</div>
+                                      </div>
+                                      <span className='sc-11tt6ib-0 fdYpUu' size='30'>
+                                        <img
+                                          className='lazyload sc-11tt6ib-2 mzpSx'
+                                          data-src='https://cdn.scores24.live/upload/team/w30-h30/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png'
+                                          data-srcset='https://cdn.scores24.live/upload/team/w30-h30/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png 1x, https://cdn.scores24.live/upload/team/w60-h60/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png 2x'
+                                          src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                        />
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className='sc-1v24ncn-0 hpPvWt' data-testid='Container'>
+                                <div className='sc-1v24ncn-0 jdBASz sc-1bt3bah-0 hmurfp' data-testid='Container'>
+                                  <div className='sc-1bt3bah-5 loFrxX'>
+                                    <div className='sc-1bt3bah-2 gjBWji'>
+                                      <div className='sc-1bt3bah-3 CMGOq'>Всего игр</div>
+                                      <div className='sc-1bt3bah-4 jRxnqn'>4</div>
+                                    </div>
+                                    <div className='sc-1bt3bah-2 gjBWji'>
+                                      <div className='sc-1bt3bah-3 CMGOq'>Средний тотал матча</div>
+                                      <div className='sc-1bt3bah-4 jRxnqn'>2.75</div>
+                                    </div>
+                                    <div className='sc-1bt3bah-2 gjBWji'>
+                                      <div className='sc-1bt3bah-3 CMGOq'>Обе команды забивали</div>
+                                      <div className='sc-1bt3bah-4 jRxnqn'>25%</div>
+                                    </div>
+                                  </div>
+                                  <div className='sc-1bt3bah-1 brAEa-d'>
+                                    <div className='sc-1bt3bah-2 gjBWji'>
+                                      <div className='sc-1bt3bah-4 jRxnqn'>2.5</div>
+                                      <div className='sc-1bt3bah-3 CMGOq'>Средний тотал</div>
+                                      <div className='sc-1bt3bah-4 jRxnqn'>0.25</div>
+                                    </div>
+                                    <div className='sc-1bt3bah-2 gjBWji'>
+                                      <div className='sc-1bt3bah-4 jRxnqn'>1.5</div>
+                                      <div className='sc-1bt3bah-3 CMGOq'>Жёлтые карточки</div>
+                                      <div className='sc-1bt3bah-4 jRxnqn'>3</div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className='sc-1v24ncn-0 hpPvWt' data-testid='Container'>
+                                <div className='sc-b9tb4l-0 gjZrXC'>
+                                  <div>
+                                    <div className='sc-30rb2b-2 hSCXdH' data-testid='MatchGenericHeader'>
+                                      <div className='sc-30rb2b-0 iiAsXC'>
+                                        <div className='sc-30rb2b-3 jLyKab'>Последние матчи</div>
+                                      </div>
+                                      <div className='sc-30rb2b-1 eRlrOB'>
+                                        <div className='sc-l3bgdv-0 cUdwHj' data-testid='MatchGenericStatisticsHeader'>
+                                          <div className='sc-l3bgdv-1 jkvlCM'>
+                                            <svg
+                                              className='sc-i341db-0 ixrffO'
+                                              direction='right'
+                                              height='20'
+                                              width='15'
+                                            >
+                                              <use fill='currentColor' href='#xg-icon'></use>
+                                            </svg>
+                                          </div>
+                                          <div className='sc-l3bgdv-1 jkvlDW'>
+                                            <svg
+                                              className='sc-i341db-0 ixrffO'
+                                              direction='right'
+                                              height='16'
+                                              width='16'
+                                            >
+                                              <use fill='currentColor' href='#corner-kicks-received'></use>
+                                            </svg>
+                                          </div>
+                                          <div className='sc-l3bgdv-1 jkvlDW'>
+                                            <svg
+                                              className='sc-i341db-0 ixrffO'
+                                              direction='right'
+                                              height='16'
+                                              width='16'
+                                            >
+                                              <use fill='currentColor' href='#faults'></use>
+                                            </svg>
+                                          </div>
+                                          <div className='sc-l3bgdv-1 jkvlDW'>
+                                            <div className='sc-cn243d-0 bzKxcj' color='yellow' data-testid='MatchCard'>
+                                              <svg
+                                                className='sc-i341db-0 ixrffO'
+                                                direction='right'
+                                                height='16'
+                                                width='16'
+                                              >
+                                                <use fill='currentColor' href='#card'></use>
+                                              </svg>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className='sc-b9tb4l-2 eEVvvY'>
+                                      <div className='sc-15z5276-0 hSdDfN sc-b9tb4l-3 gKdmEn'>
+                                        <div className='sc-15z5276-2 fAwaEU'>
+                                          <div className='sc-1eaieo6-0 dEJdyt __MatchGamesBody'>
+                                            <div className='sc-jrv2fx-0 fhEluS open' open=''>
+                                              <div className='sc-17qxh4e-0 dHxDFU'>
+                                                <div className='sc-17qxh4e-1 iLRgmV'>
+                                                  <div
+                                                    className='sc-vn72qa-0 wcbRr sc-17qxh4e-12 hhOtWx'
+                                                    data-testid='MatchGenericSubscribe'
+                                                  ></div>
+                                                  <div className='sc-5hj7ft-0 dDFJAN' data-testid='MatchGenericInfo'>
+                                                    <div className='sc-oh2bsf-0 fUZLA'>
+                                                      <span>11.10.22</span>
+                                                    </div>
+                                                    <div className='sc-5hj7ft-1 eYrqTP'></div>
+                                                    <span className='sc-5hj7ft-3 eKJwvm'>ЛЧУ</span>
+                                                    <div className='sc-p2ps84-0 hfixrZ sc-5hj7ft-5 jynVzi'>
+                                                      <div className='sc-p2ps84-1 etreKg'>
+                                                        <a
+                                                          className='link sc-2k73ey-0 hHswlX'
+                                                          href='/ru/soccer/m-11-10-2022-ac-milan-chelsea-fc-prediction'
+                                                        >
+                                                          <svg
+                                                            className='sc-i341db-0 ixrffO sc-2k73ey-1 fzOumZ'
+                                                            direction='right'
+                                                            height='20'
+                                                            width='20'
+                                                          >
+                                                            <use fill='currentColor' href='#bet-stacked'></use>
+                                                          </svg>
+                                                        </a>
+                                                      </div>
+                                                      <div
+                                                        className='sc-vn72qa-0 wcbRr'
+                                                        data-testid='MatchGenericSubscribe'
+                                                      ></div>
+                                                    </div>
+                                                  </div>
+                                                  <span className='link sc-17qxh4e-8 fwbGnc pointer'></span>
+                                                  <div className='sc-17qxh4e-3 dSsigE'>
+                                                    <div className='sc-17qxh4e-4 kWBSIF'>
+                                                      <div className='sc-17qxh4e-9 kNTalG'>
+                                                        <div className='sc-17qxh4e-5 iUfAma'>
+                                                          <div className='sc-17qxh4e-6 jncOYI'>
+                                                            <span
+                                                              className='sc-11tt6ib-0 eAPQXi sc-17qxh4e-7 ewpDUQ'
+                                                              size='18'
+                                                            >
+                                                              <img
+                                                                alt='Милан'
+                                                                className='lazyload sc-11tt6ib-2 mzpSx'
+                                                                data-src='https://cdn.scores24.live/upload/team/w20-h20/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png'
+                                                                data-srcset='https://cdn.scores24.live/upload/team/w20-h20/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png 1x, https://cdn.scores24.live/upload/team/w40-h40/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png 2x'
+                                                                src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                                              />
+                                                            </span>
+                                                            <div className='sc-17qxh4e-11 bAavID'>
+                                                              <div className='sc-17qxh4e-10 iztCrh'>Милан</div>
+                                                              <div
+                                                                className='sc-cn243d-0 kqAIXT sc-17qxh4e-15 icWxNy'
+                                                                color='red'
+                                                                data-testid='MatchCard'
+                                                              >
+                                                                <svg
+                                                                  className='sc-i341db-0 ixrffO'
+                                                                  direction='right'
+                                                                  height='16'
+                                                                  width='16'
+                                                                >
+                                                                  <use fill='currentColor' href='#card'></use>
+                                                                </svg>
+                                                                <div className='sc-cn243d-1 bxwJRz'>1</div>
+                                                              </div>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                        <div className='sc-17qxh4e-5 iUfAma'>
+                                                          <div className='sc-17qxh4e-6 jncOYI'>
+                                                            <span
+                                                              className='sc-11tt6ib-0 eAPQXi sc-17qxh4e-7 ewpDUQ'
+                                                              size='18'
+                                                            >
+                                                              <img
+                                                                alt='Челси'
+                                                                className='lazyload sc-11tt6ib-2 mzpSx'
+                                                                data-src='https://cdn.scores24.live/upload/team/w20-h20/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png'
+                                                                data-srcset='https://cdn.scores24.live/upload/team/w20-h20/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png 1x, https://cdn.scores24.live/upload/team/w40-h40/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png 2x'
+                                                                src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                                              />
+                                                            </span>
+                                                            <div className='sc-17qxh4e-11 bAavID'>
+                                                              <div className='sc-17qxh4e-10 esbhnW'>Челси</div>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      <div className='sc-17qxh4e-2 cuPJkr'>
+                                                        <div
+                                                          className='sc-cmtokc-0 deICTO'
+                                                          data-testid='MatchGenericStatistics'
+                                                        >
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>2</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>5</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>11</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>17</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>6</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>3</div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      <div className='sc-4g7sie-0 gMBPyP'>
+                                                        <div className='sc-pvs6fr-0 cguIVO sc-4whuex-1 kdcjrx'>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>2</div>
+                                                        </div>
+                                                        <div className='sc-pvs6fr-0 iqhToT'>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>2</div>
+                                                        </div>
+                                                        <div className='sc-pvs6fr-0 iqhToT'>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div className='sc-17qxh4e-2 cuPJkr'>
+                                                      <div
+                                                        className='sc-cmtokc-0 deICTO'
+                                                        data-testid='MatchGenericStatistics'
+                                                      >
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>2</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>5</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>11</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>17</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>6</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>3</div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      className='sc-1spz999-0 bvWwSG'
+                                                      data-testid='MatchGenericActions'
+                                                    >
+                                                      <div className='sc-p2ps84-0 hfixrZ sc-1spz999-1 iDrgnu'>
+                                                        <div className='sc-p2ps84-1 etreKg action'>
+                                                          <a
+                                                            className='link sc-2k73ey-0 hHswlX'
+                                                            href='/ru/soccer/m-11-10-2022-ac-milan-chelsea-fc-prediction'
+                                                          >
+                                                            <svg
+                                                              className='sc-i341db-0 ixrffO sc-2k73ey-1 fzOumZ'
+                                                              direction='right'
+                                                              height='20'
+                                                              width='20'
+                                                            >
+                                                              <use fill='currentColor' href='#bet-stacked'></use>
+                                                            </svg>
+                                                          </a>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div className='sc-17qxh4e-0 dHxDFU'>
+                                                <div className='sc-17qxh4e-1 iLRgmV'>
+                                                  <div
+                                                    className='sc-vn72qa-0 wcbRr sc-17qxh4e-12 hhOtWx'
+                                                    data-testid='MatchGenericSubscribe'
+                                                  ></div>
+                                                  <div className='sc-5hj7ft-0 dDFJAN' data-testid='MatchGenericInfo'>
+                                                    <div className='sc-oh2bsf-0 fUZLA'>
+                                                      <span>05.10.22</span>
+                                                    </div>
+                                                    <div className='sc-5hj7ft-1 eYrqTP'></div>
+                                                    <span className='sc-5hj7ft-3 eKJwvm'>ЛЧУ</span>
+                                                    <div className='sc-p2ps84-0 hfixrZ sc-5hj7ft-5 jynVzi'>
+                                                      <div className='sc-p2ps84-1 etreKg'>
+                                                        <a
+                                                          className='link sc-2k73ey-0 hHswlX'
+                                                          href='/ru/soccer/m-05-10-2022-chelsea-fc-ac-milan-prediction'
+                                                        >
+                                                          <svg
+                                                            className='sc-i341db-0 ixrffO sc-2k73ey-1 fzOumZ'
+                                                            direction='right'
+                                                            height='20'
+                                                            width='20'
+                                                          >
+                                                            <use fill='currentColor' href='#bet-stacked'></use>
+                                                          </svg>
+                                                        </a>
+                                                      </div>
+                                                      <div
+                                                        className='sc-vn72qa-0 wcbRr'
+                                                        data-testid='MatchGenericSubscribe'
+                                                      ></div>
+                                                    </div>
+                                                  </div>
+                                                  <span className='link sc-17qxh4e-8 fwbGnc pointer'></span>
+                                                  <div className='sc-17qxh4e-3 dSsigE'>
+                                                    <div className='sc-17qxh4e-4 kWBSIF'>
+                                                      <div className='sc-17qxh4e-9 kNTalG'>
+                                                        <div className='sc-17qxh4e-5 iUfAma'>
+                                                          <div className='sc-17qxh4e-6 jncOYI'>
+                                                            <span
+                                                              className='sc-11tt6ib-0 eAPQXi sc-17qxh4e-7 ewpDUQ'
+                                                              size='18'
+                                                            >
+                                                              <img
+                                                                alt='Челси'
+                                                                className='lazyload sc-11tt6ib-2 mzpSx'
+                                                                data-src='https://cdn.scores24.live/upload/team/w20-h20/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png'
+                                                                data-srcset='https://cdn.scores24.live/upload/team/w20-h20/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png 1x, https://cdn.scores24.live/upload/team/w40-h40/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png 2x'
+                                                                src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                                              />
+                                                            </span>
+                                                            <div className='sc-17qxh4e-11 bAavID'>
+                                                              <div className='sc-17qxh4e-10 esbhnW'>Челси</div>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                        <div className='sc-17qxh4e-5 iUfAma'>
+                                                          <div className='sc-17qxh4e-6 jncOYI'>
+                                                            <span
+                                                              className='sc-11tt6ib-0 eAPQXi sc-17qxh4e-7 ewpDUQ'
+                                                              size='18'
+                                                            >
+                                                              <img
+                                                                alt='Милан'
+                                                                className='lazyload sc-11tt6ib-2 mzpSx'
+                                                                data-src='https://cdn.scores24.live/upload/team/w20-h20/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png'
+                                                                data-srcset='https://cdn.scores24.live/upload/team/w20-h20/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png 1x, https://cdn.scores24.live/upload/team/w40-h40/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png 2x'
+                                                                src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                                              />
+                                                            </span>
+                                                            <div className='sc-17qxh4e-11 bAavID'>
+                                                              <div className='sc-17qxh4e-10 iztCrh'>Милан</div>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      <div className='sc-17qxh4e-2 cuPJkr'>
+                                                        <div
+                                                          className='sc-cmtokc-0 deICTO'
+                                                          data-testid='MatchGenericStatistics'
+                                                        >
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>4</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>3</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>15</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>15</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>2</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>3</div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      <div className='sc-4g7sie-0 gMBPyP'>
+                                                        <div className='sc-pvs6fr-0 cguIVO sc-4whuex-1 kdcjrx'>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>3</div>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                        </div>
+                                                        <div className='sc-pvs6fr-0 iqhToT'>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>1</div>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                        </div>
+                                                        <div className='sc-pvs6fr-0 iqhToT'>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>2</div>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div className='sc-17qxh4e-2 cuPJkr'>
+                                                      <div
+                                                        className='sc-cmtokc-0 deICTO'
+                                                        data-testid='MatchGenericStatistics'
+                                                      >
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>4</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>3</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>15</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>15</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>2</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>3</div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      className='sc-1spz999-0 bvWwSG'
+                                                      data-testid='MatchGenericActions'
+                                                    >
+                                                      <div className='sc-p2ps84-0 hfixrZ sc-1spz999-1 iDrgnu'>
+                                                        <div className='sc-p2ps84-1 etreKg action'>
+                                                          <a
+                                                            className='link sc-2k73ey-0 hHswlX'
+                                                            href='/ru/soccer/m-05-10-2022-chelsea-fc-ac-milan-prediction'
+                                                          >
+                                                            <svg
+                                                              className='sc-i341db-0 ixrffO sc-2k73ey-1 fzOumZ'
+                                                              direction='right'
+                                                              height='20'
+                                                              width='20'
+                                                            >
+                                                              <use fill='currentColor' href='#bet-stacked'></use>
+                                                            </svg>
+                                                          </a>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <div className='sc-1eaieo6-0 dEJdyt __MatchGamesBody'>
+                                            <div className='sc-jrv2fx-0 WmwaT notEntered'></div>
+                                          </div>
+                                        </div>
+                                        <div className='sc-15z5276-1 jvqndO empty'>
+                                          <div className='sc-15z5276-4 dKhvGV'>
+                                            <svg
+                                              className='sc-i341db-0 ixrffO sc-15z5276-5 fqHOwN'
+                                              direction='right'
+                                              height='90'
+                                              width='90'
+                                            >
+                                              <use fill='currentColor' href='#empty-general'></use>
+                                            </svg>
+                                          </div>
+                                          <div className='sc-15z5276-3 hpirry'>
+                                            <div className='sc-15z5276-6 TysSf'>Матчей нет</div>
+                                            <div className='sc-15z5276-7 krKqUg'>
+                                              Добавьте интересующие вас матчи или подпишитесь на команду, турнир или
+                                              игрока.
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className='sc-494x2g-2 hSGGEC'>
+                          <div className='sc-1gd34kg-0 iWHzDM'>
+                            <div className='sc-1gd34kg-1 kcQuML'>
+                              <span className='sc-11tt6ib-0 iQOaaC sc-1gd34kg-6 ehwfCy' size='60'>
+                                <img
+                                  className='lazyload sc-11tt6ib-2 mzpSx'
+                                  data-src='https://cdn.scores24.live/upload/team/w60-h60/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png'
+                                  data-srcset='https://cdn.scores24.live/upload/team/w60-h60/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png 1x, https://cdn.scores24.live/upload/team/w120-h120/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png 2x'
+                                  src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                />
+                              </span>
+                              <h2 className='sc-1gd34kg-2 cNYWKh'>
+                                Челси<span className='sc-1gd34kg-4 bLsdd'> Обзор команды</span>
+                              </h2>
+                            </div>
+                            <div className='sc-494x2g-0 sc-1gd34kg-5 gvBCgg hhWnfd'>
+                              <p>
+                                Последний официальный матч команда провела 8 августа 2025 в рамках турнира Клубные
+                                товарищеские матчи (хозяева поля – Челси, гости – Байер). Матч завершился со счётом 2:0.
+                              </p>
+                              <p>Статистика игры следующая (Челси vs Байер):</p>
+                              <ul>
+                                <li>процент владения мячом: 69% vs 31%;</li>
+                                <li>угловые удары: 7 vs 4;</li>
+                                <li>жёлтые карточки: 1 vs 2;</li>
+                                <li>удары в створ ворот: 6 vs 2.</li>
+                              </ul>
+                              <p>
+                                ✅Команде Челси выпала честь провести первый официальный матч в этом сезоне на своём
+                                поле. Нам только предстоит увидеть, какую работу проделали над своей игрой тренерский
+                                состав и игроки. А пока предлагаем ознакомиться со статистикой коллектива за последние
+                                10 матчей.
+                              </p>
+                              <p>
+                                На официальном десятиматчевом отрезке команда имеет 9 побед, 1 поражение, и 0 ничьи. В
+                                общей сложности за 10 предыдущих игр коллектив забил 23 гола. Исходя из этого можно
+                                посчитать среднее количество голов за игру, которое составляет 2.3. При этом в домашних
+                                матчах этот показатель равен 2. Что касается пропущенных мячей, то их среднее количество
+                                равно 0.6.
+                              </p>
+                            </div>
+                            <div className='sc-1gd34kg-7 eGDoMz'>
+                              <div className='sc-85qh4y-0 jcnSTJ'>
+                                <div className='sc-ou8qdt-0 kIFtjI'>
+                                  <h3 className='sc-4y75cf-0 fAPWyp sc-ou8qdt-1 eIHCZe' data-testid='Headline'>
+                                    Результаты матчей: Челси
+                                  </h3>
+                                  <div className='sc-ou8qdt-2 igXPEY'>
+                                    <div className='sc-1t0r7hb-0 llvRLu'>
+                                      <button
+                                        className='sc-2dzn45-6 cVLSuC sc-13b4qwh-1 sc-ou8qdt-3 ikRGnq'
+                                        data-testid='Chip'
+                                      >
+                                        <div className='sc-2dzn45-1 ixyoiX'></div>
+                                        <div className='sc-2dzn45-4 kVkqIr'>Все турниры </div>
+                                        <div className='sc-2dzn45-2 bWbFCd'>
+                                          <svg
+                                            className='sc-i341db-0 ixrffO sc-13b4qwh-0 kYKqgr'
+                                            direction='right'
+                                            height='16'
+                                            width='16'
+                                          >
+                                            <use fill='currentColor' href='#arrow-chevron'></use>
+                                          </svg>
+                                        </div>
+                                      </button>
+                                    </div>
+                                    <div className='sc-1t0r7hb-0 llvRLu'>
+                                      <button className='sc-2dzn45-6 cVLSuC sc-13b4qwh-1' data-testid='Chip'>
+                                        <div className='sc-2dzn45-1 ixyoiX'></div>
+                                        <div className='sc-2dzn45-4 kVkqIr'>Все матчи </div>
+                                        <div className='sc-2dzn45-2 bWbFCd'>
+                                          <svg
+                                            className='sc-i341db-0 ixrffO sc-13b4qwh-0 kYKqgr'
+                                            direction='right'
+                                            height='16'
+                                            width='16'
+                                          >
+                                            <use fill='currentColor' href='#arrow-chevron'></use>
+                                          </svg>
+                                        </div>
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className='sc-b9tb4l-0 irdcwi'>
+                                  <div>
+                                    <div className='sc-wzh2yo-0 kgmgDt' data-testid='StickyHeader'>
+                                      <div className='sc-30rb2b-2 hSCXdH' data-testid='MatchGenericHeader'>
+                                        <div className='sc-30rb2b-0 iiAsXC'>
+                                          <div className='sc-30rb2b-3 jLyKab'>Последние матчи</div>
+                                        </div>
+                                        <div className='sc-30rb2b-1 eRlrOB'>
+                                          <div
+                                            className='sc-l3bgdv-0 cUdwHj'
+                                            data-testid='MatchGenericStatisticsHeader'
+                                          >
+                                            <div className='sc-l3bgdv-1 jkvlCM'>
+                                              <svg
+                                                className='sc-i341db-0 ixrffO'
+                                                direction='right'
+                                                height='20'
+                                                width='15'
+                                              >
+                                                <use fill='currentColor' href='#xg-icon'></use>
+                                              </svg>
+                                            </div>
+                                            <div className='sc-l3bgdv-1 jkvlDW'>
+                                              <svg
+                                                className='sc-i341db-0 ixrffO'
+                                                direction='right'
+                                                height='16'
+                                                width='16'
+                                              >
+                                                <use fill='currentColor' href='#corner-kicks-received'></use>
+                                              </svg>
+                                            </div>
+                                            <div className='sc-l3bgdv-1 jkvlDW'>
+                                              <svg
+                                                className='sc-i341db-0 ixrffO'
+                                                direction='right'
+                                                height='16'
+                                                width='16'
+                                              >
+                                                <use fill='currentColor' href='#faults'></use>
+                                              </svg>
+                                            </div>
+                                            <div className='sc-l3bgdv-1 jkvlDW'>
+                                              <div
+                                                className='sc-cn243d-0 bzKxcj'
+                                                color='yellow'
+                                                data-testid='MatchCard'
+                                              >
+                                                <svg
+                                                  className='sc-i341db-0 ixrffO'
+                                                  direction='right'
+                                                  height='16'
+                                                  width='16'
+                                                >
+                                                  <use fill='currentColor' href='#card'></use>
+                                                </svg>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className='sc-b9tb4l-2 eEVvvY'>
+                                      <div className='sc-15z5276-0 hSdDfN sc-b9tb4l-3 gKdmEn'>
+                                        <div className='sc-15z5276-2 fAwaEU'>
+                                          <div className='sc-1eaieo6-0 dEJdyt __MatchGamesBody'>
+                                            <div className='sc-jrv2fx-0 fhEluS open' open=''>
+                                              <div className='sc-17qxh4e-0 dHxDFU'>
+                                                <div className='sc-17qxh4e-1 iLRgmV'>
+                                                  <div
+                                                    className='sc-vn72qa-0 wcbRr sc-17qxh4e-12 hhOtWx'
+                                                    data-testid='MatchGenericSubscribe'
+                                                  ></div>
+                                                  <span
+                                                    className='sc-1hthis6-0 bZQzlG sc-17qxh4e-13 huCtwe'
+                                                    type='win'
+                                                  ></span>
+                                                  <div className='sc-5hj7ft-0 dDFJAN' data-testid='MatchGenericInfo'>
+                                                    <div className='sc-oh2bsf-0 fUZLA'>
+                                                      <span>08.08.25</span>
+                                                    </div>
+                                                    <div className='sc-5hj7ft-1 eYrqTP'></div>
+                                                    <span className='sc-5hj7ft-3 eKJwvm'>
+                                                      Клубные товарищеские матчи
+                                                    </span>
+                                                    <div className='sc-p2ps84-0 hfixrZ sc-5hj7ft-5 jynVzi'>
+                                                      <div
+                                                        className='sc-vn72qa-0 wcbRr'
+                                                        data-testid='MatchGenericSubscribe'
+                                                      ></div>
+                                                    </div>
+                                                  </div>
+                                                  <a
+                                                    className='link sc-17qxh4e-8 fwbGnc'
+                                                    href='/ru/soccer/m-08-08-2025-chelsea-bayer-leverkusen'
+                                                  ></a>
+                                                  <div className='sc-17qxh4e-3 dSsigE'>
+                                                    <div className='sc-17qxh4e-4 kWBSIF'>
+                                                      <div className='sc-17qxh4e-9 kNTalG'>
+                                                        <div className='sc-17qxh4e-5 iUfAma'>
+                                                          <div className='sc-17qxh4e-6 jncOYI'>
+                                                            <span
+                                                              className='sc-11tt6ib-0 eAPQXi sc-17qxh4e-7 ewpDUQ'
+                                                              size='18'
+                                                            >
+                                                              <img
+                                                                alt='Челси'
+                                                                className='lazyload sc-11tt6ib-2 mzpSx'
+                                                                data-src='https://cdn.scores24.live/upload/team/w20-h20/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png'
+                                                                data-srcset='https://cdn.scores24.live/upload/team/w20-h20/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png 1x, https://cdn.scores24.live/upload/team/w40-h40/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png 2x'
+                                                                src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                                              />
+                                                            </span>
+                                                            <div className='sc-17qxh4e-11 bAavID'>
+                                                              <div className='sc-17qxh4e-10 esbhnW'>Челси</div>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                        <div className='sc-17qxh4e-5 iUfAma'>
+                                                          <div className='sc-17qxh4e-6 jncOYI'>
+                                                            <span
+                                                              className='sc-11tt6ib-0 eAPQXi sc-17qxh4e-7 ewpDUQ'
+                                                              size='18'
+                                                            >
+                                                              <img
+                                                                alt='Байер'
+                                                                className='lazyload sc-11tt6ib-2 mzpSx'
+                                                                data-src='https://cdn.scores24.live/upload/team/w20-h20/424/5b1/ac20998721bd5643be5dd3a5e5ff2ff390.png'
+                                                                data-srcset='https://cdn.scores24.live/upload/team/w20-h20/424/5b1/ac20998721bd5643be5dd3a5e5ff2ff390.png 1x, https://cdn.scores24.live/upload/team/w40-h40/424/5b1/ac20998721bd5643be5dd3a5e5ff2ff390.png 2x'
+                                                                src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                                              />
+                                                            </span>
+                                                            <div className='sc-17qxh4e-11 bAavID'>
+                                                              <div className='sc-17qxh4e-10 iztCrh'>Байер</div>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      <div className='sc-17qxh4e-2 cuPJkr'>
+                                                        <div
+                                                          className='sc-cmtokc-0 deICTO'
+                                                          data-testid='MatchGenericStatistics'
+                                                        >
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>7</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>4</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>1</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>2</div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      <div className='sc-4g7sie-0 gMBPyP'>
+                                                        <div className='sc-pvs6fr-0 cguIVO sc-4whuex-1 kdcjrx'>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>2</div>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                        </div>
+                                                        <div className='sc-pvs6fr-0 iqhToT'>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>1</div>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                        </div>
+                                                        <div className='sc-pvs6fr-0 iqhToT'>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>1</div>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div className='sc-17qxh4e-2 cuPJkr'>
+                                                      <div
+                                                        className='sc-cmtokc-0 deICTO'
+                                                        data-testid='MatchGenericStatistics'
+                                                      >
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>7</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>4</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>1</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>2</div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      className='sc-1spz999-0 bvWwSG'
+                                                      data-testid='MatchGenericActions'
+                                                    >
+                                                      <span
+                                                        className='sc-1hthis6-0 bZQzlG sc-1spz999-2 jcYBgi'
+                                                        type='win'
+                                                      >
+                                                        В
+                                                      </span>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div className='sc-17qxh4e-0 dHxDFU'>
+                                                <div className='sc-17qxh4e-1 iLRgmV'>
+                                                  <div
+                                                    className='sc-vn72qa-0 wcbRr sc-17qxh4e-12 hhOtWx'
+                                                    data-testid='MatchGenericSubscribe'
+                                                  ></div>
+                                                  <span
+                                                    className='sc-1hthis6-0 byxdUl sc-17qxh4e-13 huCtwe'
+                                                    type='lose'
+                                                  ></span>
+                                                  <div className='sc-5hj7ft-0 dDFJAN' data-testid='MatchGenericInfo'>
+                                                    <div className='sc-oh2bsf-0 fUZLA'>
+                                                      <span>26.07.25</span>
+                                                    </div>
+                                                    <div className='sc-5hj7ft-1 eYrqTP'></div>
+                                                    <span className='sc-5hj7ft-3 eKJwvm'>
+                                                      Клубные товарищеские матчи
+                                                    </span>
+                                                    <div className='sc-p2ps84-0 hfixrZ sc-5hj7ft-5 jynVzi'>
+                                                      <div
+                                                        className='sc-vn72qa-0 wcbRr'
+                                                        data-testid='MatchGenericSubscribe'
+                                                      ></div>
+                                                    </div>
+                                                  </div>
+                                                  <span className='link sc-17qxh4e-8 fwbGnc pointer'></span>
+                                                  <div className='sc-17qxh4e-3 dSsigE'>
+                                                    <div className='sc-17qxh4e-4 kWBSIF'>
+                                                      <div className='sc-17qxh4e-9 kNTalG'>
+                                                        <div className='sc-17qxh4e-5 iUfAma'>
+                                                          <div className='sc-17qxh4e-6 jncOYI'>
+                                                            <span
+                                                              className='sc-11tt6ib-0 eAPQXi sc-17qxh4e-7 ewpDUQ'
+                                                              size='18'
+                                                            >
+                                                              <img
+                                                                alt='Шолинг'
+                                                                className='lazyload sc-11tt6ib-2 mzpSx'
+                                                                data-src='https://cdn.scores24.live/upload/team/w20-h20/62f/ddc/1fb1589ceab0ce12f57cceaf8c4a662c94.png'
+                                                                data-srcset='https://cdn.scores24.live/upload/team/w20-h20/62f/ddc/1fb1589ceab0ce12f57cceaf8c4a662c94.png 1x, https://cdn.scores24.live/upload/team/w40-h40/62f/ddc/1fb1589ceab0ce12f57cceaf8c4a662c94.png 2x'
+                                                                src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                                              />
+                                                            </span>
+                                                            <div className='sc-17qxh4e-11 bAavID'>
+                                                              <div className='sc-17qxh4e-10 esbhnW'>Шолинг</div>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                        <div className='sc-17qxh4e-5 iUfAma'>
+                                                          <div className='sc-17qxh4e-6 jncOYI'>
+                                                            <span
+                                                              className='sc-11tt6ib-0 eAPQXi sc-17qxh4e-7 ewpDUQ'
+                                                              size='18'
+                                                            >
+                                                              <img
+                                                                alt='Челси'
+                                                                className='lazyload sc-11tt6ib-2 mzpSx'
+                                                                data-src='https://cdn.scores24.live/upload/team/w20-h20/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png'
+                                                                data-srcset='https://cdn.scores24.live/upload/team/w20-h20/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png 1x, https://cdn.scores24.live/upload/team/w40-h40/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png 2x'
+                                                                src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                                              />
+                                                            </span>
+                                                            <div className='sc-17qxh4e-11 bAavID'>
+                                                              <div className='sc-17qxh4e-10 iztCrh'>Челси</div>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      <div className='sc-17qxh4e-2 cuPJkr'>
+                                                        <div
+                                                          className='sc-cmtokc-0 deICTO'
+                                                          data-testid='MatchGenericStatistics'
+                                                        >
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      <div className='sc-4g7sie-0 gMBPyP'>
+                                                        <div className='sc-pvs6fr-0 cguIVO sc-4whuex-1 kdcjrx'>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>2</div>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                        </div>
+                                                        <div className='sc-pvs6fr-0 iqhToT'>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>1</div>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                        </div>
+                                                        <div className='sc-pvs6fr-0 iqhToT'>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>1</div>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div className='sc-17qxh4e-2 cuPJkr'>
+                                                      <div
+                                                        className='sc-cmtokc-0 deICTO'
+                                                        data-testid='MatchGenericStatistics'
+                                                      >
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      className='sc-1spz999-0 bvWwSG'
+                                                      data-testid='MatchGenericActions'
+                                                    >
+                                                      <span
+                                                        className='sc-1hthis6-0 byxdUl sc-1spz999-2 jcYBgi'
+                                                        type='lose'
+                                                      >
+                                                        П
+                                                      </span>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div className='sc-17qxh4e-0 dHxDFU'>
+                                                <div className='sc-17qxh4e-1 iLRgmV'>
+                                                  <div
+                                                    className='sc-vn72qa-0 wcbRr sc-17qxh4e-12 hhOtWx'
+                                                    data-testid='MatchGenericSubscribe'
+                                                  ></div>
+                                                  <span
+                                                    className='sc-1hthis6-0 bZQzlG sc-17qxh4e-13 huCtwe'
+                                                    type='win'
+                                                  ></span>
+                                                  <div className='sc-5hj7ft-0 dDFJAN' data-testid='MatchGenericInfo'>
+                                                    <div className='sc-oh2bsf-0 fUZLA'>
+                                                      <span>13.07.25</span>
+                                                    </div>
+                                                    <div className='sc-5hj7ft-1 eYrqTP'></div>
+                                                    <span className='sc-5hj7ft-3 eKJwvm'>Клубный чемпионат мира</span>
+                                                    <div className='sc-p2ps84-0 hfixrZ sc-5hj7ft-5 jynVzi'>
+                                                      <div
+                                                        className='sc-vn72qa-0 wcbRr'
+                                                        data-testid='MatchGenericSubscribe'
+                                                      ></div>
+                                                    </div>
+                                                  </div>
+                                                  <span className='link sc-17qxh4e-8 fwbGnc pointer'></span>
+                                                  <div className='sc-17qxh4e-3 dSsigE'>
+                                                    <div className='sc-17qxh4e-4 kWBSIF'>
+                                                      <div className='sc-17qxh4e-9 kNTalG'>
+                                                        <div className='sc-17qxh4e-5 iUfAma'>
+                                                          <div className='sc-17qxh4e-6 jncOYI'>
+                                                            <span
+                                                              className='sc-11tt6ib-0 eAPQXi sc-17qxh4e-7 ewpDUQ'
+                                                              size='18'
+                                                            >
+                                                              <img
+                                                                alt='Челси'
+                                                                className='lazyload sc-11tt6ib-2 mzpSx'
+                                                                data-src='https://cdn.scores24.live/upload/team/w20-h20/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png'
+                                                                data-srcset='https://cdn.scores24.live/upload/team/w20-h20/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png 1x, https://cdn.scores24.live/upload/team/w40-h40/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png 2x'
+                                                                src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                                              />
+                                                            </span>
+                                                            <div className='sc-17qxh4e-11 bAavID'>
+                                                              <div className='sc-17qxh4e-10 esbhnW'>Челси</div>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                        <div className='sc-17qxh4e-5 iUfAma'>
+                                                          <div className='sc-17qxh4e-6 jncOYI'>
+                                                            <span
+                                                              className='sc-11tt6ib-0 eAPQXi sc-17qxh4e-7 ewpDUQ'
+                                                              size='18'
+                                                            >
+                                                              <img
+                                                                alt='ПСЖ'
+                                                                className='lazyload sc-11tt6ib-2 mzpSx'
+                                                                data-src='https://cdn.scores24.live/upload/team/w20-h20/483/96e/e3400db1dd190a07890d8d442233ea24dc.png'
+                                                                data-srcset='https://cdn.scores24.live/upload/team/w20-h20/483/96e/e3400db1dd190a07890d8d442233ea24dc.png 1x, https://cdn.scores24.live/upload/team/w40-h40/483/96e/e3400db1dd190a07890d8d442233ea24dc.png 2x'
+                                                                src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                                              />
+                                                            </span>
+                                                            <div className='sc-17qxh4e-11 bAavID'>
+                                                              <div className='sc-17qxh4e-10 iztCrh'>ПСЖ</div>
+                                                              <div
+                                                                className='sc-cn243d-0 kqAIXT sc-17qxh4e-15 icWxNy'
+                                                                color='red'
+                                                                data-testid='MatchCard'
+                                                              >
+                                                                <svg
+                                                                  className='sc-i341db-0 ixrffO'
+                                                                  direction='right'
+                                                                  height='16'
+                                                                  width='16'
+                                                                >
+                                                                  <use fill='currentColor' href='#card'></use>
+                                                                </svg>
+                                                                <div className='sc-cn243d-1 bxwJRz'>1</div>
+                                                              </div>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      <div className='sc-17qxh4e-2 cuPJkr'>
+                                                        <div
+                                                          className='sc-cmtokc-0 deICTO'
+                                                          data-testid='MatchGenericStatistics'
+                                                        >
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>2.11</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>0.52</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>3</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>5</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>15</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>12</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>4</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>2</div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      <div className='sc-4g7sie-0 gMBPyP'>
+                                                        <div className='sc-pvs6fr-0 cguIVO sc-4whuex-1 kdcjrx'>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>3</div>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                        </div>
+                                                        <div className='sc-pvs6fr-0 iqhToT'>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>3</div>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                        </div>
+                                                        <div className='sc-pvs6fr-0 iqhToT'>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div className='sc-17qxh4e-2 cuPJkr'>
+                                                      <div
+                                                        className='sc-cmtokc-0 deICTO'
+                                                        data-testid='MatchGenericStatistics'
+                                                      >
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>2.11</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>0.52</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>3</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>5</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>15</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>12</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>4</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>2</div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      className='sc-1spz999-0 bvWwSG'
+                                                      data-testid='MatchGenericActions'
+                                                    >
+                                                      <span
+                                                        className='sc-1hthis6-0 bZQzlG sc-1spz999-2 jcYBgi'
+                                                        type='win'
+                                                      >
+                                                        В
+                                                      </span>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div className='sc-17qxh4e-0 dHxDFU'>
+                                                <div className='sc-17qxh4e-1 iLRgmV'>
+                                                  <div
+                                                    className='sc-vn72qa-0 wcbRr sc-17qxh4e-12 hhOtWx'
+                                                    data-testid='MatchGenericSubscribe'
+                                                  ></div>
+                                                  <span
+                                                    className='sc-1hthis6-0 bZQzlG sc-17qxh4e-13 huCtwe'
+                                                    type='win'
+                                                  ></span>
+                                                  <div className='sc-5hj7ft-0 dDFJAN' data-testid='MatchGenericInfo'>
+                                                    <div className='sc-oh2bsf-0 fUZLA'>
+                                                      <span>08.07.25</span>
+                                                    </div>
+                                                    <div className='sc-5hj7ft-1 eYrqTP'></div>
+                                                    <span className='sc-5hj7ft-3 eKJwvm'>Клубный чемпионат мира</span>
+                                                    <div className='sc-p2ps84-0 hfixrZ sc-5hj7ft-5 jynVzi'>
+                                                      <div
+                                                        className='sc-vn72qa-0 wcbRr'
+                                                        data-testid='MatchGenericSubscribe'
+                                                      ></div>
+                                                    </div>
+                                                  </div>
+                                                  <span className='link sc-17qxh4e-8 fwbGnc pointer'></span>
+                                                  <div className='sc-17qxh4e-3 dSsigE'>
+                                                    <div className='sc-17qxh4e-4 kWBSIF'>
+                                                      <div className='sc-17qxh4e-9 kNTalG'>
+                                                        <div className='sc-17qxh4e-5 iUfAma'>
+                                                          <div className='sc-17qxh4e-6 jncOYI'>
+                                                            <span
+                                                              className='sc-11tt6ib-0 eAPQXi sc-17qxh4e-7 ewpDUQ'
+                                                              size='18'
+                                                            >
+                                                              <img
+                                                                alt='Флуминенсе'
+                                                                className='lazyload sc-11tt6ib-2 mzpSx'
+                                                                data-src='https://cdn.scores24.live/upload/team/w20-h20/48c/b2d/18ad08ac61e145c1902849382b6d268ea2.png'
+                                                                data-srcset='https://cdn.scores24.live/upload/team/w20-h20/48c/b2d/18ad08ac61e145c1902849382b6d268ea2.png 1x, https://cdn.scores24.live/upload/team/w40-h40/48c/b2d/18ad08ac61e145c1902849382b6d268ea2.png 2x'
+                                                                src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                                              />
+                                                            </span>
+                                                            <div className='sc-17qxh4e-11 bAavID'>
+                                                              <div className='sc-17qxh4e-10 iztCrh'>Флуминенсе</div>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                        <div className='sc-17qxh4e-5 iUfAma'>
+                                                          <div className='sc-17qxh4e-6 jncOYI'>
+                                                            <span
+                                                              className='sc-11tt6ib-0 eAPQXi sc-17qxh4e-7 ewpDUQ'
+                                                              size='18'
+                                                            >
+                                                              <img
+                                                                alt='Челси'
+                                                                className='lazyload sc-11tt6ib-2 mzpSx'
+                                                                data-src='https://cdn.scores24.live/upload/team/w20-h20/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png'
+                                                                data-srcset='https://cdn.scores24.live/upload/team/w20-h20/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png 1x, https://cdn.scores24.live/upload/team/w40-h40/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png 2x'
+                                                                src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                                              />
+                                                            </span>
+                                                            <div className='sc-17qxh4e-11 bAavID'>
+                                                              <div className='sc-17qxh4e-10 esbhnW'>Челси</div>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      <div className='sc-17qxh4e-2 cuPJkr'>
+                                                        <div
+                                                          className='sc-cmtokc-0 deICTO'
+                                                          data-testid='MatchGenericStatistics'
+                                                        >
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>0.96</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>1.58</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>3</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>4</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>11</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>11</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>2</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>1</div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      <div className='sc-4g7sie-0 gMBPyP'>
+                                                        <div className='sc-pvs6fr-0 cguIVO sc-4whuex-1 kdcjrx'>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>2</div>
+                                                        </div>
+                                                        <div className='sc-pvs6fr-0 iqhToT'>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>1</div>
+                                                        </div>
+                                                        <div className='sc-pvs6fr-0 iqhToT'>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>1</div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div className='sc-17qxh4e-2 cuPJkr'>
+                                                      <div
+                                                        className='sc-cmtokc-0 deICTO'
+                                                        data-testid='MatchGenericStatistics'
+                                                      >
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>0.96</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>1.58</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>3</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>4</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>11</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>11</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>2</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>1</div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      className='sc-1spz999-0 bvWwSG'
+                                                      data-testid='MatchGenericActions'
+                                                    >
+                                                      <span
+                                                        className='sc-1hthis6-0 bZQzlG sc-1spz999-2 jcYBgi'
+                                                        type='win'
+                                                      >
+                                                        В
+                                                      </span>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div className='sc-17qxh4e-0 dHxDFU'>
+                                                <div className='sc-17qxh4e-1 iLRgmV'>
+                                                  <div
+                                                    className='sc-vn72qa-0 wcbRr sc-17qxh4e-12 hhOtWx'
+                                                    data-testid='MatchGenericSubscribe'
+                                                  ></div>
+                                                  <span
+                                                    className='sc-1hthis6-0 bZQzlG sc-17qxh4e-13 huCtwe'
+                                                    type='win'
+                                                  ></span>
+                                                  <div className='sc-5hj7ft-0 dDFJAN' data-testid='MatchGenericInfo'>
+                                                    <div className='sc-oh2bsf-0 fUZLA'>
+                                                      <span>05.07.25</span>
+                                                    </div>
+                                                    <div className='sc-5hj7ft-1 eYrqTP'></div>
+                                                    <span className='sc-5hj7ft-3 eKJwvm'>Клубный чемпионат мира</span>
+                                                    <div className='sc-p2ps84-0 hfixrZ sc-5hj7ft-5 jynVzi'>
+                                                      <div
+                                                        className='sc-vn72qa-0 wcbRr'
+                                                        data-testid='MatchGenericSubscribe'
+                                                      ></div>
+                                                    </div>
+                                                  </div>
+                                                  <span className='link sc-17qxh4e-8 fwbGnc pointer'></span>
+                                                  <div className='sc-17qxh4e-3 dSsigE'>
+                                                    <div className='sc-17qxh4e-4 kWBSIF'>
+                                                      <div className='sc-17qxh4e-9 kNTalG'>
+                                                        <div className='sc-17qxh4e-5 iUfAma'>
+                                                          <div className='sc-17qxh4e-6 jncOYI'>
+                                                            <span
+                                                              className='sc-11tt6ib-0 eAPQXi sc-17qxh4e-7 ewpDUQ'
+                                                              size='18'
+                                                            >
+                                                              <img
+                                                                alt='Палмейрас'
+                                                                className='lazyload sc-11tt6ib-2 mzpSx'
+                                                                data-src='https://cdn.scores24.live/upload/team/w20-h20/603/266/c5edf5d190fbeed12764e56b3b5b2094ba.png'
+                                                                data-srcset='https://cdn.scores24.live/upload/team/w20-h20/603/266/c5edf5d190fbeed12764e56b3b5b2094ba.png 1x, https://cdn.scores24.live/upload/team/w40-h40/603/266/c5edf5d190fbeed12764e56b3b5b2094ba.png 2x'
+                                                                src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                                              />
+                                                            </span>
+                                                            <div className='sc-17qxh4e-11 bAavID'>
+                                                              <div className='sc-17qxh4e-10 iztCrh'>Палмейрас</div>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                        <div className='sc-17qxh4e-5 iUfAma'>
+                                                          <div className='sc-17qxh4e-6 jncOYI'>
+                                                            <span
+                                                              className='sc-11tt6ib-0 eAPQXi sc-17qxh4e-7 ewpDUQ'
+                                                              size='18'
+                                                            >
+                                                              <img
+                                                                alt='Челси'
+                                                                className='lazyload sc-11tt6ib-2 mzpSx'
+                                                                data-src='https://cdn.scores24.live/upload/team/w20-h20/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png'
+                                                                data-srcset='https://cdn.scores24.live/upload/team/w20-h20/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png 1x, https://cdn.scores24.live/upload/team/w40-h40/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png 2x'
+                                                                src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                                              />
+                                                            </span>
+                                                            <div className='sc-17qxh4e-11 bAavID'>
+                                                              <div className='sc-17qxh4e-10 esbhnW'>Челси</div>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      <div className='sc-17qxh4e-2 cuPJkr'>
+                                                        <div
+                                                          className='sc-cmtokc-0 deICTO'
+                                                          data-testid='MatchGenericStatistics'
+                                                        >
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>0.19</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>1.11</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>3</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>10</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>14</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>16</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>1</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>3</div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      <div className='sc-4g7sie-0 gMBPyP'>
+                                                        <div className='sc-pvs6fr-0 cguIVO sc-4whuex-1 kdcjrx'>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>1</div>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>2</div>
+                                                        </div>
+                                                        <div className='sc-pvs6fr-0 iqhToT'>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>1</div>
+                                                        </div>
+                                                        <div className='sc-pvs6fr-0 iqhToT'>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>1</div>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>1</div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div className='sc-17qxh4e-2 cuPJkr'>
+                                                      <div
+                                                        className='sc-cmtokc-0 deICTO'
+                                                        data-testid='MatchGenericStatistics'
+                                                      >
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>0.19</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>1.11</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>3</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>10</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>14</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>16</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>1</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>3</div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      className='sc-1spz999-0 bvWwSG'
+                                                      data-testid='MatchGenericActions'
+                                                    >
+                                                      <span
+                                                        className='sc-1hthis6-0 bZQzlG sc-1spz999-2 jcYBgi'
+                                                        type='win'
+                                                      >
+                                                        В
+                                                      </span>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <div className='sc-1eaieo6-0 dEJdyt __MatchGamesBody'>
+                                            <div className='sc-jrv2fx-0 WmwaT notEntered'></div>
+                                          </div>
+                                        </div>
+                                        <div className='sc-15z5276-1 jvqndO empty'>
+                                          <div className='sc-15z5276-4 dKhvGV'>
+                                            <svg
+                                              className='sc-i341db-0 ixrffO sc-15z5276-5 fqHOwN'
+                                              direction='right'
+                                              height='90'
+                                              width='90'
+                                            >
+                                              <use fill='currentColor' href='#empty-general'></use>
+                                            </svg>
+                                          </div>
+                                          <div className='sc-15z5276-3 hpirry'>
+                                            <div className='sc-15z5276-6 TysSf'>Матчей нет</div>
+                                            <div className='sc-15z5276-7 krKqUg'>
+                                              Добавьте интересующие вас матчи или подпишитесь на команду, турнир или
+                                              игрока.
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className='sc-17eplpv-0 eAXAfg'>
+                                    <button
+                                      aria-label='Показать еще'
+                                      className='sc-17eplpv-1 kqmojO sc-b9tb4l-4 jyQUOh'
+                                      mode='show-more'
+                                      type='button'
+                                    >
+                                      Показать еще
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className='sc-1wwwqdz-0 kJixMC' data-testid='MatchPredictionBonuses'>
+                          <div className='sc-958ogn-0 jXHTgF sc-1wwwqdz-1 giwBgw' data-testid='CommonDelimeter'></div>
+                          <div className='sc-1wwwqdz-2 cdUfrl'>
+                            <svg
+                              className='sc-i341db-0 ixrffO sc-1wwwqdz-4 gWpdNt'
+                              direction='right'
+                              height='20'
+                              width='20'
+                            >
+                              <use fill='currentColor' href='#gift'></use>
+                            </svg>
+                            <h2 className='sc-1wwwqdz-3 cljHfd'>Популярные бонусы</h2>
+                          </div>
+                          <div className='sc-1wwwqdz-5 eiMaMi'>
+                            <div className='sc-1wwwqdz-6 ewBEO'>
+                              <div className='sc-1wwwqdz-7 jqwhfH'>Букмекер</div>
+                              <div className='sc-1wwwqdz-7 jqwhfH'>Бонус</div>
+                              <div className='sc-1wwwqdz-7 jqwhfH'>Жми 👇</div>
+                            </div>
+                            <div className='sc-1wwwqdz-8 hJINxq'>
+                              <div className='sc-1jiobxs-0 gvSzfs' data-testid='BonusRow'>
+                                <div className='sc-1jiobxs-1 faJEyV'>
+                                  <div className='sc-18vea0p-1 idBVUT sc-1jiobxs-3 hdEjEp'>
+                                    <img
+                                      alt='Unibet'
+                                      className='lazyload sc-18vea0p-0 jPtiYw'
+                                      data-src='https://cdn.scores24.ru/upload/partners-s24/origin/972/f30/fba9298dbf8e04ab3d8377c819c9213bccunibet.svg'
+                                      data-srcset='https://cdn.scores24.ru/upload/partners-s24/origin/972/f30/fba9298dbf8e04ab3d8377c819c9213bccunibet.svg'
+                                      src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                    />
+                                  </div>
+                                </div>
+                                <div className='sc-1jiobxs-1 faJEyV'>
+                                  <div className='sc-1jiobxs-4 sc-1jiobxs-5 brdCVM icRnHr'>
+                                    <span className='sc-1jiobxs-6 fjANi'>50</span>
+                                    <span className='sc-1jiobxs-7 cVWNlK'>€</span>
+                                  </div>
+                                  <div className='sc-1jiobxs-4 brdCVM'>
+                                    <span className='sc-1jiobxs-6 fjANi'>50</span>
+                                    <span className='sc-1jiobxs-7 cVWNlK'>€</span>
+                                  </div>
+                                </div>
+                                <a
+                                  className='sc-ljbnji-0 iufpzM sc-1jiobxs-2 fCGXfH'
+                                  data-capture=':Rr6kmf6h6h:'
+                                  href='/dapi/v3/click/sYyWTbW9?position=table_bonus_prediction&amp;bkm=unibet&amp;lg=international-clubs-club-friendly-games&amp;mch=10-08-2025-chelsea-milan'
+                                  rel='noopener nofollow'
+                                  target='_blank'
+                                >
+                                  Забрать
+                                </a>
+                              </div>
+                              <div className='sc-1jiobxs-0 gvSzfs' data-testid='BonusRow'>
+                                <div className='sc-1jiobxs-1 faJEyV'>
+                                  <div className='sc-18vea0p-1 dqymWZ sc-1jiobxs-3 wyuWX'>
+                                    <img
+                                      alt='Бет 365'
+                                      className='lazyload sc-18vea0p-0 jPtiYw'
+                                      data-src='https://cdn.scores24.ru/upload/partners-s24/origin/99c/072/b19c64b85d2f79525a4cef9bff61845e61.jpeg'
+                                      data-srcset='https://cdn.scores24.ru/upload/partners-s24/origin/99c/072/b19c64b85d2f79525a4cef9bff61845e61.jpeg'
+                                      src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                    />
+                                  </div>
+                                </div>
+                                <div className='sc-1jiobxs-1 faJEyV'>
+                                  <div className='sc-1jiobxs-4 sc-1jiobxs-5 brdCVM icRnHr'>
+                                    <span className='sc-1jiobxs-6 fjANi'>50</span>
+                                    <span className='sc-1jiobxs-7 cVWNlK'>€</span>
+                                  </div>
+                                  <div className='sc-1jiobxs-4 brdCVM'>
+                                    <span className='sc-1jiobxs-6 fjANi'>50</span>
+                                    <span className='sc-1jiobxs-7 cVWNlK'>€</span>
+                                  </div>
+                                </div>
+                                <a
+                                  className='sc-ljbnji-0 iufpzM sc-1jiobxs-2 fCGXfH'
+                                  data-capture=':Rt6kmf6h6h:'
+                                  href='/dapi/v3/click/sYyWTbW9?position=table_bonus_prediction&amp;bkm=bet365&amp;lg=international-clubs-club-friendly-games&amp;mch=10-08-2025-chelsea-milan'
+                                  rel='noopener nofollow'
+                                  target='_blank'
+                                >
+                                  Забрать
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                          <span className='sc-1i0wga8-0 kZildY sc-1wwwqdz-9 hDcyEO' color='gray'>
+                            18+ Gamble Responsibly
+                          </span>
+                          <div className='sc-958ogn-0 jXHTgF sc-1wwwqdz-1 giwBgw' data-testid='CommonDelimeter'></div>
+                        </div>
+
+                        <div className='sc-494x2g-2 hSGGEC'>
+                          <div className='sc-1gd34kg-0 iWHzDM'>
+                            <div className='sc-1gd34kg-1 kcQuML'>
+                              <span className='sc-11tt6ib-0 iQOaaC sc-1gd34kg-6 ehwfCy' size='60'>
+                                <img
+                                  className='lazyload sc-11tt6ib-2 mzpSx'
+                                  data-src='https://cdn.scores24.live/upload/team/w60-h60/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png'
+                                  data-srcset='https://cdn.scores24.live/upload/team/w60-h60/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png 1x, https://cdn.scores24.live/upload/team/w120-h120/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png 2x'
+                                  src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                />
+                              </span>
+                              <h2 className='sc-1gd34kg-2 cNYWKh'>
+                                Милан<span className='sc-1gd34kg-4 bLsdd'> Обзор команды</span>
+                              </h2>
+                            </div>
+                            <div className='sc-494x2g-0 sc-1gd34kg-5 gvBCgg hhWnfd'>
+                              <p>
+                                Нынешние гости провели свой последний официальный матч 9 августа 2025 в рамках турнира
+                                Клубные товарищеские матчи (хозяева поля – Лидс, гости – Милан). Встреча завершилась со
+                                счётом 1:1.{' '}
+                              </p>
+                              <p>Статистика игры следующая (Милан vs Лидс):</p>
+                              <ul>
+                                <li>процент владения мячом: 36% vs 64%;</li>
+                                <li>угловые удары: 5 vs 6;</li>
+                                <li>жёлтые карточки: 0 vs 1;</li>
+                                <li>удары в створ ворот: 3 vs 3.</li>
+                              </ul>
+                              <p>
+                                Команде Милан повезло меньше, ведь предстоящий товарищеский матч она проведёт на выезде.
+                                Чем может похвастаться состав по результатам последних 10 официальных игр?
+                              </p>
+                              <p>
+                                На данном отрезке коллектив одержал 6 побед, потерпел 3 поражения, а также 1 раз сыграл
+                                вничью. Результатом атакующих действий игроков является 19 голов, что в среднем
+                                составляет 1.9 за матч (на выезде показатель равен 2). Разумеется, в обороне команды не
+                                обошлось без ошибок. Среднее значение пропущенных мячей за игру равно 0.9.
+                              </p>
+                              <p></p>
+                            </div>
+                            <div className='sc-1gd34kg-7 eGDoMz'>
+                              <div className='sc-85qh4y-0 jcnSTJ'>
+                                <div className='sc-ou8qdt-0 kIFtjI'>
+                                  <h3 className='sc-4y75cf-0 fAPWyp sc-ou8qdt-1 eIHCZe' data-testid='Headline'>
+                                    Результаты матчей: Милан
+                                  </h3>
+                                  <div className='sc-ou8qdt-2 igXPEY'>
+                                    <div className='sc-1t0r7hb-0 llvRLu'>
+                                      <button
+                                        className='sc-2dzn45-6 cVLSuC sc-13b4qwh-1 sc-ou8qdt-3 ikRGnq'
+                                        data-testid='Chip'
+                                      >
+                                        <div className='sc-2dzn45-1 ixyoiX'></div>
+                                        <div className='sc-2dzn45-4 kVkqIr'>Все турниры </div>
+                                        <div className='sc-2dzn45-2 bWbFCd'>
+                                          <svg
+                                            className='sc-i341db-0 ixrffO sc-13b4qwh-0 kYKqgr'
+                                            direction='right'
+                                            height='16'
+                                            width='16'
+                                          >
+                                            <use fill='currentColor' href='#arrow-chevron'></use>
+                                          </svg>
+                                        </div>
+                                      </button>
+                                    </div>
+                                    <div className='sc-1t0r7hb-0 llvRLu'>
+                                      <button className='sc-2dzn45-6 cVLSuC sc-13b4qwh-1' data-testid='Chip'>
+                                        <div className='sc-2dzn45-1 ixyoiX'></div>
+                                        <div className='sc-2dzn45-4 kVkqIr'>Все матчи </div>
+                                        <div className='sc-2dzn45-2 bWbFCd'>
+                                          <svg
+                                            className='sc-i341db-0 ixrffO sc-13b4qwh-0 kYKqgr'
+                                            direction='right'
+                                            height='16'
+                                            width='16'
+                                          >
+                                            <use fill='currentColor' href='#arrow-chevron'></use>
+                                          </svg>
+                                        </div>
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className='sc-b9tb4l-0 irdcwi'>
+                                  <div>
+                                    <div className='sc-wzh2yo-0 kgmgDt' data-testid='StickyHeader'>
+                                      <div className='sc-30rb2b-2 hSCXdH' data-testid='MatchGenericHeader'>
+                                        <div className='sc-30rb2b-0 iiAsXC'>
+                                          <div className='sc-30rb2b-3 jLyKab'>Последние матчи</div>
+                                        </div>
+                                        <div className='sc-30rb2b-1 eRlrOB'>
+                                          <div
+                                            className='sc-l3bgdv-0 cUdwHj'
+                                            data-testid='MatchGenericStatisticsHeader'
+                                          >
+                                            <div className='sc-l3bgdv-1 jkvlCM'>
+                                              <svg
+                                                className='sc-i341db-0 ixrffO'
+                                                direction='right'
+                                                height='20'
+                                                width='15'
+                                              >
+                                                <use fill='currentColor' href='#xg-icon'></use>
+                                              </svg>
+                                            </div>
+                                            <div className='sc-l3bgdv-1 jkvlDW'>
+                                              <svg
+                                                className='sc-i341db-0 ixrffO'
+                                                direction='right'
+                                                height='16'
+                                                width='16'
+                                              >
+                                                <use fill='currentColor' href='#corner-kicks-received'></use>
+                                              </svg>
+                                            </div>
+                                            <div className='sc-l3bgdv-1 jkvlDW'>
+                                              <svg
+                                                className='sc-i341db-0 ixrffO'
+                                                direction='right'
+                                                height='16'
+                                                width='16'
+                                              >
+                                                <use fill='currentColor' href='#faults'></use>
+                                              </svg>
+                                            </div>
+                                            <div className='sc-l3bgdv-1 jkvlDW'>
+                                              <div
+                                                className='sc-cn243d-0 bzKxcj'
+                                                color='yellow'
+                                                data-testid='MatchCard'
+                                              >
+                                                <svg
+                                                  className='sc-i341db-0 ixrffO'
+                                                  direction='right'
+                                                  height='16'
+                                                  width='16'
+                                                >
+                                                  <use fill='currentColor' href='#card'></use>
+                                                </svg>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className='sc-b9tb4l-2 eEVvvY'>
+                                      <div className='sc-15z5276-0 hSdDfN sc-b9tb4l-3 gKdmEn'>
+                                        <div className='sc-15z5276-2 fAwaEU'>
+                                          <div className='sc-1eaieo6-0 dEJdyt __MatchGamesBody'>
+                                            <div className='sc-jrv2fx-0 fhEluS open' open=''>
+                                              <div className='sc-17qxh4e-0 dHxDFU'>
+                                                <div className='sc-17qxh4e-1 iLRgmV'>
+                                                  <div
+                                                    className='sc-vn72qa-0 wcbRr sc-17qxh4e-12 hhOtWx'
+                                                    data-testid='MatchGenericSubscribe'
+                                                  ></div>
+                                                  <span
+                                                    className='sc-1hthis6-0 dKDKyE sc-17qxh4e-13 huCtwe'
+                                                    type='draw'
+                                                  ></span>
+                                                  <div className='sc-5hj7ft-0 dDFJAN' data-testid='MatchGenericInfo'>
+                                                    <div className='sc-oh2bsf-0 fUZLA'>
+                                                      <span>09.08.25</span>
+                                                    </div>
+                                                    <div className='sc-5hj7ft-1 eYrqTP'></div>
+                                                    <span className='sc-5hj7ft-3 eKJwvm'>
+                                                      Клубные товарищеские матчи
+                                                    </span>
+                                                    <div className='sc-p2ps84-0 hfixrZ sc-5hj7ft-5 jynVzi'>
+                                                      <div
+                                                        className='sc-vn72qa-0 wcbRr'
+                                                        data-testid='MatchGenericSubscribe'
+                                                      ></div>
+                                                    </div>
+                                                  </div>
+                                                  <a
+                                                    className='link sc-17qxh4e-8 fwbGnc'
+                                                    href='/ru/soccer/m-09-08-2025-leeds-united-milan'
+                                                  ></a>
+                                                  <div className='sc-17qxh4e-3 dSsigE'>
+                                                    <div className='sc-17qxh4e-4 kWBSIF'>
+                                                      <div className='sc-17qxh4e-9 kNTalG'>
+                                                        <div className='sc-17qxh4e-5 iUfAma'>
+                                                          <div className='sc-17qxh4e-6 jncOYI'>
+                                                            <span
+                                                              className='sc-11tt6ib-0 eAPQXi sc-17qxh4e-7 ewpDUQ'
+                                                              size='18'
+                                                            >
+                                                              <img
+                                                                alt='Лидс'
+                                                                className='lazyload sc-11tt6ib-2 mzpSx'
+                                                                data-src='https://cdn.scores24.live/upload/team/w20-h20/90c/dae/9cdd458d233ab7d3e76208415be4037e1d.png'
+                                                                data-srcset='https://cdn.scores24.live/upload/team/w20-h20/90c/dae/9cdd458d233ab7d3e76208415be4037e1d.png 1x, https://cdn.scores24.live/upload/team/w40-h40/90c/dae/9cdd458d233ab7d3e76208415be4037e1d.png 2x'
+                                                                src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                                              />
+                                                            </span>
+                                                            <div className='sc-17qxh4e-11 bAavID'>
+                                                              <div className='sc-17qxh4e-10 iztCrh'>Лидс</div>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                        <div className='sc-17qxh4e-5 iUfAma'>
+                                                          <div className='sc-17qxh4e-6 jncOYI'>
+                                                            <span
+                                                              className='sc-11tt6ib-0 eAPQXi sc-17qxh4e-7 ewpDUQ'
+                                                              size='18'
+                                                            >
+                                                              <img
+                                                                alt='Милан'
+                                                                className='lazyload sc-11tt6ib-2 mzpSx'
+                                                                data-src='https://cdn.scores24.live/upload/team/w20-h20/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png'
+                                                                data-srcset='https://cdn.scores24.live/upload/team/w20-h20/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png 1x, https://cdn.scores24.live/upload/team/w40-h40/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png 2x'
+                                                                src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                                              />
+                                                            </span>
+                                                            <div className='sc-17qxh4e-11 bAavID'>
+                                                              <div className='sc-17qxh4e-10 iztCrh'>Милан</div>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      <div className='sc-17qxh4e-2 cuPJkr'>
+                                                        <div
+                                                          className='sc-cmtokc-0 deICTO'
+                                                          data-testid='MatchGenericStatistics'
+                                                        >
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>6</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>5</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>1</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>0</div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      <div className='sc-4g7sie-0 gMBPyP'>
+                                                        <div className='sc-pvs6fr-0 cguIVO sc-4whuex-1 kdcjrx'>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>1</div>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>1</div>
+                                                        </div>
+                                                        <div className='sc-pvs6fr-0 iqhToT'>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>1</div>
+                                                        </div>
+                                                        <div className='sc-pvs6fr-0 iqhToT'>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>1</div>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div className='sc-17qxh4e-2 cuPJkr'>
+                                                      <div
+                                                        className='sc-cmtokc-0 deICTO'
+                                                        data-testid='MatchGenericStatistics'
+                                                      >
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>6</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>5</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>1</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>0</div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      className='sc-1spz999-0 bvWwSG'
+                                                      data-testid='MatchGenericActions'
+                                                    >
+                                                      <span
+                                                        className='sc-1hthis6-0 dKDKyE sc-1spz999-2 jcYBgi'
+                                                        type='draw'
+                                                      >
+                                                        Н
+                                                      </span>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div className='sc-17qxh4e-0 dHxDFU'>
+                                                <div className='sc-17qxh4e-1 iLRgmV'>
+                                                  <div
+                                                    className='sc-vn72qa-0 wcbRr sc-17qxh4e-12 hhOtWx'
+                                                    data-testid='MatchGenericSubscribe'
+                                                  ></div>
+                                                  <span
+                                                    className='sc-1hthis6-0 bZQzlG sc-17qxh4e-13 huCtwe'
+                                                    type='win'
+                                                  ></span>
+                                                  <div className='sc-5hj7ft-0 dDFJAN' data-testid='MatchGenericInfo'>
+                                                    <div className='sc-oh2bsf-0 fUZLA'>
+                                                      <span>31.07.25</span>
+                                                    </div>
+                                                    <div className='sc-5hj7ft-1 eYrqTP'></div>
+                                                    <span className='sc-5hj7ft-3 eKJwvm'>
+                                                      Клубные товарищеские матчи
+                                                    </span>
+                                                    <div className='sc-p2ps84-0 hfixrZ sc-5hj7ft-5 jynVzi'>
+                                                      <div
+                                                        className='sc-vn72qa-0 wcbRr'
+                                                        data-testid='MatchGenericSubscribe'
+                                                      ></div>
+                                                    </div>
+                                                  </div>
+                                                  <span className='link sc-17qxh4e-8 fwbGnc pointer'></span>
+                                                  <div className='sc-17qxh4e-3 dSsigE'>
+                                                    <div className='sc-17qxh4e-4 kWBSIF'>
+                                                      <div className='sc-17qxh4e-9 kNTalG'>
+                                                        <div className='sc-17qxh4e-5 iUfAma'>
+                                                          <div className='sc-17qxh4e-6 jncOYI'>
+                                                            <span
+                                                              className='sc-11tt6ib-0 eAPQXi sc-17qxh4e-7 ewpDUQ'
+                                                              size='18'
+                                                            >
+                                                              <img
+                                                                alt='Перт Глори'
+                                                                className='lazyload sc-11tt6ib-2 mzpSx'
+                                                                data-src='https://cdn.scores24.live/upload/team/w20-h20/116/60a/d22eff38a1a619fda4a69d1d045d0b07d0.png'
+                                                                data-srcset='https://cdn.scores24.live/upload/team/w20-h20/116/60a/d22eff38a1a619fda4a69d1d045d0b07d0.png 1x, https://cdn.scores24.live/upload/team/w40-h40/116/60a/d22eff38a1a619fda4a69d1d045d0b07d0.png 2x'
+                                                                src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                                              />
+                                                            </span>
+                                                            <div className='sc-17qxh4e-11 bAavID'>
+                                                              <div className='sc-17qxh4e-10 iztCrh'>Перт Глори</div>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                        <div className='sc-17qxh4e-5 iUfAma'>
+                                                          <div className='sc-17qxh4e-6 jncOYI'>
+                                                            <span
+                                                              className='sc-11tt6ib-0 eAPQXi sc-17qxh4e-7 ewpDUQ'
+                                                              size='18'
+                                                            >
+                                                              <img
+                                                                alt='Милан'
+                                                                className='lazyload sc-11tt6ib-2 mzpSx'
+                                                                data-src='https://cdn.scores24.live/upload/team/w20-h20/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png'
+                                                                data-srcset='https://cdn.scores24.live/upload/team/w20-h20/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png 1x, https://cdn.scores24.live/upload/team/w40-h40/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png 2x'
+                                                                src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                                              />
+                                                            </span>
+                                                            <div className='sc-17qxh4e-11 bAavID'>
+                                                              <div className='sc-17qxh4e-10 esbhnW'>Милан</div>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      <div className='sc-17qxh4e-2 cuPJkr'>
+                                                        <div
+                                                          className='sc-cmtokc-0 deICTO'
+                                                          data-testid='MatchGenericStatistics'
+                                                        >
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>0.47</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>4.71</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>0</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>0</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>5</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>5</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>0</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>0</div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      <div className='sc-4g7sie-0 gMBPyP'>
+                                                        <div className='sc-pvs6fr-0 cguIVO sc-4whuex-1 kdcjrx'>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>9</div>
+                                                        </div>
+                                                        <div className='sc-pvs6fr-0 iqhToT'>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>5</div>
+                                                        </div>
+                                                        <div className='sc-pvs6fr-0 iqhToT'>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>4</div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div className='sc-17qxh4e-2 cuPJkr'>
+                                                      <div
+                                                        className='sc-cmtokc-0 deICTO'
+                                                        data-testid='MatchGenericStatistics'
+                                                      >
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>0.47</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>4.71</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>0</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>0</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>5</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>5</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>0</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>0</div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      className='sc-1spz999-0 bvWwSG'
+                                                      data-testid='MatchGenericActions'
+                                                    >
+                                                      <span
+                                                        className='sc-1hthis6-0 bZQzlG sc-1spz999-2 jcYBgi'
+                                                        type='win'
+                                                      >
+                                                        В
+                                                      </span>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div className='sc-17qxh4e-0 dHxDFU'>
+                                                <div className='sc-17qxh4e-1 iLRgmV'>
+                                                  <div
+                                                    className='sc-vn72qa-0 wcbRr sc-17qxh4e-12 hhOtWx'
+                                                    data-testid='MatchGenericSubscribe'
+                                                  ></div>
+                                                  <span
+                                                    className='sc-1hthis6-0 bZQzlG sc-17qxh4e-13 huCtwe'
+                                                    type='win'
+                                                  ></span>
+                                                  <div className='sc-5hj7ft-0 dDFJAN' data-testid='MatchGenericInfo'>
+                                                    <div className='sc-oh2bsf-0 fUZLA'>
+                                                      <span>26.07.25</span>
+                                                    </div>
+                                                    <div className='sc-5hj7ft-1 eYrqTP'></div>
+                                                    <span className='sc-5hj7ft-3 eKJwvm'>
+                                                      Клубные товарищеские матчи
+                                                    </span>
+                                                    <div className='sc-p2ps84-0 hfixrZ sc-5hj7ft-5 jynVzi'>
+                                                      <div
+                                                        className='sc-vn72qa-0 wcbRr'
+                                                        data-testid='MatchGenericSubscribe'
+                                                      ></div>
+                                                    </div>
+                                                  </div>
+                                                  <span className='link sc-17qxh4e-8 fwbGnc pointer'></span>
+                                                  <div className='sc-17qxh4e-3 dSsigE'>
+                                                    <div className='sc-17qxh4e-4 kWBSIF'>
+                                                      <div className='sc-17qxh4e-9 kNTalG'>
+                                                        <div className='sc-17qxh4e-5 iUfAma'>
+                                                          <div className='sc-17qxh4e-6 jncOYI'>
+                                                            <span
+                                                              className='sc-11tt6ib-0 eAPQXi sc-17qxh4e-7 ewpDUQ'
+                                                              size='18'
+                                                            >
+                                                              <img
+                                                                alt='Ливерпуль'
+                                                                className='lazyload sc-11tt6ib-2 mzpSx'
+                                                                data-src='https://cdn.scores24.live/upload/team/w20-h20/41f/ded/77e924b65229051ee72dc7ff3a9b166ef6.png'
+                                                                data-srcset='https://cdn.scores24.live/upload/team/w20-h20/41f/ded/77e924b65229051ee72dc7ff3a9b166ef6.png 1x, https://cdn.scores24.live/upload/team/w40-h40/41f/ded/77e924b65229051ee72dc7ff3a9b166ef6.png 2x'
+                                                                src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                                              />
+                                                            </span>
+                                                            <div className='sc-17qxh4e-11 bAavID'>
+                                                              <div className='sc-17qxh4e-10 iztCrh'>Ливерпуль</div>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                        <div className='sc-17qxh4e-5 iUfAma'>
+                                                          <div className='sc-17qxh4e-6 jncOYI'>
+                                                            <span
+                                                              className='sc-11tt6ib-0 eAPQXi sc-17qxh4e-7 ewpDUQ'
+                                                              size='18'
+                                                            >
+                                                              <img
+                                                                alt='Милан'
+                                                                className='lazyload sc-11tt6ib-2 mzpSx'
+                                                                data-src='https://cdn.scores24.live/upload/team/w20-h20/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png'
+                                                                data-srcset='https://cdn.scores24.live/upload/team/w20-h20/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png 1x, https://cdn.scores24.live/upload/team/w40-h40/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png 2x'
+                                                                src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                                              />
+                                                            </span>
+                                                            <div className='sc-17qxh4e-11 bAavID'>
+                                                              <div className='sc-17qxh4e-10 esbhnW'>Милан</div>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      <div className='sc-17qxh4e-2 cuPJkr'>
+                                                        <div
+                                                          className='sc-cmtokc-0 deICTO'
+                                                          data-testid='MatchGenericStatistics'
+                                                        >
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>4</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>1</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>0</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>0</div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      <div className='sc-4g7sie-0 gMBPyP'>
+                                                        <div className='sc-pvs6fr-0 cguIVO sc-4whuex-1 kdcjrx'>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>2</div>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>4</div>
+                                                        </div>
+                                                        <div className='sc-pvs6fr-0 iqhToT'>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>1</div>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>1</div>
+                                                        </div>
+                                                        <div className='sc-pvs6fr-0 iqhToT'>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>1</div>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>3</div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div className='sc-17qxh4e-2 cuPJkr'>
+                                                      <div
+                                                        className='sc-cmtokc-0 deICTO'
+                                                        data-testid='MatchGenericStatistics'
+                                                      >
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>4</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>1</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>0</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>0</div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      className='sc-1spz999-0 bvWwSG'
+                                                      data-testid='MatchGenericActions'
+                                                    >
+                                                      <span
+                                                        className='sc-1hthis6-0 bZQzlG sc-1spz999-2 jcYBgi'
+                                                        type='win'
+                                                      >
+                                                        В
+                                                      </span>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div className='sc-17qxh4e-0 dHxDFU'>
+                                                <div className='sc-17qxh4e-1 iLRgmV'>
+                                                  <div
+                                                    className='sc-vn72qa-0 wcbRr sc-17qxh4e-12 hhOtWx'
+                                                    data-testid='MatchGenericSubscribe'
+                                                  ></div>
+                                                  <span
+                                                    className='sc-1hthis6-0 bZQzlG sc-17qxh4e-13 huCtwe'
+                                                    type='win'
+                                                  ></span>
+                                                  <div className='sc-5hj7ft-0 dDFJAN' data-testid='MatchGenericInfo'>
+                                                    <div className='sc-oh2bsf-0 fUZLA'>
+                                                      <span>23.07.25</span>
+                                                    </div>
+                                                    <div className='sc-5hj7ft-1 eYrqTP'></div>
+                                                    <span className='sc-5hj7ft-3 eKJwvm'>
+                                                      Клубные товарищеские матчи
+                                                    </span>
+                                                    <div className='sc-p2ps84-0 hfixrZ sc-5hj7ft-5 jynVzi'>
+                                                      <div
+                                                        className='sc-vn72qa-0 wcbRr'
+                                                        data-testid='MatchGenericSubscribe'
+                                                      ></div>
+                                                    </div>
+                                                  </div>
+                                                  <span className='link sc-17qxh4e-8 fwbGnc pointer'></span>
+                                                  <div className='sc-17qxh4e-3 dSsigE'>
+                                                    <div className='sc-17qxh4e-4 kWBSIF'>
+                                                      <div className='sc-17qxh4e-9 kNTalG'>
+                                                        <div className='sc-17qxh4e-5 iUfAma'>
+                                                          <div className='sc-17qxh4e-6 jncOYI'>
+                                                            <span
+                                                              className='sc-11tt6ib-0 eAPQXi sc-17qxh4e-7 ewpDUQ'
+                                                              size='18'
+                                                            >
+                                                              <img
+                                                                alt='Арсенал'
+                                                                className='lazyload sc-11tt6ib-2 mzpSx'
+                                                                data-src='https://cdn.scores24.live/upload/team/w20-h20/1de/823/838ab4d32ab22622c6c129053bd7c16dbb.png'
+                                                                data-srcset='https://cdn.scores24.live/upload/team/w20-h20/1de/823/838ab4d32ab22622c6c129053bd7c16dbb.png 1x, https://cdn.scores24.live/upload/team/w40-h40/1de/823/838ab4d32ab22622c6c129053bd7c16dbb.png 2x'
+                                                                src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                                              />
+                                                            </span>
+                                                            <div className='sc-17qxh4e-11 bAavID'>
+                                                              <div className='sc-17qxh4e-10 iztCrh'>Арсенал</div>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                        <div className='sc-17qxh4e-5 iUfAma'>
+                                                          <div className='sc-17qxh4e-6 jncOYI'>
+                                                            <span
+                                                              className='sc-11tt6ib-0 eAPQXi sc-17qxh4e-7 ewpDUQ'
+                                                              size='18'
+                                                            >
+                                                              <img
+                                                                alt='Милан'
+                                                                className='lazyload sc-11tt6ib-2 mzpSx'
+                                                                data-src='https://cdn.scores24.live/upload/team/w20-h20/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png'
+                                                                data-srcset='https://cdn.scores24.live/upload/team/w20-h20/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png 1x, https://cdn.scores24.live/upload/team/w40-h40/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png 2x'
+                                                                src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                                              />
+                                                            </span>
+                                                            <div className='sc-17qxh4e-11 bAavID'>
+                                                              <div className='sc-17qxh4e-10 esbhnW'>Милан</div>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      <div className='sc-17qxh4e-2 cuPJkr'>
+                                                        <div
+                                                          className='sc-cmtokc-0 deICTO'
+                                                          data-testid='MatchGenericStatistics'
+                                                        >
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>14</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>2</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>0</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>0</div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      <div className='sc-4g7sie-0 gMBPyP'>
+                                                        <div className='sc-pvs6fr-0 cguIVO sc-4whuex-1 kdcjrx'>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>1</div>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>0</div>
+                                                        </div>
+                                                        <div className='sc-pvs6fr-0 iqhToT'>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                        </div>
+                                                        <div className='sc-pvs6fr-0 iqhToT'>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>1</div>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                        </div>
+                                                        <div className='sc-4whuex-2 gxLBKF'></div>
+                                                        <div className='sc-pvs6fr-0 jGdtXn'>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>5</div>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>6</div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div className='sc-17qxh4e-2 cuPJkr'>
+                                                      <div
+                                                        className='sc-cmtokc-0 deICTO'
+                                                        data-testid='MatchGenericStatistics'
+                                                      >
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>14</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>2</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>-</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>0</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>0</div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      className='sc-1spz999-0 bvWwSG'
+                                                      data-testid='MatchGenericActions'
+                                                    >
+                                                      <span
+                                                        className='sc-1hthis6-0 bZQzlG sc-1spz999-2 jcYBgi'
+                                                        type='win'
+                                                      >
+                                                        В
+                                                      </span>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div className='sc-17qxh4e-0 dHxDFU'>
+                                                <div className='sc-17qxh4e-1 iLRgmV'>
+                                                  <div
+                                                    className='sc-vn72qa-0 wcbRr sc-17qxh4e-12 hhOtWx'
+                                                    data-testid='MatchGenericSubscribe'
+                                                  ></div>
+                                                  <span
+                                                    className='sc-1hthis6-0 bZQzlG sc-17qxh4e-13 huCtwe'
+                                                    type='win'
+                                                  ></span>
+                                                  <div className='sc-5hj7ft-0 dDFJAN' data-testid='MatchGenericInfo'>
+                                                    <div className='sc-oh2bsf-0 fUZLA'>
+                                                      <span>24.05.25</span>
+                                                    </div>
+                                                    <div className='sc-5hj7ft-1 eYrqTP'></div>
+                                                    <span className='sc-5hj7ft-3 eKJwvm'>Серия А</span>
+                                                    <div className='sc-p2ps84-0 hfixrZ sc-5hj7ft-5 jynVzi'>
+                                                      <div
+                                                        className='sc-vn72qa-0 wcbRr'
+                                                        data-testid='MatchGenericSubscribe'
+                                                      ></div>
+                                                    </div>
+                                                  </div>
+                                                  <span className='link sc-17qxh4e-8 fwbGnc pointer'></span>
+                                                  <div className='sc-17qxh4e-3 dSsigE'>
+                                                    <div className='sc-17qxh4e-4 kWBSIF'>
+                                                      <div className='sc-17qxh4e-9 kNTalG'>
+                                                        <div className='sc-17qxh4e-5 iUfAma'>
+                                                          <div className='sc-17qxh4e-6 jncOYI'>
+                                                            <span
+                                                              className='sc-11tt6ib-0 eAPQXi sc-17qxh4e-7 ewpDUQ'
+                                                              size='18'
+                                                            >
+                                                              <img
+                                                                alt='Милан'
+                                                                className='lazyload sc-11tt6ib-2 mzpSx'
+                                                                data-src='https://cdn.scores24.live/upload/team/w20-h20/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png'
+                                                                data-srcset='https://cdn.scores24.live/upload/team/w20-h20/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png 1x, https://cdn.scores24.live/upload/team/w40-h40/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png 2x'
+                                                                src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                                              />
+                                                            </span>
+                                                            <div className='sc-17qxh4e-11 bAavID'>
+                                                              <div className='sc-17qxh4e-10 esbhnW'>Милан</div>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                        <div className='sc-17qxh4e-5 iUfAma'>
+                                                          <div className='sc-17qxh4e-6 jncOYI'>
+                                                            <span
+                                                              className='sc-11tt6ib-0 eAPQXi sc-17qxh4e-7 ewpDUQ'
+                                                              size='18'
+                                                            >
+                                                              <img
+                                                                alt='Монца'
+                                                                className='lazyload sc-11tt6ib-2 mzpSx'
+                                                                data-src='https://cdn.scores24.live/upload/team/w20-h20/066/a8f/8cf7b7a20002abe900f0e5b532e5db99ca.png'
+                                                                data-srcset='https://cdn.scores24.live/upload/team/w20-h20/066/a8f/8cf7b7a20002abe900f0e5b532e5db99ca.png 1x, https://cdn.scores24.live/upload/team/w40-h40/066/a8f/8cf7b7a20002abe900f0e5b532e5db99ca.png 2x'
+                                                                src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                                              />
+                                                            </span>
+                                                            <div className='sc-17qxh4e-11 bAavID'>
+                                                              <div className='sc-17qxh4e-10 iztCrh'>Монца</div>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      <div className='sc-17qxh4e-2 cuPJkr'>
+                                                        <div
+                                                          className='sc-cmtokc-0 deICTO'
+                                                          data-testid='MatchGenericStatistics'
+                                                        >
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>1.99</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>0.52</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>4</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>6</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>8</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>9</div>
+                                                          </div>
+                                                          <div className='sc-cmtokc-2 jOqilS'></div>
+                                                          <div className='sc-cmtokc-1 eYHyrO'>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>0</div>
+                                                            <div className='sc-cmtokc-3 jkOIJJ'>1</div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      <div className='sc-4g7sie-0 gMBPyP'>
+                                                        <div className='sc-pvs6fr-0 cguIVO sc-4whuex-1 kdcjrx'>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>2</div>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                        </div>
+                                                        <div className='sc-pvs6fr-0 iqhToT'>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                        </div>
+                                                        <div className='sc-pvs6fr-0 iqhToT'>
+                                                          <div className='sc-pvs6fr-1 hdZfIn'>2</div>
+                                                          <div className='sc-pvs6fr-1 bAhpay'>0</div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div className='sc-17qxh4e-2 cuPJkr'>
+                                                      <div
+                                                        className='sc-cmtokc-0 deICTO'
+                                                        data-testid='MatchGenericStatistics'
+                                                      >
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>1.99</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>0.52</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>4</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>6</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>8</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>9</div>
+                                                        </div>
+                                                        <div className='sc-cmtokc-2 jOqilS'></div>
+                                                        <div className='sc-cmtokc-1 eYHyrO'>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>0</div>
+                                                          <div className='sc-cmtokc-3 jkOIJJ'>1</div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      className='sc-1spz999-0 bvWwSG'
+                                                      data-testid='MatchGenericActions'
+                                                    >
+                                                      <span
+                                                        className='sc-1hthis6-0 bZQzlG sc-1spz999-2 jcYBgi'
+                                                        type='win'
+                                                      >
+                                                        В
+                                                      </span>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <div className='sc-1eaieo6-0 dEJdyt __MatchGamesBody'>
+                                            <div className='sc-jrv2fx-0 WmwaT notEntered'></div>
+                                          </div>
+                                        </div>
+                                        <div className='sc-15z5276-1 jvqndO empty'>
+                                          <div className='sc-15z5276-4 dKhvGV'>
+                                            <svg
+                                              className='sc-i341db-0 ixrffO sc-15z5276-5 fqHOwN'
+                                              direction='right'
+                                              height='90'
+                                              width='90'
+                                            >
+                                              <use fill='currentColor' href='#empty-general'></use>
+                                            </svg>
+                                          </div>
+                                          <div className='sc-15z5276-3 hpirry'>
+                                            <div className='sc-15z5276-6 TysSf'>Матчей нет</div>
+                                            <div className='sc-15z5276-7 krKqUg'>
+                                              Добавьте интересующие вас матчи или подпишитесь на команду, турнир или
+                                              игрока.
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className='sc-17eplpv-0 eAXAfg'>
+                                    <button
+                                      aria-label='Показать еще'
+                                      className='sc-17eplpv-1 kqmojO sc-b9tb4l-4 jyQUOh'
+                                      mode='show-more'
+                                      type='button'
+                                    >
+                                      Показать еще
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <h2 className='heading'>Прогноз на исход</h2>{' '}
+                          <p>
+                            <i>Очные матчи:</i>
+                          </p>
+                          <ul>
+                            <li>количество противостояний – 4;</li>
+                            <li>победы у хозяев поля – 4, у гостей – 0, ничьих – 0.</li>
+                          </ul>
+                          <div>
+                            <i>Тренды</i>
+                          </div>
+                          <ul>
+                            <li>Милан не проигрывает в 8 из 9 последних матчей (Клубные товарищеские матчи).</li>
+                          </ul>
+                          <div> =IПрогноз: Милан не проиграет(коэффициент: 1.95)</div>
+                          <h2 className='heading'>Прогноз на тотал</h2> <p>Очные матчи</p>
+                          <ul>
+                            <li>хозяева поля в среднем забивают - 2.5, гости - 0.25;</li>
+                            <li>средний тотал голов в очных матчах - 2.75;</li>
+                            <li>обе команды забивали: за всё время - 1 раз; на поле домашней команды - 0 раз.</li>
+                          </ul>
+                          <div>
+                            <i>Тренды</i>
+                          </div>
+                          <ul>
+                            <li>
+                              Тотал меньше 3.5 голов сыграл в 5 матчах команды Челси подряд (Клубные товарищеские
+                              матчи).
+                            </li>
+                          </ul>
+                          <div> =IПрогноз: Тотал голов меньше (3.5)(коэффициент: 1.74)</div>
+                          <h2 className='heading'>Прогноз на угловые</h2>
+                          <div>
+                            <i>Тренды</i>
+                          </div>
+                          <ul>
+                            <li>
+                              Тотал меньше 9.5 угловых сыграл в 6 из 7 последних выездных матчей команды Милан (Клубные
+                              товарищеские матчи).
+                            </li>
+                          </ul>
+                          <div> =IПрогноз: Угловые - Тотал меньше (9.5)(коэффициент: 1.8)</div>
+                          <h2 className='heading'>Прогноз на карточки</h2>{' '}
+                          <p>
+                            <i>Очные матчи</i>
+                          </p>
+                          <ul>
+                            <li>
+                              средний тотал желтых карточек в очных матчах - 3 (1.5 - у хозяев поля и 1.5 - у гостей);
+                            </li>
+                            <li>
+                              средний тотал желтых карточек на поле хозяев - 5 (2 - у хозяев поля и 3 - у гостей).
+                            </li>
+                          </ul>
+                          <div> =IПрогноз: Желтые карточки - Тотал меньше (3.5)</div>
+                          <h2 className='heading'>Прогноз на обе забьют</h2>{' '}
+                          <p>
+                            <i>Очные матчи:</i>
+                          </p>
+                          <ul>
+                            <li>количество противостояний – 4;</li>
+                            <li>обе команды забивали за всё время - 1 раз;</li>
+                            <li>на поле домашней команды - 0 раз.</li>
+                          </ul>
+                          <div> =IПрогноз: Обе забьют (Нет)(коэффициент: 2.63)</div>
+                        </div>
+                        <div>
+                          <p></p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className='sc-10cwpmp-0 cVXUI'>
+                      <img
+                        className='sc-10cwpmp-1 fupXhF lazyload'
+                        data-src='https://cdn.scores24.live/upload/scores24/dist/assets/bg-3d16e7f3.png'
+                        data-srcset='https://cdn.scores24.live/upload/scores24/dist/assets/bg-3d16e7f3.png'
+                        src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                      />
+                      <div className='sc-10cwpmp-2 dCrCCi'>Наш выбор</div>
+                      <div className='sc-10cwpmp-3 cVvIGt'>
+                        <div className='sc-10cwpmp-5 hvjWKr'>
+                          <div className='sc-10cwpmp-6 gLatNg'>
+                            <span>Тотал голов больше (3.5)</span> с кэфом <span className='value'>2.1*</span>
+                          </div>
+                        </div>
+                        <div className='sc-10cwpmp-4 erEdfP'>
+                          *Коэффициент актуален на момент публикации прогноза (8 августа 2025, 14:24)
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className='sc-3xainz-0 ejfsOT'>
+                      <div className='sc-3xainz-2 dAzuou'>
+                        <div className='sc-3xainz-3 cmgcDL'>
+                          <div className='sc-111vqmd-0 fiNJGr sc-3xainz-1 bYJTwT'>
+                            <div className='sc-111vqmd-1 huPwvB'>
+                              <div className='sc-111vqmd-2 dRkomU'>
+                                <h2 className='sc-4y75cf-0 hoRCwP sc-111vqmd-5 grXjBn' data-testid='Headline'>
+                                  Этот прогноз зайдёт?
+                                </h2>
+                              </div>
+                            </div>
+                          </div>
+                          <div className='sc-3xainz-5 jyuQdH'>
+                            <button
+                              aria-label='YesButton'
+                              className='sc-jvwc7y-4 sc-jvwc7y-5 cmfzay dTeXrV sc-jvwc7y-4 jvVchS sc-3xainz-6 YdnMw'
+                              type='button'
+                            >
+                              <svg
+                                className='sc-i341db-0 ixrffO sc-jvwc7y-1 gqBSzk'
+                                direction='right'
+                                height='20'
+                                width='20'
+                              >
+                                <use fill='currentColor' href='#finger-up'></use>
+                              </svg>
+                              <span className='sc-jvwc7y-3 hdwUJe'>Да</span>
+                            </button>
+                            <button
+                              aria-label='NoButton'
+                              className='sc-jvwc7y-4 sc-jvwc7y-6 cmfzay eODfWO sc-jvwc7y-4 jvVchS sc-3xainz-6 eDUInR'
+                              type='button'
+                            >
+                              <svg
+                                className='sc-i341db-0 ixrffO sc-jvwc7y-1 gqBSzk'
+                                direction='right'
+                                height='20'
+                                width='20'
+                              >
+                                <use fill='currentColor' href='#finger-down'></use>
+                              </svg>
+                              <span className='sc-jvwc7y-3 hdwUJe'>Нет</span>
+                            </button>
+                          </div>
+                          <div className='sc-3xainz-4 jzeefU'>Всего проголосовало: 0</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className='sc-958ogn-0 jXHTgF' data-testid='CommonDelimeter'></div>
+                    <div className='sc-2cxzjp-0 cfqqTg' data-anchor='trends' data-testid='PageAnchorContainer'>
+                      <div className='sc-1x89i8t-0 bTaOmI'>
+                        <div className='sc-111vqmd-0 fiNJGr sc-1x89i8t-1 emWSaU'>
+                          <div className='sc-111vqmd-1 huPwvB'>
+                            <div className='sc-111vqmd-2 dRkomU'>
+                              <h2 className='sc-4y75cf-0 hoRCwP sc-111vqmd-5 grXjBn' data-testid='Headline'>
+                                Челси - Милан прогнозы по статистике
+                              </h2>
+                            </div>
+                          </div>
+                        </div>
+                        <div className='sc-1qook4i-4 yrJen' data-testid='trendCard'>
+                          <div className='sc-1qook4i-2 iYtyoa'>
+                            <div className='sc-og57cc-10 emIpKv' data-testid='MatchCardWithTrendsMarket'>
+                              <button className='sc-og57cc-0 iiOXcW'>
+                                <div className='sc-og57cc-1 kiVdxT'>
+                                  <div className='sc-og57cc-2 dRVDA'>Прогнозы на Двойной исход</div>
+                                  <span>(1)</span>
+                                </div>
+                                <div className='sc-og57cc-4 eJKsmP'>
+                                  <div className='sc-og57cc-3 vaEqd'>
+                                    <span className='sc-11tt6ib-0 iQnnmC' size='20'>
+                                      <img
+                                        className='lazyload sc-11tt6ib-2 mzpSx'
+                                        data-src='https://cdn.scores24.ru/upload/partners-s24/origin/2b5/0ac/122042bd5b79eb2e966262b7a5c08d37bfbet365 fav.svg'
+                                        data-srcset='https://cdn.scores24.ru/upload/partners-s24/origin/2b5/0ac/122042bd5b79eb2e966262b7a5c08d37bfbet365 fav.svg'
+                                        src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                      />
+                                    </span>
+                                  </div>
+                                  <div className='sc-og57cc-5 clOpzx'>1.91</div>
+                                </div>
+                                <div className='sc-og57cc-6 hNWKUS'>
+                                  <svg
+                                    className='sc-i341db-0 ixrffO sc-og57cc-7 JAIQM'
+                                    direction='right'
+                                    height='20'
+                                    width='20'
+                                  >
+                                    <use fill='currentColor' href='#arrow-chevron-small'></use>
+                                  </svg>
+                                </div>
+                              </button>
+                              <div className='sc-jrv2fx-0 fhEluS open' open=''>
+                                <div className='sc-og57cc-8 hpvWlg'>
+                                  <div className='sc-13dfxab-0 gyREyU'>
+                                    <div className='sc-gwfubx-0 cQQCqy' data-testid='TrendContent'>
+                                      <div className='sc-gwfubx-1 eYwIWJ'>
+                                        <div className='sc-gwfubx-2 gcuecJ'>Милан не проигрывает:</div>
+                                        <div className='sc-gwfubx-3 eIvUra'>
+                                          <div className='sc-gwfubx-4 btvJKL'>
+                                            <span className='sc-11tt6ib-0 iQnnmC sc-gwfubx-5 hbEEtl' size='20'>
+                                              <img
+                                                alt='ac-milan-2'
+                                                className='lazyload sc-11tt6ib-2 mzpSx'
+                                                data-src='https://cdn.scores24.live/upload/team/w20-h20/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png'
+                                                data-srcset='https://cdn.scores24.live/upload/team/w20-h20/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png 1x, https://cdn.scores24.live/upload/team/w40-h40/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png 2x'
+                                                src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                              />
+                                            </span>
+                                            <span className='sc-gwfubx-6 iQDcbZ'>
+                                              в <span className='digit'>8 </span>из <span className='digit'>9 </span>
+                                              последних матчей (Клубные товарищеские матчи).
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <span className='sc-ljbnji-0 iufpzM sc-13dfxab-2 yGjVC'>
+                                      <a
+                                        className='sc-13dfxab-3 erpqpa'
+                                        href='/dapi/v3/click/sYyWTbW9?position=trends&amp;bkm=bet365&amp;lg=international-clubs-club-friendly-games&amp;mch=10-08-2025-chelsea-milan'
+                                        target='_blank'
+                                      ></a>
+                                      <div className='sc-13dfxab-1 kozYiF'>
+                                        <div className='sc-13dfxab-4 lnuejF'>
+                                          <span className='sc-7nq6jv-0 ilPlEz'>Милан не проиграет</span>
+                                        </div>
+                                      </div>
+                                      <div className='sc-31r1g9-0 bwklvq' data-testid='PredictionValueButton'>
+                                        <div className='sc-31r1g9-3 gyCHJE' data-testid='PredictionValueButtonLogo'>
+                                          <img
+                                            alt='Бет 365'
+                                            className='sc-31r1g9-4 guucqz lazyload'
+                                            data-src='https://cdn.scores24.ru/upload/partners-s24/origin/2b5/0ac/122042bd5b79eb2e966262b7a5c08d37bfbet365 fav.svg'
+                                            data-srcset='https://cdn.scores24.ru/upload/partners-s24/origin/2b5/0ac/122042bd5b79eb2e966262b7a5c08d37bfbet365 fav.svg'
+                                            src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                            style={{ objectFit: 'contain' }}
+                                          />
+                                        </div>
+                                        <div className='sc-31r1g9-1 fkPJDI'>
+                                          <div className='sc-31r1g9-2 kGYzNO' data-testid='PredictionValueButtonValue'>
+                                            1.91
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className='sc-og57cc-10 gkDBDD' data-testid='MatchCardWithTrendsMarket'>
+                              <button className='sc-og57cc-0 iiOXcW'>
+                                <div className='sc-og57cc-1 kiVdxT'>
+                                  <div className='sc-og57cc-2 dRVDA'>Прогнозы на Тотал</div>
+                                  <span>(4)</span>
+                                </div>
+                                <div className='sc-og57cc-4 eJKsmP'>
+                                  <div className='sc-og57cc-3 vaEqd'>
+                                    <span className='sc-11tt6ib-0 iQnnmC' size='20'>
+                                      <img
+                                        className='lazyload sc-11tt6ib-2 mzpSx'
+                                        data-src='https://cdn.scores24.ru/upload/partners-s24/origin/2b5/0ac/122042bd5b79eb2e966262b7a5c08d37bfbet365 fav.svg'
+                                        data-srcset='https://cdn.scores24.ru/upload/partners-s24/origin/2b5/0ac/122042bd5b79eb2e966262b7a5c08d37bfbet365 fav.svg'
+                                        src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                      />
+                                    </span>
+                                  </div>
+                                  <div className='sc-og57cc-5 clOpzx'>1.11 - 1.73 </div>
+                                </div>
+                                <div className='sc-og57cc-6 hNWKUS'>
+                                  <svg
+                                    className='sc-i341db-0 ixrffO sc-og57cc-7 JAIQM'
+                                    direction='right'
+                                    height='20'
+                                    width='20'
+                                  >
+                                    <use fill='currentColor' href='#arrow-chevron-small'></use>
+                                  </svg>
+                                </div>
+                              </button>
+                              <div className='sc-jrv2fx-0 WmwaT notEntered'>
+                                <div className='sc-og57cc-8 hpvWlg'>
+                                  <div className='sc-13dfxab-0 gyREyU'>
+                                    <div className='sc-gwfubx-0 cQQCqy' data-testid='TrendContent'>
+                                      <div className='sc-gwfubx-1 eYwIWJ'>
+                                        <div className='sc-gwfubx-2 gcuecJ'>Милан забивает:</div>
+                                        <div className='sc-gwfubx-3 eIvUra'>
+                                          <div className='sc-gwfubx-4 btvJKL'>
+                                            <span className='sc-11tt6ib-0 iQnnmC sc-gwfubx-5 hbEEtl' size='20'>
+                                              <img
+                                                alt='ac-milan-2'
+                                                className='lazyload sc-11tt6ib-2 mzpSx'
+                                                data-src='https://cdn.scores24.live/upload/team/w20-h20/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png'
+                                                data-srcset='https://cdn.scores24.live/upload/team/w20-h20/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png 1x, https://cdn.scores24.live/upload/team/w40-h40/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png 2x'
+                                                src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                              />
+                                            </span>
+                                            <span className='sc-gwfubx-6 iQDcbZ'>
+                                              в <span className='digit'>11 </span>из <span className='digit'>12 </span>
+                                              последних матчей (Клубные товарищеские матчи).
+                                            </span>
+                                          </div>
+                                          <div className='sc-gwfubx-4 btvJKL'>
+                                            <span className='sc-11tt6ib-0 iQnnmC sc-gwfubx-5 hbEEtl' size='20'>
+                                              <img
+                                                alt='ac-milan-2'
+                                                className='lazyload sc-11tt6ib-2 mzpSx'
+                                                data-src='https://cdn.scores24.live/upload/team/w20-h20/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png'
+                                                data-srcset='https://cdn.scores24.live/upload/team/w20-h20/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png 1x, https://cdn.scores24.live/upload/team/w40-h40/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png 2x'
+                                                src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                              />
+                                            </span>
+                                            <span className='sc-gwfubx-6 iQDcbZ'>
+                                              на выезде в <span className='digit'>7 </span>из{' '}
+                                              <span className='digit'>8 </span>последних матчей (Клубные товарищеские
+                                              матчи).
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <span className='sc-ljbnji-0 iufpzM sc-13dfxab-2 yGjVC'>
+                                      <a
+                                        className='sc-13dfxab-3 erpqpa'
+                                        href='/dapi/v3/click/sYyWTbW9?position=trends&amp;bkm=bet365&amp;lg=international-clubs-club-friendly-games&amp;mch=10-08-2025-chelsea-milan'
+                                        target='_blank'
+                                      ></a>
+                                      <div className='sc-13dfxab-1 kozYiF'>
+                                        <div className='sc-13dfxab-4 lnuejF'>
+                                          <span className='sc-7nq6jv-0 ilPlEz'>Милан забьет гол</span>
+                                        </div>
+                                      </div>
+                                      <div className='sc-31r1g9-0 bwklvq' data-testid='PredictionValueButton'>
+                                        <div className='sc-31r1g9-3 gyCHJE' data-testid='PredictionValueButtonLogo'>
+                                          <img
+                                            alt='Бет 365'
+                                            className='sc-31r1g9-4 guucqz lazyload'
+                                            data-src='https://cdn.scores24.ru/upload/partners-s24/origin/2b5/0ac/122042bd5b79eb2e966262b7a5c08d37bfbet365 fav.svg'
+                                            data-srcset='https://cdn.scores24.ru/upload/partners-s24/origin/2b5/0ac/122042bd5b79eb2e966262b7a5c08d37bfbet365 fav.svg'
+                                            src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                            style={{ objectFit: 'contain' }}
+                                          />
+                                        </div>
+                                        <div className='sc-31r1g9-1 fkPJDI'>
+                                          <div className='sc-31r1g9-2 kGYzNO' data-testid='PredictionValueButtonValue'>
+                                            1.29
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </span>
+                                  </div>
+                                  <div className='sc-13dfxab-0 gyREyU'>
+                                    <div className='sc-gwfubx-0 cQQCqy' data-testid='TrendContent'>
+                                      <div className='sc-gwfubx-1 eYwIWJ'>
+                                        <div className='sc-gwfubx-2 gcuecJ'>Челси забивает:</div>
+                                        <div className='sc-gwfubx-3 eIvUra'>
+                                          <div className='sc-gwfubx-4 btvJKL'>
+                                            <span className='sc-11tt6ib-0 iQnnmC sc-gwfubx-5 hbEEtl' size='20'>
+                                              <img
+                                                alt='chelsea-fc'
+                                                className='lazyload sc-11tt6ib-2 mzpSx'
+                                                data-src='https://cdn.scores24.live/upload/team/w20-h20/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png'
+                                                data-srcset='https://cdn.scores24.live/upload/team/w20-h20/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png 1x, https://cdn.scores24.live/upload/team/w40-h40/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png 2x'
+                                                src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                              />
+                                            </span>
+                                            <span className='sc-gwfubx-6 iQDcbZ'>
+                                              в <span className='digit'>10 </span>из <span className='digit'>11 </span>
+                                              последних матчей (Клубные товарищеские матчи).
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <span className='sc-ljbnji-0 iufpzM sc-13dfxab-2 yGjVC'>
+                                      <a
+                                        className='sc-13dfxab-3 erpqpa'
+                                        href='/dapi/v3/click/sYyWTbW9?position=trends&amp;bkm=bet365&amp;lg=international-clubs-club-friendly-games&amp;mch=10-08-2025-chelsea-milan'
+                                        target='_blank'
+                                      ></a>
+                                      <div className='sc-13dfxab-1 kozYiF'>
+                                        <div className='sc-13dfxab-4 lnuejF'>
+                                          <span className='sc-7nq6jv-0 ilPlEz'>Челси забьет гол</span>
+                                        </div>
+                                      </div>
+                                      <div className='sc-31r1g9-0 bwklvq' data-testid='PredictionValueButton'>
+                                        <div className='sc-31r1g9-3 gyCHJE' data-testid='PredictionValueButtonLogo'>
+                                          <img
+                                            alt='Бет 365'
+                                            className='sc-31r1g9-4 guucqz lazyload'
+                                            data-src='https://cdn.scores24.ru/upload/partners-s24/origin/2b5/0ac/122042bd5b79eb2e966262b7a5c08d37bfbet365 fav.svg'
+                                            data-srcset='https://cdn.scores24.ru/upload/partners-s24/origin/2b5/0ac/122042bd5b79eb2e966262b7a5c08d37bfbet365 fav.svg'
+                                            src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                            style={{ objectFit: 'contain' }}
+                                          />
+                                        </div>
+                                        <div className='sc-31r1g9-1 fkPJDI'>
+                                          <div className='sc-31r1g9-2 kGYzNO' data-testid='PredictionValueButtonValue'>
+                                            1.11
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </span>
+                                  </div>
+                                  <div className='sc-13dfxab-0 gyREyU'>
+                                    <div className='sc-gwfubx-0 cQQCqy' data-testid='TrendContent'>
+                                      <div className='sc-gwfubx-1 eYwIWJ'>
+                                        <div className='sc-gwfubx-2 gcuecJ'>Челси забивает меньше 2.5 мячей:</div>
+                                        <div className='sc-gwfubx-3 eIvUra'>
+                                          <div className='sc-gwfubx-4 btvJKL'>
+                                            <span className='sc-11tt6ib-0 iQnnmC sc-gwfubx-5 hbEEtl' size='20'>
+                                              <img
+                                                alt='chelsea-fc'
+                                                className='lazyload sc-11tt6ib-2 mzpSx'
+                                                data-src='https://cdn.scores24.live/upload/team/w20-h20/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png'
+                                                data-srcset='https://cdn.scores24.live/upload/team/w20-h20/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png 1x, https://cdn.scores24.live/upload/team/w40-h40/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png 2x'
+                                                src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                              />
+                                            </span>
+                                            <span className='sc-gwfubx-6 iQDcbZ'>
+                                              в <span className='digit'>9 </span>из <span className='digit'>10 </span>
+                                              последних матчей (Клубные товарищеские матчи).
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <span className='sc-ljbnji-0 iufpzM sc-13dfxab-2 yGjVC'>
+                                      <a
+                                        className='sc-13dfxab-3 erpqpa'
+                                        href='/dapi/v3/click/sYyWTbW9?position=trends&amp;bkm=bet365&amp;lg=international-clubs-club-friendly-games&amp;mch=10-08-2025-chelsea-milan'
+                                        target='_blank'
+                                      ></a>
+                                      <div className='sc-13dfxab-1 kozYiF'>
+                                        <div className='sc-13dfxab-4 lnuejF'>
+                                          <span className='sc-7nq6jv-0 ilPlEz'>Челси Тотал голов меньше (2.5)</span>
+                                        </div>
+                                      </div>
+                                      <div className='sc-31r1g9-0 bwklvq' data-testid='PredictionValueButton'>
+                                        <div className='sc-31r1g9-3 gyCHJE' data-testid='PredictionValueButtonLogo'>
+                                          <img
+                                            alt='Бет 365'
+                                            className='sc-31r1g9-4 guucqz lazyload'
+                                            data-src='https://cdn.scores24.ru/upload/partners-s24/origin/2b5/0ac/122042bd5b79eb2e966262b7a5c08d37bfbet365 fav.svg'
+                                            data-srcset='https://cdn.scores24.ru/upload/partners-s24/origin/2b5/0ac/122042bd5b79eb2e966262b7a5c08d37bfbet365 fav.svg'
+                                            src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                            style={{ objectFit: 'contain' }}
+                                          />
+                                        </div>
+                                        <div className='sc-31r1g9-1 fkPJDI'>
+                                          <div className='sc-31r1g9-2 kGYzNO' data-testid='PredictionValueButtonValue'>
+                                            1.44
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <a className='link sc-1qook4i-3 bWIqnx' href='/ru/soccer/m-10-08-2025-chelsea-milan#trends'>
+                            Все факты о соперниках
+                            <svg className='sc-i341db-0 ixrffO' direction='right' height='16' width='16'>
+                              <use fill='currentColor' href='#arrow-chevron'></use>
+                            </svg>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div className='sc-958ogn-0 jXHTgF' data-testid='CommonDelimeter'></div>
+
+                    <div className='sc-958ogn-0 jXHTgF' data-testid='CommonDelimeter'></div>
+
+                    <div className='sc-958ogn-0 jXHTgF' data-testid='CommonDelimeter'></div>
+
+                    <div className='sc-958ogn-0 bsLROc' data-testid='CommonDelimeter'></div>
+
+                    <div className='sc-958ogn-0 bsLROc' data-testid='CommonDelimeter'></div>
+
+                    <div className='sc-utrs6s-0 cLBJko'>
+                      <div className='sc-111vqmd-0 fiNJGr sc-utrs6s-1 EWTjA'>
+                        <div className='sc-111vqmd-1 huPwvB'>
+                          <div className='sc-111vqmd-2 dRkomU'>
+                            <h2 className='sc-4y75cf-0 hoRCwP sc-111vqmd-5 grXjBn' data-testid='Headline'>
+                              Другие прогнозы на Футбол
+                            </h2>
+                          </div>
+                        </div>
+                      </div>
+                      <div className='sc-utrs6s-2 jZSvNz'>
+                        <a
+                          className='link sc-tcl2eq-0 gyKrf'
+                          href='/ru/soccer/m-10-08-2025-hibernian-w-durham-lfc-w--prediction'
+                        >
+                          <div className='sc-tcl2eq-1 ghAAbO'>Клубные товарищеские матчи</div>
+                          <div className='sc-tcl2eq-2 jEsSw'>
+                            <div className='sc-tcl2eq-3 nBiAX'>
+                              <div className='sc-tcl2eq-7 kwOtMp'>
+                                <span className='sc-11tt6ib-0 iQnnmC' size='20'>
+                                  <img
+                                    alt='Дарем (Ж)'
+                                    className='lazyload sc-11tt6ib-2 mzpSx'
+                                    data-src='https://cdn.scores24.live/upload/team/w20-h20/6f1/820/6ae906982b3ec1e6d151694853a1b193ed.png'
+                                    data-srcset='https://cdn.scores24.live/upload/team/w20-h20/6f1/820/6ae906982b3ec1e6d151694853a1b193ed.png 1x, https://cdn.scores24.live/upload/team/w40-h40/6f1/820/6ae906982b3ec1e6d151694853a1b193ed.png 2x'
+                                    src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                  />
+                                </span>
+                                <div className='sc-tcl2eq-8 jbAlZT'>Дарем (Ж)</div>
+                              </div>
+                              <div className='sc-tcl2eq-7 kwOtMp'>
+                                <span className='sc-11tt6ib-0 iQnnmC' size='20'>
+                                  <img
+                                    alt='Хиберниан (Ж)'
+                                    className='lazyload sc-11tt6ib-2 mzpSx'
+                                    data-src='https://cdn.scores24.live/upload/team/w20-h20/626/ac0/f4a906edfe4a8366755dd5c9b2edb368ce.png'
+                                    data-srcset='https://cdn.scores24.live/upload/team/w20-h20/626/ac0/f4a906edfe4a8366755dd5c9b2edb368ce.png 1x, https://cdn.scores24.live/upload/team/w40-h40/626/ac0/f4a906edfe4a8366755dd5c9b2edb368ce.png 2x'
+                                    src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                  />
+                                </span>
+                                <div className='sc-tcl2eq-8 jbAlZT'>Хиберниан (Ж)</div>
+                              </div>
+                            </div>
+                            <div className='sc-tcl2eq-4 fiMOII'>
+                              <div className='sc-tcl2eq-5 vQgxT'>
+                                <span>10 авг</span>
+                              </div>
+                              <div className='sc-tcl2eq-6 ZfplR'>
+                                <span>12:00</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className='sc-tcl2eq-9 hMoSig'>
+                            Подробнее
+                            <svg
+                              className='sc-i341db-0 ixrffO sc-tcl2eq-10 irTYkU'
+                              direction='right'
+                              height='20'
+                              width='20'
+                            >
+                              <use fill='currentColor' href='#arrow-chevron'></use>
+                            </svg>
+                          </div>
+                        </a>
+                        <a
+                          className='link sc-tcl2eq-0 gyKrf'
+                          href='/ru/soccer/m-10-08-2025-atalanta-nk-opatija-prediction'
+                        >
+                          <div className='sc-tcl2eq-1 ghAAbO'>Клубные товарищеские матчи</div>
+                          <div className='sc-tcl2eq-2 jEsSw'>
+                            <div className='sc-tcl2eq-3 nBiAX'>
+                              <div className='sc-tcl2eq-7 kwOtMp'>
+                                <span className='sc-11tt6ib-0 iQnnmC' size='20'>
+                                  <img
+                                    alt='Аталанта'
+                                    className='lazyload sc-11tt6ib-2 mzpSx'
+                                    data-src='https://cdn.scores24.live/upload/team/w20-h20/ef8/3e3/a5b6734c1a1339ca80f017112cf24e0757.png'
+                                    data-srcset='https://cdn.scores24.live/upload/team/w20-h20/ef8/3e3/a5b6734c1a1339ca80f017112cf24e0757.png 1x, https://cdn.scores24.live/upload/team/w40-h40/ef8/3e3/a5b6734c1a1339ca80f017112cf24e0757.png 2x'
+                                    src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                  />
+                                </span>
+                                <div className='sc-tcl2eq-8 jbAlZT'>Аталанта</div>
+                              </div>
+                              <div className='sc-tcl2eq-7 kwOtMp'>
+                                <span className='sc-11tt6ib-0 iQnnmC' size='20'>
+                                  <img
+                                    alt='Опатия'
+                                    className='lazyload sc-11tt6ib-2 mzpSx'
+                                    data-src='https://cdn.scores24.live/upload/team/w20-h20/bab/755/9a83063f29e6cd39870dd5fa9927451a77.png'
+                                    data-srcset='https://cdn.scores24.live/upload/team/w20-h20/bab/755/9a83063f29e6cd39870dd5fa9927451a77.png 1x, https://cdn.scores24.live/upload/team/w40-h40/bab/755/9a83063f29e6cd39870dd5fa9927451a77.png 2x'
+                                    src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                  />
+                                </span>
+                                <div className='sc-tcl2eq-8 jbAlZT'>Опатия</div>
+                              </div>
+                            </div>
+                            <div className='sc-tcl2eq-4 fiMOII'>
+                              <div className='sc-tcl2eq-5 vQgxT'>
+                                <span>10 авг</span>
+                              </div>
+                              <div className='sc-tcl2eq-6 ZfplR'>
+                                <span>08:30</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className='sc-tcl2eq-9 hMoSig'>
+                            Подробнее
+                            <svg
+                              className='sc-i341db-0 ixrffO sc-tcl2eq-10 irTYkU'
+                              direction='right'
+                              height='20'
+                              width='20'
+                            >
+                              <use fill='currentColor' href='#arrow-chevron'></use>
+                            </svg>
+                          </div>
+                        </a>
+                        <a
+                          className='link sc-tcl2eq-0 gyKrf'
+                          href='/ru/soccer/m-10-08-2025-napoli-as-sorrento-calcio-prediction'
+                        >
+                          <div className='sc-tcl2eq-1 ghAAbO'>Клубные товарищеские матчи</div>
+                          <div className='sc-tcl2eq-2 jEsSw'>
+                            <div className='sc-tcl2eq-3 nBiAX'>
+                              <div className='sc-tcl2eq-7 kwOtMp'>
+                                <span className='sc-11tt6ib-0 iQnnmC' size='20'>
+                                  <img
+                                    alt='Наполи'
+                                    className='lazyload sc-11tt6ib-2 mzpSx'
+                                    data-src='https://cdn.scores24.live/upload/team/w20-h20/377/8f4/6c1f931258a2a93e1c0777c842a04d18bd.png'
+                                    data-srcset='https://cdn.scores24.live/upload/team/w20-h20/377/8f4/6c1f931258a2a93e1c0777c842a04d18bd.png 1x, https://cdn.scores24.live/upload/team/w40-h40/377/8f4/6c1f931258a2a93e1c0777c842a04d18bd.png 2x'
+                                    src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                  />
+                                </span>
+                                <div className='sc-tcl2eq-8 jbAlZT'>Наполи</div>
+                              </div>
+                              <div className='sc-tcl2eq-7 kwOtMp'>
+                                <span className='sc-11tt6ib-0 iQnnmC' size='20'>
+                                  <img
+                                    alt='Сорренто 1945'
+                                    className='lazyload sc-11tt6ib-2 mzpSx'
+                                    data-src='https://cdn.scores24.live/upload/team/w20-h20/e94/281/b48865d4a2d4071e885ae6e485897065b8.png'
+                                    data-srcset='https://cdn.scores24.live/upload/team/w20-h20/e94/281/b48865d4a2d4071e885ae6e485897065b8.png 1x, https://cdn.scores24.live/upload/team/w40-h40/e94/281/b48865d4a2d4071e885ae6e485897065b8.png 2x'
+                                    src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                  />
+                                </span>
+                                <div className='sc-tcl2eq-8 jbAlZT'>Сорренто 1945</div>
+                              </div>
+                            </div>
+                            <div className='sc-tcl2eq-4 fiMOII'>
+                              <div className='sc-tcl2eq-5 vQgxT'>
+                                <span>10 авг</span>
+                              </div>
+                              <div className='sc-tcl2eq-6 ZfplR'>
+                                <span>09:00</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className='sc-tcl2eq-9 hMoSig'>
+                            Подробнее
+                            <svg
+                              className='sc-i341db-0 ixrffO sc-tcl2eq-10 irTYkU'
+                              direction='right'
+                              height='20'
+                              width='20'
+                            >
+                              <use fill='currentColor' href='#arrow-chevron'></use>
+                            </svg>
+                          </div>
+                        </a>
+                        <a
+                          className='link sc-tcl2eq-0 gyKrf'
+                          href='/ru/soccer/m-10-08-2025-mfa-zalgiris-w-fc-flora-tallinn-w--prediction'
+                        >
+                          <div className='sc-tcl2eq-1 ghAAbO'>Клубные товарищеские матчи</div>
+                          <div className='sc-tcl2eq-2 jEsSw'>
+                            <div className='sc-tcl2eq-3 nBiAX'>
+                              <div className='sc-tcl2eq-7 kwOtMp'>
+                                <span className='sc-11tt6ib-0 iQnnmC' size='20'>
+                                  <img
+                                    alt='Флора Таллинн (Ж)'
+                                    className='lazyload sc-11tt6ib-2 mzpSx'
+                                    data-src='https://cdn.scores24.live/upload/team/w20-h20/0e5/de9/d74f3616789f25293fe847db158ba880c2.png'
+                                    data-srcset='https://cdn.scores24.live/upload/team/w20-h20/0e5/de9/d74f3616789f25293fe847db158ba880c2.png 1x, https://cdn.scores24.live/upload/team/w40-h40/0e5/de9/d74f3616789f25293fe847db158ba880c2.png 2x'
+                                    src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                  />
+                                </span>
+                                <div className='sc-tcl2eq-8 jbAlZT'>Флора Таллинн (Ж)</div>
+                              </div>
+                              <div className='sc-tcl2eq-7 kwOtMp'>
+                                <span className='sc-11tt6ib-0 iQnnmC' size='20'>
+                                  <img
+                                    alt='MFA Zalgiris (w)'
+                                    className='lazyload sc-11tt6ib-2 mzpSx'
+                                    data-src='https://img.thesports.com/football/team/9ec0b58e31e65de4027cf499df009e77.png'
+                                    data-srcset='https://img.thesports.com/football/team/9ec0b58e31e65de4027cf499df009e77.png'
+                                    src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                  />
+                                </span>
+                                <div className='sc-tcl2eq-8 jbAlZT'>MFA Zalgiris (w)</div>
+                              </div>
+                            </div>
+                            <div className='sc-tcl2eq-4 fiMOII'>
+                              <div className='sc-tcl2eq-5 vQgxT'>
+                                <span>10 авг</span>
+                              </div>
+                              <div className='sc-tcl2eq-6 ZfplR'>
+                                <span>09:30</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className='sc-tcl2eq-9 hMoSig'>
+                            Подробнее
+                            <svg
+                              className='sc-i341db-0 ixrffO sc-tcl2eq-10 irTYkU'
+                              direction='right'
+                              height='20'
+                              width='20'
+                            >
+                              <use fill='currentColor' href='#arrow-chevron'></use>
+                            </svg>
+                          </div>
+                        </a>
+                        <a
+                          className='link sc-tcl2eq-0 gyKrf'
+                          href='/ru/soccer/m-10-08-2025-cd-arenteiro-sporting-gijon-prediction'
+                        >
+                          <div className='sc-tcl2eq-1 ghAAbO'>Клубные товарищеские матчи</div>
+                          <div className='sc-tcl2eq-2 jEsSw'>
+                            <div className='sc-tcl2eq-3 nBiAX'>
+                              <div className='sc-tcl2eq-7 kwOtMp'>
+                                <span className='sc-11tt6ib-0 iQnnmC' size='20'>
+                                  <img
+                                    alt='Спортинг'
+                                    className='lazyload sc-11tt6ib-2 mzpSx'
+                                    data-src='https://cdn.scores24.live/upload/team/w20-h20/9b1/926/98b9e0985b7371df9dea9fd048f195f500.png'
+                                    data-srcset='https://cdn.scores24.live/upload/team/w20-h20/9b1/926/98b9e0985b7371df9dea9fd048f195f500.png 1x, https://cdn.scores24.live/upload/team/w40-h40/9b1/926/98b9e0985b7371df9dea9fd048f195f500.png 2x'
+                                    src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                  />
+                                </span>
+                                <div className='sc-tcl2eq-8 jbAlZT'>Спортинг</div>
+                              </div>
+                              <div className='sc-tcl2eq-7 kwOtMp'>
+                                <span className='sc-11tt6ib-0 iQnnmC' size='20'>
+                                  <img
+                                    alt='Арентейро'
+                                    className='lazyload sc-11tt6ib-2 mzpSx'
+                                    data-src='https://cdn.scores24.live/upload/team/w20-h20/659/d1b/6e34f68e5417db6f27a572595d6d7cf2a6.png'
+                                    data-srcset='https://cdn.scores24.live/upload/team/w20-h20/659/d1b/6e34f68e5417db6f27a572595d6d7cf2a6.png 1x, https://cdn.scores24.live/upload/team/w40-h40/659/d1b/6e34f68e5417db6f27a572595d6d7cf2a6.png 2x'
+                                    src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                  />
+                                </span>
+                                <div className='sc-tcl2eq-8 jbAlZT'>Арентейро</div>
+                              </div>
+                            </div>
+                            <div className='sc-tcl2eq-4 fiMOII'>
+                              <div className='sc-tcl2eq-5 vQgxT'>
+                                <span>10 авг</span>
+                              </div>
+                              <div className='sc-tcl2eq-6 ZfplR'>
+                                <span>10:00</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className='sc-tcl2eq-9 hMoSig'>
+                            Подробнее
+                            <svg
+                              className='sc-i341db-0 ixrffO sc-tcl2eq-10 irTYkU'
+                              direction='right'
+                              height='20'
+                              width='20'
+                            >
+                              <use fill='currentColor' href='#arrow-chevron'></use>
+                            </svg>
+                          </div>
+                        </a>
+                        <a
+                          className='link sc-tcl2eq-0 gyKrf'
+                          href='/ru/soccer/m-10-08-2025-buriram-united-rayong-fc-prediction'
+                        >
+                          <div className='sc-tcl2eq-1 ghAAbO'>Клубные товарищеские матчи</div>
+                          <div className='sc-tcl2eq-2 jEsSw'>
+                            <div className='sc-tcl2eq-3 nBiAX'>
+                              <div className='sc-tcl2eq-7 kwOtMp'>
+                                <span className='sc-11tt6ib-0 iQnnmC' size='20'>
+                                  <img
+                                    alt='Районг'
+                                    className='lazyload sc-11tt6ib-2 mzpSx'
+                                    data-src='https://cdn.scores24.live/upload/team/w20-h20/19f/b10/7417196b176f96c0e39992e6621b3fda25.png'
+                                    data-srcset='https://cdn.scores24.live/upload/team/w20-h20/19f/b10/7417196b176f96c0e39992e6621b3fda25.png 1x, https://cdn.scores24.live/upload/team/w40-h40/19f/b10/7417196b176f96c0e39992e6621b3fda25.png 2x'
+                                    src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                  />
+                                </span>
+                                <div className='sc-tcl2eq-8 jbAlZT'>Районг</div>
+                              </div>
+                              <div className='sc-tcl2eq-7 kwOtMp'>
+                                <span className='sc-11tt6ib-0 iQnnmC' size='20'>
+                                  <img
+                                    alt='Бурирам'
+                                    className='lazyload sc-11tt6ib-2 mzpSx'
+                                    data-src='https://cdn.scores24.live/upload/team/w20-h20/e44/ba2/382000477588805d23e8f15ca152a0e364.png'
+                                    data-srcset='https://cdn.scores24.live/upload/team/w20-h20/e44/ba2/382000477588805d23e8f15ca152a0e364.png 1x, https://cdn.scores24.live/upload/team/w40-h40/e44/ba2/382000477588805d23e8f15ca152a0e364.png 2x'
+                                    src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                                  />
+                                </span>
+                                <div className='sc-tcl2eq-8 jbAlZT'>Бурирам</div>
+                              </div>
+                            </div>
+                            <div className='sc-tcl2eq-4 fiMOII'>
+                              <div className='sc-tcl2eq-5 vQgxT'>
+                                <span>10 авг</span>
+                              </div>
+                              <div className='sc-tcl2eq-6 ZfplR'>
+                                <span>11:00</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className='sc-tcl2eq-9 hMoSig'>
+                            Подробнее
+                            <svg
+                              className='sc-i341db-0 ixrffO sc-tcl2eq-10 irTYkU'
+                              direction='right'
+                              height='20'
+                              width='20'
+                            >
+                              <use fill='currentColor' href='#arrow-chevron'></use>
+                            </svg>
+                          </div>
+                        </a>
+                      </div>
+                      <div className='sc-17eplpv-0 ccfGM'>
+                        <a className='link sc-17eplpv-1 fENEvO sc-utrs6s-3 kXISXw' href='/ru/predictions/soccer'>
+                          Все прогнозы
+                          <svg
+                            className='sc-i341db-0 ixrffO otherMatches-caret'
+                            direction='right'
+                            height='30'
+                            width='30'
+                          >
+                            <use fill='currentColor' href='#arrow-chevron-small'></use>
+                          </svg>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <article className='sc-vjv7tj-0 kmqZqq'></article>
+
+              <div className='sc-1xsn000-11' id='sticky-boundary'></div>
+            </section>
+            <aside className='sc-1f6wkge-2 kiABVW'></aside>
+          </main>
+
+          <footer className='sc-1vy4lno-1 cXHMKQ sc-1xsn000-10 gIOoVA'>
+            <div className='sc-1vy4lno-0 gnZydl'>
+              <div className='sc-1yx7qj5-0 kzkZwu'>
+                <div className='sc-1yx7qj5-1 hekNtJ'>
+                  <div className='sc-1udshgx-0 dXEIzX' data-testid='FooterNavBlock'>
+                    <div className='sc-1udshgx-1 jHWSVK'>SCORES24</div>
+                    <div className='sc-1udshgx-2 kTKhxI'>
+                      <ul className='sc-1yx7qj5-4 hRXZbI'>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA link--active' href='/ru'>
+                            Главная
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/sportbooks'>
+                            Букмекеры
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/trends/soccer'>
+                            Тренды
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/predictions'>
+                            Прогнозы
+                          </a>
+                        </li>
+                      </ul>
+                      <div className='sc-1udshgx-3 mRKgd'></div>
+                    </div>
+                  </div>
+                  <div className='sc-1udshgx-0 dXEIzX' data-testid='FooterNavBlock'>
+                    <div className='sc-1udshgx-1 jHWSVK'>Прогнозы</div>
+                    <div className='sc-1udshgx-2 kTKhxI'>
+                      <ul className='sc-1yx7qj5-4 hRXZbI'>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/predictions/soccer'>
+                            Футбол
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/predictions/ice-hockey'>
+                            Хоккей
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/predictions/basketball'>
+                            Баскетбол
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/predictions/tennis'>
+                            Теннис
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/predictions/volleyball'>
+                            Волейбол
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/predictions/mma'>
+                            ММА
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/predictions/snooker'>
+                            Снукер
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/predictions/csgo'>
+                            Counter-Strike
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/predictions/futsal'>
+                            Футзал
+                          </a>
+                        </li>
+                      </ul>
+                      <div className='sc-1udshgx-3 mRKgd'></div>
+                    </div>
+                  </div>
+                  <div className='sc-1udshgx-0 dXEIzX' data-testid='FooterNavBlock'>
+                    <div className='sc-1udshgx-1 jHWSVK'>Компания</div>
+                    <div className='sc-1udshgx-2 kTKhxI'>
+                      <ul className='sc-1yx7qj5-4 hRXZbI'>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/p-about'>
+                            О нас
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/p-contacts'>
+                            Контакты
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/p-rules'>
+                            Пользовательское соглашение
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/p-personal-data-rules'>
+                            Политика обработки персональных данных
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/p-cookie-policy'>
+                            Политика использования файлов cookie
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a
+                            className='sc-1yx7qj5-7 ecJYCZ'
+                            href='https://hh.ru/employer/10335256'
+                            target='_blank'
+                            rel='noreferrer'
+                          >
+                            Вакансии
+                          </a>
+                        </li>
+                      </ul>
+                      <div className='sc-1udshgx-3 mRKgd'></div>
+                    </div>
+                  </div>
+                  <div className='sc-1udshgx-0 dXEIzX' data-testid='FooterNavBlock'>
+                    <div className='sc-1udshgx-1 jHWSVK'>Результаты</div>
+                    <div className='sc-1udshgx-2 kTKhxI'>
+                      <ul className='sc-1yx7qj5-4 hRXZbI'>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/soccer'>
+                            Футбольные результаты
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/basketball'>
+                            Баскетбольные результаты
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/tennis'>
+                            Теннисные результаты
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/ice-hockey'>
+                            Хоккейные результаты
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/table-tennis'>
+                            Результаты настольного тенниса
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/volleyball'>
+                            Волейбольные результаты
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/handball'>
+                            Гандбольные результаты
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/baseball'>
+                            Бейсбольные результаты
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/american-football'>
+                            Результаты американского футбола
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/rugby'>
+                            Результаты по регби
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/cricket'>
+                            Результаты по крикету
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/mma'>
+                            Результаты MMA
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/boxing'>
+                            Боксерские результаты
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/snooker'>
+                            Результаты снукера
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/futsal'>
+                            Результаты футзала
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/waterpolo'>
+                            Результаты водного поло
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/badminton'>
+                            Результаты бадминтона
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/darts'>
+                            Результаты дартса
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/csgo'>
+                            Результаты Counter-Strike
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/dota2'>
+                            Результаты Dota 2
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/lol'>
+                            Результаты League of Legends
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a className='link sc-1yx7qj5-6 gZMrwA' href='/ru/horse-racing'>
+                            Результаты скачек
+                          </a>
+                        </li>
+                      </ul>
+                      <div className='sc-1udshgx-3 mRKgd'></div>
+                    </div>
+                  </div>
+
+                  <div className='sc-1udshgx-0 dXEIzX' data-testid='FooterNavBlock'>
+                    <div className='sc-1udshgx-1 jHWSVK'>Популярные события</div>
+                    <div className='sc-1udshgx-2 kTKhxI'>
+                      <ul className='sc-1yx7qj5-4 hRXZbI'>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a
+                            className='link sc-1yx7qj5-6 gZMrwA'
+                            href='/ru/tennis/m-09-08-2025-garcia-caroline-muchova-karolina-prediction'
+                          >
+                            Каролин Гарсия – Каролина Мухова
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a
+                            className='link sc-1yx7qj5-6 gZMrwA'
+                            href='/ru/tennis/m-10-08-2025-kudermetova-veronika-bencic-belinda-prediction'
+                          >
+                            Вероника Кудерметова – Белинда Бенчич
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a
+                            className='link sc-1yx7qj5-6 gZMrwA'
+                            href='/ru/tennis/m-10-08-2025-krejcikova-barbora-svitolina-elina-prediction'
+                          >
+                            Барбора Крейчикова – Элина Свитолина
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a
+                            className='link sc-1yx7qj5-6 gZMrwA'
+                            href='/ru/soccer/m-10-08-2025-crystal-palace-liverpool-prediction'
+                          >
+                            Кристал Пэлас – Ливерпуль
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a
+                            className='link sc-1yx7qj5-6 gZMrwA'
+                            href='/ru/tennis/m-10-08-2025-walton-adam-medvedev-daniil-prediction'
+                          >
+                            Адам Уолтон – Даниил Медведев
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a
+                            className='link sc-1yx7qj5-6 gZMrwA'
+                            href='/ru/tennis/m-10-08-2025-tien-learner-rublev-andrey-prediction'
+                          >
+                            Лернер Тьен – Андрей Рублев
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <span className='link sc-1yx7qj5-6 gZMrwA link--active cursorDefault'>Челси – Милан</span>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a
+                            className='link sc-1yx7qj5-6 gZMrwA'
+                            href='/ru/soccer/m-10-08-2025-borussia-dortmund-juventus-turin-prediction'
+                          >
+                            Боруссия Дортмунд – Ювентус
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a
+                            className='link sc-1yx7qj5-6 gZMrwA'
+                            href='/ru/tennis/m-10-08-2025-dzumhur-damir-alcaraz-carlos-prediction'
+                          >
+                            Дамир Джумхур – Карлос Алькарас
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a
+                            className='link sc-1yx7qj5-6 gZMrwA'
+                            href='/ru/tennis/m-10-08-2025-khachanov-karen-royer-valentin-prediction'
+                          >
+                            Карен Хачанов – Валентин Ройер
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a
+                            className='link sc-1yx7qj5-6 gZMrwA'
+                            href='/ru/tennis/m-10-08-2025-wang-xinyu-gauff-coco-prediction'
+                          >
+                            Ван Синью – Кори Гауфф
+                          </a>
+                        </li>
+                        <li className='sc-1yx7qj5-5 dlvYLy'>
+                          <a
+                            className='link sc-1yx7qj5-6 gZMrwA'
+                            href='/ru/tennis/m-10-08-2025-de-minaur-alex-opelka-reilly-prediction'
+                          >
+                            Алекс Де Минор – Рейлли Опелка{' '}
+                          </a>
+                        </li>
+                      </ul>
+                      <div className='sc-1udshgx-3 mRKgd'></div>
+                    </div>
+                  </div>
+                </div>
+                <div className='sc-1xexym7-0 tLHPT sc-1yx7qj5-2 lqvnk' data-testid='FooterNavSettings'>
+                  <div className='sc-1xexym7-1 dENHsU'>
+                    <a
+                      className='sc-1xexym7-2 huZtFO'
+                      href='https://vk.com/scores_24'
+                      rel='nofollow noopener noreferrer'
+                      target='_blank'
+                    >
+                      <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                        <use fill='currentColor' href='#vk'></use>
+                      </svg>
+                    </a>
+                    <a
+                      className='sc-1xexym7-2 huZtFO'
+                      href='https://t.me/+OYWNfu_1sNU0N2Qy'
+                      rel='nofollow noopener noreferrer'
+                      target='_blank'
+                    >
+                      <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                        <use fill='currentColor' href='#tg'></use>
+                      </svg>
+                    </a>
+                    <a
+                      className='sc-1xexym7-2 huZtFO'
+                      href='https://twitter.com/scores_24live'
+                      rel='nofollow noopener noreferrer'
+                      target='_blank'
+                    >
+                      <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                        <use fill='currentColor' href='#twitter'></use>
+                      </svg>
+                    </a>
+                    <a
+                      className='sc-1xexym7-2 huZtFO'
+                      href='https://instagram.com/scores_24/'
+                      rel='nofollow noopener noreferrer'
+                      target='_blank'
+                    >
+                      <svg className='sc-i341db-0 ixrffO' direction='right' height='20' width='20'>
+                        <use fill='currentColor' href='#instagram'></use>
+                      </svg>
+                    </a>
+                  </div>
+                  <div className='sc-1xexym7-3 goFlVb'>
+                    <button className='sc-xkaft1-4 kJcxug' type='button'>
+                      <span className='sc-xkaft1-5 jqDLGl'>
+                        <span className='sc-xkaft1-3 eKEprw'>EU (1.50)</span>
+                      </span>
+                      <svg className='sc-i341db-0 ixrffO sc-xkaft1-2 eJvZds' direction='right' height='16' width='16'>
+                        <use fill='currentColor' href='#arrow-caret'></use>
+                      </svg>
+                    </button>
+                    <button className='sc-xkaft1-4 kJcxug' type='button'>
+                      <span className='sc-xkaft1-5 jqDLGl'>
+                        <span className='sc-xkaft1-3 eKEprw'>
+                          <span>09:05</span> (GTM+00:00)
+                        </span>
+                      </span>
+                      <svg className='sc-i341db-0 ixrffO sc-xkaft1-2 eJvZds' direction='right' height='16' width='16'>
+                        <use fill='currentColor' href='#arrow-caret'></use>
+                      </svg>
+                    </button>
+                    <button className='sc-jvwc7y-4 sc-jvwc7y-11 cmfzay hvAZEo sc-jvwc7y-4 cmfzay' type='button'>
+                      <span className='sc-jvwc7y-3 hdwUJe'>Скрыть актуальные бонусы</span>
                     </button>
                   </div>
                 </div>
-                <div className='PromoGiftContainer gift' data-v-b0a820b1=''></div>
-              </div>
-              <div className='right' data-v-b0a820b1=''>
-                <button
-                  className='StvButton StvButton--design-dark StvButton--size-medium StvButton--uppercase StvButton--rounded auth-button'
-                  type='button'
-                  data-v-b0a820b1=''
-                  data-v-91c12806=''
-                >
-                  {' '}
-                  Войти
-                </button>
-                <button
-                  className='StvButton StvButton--design-dark StvButton--size-medium StvButton--uppercase StvButton--rounded registration-button'
-                  type='button'
-                  data-v-b0a820b1=''
-                  data-v-91c12806=''
-                >
-                  {' '}
-                  Зарегистрироваться
-                </button>
-
-                <button className='notifications-button notification-button' data-v-b0a820b1='' data-v-6f7f782a=''>
-                  <span className='logo-wrapper' data-v-6f7f782a=''>
-                    <span alt='notifictions logo bell' data-v-6f7f782a=''></span>
-                  </span>
-                </button>
-                <div data-v-8875ef35='' data-v-4d1432fe=''></div>
-              </div>
-            </header>
-          </div>
-          <div className='content' data-v-2af4a11a=''>
-            <div className='leftNav' style={{ gridArea: 'nav', marginRight: 12 }}>
-              <Suspense fallback={<h1>loading</h1>}>
-                <Area areaCode='7eebc2c48c0268' options={{ ssr: true }} />
-              </Suspense>
-            </div>
-            <div className='grid-main' data-v-2af4a11a=''>
-              <div className='main-wrapper' data-v-2af4a11a=''>
-                <div className='MainPage' data-v-4050c876=''>
-                  <div className='header' style={{ marginInline: -24 }}>
-                    <Area areaCode='80976154971018' options={{ ssr: false }} />
-                  </div>
-
-                  <Area areaCode='82e99a8607c17' options={{ ssr: false }} />
-
-                  <section
-                    className='MainPageContainer MainPageContainer--top-matches MainPageContainer--grid'
-                    data-v-4050c876=''
-                    data-v-8a768e31=''
-                  >
-                    <h2 className='text-h1 title' data-v-8a768e31=''>
-                      <a href='/matches' className='marked' data-v-4050c876=''>
-                        {' '}
-                        1 000+ матчей{' '}
-                      </a>{' '}
-                      ежедневно. Изучай{' '}
-                      <span className='marked--gray' data-v-4050c876=''>
-                        <span data-v-4050c876=''></span> статистику{' '}
-                      </span>
-                      , читай подробные разборы редакции и пиши собственные{' '}
-                      <a href='/predictions' className='marked marked--fill' data-v-4050c876=''>
-                        {' '}
-                        прогнозы{' '}
-                      </a>
-                    </h2>
-                    <div className='TopMatches' data-v-4050c876='' data-v-8dc5b9f9=''>
-                      <div className='large-cards' data-v-8dc5b9f9=''>
-                        <div
-                          className='TopMatchesItem TopMatchesItem--large TopMatchesItem--soccer card--large card'
-                          data-v-8dc5b9f9=''
-                          data-v-b8036fa9=''
-                        >
-                          <a
-                            href='/matches/soccer/22-07-2025-shelbourne-qarabag'
-                            className='match-link--large'
-                            data-v-b8036fa9=''
-                          >
-                            <div className='large-logos' data-v-b8036fa9=''>
-                              <div className='ContentImage loading logo--large' data-v-b8036fa9='' data-v-13b18673=''>
-                                <div className='image-placeholder' data-v-13b18673=''></div>
-                              </div>
-                              <div className='ContentImage loading logo--large' data-v-b8036fa9='' data-v-13b18673=''>
-                                <div className='image-placeholder' data-v-13b18673=''></div>
-                              </div>
-                            </div>
-                            <div
-                              className='TopMatchesItemInfo TopMatchesItemInfo--dark'
-                              data-v-b8036fa9=''
-                              data-v-21ddb129=''
-                            >
-                              <span className='time' data-v-21ddb129=''>
-                                18:45
-                              </span>
-                              <span className='text-dot-separator' data-v-21ddb129=''>
-                                23 июл
-                              </span>
-                              <span className='text-dot-separator--dark country text-dot-separator' data-v-21ddb129=''>
-                                Европа
-                              </span>
-                              <span className='tournament' data-v-21ddb129=''>
-                                Лига чемпионов
-                              </span>
-                            </div>
-
-                            <div className='name text-h3' data-v-b8036fa9=''>
-                              Шелбурн
-                            </div>
-                            <div className='name text-h3' data-v-b8036fa9=''>
-                              Карабах
-                            </div>
-                          </a>
-                          <div className='outcomes' data-v-b8036fa9=''>
-                            <button
-                              className='TopMatchesItemOutcome--top TopMatchesItemOutcome outcome-item'
-                              data-v-b8036fa9=''
-                              data-v-4adeeae5=''
-                            >
-                              <div className='icon-wrapper' data-v-4adeeae5=''>
-                                <span data-v-4adeeae5=''></span>
-                              </div>
-                              <div
-                                className='Rate--pending Rate--medium Rate--primary Rate rate'
-                                data-v-4adeeae5=''
-                                data-v-3c4adb81=''
-                              >
-                                {' '}
-                                2.49
-                              </div>
-                              <div className='body' data-v-4adeeae5=''>
-                                <div className='outcome text-h5' data-v-4adeeae5=''>
-                                  1X
-                                </div>
-                                <div className='outcome-label' data-v-4adeeae5=''>
-                                  58 прогнозов <span data-v-4adeeae5=''></span>
-                                </div>
-                              </div>
-                            </button>
-                            <button
-                              className='TopMatchesItemOutcome outcome-item'
-                              data-v-b8036fa9=''
-                              data-v-4adeeae5=''
-                            >
-                              <div
-                                className='Rate--pending Rate--medium Rate--primary Rate rate'
-                                data-v-4adeeae5=''
-                                data-v-3c4adb81=''
-                              >
-                                {' '}
-                                1.98
-                              </div>
-                              <div className='body' data-v-4adeeae5=''>
-                                <div className='outcome text-h5' data-v-4adeeae5=''>
-                                  ОЗ (ДА)
-                                </div>
-                                <div className='outcome-label' data-v-4adeeae5=''>
-                                  56 прогнозов <span data-v-4adeeae5=''></span>
-                                </div>
-                              </div>
-                            </button>
-                            <button
-                              className='TopMatchesItemOutcome outcome-item'
-                              data-v-b8036fa9=''
-                              data-v-4adeeae5=''
-                            >
-                              <div
-                                className='Rate--pending Rate--medium Rate--primary Rate rate'
-                                data-v-4adeeae5=''
-                                data-v-3c4adb81=''
-                              >
-                                {' '}
-                                4.20
-                              </div>
-                              <div className='body' data-v-4adeeae5=''>
-                                <div className='outcome text-h5' data-v-4adeeae5=''>
-                                  X
-                                </div>
-                                <div className='outcome-label' data-v-4adeeae5=''>
-                                  45 прогнозов <span data-v-4adeeae5=''></span>
-                                </div>
-                              </div>
-                            </button>
-                          </div>
-                          <a
-                            href='/matches/soccer/22-07-2025-shelbourne-qarabag'
-                            className='match-link--large'
-                            data-v-b8036fa9=''
-                          >
-                            <button
-                              className='Button text-button Button--design-with-arrow Button--size-medium Button--full-width Button--uppercase Button--rounded prediction-button'
-                              type='button'
-                              data-v-b8036fa9=''
-                              data-v-3754441f=''
-                            >
-                              <span className='prediction-info' data-v-b8036fa9=''>
-                                <span data-v-b8036fa9=''></span> 520 прогнозов на матч{' '}
-                              </span>
-                              <span data-v-3754441f=''></span>
-                            </button>
-                          </a>
-                        </div>
-                        <div
-                          className='TopMatchesItem TopMatchesItem--small TopMatchesItem-- card'
-                          data-v-8dc5b9f9=''
-                          data-v-b8036fa9=''
-                        >
-                          <a
-                            href='/matches/soccer/23-07-2025-olimpija-ljubljana-inter-club-de-escaldes'
-                            className='match-link'
-                            data-v-b8036fa9=''
-                          >
-                            <div className='TopMatchesItemInfo match-info' data-v-b8036fa9='' data-v-21ddb129=''>
-                              <span className='time' data-v-21ddb129=''>
-                                18:00
-                              </span>
-                              <span className='text-dot-separator' data-v-21ddb129=''>
-                                23 июл
-                              </span>
-                              <span className='tournament' data-v-21ddb129=''>
-                                Лига конференций
-                              </span>
-                            </div>
-                            <div className='container' data-v-b8036fa9=''>
-                              <div className='teams' data-v-b8036fa9=''>
-                                <div className='team' data-v-b8036fa9=''>
-                                  <div
-                                    className='ContentImage loading logo--small'
-                                    data-v-b8036fa9=''
-                                    data-v-13b18673=''
-                                  >
-                                    <div className='image-placeholder' data-v-13b18673=''></div>
-                                  </div>
-                                  <span className='name text-h5' data-v-b8036fa9=''>
-                                    Олимпия Любляна
-                                  </span>
-                                </div>
-                                <div className='team' data-v-b8036fa9=''>
-                                  <div
-                                    className='ContentImage loading logo--small'
-                                    data-v-b8036fa9=''
-                                    data-v-13b18673=''
-                                  >
-                                    <div className='image-placeholder' data-v-13b18673=''></div>
-                                  </div>
-                                  <span className='name text-h5' data-v-b8036fa9=''>
-                                    Интер Эскальдес
-                                  </span>
-                                </div>
-                              </div>
-                              <div className='predictions' data-v-b8036fa9=''>
-                                <span data-v-b8036fa9=''></span> 494
-                              </div>
-                            </div>
-                          </a>
-                        </div>
-                        <div
-                          className='TopMatchesItem TopMatchesItem--small TopMatchesItem-- card'
-                          data-v-8dc5b9f9=''
-                          data-v-b8036fa9=''
-                        >
-                          <a
-                            href='/matches/soccer/23-07-2025-the-new-saints-red-boys-differdange'
-                            className='match-link'
-                            data-v-b8036fa9=''
-                          >
-                            <div className='TopMatchesItemInfo match-info' data-v-b8036fa9='' data-v-21ddb129=''>
-                              <span className='time' data-v-21ddb129=''>
-                                18:00
-                              </span>
-                              <span className='text-dot-separator' data-v-21ddb129=''>
-                                23 июл
-                              </span>
-                              <span className='tournament' data-v-21ddb129=''>
-                                Лига конференций
-                              </span>
-                            </div>
-                            <div className='container' data-v-b8036fa9=''>
-                              <div className='teams' data-v-b8036fa9=''>
-                                <div className='team' data-v-b8036fa9=''>
-                                  <div
-                                    className='ContentImage loading logo--small'
-                                    data-v-b8036fa9=''
-                                    data-v-13b18673=''
-                                  >
-                                    <div className='image-placeholder' data-v-13b18673=''></div>
-                                  </div>
-                                  <span className='name text-h5' data-v-b8036fa9=''>
-                                    Нью-Сейнтс
-                                  </span>
-                                </div>
-                                <div className='team' data-v-b8036fa9=''>
-                                  <div
-                                    className='ContentImage loading logo--small'
-                                    data-v-b8036fa9=''
-                                    data-v-13b18673=''
-                                  >
-                                    <div className='image-placeholder' data-v-13b18673=''></div>
-                                  </div>
-                                  <span className='name text-h5' data-v-b8036fa9=''>
-                                    Дифферданж
-                                  </span>
-                                </div>
-                              </div>
-                              <div className='predictions' data-v-b8036fa9=''>
-                                <span data-v-b8036fa9=''></span> 474
-                              </div>
-                            </div>
-                          </a>
-                        </div>
-                      </div>
-                      <div className='small-cards' data-v-8dc5b9f9=''>
-                        <div
-                          className='TopMatchesItem TopMatchesItem--small TopMatchesItem--'
-                          data-v-8dc5b9f9=''
-                          data-v-b8036fa9=''
-                        >
-                          <a
-                            href='/matches/soccer/23-07-2025-buducnost-milsami'
-                            className='match-link'
-                            data-v-b8036fa9=''
-                          >
-                            <div className='TopMatchesItemInfo match-info' data-v-b8036fa9='' data-v-21ddb129=''>
-                              <span className='time' data-v-21ddb129=''>
-                                19:00
-                              </span>
-                              <span className='text-dot-separator' data-v-21ddb129=''>
-                                23 июл
-                              </span>
-                              <span className='tournament' data-v-21ddb129=''>
-                                Лига конференций
-                              </span>
-                            </div>
-                            <div className='container' data-v-b8036fa9=''>
-                              <div className='teams' data-v-b8036fa9=''>
-                                <div className='team' data-v-b8036fa9=''>
-                                  <div
-                                    className='ContentImage loading logo--small'
-                                    data-v-b8036fa9=''
-                                    data-v-13b18673=''
-                                  >
-                                    <div className='image-placeholder' data-v-13b18673=''></div>
-                                  </div>
-                                  <span className='name text-h5' data-v-b8036fa9=''>
-                                    Будучность
-                                  </span>
-                                </div>
-                                <div className='team' data-v-b8036fa9=''>
-                                  <div
-                                    className='ContentImage loading logo--small'
-                                    data-v-b8036fa9=''
-                                    data-v-13b18673=''
-                                  >
-                                    <div className='image-placeholder' data-v-13b18673=''></div>
-                                  </div>
-                                  <span className='name text-h5' data-v-b8036fa9=''>
-                                    Милсами
-                                  </span>
-                                </div>
-                              </div>
-                              <div className='predictions' data-v-b8036fa9=''>
-                                <span data-v-b8036fa9=''></span> 437
-                              </div>
-                            </div>
-                          </a>
-                        </div>
-                        <div
-                          className='TopMatchesItem TopMatchesItem--small TopMatchesItem--'
-                          data-v-8dc5b9f9=''
-                          data-v-b8036fa9=''
-                        >
-                          <a href='/matches/csgo/23-07-2025-liquid-pain' className='match-link' data-v-b8036fa9=''>
-                            <div className='TopMatchesItemInfo match-info' data-v-b8036fa9='' data-v-21ddb129=''>
-                              <span className='time' data-v-21ddb129=''>
-                                19:00
-                              </span>
-                              <span className='text-dot-separator' data-v-21ddb129=''>
-                                23 июл
-                              </span>
-                              <span className='tournament' data-v-21ddb129=''>
-                                IEM Cologne
-                              </span>
-                            </div>
-                            <div className='container' data-v-b8036fa9=''>
-                              <div className='teams' data-v-b8036fa9=''>
-                                <div className='team' data-v-b8036fa9=''>
-                                  <div
-                                    className='ContentImage loading logo--small'
-                                    data-v-b8036fa9=''
-                                    data-v-13b18673=''
-                                  >
-                                    <div className='image-placeholder' data-v-13b18673=''></div>
-                                  </div>
-                                  <span className='name text-h5' data-v-b8036fa9=''>
-                                    Liquid
-                                  </span>
-                                </div>
-                                <div className='team' data-v-b8036fa9=''>
-                                  <div
-                                    className='ContentImage loading logo--small'
-                                    data-v-b8036fa9=''
-                                    data-v-13b18673=''
-                                  >
-                                    <div className='image-placeholder' data-v-13b18673=''></div>
-                                  </div>
-                                  <span className='name text-h5' data-v-b8036fa9=''>
-                                    paiN
-                                  </span>
-                                </div>
-                              </div>
-                              <div className='predictions' data-v-b8036fa9=''>
-                                <span data-v-b8036fa9=''></span> 232
-                              </div>
-                            </div>
-                          </a>
-                        </div>
-                        <div
-                          className='TopMatchesItem TopMatchesItem--small TopMatchesItem--'
-                          data-v-8dc5b9f9=''
-                          data-v-b8036fa9=''
-                        >
-                          <a
-                            href='/matches/soccer/24-07-2025-tampereen-ilves-az-alkmaar'
-                            className='match-link'
-                            data-v-b8036fa9=''
-                          >
-                            <div className='TopMatchesItemInfo match-info' data-v-b8036fa9='' data-v-21ddb129=''>
-                              <span className='time' data-v-21ddb129=''>
-                                16:00
-                              </span>
-                              <span className='text-dot-separator' data-v-21ddb129=''>
-                                24 июл
-                              </span>
-                              <span className='tournament' data-v-21ddb129=''>
-                                Лига конференций
-                              </span>
-                            </div>
-                            <div className='container' data-v-b8036fa9=''>
-                              <div className='teams' data-v-b8036fa9=''>
-                                <div className='team' data-v-b8036fa9=''>
-                                  <div
-                                    className='ContentImage loading logo--small'
-                                    data-v-b8036fa9=''
-                                    data-v-13b18673=''
-                                  >
-                                    <div className='image-placeholder' data-v-13b18673=''></div>
-                                  </div>
-                                  <span className='name text-h5' data-v-b8036fa9=''>
-                                    Ильвес
-                                  </span>
-                                </div>
-                                <div className='team' data-v-b8036fa9=''>
-                                  <div
-                                    className='ContentImage loading logo--small'
-                                    data-v-b8036fa9=''
-                                    data-v-13b18673=''
-                                  >
-                                    <div className='image-placeholder' data-v-13b18673=''></div>
-                                  </div>
-                                  <span className='name text-h5' data-v-b8036fa9=''>
-                                    АЗ Алкмар
-                                  </span>
-                                </div>
-                              </div>
-                              <div className='predictions' data-v-b8036fa9=''>
-                                <span data-v-b8036fa9=''></span> 139
-                              </div>
-                            </div>
-                          </a>
-                        </div>
-                        <div
-                          className='TopMatchesItem TopMatchesItem--small TopMatchesItem--'
-                          data-v-8dc5b9f9=''
-                          data-v-b8036fa9=''
-                        >
-                          <a
-                            href='/matches/soccer/24-07-2025-astana-zimbru-chisinau-1'
-                            className='match-link'
-                            data-v-b8036fa9=''
-                          >
-                            <div className='TopMatchesItemInfo match-info' data-v-b8036fa9='' data-v-21ddb129=''>
-                              <span className='time' data-v-21ddb129=''>
-                                14:00
-                              </span>
-                              <span className='text-dot-separator' data-v-21ddb129=''>
-                                24 июл
-                              </span>
-                              <span className='tournament' data-v-21ddb129=''>
-                                Лига конференций
-                              </span>
-                            </div>
-                            <div className='container' data-v-b8036fa9=''>
-                              <div className='teams' data-v-b8036fa9=''>
-                                <div className='team' data-v-b8036fa9=''>
-                                  <div
-                                    className='ContentImage loading logo--small'
-                                    data-v-b8036fa9=''
-                                    data-v-13b18673=''
-                                  >
-                                    <div className='image-placeholder' data-v-13b18673=''></div>
-                                  </div>
-                                  <span className='name text-h5' data-v-b8036fa9=''>
-                                    Астана
-                                  </span>
-                                </div>
-                                <div className='team' data-v-b8036fa9=''>
-                                  <div
-                                    className='ContentImage loading logo--small'
-                                    data-v-b8036fa9=''
-                                    data-v-13b18673=''
-                                  >
-                                    <div className='image-placeholder' data-v-13b18673=''></div>
-                                  </div>
-                                  <span className='name text-h5' data-v-b8036fa9=''>
-                                    Зимбру
-                                  </span>
-                                </div>
-                              </div>
-                              <div className='predictions' data-v-b8036fa9=''>
-                                <span data-v-b8036fa9=''></span> 130
-                              </div>
-                            </div>
-                          </a>
-                        </div>
-                        <div
-                          className='TopMatchesItem TopMatchesItem--small TopMatchesItem--'
-                          data-v-8dc5b9f9=''
-                          data-v-b8036fa9=''
-                        >
-                          <a
-                            href='/matches/soccer/24-07-2025-atletic-club-d-escaldes-dinamo-tirana'
-                            className='match-link'
-                            data-v-b8036fa9=''
-                          >
-                            <div className='TopMatchesItemInfo match-info' data-v-b8036fa9='' data-v-21ddb129=''>
-                              <span className='time' data-v-21ddb129=''>
-                                14:00
-                              </span>
-                              <span className='text-dot-separator' data-v-21ddb129=''>
-                                24 июл
-                              </span>
-                              <span className='tournament' data-v-21ddb129=''>
-                                Лига конференций
-                              </span>
-                            </div>
-                            <div className='container' data-v-b8036fa9=''>
-                              <div className='teams' data-v-b8036fa9=''>
-                                <div className='team' data-v-b8036fa9=''>
-                                  <div
-                                    className='ContentImage loading logo--small'
-                                    data-v-b8036fa9=''
-                                    data-v-13b18673=''
-                                  >
-                                    <div className='image-placeholder' data-v-13b18673=''></div>
-                                  </div>
-                                  <span className='name text-h5' data-v-b8036fa9=''>
-                                    Атлетик Эскальдес
-                                  </span>
-                                </div>
-                                <div className='team' data-v-b8036fa9=''>
-                                  <div
-                                    className='ContentImage loading logo--small'
-                                    data-v-b8036fa9=''
-                                    data-v-13b18673=''
-                                  >
-                                    <div className='image-placeholder' data-v-13b18673=''></div>
-                                  </div>
-                                  <span className='name text-h5' data-v-b8036fa9=''>
-                                    Динамо Тирана
-                                  </span>
-                                </div>
-                              </div>
-                              <div className='predictions' data-v-b8036fa9=''>
-                                <span data-v-b8036fa9=''></span> 126
-                              </div>
-                            </div>
-                          </a>
-                        </div>
-                        <div
-                          className='TopMatchesItem TopMatchesItem--small TopMatchesItem--'
-                          data-v-8dc5b9f9=''
-                          data-v-b8036fa9=''
-                        >
-                          <a
-                            href='/matches/soccer/23-07-2025-winner-qf4-winner-qf3'
-                            className='match-link'
-                            data-v-b8036fa9=''
-                          >
-                            <div className='TopMatchesItemInfo match-info' data-v-b8036fa9='' data-v-21ddb129=''>
-                              <span className='time' data-v-21ddb129=''>
-                                19:00
-                              </span>
-                              <span className='text-dot-separator' data-v-21ddb129=''>
-                                23 июл
-                              </span>
-                              <span className='tournament' data-v-21ddb129=''>
-                                Чемпионат Европы, женщины
-                              </span>
-                            </div>
-                            <div className='container' data-v-b8036fa9=''>
-                              <div className='teams' data-v-b8036fa9=''>
-                                <div className='team' data-v-b8036fa9=''>
-                                  <div
-                                    className='ContentImage loading logo--small'
-                                    data-v-b8036fa9=''
-                                    data-v-13b18673=''
-                                  >
-                                    <div className='image-placeholder' data-v-13b18673=''></div>
-                                  </div>
-                                  <span className='name text-h5' data-v-b8036fa9=''>
-                                    Германия (Ж)
-                                  </span>
-                                </div>
-                                <div className='team' data-v-b8036fa9=''>
-                                  <div
-                                    className='ContentImage loading logo--small'
-                                    data-v-b8036fa9=''
-                                    data-v-13b18673=''
-                                  >
-                                    <div className='image-placeholder' data-v-13b18673=''></div>
-                                  </div>
-                                  <span className='name text-h5' data-v-b8036fa9=''>
-                                    Испания (Ж)
-                                  </span>
-                                </div>
-                              </div>
-                              <div className='predictions' data-v-b8036fa9=''>
-                                <span data-v-b8036fa9=''></span> 125
-                              </div>
-                            </div>
-                          </a>
-                        </div>
-                        <div
-                          className='TopMatchesItem TopMatchesItem--small TopMatchesItem--'
-                          data-v-8dc5b9f9=''
-                          data-v-b8036fa9=''
-                        >
-                          <a
-                            href='/matches/soccer/24-07-2025-josephs-shamrock-rovers'
-                            className='match-link'
-                            data-v-b8036fa9=''
-                          >
-                            <div className='TopMatchesItemInfo match-info' data-v-b8036fa9='' data-v-21ddb129=''>
-                              <span className='time' data-v-21ddb129=''>
-                                16:00
-                              </span>
-                              <span className='text-dot-separator' data-v-21ddb129=''>
-                                24 июл
-                              </span>
-                              <span className='tournament' data-v-21ddb129=''>
-                                Лига конференций
-                              </span>
-                            </div>
-                            <div className='container' data-v-b8036fa9=''>
-                              <div className='teams' data-v-b8036fa9=''>
-                                <div className='team' data-v-b8036fa9=''>
-                                  <div
-                                    className='ContentImage loading logo--small'
-                                    data-v-b8036fa9=''
-                                    data-v-13b18673=''
-                                  >
-                                    <div className='image-placeholder' data-v-13b18673=''></div>
-                                  </div>
-                                  <span className='name text-h5' data-v-b8036fa9=''>
-                                    Сент-Джозефс
-                                  </span>
-                                </div>
-                                <div className='team' data-v-b8036fa9=''>
-                                  <div
-                                    className='ContentImage loading logo--small'
-                                    data-v-b8036fa9=''
-                                    data-v-13b18673=''
-                                  >
-                                    <div className='image-placeholder' data-v-13b18673=''></div>
-                                  </div>
-                                  <span className='name text-h5' data-v-b8036fa9=''>
-                                    Шемрок Роверс
-                                  </span>
-                                </div>
-                              </div>
-                              <div className='predictions' data-v-b8036fa9=''>
-                                <span data-v-b8036fa9=''></span> 116
-                              </div>
-                            </div>
-                          </a>
-                        </div>
-                        <div
-                          className='TopMatchesItem TopMatchesItem--small TopMatchesItem--'
-                          data-v-8dc5b9f9=''
-                          data-v-b8036fa9=''
-                        >
-                          <a
-                            href='/matches/soccer/24-07-2025-arda-kurdzhali-hjk-helsinki'
-                            className='match-link'
-                            data-v-b8036fa9=''
-                          >
-                            <div className='TopMatchesItemInfo match-info' data-v-b8036fa9='' data-v-21ddb129=''>
-                              <span className='time' data-v-21ddb129=''>
-                                16:00
-                              </span>
-                              <span className='text-dot-separator' data-v-21ddb129=''>
-                                24 июл
-                              </span>
-                              <span className='tournament' data-v-21ddb129=''>
-                                Лига конференций
-                              </span>
-                            </div>
-                            <div className='container' data-v-b8036fa9=''>
-                              <div className='teams' data-v-b8036fa9=''>
-                                <div className='team' data-v-b8036fa9=''>
-                                  <div
-                                    className='ContentImage loading logo--small'
-                                    data-v-b8036fa9=''
-                                    data-v-13b18673=''
-                                  >
-                                    <div className='image-placeholder' data-v-13b18673=''></div>
-                                  </div>
-                                  <span className='name text-h5' data-v-b8036fa9=''>
-                                    Арда Курджали
-                                  </span>
-                                </div>
-                                <div className='team' data-v-b8036fa9=''>
-                                  <div
-                                    className='ContentImage loading logo--small'
-                                    data-v-b8036fa9=''
-                                    data-v-13b18673=''
-                                  >
-                                    <div className='image-placeholder' data-v-13b18673=''></div>
-                                  </div>
-                                  <span className='name text-h5' data-v-b8036fa9=''>
-                                    ХИК
-                                  </span>
-                                </div>
-                              </div>
-                              <div className='predictions' data-v-b8036fa9=''>
-                                <span data-v-b8036fa9=''></span> 111
-                              </div>
-                            </div>
-                          </a>
-                        </div>
-                      </div>
-                      <div className='NavigationLinks--multiple NavigationLinks' data-v-8dc5b9f9='' data-v-781aa78c=''>
-                        <div className='links scrollbar-hidden' data-v-781aa78c=''>
-                          <a href='/matches/soccer' className='link--item-first link link--item' data-v-781aa78c=''>
-                            <span data-v-781aa78c=''></span>
-                          </a>
-                          <a href='/matches/ice-hockey' className='link link--item' data-v-781aa78c=''>
-                            <span data-v-781aa78c=''></span>
-                          </a>
-                          <a href='/matches/tennis' className='link link--item' data-v-781aa78c=''>
-                            <span data-v-781aa78c=''></span>
-                          </a>
-                          <a href='/matches/basketball' className='link link--item' data-v-781aa78c=''>
-                            <span data-v-781aa78c=''></span>
-                          </a>
-                          <a href='/matches/volleyball' className='link link--item' data-v-781aa78c=''>
-                            <span data-v-781aa78c=''></span>
-                          </a>
-                          <a href='/matches/baseball' className='link link--item' data-v-781aa78c=''>
-                            <span data-v-781aa78c=''></span>
-                          </a>
-                          <a href='/matches/handball' className='link link--item' data-v-781aa78c=''>
-                            <span data-v-781aa78c=''></span>
-                          </a>
-                          <a href='/matches/futsal' className='link link--item' data-v-781aa78c=''>
-                            <span data-v-781aa78c=''></span>
-                          </a>
-                          <a href='/matches/snooker' className='link link--item' data-v-781aa78c=''>
-                            <span data-v-781aa78c=''></span>
-                          </a>
-                          <a href='/matches/csgo' className='link link--item' data-v-781aa78c=''>
-                            <span data-v-781aa78c=''></span>
-                          </a>
-                          <a href='/matches/dota2' className='link link--item' data-v-781aa78c=''>
-                            <span data-v-781aa78c=''></span>
-                          </a>
-                          <a href='/matches/american-football' className='link link--item' data-v-781aa78c=''>
-                            <span data-v-781aa78c=''></span>
-                          </a>
-                          <a href='/matches/mma' className='link link--item' data-v-781aa78c=''>
-                            <span data-v-781aa78c=''></span>
-                          </a>
-                          <a href='/matches/boxing' className='link--item-last link link--item' data-v-781aa78c=''>
-                            <span data-v-781aa78c=''></span>
-                          </a>
-                        </div>
-                        <a href='/matches' className='link link--all' data-v-781aa78c=''>
-                          Все матчи <span data-v-781aa78c=''></span>
-                        </a>
+                <div className='sc-fzqqld-0 gGdHMk sc-1yx7qj5-3 izXwvw' data-testid='FooterNavLegal'>
+                  <div className='sc-fzqqld-1 cqyqnA'>
+                    <div className='sc-fzqqld-3 hojyrX'>
+                      <div className='sc-fzqqld-4 sjTPD'>18+</div>
+                      <div className='sc-fzqqld-5 gvrhPm'>
+                        Играйте <br /> ответственно.
                       </div>
                     </div>
-                  </section>
-                  <section
-                    className='MainPageContainer MainPageContainer--contests MainPageContainer--full'
-                    data-v-4050c876=''
-                    data-v-8a768e31=''
-                  >
-                    <div className='pluses' data-v-8a768e31=''></div>
-                    <h2 className='text-h1 title' data-v-8a768e31=''>
-                      {' '}
-                      Участвуй в турнирах прогнозов <br />и выигрывай{' '}
-                      <a href='/cup' className='marked--green with-icon with-icon--money' data-v-4050c876=''>
-                        {' '}
-                        реальные деньги{' '}
-                      </a>
-                    </h2>
-                    <div className='advantages' data-v-8a768e31=''>
-                      <div className='advantage' data-v-8a768e31=''>
-                        <span data-v-8a768e31=''></span> Обучение через игровой процесс
-                      </div>
-                      <div className='advantage' data-v-8a768e31=''>
-                        <span data-v-8a768e31=''></span> Эксклюзивные турниры с низкой конкуренцией
-                      </div>
-                      <div className='advantage' data-v-8a768e31=''>
-                        <span data-v-8a768e31=''></span> Возможность выиграть реальные деньги без вложений
-                      </div>
-                    </div>
-
-                    <div className='MainPageContests' data-v-4050c876='' data-v-050240de=''>
-                      <div className='ContestsSlider contests' data-v-050240de='' data-v-bf65f25b=''>
-                        <div className='list scrollbar-hidden' data-v-bf65f25b=''>
-                          <a
-                            href='/cup/eurotour-nine'
-                            className='ContestsItem--small ContestsItem--started ContestsItem item'
-                            data-v-bf65f25b=''
-                            data-v-53c72fa4=''
-                          >
-                            <div className='ContentImage loading cover' data-v-53c72fa4='' data-v-13b18673=''>
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-
-                            {/*              <div className='NavigationLinks--single NavigationLinks' data-v-781aa78c=''>*/}
-                            {/*                <a href='/bookmakers' className='link link--all link--single' data-v-781aa78c=''>*/}
-                            {/*                  Все рейтинги БК*/}
-                            {/*                  <span data-v-781aa78c=''></span>*/}
-                            {/*                </a>*/}
-                            {/*              </div>*/}
-                            {/*            </div>*/}
-                            {/*          </section>*/}
-                            {/*          <div className='SocialPollContainer' data-v-4050c876='' data-v-dff4d117=''></div>*/}
-                            {/*          <section*/}
-                            {/*            className='MainPageContainer MainPageContainer--bonuses MainPageContainer--full'*/}
-                            {/*            data-v-4050c876=''*/}
-                            {/*            data-v-8a768e31=''*/}
-                            {/*          >*/}
-                            {/*            <div className='pluses' data-v-8a768e31=''></div>*/}
-                            {/*            <h2 className='text-h1 title' data-v-8a768e31=''>*/}
-                            {/*              {' '}*/}
-                            {/*              Находи эксклюзивные*/}
-                            {/*              <br data-v-4050c876='' />*/}
-                            {/*              <a href='/promo/sets' className='marked--pink with-icon with-icon--heart' data-v-4050c876=''>*/}
-                            {/*                {' '}*/}
-                            {/*                бонусы в коллекциях{' '}*/}
-                            {/*              </a>*/}
-                            {/*            </h2>*/}
-                            {/*            <div className='advantages' data-v-8a768e31=''>*/}
-                            {/*              <div className='advantage' data-v-8a768e31=''>*/}
-                            {/*                <span data-v-8a768e31=''></span> Подробные разборы*/}
-                            {/*              </div>*/}
-                            {/*              <div className='advantage' data-v-8a768e31=''>*/}
-                            {/*                <span data-v-8a768e31=''></span> Личное и честное мнение*/}
-                            {/*              </div>*/}
-                            {/*              <div className='advantage' data-v-8a768e31=''>*/}
-                            {/*                <span data-v-8a768e31=''></span> Эксклюзивные бонусы*/}
-                            {/*              </div>*/}
-                            {/*            </div>*/}
-
-                            <div className='inner' data-v-53c72fa4=''>
-                              <div className='params' data-v-53c72fa4=''>
-                                <span className='params-item params-item--prize' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> 50 000 ₽
-                                </span>
-                                <span className='params-item params-item--prizePlaces' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> 1 призовых
-                                </span>
-                              </div>
-                              <div className='header' data-v-53c72fa4=''>
-                                <div className='header-info' data-v-53c72fa4=''>
-                                  <h2 className='header-title text-h3' data-v-53c72fa4=''>
-                                    Царь горы
-                                  </h2>
-                                  <div className='header-date text-slogan' data-v-53c72fa4=''>
-                                    01 июл - 31 июл
-                                  </div>
-                                </div>
-                              </div>
-                              <div className='footer' data-v-53c72fa4=''>
-                                <div className='contest-link' data-v-53c72fa4=''>
-                                  <span className='contest-link-text' data-v-53c72fa4=''>
-                                    {' '}
-                                    Участвовать{' '}
-                                  </span>
-                                  <span data-v-53c72fa4=''></span>
-                                </div>
-                              </div>
-                            </div>
-                          </a>
-                          <a
-                            href='/cup/weekend-league-43'
-                            className='ContestsItem--small ContestsItem item'
-                            data-v-bf65f25b=''
-                            data-v-53c72fa4=''
-                          >
-                            <div className='ContentImage loading cover' data-v-53c72fa4='' data-v-13b18673=''>
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-                            <div
-                              className='Badge--new Badge--medium Badge--primary Badge--radius-xsm Badge badge'
-                              data-v-53c72fa4=''
-                              data-v-597ce9a9=''
-                            >
-                              {' '}
-                              Новый
-                            </div>
-                            <div className='inner' data-v-53c72fa4=''>
-                              <div className='params' data-v-53c72fa4=''>
-                                <span className='params-item params-item--prize' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> 50 000 ₽
-                                </span>
-                                <span className='params-item params-item--prizePlaces' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> Х призовых
-                                </span>
-                              </div>
-                              <div className='header' data-v-53c72fa4=''>
-                                <div className='header-info' data-v-53c72fa4=''>
-                                  <h2 className='header-title text-h3' data-v-53c72fa4=''>
-                                    Weekend League
-                                  </h2>
-                                  <div className='header-date text-slogan' data-v-53c72fa4=''>
-                                    26 июл - 27 июл
-                                  </div>
-                                </div>
-                              </div>
-                              <div className='footer' data-v-53c72fa4=''>
-                                <div className='contest-link' data-v-53c72fa4=''>
-                                  <span className='contest-link-text' data-v-53c72fa4=''>
-                                    {' '}
-                                    Участвовать{' '}
-                                  </span>
-                                  <span data-v-53c72fa4=''></span>
-                                </div>
-                              </div>
-                            </div>
-                          </a>
-                          <a
-                            href='/cup/sprint-july-25'
-                            className='ContestsItem--small ContestsItem item'
-                            data-v-bf65f25b=''
-                            data-v-53c72fa4=''
-                          >
-                            <div className='ContentImage loading cover' data-v-53c72fa4='' data-v-13b18673=''>
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-                            <div
-                              className='Badge--new Badge--medium Badge--primary Badge--radius-xsm Badge badge'
-                              data-v-53c72fa4=''
-                              data-v-597ce9a9=''
-                            >
-                              {' '}
-                              Новый
-                            </div>
-                            <div className='inner' data-v-53c72fa4=''>
-                              <div className='params' data-v-53c72fa4=''>
-                                <span className='params-item params-item--prize' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> 75 000 баллов
-                                </span>
-                                <span className='params-item params-item--prizePlaces' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> 75 призовых
-                                </span>
-                              </div>
-                              <div className='header' data-v-53c72fa4=''>
-                                <div className='header-info' data-v-53c72fa4=''>
-                                  <h2 className='header-title text-h3' data-v-53c72fa4=''>
-                                    Спринт №25
-                                  </h2>
-                                  <div className='header-date text-slogan' data-v-53c72fa4=''>
-                                    25 июл - 25 июл
-                                  </div>
-                                </div>
-                              </div>
-                              <div className='footer' data-v-53c72fa4=''>
-                                <div className='contest-link' data-v-53c72fa4=''>
-                                  <span className='contest-link-text' data-v-53c72fa4=''>
-                                    {' '}
-                                    Участвовать{' '}
-                                  </span>
-                                  <span data-v-53c72fa4=''></span>
-                                </div>
-                              </div>
-                            </div>
-                          </a>
-                          <a
-                            href='/cup/second-echelon-48'
-                            className='ContestsItem--small ContestsItem item'
-                            data-v-bf65f25b=''
-                            data-v-53c72fa4=''
-                          >
-                            <div className='ContentImage loading cover' data-v-53c72fa4='' data-v-13b18673=''>
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-                            <div
-                              className='Badge--new Badge--medium Badge--primary Badge--radius-xsm Badge badge'
-                              data-v-53c72fa4=''
-                              data-v-597ce9a9=''
-                            >
-                              {' '}
-                              Новый
-                            </div>
-                            <div className='inner' data-v-53c72fa4=''>
-                              <div className='params' data-v-53c72fa4=''>
-                                <span className='params-item params-item--prize' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> 20 000 ₽
-                                </span>
-                                <span className='params-item params-item--prizePlaces' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> 10 призовых
-                                </span>
-                              </div>
-                              <div className='header' data-v-53c72fa4=''>
-                                <div className='header-info' data-v-53c72fa4=''>
-                                  <h2 className='header-title text-h3' data-v-53c72fa4=''>
-                                    Второй эшелон
-                                  </h2>
-                                  <div className='header-date text-slogan' data-v-53c72fa4=''>
-                                    25 июл - 28 июл
-                                  </div>
-                                </div>
-                              </div>
-                              <div className='footer' data-v-53c72fa4=''>
-                                <div className='contest-link' data-v-53c72fa4=''>
-                                  <span className='contest-link-text' data-v-53c72fa4=''>
-                                    {' '}
-                                    Участвовать{' '}
-                                  </span>
-                                  <span data-v-53c72fa4=''></span>
-                                </div>
-                              </div>
-                            </div>
-                          </a>
-                          <a
-                            href='/cup/score-booster-35'
-                            className='ContestsItem--small ContestsItem item'
-                            data-v-bf65f25b=''
-                            data-v-53c72fa4=''
-                          >
-                            <div className='ContentImage loading cover' data-v-53c72fa4='' data-v-13b18673=''>
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-                            <div
-                              className='Badge--new Badge--medium Badge--primary Badge--radius-xsm Badge badge'
-                              data-v-53c72fa4=''
-                              data-v-597ce9a9=''
-                            >
-                              {' '}
-                              Новый
-                            </div>
-                            <div className='inner' data-v-53c72fa4=''>
-                              <div className='params' data-v-53c72fa4=''>
-                                <span className='params-item params-item--prize' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> Х баллов
-                                </span>
-                                <span className='params-item params-item--prizePlaces' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> Х призовых
-                                </span>
-                              </div>
-                              <div className='header' data-v-53c72fa4=''>
-                                <div className='header-info' data-v-53c72fa4=''>
-                                  <h2 className='header-title text-h3' data-v-53c72fa4=''>
-                                    Бустер баллов
-                                  </h2>
-                                  <div className='header-date text-slogan' data-v-53c72fa4=''>
-                                    25 июл - 25 июл
-                                  </div>
-                                </div>
-                              </div>
-                              <div className='footer' data-v-53c72fa4=''>
-                                <div className='contest-link' data-v-53c72fa4=''>
-                                  <span className='contest-link-text' data-v-53c72fa4=''>
-                                    {' '}
-                                    Участвовать{' '}
-                                  </span>
-                                  <span data-v-53c72fa4=''></span>
-                                </div>
-                              </div>
-                            </div>
-                          </a>
-                          <a
-                            href='/cup/footballru-capper37'
-                            className='ContestsItem--small ContestsItem item'
-                            data-v-bf65f25b=''
-                            data-v-53c72fa4=''
-                          >
-                            <div className='ContentImage loading cover' data-v-53c72fa4='' data-v-13b18673=''>
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-                            <div
-                              className='Badge--new Badge--medium Badge--primary Badge--radius-xsm Badge badge'
-                              data-v-53c72fa4=''
-                              data-v-597ce9a9=''
-                            >
-                              {' '}
-                              Новый
-                            </div>
-                            <div className='inner' data-v-53c72fa4=''>
-                              <div className='params' data-v-53c72fa4=''>
-                                <span className='params-item params-item--prize' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> 50 000 ₽
-                                </span>
-                                <span className='params-item params-item--prizePlaces' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> 20 призовых
-                                </span>
-                              </div>
-                              <div className='header' data-v-53c72fa4=''>
-                                <div className='header-info' data-v-53c72fa4=''>
-                                  <h2 className='header-title text-h3' data-v-53c72fa4=''>
-                                    Футбол.ру
-                                  </h2>
-                                  <div className='header-date text-slogan' data-v-53c72fa4=''>
-                                    25 июл - 27 июл
-                                  </div>
-                                </div>
-                              </div>
-                              <div className='footer' data-v-53c72fa4=''>
-                                <div className='contest-link' data-v-53c72fa4=''>
-                                  <span className='contest-link-text' data-v-53c72fa4=''>
-                                    {' '}
-                                    Участвовать{' '}
-                                  </span>
-                                  <span data-v-53c72fa4=''></span>
-                                </div>
-                              </div>
-                            </div>
-                          </a>
-                          <a
-                            href='/cup/sprint-july-24'
-                            className='ContestsItem--small ContestsItem item'
-                            data-v-bf65f25b=''
-                            data-v-53c72fa4=''
-                          >
-                            <div className='ContentImage loading cover' data-v-53c72fa4='' data-v-13b18673=''>
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-
-                            <div className='inner' data-v-53c72fa4=''>
-                              <div className='params' data-v-53c72fa4=''>
-                                <span className='params-item params-item--prize' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> 75 000 баллов
-                                </span>
-                                <span className='params-item params-item--prizePlaces' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> 75 призовых
-                                </span>
-                              </div>
-                              <div className='header' data-v-53c72fa4=''>
-                                <div className='header-info' data-v-53c72fa4=''>
-                                  <h2 className='header-title text-h3' data-v-53c72fa4=''>
-                                    Спринт №24
-                                  </h2>
-                                  <div className='header-date text-slogan' data-v-53c72fa4=''>
-                                    24 июл - 24 июл
-                                  </div>
-                                </div>
-                              </div>
-                              <div className='footer' data-v-53c72fa4=''>
-                                <div className='contest-link' data-v-53c72fa4=''>
-                                  <span className='contest-link-text' data-v-53c72fa4=''>
-                                    {' '}
-                                    Участвовать{' '}
-                                  </span>
-                                  <span data-v-53c72fa4=''></span>
-                                </div>
-                              </div>
-                            </div>
-                          </a>
-                          <a
-                            href='/cup/sprint-july-23'
-                            className='ContestsItem--small ContestsItem--started ContestsItem item'
-                            data-v-bf65f25b=''
-                            data-v-53c72fa4=''
-                          >
-                            <div className='ContentImage loading cover' data-v-53c72fa4='' data-v-13b18673=''>
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-
-                            <div className='inner' data-v-53c72fa4=''>
-                              <div className='params' data-v-53c72fa4=''>
-                                <span className='params-item params-item--prize' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> 75 000 баллов
-                                </span>
-                                <span className='params-item params-item--prizePlaces' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> 75 призовых
-                                </span>
-                              </div>
-                              <div className='header' data-v-53c72fa4=''>
-                                <div className='header-info' data-v-53c72fa4=''>
-                                  <h2 className='header-title text-h3' data-v-53c72fa4=''>
-                                    Спринт №23
-                                  </h2>
-                                  <div className='header-date text-slogan' data-v-53c72fa4=''>
-                                    23 июл - 23 июл
-                                  </div>
-                                </div>
-                              </div>
-                              <div className='footer' data-v-53c72fa4=''>
-                                <div className='contest-link' data-v-53c72fa4=''>
-                                  <span className='contest-link-text' data-v-53c72fa4=''>
-                                    {' '}
-                                    Участвовать{' '}
-                                  </span>
-                                  <span data-v-53c72fa4=''></span>
-                                </div>
-                              </div>
-                            </div>
-                          </a>
-                          <a
-                            href='/cup/cs2-iem-cologne'
-                            className='ContestsItem--small ContestsItem--started ContestsItem item'
-                            data-v-bf65f25b=''
-                            data-v-53c72fa4=''
-                          >
-                            <div className='ContentImage loading cover' data-v-53c72fa4='' data-v-13b18673=''>
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-
-                            <div className='inner' data-v-53c72fa4=''>
-                              <div className='params' data-v-53c72fa4=''>
-                                <span className='params-item params-item--prize' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> 20 000 ₽
-                                </span>
-                                <span className='params-item params-item--prizePlaces' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> 10 призовых
-                                </span>
-                              </div>
-                              <div className='header' data-v-53c72fa4=''>
-                                <div className='header-info' data-v-53c72fa4=''>
-                                  <h2 className='header-title text-h3' data-v-53c72fa4=''>
-                                    IEM Cologne 2025
-                                  </h2>
-                                  <div className='header-date text-slogan' data-v-53c72fa4=''>
-                                    23 июл - 03 авг
-                                  </div>
-                                </div>
-                              </div>
-                              <div className='footer' data-v-53c72fa4=''>
-                                <div className='contest-link' data-v-53c72fa4=''>
-                                  <span className='contest-link-text' data-v-53c72fa4=''>
-                                    {' '}
-                                    Участвовать{' '}
-                                  </span>
-                                  <span data-v-53c72fa4=''></span>
-                                </div>
-                              </div>
-                            </div>
-                          </a>
-                          <a
-                            href='/cup/breakpoint-cappers-23'
-                            className='ContestsItem--small ContestsItem--started ContestsItem item'
-                            data-v-bf65f25b=''
-                            data-v-53c72fa4=''
-                          >
-                            <div className='ContentImage loading cover' data-v-53c72fa4='' data-v-13b18673=''>
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-
-                            <div className='inner' data-v-53c72fa4=''>
-                              <div className='params' data-v-53c72fa4=''>
-                                <span className='params-item params-item--prize' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> 20 000 ₽
-                                </span>
-                                <span className='params-item params-item--prizePlaces' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> 10 призовых
-                                </span>
-                              </div>
-                              <div className='header' data-v-53c72fa4=''>
-                                <div className='header-info' data-v-53c72fa4=''>
-                                  <h2 className='header-title text-h3' data-v-53c72fa4=''>
-                                    Брейк Поинт
-                                  </h2>
-                                  <div className='header-date text-slogan' data-v-53c72fa4=''>
-                                    21 июл - 25 июл
-                                  </div>
-                                </div>
-                              </div>
-                              <div className='footer' data-v-53c72fa4=''>
-                                <div className='contest-link' data-v-53c72fa4=''>
-                                  <span className='contest-link-text' data-v-53c72fa4=''>
-                                    {' '}
-                                    Участвовать{' '}
-                                  </span>
-                                  <span data-v-53c72fa4=''></span>
-                                </div>
-                              </div>
-                            </div>
-                          </a>
-                          <a
-                            href='/cup/basketball2025-two'
-                            className='ContestsItem--small ContestsItem--started ContestsItem item'
-                            data-v-bf65f25b=''
-                            data-v-53c72fa4=''
-                          >
-                            <div className='ContentImage loading cover' data-v-53c72fa4='' data-v-13b18673=''>
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-
-                            <div className='inner' data-v-53c72fa4=''>
-                              <div className='params' data-v-53c72fa4=''>
-                                <span className='params-item params-item--prize' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> 20 000 ₽
-                                </span>
-                                <span className='params-item params-item--prizePlaces' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> 10 призовых
-                                </span>
-                              </div>
-                              <div className='header' data-v-53c72fa4=''>
-                                <div className='header-info' data-v-53c72fa4=''>
-                                  <h2 className='header-title text-h3' data-v-53c72fa4=''>
-                                    Баскетбол
-                                  </h2>
-                                  <div className='header-date text-slogan' data-v-53c72fa4=''>
-                                    17 июл - 31 июл
-                                  </div>
-                                </div>
-                              </div>
-                              <div className='footer' data-v-53c72fa4=''>
-                                <div className='contest-link' data-v-53c72fa4=''>
-                                  <span className='contest-link-text' data-v-53c72fa4=''>
-                                    {' '}
-                                    Участвовать{' '}
-                                  </span>
-                                  <span data-v-53c72fa4=''></span>
-                                </div>
-                              </div>
-                            </div>
-                          </a>
-                          <a
-                            href='/cup/profi-league-11'
-                            className='ContestsItem--small ContestsItem--started ContestsItem item'
-                            data-v-bf65f25b=''
-                            data-v-53c72fa4=''
-                          >
-                            <div className='ContentImage loading cover' data-v-53c72fa4='' data-v-13b18673=''>
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-
-                            <div className='inner' data-v-53c72fa4=''>
-                              <div className='params' data-v-53c72fa4=''>
-                                <span className='params-item params-item--prize' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> 75 000 ₽
-                                </span>
-                                <span className='params-item params-item--prizePlaces' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> 25 призовых
-                                </span>
-                              </div>
-                              <div className='header' data-v-53c72fa4=''>
-                                <div className='header-info' data-v-53c72fa4=''>
-                                  <h2 className='header-title text-h3' data-v-53c72fa4=''>
-                                    Лига профи
-                                  </h2>
-                                  <div className='header-date text-slogan' data-v-53c72fa4=''>
-                                    01 июл - 31 июл
-                                  </div>
-                                </div>
-                              </div>
-                              <div className='footer' data-v-53c72fa4=''>
-                                <div className='contest-link' data-v-53c72fa4=''>
-                                  <span className='contest-link-text' data-v-53c72fa4=''>
-                                    {' '}
-                                    Участвовать{' '}
-                                  </span>
-                                  <span data-v-53c72fa4=''></span>
-                                </div>
-                              </div>
-                            </div>
-                          </a>
-                          <a
-                            href='/cup/experts-july2025'
-                            className='ContestsItem--small ContestsItem--started ContestsItem item'
-                            data-v-bf65f25b=''
-                            data-v-53c72fa4=''
-                          >
-                            <div className='ContentImage loading cover' data-v-53c72fa4='' data-v-13b18673=''>
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-
-                            <div className='inner' data-v-53c72fa4=''>
-                              <div className='params' data-v-53c72fa4=''>
-                                <span className='params-item params-item--prize' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> 100 000 ₽
-                                </span>
-                                <span className='params-item params-item--prizePlaces' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> 10 призовых
-                                </span>
-                              </div>
-                              <div className='header' data-v-53c72fa4=''>
-                                <div className='header-info' data-v-53c72fa4=''>
-                                  <h2 className='header-title text-h3' data-v-53c72fa4=''>
-                                    Лига экспертов
-                                  </h2>
-                                  <div className='header-date text-slogan' data-v-53c72fa4=''>
-                                    01 июл - 31 июл
-                                  </div>
-                                </div>
-                              </div>
-                              <div className='footer' data-v-53c72fa4=''>
-                                <div className='contest-link' data-v-53c72fa4=''>
-                                  <span className='contest-link-text' data-v-53c72fa4=''>
-                                    {' '}
-                                    Участвовать{' '}
-                                  </span>
-                                  <span data-v-53c72fa4=''></span>
-                                </div>
-                              </div>
-                            </div>
-                          </a>
-                          <a
-                            href='/cup/authors-league-11'
-                            className='ContestsItem--small ContestsItem--started ContestsItem item'
-                            data-v-bf65f25b=''
-                            data-v-53c72fa4=''
-                          >
-                            <div className='ContentImage loading cover' data-v-53c72fa4='' data-v-13b18673=''>
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-
-                            <div className='inner' data-v-53c72fa4=''>
-                              <div className='params' data-v-53c72fa4=''>
-                                <span className='params-item params-item--prize' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> 75 000 ₽
-                                </span>
-                                <span className='params-item params-item--prizePlaces' data-v-53c72fa4=''>
-                                  <span data-v-53c72fa4=''></span> 25 призовых
-                                </span>
-                              </div>
-                              <div className='header' data-v-53c72fa4=''>
-                                <div className='header-info' data-v-53c72fa4=''>
-                                  <h2 className='header-title text-h3' data-v-53c72fa4=''>
-                                    Лига авторов
-                                  </h2>
-                                  <div className='header-date text-slogan' data-v-53c72fa4=''>
-                                    01 июл - 31 июл
-                                  </div>
-                                </div>
-                              </div>
-                              <div className='footer' data-v-53c72fa4=''>
-                                <div className='contest-link' data-v-53c72fa4=''>
-                                  <span className='contest-link-text' data-v-53c72fa4=''>
-                                    {' '}
-                                    Участвовать{' '}
-                                  </span>
-                                  <span data-v-53c72fa4=''></span>
-                                </div>
-                              </div>
-                            </div>
-                          </a>
-                        </div>
-                      </div>
-                      <div className='NavigationLinks' data-v-050240de='' data-v-781aa78c=''>
-                        <div className='links scrollbar-hidden' data-v-781aa78c=''>
-                          <a href='/cup?type=result' className='link--item-first link link--item' data-v-781aa78c=''>
-                            <span data-v-781aa78c=''></span>
-                          </a>
-                          <a href='/cup?type=roi' className='link link--item' data-v-781aa78c=''>
-                            <span data-v-781aa78c=''></span>
-                          </a>
-                          <a href='/cup?type=won' className='link link--item' data-v-781aa78c=''>
-                            <span data-v-781aa78c=''></span>
-                          </a>
-                          <a href='/cup?type=race' className='link--item-last link link--item' data-v-781aa78c=''>
-                            <span data-v-781aa78c=''></span>
-                          </a>
-                        </div>
-                        <a href='/cup' className='link link--all' data-v-781aa78c=''>
-                          Все конкурсы <span data-v-781aa78c=''></span>
-                        </a>
-                      </div>
-                    </div>
-                  </section>
-                  <section
-                    className='MainPageContainer MainPageContainer--bookmakers MainPageContainer--grid'
-                    data-v-4050c876=''
-                    data-v-8a768e31=''
-                  >
-                    <h2 className='text-h1 title' data-v-8a768e31=''>
-                      <a href='/bookmakers' className='marked' data-v-4050c876=''>
-                        {' '}
-                        Изучай честные рейтинги{' '}
-                      </a>{' '}
-                      и получай лучшие бонусы от БК{' '}
-                    </h2>
-                    <div className='MainPageBookmakers' data-v-4050c876=''>
-                      <div className='BookmakerRatingItem' data-v-09d4c714=''>
-                        <a
-                          target='_blank'
-                          rel='nofollow noopener noreferrer'
-                          href='https://stavka.tv/go?to=win_rating_main_main_3k_mob'
-                          className='link'
-                          data-v-09d4c714=''
-                        >
-                          <span className='position' data-v-09d4c714=''>
-                            1
-                          </span>
-                          <div className='BkLogoWithName' data-v-09d4c714='' data-v-bad4e969=''>
-                            <div
-                              className='ContentImage loading logo--rounded logo'
-                              data-v-bad4e969=''
-                              data-v-13b18673=''
-                            >
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-                            <div data-v-bad4e969=''>
-                              <span className='name text-slogan' data-v-bad4e969=''>
-                                Винлайн
-                              </span>
-                              <div className='grade' data-v-bad4e969=''>
-                                <div
-                                  className='RoundIndicator RoundIndicator--high RoundIndicator--medium RoundIndicator--without-bg RoundIndicator--is-oval'
-                                  data-v-bad4e969=''
-                                  data-v-00e01bf0=''
-                                >
-                                  <div className='inner' data-v-00e01bf0=''></div>
-                                  <span className='progress' data-v-00e01bf0=''>
-                                    95
-                                  </span>
-                                  <svg
-                                    className='IndicatorIcon'
-                                    xmlns='http://www.w3.org/2000/svg'
-                                    viewBox='0 0 34 18'
-                                    fill='none'
-                                    data-v-00e01bf0=''
-                                  >
-                                    <path
-                                      d='M17 1.5H25C29.1421 1.5 32.5 4.85786 32.5 9C32.5 13.1421 29.1421 16.5 25 16.5H9C4.85786 16.5 1.5 13.1421 1.5 9C1.5 4.85786 4.85786 1.5 9 1.5H17'
-                                      strokeWidth='2'
-                                      strokeLinecap='round'
-                                      data-v-00e01bf0=''
-                                    ></path>
-                                  </svg>
-                                </div>
-                                Оценка
-                              </div>
-                            </div>
-                          </div>
-                        </a>
-                        <a href='/bookmakers/winline' className='review' data-v-09d4c714=''>
-                          <div className='review-button' data-v-09d4c714=''>
-                            <span data-v-09d4c714=''></span> Обзор
-                          </div>
-                        </a>
-                        <div className='bonus' data-v-09d4c714=''>
-                          <a
-                            href='https://stavka.tv/go?to=win_rating_main_main_3k_mob'
-                            rel='nofollow noopener noreferrer'
-                            target='_blank'
-                            size='small'
-                            className='BonusButton text-button BonusButton--dark'
-                            data-v-09d4c714=''
-                            data-v-0ba61d93=''
-                          >
-                            <div className='gift-icon-wrapper' data-v-0ba61d93=''>
-                              <span data-v-0ba61d93=''></span>
-                            </div>
-                            <div className='bonus' data-v-0ba61d93=''>
-                              3 000 ₽
-                            </div>
-                            <span className='arrow' data-v-0ba61d93=''>
-                              <span data-v-0ba61d93=''></span>
-                            </span>
-                          </a>
-                        </div>
-                        <div data-v-162e60f0='' data-v-4d1432fe=''></div>
-                      </div>
-                      <div className='BookmakerRatingItem' data-v-09d4c714=''>
-                        <a
-                          target='_blank'
-                          rel='nofollow noopener noreferrer'
-                          href='https://stavka.tv/go?to=fon_rating_main_main_15000_newreg'
-                          className='link'
-                          data-v-09d4c714=''
-                        >
-                          <span className='position' data-v-09d4c714=''>
-                            2
-                          </span>
-                          <div className='BkLogoWithName' data-v-09d4c714='' data-v-bad4e969=''>
-                            <div
-                              className='ContentImage loading logo--rounded logo'
-                              data-v-bad4e969=''
-                              data-v-13b18673=''
-                            >
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-                            <div data-v-bad4e969=''>
-                              <span className='name text-slogan' data-v-bad4e969=''>
-                                Фонбет
-                              </span>
-                              <div className='grade' data-v-bad4e969=''>
-                                <div
-                                  className='RoundIndicator RoundIndicator--high RoundIndicator--medium RoundIndicator--without-bg RoundIndicator--is-oval'
-                                  data-v-bad4e969=''
-                                  data-v-00e01bf0=''
-                                >
-                                  <div className='inner' data-v-00e01bf0=''></div>
-                                  <span className='progress' data-v-00e01bf0=''>
-                                    90
-                                  </span>
-                                  <svg
-                                    className='IndicatorIcon'
-                                    xmlns='http://www.w3.org/2000/svg'
-                                    viewBox='0 0 34 18'
-                                    fill='none'
-                                    data-v-00e01bf0=''
-                                  >
-                                    <path
-                                      d='M17 1.5H25C29.1421 1.5 32.5 4.85786 32.5 9C32.5 13.1421 29.1421 16.5 25 16.5H9C4.85786 16.5 1.5 13.1421 1.5 9C1.5 4.85786 4.85786 1.5 9 1.5H17'
-                                      strokeWidth='2'
-                                      strokeLinecap='round'
-                                      data-v-00e01bf0=''
-                                    ></path>
-                                  </svg>
-                                </div>
-                                Оценка
-                              </div>
-                            </div>
-                          </div>
-                        </a>
-                        <a href='/bookmakers/fonbet' className='review' data-v-09d4c714=''>
-                          <div className='review-button' data-v-09d4c714=''>
-                            <span data-v-09d4c714=''></span> Обзор
-                          </div>
-                        </a>
-                        <div className='bonus' data-v-09d4c714=''>
-                          <a
-                            href='https://stavka.tv/go?to=fon_rating_main_main_15000_newreg'
-                            rel='nofollow noopener noreferrer'
-                            target='_blank'
-                            size='small'
-                            className='BonusButton text-button BonusButton--dark'
-                            data-v-09d4c714=''
-                            data-v-0ba61d93=''
-                          >
-                            <div className='gift-icon-wrapper' data-v-0ba61d93=''>
-                              <span data-v-0ba61d93=''></span>
-                            </div>
-                            <div className='bonus' data-v-0ba61d93=''>
-                              15 000 ₽
-                            </div>
-                            <span className='arrow' data-v-0ba61d93=''>
-                              <span data-v-0ba61d93=''></span>
-                            </span>
-                          </a>
-                        </div>
-                        <div data-v-162e60f0='' data-v-4d1432fe=''></div>
-                      </div>
-                      <div className='BookmakerRatingItem' data-v-09d4c714=''>
-                        <a
-                          target='_blank'
-                          rel='nofollow noopener noreferrer'
-                          href='https://stavka.tv/go?to=bb_bookmakers_rating_table_main_10000reg'
-                          className='link'
-                          data-v-09d4c714=''
-                        >
-                          <span className='position' data-v-09d4c714=''>
-                            3
-                          </span>
-                          <div className='BkLogoWithName' data-v-09d4c714='' data-v-bad4e969=''>
-                            <div
-                              className='ContentImage loading logo--rounded logo'
-                              data-v-bad4e969=''
-                              data-v-13b18673=''
-                            >
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-                            <div data-v-bad4e969=''>
-                              <span className='name text-slogan' data-v-bad4e969=''>
-                                Бетбум
-                              </span>
-                              <div className='grade' data-v-bad4e969=''>
-                                <div
-                                  className='RoundIndicator RoundIndicator--high RoundIndicator--medium RoundIndicator--without-bg RoundIndicator--is-oval'
-                                  data-v-bad4e969=''
-                                  data-v-00e01bf0=''
-                                >
-                                  <div className='inner' data-v-00e01bf0=''></div>
-                                  <span className='progress' data-v-00e01bf0=''>
-                                    85
-                                  </span>
-                                  <svg
-                                    className='IndicatorIcon'
-                                    xmlns='http://www.w3.org/2000/svg'
-                                    viewBox='0 0 34 18'
-                                    fill='none'
-                                    data-v-00e01bf0=''
-                                  >
-                                    <path
-                                      d='M17 1.5H25C29.1421 1.5 32.5 4.85786 32.5 9C32.5 13.1421 29.1421 16.5 25 16.5H9C4.85786 16.5 1.5 13.1421 1.5 9C1.5 4.85786 4.85786 1.5 9 1.5H17'
-                                      strokeWidth='2'
-                                      strokeLinecap='round'
-                                      data-v-00e01bf0=''
-                                    ></path>
-                                  </svg>
-                                </div>
-                                Оценка
-                              </div>
-                            </div>
-                          </div>
-                        </a>
-                        <a href='/bookmakers/betboom' className='review' data-v-09d4c714=''>
-                          <div className='review-button' data-v-09d4c714=''>
-                            <span data-v-09d4c714=''></span> Обзор
-                          </div>
-                        </a>
-                        <div className='bonus' data-v-09d4c714=''>
-                          <a
-                            href='https://stavka.tv/go?to=bb_bookmakers_rating_table_main_10000reg'
-                            rel='nofollow noopener noreferrer'
-                            target='_blank'
-                            size='small'
-                            className='BonusButton text-button BonusButton--dark'
-                            data-v-09d4c714=''
-                            data-v-0ba61d93=''
-                          >
-                            <div className='gift-icon-wrapper' data-v-0ba61d93=''>
-                              <span data-v-0ba61d93=''></span>
-                            </div>
-                            <div className='bonus' data-v-0ba61d93=''>
-                              10 000 ₽
-                            </div>
-                            <span className='arrow' data-v-0ba61d93=''>
-                              <span data-v-0ba61d93=''></span>
-                            </span>
-                          </a>
-                        </div>
-                        <div data-v-162e60f0='' data-v-4d1432fe=''></div>
-                      </div>
-                      <div className='BookmakerRatingItem' data-v-09d4c714=''>
-                        <a
-                          target='_blank'
-                          rel='nofollow noopener noreferrer'
-                          href='https://stavka.tv/go?to=bett_rating_main_main_2k_reg'
-                          className='link'
-                          data-v-09d4c714=''
-                        >
-                          <span className='position' data-v-09d4c714=''>
-                            4
-                          </span>
-                          <div className='BkLogoWithName' data-v-09d4c714='' data-v-bad4e969=''>
-                            <div
-                              className='ContentImage loading logo--rounded logo'
-                              data-v-bad4e969=''
-                              data-v-13b18673=''
-                            >
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-                            <div data-v-bad4e969=''>
-                              <span className='name text-slogan' data-v-bad4e969=''>
-                                Беттери
-                              </span>
-                              <div className='grade' data-v-bad4e969=''>
-                                <div
-                                  className='RoundIndicator RoundIndicator--high RoundIndicator--medium RoundIndicator--without-bg RoundIndicator--is-oval'
-                                  data-v-bad4e969=''
-                                  data-v-00e01bf0=''
-                                >
-                                  <div className='inner' data-v-00e01bf0=''></div>
-                                  <span className='progress' data-v-00e01bf0=''>
-                                    83
-                                  </span>
-                                  <svg
-                                    className='IndicatorIcon'
-                                    xmlns='http://www.w3.org/2000/svg'
-                                    viewBox='0 0 34 18'
-                                    fill='none'
-                                    data-v-00e01bf0=''
-                                  >
-                                    <path
-                                      d='M17 1.5H25C29.1421 1.5 32.5 4.85786 32.5 9C32.5 13.1421 29.1421 16.5 25 16.5H9C4.85786 16.5 1.5 13.1421 1.5 9C1.5 4.85786 4.85786 1.5 9 1.5H17'
-                                      strokeWidth='2'
-                                      strokeLinecap='round'
-                                      data-v-00e01bf0=''
-                                    ></path>
-                                  </svg>
-                                </div>
-                                Оценка
-                              </div>
-                            </div>
-                          </div>
-                        </a>
-                        <a href='/bookmakers/bettery' className='review' data-v-09d4c714=''>
-                          <div className='review-button' data-v-09d4c714=''>
-                            <span data-v-09d4c714=''></span> Обзор
-                          </div>
-                        </a>
-                        <div className='bonus' data-v-09d4c714=''>
-                          <a
-                            href='https://stavka.tv/go?to=bett_rating_main_main_2k_reg'
-                            rel='nofollow noopener noreferrer'
-                            target='_blank'
-                            size='small'
-                            className='BonusButton text-button BonusButton--dark'
-                            data-v-09d4c714=''
-                            data-v-0ba61d93=''
-                          >
-                            <div className='gift-icon-wrapper' data-v-0ba61d93=''>
-                              <span data-v-0ba61d93=''></span>
-                            </div>
-                            <div className='bonus' data-v-0ba61d93=''>
-                              2 000 ₽
-                            </div>
-                            <span className='arrow' data-v-0ba61d93=''>
-                              <span data-v-0ba61d93=''></span>
-                            </span>
-                          </a>
-                        </div>
-                        <div data-v-162e60f0='' data-v-4d1432fe=''></div>
-                      </div>
-                      <div className='BookmakerRatingItem' data-v-09d4c714=''>
-                        <a
-                          target='_blank'
-                          rel='nofollow noopener noreferrer'
-                          href='https://stavka.tv/go?to=ol_rating_rating_8k_reg'
-                          className='link'
-                          data-v-09d4c714=''
-                        >
-                          <span className='position' data-v-09d4c714=''>
-                            5
-                          </span>
-                          <div className='BkLogoWithName' data-v-09d4c714='' data-v-bad4e969=''>
-                            <div
-                              className='ContentImage loading logo--rounded logo'
-                              data-v-bad4e969=''
-                              data-v-13b18673=''
-                            >
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-                            <div data-v-bad4e969=''>
-                              <span className='name text-slogan' data-v-bad4e969=''>
-                                OLIMPBET
-                              </span>
-                              <div className='grade' data-v-bad4e969=''>
-                                <div
-                                  className='RoundIndicator RoundIndicator--high RoundIndicator--medium RoundIndicator--without-bg RoundIndicator--is-oval'
-                                  data-v-bad4e969=''
-                                  data-v-00e01bf0=''
-                                >
-                                  <div className='inner' data-v-00e01bf0=''></div>
-                                  <span className='progress' data-v-00e01bf0=''>
-                                    80
-                                  </span>
-                                  <svg
-                                    className='IndicatorIcon'
-                                    xmlns='http://www.w3.org/2000/svg'
-                                    viewBox='0 0 34 18'
-                                    fill='none'
-                                    data-v-00e01bf0=''
-                                  >
-                                    <path
-                                      d='M17 1.5H25C29.1421 1.5 32.5 4.85786 32.5 9C32.5 13.1421 29.1421 16.5 25 16.5H9C4.85786 16.5 1.5 13.1421 1.5 9C1.5 4.85786 4.85786 1.5 9 1.5H17'
-                                      strokeWidth='2'
-                                      strokeLinecap='round'
-                                      data-v-00e01bf0=''
-                                    ></path>
-                                  </svg>
-                                </div>
-                                Оценка
-                              </div>
-                            </div>
-                          </div>
-                        </a>
-                        <a href='/bookmakers/olimpbet' className='review' data-v-09d4c714=''>
-                          <div className='review-button' data-v-09d4c714=''>
-                            <span data-v-09d4c714=''></span> Обзор
-                          </div>
-                        </a>
-                        <div className='bonus' data-v-09d4c714=''>
-                          <a
-                            href='https://stavka.tv/go?to=ol_rating_rating_8k_reg'
-                            rel='nofollow noopener noreferrer'
-                            target='_blank'
-                            size='small'
-                            className='BonusButton text-button BonusButton--dark'
-                            data-v-09d4c714=''
-                            data-v-0ba61d93=''
-                          >
-                            <div className='gift-icon-wrapper' data-v-0ba61d93=''>
-                              <span data-v-0ba61d93=''></span>
-                            </div>
-                            <div className='bonus' data-v-0ba61d93=''>
-                              8 000 ₽
-                            </div>
-                            <span className='arrow' data-v-0ba61d93=''>
-                              <span data-v-0ba61d93=''></span>
-                            </span>
-                          </a>
-                        </div>
-                        <div data-v-162e60f0='' data-v-4d1432fe=''></div>
-                      </div>
-                      <div className='BookmakerRatingItem' data-v-09d4c714=''>
-                        <a
-                          target='_blank'
-                          rel='nofollow noopener noreferrer'
-                          href='https://stavka.tv/go?to=pari_rating_main_main_3k_stavka'
-                          className='link'
-                          data-v-09d4c714=''
-                        >
-                          <span className='position' data-v-09d4c714=''>
-                            6
-                          </span>
-                          <div className='BkLogoWithName' data-v-09d4c714='' data-v-bad4e969=''>
-                            <div
-                              className='ContentImage loading logo--rounded logo'
-                              data-v-bad4e969=''
-                              data-v-13b18673=''
-                            >
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-                            <div data-v-bad4e969=''>
-                              <span className='name text-slogan' data-v-bad4e969=''>
-                                Пари
-                              </span>
-                              <div className='grade' data-v-bad4e969=''>
-                                <div
-                                  className='RoundIndicator RoundIndicator--good RoundIndicator--medium RoundIndicator--without-bg RoundIndicator--is-oval'
-                                  data-v-bad4e969=''
-                                  data-v-00e01bf0=''
-                                >
-                                  <div className='inner' data-v-00e01bf0=''></div>
-                                  <span className='progress' data-v-00e01bf0=''>
-                                    77
-                                  </span>
-                                  <svg
-                                    className='IndicatorIcon'
-                                    xmlns='http://www.w3.org/2000/svg'
-                                    viewBox='0 0 34 18'
-                                    fill='none'
-                                    data-v-00e01bf0=''
-                                  >
-                                    <path
-                                      d='M17 1.5H25C29.1421 1.5 32.5 4.85786 32.5 9C32.5 13.1421 29.1421 16.5 25 16.5H9C4.85786 16.5 1.5 13.1421 1.5 9C1.5 4.85786 4.85786 1.5 9 1.5H17'
-                                      strokeWidth='2'
-                                      strokeLinecap='round'
-                                      data-v-00e01bf0=''
-                                    ></path>
-                                  </svg>
-                                </div>
-                                Оценка
-                              </div>
-                            </div>
-                          </div>
-                        </a>
-                        <a href='/bookmakers/pari' className='review' data-v-09d4c714=''>
-                          <div className='review-button' data-v-09d4c714=''>
-                            <span data-v-09d4c714=''></span> Обзор
-                          </div>
-                        </a>
-                        <div className='bonus' data-v-09d4c714=''>
-                          <a
-                            href='https://stavka.tv/go?to=pari_rating_main_main_3k_stavka'
-                            rel='nofollow noopener noreferrer'
-                            target='_blank'
-                            size='small'
-                            className='BonusButton text-button BonusButton--dark'
-                            data-v-09d4c714=''
-                            data-v-0ba61d93=''
-                          >
-                            <div className='gift-icon-wrapper gift-icon-wrapper--exclusive' data-v-0ba61d93=''>
-                              <span data-v-0ba61d93=''></span>
-                            </div>
-                            <div className='bonus' data-v-0ba61d93=''>
-                              3 000 ₽{' '}
-                              <p className='bonus-text' data-v-0ba61d93=''>
-                                эксклюзив{' '}
-                              </p>
-                            </div>
-                            <span className='arrow' data-v-0ba61d93=''>
-                              <span data-v-0ba61d93=''></span>
-                            </span>
-                          </a>
-                        </div>
-                        <div data-v-162e60f0='' data-v-4d1432fe=''></div>
-                      </div>
-                      <div className='BookmakerRatingItem' data-v-09d4c714=''>
-                        <a
-                          target='_blank'
-                          rel='nofollow noopener noreferrer'
-                          href='https://stavka.tv/go?to=ls_bookmakers_rating_table_main_7777reg'
-                          className='link'
-                          data-v-09d4c714=''
-                        >
-                          <span className='position' data-v-09d4c714=''>
-                            7
-                          </span>
-                          <div className='BkLogoWithName' data-v-09d4c714='' data-v-bad4e969=''>
-                            <div
-                              className='ContentImage loading logo--rounded logo'
-                              data-v-bad4e969=''
-                              data-v-13b18673=''
-                            >
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-                            <div data-v-bad4e969=''>
-                              <span className='name text-slogan' data-v-bad4e969=''>
-                                Лига Ставок
-                              </span>
-                              <div className='grade' data-v-bad4e969=''>
-                                <div
-                                  className='RoundIndicator RoundIndicator--good RoundIndicator--medium RoundIndicator--without-bg RoundIndicator--is-oval'
-                                  data-v-bad4e969=''
-                                  data-v-00e01bf0=''
-                                >
-                                  <div className='inner' data-v-00e01bf0=''></div>
-                                  <span className='progress' data-v-00e01bf0=''>
-                                    75
-                                  </span>
-                                  <svg
-                                    className='IndicatorIcon'
-                                    xmlns='http://www.w3.org/2000/svg'
-                                    viewBox='0 0 34 18'
-                                    fill='none'
-                                    data-v-00e01bf0=''
-                                  >
-                                    <path
-                                      d='M17 1.5H25C29.1421 1.5 32.5 4.85786 32.5 9C32.5 13.1421 29.1421 16.5 25 16.5H9C4.85786 16.5 1.5 13.1421 1.5 9C1.5 4.85786 4.85786 1.5 9 1.5H17'
-                                      strokeWidth='2'
-                                      strokeLinecap='round'
-                                      data-v-00e01bf0=''
-                                    ></path>
-                                  </svg>
-                                </div>
-                                Оценка
-                              </div>
-                            </div>
-                          </div>
-                        </a>
-                        <a href='/bookmakers/ligastavok' className='review' data-v-09d4c714=''>
-                          <div className='review-button' data-v-09d4c714=''>
-                            <span data-v-09d4c714=''></span> Обзор
-                          </div>
-                        </a>
-                        <div className='bonus' data-v-09d4c714=''>
-                          <a
-                            href='https://stavka.tv/go?to=ls_bookmakers_rating_table_main_7777reg'
-                            rel='nofollow noopener noreferrer'
-                            target='_blank'
-                            size='small'
-                            className='BonusButton text-button BonusButton--dark'
-                            data-v-09d4c714=''
-                            data-v-0ba61d93=''
-                          >
-                            <div className='gift-icon-wrapper' data-v-0ba61d93=''>
-                              <span data-v-0ba61d93=''></span>
-                            </div>
-                            <div className='bonus' data-v-0ba61d93=''>
-                              7 777 ₽
-                            </div>
-                            <span className='arrow' data-v-0ba61d93=''>
-                              <span data-v-0ba61d93=''></span>
-                            </span>
-                          </a>
-                        </div>
-                        <div data-v-162e60f0='' data-v-4d1432fe=''></div>
-                      </div>
-                      <div className='BookmakerRatingItem' data-v-09d4c714=''>
-                        <a
-                          target='_blank'
-                          rel='nofollow noopener noreferrer'
-                          href='https://stavka.tv/go?to=mel_bookmakers_rating_table_main_25kreg'
-                          className='link'
-                          data-v-09d4c714=''
-                        >
-                          <span className='position' data-v-09d4c714=''>
-                            8
-                          </span>
-                          <div className='BkLogoWithName' data-v-09d4c714='' data-v-bad4e969=''>
-                            <div
-                              className='ContentImage loading logo--rounded logo'
-                              data-v-bad4e969=''
-                              data-v-13b18673=''
-                            >
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-                            <div data-v-bad4e969=''>
-                              <span className='name text-slogan' data-v-bad4e969=''>
-                                Мелбет
-                              </span>
-                              <div className='grade' data-v-bad4e969=''>
-                                <div
-                                  className='RoundIndicator RoundIndicator--good RoundIndicator--medium RoundIndicator--without-bg RoundIndicator--is-oval'
-                                  data-v-bad4e969=''
-                                  data-v-00e01bf0=''
-                                >
-                                  <div className='inner' data-v-00e01bf0=''></div>
-                                  <span className='progress' data-v-00e01bf0=''>
-                                    73
-                                  </span>
-                                  <svg
-                                    className='IndicatorIcon'
-                                    xmlns='http://www.w3.org/2000/svg'
-                                    viewBox='0 0 34 18'
-                                    fill='none'
-                                    data-v-00e01bf0=''
-                                  >
-                                    <path
-                                      d='M17 1.5H25C29.1421 1.5 32.5 4.85786 32.5 9C32.5 13.1421 29.1421 16.5 25 16.5H9C4.85786 16.5 1.5 13.1421 1.5 9C1.5 4.85786 4.85786 1.5 9 1.5H17'
-                                      strokeWidth='2'
-                                      strokeLinecap='round'
-                                      data-v-00e01bf0=''
-                                    ></path>
-                                  </svg>
-                                </div>
-                                Оценка
-                              </div>
-                            </div>
-                          </div>
-                        </a>
-                        <a href='/bookmakers/melbet' className='review' data-v-09d4c714=''>
-                          <div className='review-button' data-v-09d4c714=''>
-                            <span data-v-09d4c714=''></span> Обзор
-                          </div>
-                        </a>
-                        <div className='bonus' data-v-09d4c714=''>
-                          <a
-                            href='https://stavka.tv/go?to=mel_bookmakers_rating_table_main_25kreg'
-                            rel='nofollow noopener noreferrer'
-                            target='_blank'
-                            size='small'
-                            className='BonusButton text-button BonusButton--dark'
-                            data-v-09d4c714=''
-                            data-v-0ba61d93=''
-                          >
-                            <div className='gift-icon-wrapper gift-icon-wrapper--exclusive' data-v-0ba61d93=''>
-                              <span data-v-0ba61d93=''></span>
-                            </div>
-                            <div className='bonus' data-v-0ba61d93=''>
-                              25 000 ₽{' '}
-                              <p className='bonus-text' data-v-0ba61d93=''>
-                                эксклюзив{' '}
-                              </p>
-                            </div>
-                            <span className='arrow' data-v-0ba61d93=''>
-                              <span data-v-0ba61d93=''></span>
-                            </span>
-                          </a>
-                        </div>
-                        <div data-v-162e60f0='' data-v-4d1432fe=''></div>
-                      </div>
-                      <div className='BookmakerRatingItem' data-v-09d4c714=''>
-                        <a
-                          target='_blank'
-                          rel='nofollow noopener noreferrer'
-                          href='https://stavka.tv/go?to=leon-rating'
-                          className='link'
-                          data-v-09d4c714=''
-                        >
-                          <span className='position' data-v-09d4c714=''>
-                            9
-                          </span>
-                          <div className='BkLogoWithName' data-v-09d4c714='' data-v-bad4e969=''>
-                            <div
-                              className='ContentImage loading logo--rounded logo'
-                              data-v-bad4e969=''
-                              data-v-13b18673=''
-                            >
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-                            <div data-v-bad4e969=''>
-                              <span className='name text-slogan' data-v-bad4e969=''>
-                                Леон
-                              </span>
-                              <div className='grade' data-v-bad4e969=''>
-                                <div
-                                  className='RoundIndicator RoundIndicator--good RoundIndicator--medium RoundIndicator--without-bg RoundIndicator--is-oval'
-                                  data-v-bad4e969=''
-                                  data-v-00e01bf0=''
-                                >
-                                  <div className='inner' data-v-00e01bf0=''></div>
-                                  <span className='progress' data-v-00e01bf0=''>
-                                    70
-                                  </span>
-                                  <svg
-                                    className='IndicatorIcon'
-                                    xmlns='http://www.w3.org/2000/svg'
-                                    viewBox='0 0 34 18'
-                                    fill='none'
-                                    data-v-00e01bf0=''
-                                  >
-                                    <path
-                                      d='M17 1.5H25C29.1421 1.5 32.5 4.85786 32.5 9C32.5 13.1421 29.1421 16.5 25 16.5H9C4.85786 16.5 1.5 13.1421 1.5 9C1.5 4.85786 4.85786 1.5 9 1.5H17'
-                                      strokeWidth='2'
-                                      strokeLinecap='round'
-                                      data-v-00e01bf0=''
-                                    ></path>
-                                  </svg>
-                                </div>
-                                Оценка
-                              </div>
-                            </div>
-                          </div>
-                        </a>
-                        <a href='/bookmakers/leon' className='review' data-v-09d4c714=''>
-                          <div className='review-button' data-v-09d4c714=''>
-                            <span data-v-09d4c714=''></span> Обзор
-                          </div>
-                        </a>
-                        <div className='bonus' data-v-09d4c714=''>
-                          <a
-                            href='https://stavka.tv/go?to=leon-rating'
-                            rel='nofollow noopener noreferrer'
-                            target='_blank'
-                            size='small'
-                            className='BonusButton text-button BonusButton--dark'
-                            data-v-09d4c714=''
-                            data-v-0ba61d93=''
-                          >
-                            <div className='gift-icon-wrapper' data-v-0ba61d93=''>
-                              <span data-v-0ba61d93=''></span>
-                            </div>
-                            <div className='bonus' data-v-0ba61d93=''>
-                              25 000 ₽
-                            </div>
-                            <span className='arrow' data-v-0ba61d93=''>
-                              <span data-v-0ba61d93=''></span>
-                            </span>
-                          </a>
-                        </div>
-                        <div data-v-162e60f0='' data-v-4d1432fe=''></div>
-                      </div>
-                      <div className='BookmakerRatingItem' data-v-09d4c714=''>
-                        <a
-                          target='_blank'
-                          rel='nofollow noopener noreferrer'
-                          href='https://stavka.tv/go?to=betc_rating_main_main_2000_promo'
-                          className='link'
-                          data-v-09d4c714=''
-                        >
-                          <span className='position' data-v-09d4c714=''>
-                            10
-                          </span>
-                          <div className='BkLogoWithName' data-v-09d4c714='' data-v-bad4e969=''>
-                            <div
-                              className='ContentImage loading logo--rounded logo'
-                              data-v-bad4e969=''
-                              data-v-13b18673=''
-                            >
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-                            <div data-v-bad4e969=''>
-                              <span className='name text-slogan' data-v-bad4e969=''>
-                                Бетсити
-                              </span>
-                              <div className='grade' data-v-bad4e969=''>
-                                <div
-                                  className='RoundIndicator RoundIndicator--good RoundIndicator--medium RoundIndicator--without-bg RoundIndicator--is-oval'
-                                  data-v-bad4e969=''
-                                  data-v-00e01bf0=''
-                                >
-                                  <div className='inner' data-v-00e01bf0=''></div>
-                                  <span className='progress' data-v-00e01bf0=''>
-                                    69
-                                  </span>
-                                  <svg
-                                    className='IndicatorIcon'
-                                    xmlns='http://www.w3.org/2000/svg'
-                                    viewBox='0 0 34 18'
-                                    fill='none'
-                                    data-v-00e01bf0=''
-                                  >
-                                    <path
-                                      d='M17 1.5H25C29.1421 1.5 32.5 4.85786 32.5 9C32.5 13.1421 29.1421 16.5 25 16.5H9C4.85786 16.5 1.5 13.1421 1.5 9C1.5 4.85786 4.85786 1.5 9 1.5H17'
-                                      strokeWidth='2'
-                                      strokeLinecap='round'
-                                      data-v-00e01bf0=''
-                                    ></path>
-                                  </svg>
-                                </div>
-                                Оценка
-                              </div>
-                            </div>
-                          </div>
-                        </a>
-                        <a href='/bookmakers/betcity' className='review' data-v-09d4c714=''>
-                          <div className='review-button' data-v-09d4c714=''>
-                            <span data-v-09d4c714=''></span> Обзор
-                          </div>
-                        </a>
-                        <div className='bonus' data-v-09d4c714=''>
-                          <a
-                            href='https://stavka.tv/go?to=betc_rating_main_main_2000_promo'
-                            rel='nofollow noopener noreferrer'
-                            target='_blank'
-                            size='small'
-                            className='BonusButton text-button BonusButton--dark'
-                            data-v-09d4c714=''
-                            data-v-0ba61d93=''
-                          >
-                            <div className='gift-icon-wrapper' data-v-0ba61d93=''>
-                              <span data-v-0ba61d93=''></span>
-                            </div>
-                            <div className='bonus' data-v-0ba61d93=''>
-                              2 000 ₽
-                            </div>
-                            <span className='arrow' data-v-0ba61d93=''>
-                              <span data-v-0ba61d93=''></span>
-                            </span>
-                          </a>
-                        </div>
-                        <div data-v-162e60f0='' data-v-4d1432fe=''></div>
-                      </div>
-
-                      <div className='NavigationLinks--single NavigationLinks' data-v-781aa78c=''>
-                        <a href='/bookmakers' className='link link--all link--single' data-v-781aa78c=''>
-                          Все рейтинги БК
-                          <span data-v-781aa78c=''></span>
-                        </a>
-                      </div>
-                    </div>
-                  </section>
-                  <div className='SocialPollContainer' data-v-4050c876='' data-v-dff4d117=''></div>
-                  <section
-                    className='MainPageContainer MainPageContainer--bonuses MainPageContainer--full'
-                    data-v-4050c876=''
-                    data-v-8a768e31=''
-                  >
-                    <div className='pluses' data-v-8a768e31=''></div>
-                    <h2 className='text-h1 title' data-v-8a768e31=''>
-                      {' '}
-                      Находи эксклюзивные
-                      <br data-v-4050c876='' />
-                      <a href='/promo/sets' className='marked--pink with-icon with-icon--heart' data-v-4050c876=''>
-                        {' '}
-                        бонусы в коллекциях{' '}
-                      </a>
-                    </h2>
-                    <div className='advantages' data-v-8a768e31=''>
-                      <div className='advantage' data-v-8a768e31=''>
-                        <span data-v-8a768e31=''></span> Подробные разборы
-                      </div>
-                      <div className='advantage' data-v-8a768e31=''>
-                        <span data-v-8a768e31=''></span> Личное и честное мнение
-                      </div>
-                      <div className='advantage' data-v-8a768e31=''>
-                        <span data-v-8a768e31=''></span> Эксклюзивные бонусы
-                      </div>
-                    </div>
-
-                    <div className='MainPageBonuses' data-v-4050c876='' data-v-701146a2=''>
-                      <div className='bonuses' data-v-701146a2=''>
-                        <a
-                          href='/promo/sets/best-freebets-month'
-                          className='BookmakerMultiPromoItem--small BookmakerMultiPromoItem'
-                          with-logos='false'
-                          data-v-701146a2=''
-                          data-v-f483b900=''
-                        >
-                          <div className='top' data-v-f483b900=''>
-                            <div className='ContentImage loading image' data-v-f483b900='' data-v-13b18673=''>
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-                          </div>
-                          <div className='bottom' data-v-f483b900=''>
-                            <div className='bonus-count-wrapper' data-v-f483b900=''>
-                              <svg className='bonus-count-corner' viewBox='0 0 15 12' fill='none' data-v-f483b900=''>
-                                <path
-                                  d='M0 0C0 0 0.5 4.64003 4 8C7.5 11.36 15 12 15 12H0V0Z'
-                                  fill='white'
-                                  data-v-f483b900=''
-                                ></path>
-                              </svg>
-                              <div className='bonus-count' data-v-f483b900=''>
-                                13 бонусов
-                              </div>
-                            </div>
-                            <h4 className='title text-slogan' data-v-f483b900=''>
-                              Фрибеты БК на ИЮЛЬ 2025
-                            </h4>
-                          </div>
-                        </a>
-                        <a
-                          href='/promo/sets/freebet-bez-deposit2023-19-12'
-                          className='BookmakerMultiPromoItem--small BookmakerMultiPromoItem'
-                          with-logos='false'
-                          data-v-701146a2=''
-                          data-v-f483b900=''
-                        >
-                          <div className='top' data-v-f483b900=''>
-                            <div className='ContentImage loading image' data-v-f483b900='' data-v-13b18673=''>
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-                          </div>
-                          <div className='bottom' data-v-f483b900=''>
-                            <div className='bonus-count-wrapper' data-v-f483b900=''>
-                              <svg className='bonus-count-corner' viewBox='0 0 15 12' fill='none' data-v-f483b900=''>
-                                <path
-                                  d='M0 0C0 0 0.5 4.64003 4 8C7.5 11.36 15 12 15 12H0V0Z'
-                                  fill='white'
-                                  data-v-f483b900=''
-                                ></path>
-                              </svg>
-                              <div className='bonus-count' data-v-f483b900=''>
-                                12 бонусов
-                              </div>
-                            </div>
-                            <h4 className='title text-slogan' data-v-f483b900=''>
-                              Фрибеты за регистрацию без депозита: ТОП-2025
-                            </h4>
-                          </div>
-                        </a>
-                        <a
-                          href='/promo/sets/promocode-bukmekers'
-                          className='BookmakerMultiPromoItem--small BookmakerMultiPromoItem'
-                          with-logos='false'
-                          data-v-701146a2=''
-                          data-v-f483b900=''
-                        >
-                          <div className='top' data-v-f483b900=''>
-                            <div className='ContentImage loading image' data-v-f483b900='' data-v-13b18673=''>
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-                          </div>
-                          <div className='bottom' data-v-f483b900=''>
-                            <div className='bonus-count-wrapper' data-v-f483b900=''>
-                              <svg className='bonus-count-corner' viewBox='0 0 15 12' fill='none' data-v-f483b900=''>
-                                <path
-                                  d='M0 0C0 0 0.5 4.64003 4 8C7.5 11.36 15 12 15 12H0V0Z'
-                                  fill='white'
-                                  data-v-f483b900=''
-                                ></path>
-                              </svg>
-                              <div className='bonus-count' data-v-f483b900=''>
-                                24 бонуса
-                              </div>
-                            </div>
-                            <h4 className='title text-slogan' data-v-f483b900=''>
-                              Промокоды букмекеров на сегодня
-                            </h4>
-                          </div>
-                        </a>
-                        <a
-                          href='/promo/sets/pari-promocode'
-                          className='BookmakerMultiPromoItem--small BookmakerMultiPromoItem'
-                          with-logos='false'
-                          data-v-701146a2=''
-                          data-v-f483b900=''
-                        >
-                          <div className='top' data-v-f483b900=''>
-                            <div className='ContentImage loading image' data-v-f483b900='' data-v-13b18673=''>
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-                          </div>
-                          <div className='bottom' data-v-f483b900=''>
-                            <div className='bonus-count-wrapper' data-v-f483b900=''>
-                              <svg className='bonus-count-corner' viewBox='0 0 15 12' fill='none' data-v-f483b900=''>
-                                <path
-                                  d='M0 0C0 0 0.5 4.64003 4 8C7.5 11.36 15 12 15 12H0V0Z'
-                                  fill='white'
-                                  data-v-f483b900=''
-                                ></path>
-                              </svg>
-                              <div className='bonus-count' data-v-f483b900=''>
-                                9 бонусов
-                              </div>
-                            </div>
-                            <h4 className='title text-slogan' data-v-f483b900=''>
-                              Промокод Пари на фрибет 2025
-                            </h4>
-                          </div>
-                        </a>
-                        <a
-                          href='/promo/sets/promocode-for-freebet2023-fonbet'
-                          className='BookmakerMultiPromoItem--small BookmakerMultiPromoItem'
-                          with-logos='false'
-                          data-v-701146a2=''
-                          data-v-f483b900=''
-                        >
-                          <div className='top' data-v-f483b900=''>
-                            <div className='ContentImage loading image' data-v-f483b900='' data-v-13b18673=''>
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-                          </div>
-                          <div className='bottom' data-v-f483b900=''>
-                            <div className='bonus-count-wrapper' data-v-f483b900=''>
-                              <svg className='bonus-count-corner' viewBox='0 0 15 12' fill='none' data-v-f483b900=''>
-                                <path
-                                  d='M0 0C0 0 0.5 4.64003 4 8C7.5 11.36 15 12 15 12H0V0Z'
-                                  fill='white'
-                                  data-v-f483b900=''
-                                ></path>
-                              </svg>
-                              <div className='bonus-count' data-v-f483b900=''>
-                                13 бонусов
-                              </div>
-                            </div>
-                            <h4 className='title text-slogan' data-v-f483b900=''>
-                              Промокоды при регистрации Фонбет 2025
-                            </h4>
-                          </div>
-                        </a>
-                        <a
-                          href='/promo/sets/promocode-winline2023'
-                          className='BookmakerMultiPromoItem--small BookmakerMultiPromoItem'
-                          with-logos='false'
-                          data-v-701146a2=''
-                          data-v-f483b900=''
-                        >
-                          <div className='top' data-v-f483b900=''>
-                            <div className='ContentImage loading image' data-v-f483b900='' data-v-13b18673=''>
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-                          </div>
-                          <div className='bottom' data-v-f483b900=''>
-                            <div className='bonus-count-wrapper' data-v-f483b900=''>
-                              <svg className='bonus-count-corner' viewBox='0 0 15 12' fill='none' data-v-f483b900=''>
-                                <path
-                                  d='M0 0C0 0 0.5 4.64003 4 8C7.5 11.36 15 12 15 12H0V0Z'
-                                  fill='white'
-                                  data-v-f483b900=''
-                                ></path>
-                              </svg>
-                              <div className='bonus-count' data-v-f483b900=''>
-                                6 бонусов
-                              </div>
-                            </div>
-                            <h4 className='title text-slogan' data-v-f483b900=''>
-                              Промокод Винлайн при регистрации на сегодня
-                            </h4>
-                          </div>
-                        </a>
-                        <a
-                          href='/promo/sets/promocode-betboom'
-                          className='BookmakerMultiPromoItem--small BookmakerMultiPromoItem'
-                          with-logos='false'
-                          data-v-701146a2=''
-                          data-v-f483b900=''
-                        >
-                          <div className='top' data-v-f483b900=''>
-                            <div className='ContentImage loading image' data-v-f483b900='' data-v-13b18673=''>
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-                          </div>
-                          <div className='bottom' data-v-f483b900=''>
-                            <div className='bonus-count-wrapper' data-v-f483b900=''>
-                              <svg className='bonus-count-corner' viewBox='0 0 15 12' fill='none' data-v-f483b900=''>
-                                <path
-                                  d='M0 0C0 0 0.5 4.64003 4 8C7.5 11.36 15 12 15 12H0V0Z'
-                                  fill='white'
-                                  data-v-f483b900=''
-                                ></path>
-                              </svg>
-                              <div className='bonus-count' data-v-f483b900=''>
-                                5 бонусов
-                              </div>
-                            </div>
-                            <h4 className='title text-slogan' data-v-f483b900=''>
-                              Промокод Бетбум на фрибет (ИЮЛЬ 2025){' '}
-                            </h4>
-                          </div>
-                        </a>
-                        <a
-                          href='/promo/sets/promocode2023-ligastavok'
-                          className='BookmakerMultiPromoItem--small BookmakerMultiPromoItem'
-                          with-logos='false'
-                          data-v-701146a2=''
-                          data-v-f483b900=''
-                        >
-                          <div className='top' data-v-f483b900=''>
-                            <div className='ContentImage loading image' data-v-f483b900='' data-v-13b18673=''>
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-                          </div>
-                          <div className='bottom' data-v-f483b900=''>
-                            <div className='bonus-count-wrapper' data-v-f483b900=''>
-                              <svg className='bonus-count-corner' viewBox='0 0 15 12' fill='none' data-v-f483b900=''>
-                                <path
-                                  d='M0 0C0 0 0.5 4.64003 4 8C7.5 11.36 15 12 15 12H0V0Z'
-                                  fill='white'
-                                  data-v-f483b900=''
-                                ></path>
-                              </svg>
-                              <div className='bonus-count' data-v-f483b900=''>
-                                5 бонусов
-                              </div>
-                            </div>
-                            <h4 className='title text-slogan' data-v-f483b900=''>
-                              Промокоды Лиги Ставок 2025 на фрибет{' '}
-                            </h4>
-                          </div>
-                        </a>
-                      </div>
-                      <div className='NavigationLinks--single NavigationLinks' data-v-701146a2='' data-v-781aa78c=''>
-                        <a href='/promo/sets' className='link link--all link--single' data-v-781aa78c=''>
-                          Все коллекции бонусов <span data-v-781aa78c=''></span>
-                        </a>
-                      </div>
-                    </div>
-                  </section>
-                  <section
-                    className='MainPageContainer MainPageContainer--reviews MainPageContainer--grid'
-                    data-v-4050c876=''
-                    data-v-8a768e31=''
-                  >
-                    <h2 className='text-h1 title' data-v-8a768e31=''>
-                      <span className='marked' data-v-4050c876=''>
-                        Честные рецензии
-                      </span>{' '}
-                      на букмекерские конторы от реальных игроков
-                    </h2>
-                    <div className='MainPageReviews' data-v-4050c876='' data-v-840d5c43=''>
-                      <div className='reviews' data-v-840d5c43=''>
-                        <div className='ReviewItem review' data-v-840d5c43='' data-v-fcdec97f=''>
-                          <div className='header' data-v-fcdec97f=''>
-                            <a href='/predictors/aaa-aaa-25' className='header-link' data-v-fcdec97f=''>
-                              <div className='Avatar avatar' alt='aaa-aaa-25' data-v-fcdec97f='' data-v-b14e7bfb=''>
-                                <div className='ContentImage loading image' data-v-b14e7bfb='' data-v-13b18673=''>
-                                  <div className='image-placeholder' data-v-13b18673=''></div>
-                                </div>
-                              </div>
-                              <div className='ContentImage loading bk-logo' data-v-fcdec97f='' data-v-13b18673=''>
-                                <div className='image-placeholder' data-v-13b18673=''></div>
-                              </div>
-                              <div className='header-info' data-v-fcdec97f=''>
-                                <div
-                                  className='FullNameWithIcon FullNameWithIcon--small name'
-                                  data-v-fcdec97f=''
-                                  data-v-23f46830=''
-                                >
-                                  <span className='full-name' data-v-23f46830=''>
-                                    'ааа 'ааа
-                                  </span>
-                                  <span
-                                    className='UserLevel capper UserLevel--small UserLevel--colored profile-icon'
-                                    data-v-23f46830=''
-                                    data-v-ff897bdd=''
-                                  >
-                                    <span data-v-ff897bdd=''>к</span>
-                                  </span>
-                                </div>
-                                <div className='additional-text' data-v-fcdec97f=''>
-                                  <span className='date' data-v-fcdec97f=''>
-                                    19 июл в 08:57
-                                  </span>
-                                </div>
-                              </div>
-                            </a>
-                            <div
-                              className='ReviewsScore review-level review-level--good ReviewsScore--good ReviewsScore--medium ReviewsScore--line score'
-                              data-v-fcdec97f=''
-                              data-v-96d3383f=''
-                            >
-                              <span data-v-96d3383f=''></span>
-                              <span className='grade' data-v-96d3383f=''>
-                                4.5
-                              </span>
-                            </div>
-                          </div>
-                          <div className='body' data-v-fcdec97f=''>
-                            <div className='text-block' data-v-fcdec97f=''>
-                              <div className='text' data-v-fcdec97f=''>
-                                играл не много можно сказать что лишь тестировал прочитав полностью поймете почему
-                              </div>
-
-                              <div className='content-item' data-v-fcdec97f=''>
-                                <div className='text-h5 block-title' data-v-fcdec97f=''>
-                                  <div
-                                    className='ReviewsScore review-level review-level--high ReviewsScore--high ReviewsScore--medium ReviewsScore--line block-score'
-                                    data-v-fcdec97f=''
-                                    data-v-96d3383f=''
-                                  >
-                                    <span data-v-96d3383f=''></span>
-                                    <span className='grade' data-v-96d3383f=''>
-                                      5
-                                    </span>
-                                  </div>
-                                  <span className='block-title-separator' data-v-fcdec97f=''>
-                                     – 
-                                  </span>{' '}
-                                  Процесс регистрации
-                                </div>
-                                <div className='text' data-v-fcdec97f=''>
-                                  Регистрация проходила в штатном режиме как практически у каждой бк раньше.
-                                  Регистрировался в ней еще давно, до того как был цупис. Стандартная процедура, номер
-                                  телефона и потом свои инициалы, и все в принципе. Никаких сложностей и подводных
-                                  камней., ставлю заслуженные 5 звезд
-                                </div>
-                              </div>
-                              <div className='content-item' data-v-fcdec97f=''>
-                                <div className='text-h5 block-title' data-v-fcdec97f=''>
-                                  <div
-                                    className='ReviewsScore review-level review-level--high ReviewsScore--high ReviewsScore--medium ReviewsScore--line block-score'
-                                    data-v-fcdec97f=''
-                                    data-v-96d3383f=''
-                                  >
-                                    <span data-v-96d3383f=''></span>
-                                    <span className='grade' data-v-96d3383f=''>
-                                      5
-                                    </span>
-                                  </div>
-                                  <span className='block-title-separator' data-v-fcdec97f=''>
-                                     – 
-                                  </span>{' '}
-                                  Процесс идентификации
-                                </div>
-                                <div className='text' data-v-fcdec97f=''>
-                                  идентификация была проблемной но прочитав и узнав больше информации насчет
-                                  идентификации у других людей понял что проблема была с моей стороны и тут точно нельзя
-                                  снижать балл. Главное имейте с собой все нужные документы и правильно...
-                                </div>
-                              </div>
-                            </div>
-                            <div className='bottom-block' data-v-fcdec97f=''>
-                              <a
-                                href='/reviews/baltbet/aaa-aaa-25-13'
-                                className='LinkButton--design-light-border LinkButton--size-small LinkButton--uppercase LinkButton--rounded LinkButton text-button button'
-                                data-v-fcdec97f=''
-                                data-v-97c9f747=''
-                              >
-                                Читать полностью{' '}
-                              </a>
-                              <div className='info-list' data-v-fcdec97f=''>
-                                <div className='info-item' data-v-fcdec97f=''>
-                                  <span data-v-fcdec97f=''></span> 0
-                                </div>
-                                <div className='info-item' data-v-fcdec97f=''>
-                                  <span data-v-fcdec97f=''></span> 0
-                                </div>
-                                <div className='info-item' data-v-fcdec97f=''>
-                                  <span data-v-fcdec97f=''></span> 0
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className='ReviewItem review' data-v-840d5c43='' data-v-fcdec97f=''>
-                          <div className='header' data-v-fcdec97f=''>
-                            <a href='/predictors/elena-kashirina-1' className='header-link' data-v-fcdec97f=''>
-                              <div
-                                className='Avatar avatar'
-                                alt='elena-kashirina-1'
-                                data-v-fcdec97f=''
-                                data-v-b14e7bfb=''
-                              >
-                                <div className='ContentImage loading image' data-v-b14e7bfb='' data-v-13b18673=''>
-                                  <div className='image-placeholder' data-v-13b18673=''></div>
-                                </div>
-                              </div>
-                              <div className='ContentImage loading bk-logo' data-v-fcdec97f='' data-v-13b18673=''>
-                                <div className='image-placeholder' data-v-13b18673=''></div>
-                              </div>
-                              <div className='header-info' data-v-fcdec97f=''>
-                                <div
-                                  className='FullNameWithIcon FullNameWithIcon--small name'
-                                  data-v-fcdec97f=''
-                                  data-v-23f46830=''
-                                >
-                                  <span className='full-name' data-v-23f46830=''>
-                                    Елена Каширина
-                                  </span>
-                                  <span
-                                    className='UserLevel capper UserLevel--small UserLevel--colored profile-icon'
-                                    data-v-23f46830=''
-                                    data-v-ff897bdd=''
-                                  >
-                                    <span data-v-ff897bdd=''>к</span>
-                                  </span>
-                                </div>
-                                <div className='additional-text' data-v-fcdec97f=''>
-                                  <span className='date' data-v-fcdec97f=''>
-                                    19 июл в 05:53
-                                  </span>
-                                </div>
-                              </div>
-                            </a>
-                            <div
-                              className='ReviewsScore review-level review-level--good ReviewsScore--good ReviewsScore--medium ReviewsScore--line score'
-                              data-v-fcdec97f=''
-                              data-v-96d3383f=''
-                            >
-                              <span data-v-96d3383f=''></span>
-                              <span className='grade' data-v-96d3383f=''>
-                                4.4
-                              </span>
-                            </div>
-                          </div>
-                          <div className='body' data-v-fcdec97f=''>
-                            <div className='text-block' data-v-fcdec97f=''>
-                              <div className='text' data-v-fcdec97f=''>
-                                Здесь будет находиться моя краткая рецензия на БК Беттери! Не сказать что я прям часто
-                                ставил в данной букмекерской конторе, но какие-выводы по ней все-таки могу сделать!
-                                После редезайна сайт стал походить на своих конкурентов. Впрочем я бы не назвал это
-                                минусом. Определенно стало лучше!
-                              </div>
-
-                              <div className='content-item' data-v-fcdec97f=''>
-                                <div className='text-h5 block-title' data-v-fcdec97f=''>
-                                  <div
-                                    className='ReviewsScore review-level review-level--high ReviewsScore--high ReviewsScore--medium ReviewsScore--line block-score'
-                                    data-v-fcdec97f=''
-                                    data-v-96d3383f=''
-                                  >
-                                    <span data-v-96d3383f=''></span>
-                                    <span className='grade' data-v-96d3383f=''>
-                                      5
-                                    </span>
-                                  </div>
-                                  <span className='block-title-separator' data-v-fcdec97f=''>
-                                     – 
-                                  </span>{' '}
-                                  Процесс регистрации
-                                </div>
-                                <div className='text' data-v-fcdec97f=''>
-                                  Сложно в наше время придумать сложную и неудобную регистрацию для новых клиентов!
-                                  Особенно когда есть такая опция как Единый ЦУПИС! Поэтому как и у всех, проблем с
-                                  регистрацие на данной букмекерской конторе не наблюдается
-                                </div>
-                              </div>
-                              <div className='content-item' data-v-fcdec97f=''>
-                                <div className='text-h5 block-title' data-v-fcdec97f=''>
-                                  <div
-                                    className='ReviewsScore review-level review-level--high ReviewsScore--high ReviewsScore--medium ReviewsScore--line block-score'
-                                    data-v-fcdec97f=''
-                                    data-v-96d3383f=''
-                                  >
-                                    <span data-v-96d3383f=''></span>
-                                    <span className='grade' data-v-96d3383f=''>
-                                      5
-                                    </span>
-                                  </div>
-                                  <span className='block-title-separator' data-v-fcdec97f=''>
-                                     – 
-                                  </span>{' '}
-                                  Пополнение счета
-                                </div>
-                                <div className='text' data-v-fcdec97f=''>
-                                  Несмотря на то, что пополнял счет в данной букмекерской конторе я достаточно редко,...
-                                </div>
-                              </div>
-                            </div>
-                            <div className='bottom-block' data-v-fcdec97f=''>
-                              <a
-                                href='/reviews/bettery/elena-kashirina-1-2'
-                                className='LinkButton--design-light-border LinkButton--size-small LinkButton--uppercase LinkButton--rounded LinkButton text-button button'
-                                data-v-fcdec97f=''
-                                data-v-97c9f747=''
-                              >
-                                Читать полностью{' '}
-                              </a>
-                              <div className='info-list' data-v-fcdec97f=''>
-                                <div className='info-item' data-v-fcdec97f=''>
-                                  <span data-v-fcdec97f=''></span> 0
-                                </div>
-                                <div className='info-item' data-v-fcdec97f=''>
-                                  <span data-v-fcdec97f=''></span> 0
-                                </div>
-                                <div className='info-item' data-v-fcdec97f=''>
-                                  <span data-v-fcdec97f=''></span> 0
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className='ReviewItem review' data-v-840d5c43='' data-v-fcdec97f=''>
-                          <div className='header' data-v-fcdec97f=''>
-                            <a href='/predictors/im-him' className='header-link' data-v-fcdec97f=''>
-                              <div className='Avatar avatar' alt='im-him' data-v-fcdec97f='' data-v-b14e7bfb=''>
-                                <div className='ContentImage loading image' data-v-b14e7bfb='' data-v-13b18673=''>
-                                  <div className='image-placeholder' data-v-13b18673=''></div>
-                                </div>
-                              </div>
-                              <div className='ContentImage loading bk-logo' data-v-fcdec97f='' data-v-13b18673=''>
-                                <div className='image-placeholder' data-v-13b18673=''></div>
-                              </div>
-                              <div className='header-info' data-v-fcdec97f=''>
-                                <div
-                                  className='FullNameWithIcon FullNameWithIcon--small name'
-                                  data-v-fcdec97f=''
-                                  data-v-23f46830=''
-                                >
-                                  <span className='full-name' data-v-23f46830=''>
-                                    I'M HIM
-                                  </span>
-                                  <span
-                                    className='UserLevel capper UserLevel--small UserLevel--colored profile-icon'
-                                    data-v-23f46830=''
-                                    data-v-ff897bdd=''
-                                  >
-                                    <span data-v-ff897bdd=''>к</span>
-                                  </span>
-                                </div>
-                                <div className='additional-text' data-v-fcdec97f=''>
-                                  <span className='date' data-v-fcdec97f=''>
-                                    19 июл в 05:53
-                                  </span>
-                                </div>
-                              </div>
-                            </a>
-                            <div
-                              className='ReviewsScore review-level review-level--middle ReviewsScore--middle ReviewsScore--medium ReviewsScore--line score'
-                              data-v-fcdec97f=''
-                              data-v-96d3383f=''
-                            >
-                              <span data-v-96d3383f=''></span>
-                              <span className='grade' data-v-96d3383f=''>
-                                3.6
-                              </span>
-                            </div>
-                          </div>
-                          <div className='body' data-v-fcdec97f=''>
-                            <div className='text-block' data-v-fcdec97f=''>
-                              <div className='text' data-v-fcdec97f=''>
-                                Бетсити в наше время не пользуется спросом от слова совсем, но вспомните те же девять
-                                лет назад, практически каждый ставочник начинал свой путь лудомании с этой конторы,
-                                которая в те времена ещё могла дать конкуренцию многим букмекерам. Сейчас же ситуация
-                                изменилось в разы, время не щадит никого, тем более заброшенные проекты.
-                              </div>
-
-                              <div className='content-item' data-v-fcdec97f=''>
-                                <div className='text-h5 block-title' data-v-fcdec97f=''>
-                                  <div
-                                    className='ReviewsScore review-level review-level--good ReviewsScore--good ReviewsScore--medium ReviewsScore--line block-score'
-                                    data-v-fcdec97f=''
-                                    data-v-96d3383f=''
-                                  >
-                                    <span data-v-96d3383f=''></span>
-                                    <span className='grade' data-v-96d3383f=''>
-                                      4
-                                    </span>
-                                  </div>
-                                  <span className='block-title-separator' data-v-fcdec97f=''>
-                                     – 
-                                  </span>{' '}
-                                  Процесс регистрации
-                                </div>
-                                <div className='text' data-v-fcdec97f=''>
-                                  Регистрация на сайте банально проста, причем для меня это было давным давно, указал
-                                  свой номер и пошел играть. Как сейчас все идёт, думаю не изменилось, учитывая какой
-                                  статус контора держит сейчас, не вводя никакие поправки в свои правила и идя с
-                                  сомнительным рейтингом...
-                                </div>
-                              </div>
-                            </div>
-                            <div className='bottom-block' data-v-fcdec97f=''>
-                              <a
-                                href='/reviews/betcity/im-him-5'
-                                className='LinkButton--design-light-border LinkButton--size-small LinkButton--uppercase LinkButton--rounded LinkButton text-button button'
-                                data-v-fcdec97f=''
-                                data-v-97c9f747=''
-                              >
-                                Читать полностью{' '}
-                              </a>
-                              <div className='info-list' data-v-fcdec97f=''>
-                                <div className='info-item' data-v-fcdec97f=''>
-                                  <span data-v-fcdec97f=''></span> 1
-                                </div>
-                                <div className='info-item' data-v-fcdec97f=''>
-                                  <span data-v-fcdec97f=''></span> 0
-                                </div>
-                                <div className='info-item' data-v-fcdec97f=''>
-                                  <span data-v-fcdec97f=''></span> 1
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className='ReviewItem review' data-v-840d5c43='' data-v-fcdec97f=''>
-                          <div className='header' data-v-fcdec97f=''>
-                            <a href='/predictors/im-him' className='header-link' data-v-fcdec97f=''>
-                              <div className='Avatar avatar' alt='im-him' data-v-fcdec97f='' data-v-b14e7bfb=''>
-                                <div className='ContentImage loading image' data-v-b14e7bfb='' data-v-13b18673=''>
-                                  <div className='image-placeholder' data-v-13b18673=''></div>
-                                </div>
-                              </div>
-                              <div className='ContentImage loading bk-logo' data-v-fcdec97f='' data-v-13b18673=''>
-                                <div className='image-placeholder' data-v-13b18673=''></div>
-                              </div>
-                              <div className='header-info' data-v-fcdec97f=''>
-                                <div
-                                  className='FullNameWithIcon FullNameWithIcon--small name'
-                                  data-v-fcdec97f=''
-                                  data-v-23f46830=''
-                                >
-                                  <span className='full-name' data-v-23f46830=''>
-                                    I'M HIM
-                                  </span>
-                                  <span
-                                    className='UserLevel capper UserLevel--small UserLevel--colored profile-icon'
-                                    data-v-23f46830=''
-                                    data-v-ff897bdd=''
-                                  >
-                                    <span data-v-ff897bdd=''>к</span>
-                                  </span>
-                                </div>
-                                <div className='additional-text' data-v-fcdec97f=''>
-                                  <span className='date' data-v-fcdec97f=''>
-                                    19 июл в 05:53
-                                  </span>
-                                </div>
-                              </div>
-                            </a>
-                            <div
-                              className='ReviewsScore review-level review-level--middle ReviewsScore--middle ReviewsScore--medium ReviewsScore--line score'
-                              data-v-fcdec97f=''
-                              data-v-96d3383f=''
-                            >
-                              <span data-v-96d3383f=''></span>
-                              <span className='grade' data-v-96d3383f=''>
-                                3.4
-                              </span>
-                            </div>
-                          </div>
-                          <div className='body' data-v-fcdec97f=''>
-                            <div className='text-block' data-v-fcdec97f=''>
-                              <div className='text' data-v-fcdec97f=''>
-                                Контора БетБум на рынке уже давно, хотя свой пик популярности пережила пару лет назад, а
-                                сейчас лишь идёт своим путём, буквально спонсируя все что только возможно, вплоть до
-                                медиа баскетбола, такая политика явно не идёт на пользу.
-                              </div>
-
-                              <div className='content-item' data-v-fcdec97f=''>
-                                <div className='text-h5 block-title' data-v-fcdec97f=''>
-                                  <div
-                                    className='ReviewsScore review-level review-level--good ReviewsScore--good ReviewsScore--medium ReviewsScore--line block-score'
-                                    data-v-fcdec97f=''
-                                    data-v-96d3383f=''
-                                  >
-                                    <span data-v-96d3383f=''></span>
-                                    <span className='grade' data-v-96d3383f=''>
-                                      4
-                                    </span>
-                                  </div>
-                                  <span className='block-title-separator' data-v-fcdec97f=''>
-                                     – 
-                                  </span>{' '}
-                                  Процесс регистрации
-                                </div>
-                                <div className='text' data-v-fcdec97f=''>
-                                  Контора имеет хорошую службу безопасности, из-за чего пройти идентификацию придется
-                                  полностью, но разве когда-то это было проблемой? Зато никаких задержек по выплатам и
-                                  неожиданными "сюрпризами" не будет. Сразу скажу про посредственную поддержку, лучше
-                                  обойтись без косяков на старте игры в БетБум.
-                                </div>
-                              </div>
-                              <div className='content-item' data-v-fcdec97f=''>
-                                <div className='text-h5 block-title' data-v-fcdec97f=''>
-                                  <div
-                                    className='ReviewsScore review-level review-level--middle ReviewsScore--middle ReviewsScore--medium ReviewsScore--line block-score'
-                                    data-v-fcdec97f=''
-                                    data-v-96d3383f=''
-                                  >
-                                    <span data-v-96d3383f=''></span>
-                                    <span className='grade' data-v-96d3383f=''>
-                                      3
-                                    </span>
-                                  </div>
-                                  <span className='block-title-separator' data-v-fcdec97f=''>
-                                     – 
-                                  </span>{' '}
-                                  Приветственный бонус
-                                </div>
-                                <div className='text' data-v-fcdec97f=''>
-                                  Каким то образом не смог получить бонус, если он и был на тот...
-                                </div>
-                              </div>
-                            </div>
-                            <div className='bottom-block' data-v-fcdec97f=''>
-                              <a
-                                href='/reviews/betboom/im-him-4'
-                                className='LinkButton--design-light-border LinkButton--size-small LinkButton--uppercase LinkButton--rounded LinkButton text-button button'
-                                data-v-fcdec97f=''
-                                data-v-97c9f747=''
-                              >
-                                Читать полностью{' '}
-                              </a>
-                              <div className='info-list' data-v-fcdec97f=''>
-                                <div className='info-item' data-v-fcdec97f=''>
-                                  <span data-v-fcdec97f=''></span> 0
-                                </div>
-                                <div className='info-item' data-v-fcdec97f=''>
-                                  <span data-v-fcdec97f=''></span> 0
-                                </div>
-                                <div className='info-item' data-v-fcdec97f=''>
-                                  <span data-v-fcdec97f=''></span> 0
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className='NavigationLinks--single NavigationLinks' data-v-840d5c43='' data-v-781aa78c=''>
-                        <a href='/reviews' className='link link--all link--single' data-v-781aa78c=''>
-                          Все рецензии <span data-v-781aa78c=''></span>
-                        </a>
-                      </div>
-                    </div>
-                  </section>
-                  <div className='LazyWrapper' data-v-4050c876=''></div>
-                  <section
-                    className='MainPageContainer MainPageContainer--articles MainPageContainer--grid'
-                    data-v-4050c876=''
-                    data-v-8a768e31=''
-                  >
-                    <h2 className='text-h1 title' data-v-8a768e31=''>
-                      <a href='/articles' className='marked' data-v-4050c876=''>
-                        {' '}
-                        Интересные статьи{' '}
-                      </a>{' '}
-                      о спорте и не только
-                    </h2>
-                    <div className='MainPageArticles' data-v-4050c876='' data-v-153e113d=''>
-                      <div className='ArticlesList articles' data-v-153e113d='' data-v-3930eba1=''>
-                        <a
-                          href='/articles/soccer/transfers-krasnodar'
-                          className='ArticlesCard article'
-                          title='Трансферы ФК «Краснодар» — как изменился состав чемпиона и сможет ли клуб защитить титул?'
-                          data-v-3930eba1=''
-                          data-v-2ee73024=''
-                        >
-                          <div className='poster-wrapper' data-v-2ee73024=''>
-                            <div className='ContentImage loading poster' data-v-2ee73024='' data-v-13b18673=''>
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-                          </div>
-                          <div className='info' data-v-2ee73024=''>
-                            <h5 className='title' data-v-2ee73024=''>
-                              Трансферы ФК «Краснодар» — как изменился состав чемпиона и сможет ли клуб защитить титул?
-                            </h5>
-                            <div className='counters' data-v-2ee73024=''>
-                              <div
-                                className='ViewCounter ViewCounter--gray views'
-                                data-v-2ee73024=''
-                                data-v-826c39e6=''
-                              >
-                                <span data-v-826c39e6=''></span> 1 061
-                              </div>
-                              <div className='divider' data-v-2ee73024=''></div>
-                              <span data-v-2ee73024=''></span> 0
-                            </div>
-                          </div>
-                        </a>
-                        <a
-                          href='/articles/express/express-2025-july-23'
-                          className='ArticlesCard article'
-                          title='Экспресс дня от СТАВКА TV на 23 июля'
-                          data-v-3930eba1=''
-                          data-v-2ee73024=''
-                        >
-                          <div className='poster-wrapper' data-v-2ee73024=''>
-                            <div className='ContentImage loading poster' data-v-2ee73024='' data-v-13b18673=''>
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-                          </div>
-                          <div className='info' data-v-2ee73024=''>
-                            <h5 className='title' data-v-2ee73024=''>
-                              Экспресс дня от СТАВКА TV на 23 июля
-                            </h5>
-                            <div className='counters' data-v-2ee73024=''>
-                              <div
-                                className='ViewCounter ViewCounter--gray views'
-                                data-v-2ee73024=''
-                                data-v-826c39e6=''
-                              >
-                                <span data-v-826c39e6=''></span> 1 244
-                              </div>
-                              <div className='divider' data-v-2ee73024=''></div>
-                              <span data-v-2ee73024=''></span> 0
-                            </div>
-                          </div>
-                        </a>
-                        <a
-                          href='/articles/blog/user-survey-sports-matches'
-                          className='ArticlesCard article'
-                          title='Расскажи нам, что для тебя важно'
-                          data-v-3930eba1=''
-                          data-v-2ee73024=''
-                        >
-                          <div className='poster-wrapper' data-v-2ee73024=''>
-                            <div className='ContentImage loading poster' data-v-2ee73024='' data-v-13b18673=''>
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-                          </div>
-                          <div className='info' data-v-2ee73024=''>
-                            <h5 className='title' data-v-2ee73024=''>
-                              Расскажи нам, что для тебя важно
-                            </h5>
-                            <div className='counters' data-v-2ee73024=''>
-                              <div
-                                className='ViewCounter ViewCounter--gray views'
-                                data-v-2ee73024=''
-                                data-v-826c39e6=''
-                              >
-                                <span data-v-826c39e6=''></span> 476
-                              </div>
-                              <div className='divider' data-v-2ee73024=''></div>
-                              <span data-v-2ee73024=''></span> 17
-                            </div>
-                          </div>
-                        </a>
-                        <a
-                          href='/articles/tips/bet-2025-july-23'
-                          className='ArticlesCard article'
-                          title='Ставка дня на 23 июля'
-                          data-v-3930eba1=''
-                          data-v-2ee73024=''
-                        >
-                          <div className='poster-wrapper' data-v-2ee73024=''>
-                            <div className='ContentImage loading poster' data-v-2ee73024='' data-v-13b18673=''>
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-                          </div>
-                          <div className='info' data-v-2ee73024=''>
-                            <h5 className='title' data-v-2ee73024=''>
-                              Ставка дня на 23 июля
-                            </h5>
-                            <div className='counters' data-v-2ee73024=''>
-                              <div
-                                className='ViewCounter ViewCounter--gray views'
-                                data-v-2ee73024=''
-                                data-v-826c39e6=''
-                              >
-                                <span data-v-826c39e6=''></span> 291
-                              </div>
-                              <div className='divider' data-v-2ee73024=''></div>
-                              <span data-v-2ee73024=''></span> 0
-                            </div>
-                          </div>
-                        </a>
-                        <a
-                          href='/articles/soccer/torpedo-excluded-rpl'
-                          className='ArticlesCard article'
-                          title='«Торпедо» исключили из РПЛ'
-                          data-v-3930eba1=''
-                          data-v-2ee73024=''
-                        >
-                          <div className='poster-wrapper' data-v-2ee73024=''>
-                            <div className='ContentImage loading poster' data-v-2ee73024='' data-v-13b18673=''>
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-                          </div>
-                          <div className='info' data-v-2ee73024=''>
-                            <h5 className='title' data-v-2ee73024=''>
-                              «Торпедо» исключили из РПЛ
-                            </h5>
-                            <div className='counters' data-v-2ee73024=''>
-                              <div
-                                className='ViewCounter ViewCounter--gray views'
-                                data-v-2ee73024=''
-                                data-v-826c39e6=''
-                              >
-                                <span data-v-826c39e6=''></span> 1 997
-                              </div>
-                              <div className='divider' data-v-2ee73024=''></div>
-                              <span data-v-2ee73024=''></span> 0
-                            </div>
-                          </div>
-                        </a>
-                        <a
-                          href='/articles/tennis/fenomenal-bublik'
-                          className='ArticlesCard article'
-                          title='Александр Бублик – король хайпа и мемов в теннисе. Почему его обожают фанаты?'
-                          data-v-3930eba1=''
-                          data-v-2ee73024=''
-                        >
-                          <div className='poster-wrapper' data-v-2ee73024=''>
-                            <div className='ContentImage loading poster' data-v-2ee73024='' data-v-13b18673=''>
-                              <div className='image-placeholder' data-v-13b18673=''></div>
-                            </div>
-                          </div>
-                          <div className='info' data-v-2ee73024=''>
-                            <h5 className='title' data-v-2ee73024=''>
-                              Александр Бублик – король хайпа и мемов в теннисе. Почему его обожают фанаты?
-                            </h5>
-                            <div className='counters' data-v-2ee73024=''>
-                              <div
-                                className='ViewCounter ViewCounter--gray views'
-                                data-v-2ee73024=''
-                                data-v-826c39e6=''
-                              >
-                                <span data-v-826c39e6=''></span> 1 944
-                              </div>
-                              <div className='divider' data-v-2ee73024=''></div>
-                              <span data-v-2ee73024=''></span> 0
-                            </div>
-                          </div>
-                        </a>
-                      </div>
-                      <div
-                        className='NavigationLinks--single NavigationLinks article-link'
-                        data-v-153e113d=''
-                        data-v-781aa78c=''
-                      >
-                        <a href='/articles' className='link link--all link--single' data-v-781aa78c=''>
-                          Все статьи <span data-v-781aa78c=''></span>
-                        </a>
-                      </div>
-                    </div>
-                  </section>
-                  <section className='MainPageFooter' data-v-4050c876='' data-v-784c77ac=''>
-                    <div className='page-end' data-v-784c77ac=''></div>
-                    <p className='text-h2 title' data-v-784c77ac=''>
-                      {' '}
-                      СТАВКА TV — это{' '}
-                    </p>
-                    <div className='advantages' data-v-784c77ac=''>
-                      <span className='text-h4 advantage' data-v-784c77ac=''>
-                        <span data-v-784c77ac=''></span> 1 000+ матчей ежедневно
-                      </span>
-                      <span className='text-h4 advantage' data-v-784c77ac=''>
-                        <span data-v-784c77ac=''></span> Тысячи прогнозов каждый день
-                      </span>
-                      <span className='text-h4 advantage' data-v-784c77ac=''>
-                        <span data-v-784c77ac=''></span> Эксклюзивные бонусы с разборами
-                      </span>
-                      <span className='text-h4 advantage' data-v-784c77ac=''>
-                        <span data-v-784c77ac=''></span> Достижения и бонусная система
-                      </span>
-                      <span className='text-h4 advantage' data-v-784c77ac=''>
-                        <span data-v-784c77ac=''></span> Рецензии от игроков
-                      </span>
-                    </div>
-                  </section>
-                  <div className='SeoBlock SeoBlock--layoutWithoutSidebar' data-v-4050c876='' data-v-e8065995=''>
-                    <div className='PageDivider PageDivider--small' data-v-e8065995='' data-v-ec4cfc72=''>
-                      <div className='line' data-v-ec4cfc72=''></div>
-                    </div>
-                    <div className='content inside-block' data-v-e8065995=''>
-                      <div className='content-text text relative' data-v-e8065995=''>
-                        <p>
-                          СТАВКА TV — социальная сеть для начинающих и профессиональных капперов. Наш портал — не
-                          букмекерская контора, а полезный инструмент для любителей ставок, где вы найдете{' '}
-                          <strong>лучшие прогнозы на спорт</strong> от экспертов. Мы помогаем бетторам анализировать
-                          события, выбирать оптимальные ставки и сохранять свой банкролл.
-                        </p>
-                        <p>
-                          Мы не просто повышаем интерес к спорту, а помогаем бетторам сохранить собственные средства,
-                          разыгрываем миллионы рублей призовых в турнирах прогнозов, даём эксклюзивные{' '}
-                          <strong>
-                            <a href='https://stavka.tv/promo/sets/promocode-bukmekers'>промокоды�букмекеров</a>,�
-                          </strong>
-                          предлагаем ознакомиться со всеми рабочими промокодами, которые действуют у конкретных
-                          букмекеров:
-                        </p>
-                        <ol>
-                          <li>
-                            <a href='https://stavka.tv/promo/sets/promocode-winline2023'>
-                              <strong>Промокоды Винлайн</strong>
-                            </a>
-                            ;�
-                          </li>
-                          <li>
-                            <a href='https://stavka.tv/promo/sets/promocode-for-freebet2023-fonbet'>
-                              <strong>Промокоды Фонбет</strong>
-                            </a>
-                            ;�
-                          </li>
-                          <li>
-                            <a href='https://stavka.tv/promo/sets/promocode-betboom'>
-                              <strong>Промокоды BetBoom</strong>
-                            </a>
-                            ;
-                          </li>
-                          <li>
-                            <a href='https://stavka.tv/promo/sets/pari-promocode'>
-                              <strong>Промокоды PARI</strong>
-                            </a>
-                            ;�
-                          </li>
-                          <li>
-                            <a href='https://stavka.tv/promo/sets/promocode2023-ligastavok'>
-                              <strong>Промокоды Лиги Ставок</strong>
-                            </a>
-                            .�
-                          </li>
-                        </ol>
-                        <p>
-                          Не забывайте и о фрибетах букмекеров, часть их которых можно забрать практически без
-                          выполнения каких-либо условий:�
-                        </p>
-                        <ol>
-                          <li>
-                            <a href='https://stavka.tv/promo/sets/freebet-new-winline'>
-                              <strong>Фрибет Винлайн</strong>
-                            </a>
-                            ;�
-                          </li>
-                          <li>
-                            <a href='https://stavka.tv/promo/sets/freebet-fonbet-2025'>
-                              <strong>Фрибет Фонбет</strong>
-                            </a>
-                            ;�
-                          </li>
-                          <li>
-                            <a href='https://stavka.tv/promo/sets/freebet5000-pari'>
-                              <strong>Фрибет PARI</strong>
-                            </a>
-                            ;�
-                          </li>
-                          <li>
-                            <a href='https://stavka.tv/promo/sets/ligastavok-freebet'>
-                              <strong>Фрибет Лиги Ставок</strong>
-                            </a>
-                            ;�
-                          </li>
-                          <li>
-                            <a href='https://stavka.tv/promo/sets/freebet-bettery'>
-                              <strong>Фрибет Bettery</strong>
-                            </a>
-                            ;
-                          </li>
-                          <li>
-                            <a href='https://stavka.tv/promo/sets/freebet2023-betboom'>
-                              <strong>Фрибет BetBoom</strong>
-                            </a>
-                            .�
-                          </li>
-                        </ol>
-                        <p>
-                          У нас также Вы сможете ознакомиться со всеми актуальными{' '}
-                          <a href='https://stavka.tv/promo'>
-                            <strong>акциями букмекерских контор</strong>
-                          </a>
-                          . Все розыгрыши фрибетов, бонусы на депозит, страховки и кэшбэк можно найти в данном разделе.
-                          Мы честно рассказали о том, где дают{' '}
-                          <a href='https://stavka.tv/promo/sets/freebet-bez-deposit2023-19-12'>
-                            <strong>фрибет без депозита</strong>
-                          </a>
-                          ; подсветили лучшие предложения с{' '}
-                          <a href='https://stavka.tv/promo/sets/best-freebets-month'>
-                            <strong>фрибетами месяца</strong>
-                          </a>
-                          ; рассказали о том, где найти{' '}
-                          <a href='https://stavka.tv/promo/sets/freebet-current-client'>
-                            <strong>фрибет действующим игрокам</strong>
-                          </a>{' '}
-                          и приятно провести время во время спортивных трансляций. Наша задача <span>—</span>� показать
-                          обратную сторону беттинга, превращая отрасль в стиль жизни.�
-                        </p>
-                        <h2>Бесплатные прогнозы на спорт</h2>
-                        <p>На СТАВКА TV вы найдете прогнозы на самые популярные виды спорта:</p>
-                        <ul>
-                          <li>Футбол;</li>
-                          <li>Хоккей;</li>
-                          <li>Теннис;</li>
-                          <li>Киберспорт (Dota 2 и CS 2);</li>
-                          <li>Баскетбол;</li>
-                          <li>Волейбол и другие.</li>
-                        </ul>
-                        <p>
-                          Каждый прогноз сопровождается анализом статистики команд, текущего уровня, коэффициентов и
-                          вероятностей исхода. Это помогает выбрать оптимальную ставку.�
-                        </p>
-                        <h3>Экспертные прогнозы на спорт</h3>
-                        <p>
-                          Наша редакция ежедневно публикует <span>прогнозы на спортивные события</span>, основанные на
-                          глубоких знаниях и опыте, статистических сводках, трендах и других факторах.
-                        </p>
-                        <p>
-                          Каждый пользователь также может оставить свой прогноз, участвовать в турнирах и выигрывать
-                          ценные призы. Для удобства в прогнозах разработаны несколько фильтров, которые помогают
-                          пользователям отбирать материалы по видам спорта, а также фильтровать события в зависимости от
-                          временного промежутка.
-                        </p>
-                        <h2>Конкурсы с денежными призами</h2>
-                        <p>
-                          СТАВКА TV — лидер по количеству организованных{' '}
-                          <a href='https://stavka.tv/cup'>
-                            <strong>конкурсов прогнозов</strong>
-                          </a>
-                          . Общий призовой фонд превышает сумму в 1 000 000 рублей в месяц. Это мотивирует лучших
-                          капперов публиковать собственные прогнозы и бороться за высокие призовые места, детально
-                          изучая статистические показатели команд и спортсменов.
-                        </p>
-                        <p>
-                          Ежемесячно на портале появляются около 15 разных конкурсов и более 300 призовых мест.
-                          Требования по каждому турниру прописаны в описании конкурсов. Прозрачная система подсчета
-                          позволяет безошибочно утвердить список победителей и выплатить призовые в максимально краткие
-                          сроки.
-                        </p>
-                        <h2>Бонусы и акции букмекеров</h2>
-                        <p>
-                          Раздел бонусов позволяет игрокам ознакомиться с приветственными и временными акционными
-                          предложениями букмекерских компаний.
-                        </p>
-                        <p>
-                          В данном разделе присутствуют актуальные бонусы для новых и действующих игроков. Кроме того, у
-                          нас есть ряд эксклюзивных предложений букмекеров, которые невозможно найти внутри БК либо у
-                          конкурентов.
-                        </p>
-                        <p>Среди актуальных предложений доступны все виды бонусов:</p>
-                        <ul>
-                          <li>фрибеты;</li>
-                          <li>промокоды;</li>
-                          <li>кэшбэк;</li>
-                          <li>бонус на депозит;</li>
-                          <li>программа лояльности и другие.</li>
-                        </ul>
-                        <p>
-                          Внутри каждого материала присутствует инструкция получения бонусов, условия использования,
-                          отыгрыша и вывода.�
-                        </p>
-                        <h2>Мобильные приложения</h2>
-                        <p>
-                          Не только серфинг интернета, но и ставки перекочевали в мобильные устройства. Букмекеры видят
-                          этот тренд и делают акцент на развитие приложений. Команда СТАВКА TV создала отдельный раздел
-                          с каталогом<strong>�</strong>
-                          <a href='https://stavka.tv/apps'>
-                            <strong>приложений букмекерских контор</strong>
-                          </a>
-                          , где мы подготовили обзоры на все приложения легальных букмекеров под разные ОС, чтобы дать
-                          объективную оценку текущим успехам и неудачам букмекеров в рамках мобильного беттинга.
-                        </p>
-                        <h2>Рейтинги букмекеров</h2>
-                        <p>
-                          <a href='https://stavka.tv/bukmekerskye-kontory'>
-                            <strong>Рейтинг легальных букмекерских контор</strong>
-                          </a>{' '}
-                          — основной помощник при выборе беттинговой площадки. В нем учитывается совокупность факторов,
-                          на которые следует обратить внимание:
-                        </p>
-                        <ul>
-                          <li>Опыт работы букмекера;</li>
-                          <li>Приветственный бонус;</li>
-                          <li>Наличие интересных акций;</li>
-                          <li>Маржа;</li>
-                          <li>Качество линии/росписи;</li>
-                          <li>Удобство в работе;</li>
-                          <li>Проведение финансовых платежей;</li>
-                          <li>Качество мобильного приложения и многое другое.</li>
-                        </ul>
-                        <p>Основной рейтинг отражает общую оценку и место в топе среди легальных букмекеров России.</p>
-                        <p>
-                          Дополнительно пользователи могут ознакомиться с рядом рейтингов по различным критериям и
-                          направлениям. Рейтинги выстраиваются с учетом экспертной оценки СТАВКА TV и мнения реальных
-                          игроков.
-                        </p>
-                        <p>На сайте представлены:</p>
-                        <ul>
-                          <li>Народный рейтинг;</li>
-                          <li>Рейтинг надежных букмекеров;</li>
-                          <li>
-                            Рейтинги БК по оценке каждого вида спорта: футбол, киберспорт, хоккей, теннис, баскетбол;
-                          </li>
-                        </ul>
-                        <p>
-                          Для тщательного изучения и анализа любой БК читатели могут воспользоваться обзорами
-                          букмекерских компаний. Опубликованные материалы проходят тщательную проверку и поддерживают
-                          объективную оценку любого показателя: от способов пополнения/вывода до детального подсчета
-                          маржи на самые популярные виды спорта.
-                        </p>
-                        <h2>Школа ставок</h2>
-                        <p>
-                          Новички, которые только пытаются освоиться в мире беттинга, смогут воспользоваться разделом
-                          Школа ставок.
-                        </p>
-                        <p>
-                          В школе ставок игроки смогут изучить основные термины в области беттинга и спорта, понять
-                          психологию, освоить основные стратегии для оформления ставок, изучить инструменты и популярные
-                          трендовые направления в ставках на спорт.
-                        </p>
-                        <h2>Матч-центр</h2>
-                        <p>
-                          Матч-центр — важнейший пользовательский инструмент. Прямо на сайте игроки могут найти любой
-                          матч практически по каждому виду спорта. В матч-центре доступен широкий функционал:
-                        </p>
-                        <ul>
-                          <li>Линия и роспись события;</li>
-                          <li>Прогноз редакции;</li>
-                          <li>Прямая трансляция;</li>
-                          <li>Статистические показатели команд/спортсменов;</li>
-                          <li>Актуальные акции/бонусы.</li>
-                        </ul>
-                        <p>
-                          Для удобства пользователей предусмотрены фильтры, позволяющие подобрать интересующее событие
-                          быстро и легко.
-                        </p>
-                      </div>
-                      <div
-                        className='ColumnLinksBlock inner-block-offset relative'
-                        data-v-e8065995=''
-                        data-v-5e99b1ee=''
-                      >
-                        <div className='columns-header' data-v-5e99b1ee=''>
-                          <h4 className='columns-title' data-v-5e99b1ee=''>
-                            Популярные материалы{' '}
-                          </h4>
-                        </div>
-                        <div className='columns' data-v-5e99b1ee=''>
-                          <div className='column' data-v-5e99b1ee=''>
-                            <p className='text-h5 column-title' data-v-5e99b1ee=''>
-                              Промокоды букмекеров
-                            </p>
-                            <ul className='column-links' data-v-5e99b1ee=''>
-                              <li className='column-link-wrapper' data-v-5e99b1ee=''>
-                                <a
-                                  href='/promo/sets/promocode-winline2023'
-                                  className='text-h5 column-link'
-                                  data-v-5e99b1ee=''
-                                >
-                                  Промокод Винлайн
-                                </a>
-                              </li>
-
-                              <li className='column-link-wrapper' data-v-5e99b1ee=''>
-                                <a href='/promo/sets/pari-promocode' className='text-h5 column-link' data-v-5e99b1ee=''>
-                                  Промокод Пари
-                                </a>
-                              </li>
-
-                              <li className='column-link-wrapper' data-v-5e99b1ee=''>
-                                <a
-                                  href='/promo/sets/promocode-for-freebet2023-fonbet'
-                                  className='text-h5 column-link'
-                                  data-v-5e99b1ee=''
-                                >
-                                  Промокод на фрибет Фонбет
-                                </a>
-                              </li>
-
-                              <li className='column-link-wrapper' data-v-5e99b1ee=''>
-                                <a
-                                  href='/promo/sets/promocode-betboom'
-                                  className='text-h5 column-link'
-                                  data-v-5e99b1ee=''
-                                >
-                                  Промокод BetBoom
-                                </a>
-                              </li>
-
-                              <li className='column-link-wrapper' data-v-5e99b1ee=''>
-                                <a
-                                  href='/promo/sets/promocode-2023-betcity'
-                                  className='text-h5 column-link'
-                                  data-v-5e99b1ee=''
-                                >
-                                  Промокод Бетсити
-                                </a>
-                              </li>
-
-                              <li className='column-link-wrapper' data-v-5e99b1ee=''>
-                                <a
-                                  href='/promo/sets/promocode-bettery'
-                                  className='text-h5 column-link'
-                                  data-v-5e99b1ee=''
-                                >
-                                  Промокод BETTERY
-                                </a>
-                              </li>
-
-                              <li className='column-link-wrapper' data-v-5e99b1ee=''>
-                                <a
-                                  href='/promo/sets/promocode-bukmekers'
-                                  className='text-h5 column-link'
-                                  data-v-5e99b1ee=''
-                                >
-                                  Промокоды на фрибет
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-
-                          <div className='column' data-v-5e99b1ee=''>
-                            <p className='text-h5 column-title' data-v-5e99b1ee=''>
-                              Фрибеты
-                            </p>
-                            <ul className='column-links' data-v-5e99b1ee=''>
-                              <li className='column-link-wrapper' data-v-5e99b1ee=''>
-                                <a
-                                  href='/promo/sets/freebet-bez-deposit2023-19-12'
-                                  className='text-h5 column-link'
-                                  data-v-5e99b1ee=''
-                                >
-                                  Фрибеты за регистрацию без депозита
-                                </a>
-                              </li>
-
-                              <li className='column-link-wrapper' data-v-5e99b1ee=''>
-                                <a
-                                  href='/promo/sets/freebets2023-apps'
-                                  className='text-h5 column-link'
-                                  data-v-5e99b1ee=''
-                                >
-                                  Фрибет за установку приложения
-                                </a>
-                              </li>
-
-                              <li className='column-link-wrapper' data-v-5e99b1ee=''>
-                                <a
-                                  href='/promo/sets/best-freebets-month'
-                                  className='text-h5 column-link'
-                                  data-v-5e99b1ee=''
-                                >
-                                  Фрибеты на Июль 2025
-                                </a>
-                              </li>
-
-                              <li className='column-link-wrapper' data-v-5e99b1ee=''>
-                                <a
-                                  href='/promo/sets/freebet-registration-fonbet'
-                                  className='text-h5 column-link'
-                                  data-v-5e99b1ee=''
-                                >
-                                  Фрибет Фонбет
-                                </a>
-                              </li>
-
-                              <li className='column-link-wrapper' data-v-5e99b1ee=''>
-                                <a
-                                  href='/promo/sets/freebet2023-betboom'
-                                  className='text-h5 column-link'
-                                  data-v-5e99b1ee=''
-                                >
-                                  Фрибет БетБум
-                                </a>
-                              </li>
-
-                              <li className='column-link-wrapper' data-v-5e99b1ee=''>
-                                <a
-                                  href='/promo/sets/freebet5000-pari'
-                                  className='text-h5 column-link'
-                                  data-v-5e99b1ee=''
-                                >
-                                  Фрибет Пари
-                                </a>
-                              </li>
-
-                              <li className='column-link-wrapper' data-v-5e99b1ee=''>
-                                <a
-                                  href='/promo/sets/freebet-new-winline'
-                                  className='text-h5 column-link'
-                                  data-v-5e99b1ee=''
-                                >
-                                  Фрибет Винлайн{' '}
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-
-                          <div className='column' data-v-5e99b1ee=''>
-                            <p className='text-h5 column-title' data-v-5e99b1ee=''>
-                              Прогнозы
-                            </p>
-                            <ul className='column-links' data-v-5e99b1ee=''>
-                              <li className='column-link-wrapper' data-v-5e99b1ee=''>
-                                <a href='/predictions/soccer' className='text-h5 column-link' data-v-5e99b1ee=''>
-                                  Прогнозы на футбол
-                                </a>
-                              </li>
-
-                              <li className='column-link-wrapper' data-v-5e99b1ee=''>
-                                <a href='/predictions/ice-hockey' className='text-h5 column-link' data-v-5e99b1ee=''>
-                                  Прогнозы на хоккей
-                                </a>
-                              </li>
-
-                              <li className='column-link-wrapper' data-v-5e99b1ee=''>
-                                <a href='/predictions/tennis' className='text-h5 column-link' data-v-5e99b1ee=''>
-                                  Прогнозы на теннис
-                                </a>
-                              </li>
-
-                              <li className='column-link-wrapper' data-v-5e99b1ee=''>
-                                <a href='/predictions/basketball' className='text-h5 column-link' data-v-5e99b1ee=''>
-                                  Прогнозы на баскетбол
-                                </a>
-                              </li>
-
-                              <li className='column-link-wrapper' data-v-5e99b1ee=''>
-                                <a href='/cup' className='text-h5 column-link' data-v-5e99b1ee=''>
-                                  Конкурсы прогнозов
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-
-                          <div className='column' data-v-5e99b1ee=''>
-                            <p className='text-h5 column-title' data-v-5e99b1ee=''>
-                              Приложения букмекеров
-                            </p>
-                            <ul className='column-links' data-v-5e99b1ee=''>
-                              <li className='column-link-wrapper' data-v-5e99b1ee=''>
-                                <a href='/apps' className='text-h5 column-link' data-v-5e99b1ee=''>
-                                  Приложения букмекерских контор
-                                </a>
-                              </li>
-
-                              <li className='column-link-wrapper' data-v-5e99b1ee=''>
-                                <a href='/apps/winline-android' className='text-h5 column-link' data-v-5e99b1ee=''>
-                                  Винлайн на андроид
-                                </a>
-                              </li>
-
-                              <li className='column-link-wrapper' data-v-5e99b1ee=''>
-                                <a href='/apps/pari-android' className='text-h5 column-link' data-v-5e99b1ee=''>
-                                  Пари на андроид
-                                </a>
-                              </li>
-
-                              <li className='column-link-wrapper' data-v-5e99b1ee=''>
-                                <a href='/apps/fonbet-android' className='text-h5 column-link' data-v-5e99b1ee=''>
-                                  Фонбет на андроид
-                                </a>
-                              </li>
-
-                              <li className='column-link-wrapper' data-v-5e99b1ee=''>
-                                <a href='/apps/betboom-android' className='text-h5 column-link' data-v-5e99b1ee=''>
-                                  БетБум на андроид
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-
-                          <div className='column' data-v-5e99b1ee=''>
-                            <p className='text-h5 column-title' data-v-5e99b1ee=''>
-                              Приложения iOS
-                            </p>
-                            <ul className='column-links' data-v-5e99b1ee=''>
-                              <li className='column-link-wrapper' data-v-5e99b1ee=''>
-                                <a href='/apps/winline-ios' className='text-h5 column-link' data-v-5e99b1ee=''>
-                                  Винлайн на айфон
-                                </a>
-                              </li>
-
-                              <li className='column-link-wrapper' data-v-5e99b1ee=''>
-                                <a href='/apps/pari-ios' className='text-h5 column-link' data-v-5e99b1ee=''>
-                                  Пари на айфон
-                                </a>
-                              </li>
-
-                              <li className='column-link-wrapper' data-v-5e99b1ee=''>
-                                <a href='/apps/fonbet-ios' className='text-h5 column-link' data-v-5e99b1ee=''>
-                                  Фонбет на айфон
-                                </a>
-                              </li>
-
-                              <li className='column-link-wrapper' data-v-5e99b1ee=''>
-                                <a href='/apps/betboom-ios' className='text-h5 column-link' data-v-5e99b1ee=''>
-                                  БетБум на айфон
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div data-v-f56af8ca='' data-v-4d1432fe=''></div>
-                </div>
-              </div>
-            </div>
-            <footer className='Footer grid-footer' data-v-2af4a11a='' data-v-6d0a58f0=''>
-              <div className='container' data-v-6d0a58f0=''>
-                <div className='FooterHeader header' data-v-6d0a58f0='' data-v-79d8bbe8=''>
-                  <div data-v-79d8bbe8=''>
                     <a
-                      aria-current='page'
-                      href='/'
-                      className='router-link-active router-link-exact-active logo'
-                      data-v-79d8bbe8=''
+                      className='sc-fzqqld-7 korJWU'
+                      href='https://kansspelautoriteit.nl/'
+                      rel='nofollow noreferrer'
+                      target='_blank'
                     >
-                      <div className='ContentImage loading logo__image' data-v-79d8bbe8='' data-v-13b18673=''>
-                        <div className='image-placeholder' data-v-13b18673=''></div>
-                      </div>
+                      <img
+                        alt='ru'
+                        className='sc-fzqqld-8 buzeva lazyload'
+                        data-src='/static/img/assets/license/regulator/nl.png'
+                        data-srcset='/static/img/assets/license/regulator/nl.png'
+                        src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                        style={{ objectFit: 'contain' }}
+                      />
                     </a>
-                    <p className='slogan text-slogan' data-v-79d8bbe8=''>
-                      {' '}
-                      Место силы каппера 💪{' '}
-                    </p>
+                    <a
+                      className='sc-fzqqld-7 korJWU'
+                      href='http://www.gamblingtherapy.org/'
+                      rel='nofollow noreferrer'
+                      target='_blank'
+                    >
+                      <img
+                        alt='ru'
+                        className='sc-fzqqld-8 buzeva lazyload'
+                        data-src='/static/img/assets/license/helper/world.png'
+                        data-srcset='/static/img/assets/license/helper/world.png'
+                        src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                        style={{ objectFit: 'contain' }}
+                      />
+                    </a>
                   </div>
-                  <div className='Socials' data-v-79d8bbe8='' data-v-9cef3620=''>
-                    <div className='AppLinks AppLinks--grey' data-v-9cef3620='' data-v-331a59ab=''>
-                      <div className='wrapper' data-v-331a59ab=''>
-                        <button className='apps-button' data-v-331a59ab=''>
-                          <span className='text' data-v-331a59ab=''>
-                            Скачать приложения
-                          </span>
-                          <span className='app-icon-container' data-v-331a59ab=''>
-                            <span data-v-331a59ab=''></span>
-                          </span>
-                          <span className='app-icon-container' data-v-331a59ab=''>
-                            <span data-v-331a59ab=''></span>
-                          </span>
-                          <span className='app-icon-container' data-v-331a59ab=''>
-                            <span data-v-331a59ab=''></span>
-                          </span>
-                          <span data-v-331a59ab=''></span>
-                        </button>
-                      </div>
-                    </div>
-                    <div className='links' data-v-9cef3620=''>
-                      <a
-                        className='link link--white'
-                        href='https://stavka.tv/go?to=telegram-footer'
-                        rel='nofollow noopener noreferrer'
-                        target='_blank'
-                        data-v-9cef3620=''
-                      >
-                        <span data-v-9cef3620=''></span>
-                      </a>
-                      <a
-                        className='link link--white'
-                        href='https://vk.com/stavkatv'
-                        rel='nofollow noopener noreferrer'
-                        target='_blank'
-                        data-v-9cef3620=''
-                      >
-                        <span data-v-9cef3620=''></span>
-                      </a>
-                      <a
-                        className='link link--white'
-                        href='https://youtube.com/@stavkatv'
-                        rel='nofollow noopener noreferrer'
-                        target='_blank'
-                        data-v-9cef3620=''
-                      >
-                        <span data-v-9cef3620=''></span>
-                      </a>
-                    </div>
+                  <div className='sc-fzqqld-6 hzUlpx'>
+                    Scores24 не является букмекерской конторой <br /> и не организует игры на деньги.
                   </div>
-                </div>
-                <div className='body' data-v-6d0a58f0=''>
-                  <div className='FooterNavMobile' data-v-6d0a58f0='' data-v-37e96694=''>
-                    <div className='nav' data-v-37e96694=''>
-                      <div className='nav__header text-h5' data-v-37e96694=''>
-                        Промокоды <span data-v-37e96694=''></span>
-                      </div>
-                      <div aria-expanded='false' hidden='' data-v-37e96694=''>
-                        <ul className='nav__list' data-v-37e96694=''>
-                          <li className='nav__item' data-v-37e96694=''>
-                            <a href='/promo/sets/promocode-bukmekers' className='nav__item-link' data-v-37e96694=''>
-                              Промокоды букмекерских контор
-                            </a>
-                          </li>
-                          <li className='nav__item' data-v-37e96694=''>
-                            <a
-                              href='/promo/sets/promocode-for-freebet2023-fonbet'
-                              className='nav__item-link'
-                              data-v-37e96694=''
-                            >
-                              Промокод Фонбет
-                            </a>
-                          </li>
-                          <li className='nav__item' data-v-37e96694=''>
-                            <a href='/promo/sets/promocode-winline2023' className='nav__item-link' data-v-37e96694=''>
-                              Промокод Винлайн
-                            </a>
-                          </li>
-                          <li className='nav__item' data-v-37e96694=''>
-                            <a href='/promo/sets/pari-promocode' className='nav__item-link' data-v-37e96694=''>
-                              Промокод Пари
-                            </a>
-                          </li>
-                          <li className='nav__item' data-v-37e96694=''>
-                            <a href='/promo/sets/promocode-bettery' className='nav__item-link' data-v-37e96694=''>
-                              Промокод Bettery
-                            </a>
-                          </li>
-                          <li className='nav__item' data-v-37e96694=''>
-                            <a href='/promo/sets/promocode-2023-betcity' className='nav__item-link' data-v-37e96694=''>
-                              Промокод Бетсити
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div className='nav' data-v-37e96694=''>
-                      <div className='nav__header text-h5' data-v-37e96694=''>
-                        Фрибеты <span data-v-37e96694=''></span>
-                      </div>
-                      <div aria-expanded='false' hidden='' data-v-37e96694=''>
-                        <ul className='nav__list' data-v-37e96694=''>
-                          <li className='nav__item' data-v-37e96694=''>
-                            <a
-                              href='/promo/sets/freebet-bez-deposit2023-19-12'
-                              className='nav__item-link'
-                              data-v-37e96694=''
-                            >
-                              Фрибеты без депозита
-                            </a>
-                          </li>
-                          <li className='nav__item' data-v-37e96694=''>
-                            <a href='/promo/sets/best-freebets-month' className='nav__item-link' data-v-37e96694=''>
-                              Фрибеты ИЮЛЬ 2025
-                            </a>
-                          </li>
-                          <li className='nav__item' data-v-37e96694=''>
-                            <a href='/promo/freebet' className='nav__item-link' data-v-37e96694=''>
-                              Фрибеты
-                            </a>
-                          </li>
-                          <li className='nav__item' data-v-37e96694=''>
-                            <a href='/promo/sets/freebet2023-betboom' className='nav__item-link' data-v-37e96694=''>
-                              Фрибет Бетбум
-                            </a>
-                          </li>
-                          <li className='nav__item' data-v-37e96694=''>
-                            <a href='/promo/sets/freebet5000-pari' className='nav__item-link' data-v-37e96694=''>
-                              Фрибет ПАРИ
-                            </a>
-                          </li>
-                          <li className='nav__item' data-v-37e96694=''>
-                            <a href='/promo/sets/freebet-bettery' className='nav__item-link' data-v-37e96694=''>
-                              Фрибет Беттери
-                            </a>
-                          </li>
-                          <li className='nav__item' data-v-37e96694=''>
-                            <a
-                              href='https://stavka.tv/promo/sets/freebet-registration-bk'
-                              rel='noopener noreferrer'
-                              target='_blank'
-                              className='nav__item-link'
-                              data-v-37e96694=''
-                            >
-                              Фрибет за регистрацию{' '}
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div className='nav' data-v-37e96694=''>
-                      <div className='nav__header text-h5' data-v-37e96694=''>
-                        Бонусы букмекеров <span data-v-37e96694=''></span>
-                      </div>
-                      <div aria-expanded='false' hidden='' data-v-37e96694=''>
-                        <ul className='nav__list' data-v-37e96694=''>
-                          <li className='nav__item' data-v-37e96694=''>
-                            <a href='/promo/pari' className='nav__item-link' data-v-37e96694=''>
-                              Бонусы ПАРИ
-                            </a>
-                          </li>
-                          <li className='nav__item' data-v-37e96694=''>
-                            <a href='/promo/winline' className='nav__item-link' data-v-37e96694=''>
-                              Бонусы Винлайн
-                            </a>
-                          </li>
-                          <li className='nav__item' data-v-37e96694=''>
-                            <a href='/promo/betboom' className='nav__item-link' data-v-37e96694=''>
-                              Бонусы BetBoom
-                            </a>
-                          </li>
-                          <li className='nav__item' data-v-37e96694=''>
-                            <a href='/promo/fonbet' className='nav__item-link' data-v-37e96694=''>
-                              Бонусы Фонбет
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div className='nav' data-v-37e96694=''>
-                      <div className='nav__header text-h5' data-v-37e96694=''>
-                        СТАВКА TV <span data-v-37e96694=''></span>
-                      </div>
-                      <div aria-expanded='false' hidden='' data-v-37e96694=''>
-                        <ul className='nav__list' data-v-37e96694=''>
-                          <li className='nav__item' data-v-37e96694=''>
-                            <a href='/about' className='nav__item-link' data-v-37e96694=''>
-                              О проекте
-                            </a>
-                          </li>
-                          <li className='nav__item' data-v-37e96694=''>
-                            <a href='/contacts' className='nav__item-link' data-v-37e96694=''>
-                              Контакты
-                            </a>
-                          </li>
-                          <li className='nav__item' data-v-37e96694=''>
-                            <a href='/app' className='nav__item-link' data-v-37e96694=''>
-                              Приложение
-                            </a>
-                          </li>
-                          <li className='nav__item' data-v-37e96694=''>
-                            <a href='/apps' className='nav__item-link' data-v-37e96694=''>
-                              Приложения букмекерских контор
-                            </a>
-                          </li>
-                          <li className='nav__item' data-v-37e96694=''>
-                            <a href='/cup' className='nav__item-link' data-v-37e96694=''>
-                              Конкурсы прогнозов
-                            </a>
-                          </li>
-                          <li className='nav__item' data-v-37e96694=''>
-                            <a href='/other/rules' className='nav__item-link' data-v-37e96694=''>
-                              Правила совершения и расчета прогнозов
-                            </a>
-                          </li>
-                          <li className='nav__item' data-v-37e96694=''>
-                            <a href='/vacancies' className='nav__item-link' data-v-37e96694=''>
-                              Вакансии
-                            </a>
-                          </li>
-                          <li className='nav__item' data-v-37e96694=''>
-                            <a href='/other/privacy-policy' className='nav__item-link' data-v-37e96694=''>
-                              Политика конфиденциальности
-                            </a>
-                          </li>
-                          <li className='nav__item' data-v-37e96694=''>
-                            <a href='/other/terms' className='nav__item-link' data-v-37e96694=''>
-                              Пользовательское соглашение
-                            </a>
-                          </li>
-                          <li className='nav__item' data-v-37e96694=''>
-                            <a href='/other/agreement' className='nav__item-link' data-v-37e96694=''>
-                              Согласие на обработку данных
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div className='nav' data-v-37e96694=''>
-                      <div className='nav__header text-h5' data-v-37e96694=''>
-                        Другие разделы <span data-v-37e96694=''></span>
-                      </div>
-                      <div aria-expanded='false' hidden='' data-v-37e96694=''>
-                        <ul className='nav__list' data-v-37e96694=''>
-                          <li className='nav__item' data-v-37e96694=''>
-                            <a href='/bettingschool' className='nav__item-link' data-v-37e96694=''>
-                              Школа ставок
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                  <p className='text text-label disclaimer' data-v-6d0a58f0=''>
-                    {' '}
-                    Свидетельство ЭЛ № ФС 77 - 83546 от 30.06.2022 г. выдано Федеральной службой по надзору в сфере
-                    связи, информационных технологий и массовых коммуникаций (Роскомнадзор). Наименование СМИ: “Ставка
-                    TV”. Учредитель: ООО “Ленинград Медиа” Главный редактор: Точилин Д.Н. Телефон редакции: +7 (495)
-                    481-39-41. Почта редакции: info@stavka.tv{' '}
-                  </p>
-                  <p className='note text-button' data-v-6d0a58f0=''>
-                    {' '}
-                    СТАВКА не является букмекерской конторой и не организует игры на деньги{' '}
-                  </p>
-                  <noindex data-v-6d0a58f0=''>
-                    <div className='copyright' data-v-6d0a58f0=''>
-                      <span className='copyright__stavka' data-v-6d0a58f0=''>
-                        18+ © 2017-2025 STAVKA.TV
-                      </span>
-                      <a
-                        href='https://flatstudio.co'
-                        rel='noopener noreferrer'
-                        target='_blank'
-                        className='copyright__design'
-                        data-v-6d0a58f0=''
-                      >
-                        {' '}
-                        Designed by{' '}
-                        <span className='copyright__highlight' data-v-6d0a58f0=''>
-                          Flatstudio
-                        </span>
-                      </a>
-                    </div>
-                  </noindex>
                 </div>
               </div>
-            </footer>
-          </div>
+              <div className='sc-19d2vr2-0 kZmgQi'>
+                <div className='sc-19d2vr2-1 fuWEUM'>© 2025 Scores24 (Скорс24). Все права защищены.</div>
+                <div className='sc-19d2vr2-2 kwxlFF'>
+                  Designed in
+                  <a
+                    className='sc-19d2vr2-3 BIkUI'
+                    href='https://flatstudio.co/'
+                    rel='noreferrer noopener nofollow'
+                    target='_blank'
+                  >
+                    {' '}
+                    Flatstudio
+                  </a>
+                </div>
+              </div>
+            </div>
+          </footer>
+
+          <div className='sc-1peck7g-0 gXtDyj' data-testid='ScrollDirectionToggle'></div>
         </div>
+        <div></div>
       </div>
-    </GlobalManager>
+    </>
   )
 }

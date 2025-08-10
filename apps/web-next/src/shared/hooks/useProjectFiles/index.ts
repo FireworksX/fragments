@@ -26,24 +26,33 @@ export const useProjectFiles = () => {
   const [updateProjectDirectory] = useUpdateProjectDirectoryMutation()
   const [deleteProjectDirectory] = useDeleteProjectDirectoryMutation()
 
-  const [createProjectFragment] = useCreateProjectFragmentMutation()
-  const [updateProjectFragment] = useUpdateProjectFragmentMutation()
-  const [deleteProjectFragment] = useDeleteProjectFragmentMutation()
+  const [createProjectFragment, { loading: createFragmentLoading }] = useCreateProjectFragmentMutation()
+  const [updateProjectFragment, { loading: updateFragmentLoading }] = useUpdateProjectFragmentMutation()
+  const [deleteProjectFragment, { loading: deleteFragmentLoading }] = useDeleteProjectFragmentMutation()
 
   const proxyCreateProjectFragment = useCallback(
-    ({ variables }: { variables: Omit<CreateProjectFragmentMutationVariables, 'document'> }) => {
+    ({ variables }: { variables: Pick<CreateProjectFragmentMutationVariables, 'name' | 'parentId'> }) => {
       return createProjectFragment({
         variables: {
-          ...variables,
+          name: variables?.name,
+          projectSlug,
+          parentId: variables?.parentId ?? project?.rootDirectoryId,
           document: getEmptyFragment(generateId())
         }
       })
     },
-    [createProjectFragment]
+    [createProjectFragment, project]
   )
 
   return {
     projectSlug,
+
+    loading: {
+      createFragmentLoading,
+      updateFragmentLoading,
+      deleteFragmentLoading
+    },
+
     rootDirectoryId: project?.rootDirectoryId,
     directories: data?.directory ?? [],
     fetchingProjectDirectory,

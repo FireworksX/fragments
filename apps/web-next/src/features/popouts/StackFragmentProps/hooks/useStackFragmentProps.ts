@@ -33,7 +33,7 @@ export const useStackFragmentProps = (options: Options) => {
       const allowProps = options.areaProperties?.filter?.(prop => prop?.type === resolvedDefinition.type)
       let actions = []
 
-      if (allowProps.length) {
+      if (allowProps?.length) {
         actions = [
           {
             name: 'setVariable',
