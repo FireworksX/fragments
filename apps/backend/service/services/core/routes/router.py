@@ -139,7 +139,7 @@ from .schemas.release_condition import (
     ReleaseConditionPatch,
     ReleaseConditionPost,
 )
-from .schemas.user import AuthPayload, RoleGet, UserSignUp
+from .schemas.user import AuthPayload, UserRole, UserSignUp
 from .user import add_avatar_route, delete_avatar_route, login, profile, refresh, signup_route
 from .variant import (
     VariantPatch,
@@ -291,13 +291,13 @@ class ProjectMutation:
 
     @strawberry.mutation
     async def add_user_to_project(
-        self, info: strawberry.Info[Context], user_id: int, project_id: int, role: int
+        self, info: strawberry.Info[Context], user_id: int, project_id: int, role: UserRole
     ) -> None:
         await add_user_to_project_route(info, user_id, project_id, role)
 
     @strawberry.mutation
     async def change_user_role(
-        self, info: strawberry.Info[Context], user_id: int, project_id: int, role: RoleGet
+        self, info: strawberry.Info[Context], user_id: int, project_id: int, role: UserRole
     ) -> None:
         await change_user_role_route(info, user_id, project_id, role)
 

@@ -16,20 +16,20 @@ from database import FilesystemDirectory, Project, Session
 from .fragment import fragment_db_to_fragment
 from .middleware import Context
 from .schemas.filesystem import ProjectDirectory, ProjectDirectoryGet, ProjectDirectoryPatch
-from .schemas.user import AuthPayload, RoleGet
+from .schemas.user import AuthPayload, UserRole
 from .utils import get_user_role_in_project
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
     logger.info(f"Checking read permission for user {user_id} in project {project_id}")
-    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[UserRole] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None
 
 
 async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
     logger.info(f"Checking write permission for user {user_id} in project {project_id}")
-    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
-    return role is not None and role is not RoleGet.DESIGNER
+    role: Optional[UserRole] = await get_user_role_in_project(db, user_id, project_id)
+    return role is not None and role is not UserRole.DESIGNER
 
 
 def gather_all_subdirectories(directory: FilesystemDirectory) -> List[FilesystemDirectory]:

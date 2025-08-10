@@ -16,21 +16,21 @@ from database import FeatureFlag, Session
 from .middleware import Context
 from .release_condition import release_condition_db_to_release_condition
 from .schemas.feature_flag import FeatureFlagGet, FeatureFlagPatch, FeatureFlagPost, RotationType
-from .schemas.user import AuthPayload, RoleGet
+from .schemas.user import AuthPayload, UserRole
 from .utils import get_user_role_in_project
 from .variant import variant_db_to_variant
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
     logger.info(f"Checking read permission for user {user_id} in project {project_id}")
-    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[UserRole] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None
 
 
 async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
     logger.info(f"Checking write permission for user {user_id} in project {project_id}")
-    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
-    return role is not None and role is not RoleGet.DESIGNER
+    role: Optional[UserRole] = await get_user_role_in_project(db, user_id, project_id)
+    return role is not None and role is not UserRole.DESIGNER
 
 
 def feature_flag_db_to_feature_flag(feature_flag: FeatureFlag) -> FeatureFlagGet:

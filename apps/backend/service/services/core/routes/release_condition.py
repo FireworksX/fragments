@@ -39,18 +39,18 @@ from services.core.routes.schemas.release_condition import (
     ReleaseConditionPatch,
     ReleaseConditionPost,
 )
-from services.core.routes.schemas.user import AuthPayload, RoleGet
+from services.core.routes.schemas.user import AuthPayload, UserRole
 from services.core.routes.utils import get_user_role_in_project
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
-    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[UserRole] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None
 
 
 async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
-    role: Optional[RoleGet] = await get_user_role_in_project(db, user_id, project_id)
-    return role is not None and role is not RoleGet.DESIGNER
+    role: Optional[UserRole] = await get_user_role_in_project(db, user_id, project_id)
+    return role is not None and role is not UserRole.DESIGNER
 
 
 def condition_db_to_condition(condition: Condition) -> ConditionGet:
