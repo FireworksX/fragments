@@ -501,7 +501,7 @@ export type MutationAddProjectPublicKeyArgs = {
 
 export type MutationAddUserToProjectArgs = {
   projectId: Scalars['Int']['input'];
-  role: Scalars['Int']['input'];
+  role: UserRole;
   userId: Scalars['Int']['input'];
 };
 
@@ -513,7 +513,7 @@ export type MutationChangeProjectPrivateKeyArgs = {
 
 export type MutationChangeUserRoleArgs = {
   projectId: Scalars['Int']['input'];
-  role: RoleGet;
+  role: UserRole;
   userId: Scalars['Int']['input'];
 };
 
@@ -1010,13 +1010,6 @@ export type ReleaseConditionPost = {
   projectId: Scalars['Int']['input'];
 };
 
-export enum RoleGet {
-  Admin = 'ADMIN',
-  Designer = 'DESIGNER',
-  Manager = 'MANAGER',
-  Owner = 'OWNER'
-}
-
 export enum RotationType {
   Keep = 'KEEP',
   Rotate = 'ROTATE'
@@ -1058,6 +1051,13 @@ export type UserGet = {
   logo: MediaGet;
 };
 
+export enum UserRole {
+  Admin = 'ADMIN',
+  Designer = 'DESIGNER',
+  Manager = 'MANAGER',
+  Owner = 'OWNER'
+}
+
 export type UserRoleGet = {
   __typename?: 'UserRoleGet';
   email: Scalars['String']['output'];
@@ -1065,7 +1065,7 @@ export type UserRoleGet = {
   id: Scalars['Int']['output'];
   lastName?: Maybe<Scalars['String']['output']>;
   logo: MediaGet;
-  role: RoleGet;
+  role: UserRole;
 };
 
 export type UserSignUp = {

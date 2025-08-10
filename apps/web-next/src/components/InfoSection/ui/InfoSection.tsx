@@ -4,7 +4,6 @@ import styles from './styles.module.css'
 import { Spinner } from '@/shared/ui/Spinner'
 
 interface InfoSectionProps extends PropsWithChildren {
-  colorMode?: 'inverse'
   header?: ReactNode
   footer?: ReactNode
   loading?: boolean
@@ -12,17 +11,9 @@ interface InfoSectionProps extends PropsWithChildren {
   bodyClassName?: string
 }
 
-export const InfoSection: FC<InfoSectionProps> = ({
-  className,
-  bodyClassName,
-  colorMode,
-  loading,
-  header,
-  footer,
-  children
-}) => {
+export const InfoSection: FC<InfoSectionProps> = ({ className, bodyClassName, loading, header, footer, children }) => {
   return (
-    <div className={cn(styles.root, styles[colorMode], className)}>
+    <div className={cn(styles.root, className)}>
       {header}
 
       <div className={cn(styles.body, bodyClassName)}>

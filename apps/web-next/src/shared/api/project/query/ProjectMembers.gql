@@ -1,0 +1,14 @@
+query ProjectMembers($projectId: Int) {
+    project(projectId: $projectId) {
+        members {
+            id
+            logo {
+                publicPath
+            }
+            firstName
+            lastName
+            email
+            role
+        }
+    }
+}

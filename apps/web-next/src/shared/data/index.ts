@@ -40,6 +40,7 @@ export const modalNames = createConstants(
   'configureFeatureFlagVariant',
   'configureFragmentVariant',
   'configureCampaign',
+  'inviteMember',
   'colorPicker',
 
   'propertyString',

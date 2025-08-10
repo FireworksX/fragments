@@ -1,12 +1,12 @@
 @layer {
     .root {
         padding: 4px;
-        background: var(--background);
+        background: var(--background-secondary);
         border-radius: var(--radius-main);
     }
 
     .body {
-        background: var(--secondary-bg);
+        background: var(--background);
         border-radius: var(--radius-main);
         border: 1px solid var(--border);
         position: relative;
@@ -17,14 +17,5 @@
         align-items: center;
         justify-content: center;
         height: 60px;
-    }
-
-
-    .inverse {
-        background: var(--background-secondary);
-
-        .body {
-            background: var(--background);
-        }
     }
 }
