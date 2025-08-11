@@ -1,5 +1,6 @@
 import * as v from "valibot";
 import { getLayerSchema } from "@/helpers/getLayerSchema";
+import { findSchemaByPath } from "./findSchemaByPath";
 
 export const parseLayerField = (
   layer: unknown,
@@ -7,9 +8,10 @@ export const parseLayerField = (
   value: unknown
 ) => {
   const schema = getLayerSchema(layer);
+  const fieldSchema = findSchemaByPath(schema, field);
 
-  if (schema && schema?.entries?.[field]) {
-    return v.safeParse(schema.entries?.[field], value);
+  if (fieldSchema) {
+    return v.safeParse(fieldSchema, value);
   }
 
   return { success: false, output: value };

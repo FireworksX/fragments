@@ -13,7 +13,7 @@ import { useDateCompare } from '@/shared/hooks/useDateCompare'
 
 export const useCampaignContentTable = (campaignId: number) => {
   const { open: openModal, close: closeModal } = useModal()
-  const dateCompare = useDateCompare('day')
+  const dateCompare = useDateCompare('today')
 
   const [createVariant, { loading: creatingVariant }] = useCreateFeatureFlagVariantMutation()
   const [removeVariant, { loading: removingVariant }] = useRemoveFeatureFlagVariantMutation()
@@ -25,8 +25,10 @@ export const useCampaignContentTable = (campaignId: number) => {
     variables: {
       id: campaignId,
       ...dateCompare
-    }
+    },
+    skip: !campaignId
   })
+
   const campaign = data?.campaign?.at(0)
   const featureFlag = campaign?.featureFlag
   const variants = useMemo(

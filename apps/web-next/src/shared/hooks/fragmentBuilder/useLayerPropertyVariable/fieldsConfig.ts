@@ -59,6 +59,12 @@ export const fieldsConfig = {
     name: 'Fill',
     defaultValue: '#fff'
   },
+  'attributes.color': {
+    nodePropertyControlReference: 'attributes.color',
+    type: definition.variableType.Color,
+    name: 'Text color',
+    defaultValue: '#000'
+  },
   content: {
     nodePropertyControlReference: 'content',
     type: definition.variableType.String,

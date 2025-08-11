@@ -27,13 +27,21 @@ const BuilderFragmentInstance: FC<BuilderSizeProps> = ({ className }) => {
 
   return (
     <Panel className={cn(styles.root, className)} title={name} aside={<div className={styles.aside}>Fragment</div>}>
-      {definition.map(property => (
+      {definition.map(def => (
         <InstancePropertyGeneric
-          key={property.link}
-          property={property.link}
-          value={property.value}
+          key={def.link}
+          property={def.link}
+          value={def.value}
           manager={instanceManager}
-          onChange={property.setValue}
+          // variable={{
+          //   // link: variableLink,
+          //   data: def.variable.data,
+          //   actions: def.variable.actions
+          //   // onClick: editVariable,
+          //   // onReset: resetVariable
+          // }}
+          hasConnector={def.hasConnector}
+          onChange={def.setValue}
         />
       ))}
 

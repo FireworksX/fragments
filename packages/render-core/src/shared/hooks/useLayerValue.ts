@@ -1,7 +1,7 @@
 import { useCallback } from "preact/compat";
 import { useGraph } from "@graph-state/react";
 import { GraphState, LinkKey, MutateOptions } from "@graph-state/core";
-import { omit, pick } from "@fragmentsx/utils";
+import { get, omit, pick, set } from "@fragmentsx/utils";
 import { parseLayerField, isVariableLink } from "@fragmentsx/definition";
 import { useNormalizeLayer } from "@/shared/hooks/useNormalizeLayer";
 import { useReadVariable } from "@/shared/hooks/useReadVariable";
@@ -21,8 +21,8 @@ export const useLayerValue = (
   });
 
   const { layer, rawLayer } = useNormalizeLayer(key, resultManager);
-  const rawValue = rawLayer?.[fieldKey];
-  const layerValue = layer?.[fieldKey];
+  const rawValue = get(rawLayer, fieldKey);
+  const layerValue = get(layer, fieldKey);
 
   const { value: variableValue } = useReadVariable(layerValue);
   const currentValue = variableValue ?? layerValue;
@@ -75,7 +75,10 @@ export const useLayerValue = (
           resultManager.resolve(resultManager?.$fragment?.temp);
         }
 
-        updateLayerData({ [fieldKey]: output }, options);
+        updateLayerData((prev) => {
+          set(prev, fieldKey, output);
+          return prev;
+        }, options);
       }
     },
     [layer, fieldKey, updateLayerData, resultManager, layerKey, currentValue]

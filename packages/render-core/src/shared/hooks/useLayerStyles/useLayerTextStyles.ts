@@ -11,6 +11,11 @@ import { omit, toPx } from "@fragmentsx/utils";
 export const useLayerTextStyles = (layerKey: LinkKey) => {
   const { manager: fragmentManager } = useContext(FragmentContext);
   const [attributes] = useLayerValue(layerKey, "attributes", fragmentManager);
+  const [color] = useLayerValue(layerKey, "attributes.color", fragmentManager);
+  const cleanAttributes = omit(attributes, "_id", "_type");
 
-  return omit(attributes, "_id", "_type");
+  return {
+    ...cleanAttributes,
+    color,
+  };
 };

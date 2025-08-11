@@ -72,6 +72,9 @@ export const useBuilderTextBase = () => {
   const [content, setContent, contentInfo] = useLayerValue('content')
   const [whiteSpace, setWhiteSpace] = useLayerValue('whiteSpace')
   const contentVariable = useLayerPropertyValue('content')
+  const colorVariable = useLayerPropertyValue('attributes.color')
+  const [color, setColor] = useLayerValue('attributes.color')
+
   const attributes = attributesValue ?? {}
 
   const openColor = () => {
@@ -83,8 +86,9 @@ export const useBuilderTextBase = () => {
         value: currentColor,
         onChange: newColor => {
           const color = objectToColorString(newColor)
-          onChangeValue('color', color)
-          setAttributes({ color })
+          setColor(color)
+          // onChangeValue('color', color)
+          // setAttributes({ color })
         }
       },
       initial: true
@@ -123,7 +127,8 @@ export const useBuilderTextBase = () => {
       onChange: value => onChangeValue('fontWeight', value)
     },
     color: {
-      value: attributes['color'] ?? '#000',
+      ...colorVariable,
+      value: color ?? '#000',
       onClick: openColor
     },
     align: {
