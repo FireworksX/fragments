@@ -26,6 +26,7 @@
     "turbo": "^2.4.4"
   },
   "dependencies": {
+    "@fragmentsx/render-core": "workspace:*",
     "tsup": "^6.2.3",
     "typescript": "^5.2.2"
   },

@@ -11,6 +11,7 @@ import { isBrowser, isKey } from "@fragmentsx/utils";
 import { fragmentStylesheetPlugin } from "@/plugins/styleSheet";
 import { autoInjector } from "@/plugins/styleSheet/utils/autoInjector";
 import { PLUGIN_TYPES } from "@/fragmentsClient";
+import { scopesPlugin } from "@/plugins/scopes";
 
 declare module "@graph-state/core" {
   interface GraphState {
@@ -71,6 +72,7 @@ export const fragmentsPlugin: Plugin = (state) => {
         },
         // cssPlugin,
         fragmentStylesheetPlugin,
+        scopesPlugin,
       ],
       skip: [
         isHtmlContent,

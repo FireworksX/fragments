@@ -1,4 +1,5 @@
-import { FC, Suspense } from "react";
+import { ComponentPropsWithoutRef, ElementType, FC, Suspense } from "react";
+import { definition } from "@fragmentsx/definition";
 import { LinkKey } from "@graph-state/core";
 import {
   GlobalManager,
@@ -7,23 +8,28 @@ import {
   useInstance,
 } from "@fragmentsx/render-core";
 import { Fragment } from "@/components/Fragment";
+import { Scope } from "@/providers/Scope";
 
 interface InstanceOptions {
   ssr?: boolean;
 }
 
-export interface InstanceProps {
+export interface InstanceProps extends ComponentPropsWithoutRef<"div"> {
   layerKey?: LinkKey;
   fragmentId?: string;
   props?: Record<string, unknown>;
   options?: InstanceOptions;
   globalManager?: unknown;
+  Tag?: string | ElementType;
 }
 
-const InstanceInitial: FC<InstanceProps> = (instanceProps) => {
+const InstanceInitial: FC<InstanceProps> = ({
+  Tag = "div",
+  style = {},
+  ...instanceProps
+}) => {
   const ssr = instanceProps?.options?.ssr ?? true;
   const {
-    styles,
     fragmentId,
     cssProps,
     parentManager,
@@ -39,25 +45,39 @@ const InstanceInitial: FC<InstanceProps> = (instanceProps) => {
   }
 
   return (
-    <InstanceContext.Provider
+    <Scope
+      fragmentManager={innerManager}
+      layerKey={instanceProps.layerKey}
       value={{
-        layerKey: instanceProps.layerKey,
-        definitions,
-        innerManager,
-        parentManager,
+        type: definition.scopeTypes.InstanceScope,
         props,
+        definitions,
       }}
     >
-      {parentManager ? (
-        <div className={hash} data-key={instanceProps.layerKey}>
-          <Fragment fragmentId={fragmentId} globalManager={globalManager} />
-        </div>
-      ) : (
-        <div style={cssProps}>
-          <Fragment fragmentId={fragmentId} globalManager={globalManager} />
-        </div>
-      )}
-    </InstanceContext.Provider>
+      <InstanceContext.Provider
+        value={{
+          layerKey: instanceProps.layerKey,
+          definitions,
+          innerManager,
+          parentManager,
+          props,
+        }}
+      >
+        {parentManager ? (
+          <Tag
+            className={hash}
+            data-key={instanceProps.layerKey}
+            style={{ ...style, ...cssProps }}
+          >
+            <Fragment fragmentId={fragmentId} globalManager={globalManager} />
+          </Tag>
+        ) : (
+          <Tag style={{ ...style, ...cssProps }}>
+            <Fragment fragmentId={fragmentId} globalManager={globalManager} />
+          </Tag>
+        )}
+      </InstanceContext.Provider>
+    </Scope>
   );
 };
 

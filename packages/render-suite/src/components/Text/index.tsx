@@ -1,22 +1,23 @@
 import { LinkKey } from "@graph-state/core";
-import cssStyles from "./styles.module.css";
-import { useTextAttributes } from "@/components/Text/hooks/useTextAttributes";
-import { FC, memo } from "react";
+import { Text as TextCore } from "@fragmentsx/render-react";
+import { FragmentContext } from "@fragmentsx/render-core";
+import { FC, memo, useContext } from "react";
 import { animated } from "@react-spring/web";
+import { useLayerStyles } from "@/hooks/useLayerStyles";
 
 interface TextProps {
   layerKey: LinkKey;
 }
 
-export const Text: FC<TextProps> = memo(({ layerKey }) => {
-  const { hash, styles, content } = useTextAttributes(layerKey);
+export const Text: FC<TextProps> = memo(({ layerKey, ...restProps }) => {
+  const styles = useLayerStyles(layerKey);
 
   return (
-    <animated.div style={styles} className={hash} data-key={layerKey}>
-      <div
-        className={cssStyles.text}
-        dangerouslySetInnerHTML={{ __html: content }}
-      />
-    </animated.div>
+    <TextCore
+      layerKey={layerKey}
+      Tag={animated.div}
+      style={styles}
+      {...restProps}
+    />
   );
 });

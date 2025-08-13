@@ -23,11 +23,12 @@
     "lint": "eslint . --ext .ts,.tsx --fix"
   },
   "peerDependencies": {
-    "react": "^17.0.2"
+    "react": "^17.0.2",
+    "@fragmentsx/render-core": "*"
   },
   "dependencies": {
     "@fragmentsx/definition": "workspace:*",
-    "@fragmentsx/render-core": "workspace:*",
+    "@fragmentsx/render-react": "workspace:*",
     "@fragmentsx/utils": "workspace:*",
     "@graph-state/checkers": "^0.1.2",
     "@graph-state/core": "^0.11.7",
@@ -37,6 +38,7 @@
     "react-use-measure": "^2.1.7"
   },
   "devDependencies": {
+    "@fragmentsx/render-core": "workspace:*",
     "@vitejs/plugin-react": "^4.3.4",
     "typescript": "^5.5.4",
     "vite": "^6.1.0",

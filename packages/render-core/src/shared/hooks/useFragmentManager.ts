@@ -3,11 +3,12 @@ import { useGlobalManager } from "@/shared/hooks/useGlobalManager";
 
 export const useFragmentManager = (
   fragmentId?: unknown | null,
-  inputGlobalManager
+  inputGlobalManager,
+  aa
 ) => {
   const {
     fragmentsGraph,
-    manager: globalManager,
+    manager: gg,
     getFragmentManager,
     queryFragmentManager,
   } = useGlobalManager(inputGlobalManager);
@@ -44,7 +45,7 @@ export const useFragmentManager = (
 
   return {
     loading,
-    manager: manager,
+    manager,
     fragmentLayerKey: manager?.$fragment?.root,
     queryFragmentManager,
     // loadFragmentManager,

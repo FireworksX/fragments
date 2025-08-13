@@ -116,3 +116,5 @@ export const renderMode = createConstants("viewport", "parent", "fixed");
 export const interactions = createConstants("click", "mouseover");
 
 export const eventMode = createConstants("goal", "callback");
+
+export const scopeTypes = createConstants("InstanceScope", "FragmentScope");

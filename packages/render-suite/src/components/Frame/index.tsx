@@ -1,12 +1,12 @@
 import { FC, memo, Profiler, useContext, useEffect } from "react";
 import { LinkKey } from "@graph-state/core";
 import { animated } from "@react-spring/web";
-import { useFrame } from "./hooks/useFrame";
-import { definition } from "@fragmentsx/definition";
-import { Text } from "../Text";
+import { Frame as FrameCore } from "@fragmentsx/render-react";
 import { CustomRender } from "@/providers/CustomRender";
+import { InstanceContext } from "@fragmentsx/render-core";
+import { useLayerStyles } from "@/hooks/useLayerStyles";
+import { Text } from "@/components/Text";
 import { Instance } from "@/components/Instance";
-import { useMounted } from "@fragmentsx/render-core";
 
 interface FrameProps {
   hidden?: boolean;
@@ -15,42 +15,21 @@ interface FrameProps {
 
 export const Frame: FC<FrameProps> = memo(({ layerKey, hidden }) => {
   const customRender = useContext(CustomRender);
-  const { styles, children, type, hash, events, restProps, Tag } =
-    useFrame(layerKey);
-  const isMounted = useMounted();
-
-  if (hidden && isMounted) {
-    return null;
-  }
-
-  if (type === definition.nodes.Text) {
-    return <Text layerKey={layerKey} />;
-  }
-
-  if (type === definition.nodes.Instance) {
-    return <Instance layerKey={layerKey} />;
-  }
+  const styles = useLayerStyles(layerKey);
+  const { layerKey: instanceLayerKey } = useContext(InstanceContext);
+  const isNestedInstanceLayer = !!instanceLayerKey;
 
   return customRender(
     layerKey,
-    // <Profiler
-    //   id={layerKey}
-    //   onRender={(id, phase, actualDuration) => {
-    //     // if (id === "Instance:94de72bbc2561") {
-    //     //   console.log(phase, actualDuration);
-    //     // }
-    //   }}
-    // >
-    <animated.div
-      className={hash}
-      data-key={layerKey}
-      style={{ ...styles, display: hidden ? "none" : styles.display }}
-      {...restProps}
-    >
-      {children.map((childLink) => (
-        <Frame key={childLink} layerKey={childLink} />
-      ))}
-    </animated.div>
-    // </Profiler>
+    <FrameCore
+      layerKey={layerKey}
+      hidden={hidden}
+      styles={styles}
+      FrameTag={animated.div}
+      FrameElement={Frame}
+      TextElement={Text}
+      InstanceElement={Instance}
+      collectStyle={isNestedInstanceLayer}
+    />
   );
 });

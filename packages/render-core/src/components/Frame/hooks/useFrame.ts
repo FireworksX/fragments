@@ -1,4 +1,4 @@
-import { useContext, useMemo } from "preact/compat";
+import { ElementType, useContext, useMemo } from "preact/compat";
 import { LinkKey } from "@graph-state/core";
 import { useLayerStyles } from "@/shared/hooks/useLayerStyles";
 import { useLayerChildren } from "@/shared/hooks/useLayerChildren";
@@ -7,12 +7,14 @@ import { useHash } from "@/shared/hooks/useHash";
 import { useStyleSheet } from "@/shared/hooks/useStyleSheet";
 import { useLayerInteractions } from "@/shared/hooks/useLayerInteractions";
 import { useLayerLink } from "@/shared/hooks/useLayerLink";
+import { ScopeContext } from "@/providers/Scope/ScopeContext";
 
-interface Options {
+export interface UseFrameOptions {
   collectStyle?: boolean;
+  FrameTag?: string | ElementType;
 }
 
-export const useFrame = (layerKey: LinkKey, options?: Options) => {
+export const useFrame = (layerKey: LinkKey, options?: UseFrameOptions) => {
   const collectStyle = options?.collectStyle ?? true;
   const { manager: fragmentManager } = useContext(FragmentContext);
   const layer = fragmentManager.entityOfKey(layerKey);
@@ -28,12 +30,12 @@ export const useFrame = (layerKey: LinkKey, options?: Options) => {
   }
 
   return {
-    Tag: link?.isLink ? "a" : "div",
+    Tag: link?.isLink ? options?.FrameTag ?? "a" : options?.FrameTag ?? "div",
     type: layer?._type,
     hash,
     styles: {}, //isBrowser ? pick(styles, "background") : {},
     children,
     events,
-    restProps: link.linkProps,
+    linkProps: link.linkProps,
   };
 };
