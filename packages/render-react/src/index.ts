@@ -4,5 +4,6 @@ export { Area } from "@/components/Area";
 export { Text } from "@/components/Text";
 export { Frame } from "@/components/Frame";
 export { Fragment } from "@/components/Fragment";
+export { Scope } from "@/providers/Scope";
 
-export { useGlobalManager, GlobalManager } from "@fragmentsx/render-core";
+export * from "@fragmentsx/render-core";

@@ -52,6 +52,8 @@ const InstanceInitial: FC<InstanceProps> = ({
         type: definition.scopeTypes.InstanceScope,
         props,
         definitions,
+        fragmentId,
+        layerKey: instanceProps.layerKey,
       }}
     >
       <InstanceContext.Provider

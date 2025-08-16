@@ -6,6 +6,9 @@ import { useGraphStack } from '@graph-state/react'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { pick } from '@fragmentsx/utils'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
+import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
+import { keyOfEntity, LinkKey } from '@graph-state/core'
+import { useLayerDefinitions } from '@/shared/hooks/fragmentBuilder/useLayerDefinitions'
 
 interface PreferredField {
   type: keyof typeof definition.variableType
@@ -14,6 +17,7 @@ interface PreferredField {
 }
 
 export interface UseLayerVariableOptions {
+  layerKey: LinkKey
   preferredField: PreferredField
   value?: unknown
   disabled?: boolean
@@ -25,11 +29,9 @@ export interface UseLayerVariableOptions {
 
 export const useLayerVariable = (options: UseLayerVariableOptions) => {
   const { documentManager } = useBuilderDocument()
-  const { properties: propertiesLinks, createProperty, editProperty } = useFragmentProperties()
-  const properties = useGraphStack(documentManager, propertiesLinks, {
-    selector: data => (data ? pick(data, '_id', '_type', 'type', 'name') : data)
-  })
-  // const disabled = !(field in fieldsConfig)
+  const { properties: propertiesLinks, createProperty } = useFragmentProperties()
+
+  const definitions = useLayerDefinitions(options.layerKey)
   const fieldType = options?.preferredField?.type
 
   const proxySetFieldValue = useCallback(
@@ -41,6 +43,7 @@ export const useLayerVariable = (options: UseLayerVariableOptions) => {
   )
 
   const getVariableName = (preferredName: string) => {
+    const properties = propertiesLinks.map(documentManager.resolve)
     const countOfSameNames = properties.filter(prop => prop?.name?.startsWith?.(preferredName)).length
     return countOfSameNames > 0 ? `${preferredName} ${countOfSameNames + 1}` : preferredName
   }
@@ -55,6 +58,7 @@ export const useLayerVariable = (options: UseLayerVariableOptions) => {
         defaultValue: options?.value ?? fieldEntity?.defaultValue,
         ...(customFields ?? {})
       })
+
       proxySetFieldValue?.(property)
 
       // if (options?.editAfterCreate !== false) {
@@ -65,30 +69,30 @@ export const useLayerVariable = (options: UseLayerVariableOptions) => {
   )
 
   const allowVariables = useMemo(() => {
-    const allowProps = properties.filter(
-      prop => prop?.type === fieldType && documentManager.keyOfEntity(prop) !== options?.value
-    )
+    const allowDefinitions = definitions
+      .map(def => def.filter(defEl => defEl?.type === fieldType && keyOfEntity(defEl) !== options.value))
+      .filter(def => !!def?.length)
 
-    if (allowProps.length) {
+    if (allowDefinitions.length) {
       return [
         {
           name: 'setVariable',
           label: options?.setName ?? 'Set variable',
-          options: [
-            allowProps.map(prop => ({
+          options: allowDefinitions.map(list =>
+            list.map(prop => ({
               label: prop?.name,
               name: prop?.name,
               onClick: () => {
                 proxySetFieldValue?.(documentManager.keyOfEntity(prop))
               }
             }))
-          ]
+          )
         }
       ]
     }
 
     return []
-  }, [documentManager, fieldType, options?.value, options?.setName, properties, proxySetFieldValue])
+  }, [definitions, options?.setName, options?.value, fieldType, documentManager, proxySetFieldValue])
 
   // const restoreValue = () => {
   //   const fieldEntity = fieldsConfig[field]

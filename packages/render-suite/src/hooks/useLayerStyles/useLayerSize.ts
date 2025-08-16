@@ -2,14 +2,8 @@ import { LinkKey } from "@graph-state/core";
 import { definition } from "@fragmentsx/definition";
 import { to } from "@react-spring/web";
 import { useContext, useMemo } from "react";
-import {
-  useRenderTarget,
-  getParent,
-  isTopLevel,
-  FragmentContext,
-  InstanceContext,
-  useLayerSizeValue,
-} from "@fragmentsx/render-core";
+import { useLayerSizeValue, FragmentContext } from "@fragmentsx/render-react";
+
 import { useLayerValue } from "@/hooks/useLayerValue";
 import { useOptionalSize } from "@/hooks/useLayerStyles/useOptionalSize";
 

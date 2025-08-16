@@ -6,6 +6,7 @@ import { useGraph, useGraphStack } from "@graph-state/react";
 import { isVariableLink } from "@/shared/helpers/checks";
 import { useReadVariable } from "@/shared/hooks/useReadVariable";
 import { useFragmentManager } from "@/shared/hooks/useFragmentManager";
+import { useFragmentProperties } from "@/shared/hooks/useFragmentProperties";
 
 /*
 Работаем по следующему принципу. Instance может рендериться внутри родителя (Fragment)
@@ -25,12 +26,15 @@ export const useInstanceProps = (instanceProps: InstanceProps) => {
     isTopInstance ? instanceProps?.fragmentId : null
   );
   const { manager: fragmentContextManager } = useContext(FragmentContext);
+  const { properties: definitions, manager: innerFragmentManager } =
+    useFragmentProperties(instanceProps?.fragmentId);
+  const definitionsData = useGraphStack(innerFragmentManager, definitions);
 
   const fragmentManager = isTopInstance
     ? loadedManager
     : fragmentContextManager;
 
-  const { readVariable } = useReadVariable(null, fragmentManager);
+  const { readVariable } = useReadVariable(null, innerFragmentManager);
 
   const [instanceLayer] = useGraph(fragmentManager, instanceProps.layerKey);
   const instanceLayerProps = instanceLayer?.props ?? {};
@@ -46,21 +50,16 @@ export const useInstanceProps = (instanceProps: InstanceProps) => {
     }
 
     if (isTopInstance && fragmentManager) {
-      const defs =
-        fragmentManager?.resolve(fragmentManager?.$fragment?.root)
-          ?.properties ?? [];
+      definitionsData.forEach((definition) => {
+        const defId = definition._id;
 
-      defs.forEach((definition) => {
-        const resolvedDefinition = fragmentManager?.resolve(definition);
-        const defId = resolvedDefinition._id;
-
-        base[defId] =
-          instanceProps?.props?.[defId] ?? readVariable(definition)?.value;
+        base[defId] = definition?.defaultValue;
+        // instanceProps?.props?.[defId] ?? readVariable(definition)?.value;
       });
     }
 
     return omit(base, "_type", "_id");
-  }, [isTopInstance, fragmentManager, instanceLayerProps]);
+  }, [isTopInstance, fragmentManager, instanceLayerProps, definitionsData]);
 
   const drilledProps = Object.values(mergedProps).filter(isVariableLink);
   const resolveDrilledProps = useGraphStack(fragmentManager, drilledProps);

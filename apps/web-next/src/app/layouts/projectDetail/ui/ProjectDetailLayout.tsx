@@ -6,7 +6,6 @@ import { TabItem } from '@/shared/ui/TabItem'
 import styles from './styles.module.css'
 import { createFragmentsClient } from '@fragmentsx/client-core'
 import { GlobalManager } from '@fragmentsx/render-suite'
-import { GlobalManager as GlobalManagerReact } from '@fragmentsx/render-react'
 import { getSession, useSession } from 'next-auth/react'
 import { DndContext, MouseSensor, pointerWithin, useSensor, useSensors } from '@dnd-kit/core'
 import { useProject } from '@/shared/hooks/useProject'
@@ -95,9 +94,7 @@ export const ProjectDetailLayout: FC<PropsWithChildren> = ({ children }) => {
       </Tabs>
 
       <DndContext sensors={sensors} collisionDetection={pointerWithin}>
-        <GlobalManagerReact>
-          <GlobalManager.Provider value={globalManager}>{children}</GlobalManager.Provider>
-        </GlobalManagerReact>
+        <GlobalManager.Provider value={globalManager}>{children}</GlobalManager.Provider>
       </DndContext>
     </main>
   )

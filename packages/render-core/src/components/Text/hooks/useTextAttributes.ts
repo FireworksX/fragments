@@ -27,6 +27,7 @@ export const useTextAttributes = (
   }
 
   return {
+    styles,
     hash,
     content,
   };

@@ -1,7 +1,7 @@
 import { ElementType, FC, useContext, useEffect } from "react";
 import { LinkKey } from "@graph-state/core";
 import { definition } from "@fragmentsx/definition";
-import { useFrame, useMounted } from "@fragmentsx/render-core";
+import { ScopeContext, useFrame, useMounted } from "@fragmentsx/render-core";
 import { Text } from "@/components/Text";
 import { Instance } from "@/components/Instance";
 import { UseFrameOptions } from "@fragmentsx/render-core/dist/components/Frame/hooks/useFrame";

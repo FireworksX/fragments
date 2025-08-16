@@ -11,6 +11,7 @@ import { fieldsConfig } from '@/shared/hooks/fragmentBuilder/useLayerPropertyVar
 import { useLayerVariable } from '@/shared/hooks/fragmentBuilder/useLayerVariable'
 import { isVariableLink } from '@/shared/utils/isVariableLink'
 import { keyOfEntity } from '@graph-state/core'
+import { useLayerScopes } from '@fragmentsx/render-react'
 
 export const useBuilderFragmentInstance = () => {
   const { documentManager } = useBuilderDocument()
@@ -31,7 +32,7 @@ export const useBuilderFragmentInstance = () => {
     definition: properties
       .map(definition => {
         const resolvedDefinition = manager?.resolve?.(definition) ?? {}
-        console.log(definition, resolvedDefinition, fragmentProperties)
+        // console.log(definition, resolvedDefinition, fragmentProperties)
         // const allowProps = options.areaProperties?.filter?.(prop => prop?.type === resolvedDefinition.type)
         const actions = []
 
@@ -70,7 +71,8 @@ export const useBuilderFragmentInstance = () => {
       })
       .toSorted(a => (a.type === definition.variableType.Event ? 1 : -1)),
     name,
-    instanceManager: manager
+    instanceManager: manager,
+    parentManager: documentManager
     // instance: fragmentInstance,
     // fragment,
     // title: fragmentInstance?.name ?? fragment?.name,

@@ -11,6 +11,7 @@ import { useLayerScope } from "@/providers/Scope/hooks/useLayerScope";
 import { useFragmentProperties } from "@/shared/hooks/useFragmentProperties";
 import { InstanceContext } from "@/components/Instance";
 import { GlobalManager } from "@/providers/GlobalManager";
+import { ScopeContext } from "@/providers/Scope/ScopeContext";
 
 export const useFragment = (fragmentId: string, globalManager?: GraphState) => {
   const instanceContext = useContext(InstanceContext);
@@ -24,6 +25,8 @@ export const useFragment = (fragmentId: string, globalManager?: GraphState) => {
     fragmentContext.manager
   );
   const { properties: definitions } = useFragmentProperties(fragmentId);
+  const scopes = useContext(ScopeContext);
+  const isTopFragment = !scopes?.length;
 
   const { addLayerStyle } = useStyleSheet(fragmentContext.manager);
 

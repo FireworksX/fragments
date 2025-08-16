@@ -49,6 +49,7 @@ const FragmentInternal: FC<FragmentProps> = ({
       layerKey={layerKey}
       value={{
         type: definition.scopeTypes.FragmentScope,
+        manager: fragmentContext.manager,
         definitions,
       }}
     >

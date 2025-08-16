@@ -1,40 +1,30 @@
 import { useContext } from "preact/compat";
-import { GraphState, LinkKey } from "@graph-state/core";
+import { entityOfKey, GraphState, LinkKey } from "@graph-state/core";
 import { useGraph } from "@graph-state/react";
 import { pick } from "@fragmentsx/utils";
-import { FragmentContext } from "@/components/Fragment/FragmentContext";
-import { isVariableLink } from "@fragmentsx/definition";
-import { InstanceContext } from "@/components/Instance";
+import { isVariableLink, definition } from "@fragmentsx/definition";
+import { ScopeContext } from "@/providers/Scope/ScopeContext";
 
-export const useReadVariable = (
-  variableKey?: LinkKey | null,
-  customManager?: GraphState
-) => {
-  const isVariable = isVariableLink(variableKey);
-  const { manager: fragmentManager } = useContext(FragmentContext);
-  const { props, innerManager } = useContext(InstanceContext);
+export const useReadVariable = (variableKey?: LinkKey | null) => {
+  const scopes = useContext(ScopeContext) as unknown[];
+  const variableId = entityOfKey(variableKey)?._id;
 
-  // const { props, innerManager, layerKey } = use(InstanceContext);
-  const resultManager = customManager ?? innerManager ?? fragmentManager;
-  const { _id: propertyId } = resultManager?.entityOfKey(variableKey) ?? {};
-  // const { layer: propertyLayer } = useLayer(propertyKey, resultManager);
-
-  const [variableLayer] = useGraph(
-    isVariable ? fragmentManager : null,
-    variableKey,
-    {
-      selector: (graph) =>
-        graph ? pick(graph, "defaultValue", "required") : graph,
-    }
-  );
-
-  const currentValue = props?.[propertyId] ?? null;
-  const required = variableLayer?.required ?? false;
-  const defaultValue = variableLayer?.defaultValue ?? null;
-  const resultValue = required ? currentValue : currentValue ?? defaultValue;
+  // useGraph(fragmentDefinition?.manager, variableKey, {
+  //   selector: (graph) =>
+  //     graph ? pick(graph, "defaultValue", "required") : graph,
+  // });
 
   const readVariable = (variableKey?: LinkKey) => {
     const isVariable = isVariableLink(variableKey);
+    const instanceProp = scopes.findLast(
+      (scope) => scope?.type === definition.scopeTypes.InstanceScope
+    )?.props?.[variableId];
+
+    const fragmentDefinition = scopes.findLast(
+      (scope) =>
+        scope.type === definition.scopeTypes.FragmentScope &&
+        scope?.definitions?.find((def) => def === variableKey)
+    );
 
     if (!isVariable) {
       return {
@@ -44,13 +34,13 @@ export const useReadVariable = (
     }
 
     const variableLayer = pick(
-      resultManager?.resolve(variableKey) ?? {},
+      fragmentDefinition?.manager?.resolve(variableKey) ?? {},
       "defaultValue",
       "required"
     );
 
-    const { _id: propertyId } = resultManager?.entityOfKey(variableKey) ?? {};
-    const currentValue = props?.[propertyId] ?? null;
+    const currentValue =
+      variableKey === instanceProp ? null : instanceProp ?? null;
     const required = variableLayer?.required ?? false;
     const defaultValue = variableLayer?.defaultValue ?? null;
     const resultValue = required ? currentValue : currentValue ?? defaultValue;

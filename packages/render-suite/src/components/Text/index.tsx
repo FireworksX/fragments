@@ -1,6 +1,5 @@
 import { LinkKey } from "@graph-state/core";
 import { Text as TextCore } from "@fragmentsx/render-react";
-import { FragmentContext } from "@fragmentsx/render-core";
 import { FC, memo, useContext } from "react";
 import { animated } from "@react-spring/web";
 import { useLayerStyles } from "@/hooks/useLayerStyles";

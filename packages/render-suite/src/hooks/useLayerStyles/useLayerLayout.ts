@@ -3,7 +3,7 @@ import { useContext, useMemo } from "react";
 import {
   FragmentContext,
   useLayerLayout as useLayerLayoutCore,
-} from "@fragmentsx/render-core";
+} from "@fragmentsx/render-react";
 import { useLayerValue } from "@/hooks/useLayerValue";
 
 export const useLayerLayout = (layerKey: LinkKey) => {

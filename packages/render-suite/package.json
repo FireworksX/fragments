@@ -23,8 +23,7 @@
     "lint": "eslint . --ext .ts,.tsx --fix"
   },
   "peerDependencies": {
-    "react": "^17.0.2",
-    "@fragmentsx/render-core": "*"
+    "react": "^17.0.2"
   },
   "dependencies": {
     "@fragmentsx/definition": "workspace:*",
@@ -38,7 +37,6 @@
     "react-use-measure": "^2.1.7"
   },
   "devDependencies": {
-    "@fragmentsx/render-core": "workspace:*",
     "@vitejs/plugin-react": "^4.3.4",
     "typescript": "^5.5.4",
     "vite": "^6.1.0",

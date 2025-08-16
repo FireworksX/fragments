@@ -4,7 +4,7 @@ import { Fragment } from "@/components/Fragment";
 import { useInstance } from "./hooks/useInstance";
 import { createContext, FC, memo, Profiler, useContext } from "react";
 import { animated } from "@react-spring/web";
-import { InstanceContext } from "@fragmentsx/render-core";
+import { InstanceContext } from "@fragmentsx/render-react";
 import { Scope } from "@/providers/Scope";
 import { definition } from "@fragmentsx/definition";
 import { useLayerStyles } from "@/hooks/useLayerStyles";
@@ -15,27 +15,6 @@ export interface InstanceProps {
   props?: Record<string, unknown>;
   globalManager?: unknown;
 }
-
-const Inner = memo((allProps) => {
-  if (!allProps.innerManager) return null;
-
-  return (
-    <InstanceContext.Provider
-      value={{
-        layerKey: allProps.layerKey,
-        definitions: allProps.definitions,
-        innerManager: allProps.innerManager,
-        parentManager: allProps.parentManager,
-        props: allProps.props,
-      }}
-    >
-      <Fragment
-        fragmentId={allProps.fragmentId}
-        globalManager={allProps.globalManager}
-      />
-    </InstanceContext.Provider>
-  );
-});
 
 export const Instance: FC<InstanceProps> = (instanceProps) => {
   const { layerKey } = useContext(InstanceContext);

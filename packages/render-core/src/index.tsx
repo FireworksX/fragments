@@ -42,6 +42,7 @@ export { useFragmentChildren } from "@/shared/hooks/useFragmentChildren";
 export { useInjectedStyle } from "@/shared/hooks/useInjectedStyle";
 export { useMounted } from "@/shared/hooks/useMounted";
 export { useLayerScopes } from "@/shared/hooks/useLayerScopes";
+export { useLayerTextStyles } from "@/shared/hooks/useLayerStyles/useLayerTextStyles";
 
 export { processOptionalSize } from "@/shared/hooks/useLayerStyles/useOptionalSize";
 export { useLayerSizeValue } from "@/shared/hooks/useLayerStyles/useLayerSizeValue";

@@ -9,6 +9,7 @@ import { InstancePropertyBoolean } from './components/InstancePropertyBoolean'
 import { InstancePropertyGeneric } from './components/InstancePropertyGeneric'
 import { Button } from '@/shared/ui/Button'
 import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
+import { InstancePropertyWithScopes } from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/widgets/InstancePropertyWithScopes'
 
 interface BuilderSizeProps {
   className?: string
@@ -22,17 +23,18 @@ interface BuilderSizeProps {
 // }
 
 const BuilderFragmentInstance: FC<BuilderSizeProps> = ({ className }) => {
-  const { name, definition, instanceManager, instanceFragmentId } = useBuilderFragmentInstance()
+  const { name, definition, instanceManager, instanceFragmentId, parentManager } = useBuilderFragmentInstance()
   const { openFragment } = useBuilder()
 
   return (
     <Panel className={cn(styles.root, className)} title={name} aside={<div className={styles.aside}>Fragment</div>}>
       {definition.map(def => (
-        <InstancePropertyGeneric
+        <InstancePropertyWithScopes
           key={def.link}
           property={def.link}
           value={def.value}
           manager={instanceManager}
+          parentManager={parentManager}
           // variable={{
           //   // link: variableLink,
           //   data: def.variable.data,

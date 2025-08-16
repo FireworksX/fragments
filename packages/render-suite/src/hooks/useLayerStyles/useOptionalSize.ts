@@ -1,7 +1,8 @@
 import { useLayerValue } from "@/hooks/useLayerValue";
 import { LinkKey } from "@graph-state/core";
 import { useContext, useMemo } from "react";
-import { FragmentContext, processOptionalSize } from "@fragmentsx/render-core";
+import { processOptionalSize } from "@fragmentsx/render-core";
+import { FragmentContext } from "@fragmentsx/render-react";
 import { to } from "@react-spring/web";
 
 type SizeType = "minWidth" | "minHeight" | "maxWidth" | "maxHeight";

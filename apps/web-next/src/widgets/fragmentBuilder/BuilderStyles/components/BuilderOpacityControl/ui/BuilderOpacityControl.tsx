@@ -9,6 +9,7 @@ import { useLayerPropertyValue } from '@/shared/hooks/fragmentBuilder/useLayerPr
 import { useLayerScopes } from '@fragmentsx/render-core'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
+import { useLayerDefinitions } from '@/shared/hooks/fragmentBuilder/useLayerDefinitions'
 
 interface BuilderOpacityControlProps {
   className?: string

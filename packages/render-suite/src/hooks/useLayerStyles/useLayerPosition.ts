@@ -6,7 +6,7 @@ import {
   isTopLevel,
   FragmentContext,
   InstanceContext,
-} from "@fragmentsx/render-core";
+} from "@fragmentsx/render-react";
 import { useLayerValue } from "@/hooks/useLayerValue";
 
 export const useLayerPosition = (layerKey: LinkKey) => {
