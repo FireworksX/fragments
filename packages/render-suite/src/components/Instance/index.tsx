@@ -8,6 +8,7 @@ import { InstanceContext } from "@fragmentsx/render-react";
 import { Scope } from "@/providers/Scope";
 import { definition } from "@fragmentsx/definition";
 import { useLayerStyles } from "@/hooks/useLayerStyles";
+import { Frame } from "@/components/Frame";
 
 export interface InstanceProps {
   layerKey?: LinkKey;
@@ -25,7 +26,14 @@ export const Instance: FC<InstanceProps> = (instanceProps) => {
 
   const styles = useLayerStyles(instanceProps.layerKey);
 
-  return <InstanceBase Tag={animated.div} style={styles} {...instanceProps} />;
+  return (
+    <InstanceBase
+      Tag={animated.div}
+      style={styles}
+      FrameElement={Frame}
+      {...instanceProps}
+    />
+  );
 
   // if (allProps.parentManager) {
   // return (

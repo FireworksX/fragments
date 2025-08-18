@@ -1,1 +1,1 @@
-export { InputText, InputTextAnimated } from './ui/InputText'
+export { InputText } from './ui/InputText'

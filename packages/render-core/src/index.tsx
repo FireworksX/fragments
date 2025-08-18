@@ -28,6 +28,7 @@ export * from "./shared/helpers";
 
 export { wrapTextInParagraphWithAttributes } from "@/shared/helpers/wrapTextInParagraphWithAttributes";
 export { findBreakpoint } from "@/shared/helpers/findBreakpoint";
+export { createLayer } from "@/shared/helpers/createLayer";
 
 export { useRenderTarget } from "@/shared/hooks/useRenderTarget";
 export { useGlobalManager } from "@/shared/hooks/useGlobalManager";

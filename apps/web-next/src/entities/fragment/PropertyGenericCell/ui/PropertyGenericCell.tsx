@@ -1,4 +1,4 @@
-import { ElementType, FC, PropsWithChildren, ReactNode, useState } from 'react'
+import React, { ElementType, FC, PropsWithChildren, ReactNode, useMemo, useState } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import ExtendIcon from '@/shared/icons/next/chevrone-right.svg'
@@ -9,6 +9,7 @@ import ObjectIcon from '@/shared/icons/next/braces.svg'
 import ArrayIcon from '@/shared/icons/next/brackets.svg'
 import EventIcon from '@/shared/icons/next/zap.svg'
 import MoreIcon from '@/shared/icons/next/ellipsis.svg'
+import ColorIcon from '@/shared/icons/next/color.svg'
 import { Cell } from '@/shared/ui/Cell'
 import { Touchable, TouchableProps } from '@/shared/ui/Touchable'
 import { Button } from '@/shared/ui/Button'
@@ -22,85 +23,60 @@ import { Select } from '@/shared/ui/Select'
 import { RenderDropdown } from '@/shared/ui/RenderDropdown'
 import { definition } from '@fragmentsx/definition'
 import SmartCell from '@/shared/ui/SmartCell/ui/SmartCell'
+import InputSelect from '../../../../shared/ui/InputSelect/ui/InputSelect'
+import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
+import { EditPropertyOptions } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
 
 interface PropertyBooleanCellProps {
   propertyLink: LinkKey
+  name?: string
+  editOptions?: EditPropertyOptions
   className?: string
 }
 
-export const PropertyGenericCell: FC<PropertyBooleanCellProps> = ({ propertyLink, className }) => {
-  const {
-    withExtend,
-    dropdownActions,
-    creating,
-    creatingName,
-    setCreatingName,
-    type,
-    name,
-    children,
-    creatingInputRef,
-    creatingButtonRef,
-    isOpen,
-    toggleIsOpen,
-    handleCancelAdd,
-    handleAdd,
-    handleClickProperty
-  } = usePropertyGenericCell(propertyLink)
+export const PropertyGenericCell: FC<PropertyBooleanCellProps> = ({ propertyLink, editOptions, name, className }) => {
+  const { isTopLevel, defaultValue, type, name: propName, handleClickProperty } = usePropertyGenericCell(propertyLink)
+  const resultName = name ?? propName
 
   const Icon = (
     {
-      Event: EventIcon,
-      Number: NumberIcon,
-      String: StringIcon,
-      Boolean: ToggleIcon,
-      Object: ObjectIcon,
-      Color: ObjectIcon,
-      Array: ArrayIcon
+      [definition.variableType.Event]: EventIcon,
+      [definition.variableType.Number]: NumberIcon,
+      [definition.variableType.String]: StringIcon,
+      [definition.variableType.Boolean]: ToggleIcon,
+      [definition.variableType.Object]: ObjectIcon,
+      [definition.variableType.Color]: ColorIcon,
+      [definition.variableType.Array]: ArrayIcon
     } as Record<keyof typeof definition.variableType, ElementType>
   )[type]
 
+  const selectValue = useMemo(() => {
+    const complexTypesName = {
+      [definition.variableType.Event]: 'Event',
+      [definition.variableType.Object]: 'Fields'
+    }
+
+    if (type in complexTypesName) return complexTypesName[type]
+    if (type === definition.variableType.String) return defaultValue || 'Empty'
+
+    return defaultValue?.toString() ?? 'Error'
+  }, [defaultValue, type])
+
+  if (!isTopLevel) {
+    return null
+  }
+
   return (
-    <>
-      <SmartCell
-        className={cn(styles.root, className, { [styles.open]: isOpen })}
-        icon={<div className={styles.icon}>{Icon && <Icon />}</div>}
-        after={
-          <RenderDropdown appendTo='body' trigger='click' options={[dropdownActions]} hideOnClick>
-            <div className={styles.aside}>
-              <Touchable TagName='div'>
-                <MoreIcon />
-              </Touchable>
-            </div>
-          </RenderDropdown>
-        }
-        onClick={handleClickProperty}
-      >
-        {name}
-      </SmartCell>
-
-      {creating && (
-        <div className={styles.creatingContainer}>
-          <InputText
-            ref={creatingInputRef}
-            placeholder='Name'
-            value={creatingName}
-            onChangeValue={setCreatingName}
-            onBlur={handleCancelAdd}
-            onSubmit={handleAdd}
-          />
-          <Button ref={creatingButtonRef} mode='secondary' onClick={handleAdd}>
-            Add
-          </Button>
-        </div>
-      )}
-
-      {isOpen && (
-        <div className={styles.children}>
-          {children.map(child => (
-            <PropertyGenericCell key={child} propertyLink={child} />
-          ))}
-        </div>
-      )}
-    </>
+    <ControlRow title={resultName}>
+      <ControlRowWide>
+        <InputSelect
+          icon={<Icon color='var(--light)' />}
+          color='var(--primary)'
+          onClick={() => handleClickProperty(editOptions)}
+        >
+          {selectValue}
+        </InputSelect>
+      </ControlRowWide>
+    </ControlRow>
   )
 }

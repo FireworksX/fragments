@@ -15,6 +15,7 @@ interface InstanceOptions {
 }
 
 export interface InstanceProps extends ComponentPropsWithoutRef<"div"> {
+  FrameElement?: ElementType;
   layerKey?: LinkKey;
   fragmentId?: string;
   props?: Record<string, unknown>;
@@ -26,6 +27,7 @@ export interface InstanceProps extends ComponentPropsWithoutRef<"div"> {
 const InstanceInitial: FC<InstanceProps> = ({
   Tag = "div",
   style = {},
+  FrameElement,
   ...instanceProps
 }) => {
   const ssr = instanceProps?.options?.ssr ?? true;
@@ -71,11 +73,19 @@ const InstanceInitial: FC<InstanceProps> = ({
             data-key={instanceProps.layerKey}
             style={{ ...style, ...cssProps }}
           >
-            <Fragment fragmentId={fragmentId} globalManager={globalManager} />
+            <Fragment
+              fragmentId={fragmentId}
+              globalManager={globalManager}
+              FrameElement={FrameElement}
+            />
           </Tag>
         ) : (
           <Tag style={{ ...style, ...cssProps }}>
-            <Fragment fragmentId={fragmentId} globalManager={globalManager} />
+            <Fragment
+              fragmentId={fragmentId}
+              globalManager={globalManager}
+              FrameElement={FrameElement}
+            />
           </Tag>
         )}
       </InstanceContext.Provider>

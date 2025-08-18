@@ -50,6 +50,7 @@ import { StackColorProperty } from '@/features/popouts/StackColorProperty'
 import { StackInteraction } from '@/features/popouts/StackInteraction'
 import { StackGoals } from '@/features/popouts/StackGoals'
 import { StackCreateGoal } from '@/features/popouts/StackCreateGoal'
+import StackObjectVariable from '@/features/popouts/StackObjectVariable/StackObjectVariable'
 
 const FragmentsEditInitial = () => {
   // const { setRenderTarget } = useRenderTarget()
@@ -101,6 +102,7 @@ const FragmentsEditInitial = () => {
                   <StackEventProperty name={popoutNames.stackEventProperty} title='Event Property' />
                   <StackBooleanProperty name={popoutNames.stackBooleanProperty} title='Boolean Property' />
                   <StackColorProperty name={popoutNames.stackColorProperty} title='Color Property' />
+                  <StackObjectVariable name={popoutNames.stackObjectProperty} title='Object Property' />
                   <StackInteraction name={popoutNames.stackInteraction} title='Interaction' />
                   <StackGoals name={popoutNames.stackGoals} title='Goals' />
                   <StackCreateGoal name={popoutNames.stackCreateGoal} title='Create Goal' />
@@ -109,7 +111,7 @@ const FragmentsEditInitial = () => {
 
                   {/*<StackNumberVariable name={stackNumberVariableName} title='Number' />*/}
                   {/*<StackBooleanVariable name={stackBooleanVariableName} title='Boolean' />*/}
-                  {/*<StackObjectVariable name={stackObjectVariableName} title='Object' />*/}
+                  <StackObjectVariable name={popoutNames.stackObjectProperty} title='Object' />
                   {/*<StackStringVariable name={stackStringVariableName} title='String' />*/}
                   <StackVariableTransform name={popoutNames.stackVariableTransform} title='Transform' />
                 </StackCollector>

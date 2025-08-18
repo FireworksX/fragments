@@ -9,6 +9,7 @@ export const EnumVariableSchema = v.object({
     fallback: "Option",
     overridable: false,
   }),
+  parent: layerField(v.nullable(v.string()), { overridable: false }),
   type: layerField(v.literal(variableType.Enum), {
     fallback: variableType.Enum,
   }),

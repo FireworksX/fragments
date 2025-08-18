@@ -9,6 +9,7 @@ export const NumberVariableSchema = v.object({
     fallback: "Number",
     overridable: false,
   }),
+  parent: layerField(v.nullable(v.string()), { overridable: false }),
   type: layerField(v.literal(variableType.Number), {
     fallback: variableType.Number,
   }),

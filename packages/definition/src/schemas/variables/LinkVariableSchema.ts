@@ -9,6 +9,7 @@ export const LinkVariableSchema = v.object({
     fallback: "Link",
     overridable: false,
   }),
+  parent: layerField(v.nullable(v.string()), { overridable: false }),
   type: layerField(v.literal(variableType.Link), {
     fallback: variableType.Link,
   }),

@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, ReactNode } from 'react'
+import React, { FC, PropsWithChildren, ReactNode } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import Checkerboard from '@/shared/icons/checkerboard.svg'

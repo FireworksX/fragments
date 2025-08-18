@@ -1,4 +1,4 @@
-import { FC, useContext } from 'react'
+import React, { FC, useContext } from 'react'
 import { useBuilderText } from '../hooks/useBuilderText'
 import { useGraph } from '@graph-state/react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'

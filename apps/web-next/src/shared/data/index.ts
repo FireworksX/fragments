@@ -12,6 +12,7 @@ export const popoutNames = createConstants(
   'stackEventProperty',
   'stackBooleanProperty',
   'stackColorProperty',
+  'stackObjectProperty',
   'stackGoalProperty',
   'stackVariableTransform',
   'stackInteraction',

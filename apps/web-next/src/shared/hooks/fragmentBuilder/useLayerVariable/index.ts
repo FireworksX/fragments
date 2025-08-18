@@ -4,7 +4,7 @@ import { definition } from '@fragmentsx/definition'
 import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
 import { useGraphStack } from '@graph-state/react'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
-import { pick } from '@fragmentsx/utils'
+import { omit, pick } from '@fragmentsx/utils'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { keyOfEntity, LinkKey } from '@graph-state/core'
@@ -68,31 +68,53 @@ export const useLayerVariable = (options: UseLayerVariableOptions) => {
     [options?.preferredField, options?.value, getVariableName, createProperty, proxySetFieldValue]
   )
 
-  const allowVariables = useMemo(() => {
-    const allowDefinitions = definitions
-      .map(def => def.filter(defEl => defEl?.type === fieldType && keyOfEntity(defEl) !== options.value))
-      .filter(def => !!def?.length)
+  const getVariable = useCallback(
+    (propertyLink, customName?: string) => {
+      const propertyLayer = documentManager.resolve(propertyLink)
 
-    if (allowDefinitions.length) {
+      if (propertyLayer?.type === definition.variableType.Object) {
+        const cleanFields = omit(propertyLayer?.fields, '_type', '_id')
+        const fields = Object.entries(cleanFields)
+          .map(([key, fieldLink]) => getVariable(fieldLink, key))
+          .filter(Boolean)
+
+        if (!fields?.length) return null
+
+        return {
+          label: propertyLayer?.name,
+          name: propertyLayer?.name,
+          options: [fields]
+        }
+      }
+
+      if (propertyLayer?.type !== fieldType) return null
+
+      return {
+        label: customName ?? propertyLayer?.name,
+        name: customName ?? propertyLayer?.name,
+        onClick: () => {
+          proxySetFieldValue?.(keyOfEntity(propertyLayer))
+        }
+      }
+    },
+    [documentManager, fieldType, proxySetFieldValue]
+  )
+
+  const allowVariables = useMemo(() => {
+    const allowOptions = definitions.map(list => list.map(prop => getVariable(prop)).filter(Boolean))
+
+    if (allowOptions?.length) {
       return [
         {
           name: 'setVariable',
           label: options?.setName ?? 'Set variable',
-          options: allowDefinitions.map(list =>
-            list.map(prop => ({
-              label: prop?.name,
-              name: prop?.name,
-              onClick: () => {
-                proxySetFieldValue?.(documentManager.keyOfEntity(prop))
-              }
-            }))
-          )
+          options: allowOptions
         }
       ]
     }
 
     return []
-  }, [definitions, options?.setName, options?.value, fieldType, documentManager, proxySetFieldValue])
+  }, [options?.setName, definitions, getVariable])
 
   // const restoreValue = () => {
   //   const fieldEntity = fieldsConfig[field]

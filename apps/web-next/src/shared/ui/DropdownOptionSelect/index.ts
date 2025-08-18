@@ -1,1 +1,1 @@
-export { default as DropdownOption } from './ui/DropdownOptionSelect'
+export { DropdownOptionSelect } from './ui/DropdownOptionSelect'
