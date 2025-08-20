@@ -75,6 +75,7 @@ export const variableType = createConstants(
   "Date",
   "Enum",
   "Number",
+  "Image",
   "Object"
 );
 

@@ -11,6 +11,7 @@ import { EventVariableSchema } from "@/schemas/variables/EventVariableSchema";
 import { LinkVariableSchema } from "@/schemas/variables/LinkVariableSchema";
 import { EnumVariableSchema } from "@/schemas/variables/EnumVariableSchema";
 import { ObjectVariableSchema } from "@/schemas/variables/ObjectVariableSchema";
+import { ImageVariableSchema } from "@/schemas/variables/ImageVariableSchema";
 
 export const getLayerSchema = (layer?: unknown) => {
   if (!layer?._type) return null;
@@ -30,6 +31,7 @@ export const getLayerSchema = (layer?: unknown) => {
       [variableType.Link]: LinkVariableSchema,
       [variableType.Enum]: EnumVariableSchema,
       [variableType.Object]: ObjectVariableSchema,
+      [variableType.Image]: ImageVariableSchema,
     };
 
     if (layer.type in types) {

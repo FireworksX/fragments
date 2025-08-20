@@ -8,6 +8,7 @@ import ToggleIcon from '@/shared/icons/next/toggle-left.svg'
 import ObjectIcon from '@/shared/icons/next/braces.svg'
 import ArrayIcon from '@/shared/icons/next/brackets.svg'
 import EventIcon from '@/shared/icons/next/zap.svg'
+import ImageIcon from '@/shared/icons/next/image.svg'
 import MoreIcon from '@/shared/icons/next/ellipsis.svg'
 import ColorIcon from '@/shared/icons/next/color.svg'
 import { Cell } from '@/shared/ui/Cell'
@@ -38,17 +39,19 @@ export const PropertyGenericCell: FC<PropertyBooleanCellProps> = ({ propertyLink
   const { isTopLevel, defaultValue, type, name: propName, handleClickProperty } = usePropertyGenericCell(propertyLink)
   const resultName = name ?? propName
 
-  const Icon = (
-    {
-      [definition.variableType.Event]: EventIcon,
-      [definition.variableType.Number]: NumberIcon,
-      [definition.variableType.String]: StringIcon,
-      [definition.variableType.Boolean]: ToggleIcon,
-      [definition.variableType.Object]: ObjectIcon,
-      [definition.variableType.Color]: ColorIcon,
-      [definition.variableType.Array]: ArrayIcon
-    } as Record<keyof typeof definition.variableType, ElementType>
-  )[type]
+  const Icon =
+    (
+      {
+        [definition.variableType.Event]: EventIcon,
+        [definition.variableType.Number]: NumberIcon,
+        [definition.variableType.String]: StringIcon,
+        [definition.variableType.Boolean]: ToggleIcon,
+        [definition.variableType.Object]: ObjectIcon,
+        [definition.variableType.Color]: ColorIcon,
+        [definition.variableType.Array]: ArrayIcon,
+        [definition.variableType.Image]: ImageIcon
+      } as Record<keyof typeof definition.variableType, ElementType>
+    )[type] ?? ObjectIcon
 
   const selectValue = useMemo(() => {
     const complexTypesName = {
@@ -58,6 +61,7 @@ export const PropertyGenericCell: FC<PropertyBooleanCellProps> = ({ propertyLink
 
     if (type in complexTypesName) return complexTypesName[type]
     if (type === definition.variableType.String) return defaultValue || 'Empty'
+    if (type === definition.variableType.Image) return 'Image'
 
     return defaultValue?.toString() ?? 'Error'
   }, [defaultValue, type])

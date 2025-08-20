@@ -51,6 +51,8 @@ import { StackInteraction } from '@/features/popouts/StackInteraction'
 import { StackGoals } from '@/features/popouts/StackGoals'
 import { StackCreateGoal } from '@/features/popouts/StackCreateGoal'
 import StackObjectVariable from '@/features/popouts/StackObjectVariable/StackObjectVariable'
+import { StackImageProperty } from '@/features/popouts/StackImageProperty/ui/StackImageProperty'
+import { StackImagePicker } from '@/features/popouts/StackImagePicker/ui/StackImagePicker'
 
 const FragmentsEditInitial = () => {
   // const { setRenderTarget } = useRenderTarget()
@@ -91,6 +93,8 @@ const FragmentsEditInitial = () => {
                 <StackCollector>
                   <StackPanelBorder name='border' title='Border' />
                   <StackPanelFill name='fill' title='Fill' />
+                  <StackImagePicker name={popoutNames.imagePicker} title='Image' />
+                  <StackImageProperty name={popoutNames.stackImageProperty} title='Image Property' />
                   <StackPanelColorPicker name={popoutNames.colorPicker} title='Color' />
                   {/*/!*<StackPanelFonts name='fonts' title='Fonts' />*!/*/}
                   <StackPanelCssOverride name='cssOverride' title='CSS override' />

@@ -19,6 +19,8 @@ export const usePropertyGenericCell = (propertyLink: LinkKey) => {
   const [defaultValue] = useLayerValue('defaultValue', propertyLink)
   const isTopLevel = !documentManager.resolve(propertyLink)?.parent
 
+  console.log(name, propertyLink)
+
   return {
     type: propertyType as keyof typeof definition.variableType,
     isTopLevel,

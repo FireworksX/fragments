@@ -64,7 +64,8 @@ export const useFragmentProperties = () => {
         [definition.variableType.Color]: popoutNames.stackColorProperty,
         [definition.variableType.Link]: popoutNames.stackLinkProperty,
         [definition.variableType.Enum]: popoutNames.stackEnumProperty,
-        [definition.variableType.Event]: popoutNames.stackEventProperty
+        [definition.variableType.Event]: popoutNames.stackEventProperty,
+        [definition.variableType.Image]: popoutNames.stackImageProperty
       }[type]
 
       popoutsStore.open(popoutName, {

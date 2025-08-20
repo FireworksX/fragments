@@ -5,6 +5,8 @@ export const popoutNames = createConstants(
   'customBreakpoint',
   'stackSolidPaintStyle',
   'colorPicker',
+  'imagePicker',
+  'stackImageProperty',
   'stackStringProperty',
   'stackEnumProperty',
   'stackLinkProperty',

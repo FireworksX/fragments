@@ -7,8 +7,8 @@ import CaretDown from '@/shared/icons/caret-down.svg'
 
 interface SelectProps extends PropsWithChildren {
   className?: string
-  value: string
-  onChange(value: string): void
+  value?: string
+  onChange?(value: string): void
 }
 
 const Select: FC<SelectProps> = animated(({ className, children, value, onChange }) => {
@@ -19,7 +19,7 @@ const Select: FC<SelectProps> = animated(({ className, children, value, onChange
         className={styles.inner}
         value={value}
         onChange={e => {
-          onChange(e.target.value)
+          onChange?.(e.target.value)
         }}
       >
         {children}
