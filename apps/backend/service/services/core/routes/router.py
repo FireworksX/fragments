@@ -644,7 +644,7 @@ class AnalyticQuery:
     @strawberry.field
     async def variant_statistic(
         self, info: strawberry.Info[Context], statistic_filter: StatisticFilter
-    ) -> List[VariantStatisticGet]:
+    ) -> List[Optional[VariantStatisticGet]]:
         return [
             await get_variant_statistic_route(
                 info,
@@ -660,7 +660,7 @@ class AnalyticQuery:
     @strawberry.field
     async def campaign_statistic(
         self, info: strawberry.Info[Context], statistic_filter: StatisticFilter
-    ) -> List[CampaignStatisticGet]:
+    ) -> List[Optional[CampaignStatisticGet]]:
         return [
             await get_campaign_statistic_route(
                 info,
@@ -676,7 +676,7 @@ class AnalyticQuery:
     @strawberry.field
     async def area_statistic(
         self, info: strawberry.Info[Context], statistic_filter: StatisticFilter
-    ) -> List[AreaStatisticGet]:
+    ) -> List[Optional[AreaStatisticGet]]:
         return [
             await get_area_statistic_route(
                 info,
@@ -708,7 +708,7 @@ class AnalyticQuery:
     @strawberry.field
     async def project_statistic(
         self, info: strawberry.Info[Context], statistic_filter: StatisticFilter
-    ) -> List[ProjectStatisticGet]:
+    ) -> List[Optional[ProjectStatisticGet]]:
         return [
             await get_project_statistic_route(
                 info,

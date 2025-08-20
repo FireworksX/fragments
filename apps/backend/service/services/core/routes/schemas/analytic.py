@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import Enum
-from typing import List
+from typing import List, Optional
 
 import strawberry
 
@@ -15,15 +15,18 @@ class Trend(Enum):
 @strawberry.enum
 class Detalization(Enum):
     MINUTE = 1
-    HOUR = 2
-    DAY = 3
+    MINUTE_10 = 2
+    HOUR = 3
+    DAY = 4
 
 
 @strawberry.type
 class Value:
     achieved: int
+    unique_achieved: int
     views: int
-    conversion: float  # achieved / views
+    sessions: int
+    conversion: float  # unique achieved / sessions
 
 
 @strawberry.type
@@ -39,30 +42,48 @@ class DetalizationGraph:
 
 
 @strawberry.type
+class StatisticTrendGet:
+    trend: Trend
+    difference: float
+    percentage: float
+
+
+@strawberry.type
 class StatisticGet:
     conversion: float
     views: int
     achieved: int
+    sessions: int
+    unique_achieved: int
+
+
+@strawberry.type
+class StatisticTrend:
+    conversion_trend: StatisticTrendGet
+    views_trend: StatisticTrendGet
+    achieved_trend: StatisticTrendGet
+    sessions_trend: StatisticTrendGet
+    unique_achieved_trend: StatisticTrendGet
 
 
 @strawberry.type
 class GoalStatisticGet:
     goal_id: int
     goal_name: str
-    trend: Trend
     current_statistic: StatisticGet
     prev_statistic: StatisticGet
-    currentGroupByDate: DetalizationGraph
-    prevGroupByDate: DetalizationGraph
+    trend: Optional[StatisticTrend]
+    current_group_by_date: DetalizationGraph
+    prev_group_by_date: DetalizationGraph
 
 
 @strawberry.type
 class VariantStatisticGet:
     variant_id: int
     variant_name: str
-    trend: Trend
     current_statistic: StatisticGet
     prev_statistic: StatisticGet
+    trend: Optional[StatisticTrend]
     goals: List[GoalStatisticGet]
 
 
@@ -70,9 +91,9 @@ class VariantStatisticGet:
 class CampaignStatisticGet:
     campaign_id: int
     campaign_name: str
-    trend: Trend
     current_statistic: StatisticGet
     prev_statistic: StatisticGet
+    trend: Optional[StatisticTrend]
     variants: List[VariantStatisticGet]
 
 
@@ -80,9 +101,9 @@ class CampaignStatisticGet:
 class AreaStatisticGet:
     area_id: int
     area_code: str
-    trend: Trend
     current_statistic: StatisticGet
     prev_statistic: StatisticGet
+    trend: Optional[StatisticTrend]
     campaigns: List[CampaignStatisticGet]
 
 
@@ -90,9 +111,9 @@ class AreaStatisticGet:
 class ProjectStatisticGet:
     project_id: int
     project_name: str
-    trend: Trend
     current_statistic: StatisticGet
     prev_statistic: StatisticGet
+    trend: Optional[StatisticTrend]
     areas: List[AreaStatisticGet]
 
 
