@@ -101,7 +101,7 @@ async def get_goal_detalization_graph_db(
                             (
                                 ClientHistory.event_type
                                 == int(ClientHistoryEventType.GOAL_CONTRIBUTE.value),
-                                ClientHistory.user_id,
+                                ClientHistory.client_id,
                             )
                         ]
                     )
@@ -538,7 +538,7 @@ async def goal_statistic_db(
             ClientHistory.created_at >= from_ts,
             ClientHistory.created_at <= to_ts,
         )
-        .order_by(ClientHistory.user_id, ClientHistory.created_at)
+        .order_by(ClientHistory.client_id, ClientHistory.created_at)
         .all()
     )
 
@@ -546,14 +546,14 @@ async def goal_statistic_db(
 
     # Calculate unique sessions (30 min gap between views)
     sessions = 0
-    current_user = None
+    current_client = None
     last_view_time = None
     SESSION_GAP = timedelta(minutes=30)
 
     for view in views_query:
-        if view.user_id != current_user:
+        if view.client_id != current_client:
             sessions += 1
-            current_user = view.user_id
+            current_client = view.client_id
             last_view_time = view.created_at
         else:
             if view.created_at - last_view_time > SESSION_GAP:
@@ -570,20 +570,20 @@ async def goal_statistic_db(
             ClientHistory.created_at >= from_ts,
             ClientHistory.created_at <= to_ts,
         )
-        .order_by(ClientHistory.user_id, ClientHistory.created_at)
+        .order_by(ClientHistory.client_id, ClientHistory.created_at)
         .all()
     )
 
     achievements = len(achievements_query)
 
     unique_achievements = 0
-    current_user = None
+    current_client = None
     last_achievement_time = None
 
     for achievement in achievements_query:
-        if achievement.user_id != current_user:
+        if achievement.client_id != current_client:
             unique_achievements += 1
-            current_user = achievement.user_id
+            current_client = achievement.client_id
             last_achievement_time = achievement.created_at
         else:
             if achievement.created_at - last_achievement_time > SESSION_GAP:
