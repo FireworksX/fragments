@@ -31,12 +31,7 @@ from .campaign import (
     delete_campaign_route,
     update_campaign_route,
 )
-from .client import (
-    client_area_route,
-    contribute_to_project_goal_route,
-    init_client_session_route,
-    release_client_session_route,
-)
+from .client import client_area_route, contribute_to_project_goal_route
 from .feature_flag import (
     FeatureFlagGet,
     FeatureFlagPatch,
@@ -68,11 +63,9 @@ from .project import (
     add_project_allowed_origin_route,
     add_project_logo_route,
     add_project_public_key_route,
-)
-from .project import add_user_to_project as add_user_to_project_route
-from .project import change_project_private_key_route
-from .project import change_user_role as change_user_role_route
-from .project import (
+    add_user_to_project_route,
+    change_project_private_key_route,
+    change_user_role_route,
     create_project_goal_route,
     create_project_route,
     delete_project_allowed_origin_route,
@@ -81,6 +74,7 @@ from .project import (
     delete_project_public_key_route,
     delete_project_route,
     get_project_goals_route,
+    invite_user_to_project_route,
     project_by_id,
     projects,
     update_project_goal_route,
@@ -288,6 +282,12 @@ class ProjectMutation:
     @strawberry.mutation
     async def delete_project(self, info: strawberry.Info[Context], project_id: int) -> None:
         return await delete_project_route(info, project_id)
+
+    @strawberry.mutation
+    async def invite_user_to_project(
+        self, info: strawberry.Info[Context], email: str, project_id: int, role: UserRole
+    ) -> None:
+        await invite_user_to_project_route(info, email, project_id, role)
 
     @strawberry.mutation
     async def add_user_to_project(
@@ -626,13 +626,9 @@ class ClientMutation:
     async def add_client_metric(
         self, info: strawberry.Info[Context], metric: ClientMetricPost
     ) -> None:
-        if metric.metric_type == ClientMetricType.INIT_SESSION:
-            return await init_client_session_route(info)
-        if metric.metric_type == ClientMetricType.RELEASE_SESSION:
-            return await release_client_session_route(info)
         if metric.metric_type == ClientMetricType.REACH_PROJECT_GOAL:
             if metric.metric_value is not None:
-                return await contribute_to_project_goal_route(info, metric.metric_value)
+                await contribute_to_project_goal_route(info, metric.metric_value)
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Invalid metric type')
 
 
