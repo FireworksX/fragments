@@ -188,7 +188,7 @@ async def fragments_by_ids(
 
 
 async def add_fragment_asset_route(
-    info: strawberry.Info[Context], file: UploadFile, fragment_id: int, directory_id: int
+    info: strawberry.Info[Context], file: UploadFile, fragment_id: int, directory_id: Optional[int] = None
 ) -> MediaGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
