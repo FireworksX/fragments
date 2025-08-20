@@ -802,19 +802,7 @@ export const Demo = () => {
                                           data-testid='MatchBoardLogoLink'
                                           href='/ru/soccer/t-chelsea-fc'
                                         >
-                                          <span
-                                            className='sc-11tt6ib-0 iQOaaC sc-13yy778-4 iAzNpS'
-                                            data-testid='MatchBoardLogoContainer'
-                                            size='60'
-                                          >
-                                            <img
-                                              alt='Челси'
-                                              className='lazyload sc-11tt6ib-2 mzpSx'
-                                              data-src='https://cdn.scores24.live/upload/team/w60-h60/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png'
-                                              data-srcset='https://cdn.scores24.live/upload/team/w60-h60/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png 1x, https://cdn.scores24.live/upload/team/w120-h120/621/2e4/ae04abc5c947467e81e702ff0c7682b709.png 2x'
-                                              src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
-                                            />
-                                          </span>
+                                          <Area areaCode='79f780fa0dd508' options={{ ssr: false }} />
                                         </a>
                                       </div>
                                     </div>
@@ -896,19 +884,7 @@ export const Demo = () => {
                                           data-testid='MatchBoardLogoLink'
                                           href='/ru/soccer/t-ac-milan-2'
                                         >
-                                          <span
-                                            className='sc-11tt6ib-0 iQOaaC sc-13yy778-4 iAzNpS'
-                                            data-testid='MatchBoardLogoContainer'
-                                            size='60'
-                                          >
-                                            <img
-                                              alt='Милан'
-                                              className='lazyload sc-11tt6ib-2 mzpSx'
-                                              data-src='https://cdn.scores24.live/upload/team/w60-h60/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png'
-                                              data-srcset='https://cdn.scores24.live/upload/team/w60-h60/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png 1x, https://cdn.scores24.live/upload/team/w120-h120/384/5c6/e42c6fa090d38dae66b42187f7f5b1ced6.png 2x'
-                                              src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
-                                            />
-                                          </span>
+                                          <Area areaCode='79f780fa0dd508' options={{ ssr: false }} />
                                         </a>
                                       </div>
                                     </div>
