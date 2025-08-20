@@ -77,6 +77,7 @@ from .project import (
     invite_user_to_project_route,
     project_by_id,
     projects,
+    remove_user_from_project_route,
     update_project_goal_route,
     update_project_route,
 )
@@ -288,6 +289,12 @@ class ProjectMutation:
         self, info: strawberry.Info[Context], email: str, project_id: int, role: UserRole
     ) -> None:
         await invite_user_to_project_route(info, email, project_id, role)
+
+    @strawberry.mutation
+    async def remove_user_from_project(
+        self, info: strawberry.Info[Context], user_id: int, project_id: int
+    ) -> None:
+        await remove_user_from_project_route(info, user_id, project_id)
 
     @strawberry.mutation
     async def add_user_to_project(
