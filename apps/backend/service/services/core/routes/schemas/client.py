@@ -11,10 +11,7 @@ from services.core.routes.schemas.release_condition import DeviceType, OSType
 
 @strawberry.enum
 class ClientHistoryEventType(Enum):
-    INIT = 1
-    RELEASE = 2
     GOAL_CONTRIBUTE = 3
-    FEEDBACK = 4
     VIEW = 5
     GOAL_VIEW = 6
 

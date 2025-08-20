@@ -23,7 +23,7 @@ from crud.project import (
     update_project_by_id_db,
     update_project_goal_db,
 )
-from crud.user import get_user_by_id_db
+from crud.user import get_user_by_email_db, get_user_by_id_db
 from database import Media, Session
 from database.models import Project, ProjectGoal, User
 
@@ -254,7 +254,20 @@ async def delete_project_public_key_route(
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(exc)) from exc
 
 
-async def add_user_to_project(
+async def invite_user_to_project_route(
+    info: strawberry.Info[Context], email: str, project_id: int, role_to_add: UserRole
+) -> None:
+    logger.info(f"Inviting user {email} to project {project_id} with role {role_to_add}")
+    db: Session = info.context.session()
+    user: Optional[User] = await get_user_by_email_db(db, email)
+    if user is None:
+        logger.error(f"User {email} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='User does not exist')
+    await add_user_to_project_db(db, user.id, project_id, role_to_add)
+    logger.info(f"Invited user {email} to project {project_id} with role {role_to_add}")
+
+
+async def add_user_to_project_route(
     info: strawberry.Info[Context], user_id: int, project_id: int, role_to_add: UserRole
 ) -> None:
     logger.info(f"Adding user {user_id} to project {project_id} with role {role_to_add}")
@@ -280,7 +293,7 @@ async def add_user_to_project(
     logger.info(f"Added user {user_id} to project {project_id}")
 
 
-async def change_user_role(
+async def change_user_role_route(
     info: strawberry.Info[Context], user_id: int, project_id: int, role_to_add: UserRole
 ) -> None:
     logger.info(f"Changing role for user {user_id} in project {project_id} to {role_to_add}")
