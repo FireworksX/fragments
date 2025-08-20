@@ -568,7 +568,7 @@ class AssetMutation:
             if media.target_id is not None:
                 return await add_project_logo_route(info, file, media.target_id)
         if media.media_type == MediaType.FRAGMENT_ASSET:
-            if media.target_id is not None and media.directory_id is not None:
+            if media.target_id is not None:
                 return await add_fragment_asset_route(
                     info, file, media.target_id, media.directory_id
                 )
