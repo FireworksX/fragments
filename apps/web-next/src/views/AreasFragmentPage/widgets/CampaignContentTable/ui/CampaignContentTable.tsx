@@ -9,10 +9,14 @@ import FragmentIcon from '@/shared/icons/next/component.svg'
 import ActionsIcon from '@/shared/icons/next/zap.svg'
 import WeightIcon from '@/shared/icons/next/weight.svg'
 import EditIcon from '@/shared/icons/next/pencil.svg'
+import ArrowUp from '@/shared/icons/next/arrow-up.svg'
+import ArrowDown from '@/shared/icons/next/arrow-down.svg'
 import DeleteIcon from '@/shared/icons/next/trash.svg'
+import InfoIcon from '@/shared/icons/next/info.svg'
 import PauseIcon from '@/shared/icons/next/pause.svg'
 import PlayIcon from '@/shared/icons/next/play.svg'
 import Logo from '@/shared/icons/next/logo.svg'
+import GoalIcon from '@/shared/icons/next/circle-dot.svg'
 import ScaleIcon from '@/shared/icons/next/scale.svg'
 import { TableRow } from '@/shared/ui/Table/components/TableRow'
 import { TableCell } from '@/shared/ui/Table/components/TableCell'
@@ -40,6 +44,9 @@ import { withModalCollector } from '@/shared/hocs/withModalCollector'
 import { modalNames } from '@/shared/data'
 import { Touchable } from '@/shared/ui/Touchable'
 import { Link } from '@/shared/ui/Link'
+import { Chip } from '@/shared/ui/Chip'
+import { GoalsConversionInfo } from '@/views/AreasFragmentPage/widgets/CampaignContentTable/components/GoalsConversionInfo'
+import { ChipTrend } from '@/shared/ui/ChipTrend'
 
 interface CampaignContentTableProps {
   campaignId: number
@@ -154,6 +161,16 @@ const CampaignContentTable: FC<CampaignContentTableProps> = ({ className, campai
               Fragment
             </div>
             <div className={styles.innerCell}>
+              <div className={styles.innerCellGroup}>
+                <GoalIcon />
+                Conversion
+              </div>
+
+              <Dropdown options={<DropdownGroup>Compare last 24 hour</DropdownGroup>}>
+                <InfoIcon />
+              </Dropdown>
+            </div>
+            <div className={styles.innerCell}>
               <ActionsIcon />
               Actions
             </div>
@@ -180,7 +197,7 @@ const CampaignContentTable: FC<CampaignContentTableProps> = ({ className, campai
 
         {loadingVariants && (
           <TableRow className={styles.row}>
-            <TableCell className={styles.cell} colSpan={6}>
+            <TableCell className={styles.cell} colSpan={7}>
               <Placeholder stretched actions={<Spinner size={16} color='var(--text-color-accent)' />} />
             </TableCell>
           </TableRow>
@@ -188,7 +205,7 @@ const CampaignContentTable: FC<CampaignContentTableProps> = ({ className, campai
 
         {variants.length === 0 && !loadingVariants && (
           <TableRow className={styles.row}>
-            <TableCell className={styles.cell} colSpan={6}>
+            <TableCell className={styles.cell} colSpan={7}>
               <Placeholder
                 stretched
                 icon={<Logo width={36} height={36} />}
@@ -232,6 +249,21 @@ const CampaignContentTable: FC<CampaignContentTableProps> = ({ className, campai
               </InputSelect>
               {/*<div className={styles.preview}></div>*/}
               {/*<Button mode='tertiary'>{variant?.fragment?.fragment?.name}</Button>*/}
+            </TableCell>
+            <TableCell>
+              <div className={styles.innerCell}>
+                <Dropdown
+                  trigger='click'
+                  options={<GoalsConversionInfo goals={variant?.statistic?.goals ?? []} />}
+                  width={230}
+                >
+                  {variant.statistic && (
+                    <ChipTrend trend={variant.statistic?.trend}>
+                      {variant.statistic?.currentStatistic.conversion}%
+                    </ChipTrend>
+                  )}
+                </Dropdown>
+              </div>
             </TableCell>
             <TableCell>
               <div className={styles.innerCell}>

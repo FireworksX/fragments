@@ -43,6 +43,10 @@ export const linkConfig = {
     path: ({ projectSlug }) => `/project/${projectSlug}/settings/tokens`,
     params: ['projectSlug']
   },
+  projectSettingMembers: {
+    path: ({ projectSlug }) => `/project/${projectSlug}/settings/members`,
+    params: ['projectSlug']
+  },
   projectCreate: {
     path: '/project/create',
     params: []

@@ -6,10 +6,10 @@ import { useLayerPosition } from "./useLayerPosition";
 import { useLayerSize } from "./useLayerSize";
 import { useLayerValue } from "@/hooks/useLayerValue";
 import {
-  FragmentContext,
   useLayerDisplay,
-  useLayerCssOverride,
-} from "@fragmentsx/render-core";
+  FragmentContext,
+  useLayerTextStyles,
+} from "@fragmentsx/render-react";
 import { useLayerBackground } from "@/hooks/useLayerStyles/useLayerBackground";
 import { useLayerBorder } from "@/hooks/useLayerStyles/useLayerBorder";
 import { useLayerLayout } from "@/hooks/useLayerStyles/useLayerLayout";
@@ -38,6 +38,7 @@ export const useLayerStyles = (layerKey: LinkKey) => {
     const layout = useLayerLayout(layerKey);
     const [zIndex] = useLayerValue(layerKey, "zIndex", fragmentManager);
     const [whiteSpace] = useLayerValue(layerKey, "whiteSpace", fragmentManager);
+    const textStyles = useLayerTextStyles(layerKey);
     const [borderRadius] = useLayerValue(
       layerKey,
       "borderRadius",
@@ -52,6 +53,7 @@ export const useLayerStyles = (layerKey: LinkKey) => {
       top,
       left,
       overflow,
+      ...textStyles,
       width,
       height,
       opacity,

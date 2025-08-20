@@ -29,6 +29,14 @@
     display: flex;
     align-items: center;
     gap: var(--gutter-small);
+    width: 100%;
+}
+
+.innerCellGroup {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: var(--gutter-small);
 }
 
 .preview {

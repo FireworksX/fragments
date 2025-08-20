@@ -2,19 +2,31 @@
     padding-block: 30px;
     display: flex;
     gap: 30px;
+    height: calc(100vh - var(--app-size-header) - var(--app-size-navigation) - 1px);
 }
 
 .aside {
-    width: 200px;
+    width: 270px;
+    background: var(--background);
+    border-radius: var(--radius-main);
+    padding: 12px;
 }
 
 .cell {
     padding-inline: 12px;
-    border-radius: var(--radius-small);
+    border-radius: var(--radius-second);
+}
+
+.cellBefore {
+
 }
 
 .activeCell {
     background: var(--secondary-bg);
+
+    .cellBefore {
+        color: var(--primary);
+    }
 }
 
 .content {

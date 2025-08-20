@@ -6,16 +6,28 @@ import { useStyleSheet } from "@/shared/hooks/useStyleSheet";
 import { useContext } from "preact/compat";
 import { FragmentContext } from "@/components/Fragment/FragmentContext";
 
-export const useTextAttributes = (layerKey: LinkKey) => {
+export interface UseTextAttributes {
+  collectStyle?: boolean;
+}
+
+export const useTextAttributes = (
+  layerKey: LinkKey,
+  options?: UseTextAttributes
+) => {
+  const collectStyle = options?.collectStyle ?? true;
   const { manager: fragmentManager } = useContext(FragmentContext);
   const styles = useLayerStyles(layerKey);
+
   const content = useTextContent(layerKey);
   const hash = useHash(layerKey, fragmentManager);
   const { addLayerStyle } = useStyleSheet(fragmentManager);
 
-  addLayerStyle(layerKey, styles, fragmentManager.resolve(layerKey));
+  if (collectStyle) {
+    addLayerStyle(layerKey, styles, fragmentManager.resolve(layerKey));
+  }
 
   return {
+    styles,
     hash,
     content,
   };

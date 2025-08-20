@@ -1,4 +1,4 @@
-import { FC, useContext } from 'react'
+import React, { FC, useContext } from 'react'
 import { useBuilderText } from '../hooks/useBuilderText'
 import { useGraph } from '@graph-state/react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
@@ -34,8 +34,8 @@ const BuilderText: FC<BuilderTextProps> = ({ className }) => {
 
       <ControlRow
         title='Content'
-        hasConnector={!content.disabled}
         value={content.value}
+        hasConnector={!content.disabled}
         variable={{
           data: content.variableData,
           actions: content.actions,
@@ -66,7 +66,16 @@ const BuilderText: FC<BuilderTextProps> = ({ className }) => {
         </ControlRowWide>
       </ControlRow>
 
-      <ControlRow title='Color'>
+      <ControlRow
+        title='Color'
+        hasConnector={!color.disabled}
+        variable={{
+          data: color.variableData,
+          actions: color.actions,
+          onReset: color.resetVariable,
+          onClick: color.editVariable
+        }}
+      >
         <ControlRowWide>
           <InputSelect color={color.value} onClick={color.onClick}>
             {color.value || getNameColor(color.value)}

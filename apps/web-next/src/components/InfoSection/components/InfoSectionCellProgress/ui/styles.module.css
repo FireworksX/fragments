@@ -1,0 +1,47 @@
+@layer {
+    .root {
+        position: relative;
+
+        &:after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            bottom: 8px;
+            left: 8px;
+            width: calc(var(--progress, 0) - 16px);
+            background: var(--secondary-bg);
+            border-radius: var(--radius-second);
+            z-index: 1;
+        }
+
+        &:first-child {
+            &:after {
+                border-top-left-radius: var(--radius-submain);
+                border-top-right-radius: var(--radius-submain);
+            }
+        }
+
+        &:last-child {
+            &:after {
+                border-bottom-left-radius: var(--radius-submain);
+                border-bottom-right-radius: var(--radius-submain);
+            }
+        }
+    }
+
+    .body {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 14px;
+        font-weight: 400;
+        color: var(--text-color-accent);
+    }
+
+    .value {
+        font-weight: 500;
+    }
+}
+

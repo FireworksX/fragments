@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useContext, useMemo } from 'react'
+import React, { FC, PropsWithChildren, ReactNode, useContext, useMemo } from 'react'
 import cn from 'classnames'
 import { LinkKey } from '@graph-state/core'
 import { GraphValue } from '@graph-state/react'
@@ -15,8 +15,9 @@ import { definition } from '@fragmentsx/definition'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
 export interface BuilderControlRowProps extends PropsWithChildren {
-  title?: string
+  title?: ReactNode
   className?: string
+  titleWrapperClassName?: string
   actions?: RenderDropdownProps['options']
   hasConnector?: boolean
   currentValue?: unknown
@@ -42,6 +43,7 @@ export interface BuilderControlRowProps extends PropsWithChildren {
 
 const ControlRow: FC<BuilderControlRowProps> = ({
   className,
+  titleWrapperClassName,
   title,
   hasConnector,
   isHighlight,
@@ -82,9 +84,16 @@ const ControlRow: FC<BuilderControlRowProps> = ({
 
   return (
     <div className={cn(styles.root, className)}>
-      <RenderDropdown appendTo='body' disabled={!hasActions} trigger='click' options={resultActions} hideOnClick>
+      <RenderDropdown
+        appendTo='body'
+        disabled={!hasActions}
+        trigger='click'
+        options={resultActions}
+        hideOnClick
+        placement={depth => (depth > 0 ? 'left' : undefined)}
+      >
         <div
-          className={cn(styles.titleWrapper, {
+          className={cn(styles.titleWrapper, titleWrapperClassName, {
             [styles.highlight]: isHighlightResult,
             [styles.withAction]: hasActions
           })}

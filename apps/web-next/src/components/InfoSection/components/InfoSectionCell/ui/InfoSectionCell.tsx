@@ -1,8 +1,8 @@
-import { FC, PropsWithChildren, ReactNode } from 'react'
+import { ComponentPropsWithoutRef, FC, PropsWithChildren, ReactNode } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 
-interface InfoSectionCellProps extends PropsWithChildren {
+export interface InfoSectionCellProps extends PropsWithChildren, ComponentPropsWithoutRef<'div'> {
   title?: string
   description?: string
   className?: string
@@ -16,10 +16,11 @@ export const InfoSectionCell: FC<InfoSectionCellProps> = ({
   before,
   after,
   description,
-  children
+  children,
+  ...HTMLProps
 }) => {
   return (
-    <div className={cn(styles.root, className)}>
+    <div className={cn(styles.root, className)} {...HTMLProps}>
       {(title || description) && (
         <div className={styles.head}>
           {before}

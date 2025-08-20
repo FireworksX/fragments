@@ -5,15 +5,19 @@ import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type CampaignContentQueryVariables = Types.Exact<{
   id: Types.Scalars['Int']['input'];
+  fromTs: Types.Scalars['DateTime']['input'];
+  toTs: Types.Scalars['DateTime']['input'];
+  prevFromTs: Types.Scalars['DateTime']['input'];
+  prevToTs: Types.Scalars['DateTime']['input'];
 }>;
 
 
-export type CampaignContentQuery = { __typename?: 'Query', campaign: Array<{ __typename?: 'CampaignGet', id: number, featureFlag: { __typename?: 'FeatureFlagGet', id: number, rotationType: Types.RotationType, variants: Array<{ __typename?: 'VariantGet', id: number, name: string, status: Types.VariantStatus, rolloutPercentage: number, fragment?: { __typename?: 'FragmentVariantGet', props?: any | null, fragment: { __typename?: 'FragmentGet', id: number, name: string } } | null }> } }> };
+export type CampaignContentQuery = { __typename?: 'Query', campaign: Array<{ __typename?: 'CampaignGet', id: number, featureFlag: { __typename?: 'FeatureFlagGet', id: number, rotationType: Types.RotationType, variants: Array<{ __typename?: 'VariantGet', id: number, name: string, status: Types.VariantStatus, rolloutPercentage: number, fragment?: { __typename?: 'FragmentVariantGet', props?: any | null, fragment: { __typename?: 'FragmentGet', id: number, name: string } } | null }> } }>, campaignStatistic: Array<{ __typename?: 'CampaignStatisticGet', variants: Array<{ __typename?: 'VariantStatisticGet', variantId: number, trend: Types.Trend, currentStatistic: { __typename?: 'StatisticGet', conversion: number }, prevStatistic: { __typename?: 'StatisticGet', conversion: number }, goals: Array<{ __typename?: 'GoalStatisticGet', goalId: number, goalName: string, trend: Types.Trend, currentStatistic: { __typename?: 'StatisticGet', conversion: number }, prevStatistic: { __typename?: 'StatisticGet', conversion: number } }> }> }> };
 
 
 export const CampaignContentDocument = gql`
-    query CampaignContent($id: Int!) {
-  campaign(campaignId: $id) {
+    query CampaignContent($id: Int!, $fromTs: DateTime!, $toTs: DateTime!, $prevFromTs: DateTime!, $prevToTs: DateTime!) {
+  campaign(campaignFilter: {campaignId: $id}) {
     id
     featureFlag {
       id
@@ -29,6 +33,31 @@ export const CampaignContentDocument = gql`
             name
           }
           props
+        }
+      }
+    }
+  }
+  campaignStatistic(
+    statisticFilter: {dataIds: [$id], fromTs: $fromTs, toTs: $toTs, prevFromTs: $prevFromTs, prevToTs: $prevToTs}
+  ) {
+    variants {
+      variantId
+      currentStatistic {
+        conversion
+      }
+      prevStatistic {
+        conversion
+      }
+      trend
+      goals {
+        goalId
+        goalName
+        trend
+        currentStatistic {
+          conversion
+        }
+        prevStatistic {
+          conversion
         }
       }
     }
@@ -49,6 +78,10 @@ export const CampaignContentDocument = gql`
  * const { data, loading, error } = useCampaignContentQuery({
  *   variables: {
  *      id: // value for 'id'
+ *      fromTs: // value for 'fromTs'
+ *      toTs: // value for 'toTs'
+ *      prevFromTs: // value for 'prevFromTs'
+ *      prevToTs: // value for 'prevToTs'
  *   },
  * });
  */

@@ -1,7 +1,9 @@
-mutation CreateGoal($projectSlug: Int!, $name: String!, $code: String!) {
-    createProjectGoal(goal: {projectId: $projectSlug, name: $name, targetAction: $code}) {
+mutation CreateGoal($projectSlug: Int!, $name: String!, $code: String!, $max: Float, $min: Float) {
+    createProjectGoal(goal: {projectId: $projectSlug, name: $name, targetAction: $code, failureLevel: $min, successLevel: $max}) {
         id
         name
         code: targetAction
+        min: failureLevel
+        max: successLevel
     }
 }

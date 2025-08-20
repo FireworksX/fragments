@@ -2,7 +2,6 @@
     background: var(--background);
     border-radius: var(--radius-main);
     display: flex;
-    align-items: center;
     gap: 18px;
     padding: 16px 24px;
     position: relative;
@@ -19,11 +18,18 @@
     flex-direction: column;
     gap: 18px;
     width: 30%;
+    max-width: 30%;
+    min-width: 30%;
 }
 
 .infoBody {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+    position: relative;
+}
+
+.infoBodyInner {
 }
 
 .goalCode {
@@ -50,12 +56,14 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
+    white-space: nowrap;
 }
 
 .row {
     display: flex;
     gap: 12px;
     color: var(--secondary);
+    justify-content: space-between;
 }
 
 .rowName {
@@ -66,14 +74,26 @@
     }
 }
 
+.rowButton {
+    padding: 0;
+}
+
 .rowValue {
     color: var(--text-color-accent);
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    gap: 3px;
 }
 
 .actions {
+    position: absolute;
+    right: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
     transition: var(--animation-transition-default);
     opacity: 0;
-    position: absolute;
-    right: 15px;
-    top: 15px;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, var(--background) 15% ,var(--background) 100%);
+    padding: 10px;
 }

@@ -4,7 +4,6 @@ import { FC, PropsWithChildren, useEffect, useState } from 'react'
 import { Tabs } from '@/shared/ui/Tabs'
 import { TabItem } from '@/shared/ui/TabItem'
 import styles from './styles.module.css'
-import { createGlobalManager } from '@fragmentsx/render-core'
 import { createFragmentsClient } from '@fragmentsx/client-core'
 import { GlobalManager } from '@fragmentsx/render-suite'
 import { getSession, useSession } from 'next-auth/react'
@@ -17,6 +16,7 @@ import AreasIcon from '@/shared/icons/next/scan.svg'
 import GoalsIcon from '@/shared/icons/next/circle-dot.svg'
 import UsersIcon from '@/shared/icons/next/users.svg'
 import SettingsIcon from '@/shared/icons/next/settings-2.svg'
+import { Container } from '@/shared/ui/Container'
 
 export const ProjectDetailLayout: FC<PropsWithChildren> = ({ children }) => {
   const { data } = useSession()
@@ -47,20 +47,13 @@ export const ProjectDetailLayout: FC<PropsWithChildren> = ({ children }) => {
   return (
     <main>
       <Tabs className={styles.tabs}>
-        <Link type='project'>
-          {({ isActive }) => (
-            <TabItem className={styles.tab} icon={<OverviewIcon />} isActive={isActive}>
-              Overview
-            </TabItem>
-          )}
-        </Link>
-        <Link partial type='builder'>
-          {({ isActive }) => (
-            <TabItem className={styles.tab} icon={<FragmentsIcon />} isActive={isActive}>
-              Fragments
-            </TabItem>
-          )}
-        </Link>
+        {/*<Link type='project'>*/}
+        {/*  {({ isActive }) => (*/}
+        {/*    <TabItem className={styles.tab} icon={<OverviewIcon />} isActive={isActive}>*/}
+        {/*      Overview*/}
+        {/*    </TabItem>*/}
+        {/*  )}*/}
+        {/*</Link>*/}
         <Link partial type='areas'>
           {({ isActive }) => (
             <TabItem className={styles.tab} icon={<AreasIcon />} isActive={isActive}>
@@ -68,6 +61,15 @@ export const ProjectDetailLayout: FC<PropsWithChildren> = ({ children }) => {
             </TabItem>
           )}
         </Link>
+
+        <Link partial type='builder'>
+          {({ isActive }) => (
+            <TabItem className={styles.tab} icon={<FragmentsIcon />} isActive={isActive}>
+              Fragments
+            </TabItem>
+          )}
+        </Link>
+
         <Link partial type='goals'>
           {({ isActive }) => (
             <TabItem className={styles.tab} icon={<GoalsIcon />} isActive={isActive}>
@@ -92,7 +94,7 @@ export const ProjectDetailLayout: FC<PropsWithChildren> = ({ children }) => {
       </Tabs>
 
       <DndContext sensors={sensors} collisionDetection={pointerWithin}>
-        <GlobalManager value={globalManager}>{children}</GlobalManager>
+        <GlobalManager.Provider value={globalManager}>{children}</GlobalManager.Provider>
       </DndContext>
     </main>
   )

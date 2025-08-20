@@ -5,6 +5,7 @@ import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type UpdateFragmentDocumentMutationVariables = Types.Exact<{
   fragmentSlug: Types.Scalars['Int']['input'];
+  linkedGoals?: Types.InputMaybe<Array<Types.Scalars['Int']['input']> | Types.Scalars['Int']['input']>;
   name?: Types.InputMaybe<Types.Scalars['String']['input']>;
   document?: Types.InputMaybe<Types.Scalars['JSON']['input']>;
   linkedFragments?: Types.InputMaybe<Array<Types.Scalars['Int']['input']> | Types.Scalars['Int']['input']>;
@@ -15,9 +16,9 @@ export type UpdateFragmentDocumentMutation = { __typename?: 'Mutation', updateFr
 
 
 export const UpdateFragmentDocumentDocument = gql`
-    mutation UpdateFragmentDocument($fragmentSlug: Int!, $name: String, $document: JSON, $linkedFragments: [Int!]) {
+    mutation UpdateFragmentDocument($fragmentSlug: Int!, $linkedGoals: [Int!], $name: String, $document: JSON, $linkedFragments: [Int!]) {
   updateFragment(
-    fg: {id: $fragmentSlug, name: $name, document: $document, linkedFragments: $linkedFragments}
+    fg: {id: $fragmentSlug, name: $name, document: $document, linkedGoals: $linkedGoals, linkedFragments: $linkedFragments}
   ) {
     id
     name
@@ -41,6 +42,7 @@ export type UpdateFragmentDocumentMutationFn = Apollo.MutationFunction<UpdateFra
  * const [updateFragmentDocumentMutation, { data, loading, error }] = useUpdateFragmentDocumentMutation({
  *   variables: {
  *      fragmentSlug: // value for 'fragmentSlug'
+ *      linkedGoals: // value for 'linkedGoals'
  *      name: // value for 'name'
  *      document: // value for 'document'
  *      linkedFragments: // value for 'linkedFragments'

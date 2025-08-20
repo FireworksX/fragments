@@ -9,6 +9,7 @@ export const BooleanVariableSchema = v.object({
     fallback: "Boolean",
     overridable: false,
   }),
+  parent: layerField(v.nullable(v.string()), { overridable: false }),
   type: layerField(v.literal(variableType.Boolean), {
     fallback: variableType.Boolean,
   }),

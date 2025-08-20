@@ -9,6 +9,7 @@ export const EventVariableSchema = v.object({
     fallback: "Event",
     overridable: false,
   }),
+  parent: layerField(v.nullable(v.string()), { overridable: false }),
   type: layerField(v.literal(variableType.Event), {
     fallback: variableType.Event,
   }),

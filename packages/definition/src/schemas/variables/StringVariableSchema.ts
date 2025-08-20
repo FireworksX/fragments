@@ -12,6 +12,7 @@ export const StringVariableSchema = v.object({
   type: layerField(v.literal(variableType.String), {
     fallback: variableType.String,
   }),
+  parent: layerField(v.nullable(v.string()), { overridable: false }),
   defaultValue: layerField(v.string(), { fallback: "" }),
   required: layerField(v.boolean(), { fallback: false }),
   placeholder: layerField(v.string(), { fallback: "" }),

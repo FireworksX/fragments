@@ -4,6 +4,7 @@ import { Fragment } from "@/components/Fragment";
 import { useInstance } from "./hooks/useInstance";
 import { GlobalManager } from "@/providers/GlobalManager";
 import { useGlobalManager } from "@/shared/hooks/useGlobalManager";
+import { Scope } from "@/providers/Scope";
 
 export interface InstanceProps {
   layerKey?: LinkKey;
@@ -44,13 +45,22 @@ const InstanceInitial: FC<InstanceProps> = (instanceProps) => {
       }}
     >
       {parentManager ? (
-        <div
-          className={hash}
-          data-key={instanceProps.layerKey}
-          style={cssProps}
+        <Scope
+          fragmentManager={innerManager}
+          layerKey={instanceProps.layerKey}
+          value={{
+            layerKey: instanceProps.layerKey,
+            definitions,
+          }}
         >
-          <Fragment fragmentId={fragmentId} globalManager={globalManager} />
-        </div>
+          <div
+            className={hash}
+            data-key={instanceProps.layerKey}
+            style={cssProps}
+          >
+            <Fragment fragmentId={fragmentId} globalManager={globalManager} />
+          </div>
+        </Scope>
       ) : (
         <div style={cssProps}>
           <Fragment fragmentId={fragmentId} globalManager={globalManager} />

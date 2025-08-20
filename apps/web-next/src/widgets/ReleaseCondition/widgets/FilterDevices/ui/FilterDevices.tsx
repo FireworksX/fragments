@@ -8,7 +8,7 @@ import { Chip } from '@/shared/ui/Chip'
 import EditIcon from '@/shared/icons/next/pencil.svg'
 import { Dropdown } from '@/shared/ui/Dropdown'
 import { useStreamDevicesFilterLazyQuery } from '../queries/StreamDevicesFilter.generated'
-import DropdownOptionSelect from '@/shared/ui/DropdownOptionSelect/ui/DropdownOptionSelect'
+import { DropdownOptionSelect } from '@/shared/ui/DropdownOptionSelect'
 import { DeviceType } from '@/graphql/types'
 import { noop } from '@fragmentsx/utils'
 

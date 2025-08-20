@@ -1,5 +1,5 @@
-mutation UpdateFragmentDocument($fragmentSlug: Int!, $name: String, $document: JSON, $linkedFragments: [Int!]) {
-    updateFragment(fg: {id: $fragmentSlug, name: $name, document: $document, linkedFragments: $linkedFragments}) {
+mutation UpdateFragmentDocument($fragmentSlug: Int!, $linkedGoals: [Int!], $name: String, $document: JSON, $linkedFragments: [Int!]) {
+    updateFragment(fg: {id: $fragmentSlug, name: $name, document: $document linkedGoals: $linkedGoals, linkedFragments: $linkedFragments}) {
         id
         name
         document

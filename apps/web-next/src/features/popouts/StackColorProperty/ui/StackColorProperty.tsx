@@ -22,17 +22,6 @@ interface StackColorPropertyProps {
   className?: string
 }
 
-const controls: TabsSelectorItem[] = [
-  {
-    name: true,
-    label: 'Yes'
-  },
-  {
-    name: false,
-    label: 'No'
-  }
-]
-
 export const StackColorProperty: FC<StackColorPropertyProps> = ({ className }) => {
   const { documentManager } = useBuilderDocument()
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackColorProperty}`)

@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@fragmentsx/definition": "workspace:*",
-    "@fragmentsx/render-core": "workspace:*",
+    "@fragmentsx/render-react": "workspace:*",
     "@fragmentsx/utils": "workspace:*",
     "@graph-state/checkers": "^0.1.2",
     "@graph-state/core": "^0.11.7",

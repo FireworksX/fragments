@@ -2,6 +2,7 @@ import { createContext, FC } from "preact/compat";
 import { useArea } from "./hooks/useArea";
 import { GlobalManager } from "@/providers/GlobalManager";
 import { Instance } from "@/components/Instance";
+import { Scope } from "../../providers/Scope";
 
 export interface AreaProps {
   areaCode: string;

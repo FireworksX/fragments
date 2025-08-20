@@ -1,7 +1,7 @@
 # import ../../../../../shared/api/fragments/ReleaseCondition.gql
 
 query ListCampaigns($areaId: Int!) {
-    campaign(areaId: $areaId) {
+    campaign(campaignFilter: {areaId: $areaId}) {
         id
         name
         status

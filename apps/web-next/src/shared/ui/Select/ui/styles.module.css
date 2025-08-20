@@ -8,6 +8,7 @@
     right: 7px;
     top:8px;
     pointer-events: none;
+    color: var(--secondary);
 }
 
 .inner {

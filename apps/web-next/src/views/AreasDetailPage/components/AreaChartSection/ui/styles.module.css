@@ -1,0 +1,23 @@
+.root {}
+
+.value {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+
+.tabsSelector {
+    background: var(--secondary-bg);
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    z-index: 2;
+}
+
+.tabsSelectorCell {
+    padding: 6px 12px;
+}
+
+.body {
+    overflow: auto;
+}

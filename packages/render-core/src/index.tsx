@@ -28,6 +28,7 @@ export * from "./shared/helpers";
 
 export { wrapTextInParagraphWithAttributes } from "@/shared/helpers/wrapTextInParagraphWithAttributes";
 export { findBreakpoint } from "@/shared/helpers/findBreakpoint";
+export { createLayer } from "@/shared/helpers/createLayer";
 
 export { useRenderTarget } from "@/shared/hooks/useRenderTarget";
 export { useGlobalManager } from "@/shared/hooks/useGlobalManager";
@@ -41,6 +42,8 @@ export { useTextContent } from "@/shared/hooks/useTextContent";
 export { useFragmentChildren } from "@/shared/hooks/useFragmentChildren";
 export { useInjectedStyle } from "@/shared/hooks/useInjectedStyle";
 export { useMounted } from "@/shared/hooks/useMounted";
+export { useLayerScopes } from "@/shared/hooks/useLayerScopes";
+export { useLayerTextStyles } from "@/shared/hooks/useLayerStyles/useLayerTextStyles";
 
 export { processOptionalSize } from "@/shared/hooks/useLayerStyles/useOptionalSize";
 export { useLayerSizeValue } from "@/shared/hooks/useLayerStyles/useLayerSizeValue";
@@ -52,6 +55,9 @@ export { useLayerCssOverride } from "@/shared/hooks/useLayerStyles/useLayerCssOv
 export { GlobalManager } from "@/providers/GlobalManager";
 export * from "@/providers/StyleSheetProvider";
 export * from "@/providers/RenderTargetProvider";
+export { Scope } from "@/providers/Scope";
+export { ScopeContext } from "@/providers/Scope/ScopeContext";
+
 export { InstanceContext, Instance } from "@/components/Instance";
 export { Area } from "@/components/Area";
 export type { AreaProps } from "@/components/Area";

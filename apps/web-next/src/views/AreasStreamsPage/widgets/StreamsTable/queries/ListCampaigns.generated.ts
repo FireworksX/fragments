@@ -14,7 +14,7 @@ export type ListCampaignsQuery = { __typename?: 'Query', campaign: Array<{ __typ
 
 export const ListCampaignsDocument = gql`
     query ListCampaigns($areaId: Int!) {
-  campaign(areaId: $areaId) {
+  campaign(campaignFilter: {areaId: $areaId}) {
     id
     name
     status

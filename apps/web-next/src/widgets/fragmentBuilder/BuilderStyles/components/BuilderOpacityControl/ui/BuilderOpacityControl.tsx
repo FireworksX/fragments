@@ -6,6 +6,10 @@ import { Slider } from '@/shared/ui/Slider'
 import { ControlRow } from '@/shared/ui/ControlRow'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { useLayerPropertyValue } from '@/shared/hooks/fragmentBuilder/useLayerPropertyVariable'
+import { useLayerScopes } from '@fragmentsx/render-core'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
+import { useLayerDefinitions } from '@/shared/hooks/fragmentBuilder/useLayerDefinitions'
 
 interface BuilderOpacityControlProps {
   className?: string

@@ -1,6 +1,5 @@
 .root {
     display: flex;
-    flex-direction: column;
     gap: var(--gutter-default);
     position: relative;
     transition: var(--animation-transition-default);
@@ -24,6 +23,7 @@
     display: flex;
     align-items: center;
     gap: var(--gutter-medium);
+    flex: 1;
 }
 
 .logo {

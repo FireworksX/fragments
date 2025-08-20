@@ -17,10 +17,7 @@ export type AuthSignUpMutation = { __typename?: 'Mutation', signup: { __typename
 export const AuthSignUpDocument = gql`
     mutation AuthSignUp($email: String!, $password: String!, $firstName: String!, $lastName: String) {
   signup(
-    email: $email
-    password: $password
-    firstName: $firstName
-    lastName: $lastName
+    userSignUp: {lastName: $lastName, firstName: $firstName, email: $email, password: $password}
   ) {
     accessToken
     refreshToken

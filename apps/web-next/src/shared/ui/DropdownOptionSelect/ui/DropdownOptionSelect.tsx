@@ -7,8 +7,6 @@ export interface DropdownOptionSelectProps extends DropdownOptionProps {
   isActive?: boolean
 }
 
-const DropdownOptionSelect: FC<DropdownOptionSelectProps> = ({ isActive, ...rest }) => {
+export const DropdownOptionSelect: FC<DropdownOptionSelectProps> = ({ isActive, ...rest }) => {
   return <DropdownOption {...rest} suffix={isActive && <CheckIcon />} />
 }
-
-export default DropdownOptionSelect

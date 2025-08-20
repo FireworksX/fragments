@@ -6,17 +6,33 @@ import { StatusDot } from '@/shared/ui/StatusDot'
 import CheckIcon from '@/shared/icons/next/check.svg'
 import { Link } from '@/shared/ui/Link'
 import { Avatar } from '@/shared/ui/Avatar'
+import ArrowUp from '@/shared/icons/next/arrow-up.svg'
+import { Chip } from '@/shared/ui/Chip'
+import { ChipTrend } from '@/shared/ui/ChipTrend'
+import { Trend } from '@/__generated__/types'
 
 interface CampaignPreviewItemProps {
   name: string
   logo?: string
   isActive?: boolean
   slug: string
-  stats?: { label: string; value: string }[]
+  statistic?: {
+    currentStatistic: {
+      conversion: number
+    }
+    trend: Trend
+  }
   className?: string
 }
 
-export const CampaignPreviewItem: FC<CampaignPreviewItemProps> = ({ className, logo, name, slug, isActive, stats }) => {
+export const CampaignPreviewItem: FC<CampaignPreviewItemProps> = ({
+  className,
+  statistic,
+  logo,
+  name,
+  slug,
+  isActive
+}) => {
   return (
     <Link className={cn(className)} partial type='area' areaSlug={slug}>
       {({ isActive: linkIsActive }) => (
@@ -31,15 +47,10 @@ export const CampaignPreviewItem: FC<CampaignPreviewItemProps> = ({ className, l
             <div className={styles.name}>{name}</div>
           </div>
 
-          {stats && (
-            <div className={styles.stats}>
-              {stats.map(stat => (
-                <div key={stat.label}>
-                  <div className={styles.statsTitle}>{stat.label}</div>
-                  <div>{stat.value}</div>
-                </div>
-              ))}
-            </div>
+          {statistic && (
+            <ChipTrend size='s' trend={statistic?.trend}>
+              {statistic?.currentStatistic?.conversion ?? 0}%
+            </ChipTrend>
           )}
         </div>
       )}

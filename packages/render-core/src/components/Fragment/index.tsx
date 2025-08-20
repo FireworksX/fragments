@@ -1,17 +1,14 @@
 import { FC, useContext, useState } from "preact/compat";
 import { useFragment } from "@/components/Fragment/hooks/useFragment";
-import {
-  FragmentContext,
-  FragmentProvider,
-} from "@/components/Fragment/FragmentContext";
+import { FragmentContext } from "@/components/Fragment/FragmentContext";
 import styles from "./styles.module.css";
 import { LinkKey } from "@graph-state/core";
 import { Frame } from "@/components/Frame";
 import { GlobalManager } from "@/providers/GlobalManager";
 import { useGlobalManager } from "@/shared/hooks/useGlobalManager";
 import { definition } from "@fragmentsx/definition";
-import { StyleSheetProvider } from "@/providers/StyleSheetProvider";
 import { useFragmentManager } from "@/shared/hooks/useFragmentManager";
+import { Scope } from "@/providers/Scope";
 
 interface FragmentProps {
   globalManager?: unknown;
@@ -21,35 +18,42 @@ interface FragmentProps {
 
 const FragmentInternal: FC<FragmentProps> = ({ fragmentId, globalManager }) => {
   const { manager: resultGlobalManager } = useGlobalManager(globalManager);
-  const { setRef, children, fragmentContext, hash, isResize } = useFragment(
-    fragmentId,
-    globalManager
-  );
+  const { setRef, children, fragmentContext, layerKey, hash, isResize } =
+    useFragment(fragmentId, globalManager);
 
   return (
-    <GlobalManager value={resultGlobalManager}>
-      <FragmentContext.Provider value={fragmentContext}>
-        <div
-          ref={setRef}
-          data-key={`${definition.nodes.Fragment}:${fragmentId}`}
-          // className={isDocument ? styles.fragmentDocument : styles.fragment}
-          className={`${styles.fragment} ${hash}`}
-        >
-          {children.map((childLink) => {
-            const childLayer = fragmentContext.manager?.resolve(childLink);
-            const isPrimary = childLayer?.isPrimary ?? false;
+    <Scope
+      fragmentManager={fragmentContext.manager}
+      layerKey={layerKey}
+      value={{
+        id: `${definition.nodes.Fragment}:${fragmentId}`,
+        manager: fragmentContext.manager,
+      }}
+    >
+      <GlobalManager value={resultGlobalManager}>
+        <FragmentContext.Provider value={fragmentContext}>
+          <div
+            ref={setRef}
+            data-key={`${definition.nodes.Fragment}:${fragmentId}`}
+            // className={isDocument ? styles.fragmentDocument : styles.fragment}
+            className={`${styles.fragment} ${hash}`}
+          >
+            {children.map((childLink) => {
+              const childLayer = fragmentContext.manager?.resolve(childLink);
+              const isPrimary = childLayer?.isPrimary ?? false;
 
-            return (
-              <Frame
-                key={childLink}
-                layerKey={childLink}
-                hidden={!isResize && !isPrimary}
-              />
-            );
-          })}
-        </div>
-      </FragmentContext.Provider>
-    </GlobalManager>
+              return (
+                <Frame
+                  key={childLink}
+                  layerKey={childLink}
+                  hidden={!isResize && !isPrimary}
+                />
+              );
+            })}
+          </div>
+        </FragmentContext.Provider>
+      </GlobalManager>
+    </Scope>
   );
 };
 

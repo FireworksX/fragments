@@ -1,7 +1,9 @@
-mutation UpdateGoal($goalId: Int!, $name: String, $code: String) {
-    updateProjectGoal(goal: {id: $goalId, name: $name, targetAction: $code}) {
+mutation UpdateGoal($goalId: Int!, $name: String, $code: String, $max: Float, $min: Float) {
+    updateProjectGoal(goal: {id: $goalId, name: $name, targetAction: $code, successLevel: $max, failureLevel: $min}) {
         id
         name
         code: targetAction
+        min: failureLevel
+        max: successLevel
     }
 }

@@ -14,28 +14,48 @@ interface ProjectSettingsProps extends PropsWithChildren {
   className?: string
 }
 
+const pages = [
+  {
+    label: 'General',
+    link: {
+      type: 'projectSetting'
+    },
+    icon: <SettingsIcon />
+  },
+  {
+    label: 'API Keys',
+    link: {
+      type: 'projectSettingTokens'
+    },
+    icon: <KeyIcon />
+  },
+  {
+    label: 'Members',
+    link: {
+      type: 'projectSettingMembers'
+    },
+    icon: <UsersIcon />
+  }
+]
+
 export const ProjectSettingsLayout: FC<ProjectSettingsProps> = ({ className, children }) => {
   return (
     <Container mode='hug' className={cn(styles.root, className)}>
       <div className={styles.aside}>
         <Panel>
-          <Link type='projectSetting'>
-            {({ isActive }) => (
-              <Cell className={cn(styles.cell, { [styles.activeCell]: isActive })} before={<SettingsIcon />}>
-                General
-              </Cell>
-            )}
-          </Link>
-          <Link type='projectSettingTokens'>
-            {({ isActive }) => (
-              <Cell className={cn(styles.cell, { [styles.activeCell]: isActive })} before={<KeyIcon />}>
-                API Keys
-              </Cell>
-            )}
-          </Link>
-          <Cell className={cn(styles.cell, { [styles.activeCell]: false })} before={<UsersIcon />}>
-            Team
-          </Cell>
+          {pages.map(page => (
+            <Link {...page.link}>
+              {({ isActive }) => (
+                <Cell
+                  className={cn(styles.cell, { [styles.activeCell]: isActive })}
+                  beforeClassName={styles.cellBefore}
+                  before={page.icon}
+                >
+                  {page.label}
+                </Cell>
+              )}
+            </Link>
+          ))}
         </Panel>
       </div>
       <div className={styles.content}>{children}</div>

@@ -1,6 +1,7 @@
 .root {
     display: flex;
     gap: var(--gutter-default);
+    align-items: center;
 }
 
 .nav {
@@ -8,6 +9,7 @@
     gap: 5px;
 }
 
-.button {
-    height: 100%;
+
+.feedback {
+    border-radius: var(--radius-submain);
 }

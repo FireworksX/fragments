@@ -5,7 +5,10 @@ import { popoutsStore } from '@/shared/store/popouts.store'
 import { popoutNames } from '@/shared/data'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
-import { declareFragmentProperty } from '@fragmentsx/render-core'
+import { declareFragmentProperty } from '@fragmentsx/render-suite'
+import { setKey } from '@fragmentsx/utils'
+import { useMemo } from 'react'
+import { capitalize } from '@/shared/utils/capitalize'
 
 export const FRAGMENT_PROPERTY_TYPES = [
   definition.variableType.Event,
@@ -15,9 +18,15 @@ export const FRAGMENT_PROPERTY_TYPES = [
   definition.variableType.Object
 ]
 
-interface EditPropertyOptions {
+export interface EditPropertyOptions {
   initial?: boolean
   position?: 'left' | 'right'
+}
+
+interface CreatePropertyOptions {
+  type: keyof typeof definition.variableType
+  parent?: string // Ref to other Variable:123
+  name?: string
 }
 
 export const useFragmentProperties = () => {
@@ -27,8 +36,13 @@ export const useFragmentProperties = () => {
   // const { allowVariables, openVariable } = useBuilderVariableCreator()
   // const { getTransformsByType, createComputedValue } = useBuilderVariableTransforms()
 
-  const createProperty = (prop: { type: string }) => {
-    return declareFragmentProperty(documentManager, { _type: definition.nodes.Variable, ...prop })
+  const createProperty = (prop: CreatePropertyOptions) => {
+    return declareFragmentProperty(documentManager, {
+      _type: definition.nodes.Variable,
+      name: capitalize(prop.type),
+      ...prop,
+      parent: prop?.parent ? setKey(prop.parent) : prop.parent
+    })
   }
 
   const deleteProperty = (prop: Entity) => {
@@ -44,12 +58,14 @@ export const useFragmentProperties = () => {
       const popoutName = {
         [definition.variableType.Number]: popoutNames.stackNumberProperty,
         [definition.variableType.Boolean]: popoutNames.stackBooleanProperty,
+        [definition.variableType.Object]: popoutNames.stackObjectProperty,
         // [builderVariableType.Object]: stackObjectVariableName,
         [definition.variableType.String]: popoutNames.stackStringProperty,
         [definition.variableType.Color]: popoutNames.stackColorProperty,
         [definition.variableType.Link]: popoutNames.stackLinkProperty,
         [definition.variableType.Enum]: popoutNames.stackEnumProperty,
-        [definition.variableType.Event]: popoutNames.stackEventProperty
+        [definition.variableType.Event]: popoutNames.stackEventProperty,
+        [definition.variableType.Image]: popoutNames.stackImageProperty
       }[type]
 
       popoutsStore.open(popoutName, {

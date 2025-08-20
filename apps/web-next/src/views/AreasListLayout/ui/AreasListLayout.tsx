@@ -1,6 +1,7 @@
 'use client'
 import styles from './styles.module.css'
 import { AreasListAside } from '@/views/AreasListLayout/widgets/CampaignsListAside'
+import { Suspense } from 'react'
 
 export const AreasListLayout = ({ children }) => {
   return (

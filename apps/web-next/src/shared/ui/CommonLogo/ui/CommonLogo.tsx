@@ -4,6 +4,27 @@ import styles from './styles.module.css'
 import Image from 'next/image'
 // import { alpha2ToIsoMap, isoFlags } from 'src/data/flags'
 
+/**
+ * CDN может обрабатывать определённые значения ширины и высоты.
+ * Например, 16x16 такого логотипа не будет, но в дизайне нужен размер
+ * именно 16x16. Поэтому мы принимаем 16 и находим ближайшее значение,
+ * которое поддерживает cdn.
+ */
+const CDN_FLAGS_SIZES = [20, 40, 80, 160, 320, 640, 1280, 2560]
+
+function findClosestGreaterOptimized(arr: number[], target: number) {
+  if (arr.includes(target)) return target
+  let minGreater: number | null = null
+
+  for (const num of arr) {
+    if (num > target && (minGreater === null || num < minGreater)) {
+      minGreater = num
+    }
+  }
+
+  return minGreater ?? arr.at(-1)
+}
+
 export type CommonLogoSize = 20 | 24 | 30 | 32 | 34 | 44 | 60 | 90
 
 export interface CommonLogoProps {
@@ -29,41 +50,29 @@ const CommonLogo: React.FC<CommonLogoProps> = ({
   alt,
   withBorder = false
 }) => {
-  if (iso) {
-    iso = iso.toUpperCase()
+  if (iso && iso.length === 2) {
+    iso = iso.toLowerCase()
+    const cdnSizeX1 = findClosestGreaterOptimized(CDN_FLAGS_SIZES, size)
+    const cdnSizeX2 = findClosestGreaterOptimized(CDN_FLAGS_SIZES, size * 2)
+    const cdnSizeX3 = findClosestGreaterOptimized(CDN_FLAGS_SIZES, size * 3)
+
+    const x1 = `https://flagcdn.com/w${cdnSizeX1}/${iso}`
+    const x2 = `https://flagcdn.com/w${cdnSizeX2}/${iso}`
+    const x3 = `https://flagcdn.com/w${cdnSizeX3}/${iso}`
+
+    return (
+      <div
+        className={cn(className, styles.root, styles.flag, { [styles.withRadius]: withRadius })}
+        style={{ width: size }}
+      >
+        <picture>
+          <source type='image/webp' srcSet={`${x1}.webp, ${x2}.webp 2x, ${x3}.webp 3x`} />
+          <source type='image/png' srcSet={`${x1}.png,  ${x2}.png 2x, ${x3}.png 3x`} />
+          <Image src={`${x1}.png`} width={size} height={size} alt={alt ?? iso} />
+        </picture>
+      </div>
+    )
   }
-
-  // if (iso && iso.length === 2) {
-  //   iso = alpha2ToIsoMap[iso]
-  // }
-
-  // if (iso) {
-  //   const image = isoFlags.has(iso) && iso.toLowerCase()
-  //
-  //   if (!image) {
-  //     return null
-  //   }
-  //
-  //   const x1 = `https://cdn.scores24.ru/upload/scores24/dist/static/img/general/flags/96dpi/${image}.png`
-  //   const x2 = `https://cdn.scores24.ru/upload/scores24/dist/static/img/general/flags/192dpi/${image}.png`
-  //   const x3 = `https://cdn.scores24.ru/upload/scores24/dist/static/img/general/flags/288dpi/${image}.png`
-  //
-  //   return (
-  //     <Styled.Root
-  //       className={className}
-  //       size='flag'
-  //       withRadius={withRadius}
-  //       withBackground={withBackground}
-  //       withBorder={withBorder}
-  //     >
-  //       <picture>
-  //         <source suppressHydrationWarning data-srcset={`${x1} 1x, ${x3} 2x`} media='(min-width: 1600px)' />
-  //         <source suppressHydrationWarning data-srcset={`${x1} 1x, ${x2} 2x`} media='(min-width: 320px)' />
-  //         <Styled.Image src={x1} size={size} alt={alt || iso} />
-  //       </picture>
-  //     </Styled.Root>
-  //   )
-  // }
 
   if (src) {
     return (

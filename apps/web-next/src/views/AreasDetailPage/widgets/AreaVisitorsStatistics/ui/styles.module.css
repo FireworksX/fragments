@@ -1,0 +1,14 @@
+.root {}
+
+.group {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding-inline: 12px;
+
+    &:last-child {
+        border-right: none;
+    }
+}
+
+

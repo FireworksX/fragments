@@ -26,4 +26,37 @@
         margin-left: 2px;
         color: var(--secondary);
     }
+
+    .success {
+        background: var(--success-bg);
+        color: var(--success);
+
+        .prefix {
+            color: var(--success);
+        }
+    }
+
+    .danger {
+        background: var(--danger-bg);
+        color: var(--danger);
+
+        .prefix {
+            color: var(--danger);
+        }
+    }
+
+    .gray {
+        background: var(--secondary-bg);
+        color: var(--secondary);
+
+        .prefix {
+            color: var(--secondary);
+        }
+    }
+
+    .s {
+        padding: 2px 5px;
+        font-size: 9px;
+        gap: 2px;
+    }
 }

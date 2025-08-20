@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "cc": "pnpm dlx hygen new component",
-    "generate:watch": "graphql-codegen -w -c ./gql-codegen.json"
+    "generate:watch": "graphql-codegen -w --require dotenv/config -c ./gql-codegen.ts"
   },
   "dependencies": {
     "@apollo/client": "^3.11.8",
@@ -43,13 +43,13 @@
     "apollo-upload-client": "^18.0.1",
     "axios": "^1.7.2",
     "classnames": "^2.5.1",
+    "dayjs": "^1.11.13",
     "detect-passive-events": "^2.0.3",
     "dnd-kit-sortable-tree": "^0.1.73",
     "escape-html": "^1.0.3",
     "jwt-decode": "^4.0.0",
-    "next": "15.1.0",
+    "next": "15.4.6",
     "next-auth": "^4.24.7",
-    "preact": "^10.26.4",
     "react": "^19.0.0",
     "react-collapse": "^5.1.1",
     "react-color": "^2.19.3",
@@ -84,7 +84,6 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
     "eslint-config-prettier": "^7",
-    "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-unused-imports": "^2.0.0",
     "graphql": "^16.9.0",
     "hygen": "^6.2.11",

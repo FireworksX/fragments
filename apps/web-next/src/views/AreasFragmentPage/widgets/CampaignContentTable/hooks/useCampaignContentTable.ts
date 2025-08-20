@@ -3,15 +3,17 @@ import { useModal } from '@/shared/hooks/useModal'
 import { modalNames } from '@/shared/data'
 import { RotationType, VariantStatus } from '@/__generated__/types'
 import { useVariantsRolloutQuery } from '@/views/AreasFragmentPage/widgets/CampaignContentTable/queries/VariantsRollout.generated'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useUpdateFeatureFlagMutation } from '@/shared/api/fatureFlag/mutation/UpdateFeatureFlag.generated'
 import { useCreateFeatureFlagVariantMutation } from '@/shared/api/featureFlagVariant/mutations/CreateFeatureFlagVariant.generated'
 import { useRemoveFeatureFlagVariantMutation } from '@/shared/api/featureFlagVariant/mutations/RemoveFeatureFlagVariant.generated'
 import { useUpdateFeatureFlagVariantMutation } from '@/shared/api/featureFlagVariant/mutations/UpdateFeatureFlagVariant.generated'
 import { useEqualizeRolloutMutation } from '@/views/AreasFragmentPage/widgets/CampaignContentTable/queries/EqualizeRollout.generated'
+import { useDateCompare } from '@/shared/hooks/useDateCompare'
 
 export const useCampaignContentTable = (campaignId: number) => {
   const { open: openModal, close: closeModal } = useModal()
+  const dateCompare = useDateCompare('today')
 
   const [createVariant, { loading: creatingVariant }] = useCreateFeatureFlagVariantMutation()
   const [removeVariant, { loading: removingVariant }] = useRemoveFeatureFlagVariantMutation()
@@ -21,12 +23,22 @@ export const useCampaignContentTable = (campaignId: number) => {
 
   const { data, loading } = useCampaignContentQuery({
     variables: {
-      id: campaignId
-    }
+      id: campaignId,
+      ...dateCompare
+    },
+    skip: !campaignId
   })
+
   const campaign = data?.campaign?.at(0)
   const featureFlag = campaign?.featureFlag
-  const variants = featureFlag?.variants ?? []
+  const variants = useMemo(
+    () =>
+      (featureFlag?.variants ?? []).map(variant => ({
+        ...variant,
+        statistic: data?.campaignStatistic?.at(0)?.variants?.find(el => el.variantId === variant.id)
+      })),
+    [data?.campaignStatistic, featureFlag?.variants]
+  )
 
   const {
     data: variantsRolloutData,

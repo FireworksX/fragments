@@ -1,5 +1,5 @@
 import { GraphState, LinkKey } from "@graph-state/core";
-import { useLayerValue as useLayerValueCore } from "@fragmentsx/render-core";
+import { useLayerValue as useLayerValueCore } from "@fragmentsx/render-react";
 import { useLayerValueSpring } from "@/hooks/useLayerValueSpring";
 
 export interface UseLayerValueOptions {

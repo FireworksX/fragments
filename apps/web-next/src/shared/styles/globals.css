@@ -49,6 +49,8 @@
 
     --background: #FEFEFE;
     --background--rgb: 254, 254, 254;
+    --background-accent: #111111;
+    --background-accent--rgb: 17, 17, 17;
     --background-secondary: #f8f8f8;
     --background-secondary--rgb: 248, 248, 248;
     --background-light: #faf9f9;

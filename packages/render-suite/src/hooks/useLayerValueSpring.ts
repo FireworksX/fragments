@@ -3,7 +3,7 @@ import { SpringValue } from "@react-spring/web";
 import { useCallback, useMemo, useState } from "react";
 import { debounce, noop } from "@fragmentsx/utils";
 import { isVariableLink } from "@fragmentsx/definition";
-import { getOverrider, isInheritField } from "@fragmentsx/render-core";
+import { getOverrider, isInheritField } from "@fragmentsx/render-react";
 
 interface Options<T> {
   layerKey: LinkKey;

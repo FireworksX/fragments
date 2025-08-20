@@ -3,17 +3,49 @@
     background: var(--background);
     border-radius: var(--radius-main);
     padding: var(--gutter-default);
-    container: inline-size;
+    container: body / inline-size;
 }
 
 .body {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    gap: 24px;
+}
+
+.wide {
+    grid-column: span 2;
+}
+
+.part {
+    grid-column: span 2;
+}
+
+.short {
+    grid-column: span 2;
+}
+
+.tabsSelector {
+    background: var(--secondary-bg);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-main);
+}
+
+.tabsSelectorCell {
+    padding: 3px 7px;
+    border-radius: var(--radius-main);
+}
+
+.countryAnalyticsLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.graphContainer {
+    padding: 22px 22px 12px 0;
 }
 
 .integration {
-    grid-column: span 6;
     background: var(--secondary-bg);
 }
 
@@ -35,5 +67,17 @@
 @container (inline-size > 1024px) {
     .body {
         grid-template-columns: repeat(6, 1fr);
+    }
+
+    .wide {
+        grid-column: span 6;
+    }
+
+    .part {
+        grid-column: span 3;
+    }
+
+    .short {
+        grid-column: span 2;
     }
 }

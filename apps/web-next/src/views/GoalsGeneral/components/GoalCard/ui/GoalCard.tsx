@@ -3,95 +3,96 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import { Button } from '@/shared/ui/Button'
 import RemoveIcon from '@/shared/icons/next/trash.svg'
-import { ContentEditable } from '@/shared/ui/ContentEditable'
-import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import EditIcon from '@/shared/icons/next/pencil.svg'
+import { GoalCardChart } from '@/views/GoalsGeneral/components/GoalCardChart'
+import { GoalCardChartProps } from '@/views/GoalsGeneral/components/GoalCardChart/ui/GoalCardChart'
 
-interface GoalCardProps {
+export interface GoalCardProps {
   id: number
   name: string
   code: string
+  min?: number | null
+  max?: number | null
+  statistic?: {
+    points: GoalCardChartProps['points']
+    conversion: number
+    achieved: number
+    views: number
+  }
   className?: string
-  onEdit?: (options: { name?: string; code?: string }) => void
+  onEdit?: () => void
   onRemove?: () => void
 }
 
-const data = [
-  { time: '10:00', value: 80 },
-  { time: '11:00', value: 90 },
-  { time: '12:00', value: 110 },
-  { time: '13:00', value: 100 },
-  { time: '14:00', value: 70 },
-  { time: '15:00', value: 95 }
-]
-
-const MIN = 75
-const MAX = 105
-
-const computeOffset = val => {
-  // нормируем value в [0..1] внутри [MIN, MAX]
-  return (val - MIN) / (MAX - MIN)
-}
-
-// Находим оффсет порога (например для MIN и MAX)
-const minOffset = 0
-const maxOffset = 1
-
-export const GoalCard: FC<GoalCardProps> = ({ className, id, name, code, onEdit, onRemove }) => {
+export const GoalCard: FC<GoalCardProps> = ({ className, id, statistic, min, max, name, code, onEdit, onRemove }) => {
   return (
     <div className={cn(styles.root, className)}>
       <div className={styles.info}>
         <div className={styles.infoBody}>
-          <div className={styles.title}>
-            {id}.
-            <ContentEditable className={styles.editable} value={name} onSubmit={name => onEdit?.({ name })} />
+          <div className={styles.infoBodyInner}>
+            <div className={styles.title}>
+              {id}.<div className={styles.editable}>{name}</div>
+            </div>
+
+            <div className={styles.goalCode}>
+              Code: <div className={styles.editable}>{code}</div>
+            </div>
           </div>
 
-          <div className={styles.goalCode}>
-            Code: <ContentEditable className={styles.editable} value={code} onSubmit={code => onEdit?.({ code })} />
-          </div>
-        </div>
-
-        <div className={styles.body}>
-          <div className={styles.row}>
-            <div className={cn(styles.rowName, styles.accent)}>Конверсия</div>
-            <div className={styles.rowValue}>0,46%</div>
-          </div>
-          <div className={styles.row}>
-            <div className={styles.rowName}>Достижения цели</div>
-            <div className={styles.rowValue}>45 083</div>
-          </div>
-          <div className={styles.row}>
-            <div className={styles.rowName}>Целевые визиты</div>
-            <div className={styles.rowValue}>39 167</div>
+          <div className={styles.actions}>
+            <Button mode='outline' icon={<EditIcon />} onClick={() => onEdit?.()} />
+            <Button mode='danger-outline' icon={<RemoveIcon />} onClick={() => onRemove?.()} />
           </div>
         </div>
+
+        {statistic && (
+          <div className={styles.body}>
+            <div className={styles.row}>
+              <div className={cn(styles.rowName, styles.accent)}>Конверсия</div>
+              <div className={styles.rowValue}>{statistic.conversion}</div>
+            </div>
+            <div className={styles.row}>
+              <div className={styles.rowName}>Достижения цели</div>
+              <div className={styles.rowValue}>{statistic.achieved}</div>
+            </div>
+            <div className={styles.row}>
+              <div className={styles.rowName}>Целевые визиты</div>
+              <div className={styles.rowValue}>{statistic.views}</div>
+            </div>
+            <div className={styles.row}>
+              <div className={styles.rowName}>Min/max %</div>
+              {!min && !max && (
+                <Button className={styles.rowButton} mode='tertiary' size='small' onClick={onEdit}>
+                  Set min/max
+                </Button>
+              )}
+              {!min && !!max && (
+                <div className={styles.rowValue}>
+                  <Button className={styles.rowButton} mode='tertiary' size='small' onClick={onEdit}>
+                    Set min
+                  </Button>{' '}
+                  / {max}
+                </div>
+              )}
+              {min && !max && (
+                <div className={styles.rowValue}>
+                  {min} /{' '}
+                  <Button className={styles.rowButton} mode='tertiary' size='small' onClick={onEdit}>
+                    Set max
+                  </Button>
+                </div>
+              )}
+              {!!min && !!max && (
+                <div className={styles.rowValue}>
+                  {min} / {max}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
-      <ResponsiveContainer width='100%' height={300}>
-        <AreaChart data={data}>
-          <defs>
-            <linearGradient id='colorByValue' x1='0' y1='0' x2='0' y2='1'>
-              {/* Зона за пределом MAX */}
-              <stop offset={`${computeOffset(MAX)}%`} stopColor='green' stopOpacity={0.2} />
-              <stop offset={`${computeOffset(MAX)}%`} stopColor='red' stopOpacity={0.5} />
-              {/* Середина диапазона */}
-              <stop offset={`${computeOffset(MIN)}%`} stopColor='green' stopOpacity={0.5} />
-              <stop offset={`${computeOffset(MIN)}%`} stopColor='red' stopOpacity={0.5} />
-            </linearGradient>
-          </defs>
-
-          <CartesianGrid strokeDasharray='3 3' />
-          <XAxis dataKey='time' />
-          <YAxis domain={['auto', 'auto']} />
-          <Tooltip />
-
-          <Area type='monotone' dataKey='value' stroke='#8884d8' fill='url(#colorByValue)' />
-        </AreaChart>
-      </ResponsiveContainer>
-
-      <div className={styles.actions}>
-        <Button mode='tertiary' icon={<RemoveIcon />} onClick={() => onRemove()} />
-      </div>
+      {statistic?.points && <GoalCardChart points={statistic.points} min={min} max={max} />}
     </div>
   )
 }

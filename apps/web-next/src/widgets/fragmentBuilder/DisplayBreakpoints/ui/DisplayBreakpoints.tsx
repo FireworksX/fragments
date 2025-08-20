@@ -36,7 +36,8 @@ const DisplayBreakpoints: FC<BuilderDisplayBreakpointsProps> = ({ className }) =
           return <WithDroppable layerKey={layerKey}>{Node}</WithDroppable>
         }}
       >
-        <Fragment fragmentId={currentFragmentId} />
+        <Instance fragmentId={currentFragmentId} />
+        {/*<Fragment fragmentId={currentFragmentId} />*/}
       </CustomRender>
 
       {/*{layers.map((layerKey, index) => (*/}

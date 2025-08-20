@@ -24,9 +24,7 @@ export const FragmentsEditPlaceholder: FC<FragmentsEditPlaceholderProps> = ({ cl
     id: 'builderPlaceholder',
     data: { area: 'builderPlaceholder' }
   })
-
-  // const { open: openModal, close: closeModal } = useModal()
-  const { createProjectFragment, projectSlug } = useProjectFiles()
+  const { createProjectFragment, loading } = useProjectFiles()
   const { openFragment } = useBuilder()
 
   useGraphEffect(builderManager, builderManager.$droppable.builderPlaceholderDroppableKey, nextValue => {
@@ -34,6 +32,18 @@ export const FragmentsEditPlaceholder: FC<FragmentsEditPlaceholderProps> = ({ cl
       openFragment(nextValue.active.id)
     }
   })
+
+  const handleCreateFragment = async () => {
+    const response = await createProjectFragment({
+      variables: {
+        name: 'Untitled'
+      }
+    })
+
+    if (response.data?.createFragment?.id) {
+      openFragment(response.data?.createFragment?.id)
+    }
+  }
 
   return (
     <>
@@ -53,27 +63,7 @@ export const FragmentsEditPlaceholder: FC<FragmentsEditPlaceholderProps> = ({ cl
               <h1 className={styles.title}>No such file</h1>
               <p className={styles.description}>Select fragment form project or create new.</p>
             </div>
-            <Button
-            // onClick={() =>
-            // openModal(modalNames.createFragment, {
-            //   creating: false,
-            //   onCreate: async ({ name }) => {
-            //     // updateContext({ creating: true })
-            //
-            //     await createProjectFragment({
-            //       variables: {
-            //         projectSlug,
-            //         name,
-            //         parentId: null
-            //       }
-            //     })
-            //
-            //     // updateContext({ creating: false })
-            //     closeModal()
-            //   }
-            // })
-            // }
-            >
+            <Button loading={loading.createFragmentLoading} onClick={handleCreateFragment}>
               Create Fragment
             </Button>
           </div>

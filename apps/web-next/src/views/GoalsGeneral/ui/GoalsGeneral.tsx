@@ -1,5 +1,5 @@
 'use client'
-import { FC, useState } from 'react'
+import { FC, useMemo, useState } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { useProject } from '@/shared/hooks/useProject'
@@ -17,48 +17,25 @@ import { useUpdateGoalMutation } from '@/shared/api/goals/UpdateGoal.generated'
 import { useDeleteGoalMutation } from '@/shared/api/goals/DeleteGoal.generated'
 import { withModalCollector } from '@/shared/hocs/withModalCollector'
 import { SpinnerBlock } from '@/shared/ui/SpinnerBlock'
+import { PeriodSelector } from '@/shared/ui/PeriodSelector'
+import { useGoalsStatisticsQuery } from '@/views/GoalsGeneral/queries/GoalsStatistics.generated'
+import { CompareInterval, useDateCompare } from '@/shared/hooks/useDateCompare'
+import { useGoalsGeneral } from '@/views/GoalsGeneral/hooks/useGoalsGeneral'
 
 interface GoalsGeneralProps {
   className?: string
 }
 
 const GoalsGeneral: FC<GoalsGeneralProps> = ({ className }) => {
-  const { open, close } = useModal()
-  const { project, projectSlug } = useProject()
-  const { data, loading } = useGoalsListQuery({
-    variables: {
-      projectSlug
-    }
-  })
-  const goals = data?.projectGoals ?? []
-
-  const [createGoal, { loading: loadingCreate }] = useCreateGoalMutation()
-  const [updateGoal] = useUpdateGoalMutation()
-  const [removeGoal] = useDeleteGoalMutation()
+  const { loadingCreate, handleCreateGoal, period, removeGoal, handleEditGoal, loading, list, setPeriod } =
+    useGoalsGeneral()
 
   return (
     <Container mode='hug' className={cn(styles.root, className)}>
       <PageHeading
         description='A catalog of your project goals.'
         actions={
-          <Button
-            loading={loadingCreate}
-            icon={<CreateIcon />}
-            onClick={() =>
-              open(modalNames.goalView, {
-                onSubmit: goal => {
-                  close()
-                  createGoal({
-                    variables: {
-                      projectSlug,
-                      name: goal.name,
-                      code: goal.code
-                    }
-                  })
-                }
-              })
-            }
-          >
+          <Button loading={loadingCreate} icon={<CreateIcon />} onClick={handleCreateGoal}>
             Create Goal
           </Button>
         }
@@ -66,22 +43,22 @@ const GoalsGeneral: FC<GoalsGeneralProps> = ({ className }) => {
         Goals
       </PageHeading>
 
+      <div className={styles.header}>
+        <PeriodSelector period={period} onChange={setPeriod} />
+      </div>
+
       <div className={styles.body}>
         {loading && <SpinnerBlock />}
-        {goals.map(goal => (
+        {list.map(goal => (
           <GoalCard
             key={goal.id}
             id={goal.id}
             name={goal.name}
             code={goal.code}
-            onEdit={updatedGoal =>
-              updateGoal({
-                variables: {
-                  goalId: goal.id,
-                  ...updatedGoal
-                }
-              })
-            }
+            min={goal.min}
+            max={goal.max}
+            statistic={goal.statistic}
+            onEdit={() => handleEditGoal(goal)}
             onRemove={() =>
               removeGoal({
                 variables: {

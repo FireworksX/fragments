@@ -1,5 +1,6 @@
 import { GraphState, LinkKey } from "@graph-state/core";
 import { getParent } from "@/shared/helpers/getParent.ts";
+import { isBrowser } from "@fragmentsx/utils";
 
 export const getAllParents = (
   manager: GraphState,

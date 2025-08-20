@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import React, { FC } from 'react'
 import DropdownGroup from '@/shared/ui/DropdownGroup/ui/DropdownGroup'
 import DropdownOption, { DropdownOptionProps } from '@/shared/ui/DropdownOption/ui/DropdownOption'
 import Dropdown, { DropdownProps } from '../../Dropdown/ui/Dropdown'
@@ -10,15 +10,27 @@ export interface DropdownRenderOption extends DropdownOptionProps {
   label: string
 }
 
-export interface RenderDropdownProps extends DropdownProps {
+export interface RenderDropdownProps extends Omit<DropdownProps, 'placement' | 'options'> {
+  depth?: number
   options: DropdownRenderOption[][]
+  placement?: DropdownProps['placement'] | ((depth: number) => DropdownProps['placement'])
   className?: string
 }
 
-const RenderDropdown: FC<RenderDropdownProps> = ({ className, children, options, ...dropdownProps }) => {
+const RenderDropdown: FC<RenderDropdownProps> = ({
+  className,
+  placement = 'left-start',
+  depth = 0,
+  children,
+  options,
+  ...dropdownProps
+}) => {
+  const resultPlacement = typeof placement === 'function' ? placement(depth) : placement
+
   return (
     <Dropdown
       className={className}
+      placement={resultPlacement}
       options={options.map((group, index) => (
         <DropdownGroup key={index}>
           {group.map(option => {
@@ -36,7 +48,8 @@ const RenderDropdown: FC<RenderDropdownProps> = ({ className, children, options,
               <RenderDropdown
                 key={option.name ?? option.label}
                 arrow={false}
-                placement={option.optionsPlacement ?? 'left-start'}
+                depth={depth + 1}
+                placement={placement}
                 options={option.options}
               >
                 {Option}

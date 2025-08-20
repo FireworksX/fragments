@@ -12,6 +12,7 @@ import { CommonLogo } from '@/shared/ui/CommonLogo'
 import { useUploadFile } from '@/shared/hooks/useUploadFile'
 import { useUpdateProjectMutation } from '@/shared/api/project/mutaion/UpdateProject.generated'
 import { ProjectWhiteList } from '@/views/ProjectSettingsGeneral/widgets/ProjectWhiteList'
+import { PageHeading } from '@/shared/ui/PageHeading/PageHeading'
 
 interface ProjectSettingsGeneralProps {
   className?: string

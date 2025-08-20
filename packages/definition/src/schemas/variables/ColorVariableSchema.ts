@@ -9,6 +9,7 @@ export const ColorVariableSchema = v.object({
     fallback: "String",
     overridable: false,
   }),
+  parent: layerField(v.nullable(v.string()), { overridable: false }),
   type: layerField(v.literal(variableType.Color), {
     fallback: variableType.Color,
   }),

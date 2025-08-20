@@ -2,7 +2,7 @@ import { useContext, useMemo } from "react";
 import { LinkKey } from "@graph-state/core";
 import { definition } from "@fragmentsx/definition";
 import { useLayerValue } from "@/hooks/useLayerValue";
-import { FragmentContext } from "@fragmentsx/render-core";
+import { FragmentContext } from "@fragmentsx/render-react";
 
 export const useLayerBackground = (layerKey: LinkKey) => {
   const { manager: fragmentManager } = useContext(FragmentContext);
