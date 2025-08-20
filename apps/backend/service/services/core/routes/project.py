@@ -20,6 +20,7 @@ from crud.project import (
     get_project_by_id_db,
     get_project_goal_by_id_db,
     get_projects_by_user_id_db,
+    remove_user_from_project_db,
     update_project_by_id_db,
     update_project_goal_db,
 )
@@ -137,7 +138,7 @@ async def projects(info: strawberry.Info[Context]) -> List[ProjectGet]:
     prs: List[Project] = await get_projects_by_user_id_db(db, user.user.id)
     res: List[ProjectGet] = []
     for project in prs:
-        res.append(await project_by_id(info, project.id))  # TODO issue of sqlalchemy
+        res.append(await project_by_id(info, project.id))
     logger.info(f"Found {len(res)} projects")
     return res
 
@@ -259,12 +260,54 @@ async def invite_user_to_project_route(
 ) -> None:
     logger.info(f"Inviting user {email} to project {project_id} with role {role_to_add}")
     db: Session = info.context.session()
-    user: Optional[User] = await get_user_by_email_db(db, email)
-    if user is None:
+    user: AuthPayload = await info.context.user()
+    user_to_invite: Optional[User] = await get_user_by_email_db(db, email)
+    if user_to_invite is None:
         logger.error(f"User {email} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='User does not exist')
-    await add_user_to_project_db(db, user.id, project_id, role_to_add)
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
+    if project is None:
+        logger.error(f"Project {project_id} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
+    permission: bool = await private_key_permission(db, user.user.id, project_id)
+    if not permission:
+        logger.warning(f"User {user.user.id} unauthorized to invite users to project {project_id}")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to invite users'
+        )
+    await add_user_to_project_db(db, user_to_invite.id, project_id, role_to_add)
     logger.info(f"Invited user {email} to project {project_id} with role {role_to_add}")
+
+
+async def remove_user_from_project_route(
+    info: strawberry.Info[Context], user_id: int, project_id: int
+) -> None:
+    logger.info(f"Removing user {user_id} from project {project_id}")
+    user: AuthPayload = await info.context.user()
+    db: Session = info.context.session()
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
+    if project is None:
+        logger.error(f"Project {project_id} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
+
+    permission: bool = await private_key_permission(db, user.user.id, project_id)
+    if not permission:
+        logger.warning(
+            f"User {user.user.id} unauthorized to remove users from project {project_id}"
+        )
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to remove users'
+        )
+    user_to_remove: Optional[User] = await get_user_by_id_db(db, user_id=user_id)
+    if user_to_remove is None:
+        logger.error(f"User {user_id} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='User does not exist')
+    try:
+        await remove_user_from_project_db(db, user_id, project_id)
+    except ValueError as exc:
+        logger.error(f"Failed to remove user {user_id} from project {project_id}: {str(exc)}")
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(exc)) from exc
+    logger.info(f"Removed user {user_id} from project {project_id}")
 
 
 async def add_user_to_project_route(
@@ -278,7 +321,7 @@ async def add_user_to_project_route(
         logger.error(f"Project {project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
 
-    permission: bool = await write_permission(db, user.user.id, project_id)
+    permission: bool = await private_key_permission(db, user.user.id, project_id)
     if not permission:
         logger.warning(f"User {user.user.id} unauthorized to add users to project {project_id}")
         raise HTTPException(
@@ -299,7 +342,7 @@ async def change_user_role_route(
     logger.info(f"Changing role for user {user_id} in project {project_id} to {role_to_add}")
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
-    permission: bool = await write_permission(db, user.user.id, project_id)
+    permission: bool = await private_key_permission(db, user.user.id, project_id)
     if not permission:
         logger.warning(f"User {user.user.id} unauthorized to change roles in project {project_id}")
         raise HTTPException(

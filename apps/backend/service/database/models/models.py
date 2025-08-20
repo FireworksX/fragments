@@ -100,7 +100,7 @@ class Area(Base):
     project = relationship('Project')
 
     # One-to-Many relationship with Campaign
-    campaigns = relationship('Campaign', back_populates='area')
+    campaigns = relationship('Campaign', back_populates='area', cascade='all, delete-orphan')
 
     properties = Column('properties', JSON, nullable=True)
 
@@ -115,7 +115,9 @@ class Project(Base):
     owner_id = Column('owner_id', Integer, ForeignKey('user.id'))
     owner = relationship('User')
 
-    members = relationship('ProjectMemberRole', back_populates='project')
+    members = relationship(
+        'ProjectMemberRole', back_populates='project', cascade='all, delete-orphan'
+    )
 
     areas = relationship('Area', back_populates='project', cascade='all, delete-orphan')
 
@@ -499,7 +501,7 @@ class Media(Base):
 class Client(Base):
     __tablename__ = 'client'
     id = Column('id', Integer, primary_key=True, index=True)
-    project_id = Column('project_id', Integer, ForeignKey('project.id'))
+    project_id = Column('project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'))
     created_at = Column('created_at', DateTime, default=datetime.datetime.now(datetime.UTC))
     updated_at = Column(
         'updated_at',
@@ -516,7 +518,9 @@ class Client(Base):
 class ClientHistory(Base):
     __tablename__ = 'client_history'
     id = Column('id', Integer, primary_key=True, index=True)
-    client_id = Column('client_id', Integer, ForeignKey('client.id', ondelete='CASCADE'))
+    client_id = Column(
+        'client_id', Integer, ForeignKey('client.id', ondelete='CASCADE'), nullable=False
+    )
     created_at = Column('created_at', DateTime, default=datetime.datetime.now(datetime.UTC))
 
     # Device info

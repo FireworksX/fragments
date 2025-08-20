@@ -74,6 +74,21 @@ async def add_user_to_project_db(
     logger.debug(f"Added user {user_id} to project {project_id}")
 
 
+async def remove_user_from_project_db(db: Session, user_id: int, project_id: int) -> None:
+    logger.info(f"Removing user {user_id} from project {project_id}")
+    member_role: ProjectMemberRole = (
+        db.query(ProjectMemberRole)
+        .filter(ProjectMemberRole.user_id == user_id, ProjectMemberRole.project_id == project_id)
+        .first()
+    )
+    if member_role is None:
+        logger.error(f"User {user_id} not found in project {project_id}")
+        raise ValueError(f"User {user_id} not found in project {project_id}")
+    db.delete(member_role)
+    db.commit()
+    logger.debug(f"Removed user {user_id} from project {project_id}")
+
+
 async def change_user_role_db(db: Session, user_id: int, project_id: int, role: UserRole) -> None:
     logger.info(f"Changing role for user {user_id} in project {project_id} to {role}")
     project: Project = db.query(Project).filter((Project.id == project_id)).first()
@@ -222,7 +237,9 @@ async def delete_project_by_id_db(db: Session, project_id: int) -> None:
 
 async def get_projects_by_user_id_db(db: Session, user_id: int) -> List[Project]:
     logger.info(f"Getting projects for user {user_id}")
-    projects = db.query(Project).filter(Project.owner_id == user_id).all()
+    projects = (
+        db.query(Project).join(ProjectMemberRole).filter(ProjectMemberRole.user_id == user_id).all()
+    )
     logger.debug(f"Found {len(projects)} projects for user {user_id}")
     return projects
 
