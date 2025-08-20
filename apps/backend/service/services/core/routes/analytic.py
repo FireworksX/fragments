@@ -53,7 +53,7 @@ async def get_variant_statistic_route(
     to_ts: datetime,
     prev_from_ts: datetime,
     prev_to_ts: datetime,
-) -> VariantStatisticGet:
+) -> Optional[VariantStatisticGet]:
     logger.info(f"Getting statistic for variant {variant_id}")
     db: Session = info.context.session()
 
@@ -91,7 +91,7 @@ async def get_campaign_statistic_route(
     to_ts: datetime,
     prev_from_ts: datetime,
     prev_to_ts: datetime,
-) -> CampaignStatisticGet:
+) -> Optional[CampaignStatisticGet]:
     logger.info(f"Getting statistic for campaign {campaign_id}")
     db: Session = info.context.session()
     campaign: Optional[Campaign] = await get_campaign_by_id_db(db, campaign_id)
@@ -128,7 +128,7 @@ async def get_area_statistic_route(
     to_ts: datetime,
     prev_from_ts: datetime,
     prev_to_ts: datetime,
-) -> AreaStatisticGet:
+) -> Optional[AreaStatisticGet]:
     logger.info(f"Getting statistic for area {area_id}")
     db: Session = info.context.session()
     area: Optional[Area] = await get_area_by_id_db(db, area_id)
@@ -163,7 +163,7 @@ async def get_project_statistic_route(
     to_ts: datetime,
     prev_from_ts: datetime,
     prev_to_ts: datetime,
-) -> ProjectStatisticGet:
+) -> Optional[ProjectStatisticGet]:
     logger.info(f"Getting statistic for project {project_id}")
     db: Session = info.context.session()
     project: Optional[Project] = await get_project_by_id_db(db, project_id)
