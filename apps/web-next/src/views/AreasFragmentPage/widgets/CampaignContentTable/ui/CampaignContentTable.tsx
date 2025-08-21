@@ -254,12 +254,12 @@ const CampaignContentTable: FC<CampaignContentTableProps> = ({ className, campai
               <div className={styles.innerCell}>
                 <Dropdown
                   trigger='click'
-                  options={<GoalsConversionInfo goals={variant?.statistic?.goals ?? []} />}
+                  // options={<GoalsConversionInfo goals={variant?.statistic?.goals ?? []} />}
                   width={230}
                 >
                   {variant.statistic && (
-                    <ChipTrend trend={variant.statistic?.trend}>
-                      {variant.statistic?.currentStatistic.conversion}%
+                    <ChipTrend trend={variant.statistic?.trend?.conversionTrend?.trend}>
+                      {variant.statistic?.trend?.conversionTrend?.difference}%
                     </ChipTrend>
                   )}
                 </Dropdown>

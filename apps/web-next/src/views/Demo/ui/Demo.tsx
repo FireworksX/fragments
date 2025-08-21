@@ -1080,8 +1080,9 @@ export const Demo = () => {
                       </div>
                     </div>
                     <div className='sc-958ogn-0 jXHTgF' data-testid='CommonDelimeter'></div>
-
+                    <Area areaCode='0a2eb85eb05f' options={{ ssr: false }} />
                     <div className='sc-958ogn-0 jXHTgF' data-testid='CommonDelimeter'></div>
+
                     <div>
                       <div className='sc-2cxzjp-0 cfqqTg' data-anchor='prediction' data-testid='PageAnchorContainer'>
                         <div className='sc-494x2g-0 gvBCgg'>

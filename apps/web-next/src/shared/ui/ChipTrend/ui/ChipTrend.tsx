@@ -7,7 +7,7 @@ import { ChipProps } from '@/shared/ui/Chip/ui/Chip'
 import { Trend } from '@/__generated__/types'
 
 interface ChipTrendProps extends ChipProps {
-  trend: Trend
+  trend?: Trend
 }
 
 const modeByTrend: Record<Trend, Exclude<ChipProps['mode'], undefined>> = {
@@ -23,6 +23,7 @@ const IconByTrend: Record<Trend, FC<any>> = {
 }
 
 export const ChipTrend: FC<ChipTrendProps> = ({ trend = Trend.Flat, children, ...chipProps }) => {
+  if (!trend) return null
   const Icon = IconByTrend?.[trend] ?? null
 
   return (

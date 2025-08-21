@@ -20,7 +20,12 @@ interface CampaignPreviewItemProps {
     currentStatistic: {
       conversion: number
     }
-    trend: Trend
+    trend: {
+      conversionTrend: {
+        trend: Trend
+        difference: number
+      }
+    }
   }
   className?: string
 }
@@ -48,8 +53,8 @@ export const CampaignPreviewItem: FC<CampaignPreviewItemProps> = ({
           </div>
 
           {statistic && (
-            <ChipTrend size='s' trend={statistic?.trend}>
-              {statistic?.currentStatistic?.conversion ?? 0}%
+            <ChipTrend size='s' trend={statistic?.trend?.conversionTrend?.trend}>
+              {statistic?.trend.conversionTrend?.difference ?? 0}%
             </ChipTrend>
           )}
         </div>

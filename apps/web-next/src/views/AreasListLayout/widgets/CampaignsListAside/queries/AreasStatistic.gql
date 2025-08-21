@@ -1,9 +1,6 @@
 query AreasStatistic($areaIds: [Int!]!, $fromTs: DateTime!, $toTs: DateTime!, $prevFromTs: DateTime!, $prevToTs: DateTime!) {
     areaStatistic(statisticFilter: {dataIds: $areaIds, fromTs: $fromTs, toTs: $toTs, prevFromTs: $prevFromTs, prevToTs: $prevToTs}) {
         areaId
-        currentStatistic {
-            conversion
-        }
         trend {
             conversionTrend {
                 trend

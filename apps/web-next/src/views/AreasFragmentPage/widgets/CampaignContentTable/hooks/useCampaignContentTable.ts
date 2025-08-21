@@ -166,6 +166,8 @@ export const useCampaignContentTable = (campaignId: number) => {
           status: variant?.status === VariantStatus.Active ? VariantStatus.Inactive : VariantStatus.Active
         }
       })
+
+      refetch()
     },
     [variants]
   )
