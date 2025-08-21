@@ -4,6 +4,11 @@ query AreasStatistic($areaIds: [Int!]!, $fromTs: DateTime!, $toTs: DateTime!, $p
         currentStatistic {
             conversion
         }
-        trend
+        trend {
+            conversionTrend {
+                trend
+                difference
+            }
+        }
     }
 }

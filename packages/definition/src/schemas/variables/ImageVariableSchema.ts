@@ -13,7 +13,7 @@ export const ImageVariableSchema = v.object({
     fallback: variableType.Image,
   }),
   parent: layerField(v.nullable(v.string()), { overridable: false }),
-  defaultValue: layerField(v.string(), { fallback: "" }),
+  defaultValue: layerField(v.string(), { fallback: null }),
   required: layerField(v.boolean(), { fallback: false }),
   imageSize: layerField(v.picklist(Object.keys(imagePaintScaleModes)), {
     fallback: imagePaintScaleModes.Auto,

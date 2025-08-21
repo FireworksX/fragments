@@ -3,3 +3,23 @@
 .fieldsIcon {
     color: var(--primary);
 }
+
+.preview {
+    height: 100px;
+    background: var(--background-secondary);
+    border-radius: var(--radius-second);
+}
+
+.previewImage_contain {
+    object-fit: contain;
+}
+
+.previewImage_cover {
+    object-fit: cover;
+}
+
+.previewRow {
+    display: flex;
+    align-items: center;
+    gap: var(--gutter-small);
+}

@@ -11,6 +11,7 @@ import { GoalViewModalContext } from '@/widgets/modals/GoalViewModal/ui/GoalView
 import { PropertyStringContext } from '@/widgets/modals/PropertyString/ui/PropertyString'
 import { PropertyColorContext } from '@/widgets/modals/PropertyColor/ui/PropertyColor'
 import { ColorPickerContext } from '@/widgets/modals/ColorPicker/ui/ColorPicker'
+import { InviteProjectMemberContext } from '@/widgets/modals/InviteProjectMemberModal/ui/InviteProjectMemberModal'
 
 interface ModalContextMap {
   [modalNames.configureFeatureFlagVariant]: ConfigureFeatureFlagVariantContext
@@ -21,6 +22,7 @@ interface ModalContextMap {
   [modalNames.propertyString]: PropertyStringContext
   [modalNames.propertyColor]: PropertyColorContext
   [modalNames.colorPicker]: ColorPickerContext
+  [modalNames.inviteMember]: InviteProjectMemberContext
 }
 
 type ModalName = keyof typeof modalNames

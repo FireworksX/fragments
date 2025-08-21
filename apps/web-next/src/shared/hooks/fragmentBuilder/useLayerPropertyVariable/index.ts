@@ -7,8 +7,10 @@ import { useGraph } from '@graph-state/react'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 
-interface Options extends Pick<UseLayerVariableOptions, 'setName' | 'createName' | 'onSetValue'> {
+interface Options
+  extends Pick<UseLayerVariableOptions, 'setName' | 'createName' | 'onSetValue' | 'skipUseDefaultValue'> {
   editAfterCreate?: boolean
+  onResetVariable?: () => void
 }
 
 export const useLayerPropertyValue = (field: keyof typeof fieldsConfig, options?: Options) => {
@@ -22,11 +24,7 @@ export const useLayerPropertyValue = (field: keyof typeof fieldsConfig, options?
 
   const handleSetValue = useCallback(
     (value: unknown) => {
-      if (options?.onSetValue) {
-        options?.onSetValue?.(value)
-      } else {
-        setFieldValue(value)
-      }
+      setFieldValue(value)
 
       if (options?.editAfterCreate !== false) {
         editProperty(value)
@@ -40,12 +38,16 @@ export const useLayerPropertyValue = (field: keyof typeof fieldsConfig, options?
     value: fieldValue,
     disabled,
     preferredField: fieldEntity,
-    onSetValue: handleSetValue,
-    ...options
+    ...options,
+    onSetValue: value => {
+      handleSetValue(value)
+      options?.onSetValue?.(value)
+    }
   })
 
   const restoreValue = () => {
     fieldInfo?.restore(fieldEntity?.defaultValue)
+    options?.onResetVariable?.()
   }
 
   return {

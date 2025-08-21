@@ -31,7 +31,7 @@ type AreaStatisticGet {
     campaigns: [CampaignStatisticGet!]!
     currentStatistic: StatisticGet!
     prevStatistic: StatisticGet!
-    trend: Trend!
+    trend: StatisticTrend
 }
 
 type AreaStatisticRatingGet {
@@ -69,7 +69,7 @@ type CampaignStatisticGet {
     campaignName: String!
     currentStatistic: StatisticGet!
     prevStatistic: StatisticGet!
-    trend: Trend!
+    trend: StatisticTrend
     variants: [VariantStatisticGet!]!
 }
 
@@ -188,7 +188,7 @@ type GoalStatisticGet {
     goalName: String!
     prevGroupByDate: DetalizationGraph!
     prevStatistic: StatisticGet!
-    trend: Trend!
+    trend: StatisticTrend
 }
 
 type MediaGet {
@@ -201,9 +201,9 @@ type Mutation {
     addClientMetric(metric: ClientMetricPost!): Void
     addProjectAllowedOrigin(name: String!, origin: String!, projectId: Int!): ProjectGet!
     addProjectPublicKey(projectId: Int!, publicKeyName: String): ProjectGet!
-    addUserToProject(projectId: Int!, role: Int!, userId: Int!): Void
+    addUserToProject(projectId: Int!, role: UserRole!, userId: Int!): Void
     changeProjectPrivateKey(projectId: Int!): ProjectGet!
-    changeUserRole(projectId: Int!, role: RoleGet!, userId: Int!): Void
+    changeUserRole(projectId: Int!, role: UserRole!, userId: Int!): Void
     createArea(area: AreaPost!): AreaGet!
     createCampaign(cmp: CampaignPost!): CampaignGet!
     createCondition(condition: ConditionPost!, conditionSetId: Int!): ConditionGet!
@@ -230,9 +230,11 @@ type Mutation {
     deleteReleaseCondition(releaseConditionId: Int!): Void
     deleteVariant(variantId: Int!): Void
     feedback(fd: FeedbackPost!): FeedbackGet!
+    inviteUserToProject(email: String!, projectId: Int!, role: UserRole!): Void
     login(email: String!, password: String!): AuthPayload!
     normalizeVariantsRolloutPercentage(featureFlagId: Int!): Void
     refresh: AuthPayload!
+    removeUserFromProject(projectId: Int!, userId: Int!): Void
     signup(userSignUp: UserSignUp!): AuthPayload!
     updateArea(area: AreaPatch!): AreaGet!
     updateCampaign(cmp: CampaignPatch!): CampaignGet!
@@ -317,15 +319,15 @@ type ProjectStatisticGet {
     prevStatistic: StatisticGet!
     projectId: Int!
     projectName: String!
-    trend: Trend!
+    trend: StatisticTrend
 }
 
 type Query {
     area(areaId: Int, projectId: Int): [AreaGet!]!
-    areaStatistic(statisticFilter: StatisticFilter!): [AreaStatisticGet!]!
+    areaStatistic(statisticFilter: StatisticFilter!): [AreaStatisticGet]!
     areaStatisticRating(statisticRatingFilter: StatisticRatingFilter!): [AreaStatisticRatingGet!]!
     campaign(campaignFilter: CampaignFilter!): [CampaignGet!]!
-    campaignStatistic(statisticFilter: StatisticFilter!): [CampaignStatisticGet!]!
+    campaignStatistic(statisticFilter: StatisticFilter!): [CampaignStatisticGet]!
     clientArea(areaCode: String!): ClientAreaGet
     clientFragment(fragmentId: Int!): FragmentGet
     condition(conditionId: Int!): ConditionGet!
@@ -338,10 +340,10 @@ type Query {
     profile: AuthPayload!
     project(projectId: Int): [ProjectGet!]!
     projectGoals(projectId: Int!): [ProjectGoalGet!]!
-    projectStatistic(statisticFilter: StatisticFilter!): [ProjectStatisticGet!]!
+    projectStatistic(statisticFilter: StatisticFilter!): [ProjectStatisticGet]!
     releaseCondition(releaseConditionId: Int!): ReleaseConditionGet!
     variant(featureFlagId: Int, variantId: Int): [VariantGet!]!
-    variantStatistic(statisticFilter: StatisticFilter!): [VariantStatisticGet!]!
+    variantStatistic(statisticFilter: StatisticFilter!): [VariantStatisticGet]!
 }
 
 type RegionGet {
@@ -358,7 +360,23 @@ type ReleaseConditionGet {
 type StatisticGet {
     achieved: Int!
     conversion: Float!
+    sessions: Int!
+    uniqueAchieved: Int!
     views: Int!
+}
+
+type StatisticTrend {
+    achievedTrend: StatisticTrendGet!
+    conversionTrend: StatisticTrendGet!
+    sessionsTrend: StatisticTrendGet!
+    uniqueAchievedTrend: StatisticTrendGet!
+    viewsTrend: StatisticTrendGet!
+}
+
+type StatisticTrendGet {
+    difference: Float!
+    percentage: Float!
+    trend: Trend!
 }
 
 type UserGet {
@@ -375,12 +393,14 @@ type UserRoleGet {
     id: Int!
     lastName: String
     logo: MediaGet!
-    role: RoleGet!
+    role: UserRole!
 }
 
 type Value {
     achieved: Int!
     conversion: Float!
+    sessions: Int!
+    uniqueAchieved: Int!
     views: Int!
 }
 
@@ -396,7 +416,7 @@ type VariantStatisticGet {
     currentStatistic: StatisticGet!
     goals: [GoalStatisticGet!]!
     prevStatistic: StatisticGet!
-    trend: Trend!
+    trend: StatisticTrend
     variantId: Int!
     variantName: String!
 }
@@ -408,15 +428,14 @@ enum CampaignStatus {
 }
 
 enum ClientMetricType {
-    INIT_SESSION
     REACH_PROJECT_GOAL
-    RELEASE_SESSION
 }
 
 enum Detalization {
     DAY
     HOUR
     MINUTE
+    MINUTE_10
 }
 
 enum DeviceType {
@@ -449,13 +468,6 @@ enum OSType {
     WINDOWS
 }
 
-enum RoleGet {
-    ADMIN
-    DESIGNER
-    MANAGER
-    OWNER
-}
-
 enum RotationType {
     KEEP
     ROTATE
@@ -465,6 +477,13 @@ enum Trend {
     DOWN
     FLAT
     UP
+}
+
+enum UserRole {
+    ADMIN
+    DESIGNER
+    MANAGER
+    OWNER
 }
 
 enum VariantStatus {

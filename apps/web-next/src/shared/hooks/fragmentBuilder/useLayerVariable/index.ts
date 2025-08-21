@@ -23,6 +23,7 @@ export interface UseLayerVariableOptions {
   disabled?: boolean
   createName?: string
   setName?: string
+  skipUseDefaultValue?: boolean
   // editAfterCreate?: boolean
   onSetValue?: (value: unknown) => void
 }
@@ -55,7 +56,7 @@ export const useLayerVariable = (options: UseLayerVariableOptions) => {
       const property = createProperty({
         ...fieldEntity,
         name: preferredName,
-        defaultValue: options?.value ?? fieldEntity?.defaultValue,
+        defaultValue: !options?.skipUseDefaultValue ? options?.value ?? fieldEntity?.defaultValue : null,
         ...(customFields ?? {})
       })
 

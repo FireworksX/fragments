@@ -60,7 +60,7 @@ export type AreaStatisticGet = {
   campaigns: Array<CampaignStatisticGet>;
   currentStatistic: StatisticGet;
   prevStatistic: StatisticGet;
-  trend: Trend;
+  trend?: Maybe<StatisticTrend>;
 };
 
 export type AreaStatisticRatingGet = {
@@ -126,7 +126,7 @@ export type CampaignStatisticGet = {
   campaignName: Scalars['String']['output'];
   currentStatistic: StatisticGet;
   prevStatistic: StatisticGet;
-  trend: Trend;
+  trend?: Maybe<StatisticTrend>;
   variants: Array<VariantStatisticGet>;
 };
 
@@ -148,9 +148,7 @@ export type ClientMetricPost = {
 };
 
 export enum ClientMetricType {
-  InitSession = 'INIT_SESSION',
-  ReachProjectGoal = 'REACH_PROJECT_GOAL',
-  ReleaseSession = 'RELEASE_SESSION'
+  ReachProjectGoal = 'REACH_PROJECT_GOAL'
 }
 
 export type ConditionGet = {
@@ -206,7 +204,8 @@ export type CountryGet = {
 export enum Detalization {
   Day = 'DAY',
   Hour = 'HOUR',
-  Minute = 'MINUTE'
+  Minute = 'MINUTE',
+  Minute_10 = 'MINUTE_10'
 }
 
 export type DetalizationGraph = {
@@ -398,7 +397,7 @@ export type GoalStatisticGet = {
   goalName: Scalars['String']['output'];
   prevGroupByDate: DetalizationGraph;
   prevStatistic: StatisticGet;
-  trend: Trend;
+  trend?: Maybe<StatisticTrend>;
 };
 
 export type MediaDelete = {
@@ -462,9 +461,11 @@ export type Mutation = {
   deleteReleaseCondition?: Maybe<Scalars['Void']['output']>;
   deleteVariant?: Maybe<Scalars['Void']['output']>;
   feedback: FeedbackGet;
+  inviteUserToProject?: Maybe<Scalars['Void']['output']>;
   login: AuthPayload;
   normalizeVariantsRolloutPercentage?: Maybe<Scalars['Void']['output']>;
   refresh: AuthPayload;
+  removeUserFromProject?: Maybe<Scalars['Void']['output']>;
   signup: AuthPayload;
   updateArea: AreaGet;
   updateCampaign: CampaignGet;
@@ -653,6 +654,13 @@ export type MutationFeedbackArgs = {
 };
 
 
+export type MutationInviteUserToProjectArgs = {
+  email: Scalars['String']['input'];
+  projectId: Scalars['Int']['input'];
+  role: UserRole;
+};
+
+
 export type MutationLoginArgs = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -661,6 +669,12 @@ export type MutationLoginArgs = {
 
 export type MutationNormalizeVariantsRolloutPercentageArgs = {
   featureFlagId: Scalars['Int']['input'];
+};
+
+
+export type MutationRemoveUserFromProjectArgs = {
+  projectId: Scalars['Int']['input'];
+  userId: Scalars['Int']['input'];
 };
 
 
@@ -853,16 +867,16 @@ export type ProjectStatisticGet = {
   prevStatistic: StatisticGet;
   projectId: Scalars['Int']['output'];
   projectName: Scalars['String']['output'];
-  trend: Trend;
+  trend?: Maybe<StatisticTrend>;
 };
 
 export type Query = {
   __typename?: 'Query';
   area: Array<AreaGet>;
-  areaStatistic: Array<AreaStatisticGet>;
+  areaStatistic: Array<Maybe<AreaStatisticGet>>;
   areaStatisticRating: Array<AreaStatisticRatingGet>;
   campaign: Array<CampaignGet>;
-  campaignStatistic: Array<CampaignStatisticGet>;
+  campaignStatistic: Array<Maybe<CampaignStatisticGet>>;
   clientArea?: Maybe<ClientAreaGet>;
   clientFragment?: Maybe<FragmentGet>;
   condition: ConditionGet;
@@ -875,10 +889,10 @@ export type Query = {
   profile: AuthPayload;
   project: Array<ProjectGet>;
   projectGoals: Array<ProjectGoalGet>;
-  projectStatistic: Array<ProjectStatisticGet>;
+  projectStatistic: Array<Maybe<ProjectStatisticGet>>;
   releaseCondition: ReleaseConditionGet;
   variant: Array<VariantGet>;
-  variantStatistic: Array<VariantStatisticGet>;
+  variantStatistic: Array<Maybe<VariantStatisticGet>>;
 };
 
 
@@ -1027,6 +1041,8 @@ export type StatisticGet = {
   __typename?: 'StatisticGet';
   achieved: Scalars['Int']['output'];
   conversion: Scalars['Float']['output'];
+  sessions: Scalars['Int']['output'];
+  uniqueAchieved: Scalars['Int']['output'];
   views: Scalars['Int']['output'];
 };
 
@@ -1034,6 +1050,22 @@ export type StatisticRatingFilter = {
   dataIds: Array<Scalars['Int']['input']>;
   fromTs: Scalars['DateTime']['input'];
   toTs: Scalars['DateTime']['input'];
+};
+
+export type StatisticTrend = {
+  __typename?: 'StatisticTrend';
+  achievedTrend: StatisticTrendGet;
+  conversionTrend: StatisticTrendGet;
+  sessionsTrend: StatisticTrendGet;
+  uniqueAchievedTrend: StatisticTrendGet;
+  viewsTrend: StatisticTrendGet;
+};
+
+export type StatisticTrendGet = {
+  __typename?: 'StatisticTrendGet';
+  difference: Scalars['Float']['output'];
+  percentage: Scalars['Float']['output'];
+  trend: Trend;
 };
 
 export enum Trend {
@@ -1079,6 +1111,8 @@ export type Value = {
   __typename?: 'Value';
   achieved: Scalars['Int']['output'];
   conversion: Scalars['Float']['output'];
+  sessions: Scalars['Int']['output'];
+  uniqueAchieved: Scalars['Int']['output'];
   views: Scalars['Int']['output'];
 };
 
@@ -1112,7 +1146,7 @@ export type VariantStatisticGet = {
   currentStatistic: StatisticGet;
   goals: Array<GoalStatisticGet>;
   prevStatistic: StatisticGet;
-  trend: Trend;
+  trend?: Maybe<StatisticTrend>;
   variantId: Scalars['Int']['output'];
   variantName: Scalars['String']['output'];
 };

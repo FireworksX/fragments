@@ -12,7 +12,7 @@ export type CampaignContentQueryVariables = Types.Exact<{
 }>;
 
 
-export type CampaignContentQuery = { __typename?: 'Query', campaign: Array<{ __typename?: 'CampaignGet', id: number, featureFlag: { __typename?: 'FeatureFlagGet', id: number, rotationType: Types.RotationType, variants: Array<{ __typename?: 'VariantGet', id: number, name: string, status: Types.VariantStatus, rolloutPercentage: number, fragment?: { __typename?: 'FragmentVariantGet', props?: any | null, fragment: { __typename?: 'FragmentGet', id: number, name: string } } | null }> } }>, campaignStatistic: Array<{ __typename?: 'CampaignStatisticGet', variants: Array<{ __typename?: 'VariantStatisticGet', variantId: number, trend: Types.Trend, currentStatistic: { __typename?: 'StatisticGet', conversion: number }, prevStatistic: { __typename?: 'StatisticGet', conversion: number }, goals: Array<{ __typename?: 'GoalStatisticGet', goalId: number, goalName: string, trend: Types.Trend, currentStatistic: { __typename?: 'StatisticGet', conversion: number }, prevStatistic: { __typename?: 'StatisticGet', conversion: number } }> }> }> };
+export type CampaignContentQuery = { __typename?: 'Query', campaign: Array<{ __typename?: 'CampaignGet', id: number, featureFlag: { __typename?: 'FeatureFlagGet', id: number, rotationType: Types.RotationType, variants: Array<{ __typename?: 'VariantGet', id: number, name: string, status: Types.VariantStatus, rolloutPercentage: number, fragment?: { __typename?: 'FragmentVariantGet', props?: any | null, fragment: { __typename?: 'FragmentGet', id: number, name: string } } | null }> } }>, campaignStatistic: Array<{ __typename?: 'CampaignStatisticGet', variants: Array<{ __typename?: 'VariantStatisticGet', variantId: number, currentStatistic: { __typename?: 'StatisticGet', conversion: number }, prevStatistic: { __typename?: 'StatisticGet', conversion: number }, trend?: { __typename?: 'StatisticTrend', conversionTrend: { __typename?: 'StatisticTrendGet', trend: Types.Trend, difference: number } } | null, goals: Array<{ __typename?: 'GoalStatisticGet', goalId: number, goalName: string, trend?: { __typename?: 'StatisticTrend', conversionTrend: { __typename?: 'StatisticTrendGet', trend: Types.Trend, difference: number } } | null, currentStatistic: { __typename?: 'StatisticGet', conversion: number }, prevStatistic: { __typename?: 'StatisticGet', conversion: number } }> }> } | null> };
 
 
 export const CampaignContentDocument = gql`
@@ -48,11 +48,21 @@ export const CampaignContentDocument = gql`
       prevStatistic {
         conversion
       }
-      trend
+      trend {
+        conversionTrend {
+          trend
+          difference
+        }
+      }
       goals {
         goalId
         goalName
-        trend
+        trend {
+          conversionTrend {
+            trend
+            difference
+          }
+        }
         currentStatistic {
           conversion
         }

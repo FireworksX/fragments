@@ -29,11 +29,21 @@ query CampaignContent($id: Int!, $fromTs: DateTime!, $toTs: DateTime!, $prevFrom
             prevStatistic {
                 conversion
             }
-            trend
+            trend {
+                conversionTrend {
+                    trend
+                    difference
+                }
+            }
             goals {
                 goalId
                 goalName
-                trend
+                trend {
+                    conversionTrend {
+                        trend
+                        difference
+                    }
+                }
                 currentStatistic {
                     conversion
                 }

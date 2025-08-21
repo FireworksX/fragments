@@ -15,57 +15,61 @@ interface PropertyVariable {
   variableData?: unknown | null
 }
 
-export const useCombinePropertyVariables = (properties: PropertyVariable[]) => {
-  const activeProperty = properties?.find(prop => !!prop.fieldValue) ?? {}
+interface UseCombinePropertyVariablesOptions {
+  hideIfEmptyOptions?: string[]
+}
+
+export const useCombinePropertyVariables = (
+  properties: PropertyVariable[],
+  activePropertyIndex: number,
+  options?: UseCombinePropertyVariablesOptions
+) => {
+  const hideIfEmptyOptionsNames = options?.hideIfEmptyOptions ?? ['setVariable']
+  const activeProperty = properties?.at(activePropertyIndex)
 
   const combinedActions = useMemo(() => {
-    return properties.reduce<Record<string, DropdownRenderOption[]>>((acc, property) => {
-      property.actions?.forEach(action => {
-        const actionIndex = acc?.findIndex(accAction => accAction.name === action.name)
+    const map = new Map<string, DropdownRenderOption>()
 
-        if (action.name === 'createVariable') {
-          const el = {
-            name: `${action.name}_${property?.fieldEntity?.name}`,
-            label: property?.fieldEntity?.name,
-            onClick: action.onClick
-          }
+    for (const variable of properties) {
+      if (!variable.actions) continue
 
-          if (actionIndex !== -1) {
-            acc.at(actionIndex)?.options.push(el)
-          } else {
-            acc.push({
-              ...omit(action, 'onClick'),
-              options: [el]
-            })
-          }
+      for (const action of variable.actions) {
+        const key = action.name ?? action.label
+        if (!key) continue
+
+        if (
+          hideIfEmptyOptionsNames.includes(key) &&
+          (!action?.options?.length || (Array.isArray(action?.options) && !action.options?.at(0)?.length))
+        ) {
+          continue
         }
 
-        if (action.name === 'setVariable') {
-          const el = {
-            name: `${action.name}_${property?.fieldEntity?.name}`,
-            label: property?.fieldEntity?.name,
-            onClick: action.onClick
-          }
-
-          if (actionIndex !== -1) {
-            acc.at(actionIndex)?.options.push(el)
-          } else {
-            acc.push({
-              ...omit(action, 'onClick'),
-              options: [el]
-            })
-          }
+        // создаём "подменю" для конкретного variable
+        const variableOption: DropdownRenderOption = {
+          name: `${action.name}_${variable?.fieldEntity?.name}`,
+          label: variable?.fieldEntity?.name,
+          onClick: action.onClick,
+          options: action.options // <-- сохраняем вложенные options!
         }
-        return acc
-      })
 
-      return acc
-    }, [])
-  }, [])
+        if (!map.has(key)) {
+          map.set(key, {
+            ...action,
+            onClick: undefined, // root action сам по себе не кликается
+            options: [[variableOption]]
+          })
+        } else {
+          const existing = map.get(key)!
+          existing.options[0] = [...(existing.options?.at(0) ?? []), variableOption]
+        }
+      }
+    }
 
-  console.log(properties, combinedActions)
+    return Array.from(map.values())
+  }, [properties])
 
   return {
-    ...activeProperty
+    ...activeProperty,
+    actions: combinedActions
   }
 }
