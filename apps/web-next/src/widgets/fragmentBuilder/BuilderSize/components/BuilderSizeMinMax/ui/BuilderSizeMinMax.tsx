@@ -62,7 +62,7 @@ export const BuilderSizeMinMax: FC<BuilderSizeMinMaxProps> = ({ className }) => 
               }
             >
               <InputSelect hasIcon icon={<Icon style={{ color: 'var(--secondary)' }} />}>
-                Add mix/max
+                Add min/max
               </InputSelect>
             </Dropdown>
           </ControlRowWide>

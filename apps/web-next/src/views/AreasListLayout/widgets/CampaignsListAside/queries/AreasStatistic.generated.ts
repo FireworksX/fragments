@@ -12,7 +12,7 @@ export type AreasStatisticQueryVariables = Types.Exact<{
 }>;
 
 
-export type AreasStatisticQuery = { __typename?: 'Query', areaStatistic: Array<{ __typename?: 'AreaStatisticGet', areaId: number, trend: Types.Trend, currentStatistic: { __typename?: 'StatisticGet', conversion: number } }> };
+export type AreasStatisticQuery = { __typename?: 'Query', areaStatistic: Array<{ __typename?: 'AreaStatisticGet', areaId: number, trend?: { __typename?: 'StatisticTrend', conversionTrend: { __typename?: 'StatisticTrendGet', trend: Types.Trend, difference: number } } | null } | null> };
 
 
 export const AreasStatisticDocument = gql`
@@ -21,10 +21,12 @@ export const AreasStatisticDocument = gql`
     statisticFilter: {dataIds: $areaIds, fromTs: $fromTs, toTs: $toTs, prevFromTs: $prevFromTs, prevToTs: $prevToTs}
   ) {
     areaId
-    currentStatistic {
-      conversion
+    trend {
+      conversionTrend {
+        trend
+        difference
+      }
     }
-    trend
   }
 }
     `;

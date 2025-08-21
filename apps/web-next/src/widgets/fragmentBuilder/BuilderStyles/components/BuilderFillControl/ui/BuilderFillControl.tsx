@@ -19,9 +19,20 @@ export const BuilderFillControl: FC<BuilderFillControlProps> = memo(({ className
   const [fillType, setFillType] = useLayerValue('fillType')
   const [solidValue, , solidValueInfo] = useLayerValue('solidFill')
   const [imageValue, , imageValueInfo] = useLayerValue('imageFill')
-  const solidFillVariable = useLayerPropertyValue('solidFill')
-  const imageFillVariable = useLayerPropertyValue('imageFill')
-  const resultVariable = useCombinePropertyVariables([imageFillVariable, solidFillVariable])
+  const solidFillVariable = useLayerPropertyValue('solidFill', {
+    skipUseDefaultValue: fillType !== definition.paintMode.Solid,
+    onSetValue: () => setFillType(definition.paintMode.Solid),
+    onResetVariable: () => setFillType(definition.paintMode.None)
+  })
+  const imageFillVariable = useLayerPropertyValue('imageFill', {
+    skipUseDefaultValue: fillType !== definition.paintMode.Image,
+    onSetValue: () => setFillType(definition.paintMode.Image),
+    onResetVariable: () => setFillType(definition.paintMode.None)
+  })
+  const resultVariable = useCombinePropertyVariables(
+    [imageFillVariable, solidFillVariable],
+    fillType === definition.paintMode.Image ? 0 : 1
+  )
 
   const result = useMemo(() => {
     if (fillType === definition.paintMode.Solid) {
@@ -62,11 +73,11 @@ export const BuilderFillControl: FC<BuilderFillControlProps> = memo(({ className
         <InputSelect
           hasIcon={TYPES_WITH_ICON.includes(fillType)}
           color={result?.value}
-          // icon={
-          //   fillType === definition.paintMode.Image ? (
-          //     <Image width={24} height={24} src={result?.value} alt={'Image fill'} />
-          //   ) : undefined
-          // }
+          icon={
+            fillType === definition.paintMode.Image && !imageValueInfo.isVariable ? (
+              <Image width={24} height={24} src={result?.value} alt={'Image fill'} />
+            ) : undefined
+          }
           onReset={() => setFillType(definition.paintMode.None)}
           onClick={openFill}
         >

@@ -2,7 +2,12 @@ query AreaVisitorsStatistics($areaId: Int!, $fromTs: DateTime!, $toTs: DateTime!
     areaStatistic(statisticFilter:{dataIds: [$areaId], fromTs: $fromTs, toTs: $toTs, prevFromTs: $prevFromTs, prevToTs: $prevToTs}) {
         areaId
         areaCode
-        trend
+        trend {
+            conversionTrend {
+                difference
+                trend
+            }
+        }
         currentStatistic {
             conversion
             achieved
@@ -16,7 +21,12 @@ query AreaVisitorsStatistics($areaId: Int!, $fromTs: DateTime!, $toTs: DateTime!
         campaigns {
             campaignId
             campaignName
-            trend
+            trend {
+                conversionTrend {
+                    trend
+                    difference
+                }
+            }
             currentStatistic {
                 conversion
                 achieved
@@ -25,7 +35,12 @@ query AreaVisitorsStatistics($areaId: Int!, $fromTs: DateTime!, $toTs: DateTime!
             variants {
                 variantId
                 variantName
-                trend
+                trend {
+                    conversionTrend {
+                        trend
+                        difference
+                    }
+                }
                 currentStatistic {
                     conversion
                     achieved
@@ -34,7 +49,12 @@ query AreaVisitorsStatistics($areaId: Int!, $fromTs: DateTime!, $toTs: DateTime!
                 goals {
                     goalId
                     goalName
-                    trend
+                    trend {
+                        conversionTrend {
+                            trend
+                            difference
+                        }
+                    }
                     currentStatistic {
                         conversion
                         achieved

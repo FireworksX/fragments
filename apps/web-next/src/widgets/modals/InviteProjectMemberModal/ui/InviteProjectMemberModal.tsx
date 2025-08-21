@@ -16,10 +16,13 @@ import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { Stepper } from '@/shared/ui/Stepper'
 import { Slider } from '@/shared/ui/Slider'
 import { Select } from '@/shared/ui/Select'
+import { RoleGet } from '@/graphql/types'
+import { capitalize } from '@/shared/utils/capitalize'
+import { UserRole } from '@/__generated__/types'
 
 interface Member {
   email: string
-  role: unknown
+  role: UserRole
 }
 
 export interface InviteProjectMemberContext {
@@ -32,20 +35,14 @@ interface InviteProjectMemberModalProps {
 
 export const InviteProjectMemberModal: FC<InviteProjectMemberModalProps> = ({ className }) => {
   const { readContext } = useModal()
-  const context = readContext(modalNames.goalView)
-  const currentGoal = context?.currentGoal
-  const isEdit = !!currentGoal
-  const [name, setName] = useState(currentGoal?.name ?? '')
-  const [code, setCode] = useState(currentGoal?.code ?? '')
-  const [min, setMin] = useState(currentGoal?.min ?? 0)
-  const [max, setMax] = useState(currentGoal?.max ?? 0)
+  const context = readContext(modalNames.inviteMember)
+  const [email, setEmail] = useState('')
+  const [role, setRole] = useState<UserRole>(UserRole.Manager)
 
   const handleSubmit = () => {
-    context?.onSubmit?.({ name, code, min, max })
-    setName('')
-    setCode('')
-    setMin(0)
-    setMax(0)
+    context?.onSubmit?.({ email, role })
+    setEmail('')
+    setRole(UserRole.Manager)
   }
 
   return (
@@ -67,13 +64,17 @@ export const InviteProjectMemberModal: FC<InviteProjectMemberModalProps> = ({ cl
         <Panel>
           <ControlRow title='E-mail'>
             <ControlRowWide>
-              <InputText placeholder='E-mail' type='email' value={name} autoFocus onChangeValue={setName} />
+              <InputText placeholder='E-mail' type='email' value={email} autoFocus onChangeValue={setEmail} />
             </ControlRowWide>
           </ControlRow>
           <ControlRow title='Role'>
             <ControlRowWide>
-              <Select value={'guest'}>
-                <option>guest</option>
+              <Select value={role} onChange={setRole}>
+                {Object.values(UserRole)
+                  .filter(role => role !== UserRole.Owner)
+                  .map(role => (
+                    <option value={role}>{capitalize(role.toLowerCase())}</option>
+                  ))}
               </Select>
             </ControlRowWide>
           </ControlRow>

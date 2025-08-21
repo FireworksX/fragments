@@ -86,7 +86,7 @@ export const FeedbackForm: FC<FeedbackFormProps> = ({ className }) => {
         )}
         {type === 'feedback' && (
           <ControlRow title='Emotion'>
-            <CommonLogo size={18} src={`/images/emoji/emoji-${emojiList.at(emotion)}.png`} />
+            <CommonLogo size={20} src={`/images/emoji/emoji-${emojiList.at(emotion)}.png`} />
             <Slider value={emotion} min={0} max={3} onChange={setEmotion} />
           </ControlRow>
         )}

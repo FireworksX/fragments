@@ -23,22 +23,20 @@ query CampaignContent($id: Int!, $fromTs: DateTime!, $toTs: DateTime!, $prevFrom
     campaignStatistic(statisticFilter: {dataIds: [$id], fromTs: $fromTs, toTs: $toTs, prevFromTs: $prevFromTs, prevToTs: $prevToTs}) {
         variants {
             variantId
-            currentStatistic {
-                conversion
+            trend {
+                conversionTrend {
+                    trend
+                    difference
+                }
             }
-            prevStatistic {
-                conversion
-            }
-            trend
             goals {
                 goalId
                 goalName
-                trend
-                currentStatistic {
-                    conversion
-                }
-                prevStatistic {
-                    conversion
+                trend {
+                    conversionTrend {
+                        trend
+                        difference
+                    }
                 }
             }
         }

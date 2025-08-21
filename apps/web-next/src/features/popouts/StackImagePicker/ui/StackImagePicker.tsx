@@ -17,28 +17,27 @@ interface StackImagePickerProps {
   className?: string
 }
 
-const controls: TabsSelectorItem[] = [
-  {
-    name: true,
-    label: 'Yes'
-  },
-  {
-    name: false,
-    label: 'No'
-  }
-]
-
 export const StackImagePicker: FC<StackImagePickerProps> = ({ className }) => {
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.imagePicker}`)
   const context = popout?.context ?? {}
   const url = context?.url
   const scaleMode = context?.scaleMode
 
+  const proxyOnChangeUrl = (url: string) => {
+    popoutsStore.updateCurrentContext({ url })
+    context?.onChangeUrl?.(url)
+  }
+
+  const proxyOnChangeScaleMode = scaleMode => {
+    popoutsStore.updateCurrentContext({ scaleMode })
+    context?.onChangeScaleMode?.(url)
+  }
+
   return (
     <div className={cn(styles.root, className)}>
       <ImagePicker
-        urlInvoker={{ value: url, onChange: context?.onChangeUrl }}
-        scaleModeInvoker={{ value: scaleMode, onChange: context?.onChangeScaleMode }}
+        urlInvoker={{ value: url, onChange: proxyOnChangeUrl }}
+        scaleModeInvoker={{ value: scaleMode, onChange: proxyOnChangeScaleMode }}
       />
     </div>
   )

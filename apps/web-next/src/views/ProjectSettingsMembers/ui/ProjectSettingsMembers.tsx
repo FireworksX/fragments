@@ -20,24 +20,42 @@ import { withModalCollector } from '@/shared/hocs/withModalCollector'
 import { modalNames } from '@/shared/data'
 import { InviteProjectMemberModal } from '@/widgets/modals/InviteProjectMemberModal'
 import { useModal } from '@/shared/hooks/useModal'
+import { SelectMimicry } from '@/shared/ui/SelectMimicry'
+import { capitalize } from '@/shared/utils/capitalize'
+import { useInviteProjectMemberMutation } from '@/shared/api/project/mutaion/InviteProjectMember.generated'
 
 interface ProjectSettingsMembersProps {
   className?: string
 }
 
 const ProjectSettingsMembersBase: FC<ProjectSettingsMembersProps> = ({ className }) => {
-  const { open: openModal } = useModal()
+  const { open: openModal, close: closeModal } = useModal()
   const { project, loading, projectSlug } = useProject()
 
-  const { data: membersData } = useProjectMembersQuery({
+  const [handleInviteMember, { loading: loadingInvite }] = useInviteProjectMemberMutation()
+
+  const { data: membersData, refetch } = useProjectMembersQuery({
     variables: {
       projectId: projectSlug
     }
   })
   const members = membersData?.project?.at(0)?.members ?? []
 
-  const handleInviteMember = async () => {
-    openModal(modalNames.inviteMember, {})
+  const openInviteModal = async () => {
+    openModal(modalNames.inviteMember, {
+      onSubmit: async member => {
+        closeModal()
+        await handleInviteMember({
+          variables: {
+            projectSlug,
+            role: member.role,
+            email: member.email
+          }
+        })
+
+        refetch()
+      }
+    })
   }
 
   return (
@@ -49,7 +67,7 @@ const ProjectSettingsMembersBase: FC<ProjectSettingsMembersProps> = ({ className
             title='Project Members'
             description='Manage and view your coworkers and guests'
             aside={
-              <Button icon={<PlusIcon />} onClick={handleInviteMember}>
+              <Button loading={loadingInvite} icon={<PlusIcon />} onClick={openInviteModal}>
                 Invite
               </Button>
             }
@@ -62,9 +80,7 @@ const ProjectSettingsMembersBase: FC<ProjectSettingsMembersProps> = ({ className
             <div className={styles.userName}>{[member.firstName, member.lastName].join(' ')}</div>
             <div className={styles.userEmail}>{member.email}</div>
             <div>
-              <Select value='owner'>
-                <option value='owner'>Owner</option>
-              </Select>
+              <SelectMimicry disabled>{capitalize(member.role.toLowerCase())}</SelectMimicry>
             </div>
             <div>
               <Button mode='danger-outline' icon={<RemoveIcon />} />

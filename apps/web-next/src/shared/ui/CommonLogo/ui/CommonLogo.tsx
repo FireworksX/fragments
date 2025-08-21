@@ -36,6 +36,7 @@ export interface CommonLogoProps {
   withBackground?: boolean
   alt?: string | null
   className?: string
+  imageClassName?: string
 }
 
 export const DEFAULT_LOGO_SIZE: CommonLogoSize = 44
@@ -45,10 +46,9 @@ const CommonLogo: React.FC<CommonLogoProps> = ({
   src,
   size = DEFAULT_LOGO_SIZE,
   withRadius = false,
-  withBackground,
   className,
-  alt,
-  withBorder = false
+  imageClassName,
+  alt
 }) => {
   if (iso && iso.length === 2) {
     iso = iso.toLowerCase()
@@ -68,7 +68,7 @@ const CommonLogo: React.FC<CommonLogoProps> = ({
         <picture>
           <source type='image/webp' srcSet={`${x1}.webp, ${x2}.webp 2x, ${x3}.webp 3x`} />
           <source type='image/png' srcSet={`${x1}.png,  ${x2}.png 2x, ${x3}.png 3x`} />
-          <Image src={`${x1}.png`} width={size} height={size} alt={alt ?? iso} />
+          <Image className={imageClassName} src={`${x1}.png`} width={size} height={size} alt={alt ?? iso} />
         </picture>
       </div>
     )
@@ -77,7 +77,11 @@ const CommonLogo: React.FC<CommonLogoProps> = ({
   if (src) {
     return (
       <div className={cn(className, styles.root, { [styles.withRadius]: withRadius })}>
-        {typeof src === 'string' ? <Image src={src} alt={alt ?? 'Alt of image'} width={size} height={size} /> : src}
+        {typeof src === 'string' ? (
+          <Image className={imageClassName} src={src} alt={alt ?? 'Alt of image'} width={size} height={size} />
+        ) : (
+          src
+        )}
       </div>
     )
   }

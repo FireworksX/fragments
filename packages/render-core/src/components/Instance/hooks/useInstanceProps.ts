@@ -53,7 +53,7 @@ export const useInstanceProps = (instanceProps: InstanceProps) => {
       definitionsData.forEach((definition) => {
         const defId = definition._id;
 
-        base[defId] = definition?.defaultValue;
+        base[defId] = instanceProps?.props?.[defId] ?? definition?.defaultValue;
         // instanceProps?.props?.[defId] ?? readVariable(definition)?.value;
       });
     }

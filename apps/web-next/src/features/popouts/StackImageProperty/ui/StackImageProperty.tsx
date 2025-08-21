@@ -10,27 +10,19 @@ import { TabsSelector, TabsSelectorItem } from '@/shared/ui/TabsSelector'
 import { capitalize } from '@/shared/utils/capitalize'
 import { booleanTabsSelectorItems, popoutNames } from '@/shared/data'
 import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
-import { InputText, InputTextAnimated } from '@/shared/ui/InputText'
+import { InputText } from '@/shared/ui/InputText'
 import { Textarea, TextareaAnimated } from '@/shared/ui/Textarea'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { PropertyContentString } from '@/entities/properyContent/PropertyContentString'
 import { Button } from '@/shared/ui/Button'
+import { CommonLogo } from '@/shared/ui/CommonLogo'
+import { InstancePropertyColor } from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/components/InstancePropertyColor'
+import { InstancePropertyImage } from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/components/InstancePropertyImage'
 
 interface StackImagePropertyProps {
   className?: string
 }
-
-const controls: TabsSelectorItem[] = [
-  {
-    name: true,
-    label: 'Yes'
-  },
-  {
-    name: false,
-    label: 'No'
-  }
-]
 
 export const StackImageProperty: FC<StackImagePropertyProps> = ({ className }) => {
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackImageProperty}`)
@@ -60,25 +52,13 @@ export const StackImageProperty: FC<StackImagePropertyProps> = ({ className }) =
           <TabsSelector items={booleanTabsSelectorItems} value={required} onChange={({ name }) => setRequired(name)} />
         </ControlRowWide>
       </ControlRow>
-      <ControlRow title='Default Value'>
-        <ControlRowWide>
-          <Button
-            mode='secondary'
-            onClick={() =>
-              popoutsStore.open(popoutNames.imagePicker, {
-                context: {
-                  url: defaultValue,
-                  scaleMode: imageSize,
-                  onChangeUrl: setDefaultValue,
-                  onChangeScaleMode: setImageSize
-                }
-              })
-            }
-          >
-            Upload
-          </Button>
-        </ControlRowWide>
-      </ControlRow>
+      <InstancePropertyImage
+        name='Default Value'
+        value={defaultValue}
+        scaleMode={imageSize}
+        onChangeScaleMode={setImageSize}
+        onChange={setDefaultValue}
+      />
     </div>
   )
 }

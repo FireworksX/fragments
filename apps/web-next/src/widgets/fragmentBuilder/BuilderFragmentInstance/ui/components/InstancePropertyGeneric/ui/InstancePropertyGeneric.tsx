@@ -23,6 +23,7 @@ import { fieldsConfig } from '@/shared/hooks/fragmentBuilder/useLayerPropertyVar
 import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
 import InstancePropertyEnum from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/components/InstancePropertyEnum/ui/InstancePropertyEnum'
 import { BuilderControlRowProps } from '@/shared/ui/ControlRow/ui/default/ControlRow'
+import { InstancePropertyImage } from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/components/InstancePropertyImage'
 
 export interface InstancePropertyGenericProps extends BuilderControlRowProps {
   value: unknown
@@ -60,6 +61,18 @@ export const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({
   if (layer?.type === definition.variableType.String) {
     return (
       <InstancePropertyString
+        name={layer.name}
+        isTextarea={layer.isTextarea}
+        value={value}
+        onChange={onChange}
+        {...controlRowProps}
+      />
+    )
+  }
+
+  if (layer?.type === definition.variableType.Image) {
+    return (
+      <InstancePropertyImage
         name={layer.name}
         isTextarea={layer.isTextarea}
         value={value}

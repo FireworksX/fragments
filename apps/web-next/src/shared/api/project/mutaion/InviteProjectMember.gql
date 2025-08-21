@@ -1,0 +1,3 @@
+mutation InviteProjectMember($projectSlug: Int!, $email: String!, $role: UserRole!) {
+    inviteUserToProject(email: $email, projectId: $projectSlug, role: $role)
+}
