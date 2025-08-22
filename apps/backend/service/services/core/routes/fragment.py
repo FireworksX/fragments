@@ -138,7 +138,7 @@ async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
 
 async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
     role: Optional[UserRole] = await get_user_role_in_project(db, user_id, project_id)
-    return role is not None and role is not UserRole.ADMIN
+    return role is not None and role is not UserRole.MANAGER
 
 
 async def create_fragment_route(info: strawberry.Info[Context], fg: FragmentPost) -> FragmentGet:

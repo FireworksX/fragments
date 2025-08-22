@@ -58,10 +58,16 @@ async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
     return role is not None and role is not UserRole.DESIGNER
 
 
-async def private_key_permission(db: Session, user_id: int, project_id: int) -> bool:
-    logger.info(f"Checking private key permission for user {user_id} in project {project_id}")
+async def admin_permission(db: Session, user_id: int, project_id: int) -> bool:
+    logger.info(f"Checking admin permission for user {user_id} in project {project_id}")
     role: Optional[UserRole] = await get_user_role_in_project(db, user_id, project_id)
-    return role is not None and role is UserRole.OWNER or role is UserRole.ADMIN
+    return role is not None and role is UserRole.ADMIN or role is UserRole.OWNER
+
+
+async def owner_permission(db: Session, user_id: int, project_id: int) -> bool:
+    logger.info(f"Checking owner permission for user {user_id} in project {project_id}")
+    role: Optional[UserRole] = await get_user_role_in_project(db, user_id, project_id)
+    return role is not None and role is UserRole.OWNER
 
 
 def project_goal_db_to_goal(goal: ProjectGoal) -> ProjectGoalGet:
@@ -80,7 +86,7 @@ async def project_db_to_project(
 ) -> ProjectGet:
     logger.debug(f"Converting project {project.id} to schema")
     user: AuthPayload = await info.context.user()
-    permission: bool = await private_key_permission(db, user.user.id, project.id)
+    permission: bool = await owner_permission(db, user.user.id, project.id)
     return ProjectGet(
         id=project.id,
         name=project.name,
@@ -178,7 +184,7 @@ async def change_project_private_key_route(
     logger.info(f"Changing private key for project {project_id}")
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
-    permission: bool = await private_key_permission(db, user.user.id, project_id)
+    permission: bool = await owner_permission(db, user.user.id, project_id)
 
     project: Optional[Project] = await get_project_by_id_db(db, project_id)
     if project is None:
@@ -211,7 +217,7 @@ async def add_project_public_key_route(
         logger.error(f"Project {project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
 
-    permission: bool = await write_permission(db, user.user.id, project_id)
+    permission: bool = await admin_permission(db, user.user.id, project_id)
     if not permission:
         logger.warning(
             f"User {user.user.id} unauthorized to add public key to project {project_id}"
@@ -238,7 +244,7 @@ async def delete_project_public_key_route(
         logger.error(f"Project {project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
 
-    permission: bool = await write_permission(db, user.user.id, project_id)
+    permission: bool = await admin_permission(db, user.user.id, project_id)
     if not permission:
         logger.warning(
             f"User {user.user.id} unauthorized to delete public key from project {project_id}"
@@ -269,7 +275,7 @@ async def invite_user_to_project_route(
     if project is None:
         logger.error(f"Project {project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
-    permission: bool = await private_key_permission(db, user.user.id, project_id)
+    permission: bool = await admin_permission(db, user.user.id, project_id)
     if not permission:
         logger.warning(f"User {user.user.id} unauthorized to invite users to project {project_id}")
         raise HTTPException(
@@ -290,7 +296,7 @@ async def remove_user_from_project_route(
         logger.error(f"Project {project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
 
-    permission: bool = await private_key_permission(db, user.user.id, project_id)
+    permission: bool = await admin_permission(db, user.user.id, project_id)
     if not permission:
         logger.warning(
             f"User {user.user.id} unauthorized to remove users from project {project_id}"
@@ -321,7 +327,7 @@ async def add_user_to_project_route(
         logger.error(f"Project {project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
 
-    permission: bool = await private_key_permission(db, user.user.id, project_id)
+    permission: bool = await admin_permission(db, user.user.id, project_id)
     if not permission:
         logger.warning(f"User {user.user.id} unauthorized to add users to project {project_id}")
         raise HTTPException(
@@ -342,7 +348,7 @@ async def change_user_role_route(
     logger.info(f"Changing role for user {user_id} in project {project_id} to {role_to_add}")
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
-    permission: bool = await private_key_permission(db, user.user.id, project_id)
+    permission: bool = await admin_permission(db, user.user.id, project_id)
     if not permission:
         logger.warning(f"User {user.user.id} unauthorized to change roles in project {project_id}")
         raise HTTPException(
