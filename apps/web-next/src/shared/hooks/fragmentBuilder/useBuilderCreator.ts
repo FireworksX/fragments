@@ -5,7 +5,7 @@ import { definition } from '@fragmentsx/definition'
 import { getRandomColor } from '@/shared/utils/random'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useFragmentLayers } from '@/shared/hooks/fragmentBuilder/useFragmentLayers'
-import { appendChildren, cloneLayer, isPartOfPrimary, isRootLayer } from '@fragmentsx/render-core'
+import { appendChildren, cloneLayer, getParent, isPartOfPrimary, isRootLayer } from '@fragmentsx/render-core'
 import { getLayer } from '@/shared/hooks/fragmentBuilder/useNormalizeLayer/getLayer'
 import { LinkKey } from '@graph-state/core'
 import { useFragmentManager } from '@fragmentsx/render-suite'
@@ -19,14 +19,21 @@ export const useBuilderCreator = () => {
   const { queryFragmentManager } = useFragmentManager()
 
   const createFrame = (parent, externalProps = {}) => {
-    if (![definition.nodes.Frame].includes(documentManager.entityOfKey(parent)?._type)) {
+    let parentType = documentManager.entityOfKey(parent)?._type
+
+    // if (parentType === definition.nodes.Collection) {
+    //   parent = getParent(documentManager, parent)
+    //   parentType = documentManager.entityOfKey(parent)?._type
+    // }
+
+    if (![definition.nodes.Frame, definition.nodes.Collection].includes(parentType)) {
       return
     }
 
     const parentNode = documentManager.resolve(parent)
     const parentLayerMode = parentNode.layerMode
 
-    return appendChildren(documentManager, documentManager.keyOfEntity(parent), {
+    const res = {
       _type: definition.nodes.Frame,
       solidFill: getRandomColor(),
       fillType: definition.paintMode.Solid,
@@ -37,7 +44,24 @@ export const useBuilderCreator = () => {
       width: 100,
       height: 100,
       ...externalProps
+    }
+
+    return appendChildren(documentManager, documentManager.keyOfEntity(parent), res)
+  }
+
+  const createCollection = (parent, externalProps = {}) => {
+    if (![definition.nodes.Frame].includes(documentManager.entityOfKey(parent)?._type)) {
+      return
+    }
+
+    const [collectionLayerKey] = appendChildren(documentManager, documentManager.keyOfEntity(parent), {
+      _type: definition.nodes.Collection,
+      ...externalProps
     })
+
+    createFrame(collectionLayerKey)
+
+    return [collectionLayerKey]
   }
 
   const createText = (parent, externalProps = {}) => {
@@ -102,6 +126,7 @@ export const useBuilderCreator = () => {
     createFrame,
     createBreakpoint,
     createText,
-    createInstance
+    createInstance,
+    createCollection
   }
 }

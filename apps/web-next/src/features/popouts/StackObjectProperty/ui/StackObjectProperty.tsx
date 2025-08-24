@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useRef } from 'react'
 import cn from 'classnames'
 import { definition } from '@fragmentsx/definition'
 import { createLayer } from '@fragmentsx/render-suite'
@@ -15,12 +15,13 @@ import { InstancePropertyGeneric } from '@/widgets/fragmentBuilder/BuilderFragme
 import { PropertyGenericCell } from '@/entities/fragment/PropertyGenericCell'
 import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { capitalize } from '@/shared/utils/capitalize'
+import { Instance } from '@/shared/ui/Popover/ui/Popover'
 
 interface StackObjectVariableProps {
   className?: string
 }
 
-const StackObjectVariable: FC<StackObjectVariableProps> = ({ className }) => {
+export const StackObjectProperty: FC<StackObjectVariableProps> = ({ className }) => {
   const { createProperty } = useFragmentProperties()
   const { documentManager } = useBuilderDocument()
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackObjectProperty}`)
@@ -33,7 +34,7 @@ const StackObjectVariable: FC<StackObjectVariableProps> = ({ className }) => {
   const cleanFields = omit(fields, '_id', '_type')
 
   const handleAddField = (key, type) => {
-    const propertyLink = createProperty({ type })
+    const propertyLink = createProperty({ type, parent: context?.propertyLink })
 
     setFields({
       [key]: propertyLink
@@ -65,4 +66,4 @@ const StackObjectVariable: FC<StackObjectVariableProps> = ({ className }) => {
   )
 }
 
-export default StackObjectVariable
+export default StackObjectProperty

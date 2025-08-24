@@ -9,6 +9,7 @@ import BreakpointsIcon from '@/shared/icons/next/tablet-smartphone.svg'
 import TextIcon from '@/shared/icons/next/type.svg'
 import ImageIcon from '@/shared/icons/next/image.svg'
 import FrameIcon from '@/shared/icons/next/frame.svg'
+import CollectionIcon from '@/shared/icons/next/database.svg'
 import PlayIcon from '@/shared/icons/next/play.svg'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { Touchable } from '@/shared/ui/Touchable'
@@ -68,6 +69,15 @@ export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
         onClick={() => manager.setCreatorType(definition.nodes.Text)}
       >
         <TextIcon width={20} height={20} />
+      </Touchable>
+      <Touchable
+        className={cn(styles.actionButton, {
+          [styles.active]: createType === definition.nodes.Collection
+        })}
+        TagName='button'
+        onClick={() => manager.setCreatorType(definition.nodes.Collection)}
+      >
+        <CollectionIcon width={20} height={20} />
       </Touchable>
 
       <div className={styles.delimiter} />

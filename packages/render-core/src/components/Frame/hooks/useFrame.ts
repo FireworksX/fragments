@@ -8,6 +8,7 @@ import { useStyleSheet } from "@/shared/hooks/useStyleSheet";
 import { useLayerInteractions } from "@/shared/hooks/useLayerInteractions";
 import { useLayerLink } from "@/shared/hooks/useLayerLink";
 import { ScopeContext } from "@/providers/Scope/ScopeContext";
+import { Scope } from "@/providers/Scope";
 
 export interface UseFrameOptions {
   collectStyle?: boolean;
@@ -24,6 +25,8 @@ export const useFrame = (layerKey: LinkKey, options?: UseFrameOptions) => {
   const { addLayerStyle } = useStyleSheet(fragmentManager);
   const events = useLayerInteractions(layerKey);
   const link = useLayerLink(layerKey);
+
+  const scopes = useContext(ScopeContext);
 
   if (collectStyle) {
     addLayerStyle(layerKey, styles, fragmentManager.resolve(layerKey));

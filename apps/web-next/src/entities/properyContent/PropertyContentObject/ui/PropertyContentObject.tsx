@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useState } from 'react'
+import React, { FC, ReactNode, useRef, useState } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
@@ -18,6 +18,7 @@ import PlusIcon from '@/shared/icons/next/plus.svg'
 import { DropdownOption } from '@/shared/ui/DropdownOption'
 import { FRAGMENT_PROPERTY_TYPES } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
 import { InstancePropertyGeneric } from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/components/InstancePropertyGeneric'
+import { Instance } from '@/shared/ui/Popover/ui/Popover'
 
 interface PropertyContentObjectProps {
   id: string | null
@@ -40,6 +41,7 @@ export const PropertyContentObject: FC<PropertyContentObjectProps> = ({
 }) => {
   const [fieldKey, setFieldKey] = useState('')
   const [fieldType, setFieldType] = useState(null)
+  const fieldsDropdownInstance = useRef<Instance | undefined>(undefined)
 
   const handleAddField = () => {
     onAddField(fieldKey, fieldType)
@@ -84,18 +86,27 @@ export const PropertyContentObject: FC<PropertyContentObjectProps> = ({
             <Dropdown
               trigger='click'
               placement='bottom-end'
+              appendTo='body'
               width='contentSize'
               hideOnClick
               arrow={false}
               options={
                 <DropdownGroup>
                   {FRAGMENT_PROPERTY_TYPES.map(type => (
-                    <DropdownOption key={type} onClick={() => setFieldType(type)}>
+                    <DropdownOption
+                      key={type}
+                      preventDefault
+                      onClick={() => {
+                        fieldsDropdownInstance.current?.hide()
+                        setFieldType(type)
+                      }}
+                    >
                       {type}
                     </DropdownOption>
                   ))}
                 </DropdownGroup>
               }
+              onCreate={instance => fieldsDropdownInstance.current === instance}
             >
               <SelectMimicry>{fieldType ?? 'Select Type'}</SelectMimicry>
             </Dropdown>

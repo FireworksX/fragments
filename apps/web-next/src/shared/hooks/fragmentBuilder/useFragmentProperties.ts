@@ -15,7 +15,9 @@ export const FRAGMENT_PROPERTY_TYPES = [
   definition.variableType.Number,
   definition.variableType.Boolean,
   definition.variableType.String,
-  definition.variableType.Object
+  definition.variableType.Object,
+  definition.variableType.Image,
+  definition.variableType.Array
 ]
 
 export interface EditPropertyOptions {
@@ -46,6 +48,13 @@ export const useFragmentProperties = () => {
   }
 
   const deleteProperty = (prop: Entity) => {
+    const resolveProperty = documentManager.resolve(prop)
+
+    if (resolveProperty?.type === definition.variableType.Object) {
+      // Удаляем fields у объекта
+      Object.values(resolveProperty?.fields ?? {}).forEach(deleteProperty)
+    }
+
     documentManager.invalidate(prop)
   }
 
@@ -65,7 +74,8 @@ export const useFragmentProperties = () => {
         [definition.variableType.Link]: popoutNames.stackLinkProperty,
         [definition.variableType.Enum]: popoutNames.stackEnumProperty,
         [definition.variableType.Event]: popoutNames.stackEventProperty,
-        [definition.variableType.Image]: popoutNames.stackImageProperty
+        [definition.variableType.Image]: popoutNames.stackImageProperty,
+        [definition.variableType.Array]: popoutNames.stackArrayProperty
       }[type]
 
       popoutsStore.open(popoutName, {
@@ -124,6 +134,7 @@ export const useFragmentProperties = () => {
   }
 
   return {
+    documentManager,
     createProperty,
     editProperty,
     deleteProperty,

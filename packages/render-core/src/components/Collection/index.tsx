@@ -1,10 +1,12 @@
 import { FC, useContext } from "preact/compat";
 import { LinkKey } from "@graph-state/core";
-import { useFrame } from "./hooks/useFrame";
+import { useCollection } from "./hooks/useCollection";
 import { Text } from "@/components/Text";
 import { Instance } from "@/components/Instance";
 import { definition } from "@fragmentsx/definition";
 import { useMounted } from "@/shared/hooks/useMounted";
+import { Scope } from "@/providers/Scope";
+import { Frame } from "@/components/Frame";
 
 interface CollectionProps {
   layerKey: LinkKey;
@@ -12,33 +14,21 @@ interface CollectionProps {
 }
 
 export const Collection: FC<CollectionProps> = ({ layerKey, hidden }) => {
-  const { events, styles, hash, children, type, restProps, Tag } =
-    useFrame(layerKey);
-  const isMounted = useMounted();
-
-  if (isMounted && hidden) {
-    return null;
-  }
-
-  if (type === definition.nodes.Text) {
-    return <Text layerKey={layerKey} />;
-  }
-
-  if (type === definition.nodes.Instance) {
-    return <Instance layerKey={layerKey} />;
-  }
+  const { children, fragmentManager, properties } = useCollection(layerKey);
 
   return (
-    <Tag
-      className={hash}
-      data-key={layerKey}
-      style={{ ...styles, display: hidden ? "none" : styles.display }}
-      {...events}
-      {...restProps}
+    <Scope
+      fragmentManager={fragmentManager}
+      layerKey={layerKey}
+      value={{
+        type: definition.scopeTypes.CollectionScope,
+        manager: fragmentManager,
+        definitions: properties,
+      }}
     >
       {children.map((childLink) => (
         <Frame key={childLink} layerKey={childLink} />
       ))}
-    </Tag>
+    </Scope>
   );
 };

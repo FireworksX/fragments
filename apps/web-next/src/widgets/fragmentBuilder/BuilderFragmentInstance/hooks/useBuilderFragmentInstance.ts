@@ -1,10 +1,10 @@
-import { definition } from '@fragmentsx/definition'
+import { definition as declareDefinition } from '@fragmentsx/definition'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { useInstanceDefinition } from '@/shared/hooks/fragmentBuilder/useInstanceDefinition'
 import { useGraph } from '@graph-state/react'
-import { isObject, pick } from '@fragmentsx/utils'
+import { isObject, pick, omit } from '@fragmentsx/utils'
 import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
 import { useNormalizeLayer } from '@/shared/hooks/fragmentBuilder/useNormalizeLayer'
 import { fieldsConfig } from '@/shared/hooks/fragmentBuilder/useLayerPropertyVariable/fieldsConfig'
@@ -36,6 +36,8 @@ export const useBuilderFragmentInstance = () => {
         // const allowProps = options.areaProperties?.filter?.(prop => prop?.type === resolvedDefinition.type)
         const actions = []
 
+        if (!!resolvedDefinition.parent) return null
+
         // if (allowProps?.length) {
         //   actions = [
         //     {
@@ -60,16 +62,27 @@ export const useBuilderFragmentInstance = () => {
         //     ? options?.props[resolvedDefinition._id]
         //     : resolvedDefinition.defaultValue
 
+        let value = resolvedDefinition._id in props ? props[resolvedDefinition._id] : resolvedDefinition.defaultValue
+
+        if (resolvedDefinition.type === declareDefinition.variableType.Object) {
+          value = props
+        }
+
         return {
           type: resolvedDefinition._type,
           link: definition,
-          value: resolvedDefinition._id in props ? props[resolvedDefinition._id] : resolvedDefinition.defaultValue,
+          value: isObject(value) ? omit(value, '_type', '_id') : value,
           setValue: value => {
-            setInstanceProps({ props: { [resolvedDefinition._id]: value } })
+            if (resolvedDefinition.type === declareDefinition.variableType.Object) {
+              setInstanceProps({ props: value })
+            } else {
+              setInstanceProps({ props: { [resolvedDefinition._id]: value } })
+            }
           }
         }
       })
-      .toSorted(a => (a.type === definition.variableType.Event ? 1 : -1)),
+      .filter(Boolean)
+      .toSorted(a => (a.type === declareDefinition.variableType.Event ? 1 : -1)),
     name,
     instanceManager: manager,
     parentManager: documentManager

@@ -5,6 +5,7 @@ import { ScopeContext, useFrame, useMounted } from "@fragmentsx/render-core";
 import { Text } from "@/components/Text";
 import { Instance } from "@/components/Instance";
 import { UseFrameOptions } from "@fragmentsx/render-core/dist/components/Frame/hooks/useFrame";
+import { Collection } from "@/components/Collection";
 
 interface FrameProps extends UseFrameOptions {
   TextElement?: ElementType;
@@ -30,6 +31,10 @@ export const Frame: FC<FrameProps> = ({
 
   if (isMounted && hidden) {
     return <div />;
+  }
+
+  if (type === definition.nodes.Collection) {
+    return <Collection layerKey={layerKey} {...restProps} />;
   }
 
   if (type === definition.nodes.Text) {

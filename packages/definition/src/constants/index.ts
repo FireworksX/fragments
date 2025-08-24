@@ -9,6 +9,7 @@ export const nodes = createConstants(
   "Fragment",
   "FragmentInstance",
   "Instance",
+  "Collection",
   "Breakpoint",
   "Frame",
   "Image",
@@ -118,4 +119,8 @@ export const interactions = createConstants("click", "mouseover");
 
 export const eventMode = createConstants("goal", "callback");
 
-export const scopeTypes = createConstants("InstanceScope", "FragmentScope");
+export const scopeTypes = createConstants(
+  "InstanceScope",
+  "FragmentScope",
+  "CollectionScope"
+);

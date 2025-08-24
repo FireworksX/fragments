@@ -1,7 +1,7 @@
 import React, { FC, use } from 'react'
 import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { animated } from '@react-spring/web'
-import { booleanTabsSelectorItems } from '@/shared/data'
+import { booleanTabsSelectorItems, popoutNames } from '@/shared/data'
 import { TabsSelector } from '@/shared/ui/TabsSelector'
 import { definition } from '@fragmentsx/definition'
 import { InstancePropertyNumber } from '../../InstancePropertyNumber'
@@ -24,6 +24,9 @@ import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmen
 import InstancePropertyEnum from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/components/InstancePropertyEnum/ui/InstancePropertyEnum'
 import { BuilderControlRowProps } from '@/shared/ui/ControlRow/ui/default/ControlRow'
 import { InstancePropertyImage } from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/components/InstancePropertyImage'
+import { InstancePropertyObject } from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/components/InstancePropertyObject'
+import { popoutsStore } from '@/shared/store/popouts.store'
+import { omit } from '@fragmentsx/utils'
 
 export interface InstancePropertyGenericProps extends BuilderControlRowProps {
   value: unknown
@@ -53,6 +56,30 @@ export const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({
         max={layer.max}
         displayStepper={layer.displayStepper}
         onChange={onChange}
+        {...controlRowProps}
+      />
+    )
+  }
+
+  if (layer?.type === definition.variableType.Object) {
+    const openObject = () => {
+      popoutsStore.open(popoutNames.stackObjectValue, {
+        context: {
+          fields: omit(layer?.fields, '_type', '_id'),
+          value,
+          manager,
+          onChange
+        }
+      })
+    }
+
+    return (
+      <InstancePropertyObject
+        value={value}
+        name={layer.name}
+        fields={layer?.fields}
+        onChange={onChange}
+        onOpenObject={openObject}
         {...controlRowProps}
       />
     )

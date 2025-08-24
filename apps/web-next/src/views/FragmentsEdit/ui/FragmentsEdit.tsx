@@ -47,12 +47,15 @@ import { StackNumberProperty } from '@/features/popouts/StackNumberProperty'
 import { StackEventProperty } from '@/features/popouts/StackEventProperty'
 import { StackBooleanProperty } from '@/features/popouts/StackBooleanProperty'
 import { StackColorProperty } from '@/features/popouts/StackColorProperty'
+import { StackObjectProperty } from '@/features/popouts/StackObjectProperty'
 import { StackInteraction } from '@/features/popouts/StackInteraction'
 import { StackGoals } from '@/features/popouts/StackGoals'
 import { StackCreateGoal } from '@/features/popouts/StackCreateGoal'
-import StackObjectVariable from '@/features/popouts/StackObjectVariable/StackObjectVariable'
-import { StackImageProperty } from '@/features/popouts/StackImageProperty/ui/StackImageProperty'
+import { StackImageProperty } from '@/features/popouts/StackImageProperty'
 import { StackImagePicker } from '@/features/popouts/StackImagePicker/ui/StackImagePicker'
+import { BuilderCollection } from '@/widgets/fragmentBuilder/BuilderCollection'
+import { StackArrayProperty } from '@/features/popouts/StackArrayProperty'
+import { StackObjectValue } from '@/features/popouts/StackObjectValue'
 
 const FragmentsEditInitial = () => {
   // const { setRenderTarget } = useRenderTarget()
@@ -106,16 +109,18 @@ const FragmentsEditInitial = () => {
                   <StackEventProperty name={popoutNames.stackEventProperty} title='Event Property' />
                   <StackBooleanProperty name={popoutNames.stackBooleanProperty} title='Boolean Property' />
                   <StackColorProperty name={popoutNames.stackColorProperty} title='Color Property' />
-                  <StackObjectVariable name={popoutNames.stackObjectProperty} title='Object Property' />
+                  <StackObjectProperty name={popoutNames.stackObjectProperty} title='Object Property' />
+                  <StackArrayProperty name={popoutNames.stackArrayProperty} title='Array Property' />
                   <StackInteraction name={popoutNames.stackInteraction} title='Interaction' />
                   <StackGoals name={popoutNames.stackGoals} title='Goals' />
                   <StackCreateGoal name={popoutNames.stackCreateGoal} title='Create Goal' />
+
+                  <StackObjectValue name={popoutNames.stackObjectValue} title='Object Value' />
                   {/*<StackPanelCssOverrideList name='cssOverrideList' title='CSS overrides' />*/}
                   {/*<StackLoopEffect name='loopEffect' title='Loop Effect' />*/}
 
                   {/*<StackNumberVariable name={stackNumberVariableName} title='Number' />*/}
                   {/*<StackBooleanVariable name={stackBooleanVariableName} title='Boolean' />*/}
-                  <StackObjectVariable name={popoutNames.stackObjectProperty} title='Object' />
                   {/*<StackStringVariable name={stackStringVariableName} title='String' />*/}
                   <StackVariableTransform name={popoutNames.stackVariableTransform} title='Transform' />
                 </StackCollector>
@@ -131,6 +136,7 @@ const FragmentsEditInitial = () => {
         fragmentPropsNode={<AssetsProperties propertiesTree={<PropertiesTree />} />}
         positionNode={<BuilderPosition />}
         sizeNode={<BuilderSize />}
+        collectionNode={<BuilderCollection />}
         layoutNode={<BuilderLayout />}
         stylesNode={<BuilderStyles />}
         linkNode={<BuilderLink />}

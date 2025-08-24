@@ -16,7 +16,7 @@ export const useCanvasClick = (targetRef: RefObject<ComponentRef<'div'>>) => {
   const { openFragment } = useBuilder()
 
   const { manager: canvasManager } = useBuilderCanvas()
-  const { creator, manager, createText, createBreakpoint, createFrame } = useBuilderCreator()
+  const { creator, manager, createText, createCollection, createFrame } = useBuilderCreator()
   const createType = creator?.createType
 
   useGesture(
@@ -24,14 +24,17 @@ export const useCanvasClick = (targetRef: RefObject<ComponentRef<'div'>>) => {
       onClick: ({ event }) => {
         const layerKey = findLayerFromPointerEvent(event)
         if (createType) {
-          if ([definition.nodes.Text, definition.nodes.Frame].includes(createType)) {
+          if ([definition.nodes.Text, definition.nodes.Frame, definition.nodes.Collection].includes(createType)) {
             let nextLayerKey = null
 
             if (createType === definition.nodes.Text) {
               ;[nextLayerKey] = createText(layerKey, { content: 'text' })
             } else if (createType === definition.nodes.Frame) {
               ;[nextLayerKey] = createFrame(layerKey)
+            } else if (createType === definition.nodes.Collection) {
+              ;[nextLayerKey] = createCollection(layerKey)
             }
+
             manager.setCreatorType(null)
 
             nextTick(() => {

@@ -14,6 +14,7 @@ interface ControlsProps extends AsideBarProps {
   linkNode?: ReactNode
   positionNode?: ReactNode
   sizeNode?: ReactNode
+  collectionNode?: ReactNode
   layoutNode?: ReactNode
   stylesNode?: ReactNode
   textNode?: ReactNode
@@ -32,6 +33,7 @@ const BuilderControls: FC<ControlsProps> = ({
   positionNode,
   linkNode,
   sizeNode,
+  collectionNode,
   layoutNode,
   interactionsNode,
   stylesNode,
@@ -76,6 +78,7 @@ const BuilderControls: FC<ControlsProps> = ({
   const hasInstanceProps = [definition.nodes.Instance].some(type => layerInfo.type === type)
   const hasInteractions = [definition.nodes.Frame].some(type => layerInfo.type === type)
   const hasLink = [definition.nodes.Frame, definition.nodes.Instance].some(type => layerInfo.type === type)
+  const hasCollection = [definition.nodes.Collection].some(type => layerInfo.type === type)
 
   return (
     <Container className={cn(className, styles.root)}>
@@ -83,6 +86,7 @@ const BuilderControls: FC<ControlsProps> = ({
       {selection && (
         <>
           {hasLink && linkNode}
+          {hasCollection && collectionNode}
           {hasInteractions && interactionsNode}
           {hasGrowing && fragmentGrowingNode}
           {hasFragmentProps && fragmentPropsNode}

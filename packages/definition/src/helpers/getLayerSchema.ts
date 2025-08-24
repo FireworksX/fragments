@@ -12,6 +12,8 @@ import { LinkVariableSchema } from "@/schemas/variables/LinkVariableSchema";
 import { EnumVariableSchema } from "@/schemas/variables/EnumVariableSchema";
 import { ObjectVariableSchema } from "@/schemas/variables/ObjectVariableSchema";
 import { ImageVariableSchema } from "@/schemas/variables/ImageVariableSchema";
+import { CollectionSchema } from "@/schemas/nodes/CollectionSchema";
+import { ArrayVariableSchema } from "@/schemas/variables/ArrayVariableSchema";
 
 export const getLayerSchema = (layer?: unknown) => {
   if (!layer?._type) return null;
@@ -20,6 +22,7 @@ export const getLayerSchema = (layer?: unknown) => {
   if (layer?._type === nodes.Text) return TextSchema;
   if (layer?._type === nodes.Fragment) return FragmentSchema;
   if (layer?._type === nodes.Instance) return InstanceSchema;
+  if (layer?._type === nodes.Collection) return CollectionSchema;
   //
   if (layer._type === nodes.Variable) {
     const types = {
@@ -32,6 +35,7 @@ export const getLayerSchema = (layer?: unknown) => {
       [variableType.Enum]: EnumVariableSchema,
       [variableType.Object]: ObjectVariableSchema,
       [variableType.Image]: ImageVariableSchema,
+      [variableType.Array]: ArrayVariableSchema,
     };
 
     if (layer.type in types) {

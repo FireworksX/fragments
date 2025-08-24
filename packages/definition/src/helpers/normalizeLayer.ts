@@ -20,7 +20,6 @@ export const normalizeLayer = (
 
     const withFallback = options?.withFallback ?? true;
     const overrideTarget = options?.overrideTarget;
-
     const parsedLayer = v.parse(schema, rawLayer);
 
     return Object.fromEntries(

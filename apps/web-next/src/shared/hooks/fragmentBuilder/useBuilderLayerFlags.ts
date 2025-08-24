@@ -5,6 +5,8 @@ import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { removeChildren, duplicateLayer } from '@fragmentsx/render-core'
 
+const PERMANENTLY_VISIBLE = [definition.nodes.Fragment, definition.nodes.Collection]
+
 export const useBuilderLayerFlags = (layerKey: LinkKey) => {
   const { documentManager } = useBuilderDocument()
   const layerInfo = useLayerInfo(layerKey)
@@ -32,7 +34,7 @@ export const useBuilderLayerFlags = (layerKey: LinkKey) => {
 
   return {
     type: layerInfo.type,
-    isVisible: layerInfo.type !== definition.nodes.Fragment ? visible : true,
+    isVisible: !PERMANENTLY_VISIBLE.includes(layerInfo.type) ? visible : true,
     layerDirection: '',
     layerMode: '',
     hasLayout,

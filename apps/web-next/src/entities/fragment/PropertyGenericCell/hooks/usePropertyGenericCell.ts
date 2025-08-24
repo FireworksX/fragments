@@ -1,4 +1,4 @@
-import { LinkKey } from '@graph-state/core'
+import { entityOfKey, LinkKey } from '@graph-state/core'
 import { ElementRef, useContext, useMemo, useRef, useState } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useGraph } from '@graph-state/react'
@@ -19,13 +19,12 @@ export const usePropertyGenericCell = (propertyLink: LinkKey) => {
   const [defaultValue] = useLayerValue('defaultValue', propertyLink)
   const isTopLevel = !documentManager.resolve(propertyLink)?.parent
 
-  console.log(name, propertyLink)
-
   return {
     type: propertyType as keyof typeof definition.variableType,
     isTopLevel,
     defaultValue,
-    name: name || propertyLink,
+    remove: () => deleteProperty(propertyLink),
+    name: name || entityOfKey(propertyLink)?._id,
     handleClickProperty: (options?: EditPropertyOptions) => {
       editProperty(propertyLink, options)
     }
