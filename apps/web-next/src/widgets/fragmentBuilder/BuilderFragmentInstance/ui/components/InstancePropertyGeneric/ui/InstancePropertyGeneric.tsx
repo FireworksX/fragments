@@ -27,6 +27,7 @@ import { InstancePropertyImage } from '@/widgets/fragmentBuilder/BuilderFragment
 import { InstancePropertyObject } from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/components/InstancePropertyObject'
 import { popoutsStore } from '@/shared/store/popouts.store'
 import { cleanGraph, isObject, omit } from '@fragmentsx/utils'
+import { InstancePropertyArray } from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/components/InstancePropertyArray'
 
 export interface InstancePropertyGenericProps extends BuilderControlRowProps {
   value: unknown
@@ -84,6 +85,22 @@ export const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({
         {...controlRowProps}
       />
     )
+  }
+
+  if (layer?.type === definition.variableType.Array) {
+    console.log(layer)
+    const editValue = () => {
+      popoutsStore.open(popoutNames.stackArrayValue, {
+        context: {
+          definition: layer?.definition,
+          value,
+          manager,
+          onChange
+        }
+      })
+    }
+
+    return <InstancePropertyArray name={layer.name} value={value} onOpen={editValue} {...controlRowProps} />
   }
 
   if (layer?.type === definition.variableType.String) {

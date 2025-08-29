@@ -33,6 +33,7 @@ import { BuilderFragmentPublish } from '@/widgets/fragmentBuilder/BuilderFragmen
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { BuilderFloatBarCollection } from '@/widgets/fragmentBuilder/BuilderFloatBar/widgets/BuilderFloatBarCollection'
 import { capitalize } from '@/shared/utils/capitalize'
+import { useBuilderAutoCreator } from '@/shared/hooks/fragmentBuilder/useBuilderAutoCreator'
 
 interface BuilderFloatBarProps {
   className?: string
@@ -44,12 +45,14 @@ export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
   const { creator, manager } = useBuilderCreator()
   const createType = creator.createType
 
+  useBuilderAutoCreator()
+
   return (
     <div className={styles.root}>
       <div className={cn(styles.info, { [styles.infoActive]: !!createType })}>
         <div className={styles.infoRow}>
           <SparklesIcon />
-          <span>Click any layer in canvas for create {capitalize(createType)}</span>
+          <span>Select layer for create {capitalize(createType)}</span>
         </div>
       </div>
 

@@ -3,7 +3,7 @@ import { definition } from "@fragmentsx/definition";
 import { Scope } from "@/providers/Scope";
 import { Frame, FrameProps } from "@/components/Frame";
 import { ElementType, FC } from "react";
-import { useCollection } from "@fragmentsx/render-core";
+import { getCssVariables, useCollection } from "@fragmentsx/render-core";
 
 interface CollectionProps extends FrameProps {}
 
@@ -47,7 +47,15 @@ export const Collection: FC<CollectionProps> = ({
             }}
           >
             {children?.map((child) => (
-              <FrameElement {...restProps} layerKey={child} />
+              <div
+                key={child}
+                style={{
+                  display: "contents",
+                  ...getCssVariables(collectionItem ?? {}),
+                }}
+              >
+                <FrameElement {...restProps} layerKey={child} />
+              </div>
             ))}
           </Scope>
         ))}

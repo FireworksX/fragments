@@ -158,14 +158,6 @@ export const PropertyContentArray: FC<PropertyContentArrayProps> = ({
                 value={cleanGraph(value)}
                 hasConnector
                 isHideTitle
-                title={
-                  <div className={styles.itemTitle}>
-                    <span>Item {index + 1}</span>
-                    <Touchable className={styles.remove} onClick={() => handleRemoveItem(index)}>
-                      <RemoveIcon />
-                    </Touchable>
-                  </div>
-                }
                 onChange={nextValue => handleUpdateValue(index, nextValue)}
               />
               <Touchable className={styles.remove} onClick={() => handleRemoveItem(index)}>

@@ -12,8 +12,9 @@ interface CollectionProps {
   layerKey: LinkKey;
 }
 
-export const Collection: FC<CollectionProps> = ({ layerKey }) => {
-  const { fragmentManager, properties } = useCollection(layerKey);
+export const Collection: FC<CollectionProps> = ({ layerKey, ...restProps }) => {
+  const { fragmentManager, hash, source, children, sourceValue } =
+    useCollection(layerKey);
 
   return (
     <Scope
@@ -21,11 +22,29 @@ export const Collection: FC<CollectionProps> = ({ layerKey }) => {
       layerKey={layerKey}
       value={{
         type: definition.scopeTypes.CollectionScope,
+        source,
         manager: fragmentManager,
-        definitions: properties,
       }}
     >
-      <Frame layerKey={layerKey} />
+      {/* В FrameTag не пробрасываем layerKey, иначе будет рекурсия */}
+      <div className={hash} data-key={layerKey}>
+        {sourceValue?.map?.((collectionItem, index) => (
+          <Scope
+            fragmentManager={fragmentManager}
+            layerKey={`${layerKey}.${index}`}
+            value={{
+              type: definition.scopeTypes.CollectionItemScope,
+              source,
+              value: collectionItem,
+              manager: fragmentManager,
+            }}
+          >
+            {children?.map((child) => (
+              <Frame {...restProps} layerKey={child} />
+            ))}
+          </Scope>
+        ))}
+      </div>
     </Scope>
   );
 };

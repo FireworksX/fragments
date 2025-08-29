@@ -7,7 +7,6 @@ import { ScopeContext } from "@/providers/Scope/ScopeContext";
 
 export const useReadVariable = (variableKey?: LinkKey | null) => {
   const scopes = useContext(ScopeContext) as unknown[];
-  const variableId = entityOfKey(variableKey)?._id;
 
   // useGraph(fragmentDefinition?.manager, variableKey, {
   //   selector: (graph) =>
@@ -15,6 +14,8 @@ export const useReadVariable = (variableKey?: LinkKey | null) => {
   // });
 
   const readVariable = (variableKey?: LinkKey) => {
+    const variableId = entityOfKey(variableKey)?._id;
+
     const isVariable = isVariableLink(variableKey);
     const instanceProp = scopes.findLast(
       (scope) => scope?.type === definition.scopeTypes.InstanceScope

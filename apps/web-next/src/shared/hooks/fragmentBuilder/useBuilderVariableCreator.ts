@@ -9,6 +9,10 @@ import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { definition } from '@fragmentsx/definition'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 
+/**
+ * @deprecated
+ */
+
 export const useBuilderVariableCreator = () => {
   const { documentManager } = useBuilderDocument()
 

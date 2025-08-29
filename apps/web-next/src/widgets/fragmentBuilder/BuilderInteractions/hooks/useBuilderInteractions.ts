@@ -14,7 +14,7 @@ export const useBuilderInteractions = () => {
   const { documentManager } = useBuilderDocument()
   const { selection } = useBuilderSelection()
   const [interactions, setInteractions, interactionsInfo] = useLayerValue('interactions')
-  const { actions, createVariable } = useLayerVariable({
+  const { createVariableOption, setVariableOption, createVariable } = useLayerVariable({
     preferredField: fieldsConfig.event,
     createName: 'New Event',
     setName: 'Set Event',
@@ -67,7 +67,7 @@ export const useBuilderInteractions = () => {
   return {
     manager: documentManager,
     actions: [
-      actions,
+      [createVariableOption, setVariableOption],
       [
         {
           name: 'goal',

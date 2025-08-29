@@ -1,0 +1,16 @@
+.root {}
+
+.fieldsIcon {
+    color: var(--primary);
+}
+
+.item {
+    display: flex;
+    gap: var(--gutter-medium);
+    align-items: center;
+    flex: 1;
+}
+
+.remove {
+    color: var(--secondary);
+}

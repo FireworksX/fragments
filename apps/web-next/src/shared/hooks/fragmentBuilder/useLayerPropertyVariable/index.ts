@@ -33,7 +33,7 @@ export const useLayerPropertyValue = (field: keyof typeof fieldsConfig, options?
     [editProperty, options, setFieldValue]
   )
 
-  const { createVariable, actions } = useLayerVariable({
+  const layerVariable = useLayerVariable({
     layerKey: selection,
     value: fieldValue,
     disabled,
@@ -54,12 +54,11 @@ export const useLayerPropertyValue = (field: keyof typeof fieldsConfig, options?
     fieldEntity,
     fieldValue,
     disabled,
-    createVariable,
     resetVariable: restoreValue,
     editVariable: () => {
       fieldInfo?.isVariable && editProperty(fieldInfo?.rawValue)
     },
     variableData: fieldInfo?.isVariable ? variableData : null,
-    actions
+    actions: [layerVariable.setVariableOption, layerVariable.createVariableOption]
   }
 }

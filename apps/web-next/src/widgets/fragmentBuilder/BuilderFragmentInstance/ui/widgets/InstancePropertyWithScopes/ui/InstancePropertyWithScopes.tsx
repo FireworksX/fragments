@@ -31,11 +31,22 @@ export const InstancePropertyWithScopes: FC<InstancePropertyWithScopesProps> = (
 }) => {
   const [propertyValue] = useGraph(manager, property)
   const [linkedVariableValue] = useGraph(isVariableLink(value) ? parentManager : null, value)
+  const { selection } = useBuilderSelection()
 
   const propertyControl = useLayerPropertyValue(propertyValue?.nodePropertyControlReference, {
     value,
     onSetValue: onChange
   })
+
+  const baseLayerVariale = useLayerVariable({
+    layerKey: selection,
+    preferredField: propertyValue,
+    onSetValue: onChange
+  })
+
+  const resultActions = propertyValue?.nodePropertyControlReference
+    ? propertyControl.actions
+    : [baseLayerVariale.setVariableOption]
 
   return (
     <InstancePropertyGeneric
@@ -43,8 +54,8 @@ export const InstancePropertyWithScopes: FC<InstancePropertyWithScopesProps> = (
       property={property}
       manager={manager}
       value={value}
-      hasConnector={!propertyControl.disabled}
-      actions={[propertyControl.actions]}
+      hasConnector={!!resultActions?.length}
+      actions={[resultActions]}
       variable={{
         data: linkedVariableValue
       }}

@@ -100,7 +100,6 @@ const BuilderControls: FC<ControlsProps> = ({
           {hasPosition && positionNode}
           {hasSize && sizeNode}
           {hasLayout && layoutNode}
-          {/*<BuilderEffects />*/}
           {hasStyles && stylesNode}
           {hasText && textNode}
           {hasImage && imageNode}

@@ -122,7 +122,7 @@ export const useLayerVariable = (options: UseLayerVariableOptions) => {
     [documentManager, fieldType, proxySetFieldValue]
   )
 
-  const allowVariables = useMemo(() => {
+  const setVariableOption = useMemo(() => {
     const visitors = new Set([])
     const allowOptions = definitions.map(list =>
       list
@@ -136,19 +136,14 @@ export const useLayerVariable = (options: UseLayerVariableOptions) => {
           return variable
         })
         .filter(Boolean)
+        .filter(item => (Array.isArray(item) ? !!item?.length : true))
     )
 
-    if (allowOptions?.length) {
-      return [
-        {
-          name: 'setVariable',
-          label: options?.setName ?? 'Set variable',
-          options: allowOptions
-        }
-      ]
+    return {
+      name: 'setVariable',
+      label: options?.setName ?? 'Set variable',
+      options: allowOptions.filter(el => !!el.length)
     }
-
-    return []
   }, [options?.setName, definitions, getVariable])
 
   // const restoreValue = () => {
@@ -165,15 +160,20 @@ export const useLayerVariable = (options: UseLayerVariableOptions) => {
     //   fieldInfo?.isVariable && editProperty(fieldInfo?.rawValue)
     // },
     // variableLink: fieldInfo?.isVariable ? fieldInfo?.resultValue : null,
-    actions: !options?.disabled
-      ? [
-          {
-            name: 'createVariable',
-            label: options?.createName ?? 'Create variable',
-            onClick: () => createVariable()
-          }
-        ].concat(allowVariables)
-      : [],
-    allowVariables
+    // actions: !options?.disabled
+    //   ? [
+    //       {
+    //         name: 'createVariable',
+    //         label: options?.createName ?? 'Create variable',
+    //         onClick: () => createVariable()
+    //       }
+    //     ].concat(allowVariables)
+    //   : [],
+    createVariableOption: {
+      name: 'createVariable',
+      label: options?.createName ?? 'Create variable',
+      onClick: () => createVariable()
+    },
+    setVariableOption
   }
 }

@@ -30,6 +30,7 @@ const BuilderInteractions: FC<BuilderPositionProps> = memo(({ className }) => {
   // if (!selectionGraph?.position && selectionGraph?._type !== builderNodes.Screen) {
   //   return null
   // }
+
   return (
     <Panel
       className={cn(styles.root, className)}

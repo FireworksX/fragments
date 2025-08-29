@@ -16,7 +16,6 @@ import { BuilderLayout } from '@/widgets/fragmentBuilder/BuilderLayout'
 import { BuilderStyles } from '@/widgets/fragmentBuilder/BuilderStyles'
 import BuilderLink from '../../../widgets/fragmentBuilder/BuilderLink/ui/BuilderLink'
 import { BuilderText } from '@/widgets/fragmentBuilder/BuilderText'
-import { BuilderImage } from '@/widgets/fragmentBuilder/BuilderImage'
 import BuilderAttributes from '../../../widgets/fragmentBuilder/BuilderAttributes/ui/BuilderAttributes'
 import BuilderFragmentInstance from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/BuilderFragmentInstance'
 import { BuilderFloatBar } from '@/widgets/fragmentBuilder/BuilderFloatBar'
@@ -56,6 +55,8 @@ import { StackImagePicker } from '@/features/popouts/StackImagePicker/ui/StackIm
 import { BuilderCollection } from '@/widgets/fragmentBuilder/BuilderCollection'
 import { StackArrayProperty } from '@/features/popouts/StackArrayProperty'
 import { StackObjectValue } from '@/features/popouts/StackObjectValue'
+import { useBuilderAutoCreator } from '@/shared/hooks/fragmentBuilder/useBuilderAutoCreator'
+import { StackArrayValue } from '@/features/popouts/StackArrayValue'
 
 const FragmentsEditInitial = () => {
   // const { setRenderTarget } = useRenderTarget()
@@ -116,6 +117,7 @@ const FragmentsEditInitial = () => {
                   <StackCreateGoal name={popoutNames.stackCreateGoal} title='Create Goal' />
 
                   <StackObjectValue name={popoutNames.stackObjectValue} title='Object Value' />
+                  <StackArrayValue name={popoutNames.stackArrayValue} title='Array Value' />
                   {/*<StackPanelCssOverrideList name='cssOverrideList' title='CSS overrides' />*/}
                   {/*<StackLoopEffect name='loopEffect' title='Loop Effect' />*/}
 
@@ -142,7 +144,7 @@ const FragmentsEditInitial = () => {
         linkNode={<BuilderLink />}
         textNode={<BuilderText />}
         interactionsNode={<BuilderInteractions />}
-        imageNode={<BuilderImage />}
+        // imageNode={<BuilderImage />}
         attributesNode={<BuilderAttributes />}
         cssNode={<BuilderCssOverride />}
         instancePropsNode={<BuilderFragmentInstance />}

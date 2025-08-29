@@ -7,6 +7,7 @@ import { isVariableLink } from "@/shared/helpers/checks";
 import { useReadVariable } from "@/shared/hooks/useReadVariable";
 import { useFragmentManager } from "@/shared/hooks/useFragmentManager";
 import { useFragmentProperties } from "@/shared/hooks/useFragmentProperties";
+import { getCssVariables } from "@/shared/helpers/getCssVariables";
 
 /*
 Работаем по следующему принципу. Instance может рендериться внутри родителя (Fragment)
@@ -34,8 +35,6 @@ export const useInstanceProps = (instanceProps: InstanceProps) => {
     ? loadedManager
     : fragmentContextManager;
 
-  const { readVariable } = useReadVariable(null, innerFragmentManager);
-
   const [instanceLayer] = useGraph(fragmentManager, instanceProps.layerKey);
   const instanceLayerProps = instanceLayer?.props ?? {};
 
@@ -54,47 +53,24 @@ export const useInstanceProps = (instanceProps: InstanceProps) => {
         const defId = definition._id;
 
         base[defId] = instanceProps?.props?.[defId] ?? definition?.defaultValue;
-        // instanceProps?.props?.[defId] ?? readVariable(definition)?.value;
       });
     }
 
     return omit(base, "_type", "_id");
   }, [isTopInstance, fragmentManager, instanceLayerProps, definitionsData]);
 
-  const drilledProps = Object.values(mergedProps).filter(isVariableLink);
-  const resolveDrilledProps = useGraphStack(fragmentManager, drilledProps);
-
-  /**
-   * TODO
-   * В будущем нужно будет открепить drilled переменные, сейчас они
-   * крепятся к инстансу, который их использует, а должен браться от родительского
-   * инстанса.
-   */
-
-  const resultProps = useMemo(() => {
-    const props = { ...mergedProps };
-
-    // resolveDrilledProps.forEach((variable) => {
-    //   props[variable?._id] = readVariable(
-    //     fragmentManager.keyOfEntity(variable)
-    //   ).value;
-    // });
-
-    return props;
-  }, [resolveDrilledProps, mergedProps]);
-
-  const cssProps = Object.entries(resultProps).reduce((acc, [key, value]) => {
-    if (isVariableLink(value)) {
-      const nestedVariableId = fragmentManager.entityOfKey(value)?._id;
-      value = `var(--${nestedVariableId})`;
-    }
-
-    acc[`--${key}`] = value;
-    return acc;
-  }, {});
+  // const cssProps = Object.entries(mergedProps).reduce((acc, [key, value]) => {
+  //   if (isVariableLink(value)) {
+  //     const nestedVariableId = fragmentManager.entityOfKey(value)?._id;
+  //     value = `var(--${nestedVariableId})`;
+  //   }
+  //
+  //   acc[`--${key}`] = value;
+  //   return acc;
+  // }, {});
 
   return {
-    props: resultProps,
-    cssProps,
+    props: mergedProps,
+    cssProps: getCssVariables(mergedProps),
   };
 };
