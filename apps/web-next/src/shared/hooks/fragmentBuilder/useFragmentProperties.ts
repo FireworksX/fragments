@@ -9,6 +9,7 @@ import { declareFragmentProperty } from '@fragmentsx/render-suite'
 import { setKey } from '@fragmentsx/utils'
 import { useMemo } from 'react'
 import { capitalize } from '@/shared/utils/capitalize'
+import { useGraphStack } from '@graph-state/react'
 
 export const FRAGMENT_PROPERTY_TYPES = [
   definition.variableType.Event,
@@ -17,6 +18,7 @@ export const FRAGMENT_PROPERTY_TYPES = [
   definition.variableType.String,
   definition.variableType.Object,
   definition.variableType.Image,
+  definition.variableType.Color,
   definition.variableType.Array
 ]
 
@@ -33,7 +35,10 @@ interface CreatePropertyOptions {
 
 export const useFragmentProperties = () => {
   const { documentManager } = useBuilderDocument()
-  const [properties] = useLayerValue('properties', documentManager?.$fragment?.root)
+  const [propertiesLinks] = useLayerValue('properties', documentManager?.$fragment?.root)
+  const propertiesLayers = useGraphStack(documentManager, propertiesLinks)
+
+  const properties = useMemo(() => (propertiesLayers ?? []).filter(prop => !prop.parent), [propertiesLayers])
 
   // const { allowVariables, openVariable } = useBuilderVariableCreator()
   // const { getTransformsByType, createComputedValue } = useBuilderVariableTransforms()

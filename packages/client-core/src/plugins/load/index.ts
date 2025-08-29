@@ -96,7 +96,7 @@ export const loadPlugin: Plugin = (state) => {
     const loader = async () => {
       const areaEntity = await state?.$fetch?.queryArea(areaCode);
 
-      await loadFragment(areaEntity.fragmentId, {
+      await loadFragment(areaEntity?.fragmentId, {
         suspense: false,
       });
 

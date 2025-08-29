@@ -16,7 +16,7 @@ export const ArrayVariableSchema = v.object({
   }),
   parent: layerField(v.nullable(v.string()), { overridable: false }),
   defaultValue: layerField(v.array(v.any()), { fallback: [] }),
-  definition: layerField(v.nullable(linkValidator), { fallback: null }),
+  definition: layerField(linkValidator, { fallback: null }),
   required: layerField(v.boolean(), { fallback: false }),
   ...GraphFieldSchema.entries,
 });

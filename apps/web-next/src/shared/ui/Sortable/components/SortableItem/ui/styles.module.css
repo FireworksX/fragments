@@ -1,0 +1,10 @@
+.root {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.handler {
+    color: var(--secondary);
+    cursor: grab;
+}

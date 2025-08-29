@@ -3,15 +3,29 @@ import { useLayerScopes } from '@fragmentsx/render-core'
 import { definition } from '@fragmentsx/definition'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useGraphStack } from '@graph-state/react'
+import { useMemo } from 'react'
 
 export const useLayerDefinitions = (layerKey: LinkKey) => {
   const { documentManager } = useBuilderDocument()
   const scopes = useLayerScopes(documentManager, layerKey)
-  const links = scopes
-    ?.map(scope => (scope?.type === definition.scopeTypes.FragmentScope ? scope?.definitions : []))
-    ?.flat()
 
-  const values = useGraphStack(documentManager, links)
+  const scopeDefinitions = useMemo(() => {
+    const list = []
 
-  return scopes.map(scope => scope?.definitions?.map(link => values.find(item => keyOfEntity(item) === link)) ?? [])
+    scopes.forEach(scope => {
+      if (scope.type === definition.scopeTypes.FragmentScope) {
+        list.push(scope.definitions)
+      }
+      if (scope.type === definition.scopeTypes.CollectionScope) {
+        list.push([scope.source])
+      }
+    })
+
+    return list
+  }, [scopes])
+
+  // Реагируем на все definition, которые находятся в скоупе
+  useGraphStack(documentManager, scopeDefinitions?.flat())
+
+  return scopeDefinitions.map(scope => scope.map(documentManager.resolve))
 }

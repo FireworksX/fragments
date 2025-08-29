@@ -10,19 +10,13 @@ import { GraphValue, GraphValues } from '@graph-state/react'
 interface PropertiesTreeProps {}
 
 export const PropertiesTree: FC<PropertiesTreeProps> = () => {
-  const { properties, documentManager } = useFragmentProperties()
+  const { properties } = useFragmentProperties()
 
   return (
     <Panel className={styles.root}>
-      <GraphValues graphState={documentManager} fields={properties}>
-        {values =>
-          values.map((prop, index) => {
-            const key = properties.at(index)
-            if (!!prop?.parent) return null
-            return <PropertyGenericCell key={key} propertyLink={key} />
-          })
-        }
-      </GraphValues>
+      {properties.map(prop => (
+        <PropertyGenericCell key={prop?._id} propertyLink={prop} />
+      ))}
     </Panel>
   )
 }

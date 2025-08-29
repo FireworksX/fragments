@@ -9,6 +9,8 @@ import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { keyOfEntity, LinkKey } from '@graph-state/core'
 import { useLayerDefinitions } from '@/shared/hooks/fragmentBuilder/useLayerDefinitions'
+import CollectionIcon from '@/shared/icons/next/database.svg'
+import { isPrimitiveVariable } from '@/shared/utils/isPrimitiveVariable'
 
 interface PreferredField {
   type: keyof typeof definition.variableType
@@ -82,15 +84,34 @@ export const useLayerVariable = (options: UseLayerVariableOptions) => {
         if (!fields?.length) return null
 
         return {
+          id: propertyLayer?._id,
           label: propertyLayer?.name,
           name: propertyLayer?.name,
           options: [fields]
         }
       }
 
+      if (propertyLayer?.type === definition.variableType.Array) {
+        const nestedVariableValue = getVariable(propertyLayer?.definition)
+
+        if (!nestedVariableValue) return null
+
+        const isPrimitive = !nestedVariableValue?.options?.length
+
+        return {
+          id: propertyLayer?._id,
+          label: propertyLayer?.name,
+          name: propertyLayer?.name,
+          icon: <CollectionIcon />,
+          options: isPrimitive ? null : nestedVariableValue?.options,
+          onClick: isPrimitive ? nestedVariableValue.onClick : null
+        }
+      }
+
       if (propertyLayer?.type !== fieldType) return null
 
       return {
+        id: propertyLayer?._id,
         label: customName ?? propertyLayer?.name,
         name: customName ?? propertyLayer?.name,
         onClick: () => {
@@ -102,7 +123,20 @@ export const useLayerVariable = (options: UseLayerVariableOptions) => {
   )
 
   const allowVariables = useMemo(() => {
-    const allowOptions = definitions.map(list => list.map(prop => getVariable(prop)).filter(Boolean))
+    const visitors = new Set([])
+    const allowOptions = definitions.map(list =>
+      list
+        .filter(prop => !prop?.parent)
+        .map(prop => {
+          const variable = getVariable(prop)
+
+          if (visitors.has(variable?.id)) return null
+          visitors.add(variable?.id)
+
+          return variable
+        })
+        .filter(Boolean)
+    )
 
     if (allowOptions?.length) {
       return [

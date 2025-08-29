@@ -10,7 +10,7 @@ import { Panel } from '@/shared/ui/Panel'
 import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { InstancePropertyGeneric } from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/components/InstancePropertyGeneric'
 import { undefined } from 'zod'
-import { omit } from '@fragmentsx/utils'
+import { cleanGraph, omit } from '@fragmentsx/utils'
 import { keyOfEntity } from '@graph-state/core'
 
 interface StackObjectValueProps {
@@ -22,8 +22,8 @@ export const StackObjectValue: FC<StackObjectValueProps> = ({ className }) => {
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackObjectValue}`)
   const context = popout?.context ?? {}
   const resultManager = context?.manager ?? documentManager
-  const fields = context?.fields ?? {}
-  const inputValue = omit(context?.value ?? {}, '_type', '_id')
+  const inputValue = cleanGraph(context?.value ?? {})
+  const fields = omit(context?.fields ?? {}, '_type', '_id')
   const onChange = context?.onChange ?? (() => undefined)
 
   const proxyOnChange = (key, value) => {

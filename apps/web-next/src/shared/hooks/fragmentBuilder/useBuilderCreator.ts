@@ -50,22 +50,22 @@ export const useBuilderCreator = () => {
   }
 
   const createCollection = (parent, externalProps = {}) => {
-    if (![definition.nodes.Frame].includes(documentManager.entityOfKey(parent)?._type)) {
-      return
-    }
-
-    const [collectionLayerKey] = appendChildren(documentManager, documentManager.keyOfEntity(parent), {
-      _type: definition.nodes.Collection,
-      ...externalProps
+    const [baseCollectionFrame] = createFrame(parent, {
+      ...externalProps,
+      layerMode: definition.layerMode.flex,
+      layerGap: 12,
+      _type: definition.nodes.Collection
     })
 
-    createFrame(collectionLayerKey)
+    createText(baseCollectionFrame, {
+      content: 'Hello collection'
+    })
 
-    return [collectionLayerKey]
+    return baseCollectionFrame
   }
 
   const createText = (parent, externalProps = {}) => {
-    if (![definition.nodes.Frame].includes(documentManager.entityOfKey(parent)?._type)) {
+    if (![definition.nodes.Frame, definition.nodes.Collection].includes(documentManager.entityOfKey(parent)?._type)) {
       return
     }
 

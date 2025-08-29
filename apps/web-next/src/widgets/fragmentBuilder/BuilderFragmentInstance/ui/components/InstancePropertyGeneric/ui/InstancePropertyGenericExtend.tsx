@@ -1,11 +1,11 @@
 import { FC, use } from 'react'
 import { GraphState, LinkKey } from '@graph-state/core'
 import { useNormalizeLayer } from '@/shared/hooks/fragmentBuilder/useNormalizeLayer'
-import { useLayerVariable } from '@/shared/hooks/fragmentBuilder/useLayerVariable'
 import { isVariableLink } from '@/shared/utils/isVariableLink'
 import { fieldsConfig } from '@/shared/hooks/fragmentBuilder/useLayerPropertyVariable/fieldsConfig'
 import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
 import { InstancePropertyGeneric, InstancePropertyGenericProps } from './InstancePropertyGeneric'
+import { useLayerVariable } from '@/shared/hooks/fragmentBuilder/useLayerVariable'
 
 interface InstancePropertyGenericExtendProps extends InstancePropertyGenericProps {}
 

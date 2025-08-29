@@ -1,18 +1,22 @@
 import { LinkKey } from "@graph-state/core";
 import { definition } from "@fragmentsx/definition";
 import { Scope } from "@/providers/Scope";
-import { Frame } from "@/components/Frame";
+import { Frame, FrameProps } from "@/components/Frame";
 import { ElementType, FC } from "react";
 import { useCollection } from "@fragmentsx/render-core";
 
-interface CollectionProps {
-  FrameElement?: ElementType;
-  layerKey: LinkKey;
-}
+interface CollectionProps extends FrameProps {}
 
-export const Collection: FC<CollectionProps> = ({ layerKey, ...restProps }) => {
-  const { children, fragmentManager, properties } = useCollection(layerKey);
-  const FrameTag = restProps?.FrameElement ?? Frame;
+export const Collection: FC<CollectionProps> = ({
+  layerKey,
+  styles: inputStyles,
+  ...restProps
+}) => {
+  const { fragmentManager, styles, hash, source, children, sourceValue } =
+    useCollection(layerKey);
+  const FrameTag = restProps?.FrameTag ?? "div";
+  const FrameElement = restProps?.FrameElement ?? Frame;
+  const resultStyles = inputStyles ?? styles;
 
   return (
     <Scope
@@ -20,13 +24,34 @@ export const Collection: FC<CollectionProps> = ({ layerKey, ...restProps }) => {
       layerKey={layerKey}
       value={{
         type: definition.scopeTypes.CollectionScope,
+        source,
         manager: fragmentManager,
-        definitions: properties,
       }}
     >
-      {children.map((childLink) => (
-        <FrameTag key={childLink} layerKey={childLink} {...restProps} />
-      ))}
+      {/* В FrameTag не пробрасываем layerKey, иначе будет рекурсия */}
+      <FrameTag
+        className={hash}
+        data-key={layerKey}
+        style={resultStyles}
+        {...restProps}
+      >
+        {sourceValue?.map?.((collectionItem, index) => (
+          <Scope
+            fragmentManager={fragmentManager}
+            layerKey={`${layerKey}.${index}`}
+            value={{
+              type: definition.scopeTypes.CollectionItemScope,
+              source,
+              value: collectionItem,
+              manager: fragmentManager,
+            }}
+          >
+            {children?.map((child) => (
+              <FrameElement {...restProps} layerKey={child} />
+            ))}
+          </Scope>
+        ))}
+      </FrameTag>
     </Scope>
   );
 };

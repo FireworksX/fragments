@@ -10,11 +10,10 @@ import { Frame } from "@/components/Frame";
 
 interface CollectionProps {
   layerKey: LinkKey;
-  hidden?: boolean;
 }
 
-export const Collection: FC<CollectionProps> = ({ layerKey, hidden }) => {
-  const { children, fragmentManager, properties } = useCollection(layerKey);
+export const Collection: FC<CollectionProps> = ({ layerKey }) => {
+  const { fragmentManager, properties } = useCollection(layerKey);
 
   return (
     <Scope
@@ -26,9 +25,7 @@ export const Collection: FC<CollectionProps> = ({ layerKey, hidden }) => {
         definitions: properties,
       }}
     >
-      {children.map((childLink) => (
-        <Frame key={childLink} layerKey={childLink} />
-      ))}
+      <Frame layerKey={layerKey} />
     </Scope>
   );
 };

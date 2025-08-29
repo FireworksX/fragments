@@ -4,6 +4,12 @@
     height: 50px;
     left: 50%;
     transform: translateX(-50%);
+    z-index: var(--z-index-navigation);
+    box-shadow: var(--shadow-basic);
+    backdrop-filter: blur(5px);
+}
+
+.body {
     background: rgba(var(--background--rgb), .8);
     backdrop-filter: blur(5px);
     padding: 10px;
@@ -11,7 +17,6 @@
     align-items: center;
     gap: 15px;
     border-radius: var(--radius-second);
-    z-index: var(--z-index-navigation);
 }
 
 .actionButton {
@@ -35,4 +40,32 @@
 
 .publishDropdown {
     border-radius: 15px !important;
+}
+
+.info {
+    position: absolute;
+    inset: -6px;
+    background: rgba(var(--background-secondary--rgb), .8);
+    border: 1px solid var(--border-light);
+    border-bottom: none;
+    padding: 8px;
+    box-shadow: var(--shadow-basic);
+    border-radius: var(--radius-second);
+    color: var(--secondary);
+    opacity: 0;
+    transition: var(--animation-transition-default);
+    backdrop-filter: blur(5px);
+}
+
+.infoActive {
+    top: -32px;
+    opacity: 1;
+}
+
+.infoRow {
+    display: flex;
+    align-items: center;
+    gap: var(--gutter-medium);
+    padding-inline: 8px;
+
 }

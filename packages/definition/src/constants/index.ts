@@ -122,5 +122,6 @@ export const eventMode = createConstants("goal", "callback");
 export const scopeTypes = createConstants(
   "InstanceScope",
   "FragmentScope",
-  "CollectionScope"
+  "CollectionScope",
+  "CollectionItemScope"
 );

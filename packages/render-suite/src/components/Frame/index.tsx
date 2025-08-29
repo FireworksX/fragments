@@ -10,13 +10,14 @@ import { CustomRender } from "@/providers/CustomRender";
 import { useLayerStyles } from "@/hooks/useLayerStyles";
 import { Text } from "@/components/Text";
 import { Instance } from "@/components/Instance";
+import { Collection } from "@/components/Collection";
 
 interface FrameProps {
   hidden?: boolean;
   layerKey: LinkKey;
 }
 
-export const Frame: FC<FrameProps> = memo(({ layerKey, hidden }) => {
+export const Frame: FC<FrameProps> = ({ layerKey, hidden }) => {
   const customRender = useContext(CustomRender);
   const styles = useLayerStyles(layerKey);
   const { layerKey: instanceLayerKey } = useContext(InstanceContext);
@@ -32,7 +33,8 @@ export const Frame: FC<FrameProps> = memo(({ layerKey, hidden }) => {
       FrameElement={Frame}
       TextElement={Text}
       InstanceElement={Instance}
+      CollectionElement={Collection}
       collectStyle={isNestedInstanceLayer}
     />
   );
-});
+};

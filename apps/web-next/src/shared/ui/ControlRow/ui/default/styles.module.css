@@ -9,6 +9,10 @@
     grid-template-rows: auto;
 }
 
+.withoutTitle {
+    display: flex;
+}
+
 .hidden {
     display: none;
 }
@@ -39,6 +43,7 @@
 .title {
     font-size: 12px;
     font-weight: 500;
+    flex: 1;
 }
 
 .variableIcon {
@@ -53,4 +58,5 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    --color: var(--background);
 }

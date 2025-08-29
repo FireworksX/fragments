@@ -26,7 +26,7 @@ import { BuilderControlRowProps } from '@/shared/ui/ControlRow/ui/default/Contro
 import { InstancePropertyImage } from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/components/InstancePropertyImage'
 import { InstancePropertyObject } from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/components/InstancePropertyObject'
 import { popoutsStore } from '@/shared/store/popouts.store'
-import { omit } from '@fragmentsx/utils'
+import { cleanGraph, isObject, omit } from '@fragmentsx/utils'
 
 export interface InstancePropertyGenericProps extends BuilderControlRowProps {
   value: unknown
@@ -45,11 +45,12 @@ export const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({
   ...controlRowProps
 }) => {
   const { layer } = useNormalizeLayer(property, manager)
+  value = value ?? layer?.defaultValue
 
   if (layer?.type === definition.variableType.Number) {
     return (
       <InstancePropertyNumber
-        value={value}
+        value={value ?? layer?.defaultValue}
         name={layer.name}
         step={layer.step}
         min={layer.min}
@@ -65,8 +66,8 @@ export const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({
     const openObject = () => {
       popoutsStore.open(popoutNames.stackObjectValue, {
         context: {
-          fields: omit(layer?.fields, '_type', '_id'),
-          value,
+          fields: cleanGraph(layer?.fields),
+          value: isObject(value) && Object.keys(value).length === 0 ? null : value,
           manager,
           onChange
         }

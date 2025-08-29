@@ -1,7 +1,7 @@
 import { useContext } from "preact/compat";
 import { entityOfKey, GraphState, LinkKey } from "@graph-state/core";
 import { useGraph } from "@graph-state/react";
-import { pick } from "@fragmentsx/utils";
+import { isPrimitive, pick } from "@fragmentsx/utils";
 import { isVariableLink, definition } from "@fragmentsx/definition";
 import { ScopeContext } from "@/providers/Scope/ScopeContext";
 
@@ -19,6 +19,13 @@ export const useReadVariable = (variableKey?: LinkKey | null) => {
     const instanceProp = scopes.findLast(
       (scope) => scope?.type === definition.scopeTypes.InstanceScope
     )?.props?.[variableId];
+
+    const lastCollectionItemValue = scopes.findLast(
+      (scope) => scope?.type === definition.scopeTypes.CollectionItemScope
+    )?.value;
+    const collectionItemProp = isPrimitive(lastCollectionItemValue)
+      ? lastCollectionItemValue
+      : lastCollectionItemValue?.[variableId];
 
     const fragmentDefinition = scopes.findLast(
       (scope) =>
@@ -40,10 +47,15 @@ export const useReadVariable = (variableKey?: LinkKey | null) => {
     );
 
     const currentValue =
-      variableKey === instanceProp ? null : instanceProp ?? null;
+      variableKey === instanceProp
+        ? null
+        : collectionItemProp ?? instanceProp ?? null;
+
     const required = variableLayer?.required ?? false;
     const defaultValue = variableLayer?.defaultValue ?? null;
-    const resultValue = required ? currentValue : currentValue ?? defaultValue;
+    const resultValue = required
+      ? currentValue
+      : currentValue ?? collectionItemProp ?? defaultValue;
 
     if (isVariableLink(resultValue)) {
       return readVariable(resultValue);

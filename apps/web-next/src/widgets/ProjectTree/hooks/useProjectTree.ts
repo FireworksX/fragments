@@ -1,4 +1,4 @@
-import { createContext, use, useContext, useMemo, useState } from 'react'
+import { createContext, use, useContext, useEffect, useMemo, useState } from 'react'
 import { LinkKey } from '@graph-state/core'
 import { buildFolderStructure } from '../lib'
 import { createConstants } from '@fragmentsx/utils'
@@ -26,8 +26,8 @@ const findIndexOfNode = (items: unknown[], linkNode: LinkKey) => {
 export const projectItemType = createConstants('directory', 'fragment')
 
 export const useProjectTree = () => {
+  const { directories, rootDirectoryId, fetchingProjectDirectory } = useProjectFiles()
   const [openedIds, setOpenedIds] = useState<string[]>([])
-  const { directories, fetchingProjectDirectory } = useProjectFiles()
 
   // console.log(droppableGraph)
 
@@ -37,6 +37,12 @@ export const useProjectTree = () => {
   const directoriesList = useMemo(() => {
     return buildFolderStructure(directories, openedIds)
   }, [directories, openedIds])
+
+  useEffect(() => {
+    if (!openedIds?.length && rootDirectoryId) {
+      setOpenedIds([rootDirectoryId])
+    }
+  }, [rootDirectoryId, openedIds])
 
   const toggleIsOpen = (id: number, flag: boolean) =>
     setOpenedIds(p => (flag ? [...p, id] : p.filter(item => item !== id)))

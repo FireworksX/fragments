@@ -26,13 +26,14 @@ export const useCanvasClick = (targetRef: RefObject<ComponentRef<'div'>>) => {
         if (createType) {
           if ([definition.nodes.Text, definition.nodes.Frame, definition.nodes.Collection].includes(createType)) {
             let nextLayerKey = null
+            const collectionSourceLink = creator?.creatorContext?.sourceLink
 
             if (createType === definition.nodes.Text) {
               ;[nextLayerKey] = createText(layerKey, { content: 'text' })
             } else if (createType === definition.nodes.Frame) {
               ;[nextLayerKey] = createFrame(layerKey)
-            } else if (createType === definition.nodes.Collection) {
-              ;[nextLayerKey] = createCollection(layerKey)
+            } else if (createType === definition.nodes.Collection && collectionSourceLink) {
+              ;[nextLayerKey] = createCollection(layerKey, { source: collectionSourceLink })
             }
 
             manager.setCreatorType(null)

@@ -31,7 +31,6 @@ interface StackArrayPropertyProps {
 export const StackArrayProperty: FC<StackArrayPropertyProps> = ({ className }) => {
   const { createProperty } = useFragmentProperties()
   const { documentManager } = useBuilderDocument()
-  const fieldsDropdownInstance = useRef<Instance | undefined>(undefined)
   const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackArrayProperty}`)
   const context = popout?.context ?? {}
   const id = documentManager.entityOfKey(context.propertyLink)?._id
@@ -39,80 +38,31 @@ export const StackArrayProperty: FC<StackArrayPropertyProps> = ({ className }) =
   const [required, setRequired] = useLayerValue('required', context?.propertyLink)
   const [defaultValue, setDefaultValue] = useLayerValue('defaultValue', context?.propertyLink)
   const [definition, setDefinition] = useLayerValue('definition', context?.propertyLink)
-  const [definitionGraph] = useGraph(documentManager, definition)
 
   const handleCreateDefinition = type => {
-    const propertyLink = createProperty({ type, parent: context?.propertyLink })
+    const propertyLink = createProperty({ type, name: `${name} Item`, parent: context?.propertyLink })
     setDefinition(propertyLink)
-  }
-
-  const handleAddItem = () => {
-    if (definitionGraph) {
-      const itemVariable = copyLayer(documentManager, definition)
-      setDefaultValue([itemVariable])
-      console.log(itemVariable)
-    }
   }
 
   return (
     <div className={cn(styles.root, className)}>
       <PropertyContentArray
         id={id}
+        manager={documentManager}
         name={{
           value: name,
-          onChange: setName
+          onChange: v => setName(v, { replace: true })
         }}
         defaultValue={{
           value: defaultValue,
-          onChange: setDefaultValue
+          onChange: nextValue => setDefaultValue(nextValue, { replace: true })
         }}
         required={{
           value: required,
-          onChange: setRequired
+          onChange: v => setRequired(v, { replace: true })
         }}
-        canAddItem={!!definition}
-        definition={
-          <ControlRow title='Schema'>
-            <ControlRowWide>
-              <Dropdown
-                trigger='click'
-                placement='bottom-end'
-                width='contentSize'
-                hideOnClick
-                appendTo='body'
-                disabled={!!definition}
-                arrow={false}
-                onCreate={instance => (fieldsDropdownInstance.current = instance)}
-                options={
-                  <DropdownGroup>
-                    {FRAGMENT_PROPERTY_TYPES.map(type => (
-                      <DropdownOption
-                        key={type}
-                        preventDefault
-                        onClick={() => {
-                          handleCreateDefinition?.(type)
-                          fieldsDropdownInstance?.current?.hide()
-                        }}
-                      >
-                        {type}
-                      </DropdownOption>
-                    ))}
-                  </DropdownGroup>
-                }
-              >
-                <InputSelect
-                  placeholder='Define...'
-                  hasIcon={!!definitionGraph}
-                  color='var(--primary)'
-                  icon={<VariableIcon type={definitionGraph?.type} color='var(--light)' />}
-                >
-                  {capitalize(definitionGraph?.type)}
-                </InputSelect>
-              </Dropdown>
-            </ControlRowWide>
-          </ControlRow>
-        }
-        onAddItem={handleAddItem}
+        definitionLink={definition}
+        onSelectSchema={handleCreateDefinition}
       />
     </div>
   )

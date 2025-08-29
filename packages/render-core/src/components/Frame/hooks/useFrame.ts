@@ -26,8 +26,6 @@ export const useFrame = (layerKey: LinkKey, options?: UseFrameOptions) => {
   const events = useLayerInteractions(layerKey);
   const link = useLayerLink(layerKey);
 
-  const scopes = useContext(ScopeContext);
-
   if (collectStyle) {
     addLayerStyle(layerKey, styles, fragmentManager.resolve(layerKey));
   }
