@@ -16,7 +16,7 @@ export const normalizeLayer = (
   options?: Options
 ) => {
   try {
-    if (!rawLayer) return null;
+    if (!rawLayer || !schema.entries) return null;
 
     const withFallback = options?.withFallback ?? true;
     const overrideTarget = options?.overrideTarget;
@@ -38,7 +38,21 @@ export const normalizeLayer = (
           layerValue = { ...overrideValue, ...layerValue };
         }
 
+        if (
+          schemaEntity &&
+          "wrapped" in schemaEntity &&
+          "entries" in schemaEntity.wrapped &&
+          isObject(schemaEntity.wrapped.entries)
+        ) {
+          layerValue = normalizeLayer(
+            schemaEntity.wrapped,
+            layerValue,
+            options
+          );
+        }
+
         const resultValue = layerValue ?? overrideValue ?? fallback;
+
         return [key, resultValue];
       })
     );

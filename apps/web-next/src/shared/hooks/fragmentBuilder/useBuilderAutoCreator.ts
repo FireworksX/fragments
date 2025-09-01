@@ -4,34 +4,36 @@ import { useBuilderCreator } from '@/shared/hooks/fragmentBuilder/useBuilderCrea
 import { definition } from '@fragmentsx/definition'
 import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
+import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
+import { builderCanvasMode } from '@/shared/constants/builderConstants'
 
 export const useBuilderAutoCreator = () => {
-  const { creator, manager, createText, createCollection, createFrame } = useBuilderCreator()
-  const createType = creator?.createType
+  const { canvasMode, canvasModeContext, setCanvasMode } = useBuilder()
+  const { manager, createText, createCollection, createFrame } = useBuilderCreator()
   const { manager: canvasManager } = useBuilderCanvas()
   const { selection, selectionGraph } = useBuilderSelection()
 
   useEffect(() => {
     if (
       [definition.nodes.Frame, definition.nodes.Collection].includes(selectionGraph?._type) &&
-      [definition.nodes.Text, definition.nodes.Frame, definition.nodes.Collection].includes(createType)
+      [definition.nodes.Text, definition.nodes.Frame, definition.nodes.Collection].includes(canvasMode)
     ) {
       let nextLayerKey = null
-      const collectionSourceLink = creator?.creatorContext?.sourceLink
+      const collectionSourceLink = canvasModeContext?.sourceLink
 
-      if (createType === definition.nodes.Text) {
+      if (canvasMode === definition.nodes.Text) {
         ;[nextLayerKey] = createText(selection, { content: 'text' })
-      } else if (createType === definition.nodes.Frame) {
+      } else if (canvasMode === definition.nodes.Frame) {
         ;[nextLayerKey] = createFrame(selection)
-      } else if (createType === definition.nodes.Collection && collectionSourceLink) {
+      } else if (canvasMode === definition.nodes.Collection && collectionSourceLink) {
         ;[nextLayerKey] = createCollection(selection, { source: collectionSourceLink })
       }
 
-      manager.setCreatorType(null)
+      setCanvasMode(builderCanvasMode.select)
 
       nextTick(() => {
         canvasManager.setFocus(nextLayerKey)
       })
     }
-  }, [selection, createType])
+  }, [selection, canvasMode])
 }

@@ -7,12 +7,15 @@ import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDoc
 export const useBuilderHotKeys = () => {
   const { selection } = useBuilderSelection()
   const layerFlags = useBuilderLayerFlags(selection)
-  const { saveFragment } = useBuilderDocument()
+  const { saveFragment, undo, redo } = useBuilderDocument()
 
   useHotkeys('meta+s, ctrl+s', saveFragment, { scopes: [hotKeysScope.builder], preventDefault: true })
 
+  useHotkeys('meta+z, ctrl+z', undo, { scopes: [hotKeysScope.builder], preventDefault: true })
+  useHotkeys('meta+shift+z, ctrl+shift+z', redo, { scopes: [hotKeysScope.builder], preventDefault: true })
+
   useHotkeys(
-    'meta+d',
+    'meta+d, ctrl+d',
     keyboardEvent => {
       keyboardEvent.preventDefault()
 
@@ -34,30 +37,30 @@ export const useBuilderHotKeys = () => {
   )
 
   useHotkeys(
-    'meta+;',
+    'meta+;, ctrl+;',
     () => {
       layerFlags.toggleVisible()
     },
     { scopes: [hotKeysScope.builder] }
   )
-  //
-  // useHotkeys(
-  //   'meta+enter',
-  //   () => {
-  //     if (layerFlags.canWrap) {
-  //       layerFlags.wrapFrame()
-  //     }
-  //   },
-  //   { scopes: [hotKeysScope.builder] }
-  // )
-  //
-  // useHotkeys(
-  //   'meta+backspace',
-  //   () => {
-  //     if (layerFlags.canRemoveWrapper) {
-  //       layerFlags.removeWrapper()
-  //     }
-  //   },
-  //   { scopes: [hotKeysScope.builder] }
-  // )
+
+  useHotkeys(
+    'meta+enter, ctrl+enter',
+    () => {
+      if (layerFlags.canWrap) {
+        layerFlags.wrapFrame()
+      }
+    },
+    { scopes: [hotKeysScope.builder] }
+  )
+
+  useHotkeys(
+    'meta+backspace, ctrl+backspace',
+    () => {
+      if (layerFlags.canRemoveWrapper) {
+        layerFlags.removeWrapper()
+      }
+    },
+    { scopes: [hotKeysScope.builder] }
+  )
 }

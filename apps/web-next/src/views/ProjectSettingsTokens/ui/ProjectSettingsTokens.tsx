@@ -49,22 +49,19 @@ export const ProjectSettingsTokens: FC<ProjectSettingsTokensProps> = ({ classNam
       >
         {publicTokens.map(token => (
           <InfoSectionCell key={token.id} className={styles.tokenRow} title={token.name ?? 'default'}>
-            <InputText classNameInput={styles.input} value={token.value} />
-            <Button icon={<RemoveIcon />} mode='secondary' onClick={() => removePublicToken(token.id)}>
-              Remove
-            </Button>
+            <div className={styles.body}>
+              <InputText value={token.value} />
+              <Button icon={<RemoveIcon />} mode='secondary' onClick={() => removePublicToken(token.id)}>
+                Remove
+              </Button>
+            </div>
           </InfoSectionCell>
         ))}
 
         <InfoSectionCell className={styles.tokenRow}>
           {isCreatingToken ? (
             <>
-              <InputText
-                ref={creatingInputRef}
-                classNameInput={styles.input}
-                value={creatingName}
-                onChangeValue={setCreatingName}
-              />
+              <InputText ref={creatingInputRef} value={creatingName} onChangeValue={setCreatingName} />
               <Button
                 icon={<CheckIcon />}
                 loading={creatingPublicToken}
@@ -96,15 +93,17 @@ export const ProjectSettingsTokens: FC<ProjectSettingsTokensProps> = ({ classNam
         }
       >
         <InfoSectionCell className={styles.tokenRow} title='Secret key'>
-          <InputText classNameInput={styles.input} value={privateKey?.value} />
-          <Button
-            loading={refreshingPrivateToken}
-            icon={<RefreshIcon />}
-            mode='secondary'
-            onClick={handleRefreshPrivateToken}
-          >
-            Refresh
-          </Button>
+          <div className={styles.body}>
+            <InputText value={privateKey?.value} />
+            <Button
+              loading={refreshingPrivateToken}
+              icon={<RefreshIcon />}
+              mode='secondary'
+              onClick={handleRefreshPrivateToken}
+            >
+              Refresh
+            </Button>
+          </div>
         </InfoSectionCell>
       </InfoSection>
     </div>

@@ -57,6 +57,7 @@ import { StackArrayProperty } from '@/features/popouts/StackArrayProperty'
 import { StackObjectValue } from '@/features/popouts/StackObjectValue'
 import { useBuilderAutoCreator } from '@/shared/hooks/fragmentBuilder/useBuilderAutoCreator'
 import { StackArrayValue } from '@/features/popouts/StackArrayValue'
+import { BuilderCanvasScale } from '@/widgets/fragmentBuilder/BuilderCanvasScale'
 
 const FragmentsEditInitial = () => {
   // const { setRenderTarget } = useRenderTarget()
@@ -78,6 +79,7 @@ const FragmentsEditInitial = () => {
             extendNodes={
               <>
                 <BuilderFloatBar />
+                <BuilderCanvasScale />
                 <Toast
                   render={({ isOpen, Node }) => (
                     <div className={cn(styles.toast, { [styles.open]: isOpen })}>{Node}</div>

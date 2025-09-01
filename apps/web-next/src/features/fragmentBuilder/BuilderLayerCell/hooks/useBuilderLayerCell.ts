@@ -33,9 +33,6 @@ export const useBuilderLayerCell = (layerKey: LinkKey) => {
         ? breakpointThreshold
         : null,
     rename,
-    duplicate: () => {
-      // layerGraph.duplicate()
-    },
     handleSelect: () => select(layerKey)
   }
 }

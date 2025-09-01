@@ -12,4 +12,5 @@
 
 .feedback {
     border-radius: var(--radius-submain);
+    background: var(--background);
 }

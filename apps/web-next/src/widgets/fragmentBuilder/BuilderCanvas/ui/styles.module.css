@@ -15,6 +15,14 @@
     inset: 0;
 }
 
+.pan {
+    cursor: grab;
+}
+
+.panning {
+    cursor: grabbing;
+}
+
 .viewport {
     position: absolute;
 }

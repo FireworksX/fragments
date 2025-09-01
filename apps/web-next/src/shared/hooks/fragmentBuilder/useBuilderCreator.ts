@@ -80,6 +80,7 @@ export const useBuilderCreator = () => {
           : definition.positionType.absolute,
       widthType: definition.sizing.Hug,
       heightType: definition.sizing.Hug,
+      attributes: {},
       ...externalProps
     })
   }

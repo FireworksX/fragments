@@ -6,12 +6,15 @@ import { useToast } from '@/widgets/Toast/hooks/useToast'
 import { makeSnapshot } from '@fragmentsx/render-core'
 import { promiseWaiter } from '@fragmentsx/utils'
 import { useUpdateFragmentDocumentMutation } from './queries/UpdateFragmentDocument.generated'
+import { useEffect, useRef, useState } from 'react'
+import { useGraphEffect } from '@graph-state/react'
 
 export const useBuilderDocument = () => {
   const { open, close, setContext } = useToast()
   const { currentFragmentId } = useBuilder()
   const { manager: globalManager } = useGlobalManager()
   const { manager, loading } = useFragmentManager(currentFragmentId)
+  const [savingState, setSavingState] = useState(null)
 
   const [updateFragment, { loading: fetchingUpdate }] = useUpdateFragmentDocumentMutation({
     variables: {
@@ -20,7 +23,9 @@ export const useBuilderDocument = () => {
   })
 
   const saveFragment = async () => {
-    open(builderToasts.saving)
+    if (fetchingUpdate) return
+
+    // open(builderToasts.saving)
     const snapshot = makeSnapshot(globalManager, currentFragmentId)
     //
     // const linkedFragmentsIds = (documentManager.resolve(documentManager?.$fragment?.linkerGraphKey)?.fragments ?? [])
@@ -39,8 +44,11 @@ export const useBuilderDocument = () => {
       })
     }
 
-    setContext({ status: 'success' })
+    setSavingState('success')
+    // setContext({ status: 'success' })
     await promiseWaiter(1000)
+
+    setSavingState(null)
 
     close()
   }
@@ -48,6 +56,10 @@ export const useBuilderDocument = () => {
   return {
     documentManager: manager,
     loading,
-    saveFragment
+    saveFragment,
+    savingState,
+    isSaving: fetchingUpdate,
+    undo: manager?.$history?.undo,
+    redo: manager?.$history?.redo
   }
 }

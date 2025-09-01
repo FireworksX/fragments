@@ -6,6 +6,8 @@ import { findLayerFromPointerEvent } from '@/shared/utils/findLayerFromPointerEv
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useDragMove } from './useDragMove'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
+import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
+import { builderCanvasMode } from '@/shared/constants/builderConstants'
 
 interface Options {
   pointerRef: RefObject<ComponentRef<'div'>>
@@ -20,10 +22,12 @@ export const SCALE = {
 export const useCanvasDrag = ({ viewportRef, pointerRef }: Options) => {
   const { canvas, manager: canvasManager } = useBuilderCanvas()
   const { documentManager } = useBuilderDocument()
+  const { canvasMode, setCanvasMode } = useBuilder()
   const dragMoveHandler = useDragMove()
   const saveOffset = useRef([0, 0])
   const [, setTop, { value$: top$ }] = useLayerValue('top')
   const [, setLeft, { value$: left$ }] = useLayerValue('left')
+  const wheelMode = useRef<'pan' | 'zoom' | null>(null)
 
   useEffect(() => {
     const handler = (e: Event) => e.preventDefault()
@@ -36,6 +40,26 @@ export const useCanvasDrag = ({ viewportRef, pointerRef }: Options) => {
       document.removeEventListener('gestureend', handler)
     }
   }, [])
+
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.code === 'Space' && canvasMode !== builderCanvasMode.pan && canvasMode !== builderCanvasMode.panning) {
+        setCanvasMode(builderCanvasMode.pan)
+      }
+    }
+    const up = (e: KeyboardEvent) => {
+      if (e.code === 'Space' && (canvasMode === builderCanvasMode.pan || canvasMode === builderCanvasMode.panning)) {
+        setCanvasMode(builderCanvasMode.select)
+      }
+    }
+
+    window.addEventListener('keydown', down)
+    window.addEventListener('keyup', up)
+    return () => {
+      window.removeEventListener('keydown', down)
+      window.removeEventListener('keyup', up)
+    }
+  }, [canvasMode])
 
   useGesture(
     {
@@ -52,10 +76,26 @@ export const useCanvasDrag = ({ viewportRef, pointerRef }: Options) => {
           cancel,
           movement: [mx, my],
           event,
-          first
+          first,
+          last
         } = dragEvent
         event.stopPropagation()
         if (pinching) cancel()
+
+        if (canvasMode === builderCanvasMode.pan || canvasMode === builderCanvasMode.panning) {
+          canvas.x.start(saveOffset.current[0] + mx)
+          canvas.y.start(saveOffset.current[1] + my)
+          if (first) {
+            saveOffset.current = [canvas.x.get(), canvas.y.get()]
+            setCanvasMode(builderCanvasMode.panning)
+          }
+
+          if (last) {
+            setCanvasMode(builderCanvasMode.pan)
+          }
+
+          return
+        }
 
         if (first) {
           const layerKey = findLayerFromPointerEvent(event)
@@ -109,24 +149,41 @@ export const useCanvasDrag = ({ viewportRef, pointerRef }: Options) => {
 
         return memo
       },
+
       onWheel: ({ event, movement: [mx, my], first, last, wheeling }) => {
         event.preventDefault()
-        const calcX = saveOffset.current[0] + mx * -1
-        const calcY = saveOffset.current[1] + my * -1
-        canvas.x.start(calcX)
-        canvas.y.start(calcY)
 
-        canvasManager.setMoving(wheeling)
+        if (wheelMode.current === 'zoom') {
+          const delta = -event.deltaY * 0.01
+          const newScale = Math.min(Math.max(canvas.scale.get() * (1 + delta), SCALE.min), SCALE.max)
+          canvas.scale.start(newScale)
+          return
+        }
+
+        if (wheelMode.current === 'pan') {
+          const calcX = saveOffset.current[0] + mx * -1
+          const calcY = saveOffset.current[1] + my * -1
+          canvas.x.start(calcX)
+          canvas.y.start(calcY)
+
+          canvasManager.setMoving(wheeling)
+        }
       },
       onWheelEnd: ({ event, movement: [mx, my] }) => {
         event.preventDefault()
         saveOffset.current[0] = saveOffset.current[0] + mx * -1
         saveOffset.current[1] = saveOffset.current[1] + my * -1
+        wheelMode.current = null
       },
       onWheelStart: ({ event }) => {
         event.preventDefault()
-        const { x: canvasX, y: canvasY } = canvas
-        saveOffset.current = [canvasX.get(), canvasY.get()]
+
+        if (event.ctrlKey || event.metaKey) {
+          wheelMode.current = 'zoom'
+        } else {
+          wheelMode.current = 'pan'
+          saveOffset.current = [canvas.x.get(), canvas.y.get()]
+        }
       }
     },
     {

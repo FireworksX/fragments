@@ -1,10 +1,10 @@
-import React, { FC, useContext } from 'react'
+import React, { FC, useContext, useState } from 'react'
 import SparklesIcon from '@/shared/icons/next/sparkles.svg'
 import { animated } from '@react-spring/web'
 import { useGraph } from '@graph-state/react'
 import styles from './styles.module.css'
-import DefaultCursor from '@/shared/icons/default-cursor.svg'
-import GrabCursor from '@/shared/icons/grab-cursor.svg'
+import DefaultCursor from '@/shared/icons/next/mouse-pointer.svg'
+import GrabCursor from '@/shared/icons/next/hand.svg'
 import InsertIcon from '@/shared/icons/next/circle-plus.svg'
 import BreakpointsIcon from '@/shared/icons/next/tablet-smartphone.svg'
 import TextIcon from '@/shared/icons/next/type.svg'
@@ -34,6 +34,12 @@ import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDoc
 import { BuilderFloatBarCollection } from '@/widgets/fragmentBuilder/BuilderFloatBar/widgets/BuilderFloatBarCollection'
 import { capitalize } from '@/shared/utils/capitalize'
 import { useBuilderAutoCreator } from '@/shared/hooks/fragmentBuilder/useBuilderAutoCreator'
+import { TabsSelector, TabsSelectorItem } from '@/shared/ui/TabsSelector'
+import { Tabs } from '@/shared/ui/Tabs'
+import { TabItem } from '@/shared/ui/TabItem'
+import { builderCanvasMode as defCanvasMode } from '@/shared/constants/builderConstants'
+import { promiseWaiter } from '@fragmentsx/utils'
+import { BuilderFloatBarInfo } from '@/widgets/fragmentBuilder/BuilderFloatBar/widgets/BuilderFloatBarInfo'
 
 interface BuilderFloatBarProps {
   className?: string
@@ -41,57 +47,63 @@ interface BuilderFloatBarProps {
 
 export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
   const { openPreview } = useBuilder()
-  const { saveFragment } = useBuilderDocument()
-  const { creator, manager } = useBuilderCreator()
-  const createType = creator.createType
+  const { saveFragment, isSaving, savingState } = useBuilderDocument()
+  const { canvasMode, setCanvasMode } = useBuilder()
 
-  useBuilderAutoCreator()
+  const items = [
+    {
+      name: defCanvasMode.select,
+      label: <DefaultCursor width={20} height={20} />
+    },
+    {
+      name: defCanvasMode.pan,
+      label: <GrabCursor width={20} height={20} />
+    },
+    {
+      name: defCanvasMode.Frame,
+      label: <FrameIcon width={20} height={20} />
+    },
+    {
+      name: defCanvasMode.Text,
+      label: <TextIcon width={20} height={20} />
+    },
+    {
+      name: defCanvasMode.Image,
+      label: <ImageIcon width={20} height={20} />
+    },
+    {
+      name: defCanvasMode.Collection,
+      disabled: true,
+      node: (
+        <BuilderFloatBarCollection
+          className={cn(styles.actionButton, {
+            [styles.active]: canvasMode === defCanvasMode.Collection
+          })}
+          isActive={canvasMode === defCanvasMode.Collection}
+          onSelectSource={sourceLink => setCanvasMode(defCanvasMode.Collection, { sourceLink })}
+        />
+      )
+    }
+  ]
 
   return (
     <div className={styles.root}>
-      <div className={cn(styles.info, { [styles.infoActive]: !!createType })}>
-        <div className={styles.infoRow}>
-          <SparklesIcon />
-          <span>Select layer for create {capitalize(createType)}</span>
-        </div>
-      </div>
+      <BuilderFloatBarInfo isSaving={isSaving} savingState={savingState} />
 
       <div className={styles.body}>
-        <Touchable
-          className={cn(styles.actionButton, {
-            [styles.active]: createType === definition.nodes.Frame
-          })}
-          TagName='button'
-          onClick={() => manager.setCreatorType(definition.nodes.Frame)}
-        >
-          <FrameIcon width={20} height={20} />
-        </Touchable>
-        <Touchable
-          className={cn(styles.actionButton, {
-            [styles.active]: createType === definition.nodes.Image
-          })}
-          TagName='button'
-          onClick={() => manager.setCreatorType(definition.nodes.Image)}
-        >
-          <ImageIcon width={20} height={20} />
-        </Touchable>
-        <Touchable
-          className={cn(styles.actionButton, {
-            [styles.active]: createType === definition.nodes.Text
-          })}
-          TagName='button'
-          onClick={() => manager.setCreatorType(definition.nodes.Text)}
-        >
-          <TextIcon width={20} height={20} />
-        </Touchable>
-
-        <BuilderFloatBarCollection
-          className={cn(styles.actionButton, {
-            [styles.active]: createType === definition.nodes.Collection
-          })}
-          isActive={createType === definition.nodes.Collection}
-          onSelectSource={sourceLink => manager.setCreatorType(definition.nodes.Collection, { sourceLink })}
-        />
+        <Tabs>
+          {items.map(
+            item =>
+              item?.node ?? (
+                <TabItem
+                  isActive={canvasMode === item.name}
+                  className={cn(styles.actionButton)}
+                  icon={item.label}
+                  onClick={() => setCanvasMode(item.name)}
+                />
+              )
+          )}
+        </Tabs>
 
         <div className={styles.delimiter} />
 

@@ -1,0 +1,12 @@
+.root {
+    position: absolute;
+    right: 50px;
+    bottom: 33px;
+    z-index: var(--z-index-navigation);
+    box-shadow: var(--shadow-basic);
+}
+
+.input {
+    background: var(--background);
+    min-width: 60px;
+}

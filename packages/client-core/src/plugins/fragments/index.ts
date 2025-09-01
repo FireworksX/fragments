@@ -27,96 +27,108 @@ declare module "@graph-state/core" {
   }
 }
 
-export const fragmentsPlugin: Plugin = (state) => {
-  const createFragmentManager = (fragmentId: number, initialDocument = {}) => {
-    if (!fragmentId || !initialDocument) return null;
+interface FragmentsPluginOptions {
+  plugins?: Plugin[];
+}
 
-    const fragmentLayerId =
-      initialDocument?._type === definition.nodes.Fragment
-        ? initialDocument?._id
-        : null;
+export const fragmentsPlugin =
+  (options: FragmentsPluginOptions): Plugin =>
+  (state) => {
+    const plugins = options?.plugins ?? [];
 
-    if (!fragmentLayerId) {
-      console.error("Cannot find fragment layer id");
-      return;
-    }
+    const createFragmentManager = (
+      fragmentId: number,
+      initialDocument = {}
+    ) => {
+      if (!fragmentId || !initialDocument) return null;
 
-    const cacheManager = state.resolve(state.$fragments.key)?.managers?.[
-      fragmentId
-    ];
+      const fragmentLayerId =
+        initialDocument?._type === definition.nodes.Fragment
+          ? initialDocument?._id
+          : null;
 
-    if (cacheManager) {
-      return cacheManager;
-    }
+      if (!fragmentLayerId) {
+        console.error("Cannot find fragment layer id");
+        return;
+      }
 
-    const tempGraph = {
-      _type: "Temp",
-      _id: "root",
-    };
+      const cacheManager = state.resolve(state.$fragments.key)?.managers?.[
+        fragmentId
+      ];
 
-    const springGraph = {
-      _type: "Spring",
-      _id: "root",
-    };
+      if (cacheManager) {
+        return cacheManager;
+      }
 
-    const manager = createState({
-      _type: "FragmentManager",
-      _id: fragmentId,
-      initialState: initialDocument,
-      plugins: [
-        (state) => {
-          state.$fragment = {
-            root: `${definition.nodes.Fragment}:${fragmentLayerId}`,
-            temp: "Temp:root",
-          };
+      const tempGraph = {
+        _type: "Temp",
+        _id: "root",
+      };
+
+      const springGraph = {
+        _type: "Spring",
+        _id: "root",
+      };
+
+      const manager = createState({
+        _type: "FragmentManager",
+        _id: fragmentId,
+        initialState: initialDocument,
+        plugins: [
+          (state) => {
+            state.$fragment = {
+              root: `${definition.nodes.Fragment}:${fragmentLayerId}`,
+              temp: "Temp:root",
+            };
+          },
+          // cssPlugin,
+          fragmentStylesheetPlugin,
+          scopesPlugin,
+          ...plugins,
+        ],
+        skip: [
+          isHtmlContent,
+          isHTMLNode,
+          isKey,
+          allowTypes([
+            ...Object.keys(definition.nodes),
+            "Temp",
+            "Spring",
+            PLUGIN_TYPES.FragmentStylesheet,
+          ]),
+        ],
+      });
+
+      manager.mutate(tempGraph);
+      manager.mutate(springGraph);
+
+      state.mutate(state.$fragments.key, {
+        managers: {
+          [fragmentId]: manager,
         },
-        // cssPlugin,
-        fragmentStylesheetPlugin,
-        scopesPlugin,
-      ],
-      skip: [
-        isHtmlContent,
-        isHTMLNode,
-        isKey,
-        allowTypes([
-          ...Object.keys(definition.nodes),
-          "Temp",
-          "Spring",
-          PLUGIN_TYPES.FragmentStylesheet,
-        ]),
-      ],
+      });
+    };
+
+    const getManager = (fragmentId) => {
+      return state.resolve(state.$fragments.key)?.managers?.[fragmentId];
+    };
+
+    const getManagers = () => {
+      return state.resolve(state.$fragments.key)?.managers;
+    };
+
+    state.$fragments = {
+      key: `${PLUGIN_TYPES.FragmentsPlugin}:root`,
+      createFragmentManager,
+      getManager,
+      getManagers,
+    };
+
+    state.mutate({
+      _type: PLUGIN_TYPES.FragmentsPlugin,
+      _id: "root",
+      managers: {},
     });
 
-    manager.mutate(tempGraph);
-    manager.mutate(springGraph);
-
-    state.mutate(state.$fragments.key, {
-      managers: {
-        [fragmentId]: manager,
-      },
-    });
+    return state;
   };
-
-  const getManager = (fragmentId) => {
-    return state.resolve(state.$fragments.key)?.managers?.[fragmentId];
-  };
-
-  const getManagers = () => {
-    return state.resolve(state.$fragments.key)?.managers;
-  };
-
-  state.$fragments = {
-    key: `${PLUGIN_TYPES.FragmentsPlugin}:root`,
-    createFragmentManager,
-    getManager,
-    getManagers,
-  };
-
-  state.mutate({
-    _type: PLUGIN_TYPES.FragmentsPlugin,
-    _id: "root",
-    managers: {},
-  });
-
-  return state;
-};

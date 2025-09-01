@@ -62,6 +62,7 @@ export const BuilderFloatBarCollection: FC<BuilderFloatBarCollectionProps> = ({
       trigger='click'
       offset={[0, 20]}
       disabled={isActive}
+      appendTo='body'
       onCreate={i => (dropdownInstance.current = i)}
       options={
         <Panel
