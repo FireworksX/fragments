@@ -8,6 +8,7 @@ import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
 import { definition } from '@fragmentsx/definition'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { Spinner } from '@/shared/ui/Spinner'
+import { useBuilderAutoCreator } from '@/shared/hooks/fragmentBuilder/useBuilderAutoCreator'
 
 interface BuilderFloatBarInfoProps {
   isSaving?: boolean
@@ -18,6 +19,8 @@ interface BuilderFloatBarInfoProps {
 export const BuilderFloatBarInfo: FC<BuilderFloatBarInfoProps> = ({ className, isSaving, savingState }) => {
   const { canvasMode, setCanvasMode } = useBuilder()
   const infoIsActive = (!!canvasMode && Object.keys(definition.nodes).includes(canvasMode)) || isSaving || !!savingState
+
+  useBuilderAutoCreator()
 
   return (
     <div
