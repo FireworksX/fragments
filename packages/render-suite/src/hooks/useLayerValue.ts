@@ -29,7 +29,9 @@ export const useLayerValue = (
   });
 
   useEffect(() => {
-    setValue$(coreValue);
+    if (!!value$?.get() && !!coreValue && value$?.get() !== coreValue) {
+      setValue$(coreValue);
+    }
   }, [coreValue]);
 
   return [

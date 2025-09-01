@@ -9,17 +9,23 @@ import { ComponentRef, RefObject } from 'react'
 import { useGesture } from '@use-gesture/react'
 import { getAllParents } from '@fragmentsx/render-core'
 import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
+import { builderCanvasMode } from '@/shared/constants/builderConstants'
 
 export const useCanvasClick = (targetRef: RefObject<ComponentRef<'div'>>) => {
   const { documentManager } = useBuilderDocument()
   const { manager: builderManager, isTextEditing } = useBuilderManager()
   const { openFragment } = useBuilder()
   const { manager: canvasManager } = useBuilderCanvas()
+  const { setCanvasMode } = useBuilder()
 
   useGesture(
     {
       onClick: ({ event }) => {
         const layerKey = findLayerFromPointerEvent(event)
+
+        if (!layerKey) {
+          setCanvasMode(builderCanvasMode.select)
+        }
 
         if (documentManager.entityOfKey(layerKey)?._type === definition.nodes.Instance) {
           if (event.detail >= 2) {

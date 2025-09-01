@@ -26,28 +26,26 @@ export const BuilderFloatBarInfo: FC<BuilderFloatBarInfoProps> = ({ className, i
         [styles.infoSuccess]: savingState === 'success'
       })}
     >
-      {!!infoIsActive && (
-        <div className={styles.infoRow}>
-          {isSaving || !!savingState ? (
-            savingState === 'success' ? (
-              <>
-                <CheckIcon size={12} />
-                <span>Saved Successfully</span>
-              </>
-            ) : (
-              <>
-                <Spinner size={12} color='var(--secondary)' />
-                <span>Saving...</span>
-              </>
-            )
+      <div className={styles.infoRow}>
+        {isSaving || !!savingState ? (
+          savingState === 'success' ? (
+            <>
+              <CheckIcon size={12} />
+              <span>Saved Successfully</span>
+            </>
           ) : (
             <>
-              <SparklesIcon />
-              <span>Select layer for create {capitalize(canvasMode)}</span>
+              <Spinner size={12} color='var(--secondary)' />
+              <span>Saving...</span>
             </>
-          )}
-        </div>
-      )}
+          )
+        ) : (
+          <>
+            <SparklesIcon />
+            <span>Select layer for create {capitalize(canvasMode)}</span>
+          </>
+        )}
+      </div>
     </div>
   )
 }
