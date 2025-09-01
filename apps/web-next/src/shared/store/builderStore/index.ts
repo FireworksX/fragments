@@ -6,6 +6,7 @@ import loggerPlugin from '@graph-state/plugin-logger'
 import { canvasPlugin } from '@/shared/store/builderStore/plugins/canvasPlugin'
 import { creatorPlugin } from '@/shared/store/builderStore/plugins/creatorPlugin'
 import { droppablePlugin } from '@/shared/store/builderStore/plugins/droppablePlugin'
+import { builderCanvasMode } from '@/shared/constants/builderConstants'
 
 export interface BuilderStore extends BuilderStoreDocumentPlugin {
   _type: 'Builder'
@@ -23,7 +24,9 @@ export const createBuilderStore = () => {
       tabs: [],
       activeTabIndex: -1,
       activeFragment: null,
-      fragmentModules: []
+      fragmentModules: [],
+      canvasMode: builderCanvasMode.select, // select | pan | frame | text | collection
+      canvasModeContext: null
     },
     skip: [isInstanceOf(SpringValue)],
     plugins: [
@@ -37,6 +40,10 @@ export const createBuilderStore = () => {
           } else {
             state.mutate(state.key, prev => ({ showTextEditor: !prev.showTextEditor }))
           }
+        }
+
+        state.setCanvasMode = (value?: string, ctx?: unknown) => {
+          state.mutate(state.key, { canvasMode: value, canvasModeContext: ctx })
         }
 
         state.mouseOverLayer = (layerLink: LinkKey) => state.mutate(state.key, { mouseOverLayer: layerLink })

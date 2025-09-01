@@ -22,7 +22,7 @@ export const TextSchema = v.object({
     v.object({
       fontSize: layerField(v.string(), { fallback: "14px" }),
       color: layerField(v.string(), { fallback: "#000", variable: true }),
-      lineHeight: layerField(v.string(), { fallback: "14px" }),
+      lineHeight: layerField(v.string(), { fallback: 1.4 }),
       fontWeight: layerField(v.string(), { fallback: "normal" }),
       letterSpacing: layerField(v.string(), { fallback: "0px" }),
       textTransform: layerField(v.string(), { fallback: "none" }),

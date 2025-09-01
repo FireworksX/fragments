@@ -1,5 +1,6 @@
 import { createContext, FC } from "preact/compat";
 import { LinkKey } from "@graph-state/core";
+import { definition } from "@fragmentsx/definition";
 import { Fragment } from "@/components/Fragment";
 import { useInstance } from "./hooks/useInstance";
 import { GlobalManager } from "@/providers/GlobalManager";
@@ -35,38 +36,50 @@ const InstanceInitial: FC<InstanceProps> = (instanceProps) => {
   } = useInstance(instanceProps);
 
   return (
-    <InstanceContext.Provider
+    <Scope
+      fragmentManager={innerManager}
+      layerKey={instanceProps.layerKey}
       value={{
-        layerKey: instanceProps.layerKey,
-        definitions,
-        innerManager,
-        parentManager,
+        type: definition.scopeTypes.InstanceScope,
         props,
+        definitions,
+        fragmentId,
+        layerKey: instanceProps.layerKey,
       }}
     >
-      {parentManager ? (
-        <Scope
-          fragmentManager={innerManager}
-          layerKey={instanceProps.layerKey}
-          value={{
-            layerKey: instanceProps.layerKey,
-            definitions,
-          }}
-        >
-          <div
-            className={hash}
-            data-key={instanceProps.layerKey}
-            style={cssProps}
+      <InstanceContext.Provider
+        value={{
+          layerKey: instanceProps.layerKey,
+          definitions,
+          innerManager,
+          parentManager,
+          props,
+        }}
+      >
+        {parentManager ? (
+          <Scope
+            fragmentManager={innerManager}
+            layerKey={instanceProps.layerKey}
+            value={{
+              layerKey: instanceProps.layerKey,
+              definitions,
+            }}
           >
+            <div
+              className={hash}
+              data-key={instanceProps.layerKey}
+              style={cssProps}
+            >
+              <Fragment fragmentId={fragmentId} globalManager={globalManager} />
+            </div>
+          </Scope>
+        ) : (
+          <div style={cssProps}>
             <Fragment fragmentId={fragmentId} globalManager={globalManager} />
           </div>
-        </Scope>
-      ) : (
-        <div style={cssProps}>
-          <Fragment fragmentId={fragmentId} globalManager={globalManager} />
-        </div>
-      )}
-    </InstanceContext.Provider>
+        )}
+      </InstanceContext.Provider>
+    </Scope>
   );
 };
 

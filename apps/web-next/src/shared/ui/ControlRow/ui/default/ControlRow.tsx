@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren, ReactNode, useContext, useMemo } from 'react'
+import React, { cloneElement, FC, PropsWithChildren, ReactNode, useContext, useMemo } from 'react'
 import cn from 'classnames'
 import { LinkKey } from '@graph-state/core'
 import { GraphValue } from '@graph-state/react'
@@ -22,6 +22,7 @@ export interface BuilderControlRowProps extends PropsWithChildren {
   hasConnector?: boolean
   currentValue?: unknown
   isHighlight?: boolean
+  isHideTitle?: boolean
   override?: {
     isOverride: boolean
     onRestOverride: () => void
@@ -45,6 +46,7 @@ const ControlRow: FC<BuilderControlRowProps> = ({
   className,
   titleWrapperClassName,
   title,
+  isHideTitle = false,
   hasConnector,
   isHighlight,
   override,
@@ -53,8 +55,6 @@ const ControlRow: FC<BuilderControlRowProps> = ({
   variable,
   onClickVariable
 }) => {
-  const { documentManager } = useBuilderDocument()
-
   const resultActions = useMemo<DropdownRenderOption[][]>(() => {
     const resultActions = []
 
@@ -83,29 +83,31 @@ const ControlRow: FC<BuilderControlRowProps> = ({
   const isHighlightResult = isHighlight || override?.isOverride
 
   return (
-    <div className={cn(styles.root, className)}>
-      <RenderDropdown
-        appendTo='body'
-        disabled={!hasActions}
-        trigger='click'
-        options={resultActions}
-        hideOnClick
-        placement={depth => (depth > 0 ? 'left' : undefined)}
-      >
-        <div
-          className={cn(styles.titleWrapper, titleWrapperClassName, {
-            [styles.highlight]: isHighlightResult,
-            [styles.withAction]: hasActions
-          })}
+    <div className={cn(styles.root, className, { [styles.withoutTitle]: isHideTitle })}>
+      {!isHideTitle && (
+        <RenderDropdown
+          appendTo='body'
+          disabled={!hasActions}
+          trigger='click'
+          options={resultActions}
+          hideOnClick
+          placement={depth => (depth > 0 ? 'left' : undefined)}
         >
-          {hasConnector && (
-            <Touchable className={styles.connectorIcon}>
-              <PlusIcon width={10} height={10} />
-            </Touchable>
-          )}
-          <div className={styles.title}>{title}</div>
-        </div>
-      </RenderDropdown>
+          <div
+            className={cn(styles.titleWrapper, titleWrapperClassName, {
+              [styles.highlight]: isHighlightResult,
+              [styles.withAction]: hasActions
+            })}
+          >
+            {hasConnector && (
+              <Touchable className={styles.connectorIcon}>
+                <PlusIcon width={10} height={10} />
+              </Touchable>
+            )}
+            <div className={styles.title}>{title}</div>
+          </div>
+        </RenderDropdown>
+      )}
 
       {variable?.data?.type ? (
         <ControlRowWide>

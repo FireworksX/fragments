@@ -20,7 +20,8 @@ export const creatorPlugin: Plugin = state => {
   const creatorGraph = {
     _type: 'Creator',
     _id: 'root',
-    createType: null
+    createType: null,
+    creatorContext: null
   }
   const creatorKey = state.keyOfEntity(creatorGraph)
 
@@ -28,10 +29,11 @@ export const creatorPlugin: Plugin = state => {
     creator: creatorGraph
   })
 
-  const setCreatorType = type => {
+  const setCreatorType = (type, context) => {
     state.mutate(creatorKey, prev => {
       return {
-        createType: prev.createType === type ? null : type
+        createType: prev.createType === type ? null : type,
+        creatorContext: prev.createType === type ? null : context
       }
     })
   }

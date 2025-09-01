@@ -6,6 +6,7 @@ import { useCanvasInsert } from '@/shared/hooks/fragmentBuilder/useCanvasInsert'
 import { animated } from '@react-spring/web'
 import { useDroppable } from '@dnd-kit/core'
 import { droppableAreas } from '@/shared/data'
+import { builderCanvasMode } from '@/shared/constants/builderConstants'
 
 interface CanvasProps extends PropsWithChildren {
   className?: string
@@ -14,11 +15,17 @@ interface CanvasProps extends PropsWithChildren {
 
 const BuilderCanvas: FC<CanvasProps> = memo(({ className, children, extendNodes }) => {
   useCanvasInsert()
-  const { viewportRef, pointerRef, containerStyles } = useCanvas()
+  const { viewportRef, canvasMode, pointerRef, containerStyles } = useCanvas()
 
   return (
     <div className={cn(className, styles.root)}>
-      <div className={styles.cursorPointer} ref={pointerRef}>
+      <div
+        className={cn(styles.cursorPointer, {
+          [styles.pan]: canvasMode === builderCanvasMode.pan,
+          [styles.panning]: canvasMode === builderCanvasMode.panning
+        })}
+        ref={pointerRef}
+      >
         <animated.div
           id='viewport'
           style={{

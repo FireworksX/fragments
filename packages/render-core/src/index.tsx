@@ -29,6 +29,7 @@ export * from "./shared/helpers";
 export { wrapTextInParagraphWithAttributes } from "@/shared/helpers/wrapTextInParagraphWithAttributes";
 export { findBreakpoint } from "@/shared/helpers/findBreakpoint";
 export { createLayer } from "@/shared/helpers/createLayer";
+export { copyLayer } from "@/shared/helpers/copyLayer";
 
 export { useRenderTarget } from "@/shared/hooks/useRenderTarget";
 export { useGlobalManager } from "@/shared/hooks/useGlobalManager";
@@ -63,6 +64,7 @@ export { Area } from "@/components/Area";
 export type { AreaProps } from "@/components/Area";
 export { useArea } from "@/components/Area/hooks/useArea";
 export { FragmentContext } from "@/components/Fragment/FragmentContext";
+export { useCollection } from "@/components/Collection/hooks/useCollection";
 
 export { createElement, render, hydrate, cloneElement, h } from "preact";
 // export { renderToString } from "preact-render-to-string";

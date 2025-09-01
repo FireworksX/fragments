@@ -20,6 +20,10 @@ export const useLayerBackground = (layerKey: LinkKey) => {
     fragmentManager
   );
 
+  /*
+  Тут есть проблема. Если устанавливается переменная, то
+  нет реакции на изменение imageSize внутри переменной
+   */
   const [, , { resultValue: imageSize }] = useLayerValue(
     layerKey,
     "imageSize",

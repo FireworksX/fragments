@@ -24,13 +24,13 @@ export const StackImagePicker: FC<StackImagePickerProps> = ({ className }) => {
   const scaleMode = context?.scaleMode
 
   const proxyOnChangeUrl = (url: string) => {
-    popoutsStore.updateCurrentContext({ url })
+    popoutsStore.updateCurrentContext({ ...context, url })
     context?.onChangeUrl?.(url)
   }
 
   const proxyOnChangeScaleMode = scaleMode => {
-    popoutsStore.updateCurrentContext({ scaleMode })
-    context?.onChangeScaleMode?.(url)
+    popoutsStore.updateCurrentContext({ ...context, scaleMode })
+    context?.onChangeScaleMode?.(scaleMode)
   }
 
   return (

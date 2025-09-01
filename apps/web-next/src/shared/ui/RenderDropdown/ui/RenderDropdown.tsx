@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useRef } from 'react'
 import DropdownGroup from '@/shared/ui/DropdownGroup/ui/DropdownGroup'
 import DropdownOption, { DropdownOptionProps } from '@/shared/ui/DropdownOption/ui/DropdownOption'
 import Dropdown, { DropdownProps } from '../../Dropdown/ui/Dropdown'
@@ -34,17 +34,17 @@ const RenderDropdown: FC<RenderDropdownProps> = ({
       options={options.map((group, index) => (
         <DropdownGroup key={index}>
           {group.map(option => {
-            const Option = (
+            const Option = option && (
               <DropdownOption
                 key={option.name ?? option.label}
                 {...option}
-                hasNested={Array.isArray(option.options) && option.options[0].length > 0}
+                hasNested={Array.isArray(option?.options) && option.options.some(op => !!op.length)}
               >
                 {option.label}
               </DropdownOption>
             )
 
-            return Array.isArray(option.options) ? (
+            return Array.isArray(option?.options) ? (
               <RenderDropdown
                 key={option.name ?? option.label}
                 arrow={false}

@@ -1,1 +1,1 @@
-export { StackStringProperty } from './ui/StackStringProperty'
+export { StackImageProperty } from './ui/StackImageProperty'

@@ -16,9 +16,13 @@
 
 .tokenRow {
     white-space: nowrap;
-    flex-direction: row;
-    align-items: center;
     gap: 12px;
+}
+
+.body {
+    display: flex;
+    align-items: center;
+    gap: var(--gutter-default);
 }
 
 .input {

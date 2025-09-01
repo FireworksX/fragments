@@ -14,6 +14,7 @@ interface ControlsProps extends AsideBarProps {
   linkNode?: ReactNode
   positionNode?: ReactNode
   sizeNode?: ReactNode
+  collectionNode?: ReactNode
   layoutNode?: ReactNode
   stylesNode?: ReactNode
   textNode?: ReactNode
@@ -32,6 +33,7 @@ const BuilderControls: FC<ControlsProps> = ({
   positionNode,
   linkNode,
   sizeNode,
+  collectionNode,
   layoutNode,
   interactionsNode,
   stylesNode,
@@ -50,6 +52,7 @@ const BuilderControls: FC<ControlsProps> = ({
   const hasGrowing = [definition.nodes.Fragment].some(type => layerInfo.type === type)
   const hasFragmentProps = [definition.nodes.Fragment].some(type => layerInfo.type === type)
   const hasPosition = [
+    definition.nodes.Collection,
     definition.nodes.Frame,
     definition.nodes.Breakpoint,
     definition.nodes.Text,
@@ -57,14 +60,18 @@ const BuilderControls: FC<ControlsProps> = ({
     definition.nodes.Image
   ].some(type => layerInfo.type === type)
   const hasSize = [
+    definition.nodes.Collection,
     definition.nodes.Frame,
     definition.nodes.Breakpoint,
     definition.nodes.Text,
     definition.nodes.Instance,
     definition.nodes.Image
   ].some(type => layerInfo.type === type)
-  const hasLayout = [definition.nodes.Frame, definition.nodes.Breakpoint].some(type => layerInfo.type === type)
+  const hasLayout = [definition.nodes.Collection, definition.nodes.Frame, definition.nodes.Breakpoint].some(
+    type => layerInfo.type === type
+  )
   const hasStyles = [
+    definition.nodes.Collection,
     definition.nodes.Frame,
     definition.nodes.Text,
     definition.nodes.Image,
@@ -72,10 +79,13 @@ const BuilderControls: FC<ControlsProps> = ({
   ].some(type => layerInfo.type === type)
   const hasText = [definition.nodes.Text].some(type => layerInfo.type === type)
   const hasImage = [definition.nodes.Image].some(type => layerInfo.type === type)
-  const hasCssOverride = [definition.nodes.Frame, definition.nodes.Text].some(type => layerInfo.type === type)
+  const hasCssOverride = [definition.nodes.Collection, definition.nodes.Frame, definition.nodes.Text].some(
+    type => layerInfo.type === type
+  )
   const hasInstanceProps = [definition.nodes.Instance].some(type => layerInfo.type === type)
   const hasInteractions = [definition.nodes.Frame].some(type => layerInfo.type === type)
   const hasLink = [definition.nodes.Frame, definition.nodes.Instance].some(type => layerInfo.type === type)
+  const hasCollection = [definition.nodes.Collection].some(type => layerInfo.type === type)
 
   return (
     <Container className={cn(className, styles.root)}>
@@ -83,13 +93,13 @@ const BuilderControls: FC<ControlsProps> = ({
       {selection && (
         <>
           {hasLink && linkNode}
+          {hasCollection && collectionNode}
           {hasInteractions && interactionsNode}
           {hasGrowing && fragmentGrowingNode}
           {hasFragmentProps && fragmentPropsNode}
           {hasPosition && positionNode}
           {hasSize && sizeNode}
           {hasLayout && layoutNode}
-          {/*<BuilderEffects />*/}
           {hasStyles && stylesNode}
           {hasText && textNode}
           {hasImage && imageNode}

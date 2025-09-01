@@ -1,0 +1,35 @@
+.info {
+    position: absolute;
+    inset: 0;
+    background: rgba(var(--background-secondary--rgb), .8);
+    border: 1px solid var(--border-light);
+    border-bottom: none;
+    padding: 8px;
+    box-shadow: var(--shadow-basic);
+    border-radius: var(--radius-second);
+    color: var(--secondary);
+    transition: .5s;
+    opacity: 0;
+    backdrop-filter: blur(5px);
+
+}
+
+.infoActive {
+    inset: -6px;
+    top: -32px;
+    opacity: 1;
+}
+
+.infoSuccess {
+    color: var(--success);
+}
+
+.infoRow {
+    display: flex;
+    align-items: center;
+    gap: var(--gutter-medium);
+    padding-inline: 8px;
+    position: relative;
+    z-index: 2;
+}
+

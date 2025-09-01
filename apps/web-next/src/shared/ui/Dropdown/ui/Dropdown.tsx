@@ -6,22 +6,12 @@ import './styles.css'
 import Popover, { Instance, PopoverProps } from '../../Popover/ui/Popover'
 import { Spinner } from '@/shared/ui/Spinner'
 
-export interface DropdownProps extends PropsWithChildren {
+export interface DropdownProps extends PopoverProps {
   options?: ReactNode | ReactNode[]
   isLoading?: boolean
   className?: string
-  disabled?: boolean
   header?: ReactNode
   width?: number | 'contentSize'
-  trigger?: PopoverProps['trigger']
-  appendTo?: PopoverProps['appendTo']
-  placement?: TippyProps['placement']
-  hideOnClick?: TippyProps['hideOnClick']
-  arrow?: TippyProps['arrow']
-  onCreate?: (instance: Instance) => void
-  onShow?: (instance: Instance) => void
-  onHide?: (instance: Instance) => void
-  stopPropagation?: PopoverProps['stopPropagation']
 }
 
 const Dropdown: FC<DropdownProps> = ({
@@ -29,18 +19,10 @@ const Dropdown: FC<DropdownProps> = ({
   children,
   header,
   isLoading,
-  placement,
   width,
-  trigger,
-  appendTo,
-  hideOnClick,
-  disabled,
   options,
-  arrow,
-  stopPropagation,
   onCreate,
-  onShow,
-  onHide
+  ...restProps
 }) => {
   const [optionsWidth, setOptionsWidth] = useState(typeof width === 'number' ? width : undefined)
 
@@ -55,12 +37,8 @@ const Dropdown: FC<DropdownProps> = ({
   return (
     <Popover
       className={cn(styles.root, className)}
-      disabled={disabled}
-      trigger={trigger}
       interactive
-      placement={placement}
-      appendTo={appendTo}
-      arrow={arrow}
+      {...restProps}
       content={
         <div className={styles.content}>
           {header && !isLoading && <div className={styles.header}>{header}</div>}
@@ -75,11 +53,7 @@ const Dropdown: FC<DropdownProps> = ({
           </div>
         </div>
       }
-      hideOnClick={hideOnClick}
-      stopPropagation={stopPropagation}
       onCreate={onCreateProxy}
-      onShown={onShow}
-      onHide={onHide}
     >
       {children}
     </Popover>

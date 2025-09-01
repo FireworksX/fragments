@@ -5,6 +5,7 @@ import { animated } from '@react-spring/web'
 import TextFrame from '@/shared/icons/text-frame.svg'
 import ColumnsFrame from '@/shared/icons/columns-frame.svg'
 import RowsFrame from '@/shared/icons/rows-frame.svg'
+import CollectionIcon from '@/shared/icons/next/database.svg'
 import Frame from '@/shared/icons/frame.svg'
 import FragmentInstanceIcon from '@/shared/icons/next/component-instance.svg'
 import BreakpointIcon from '@/shared/icons/next/square-dashed.svg'
@@ -43,6 +44,7 @@ export const BuilderLayerTypeIcon: FC<BuilderLayerTypeIconProps> = ({
   if (layerInfo.type === definition.nodes.Instance) return <FragmentInstanceIcon className={fragmentIconClassName} />
   if (layerInfo.type === definition.nodes.Fragment) return <FragmentIcon className={primaryIconClassName} />
   if (layerInfo.type === definition.nodes.Image) return <ImageIcon className={primaryIconClassName} />
+  if (layerInfo.type === definition.nodes.Collection) return <CollectionIcon className={primaryIconClassName} />
 
   if (layerInfo?.isBreakpoint) return <BreakpointIcon className={primaryIconClassName} />
 

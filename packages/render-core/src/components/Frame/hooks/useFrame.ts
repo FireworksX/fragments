@@ -8,6 +8,7 @@ import { useStyleSheet } from "@/shared/hooks/useStyleSheet";
 import { useLayerInteractions } from "@/shared/hooks/useLayerInteractions";
 import { useLayerLink } from "@/shared/hooks/useLayerLink";
 import { ScopeContext } from "@/providers/Scope/ScopeContext";
+import { Scope } from "@/providers/Scope";
 
 export interface UseFrameOptions {
   collectStyle?: boolean;

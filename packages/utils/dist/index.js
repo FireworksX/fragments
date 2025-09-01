@@ -35,6 +35,7 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // src/index.ts
 var src_exports = {};
 __export(src_exports, {
+  cleanGraph: () => cleanGraph,
   colorToObject: () => colorToObject,
   createConstants: () => createConstants,
   debounce: () => debounce,
@@ -326,6 +327,9 @@ function omit(obj, ...props) {
 // src/times.ts
 var times = (amount = 1) => new Array(amount).fill(null).map((_, i) => i);
 
+// src/cleanGraph.ts
+var cleanGraph = (input) => isObject(input) ? omit(input, "_type", "_id") : input;
+
 // src/injectLink.ts
 var injectLink = (options) => {
   const head = document.getElementsByTagName("head")[0];
@@ -512,6 +516,7 @@ function roundWithOffset(value, offset) {
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
+  cleanGraph,
   colorToObject,
   createConstants,
   debounce,

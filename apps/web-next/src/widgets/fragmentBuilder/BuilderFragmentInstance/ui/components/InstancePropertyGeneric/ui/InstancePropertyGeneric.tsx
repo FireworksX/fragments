@@ -1,7 +1,7 @@
 import React, { FC, use } from 'react'
 import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { animated } from '@react-spring/web'
-import { booleanTabsSelectorItems } from '@/shared/data'
+import { booleanTabsSelectorItems, popoutNames } from '@/shared/data'
 import { TabsSelector } from '@/shared/ui/TabsSelector'
 import { definition } from '@fragmentsx/definition'
 import { InstancePropertyNumber } from '../../InstancePropertyNumber'
@@ -24,6 +24,10 @@ import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmen
 import InstancePropertyEnum from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/components/InstancePropertyEnum/ui/InstancePropertyEnum'
 import { BuilderControlRowProps } from '@/shared/ui/ControlRow/ui/default/ControlRow'
 import { InstancePropertyImage } from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/components/InstancePropertyImage'
+import { InstancePropertyObject } from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/components/InstancePropertyObject'
+import { popoutsStore } from '@/shared/store/popouts.store'
+import { cleanGraph, isObject, omit } from '@fragmentsx/utils'
+import { InstancePropertyArray } from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/components/InstancePropertyArray'
 
 export interface InstancePropertyGenericProps extends BuilderControlRowProps {
   value: unknown
@@ -42,11 +46,12 @@ export const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({
   ...controlRowProps
 }) => {
   const { layer } = useNormalizeLayer(property, manager)
+  value = value ?? layer?.defaultValue
 
   if (layer?.type === definition.variableType.Number) {
     return (
       <InstancePropertyNumber
-        value={value}
+        value={value ?? layer?.defaultValue}
         name={layer.name}
         step={layer.step}
         min={layer.min}
@@ -56,6 +61,46 @@ export const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({
         {...controlRowProps}
       />
     )
+  }
+
+  if (layer?.type === definition.variableType.Object) {
+    const openObject = () => {
+      popoutsStore.open(popoutNames.stackObjectValue, {
+        context: {
+          fields: cleanGraph(layer?.fields),
+          value: isObject(value) && Object.keys(value).length === 0 ? null : value,
+          manager,
+          onChange
+        }
+      })
+    }
+
+    return (
+      <InstancePropertyObject
+        value={value}
+        name={layer.name}
+        fields={layer?.fields}
+        onChange={onChange}
+        onOpenObject={openObject}
+        {...controlRowProps}
+      />
+    )
+  }
+
+  if (layer?.type === definition.variableType.Array) {
+    console.log(layer)
+    const editValue = () => {
+      popoutsStore.open(popoutNames.stackArrayValue, {
+        context: {
+          definition: layer?.definition,
+          value,
+          manager,
+          onChange
+        }
+      })
+    }
+
+    return <InstancePropertyArray name={layer.name} value={value} onOpen={editValue} {...controlRowProps} />
   }
 
   if (layer?.type === definition.variableType.String) {

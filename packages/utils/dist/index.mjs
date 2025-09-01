@@ -260,6 +260,9 @@ function omit(obj, ...props) {
 // src/times.ts
 var times = (amount = 1) => new Array(amount).fill(null).map((_, i) => i);
 
+// src/cleanGraph.ts
+var cleanGraph = (input) => isObject(input) ? omit(input, "_type", "_id") : input;
+
 // src/injectLink.ts
 var injectLink = (options) => {
   const head = document.getElementsByTagName("head")[0];
@@ -445,6 +448,7 @@ function roundWithOffset(value, offset) {
   return Math.round(value - offset) + offset;
 }
 export {
+  cleanGraph,
   colorToObject,
   createConstants,
   debounce,

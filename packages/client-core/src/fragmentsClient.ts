@@ -1,4 +1,4 @@
-import { createState } from "@graph-state/core";
+import { createState, Plugin } from "@graph-state/core";
 import { definition } from "@fragmentsx/definition";
 import { fetchPlugin } from "@/plugins/fetch";
 import { fragmentsPlugin } from "@/plugins/fragments";
@@ -21,6 +21,7 @@ declare module "@graph-state/core" {
 interface Options {
   apiToken: string;
   isSelf?: boolean;
+  fragmentPlugins?: Plugin[];
 }
 
 export const PLUGIN_TYPES = createConstants(
@@ -52,7 +53,9 @@ export const createFragmentsClient = (options: Options) => {
         };
       },
       fetchPlugin,
-      fragmentsPlugin,
+      fragmentsPlugin({
+        plugins: options?.fragmentPlugins,
+      }),
       loadPlugin,
       globalMetricsPlugin,
       globalStylesheetPlugin,

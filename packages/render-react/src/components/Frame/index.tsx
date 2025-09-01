@@ -5,11 +5,13 @@ import { ScopeContext, useFrame, useMounted } from "@fragmentsx/render-core";
 import { Text } from "@/components/Text";
 import { Instance } from "@/components/Instance";
 import { UseFrameOptions } from "@fragmentsx/render-core/dist/components/Frame/hooks/useFrame";
+import { Collection } from "@/components/Collection";
 
-interface FrameProps extends UseFrameOptions {
+export interface FrameProps extends UseFrameOptions {
   TextElement?: ElementType;
   InstanceElement?: ElementType;
   FrameElement?: ElementType;
+  CollectionElement?: ElementType;
   styles?: boolean;
   hidden?: boolean;
   layerKey: LinkKey;
@@ -30,6 +32,11 @@ export const Frame: FC<FrameProps> = ({
 
   if (isMounted && hidden) {
     return <div />;
+  }
+
+  if (type === definition.nodes.Collection) {
+    const Tag = restProps?.CollectionElement ?? Collection;
+    return <Tag layerKey={layerKey} {...restProps} />;
   }
 
   if (type === definition.nodes.Text) {

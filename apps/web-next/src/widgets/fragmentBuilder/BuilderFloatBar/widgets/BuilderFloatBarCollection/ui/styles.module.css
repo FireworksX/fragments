@@ -1,0 +1,20 @@
+.root {}
+
+.content {
+    padding-inline: 16px;
+}
+
+.body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gutter-default);
+}
+
+
+.info {
+    padding: 8px 12px;
+    border-radius: var(--radius-second);
+    background: var(--warning-bg);
+    color: var(--warning);
+    font-size: 12px;
+}

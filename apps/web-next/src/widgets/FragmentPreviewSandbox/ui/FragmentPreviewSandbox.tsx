@@ -15,6 +15,8 @@ import { StackPanelColorPicker } from '@/features/popouts/StackPanelColorPicker'
 import { StackGoals } from '@/features/popouts/StackGoals'
 import { StackCreateGoal } from '@/features/popouts/StackCreateGoal'
 import { StackFragmentProps } from '@/features/popouts/StackFragmentProps'
+import { StackObjectValue } from '@/features/popouts/StackObjectValue'
+import { StackArrayValue } from '@/features/popouts/StackArrayValue'
 
 interface FragmentPreviewSandboxProps {
   initialProps?: unknown
@@ -46,6 +48,8 @@ export const FragmentPreviewSandbox: FC<FragmentPreviewSandboxProps> = ({
               <StackPanelColorPicker name={popoutNames.colorPicker} title='Color' />
               <StackGoals name={popoutNames.stackGoals} title='Goals' />
               <StackCreateGoal name={popoutNames.stackCreateGoal} title='Create Goal' />
+              <StackObjectValue name={popoutNames.stackObjectValue} title='Object Value' />
+              <StackArrayValue name={popoutNames.stackArrayValue} title='Array Value' />
             </StackCollector>
           </div>
 

@@ -2,10 +2,10 @@ import { fieldsConfig } from './fieldsConfig'
 import { useCallback, useMemo } from 'react'
 import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
-import { useLayerVariable, UseLayerVariableOptions } from '../useLayerVariable'
 import { useGraph } from '@graph-state/react'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
+import { useLayerVariable, UseLayerVariableOptions } from '@/shared/hooks/fragmentBuilder/useLayerVariable'
 
 interface Options
   extends Pick<UseLayerVariableOptions, 'setName' | 'createName' | 'onSetValue' | 'skipUseDefaultValue'> {
@@ -33,7 +33,7 @@ export const useLayerPropertyValue = (field: keyof typeof fieldsConfig, options?
     [editProperty, options, setFieldValue]
   )
 
-  const { createVariable, actions } = useLayerVariable({
+  const layerVariable = useLayerVariable({
     layerKey: selection,
     value: fieldValue,
     disabled,
@@ -54,12 +54,11 @@ export const useLayerPropertyValue = (field: keyof typeof fieldsConfig, options?
     fieldEntity,
     fieldValue,
     disabled,
-    createVariable,
     resetVariable: restoreValue,
     editVariable: () => {
       fieldInfo?.isVariable && editProperty(fieldInfo?.rawValue)
     },
     variableData: fieldInfo?.isVariable ? variableData : null,
-    actions
+    actions: [layerVariable.setVariableOption, layerVariable.createVariableOption]
   }
 }

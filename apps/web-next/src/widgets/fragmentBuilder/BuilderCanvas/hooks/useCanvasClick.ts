@@ -9,66 +9,53 @@ import { ComponentRef, RefObject } from 'react'
 import { useGesture } from '@use-gesture/react'
 import { getAllParents } from '@fragmentsx/render-core'
 import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
+import { builderCanvasMode } from '@/shared/constants/builderConstants'
 
 export const useCanvasClick = (targetRef: RefObject<ComponentRef<'div'>>) => {
   const { documentManager } = useBuilderDocument()
   const { manager: builderManager, isTextEditing } = useBuilderManager()
   const { openFragment } = useBuilder()
-
   const { manager: canvasManager } = useBuilderCanvas()
-  const { creator, manager, createText, createBreakpoint, createFrame } = useBuilderCreator()
-  const createType = creator?.createType
+  const { setCanvasMode } = useBuilder()
 
   useGesture(
     {
       onClick: ({ event }) => {
         const layerKey = findLayerFromPointerEvent(event)
-        if (createType) {
-          if ([definition.nodes.Text, definition.nodes.Frame].includes(createType)) {
-            let nextLayerKey = null
 
-            if (createType === definition.nodes.Text) {
-              ;[nextLayerKey] = createText(layerKey, { content: 'text' })
-            } else if (createType === definition.nodes.Frame) {
-              ;[nextLayerKey] = createFrame(layerKey)
-            }
-            manager.setCreatorType(null)
+        if (!layerKey) {
+          setCanvasMode(builderCanvasMode.select)
+        }
 
-            nextTick(() => {
-              canvasManager.setFocus(nextLayerKey)
-            })
+        if (documentManager.entityOfKey(layerKey)?._type === definition.nodes.Instance) {
+          if (event.detail >= 2) {
+            const instanceFragmentId = documentManager.resolve(layerKey)?.fragment
+            openFragment(instanceFragmentId)
           }
+
+          // const isTopInstance = getAllParents(documentManager, layerKey)?.at(-1)?._type === definition.nodes.Fragment
+          // console.log(isTopInstance)
+          builderManager.toggleTextEditor(false)
+
+          // if (isTopInstance) {
+          canvasManager.setFocus(layerKey)
+          // }
+        } else if (layerKey) {
+          if (!isTextEditing) {
+            const clickedLayerValue = documentManager.resolve(layerKey)
+
+            if (clickedLayerValue?._type === definition.nodes.Text && event.detail === 2) {
+              canvasManager.setFocus(layerKey)
+              builderManager.toggleTextEditor(true)
+              return
+            }
+          }
+
+          builderManager.toggleTextEditor(false)
+          canvasManager.setFocus(layerKey)
         } else {
-          if (documentManager.entityOfKey(layerKey)?._type === definition.nodes.Instance) {
-            if (event.detail >= 2) {
-              const instanceFragmentId = documentManager.resolve(layerKey)?.fragment
-              openFragment(instanceFragmentId)
-            }
-
-            // const isTopInstance = getAllParents(documentManager, layerKey)?.at(-1)?._type === definition.nodes.Fragment
-            // console.log(isTopInstance)
-            builderManager.toggleTextEditor(false)
-
-            // if (isTopInstance) {
-            canvasManager.setFocus(layerKey)
-            // }
-          } else if (layerKey) {
-            if (!isTextEditing) {
-              const clickedLayerValue = documentManager.resolve(layerKey)
-
-              if (clickedLayerValue?._type === definition.nodes.Text && event.detail === 2) {
-                canvasManager.setFocus(layerKey)
-                builderManager.toggleTextEditor(true)
-                return
-              }
-            }
-
-            builderManager.toggleTextEditor(false)
-            canvasManager.setFocus(layerKey)
-          } else {
-            builderManager.toggleTextEditor(false)
-            canvasManager.setFocus(null)
-          }
+          builderManager.toggleTextEditor(false)
+          canvasManager.setFocus(null)
         }
       }
     },

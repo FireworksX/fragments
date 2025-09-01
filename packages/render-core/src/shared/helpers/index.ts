@@ -9,4 +9,5 @@ export { isInheritField } from "./isInheritField";
 export { getOverrider } from "./getOverrider";
 export { declareFragmentProperty } from "./declareFragmentProperty";
 export { duplicateLayer } from "./duplicateLayer";
+export { getCssVariables } from "./getCssVariables";
 export * from "./children";

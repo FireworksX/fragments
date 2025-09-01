@@ -1,6 +1,5 @@
 import { definition } from '@fragmentsx/definition'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
-import { useLayerVariable, useLayerVariables } from '../../../../shared/hooks/fragmentBuilder/useLayerVariable'
 import { LinkKey } from '@graph-state/core'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
@@ -9,12 +8,13 @@ import { popoutNames } from '@/shared/data'
 import { nextTick } from '@/shared/utils/nextTick'
 import { useLayerPropertyValue } from '@/shared/hooks/fragmentBuilder/useLayerPropertyVariable'
 import { fieldsConfig } from '@/shared/hooks/fragmentBuilder/useLayerPropertyVariable/fieldsConfig'
+import { useLayerVariable } from '@/shared/hooks/fragmentBuilder/useLayerVariable'
 
 export const useBuilderInteractions = () => {
   const { documentManager } = useBuilderDocument()
   const { selection } = useBuilderSelection()
   const [interactions, setInteractions, interactionsInfo] = useLayerValue('interactions')
-  const { actions, createVariable } = useLayerVariable({
+  const { createVariableOption, setVariableOption, createVariable } = useLayerVariable({
     preferredField: fieldsConfig.event,
     createName: 'New Event',
     setName: 'Set Event',
@@ -67,7 +67,7 @@ export const useBuilderInteractions = () => {
   return {
     manager: documentManager,
     actions: [
-      actions,
+      [createVariableOption, setVariableOption],
       [
         {
           name: 'goal',

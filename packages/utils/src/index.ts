@@ -24,6 +24,7 @@ export { findDeep } from "./findDeep";
 export { pick } from "./pick";
 export { omit } from "./omit";
 export { times } from "./times";
+export { cleanGraph } from "./cleanGraph";
 export { injectLink } from "./injectLink";
 export { debounce } from "./debounce";
 export { default as isBrowser } from "./isBrowser";

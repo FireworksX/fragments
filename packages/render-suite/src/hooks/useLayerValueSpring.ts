@@ -85,13 +85,13 @@ export const useLayerValueSpring = <T>({
   const value$ = useMemo(() => getValue$(), [cacheKey, initialValue]);
 
   const updateValue = useCallback(
-    (nextValue: T) => {
+    (nextValue: T, ...args) => {
       if (layerKey) {
         const target$ = getValue$();
         if (springable && !isVariableLink(nextValue) && !isInherit) {
           target$.set(nextValue);
         } else {
-          onFinish?.(nextValue);
+          onFinish?.(nextValue, ...args);
         }
       }
     },

@@ -5,6 +5,7 @@ import { Container } from '@/shared/ui/Container'
 import { PropertyGenericCell } from '@/entities/fragment/PropertyGenericCell'
 import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
 import { Panel } from '@/shared/ui/Panel'
+import { GraphValue, GraphValues } from '@graph-state/react'
 
 interface PropertiesTreeProps {}
 
@@ -13,9 +14,9 @@ export const PropertiesTree: FC<PropertiesTreeProps> = () => {
 
   return (
     <Panel className={styles.root}>
-      {properties.map(prop => {
-        return <PropertyGenericCell key={prop} propertyLink={prop} />
-      })}
+      {properties.map(prop => (
+        <PropertyGenericCell key={prop?._id} propertyLink={prop} />
+      ))}
     </Panel>
   )
 }

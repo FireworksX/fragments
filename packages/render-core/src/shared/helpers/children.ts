@@ -20,24 +20,27 @@ export const appendChildren = (
   ...children: Entity[]
 ) => {
   const targetEntity = manager.entityOfKey(target);
-  const parseChildren = children.map((child) => ({
-    ...(manager.entityOfKey(child) ?? child),
-    parent: setKey(manager.keyOfEntity(target)),
-  }));
+  const parseChildren = children
+    .map((child) =>
+      createLayer({
+        ...(manager.entityOfKey(child) ?? child),
+        parent: setKey(manager.keyOfEntity(target)),
+      })
+    )
+    .filter(Boolean);
 
   if (targetEntity._type !== definition.nodes.Frame) {
     manager.mutate(manager.keyOfEntity(target), {
-      children,
+      children: parseChildren,
     });
     return;
   }
 
   const primaryTarget = getOverrider(manager, target);
   const isPrimaryTarget = isPartOfPrimary(manager, target);
-  const resolveChildren = parseChildren.map(createLayer).filter(Boolean);
 
   (primaryTarget?.overrides ?? []).forEach((override) => {
-    const overridesChildren = resolveChildren
+    const overridesChildren = parseChildren
       .map((child) => {
         const nextChild = createLayer(
           {
@@ -56,7 +59,7 @@ export const appendChildren = (
       .filter(Boolean);
 
     overridesChildren.forEach((child, index) => {
-      const primaryChild = resolveChildren.at(index);
+      const primaryChild = parseChildren.at(index);
       if ("overrides" in primaryChild) {
         primaryChild.overrides.push(manager.keyOfEntity(child));
       } else {
@@ -71,13 +74,13 @@ export const appendChildren = (
 
   // TODO Должен скрываться со всех других экранов, не только с primary
   manager.mutate(manager.keyOfEntity(primaryTarget), {
-    children: resolveChildren.map((child) => ({
+    children: parseChildren.map((child) => ({
       ...child,
       visible: isPrimaryTarget,
     })),
   });
 
-  return resolveChildren.map(manager.keyOfEntity);
+  return parseChildren.map(manager.keyOfEntity);
 };
 
 export const insertChildren = (

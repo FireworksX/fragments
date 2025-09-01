@@ -1,0 +1,17 @@
+.root {}
+
+.fieldsPanel {
+    padding-top: 12px;
+}
+
+.item {
+    display: flex;
+    gap: var(--gutter-medium);
+    align-items: center;
+    flex: 1;
+}
+
+.remove {
+    color: var(--secondary);
+}
+

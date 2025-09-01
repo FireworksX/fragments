@@ -1,6 +1,7 @@
 import { GraphState, LinkKey } from "@graph-state/core";
 import { useLayerValue as useLayerValueCore } from "@fragmentsx/render-react";
 import { useLayerValueSpring } from "@/hooks/useLayerValueSpring";
+import { useEffect } from "react";
 
 export interface UseLayerValueOptions {
   onChange?: (value: unknown) => void;
@@ -26,6 +27,12 @@ export const useLayerValue = (
     onFinish: setCoreValue,
     onChange: (value) => options?.onChange?.(value),
   });
+
+  useEffect(() => {
+    if (!!value$?.get() && !!coreValue && value$?.get() !== coreValue) {
+      setValue$(coreValue);
+    }
+  }, [coreValue]);
 
   return [
     coreValue,

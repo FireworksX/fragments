@@ -27,6 +27,7 @@ import SmartCell from '@/shared/ui/SmartCell/ui/SmartCell'
 import InputSelect from '../../../../shared/ui/InputSelect/ui/InputSelect'
 import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { EditPropertyOptions } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
+import { VariableIcon } from '@/entities/fragment/VariableIcon'
 
 interface PropertyBooleanCellProps {
   propertyLink: LinkKey
@@ -36,27 +37,21 @@ interface PropertyBooleanCellProps {
 }
 
 export const PropertyGenericCell: FC<PropertyBooleanCellProps> = ({ propertyLink, editOptions, name, className }) => {
-  const { isTopLevel, defaultValue, type, name: propName, handleClickProperty } = usePropertyGenericCell(propertyLink)
+  const {
+    isTopLevel,
+    defaultValue,
+    type,
+    name: propName,
+    remove,
+    handleClickProperty
+  } = usePropertyGenericCell(propertyLink)
   const resultName = name ?? propName
-
-  const Icon =
-    (
-      {
-        [definition.variableType.Event]: EventIcon,
-        [definition.variableType.Number]: NumberIcon,
-        [definition.variableType.String]: StringIcon,
-        [definition.variableType.Boolean]: ToggleIcon,
-        [definition.variableType.Object]: ObjectIcon,
-        [definition.variableType.Color]: ColorIcon,
-        [definition.variableType.Array]: ArrayIcon,
-        [definition.variableType.Image]: ImageIcon
-      } as Record<keyof typeof definition.variableType, ElementType>
-    )[type] ?? ObjectIcon
 
   const selectValue = useMemo(() => {
     const complexTypesName = {
       [definition.variableType.Event]: 'Event',
-      [definition.variableType.Object]: 'Fields'
+      [definition.variableType.Object]: 'Fields',
+      [definition.variableType.Array]: 'Stack'
     }
 
     if (type in complexTypesName) return complexTypesName[type]
@@ -66,17 +61,14 @@ export const PropertyGenericCell: FC<PropertyBooleanCellProps> = ({ propertyLink
     return defaultValue?.toString() ?? 'Error'
   }, [defaultValue, type])
 
-  if (!isTopLevel) {
-    return null
-  }
-
   return (
     <ControlRow title={resultName}>
       <ControlRowWide>
         <InputSelect
-          icon={<Icon color='var(--light)' />}
+          icon={<VariableIcon type={type} color='var(--light)' />}
           color='var(--primary)'
           onClick={() => handleClickProperty(editOptions)}
+          onReset={remove}
         >
           {selectValue}
         </InputSelect>

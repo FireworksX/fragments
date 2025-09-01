@@ -30,8 +30,8 @@
   "dependencies": {
     "@fragmentsx/definition": "workspace:*",
     "@graph-state/checkers": "^0.1.2",
-    "@graph-state/core": "^0.11.7",
-    "@graph-state/react": "^0.6.3",
+    "@graph-state/core": "^0.12.0",
+    "@graph-state/react": "^0.7.0",
     "react-use-measure": "^2.1.7"
   },
   "devDependencies": {

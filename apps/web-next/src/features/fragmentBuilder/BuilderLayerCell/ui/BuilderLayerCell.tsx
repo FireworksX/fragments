@@ -13,6 +13,8 @@ import { DropdownOption } from '@/shared/ui/DropdownOption'
 import { Touchable } from '@/shared/ui/Touchable'
 import { useBuilderLayerFlags } from '@/shared/hooks/fragmentBuilder/useBuilderLayerFlags'
 import { useInterpolation } from '@/shared/hooks/useInterpolation'
+import { useShortcut } from '@/shared/hooks/useShortcut'
+import { SHORTCUTS } from '@/shared/constants/shortcuts'
 
 interface BuilderLayerCellProps {
   layerKey: LinkKey
@@ -36,10 +38,10 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
     partialSelected,
     handleSelect,
     selected,
-    rename,
-    duplicate
+    rename
   } = useBuilderLayerCell(layerKey)
   const flags = useBuilderLayerFlags(layerKey)
+  const shortcuts = useShortcut()
 
   const onEdit = () => {
     if (editLabel) {
@@ -93,13 +95,21 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
       options={
         <>
           <DropdownGroup minWidth={200}>
-            <DropdownOption description='⌘;' disabled={!flags.isVisible} onClick={flags.toggleVisible}>
+            <DropdownOption description={shortcuts[SHORTCUTS.toggleVisible]} onClick={flags.toggleVisible}>
               {!flags.isVisible ? 'Show' : 'Hide'}
             </DropdownOption>
-            <DropdownOption description='⌘D' disabled={!flags.canDuplicate} onClick={duplicate}>
+            <DropdownOption
+              description={shortcuts[SHORTCUTS.duplicate]}
+              disabled={!flags.canDuplicate}
+              onClick={flags.duplicate}
+            >
               Duplicate
             </DropdownOption>
-            <DropdownOption description='⌫' disabled={!flags.canRemove} onClick={flags.remove}>
+            <DropdownOption
+              description={shortcuts[SHORTCUTS.remove]}
+              disabled={!flags.canRemove}
+              onClick={flags.remove}
+            >
               Remove
             </DropdownOption>
             {/*  <DropdownOption disabled={!flags.canSetPrimary} onClick={setPrimary}>*/}
@@ -110,10 +120,18 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
             {/*  /!*</DropdownOption>*!/*/}
             {/*</DropdownGroup>*/}
             {/*<DropdownGroup>*/}
-            <DropdownOption description='⌘↵' disabled={!flags.canWrap} onClick={flags.wrapFrame}>
+            <DropdownOption
+              description={shortcuts[SHORTCUTS.wrapFrame]}
+              disabled={!flags.canWrap}
+              onClick={flags.wrapFrame}
+            >
               Wrap Frame
             </DropdownOption>
-            <DropdownOption description='⌘⌫' disabled={!flags.canRemoveWrapper} onClick={flags.removeWrapper}>
+            <DropdownOption
+              description={shortcuts[SHORTCUTS.removeFrame]}
+              disabled={!flags.canRemoveWrapper}
+              onClick={flags.removeWrapper}
+            >
               Remove Frame
             </DropdownOption>
           </DropdownGroup>
