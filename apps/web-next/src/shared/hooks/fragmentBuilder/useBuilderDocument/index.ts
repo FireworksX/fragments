@@ -6,19 +6,14 @@ import { useToast } from '@/widgets/Toast/hooks/useToast'
 import { makeSnapshot } from '@fragmentsx/render-core'
 import { pick, promiseWaiter } from '@fragmentsx/utils'
 import { useUpdateFragmentDocumentMutation } from './queries/UpdateFragmentDocument.generated'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useGraph, useGraphEffect } from '@graph-state/react'
 
 export const useBuilderDocument = () => {
   const { open, close, setContext } = useToast()
-  const { currentFragmentId } = useBuilder()
+  const { currentFragmentId, isSaving, savingState, setSavingState, setSaving } = useBuilder()
   const { manager: globalManager } = useGlobalManager()
   const { manager, loading } = useFragmentManager(currentFragmentId)
-  const [documentBuilderGraph] = useGraph(manager, manager?.$builder, {
-    selector: graph => pick(graph, 'isSaving', 'savingState')
-  })
-  const isSaving = documentBuilderGraph?.isSaving ?? false
-  const savingState = documentBuilderGraph?.savingState ?? null
 
   const [updateFragment, { loading: fetchingUpdate }] = useUpdateFragmentDocumentMutation({
     variables: {
@@ -26,10 +21,10 @@ export const useBuilderDocument = () => {
     }
   })
 
-  const saveFragment = async () => {
+  const saveFragment = useCallback(async () => {
     if (fetchingUpdate) return
 
-    manager?.$builder?.setSaving(true)
+    setSaving(true)
 
     // open(builderToasts.saving)
     const snapshot = makeSnapshot(globalManager, currentFragmentId)
@@ -50,15 +45,15 @@ export const useBuilderDocument = () => {
       })
     }
 
-    manager?.$builder?.setSavingState('success')
+    setSavingState('success')
     // setContext({ status: 'success' })
     await promiseWaiter(1000)
 
-    manager?.$builder?.setSavingState(null)
+    setSavingState(null)
 
     close()
-    manager?.$builder?.setSaving(false)
-  }
+    setSaving(false)
+  }, [])
 
   return {
     documentManager: manager,

@@ -36,12 +36,14 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
     isInstance,
     hasChildren,
     partialSelected,
+    partialHidden,
     handleSelect,
     selected,
     rename
   } = useBuilderLayerCell(layerKey)
   const flags = useBuilderLayerFlags(layerKey)
   const shortcuts = useShortcut()
+  const hidden = !flags.isVisible || partialHidden
 
   const onEdit = () => {
     if (editLabel) {
@@ -84,8 +86,12 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
       states.push(selected ? styles.selectedFragment : styles.fragment)
     }
 
+    if (hidden) {
+      states.push(styles.hidden)
+    }
+
     return [background, radius, states]
-  }, [collapsed, hasChildren, isInstance, isLast, partialSelected, selected])
+  }, [collapsed, hasChildren, isInstance, isLast, partialSelected, selected, hidden])
 
   return (
     <Dropdown
@@ -147,9 +153,6 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
           },
           classNames
         )}
-        style={{
-          opacity: flags.isVisible ? 1 : 0.4
-        }}
         onClick={handleSelect}
       >
         <Touchable

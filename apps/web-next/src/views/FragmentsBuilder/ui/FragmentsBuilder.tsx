@@ -7,11 +7,14 @@ import { isBrowser } from '@fragmentsx/utils'
 import { FragmentBuilderProvider } from '@/views/FragmentsBuilder/lib/FragmentBuilderProvider'
 import { FragmentsBuilderContent } from '@/views/FragmentsBuilder/widgets/FragmentsBuilderContent'
 import { useGlobalManager } from '@fragmentsx/render-suite'
+import { createCanvasStore } from '@/shared/store/canvasStore'
 
 const builderManager = createBuilderStore()
+const canvasManager = createCanvasStore()
 
 if (isBrowser) {
   window.builderManager = builderManager
+  window.canvasManager = canvasManager
 }
 
 // const context = createGlobalContext()
@@ -23,7 +26,7 @@ export const FragmentsBuilder = () => {
 
   return (
     <>
-      <FragmentBuilderProvider builderManager={builderManager}>
+      <FragmentBuilderProvider builderManager={builderManager} canvasManager={canvasManager}>
         <div className={styles.root}>
           <div className={styles.container}>
             <FragmentsBuilderAside />

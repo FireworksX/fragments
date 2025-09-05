@@ -27,14 +27,6 @@ export const getEmptyFragment = (fragmentId: string) => {
         threshold: 320
       }
     ],
-    layoutSizingHorizontal: 'Fixed',
-    layoutSizingVertical: 'Fixed',
-    horizontalGrow: 'auto',
-    verticalGrow: 'auto',
-    renderMode: 'parent',
-    opacity: 1,
-    visible: true,
-    overflow: 'hidden',
     overrides: [],
     properties: []
   }

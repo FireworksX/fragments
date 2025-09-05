@@ -6,19 +6,20 @@ import { pick } from '@fragmentsx/utils'
 import { useGraphEffect } from '@graph-state/react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useUpdateEffect } from 'react-use'
+import { useBuilderCanvasField } from '@/shared/hooks/fragmentBuilder/useBuilderCanvasField'
 
 export const useBuilderSelection = () => {
   const { documentManager } = useBuilderDocument()
-  const { canvas, manager: canvasManager } = useBuilderCanvas(data => pick(data, 'focusLayer'))
-  const selectionLayerKey = canvas.focusLayer
+  const [selectLayer, setSelectLayer] = useBuilderCanvasField('selectLayer')
+  const selectionLayerKey = selectLayer
   const selectionGraph = documentManager?.resolve(selectionLayerKey)
 
   const select = useCallback(
     (field: any) => {
       const inputKey = typeof field === 'string' ? field : documentManager?.keyOfEntity(field)
-      canvasManager.setFocus(inputKey)
+      setSelectLayer(inputKey)
     },
-    [canvasManager, documentManager]
+    [documentManager]
   )
 
   useUpdateEffect(() => {

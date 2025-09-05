@@ -43,7 +43,7 @@ export const createStyleExtension = ({
         [`set${name.charAt(0).toUpperCase() + name.slice(1)}`]:
           (value: string) =>
           ({ chain, editor }) => {
-            const { selection } = editor.state
+            const { selection, doc } = editor.state
 
             // Если текст выделен, работаем с текстом
             if (!selection.empty) {
@@ -56,11 +56,76 @@ export const createStyleExtension = ({
             const { $from } = selection
             const parentNodeType = $from.node($from.depth).type.name
 
-            if (this.options.blockTypes.includes(parentNodeType)) {
-              return chain()
-                .updateAttributes(parentNodeType, { [name]: value })
-                .run()
+            // СОЗДАЕМ ТРАНЗАКЦИЮ ПРАВИЛЬНО
+            const transaction = editor.state.tr
+
+            let updated = false
+
+            doc.descendants((node, pos) => {
+              if (blockTypes.includes(node.type.name)) {
+                transaction.setNodeMarkup(pos, undefined, {
+                  ...node.attrs,
+                  [name]: value
+                })
+                updated = true
+              }
+            })
+
+            if (updated) {
+              editor.view.dispatch(transaction)
+              return true
             }
+
+            // console.log(doc, selection)
+            // blockTypes.forEach(type => {
+            //   chain()
+            //     .updateAttributes(type, { [name]: value })
+            //     .run()
+            // })
+
+            // if (this.options.blockTypes.includes(parentNodeType)) {
+            //   // Находим границы текущего родительского узла
+            //   const parentStart = $from.before($from.depth)
+            //   const parentEnd = $from.after($from.depth)
+            //
+            //   let transaction = editor.state.tr
+            //
+            //   doc.descendants((node, pos) => {
+            //     if (blockTypes.includes(node.type.name)) {
+            //       console.log(node, pos, transaction)
+            //
+            //       // Обновляем атрибуты для каждой найденной ноды
+            //       // transaction = transaction.setNodeMarkup(pos, null, {
+            //       //   ...node.attrs,
+            //       //   [name]: value
+            //       // })
+            //     }
+            //   })
+            //
+            //   // Проходим через все ноды внутри родительского узла
+            //   // editor.state.doc.nodesBetween(parentStart, parentEnd, (node, pos) => {
+            //   //   console.log(parentStart, parentEnd, node, pos)
+            //   //   return chain()
+            //   //     .updateAttributes(pos, { [name]: value })
+            //   //     .run()
+            //   //   // if (node.type.name === parentNodeType) {
+            //   //   //   transaction = transaction.setNodeMarkup(pos, null, {
+            //   //   //     ...node.attrs,
+            //   //   //     [name]: value
+            //   //   //   })
+            //   //   // }
+            //   // })
+            //
+            //   // console.log(transaction)
+            //
+            //   editor.view.dispatch(transaction)
+            //   return true
+            // }
+            // if (this.options.blockTypes.includes(parentNodeType)) {
+            //   return chain()
+            //     .updateAttributes(parentNodeType, { [name]: value })
+            //     .run()
+            // }
 
             return false
           },
@@ -76,7 +141,16 @@ export const createStyleExtension = ({
     addStorage() {
       return {
         [`get${name.charAt(0).toUpperCase() + name.slice(1)}`]: ({ editor }) => {
-          const { selection } = editor.state
+          const { selection, doc } = editor.state
+
+          const values = new Set()
+          const checkedNodes = new Set()
+
+          const addValue = value => {
+            if (value !== undefined && value !== null && value !== '') {
+              values.add(value)
+            }
+          }
 
           // Проверяем выделенный текст
           if (!selection.empty) {
@@ -86,19 +160,58 @@ export const createStyleExtension = ({
             }
           }
 
-          // Проверяем блочный узел (paragraph, heading и т.д.)
-          const { $from } = selection
-          const parentNodeType = $from.node($from.depth).type.name
+          // Текущая нода
+          addValue(selection.$from.parent.attrs[name])
 
-          if (this.options.blockTypes.includes(parentNodeType)) {
-            const blockAttributes = editor.getAttributes(parentNodeType)
-            if (blockAttributes[name]) {
-              return blockAttributes[name]
+          // 2. Выборочная проверка документа (только релевантные типы нод)
+          doc.descendants(node => {
+            // Пропускаем уже проверенные ноды
+            if (checkedNodes.has(node)) return
+
+            // Проверяем только ноды, которые могут содержать нужный атрибут
+            const nodeSpec = node.type.spec
+            if (nodeSpec.attrs && nodeSpec.attrs[name] !== undefined) {
+              addValue(node.attrs[name])
+              checkedNodes.add(node)
             }
-          }
 
-          // Если значение не найдено, возвращаем null
-          return null
+            // Проверяем дочерние ноды
+            if (node.content) {
+              node.content.forEach(childNode => {
+                const childSpec = childNode.type.spec
+                if (childSpec.attrs && childSpec.attrs[name] !== undefined) {
+                  addValue(childNode.attrs[name])
+                  checkedNodes.add(childNode)
+                }
+              })
+            }
+
+            // Проверяем марки в текстовых нодах
+            if (node.isText) {
+              node.marks.forEach(mark => {
+                const markSpec = mark.type.spec
+                if (markSpec.attrs && markSpec.attrs[name] !== undefined) {
+                  addValue(mark.attrs[name])
+                }
+              })
+            }
+          })
+
+          return Array.from(values)
+
+          // // Проверяем блочный узел (paragraph, heading и т.д.)
+          // const { $from } = selection
+          // const parentNodeType = $from.node($from.depth).type.name
+          //
+          // if (this.options.blockTypes.includes(parentNodeType)) {
+          //   const blockAttributes = editor.getAttributes(parentNodeType)
+          //   if (blockAttributes[name]) {
+          //     return blockAttributes[name]
+          //   }
+          // }
+          //
+          // // Если значение не найдено, возвращаем null
+          // return null
         }
       }
     }

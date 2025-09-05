@@ -32,6 +32,7 @@ export const CanvasTextEditorContext = createContext<Editor>(null as any as Edit
 export const CanvasTextEditorProvider: FC<PropsWithChildren> = ({ children }) => {
   const editor = useEditor({
     extensions: canvasEditorExtensions,
+    immediatelyRender: false,
     content
   })
 

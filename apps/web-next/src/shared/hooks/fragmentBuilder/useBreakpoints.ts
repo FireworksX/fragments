@@ -10,10 +10,10 @@ import { isPartOfPrimary } from '@fragmentsx/render-core'
 import { pick } from '@fragmentsx/utils'
 
 const DEFAULT_BREAKPOINTS = [
-  { name: 'Mobile', width: 375 },
-  { name: 'Tablet', width: 768 },
-  { name: 'Laptop', width: 1200 },
-  { name: 'Desktop', width: 1920 }
+  { name: 'Small', width: 100 },
+  { name: 'Medium', width: 300 },
+  { name: 'Large', width: 600 },
+  { name: 'XLarge', width: 1000 }
 ]
 
 function getFrameRange(frames, targetLink) {

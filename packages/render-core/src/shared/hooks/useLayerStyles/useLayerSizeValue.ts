@@ -7,6 +7,7 @@ import { useLayerValue } from "@/shared/hooks/useLayerValue";
 import { LinkKey } from "@graph-state/core";
 import { definition } from "@fragmentsx/definition";
 import { toPx } from "@fragmentsx/utils";
+import { useNormalizeLayer } from "@/shared/hooks/useNormalizeLayer";
 
 const autoSizes = [definition.sizing.Hug];
 
@@ -20,6 +21,10 @@ export const useLayerSizeValue = (
   const isTop = isTopLevel(fragmentManager, layerKey);
   const isPartOfInstance = !!instanceLayerKey;
   const layerParent = getParent(fragmentManager, layerKey);
+  const { layer: normalizeParentLayer } = useNormalizeLayer(
+    layerParent,
+    fragmentManager
+  );
   const layerNode = fragmentManager.resolve(layerKey);
 
   const [instanceType] = useLayerValue(
@@ -39,7 +44,7 @@ export const useLayerSizeValue = (
       if (
         isTop &&
         isDocument &&
-        layerParent?.[growType] === definition.fragmentGrowingMode.fill
+        normalizeParentLayer?.[growType] === definition.fragmentGrowingMode.fill
       ) {
         return "100%";
       }

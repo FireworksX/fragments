@@ -9,15 +9,24 @@ interface SelectProps extends PropsWithChildren {
   className?: string
   disabled?: boolean
   classNameInner?: string
+  contentNameInner?: string
   onClick?: () => void
 }
 
-const SelectMimicry: FC<SelectProps> = ({ className, icon, disabled, classNameInner, children, onClick }) => {
+const SelectMimicry: FC<SelectProps> = ({
+  className,
+  icon,
+  contentNameInner,
+  disabled,
+  classNameInner,
+  children,
+  onClick
+}) => {
   return (
     <Touchable className={cn(styles.root, className, { [styles.disabled]: disabled })} onClick={onClick}>
       <div className={cn(styles.inner, classNameInner)}>
         {icon && <div className={styles.icon}>{icon}</div>}
-        <div className={styles.content}>{children}</div>
+        <div className={cn(styles.content, contentNameInner)}>{children}</div>
       </div>
       <CaretDown className={styles.caret} width={11} />
     </Touchable>

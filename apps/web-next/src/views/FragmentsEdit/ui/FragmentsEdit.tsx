@@ -25,7 +25,7 @@ import StackCollector from '../../../widgets/StackCollector/ui/StackCollector'
 import { StackPanelBorder } from '@/widgets/fragmentBuilder/BuilderStackPanelBorder'
 import { StackPanelFill } from '@/widgets/fragmentBuilder/BuilderStackPanelFill'
 import { StackPanelColorPicker } from '@/features/popouts/StackPanelColorPicker'
-import { builderToasts, popoutNames } from '@/shared/data'
+import { builderToasts, modalNames, popoutNames } from '@/shared/data'
 import { StackPanelCssOverride } from '@/features/popouts/StackPanelCssOverride'
 import { StackSolidPaintStyle } from '@/features/popouts/StackSolidPaintStyle'
 import StackVariableTransform from '@/features/popouts/StackVariableTransform/StackVariableTransform'
@@ -58,15 +58,15 @@ import { StackObjectValue } from '@/features/popouts/StackObjectValue'
 import { useBuilderAutoCreator } from '@/shared/hooks/fragmentBuilder/useBuilderAutoCreator'
 import { StackArrayValue } from '@/features/popouts/StackArrayValue'
 import { BuilderCanvasScale } from '@/widgets/fragmentBuilder/BuilderCanvasScale'
+import { useGraphEffect } from '@graph-state/react'
+import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { debounce } from '@fragmentsx/utils'
+import { useCallback, useEffect, useRef } from 'react'
 
 const FragmentsEditInitial = () => {
-  // const { setRenderTarget } = useRenderTarget()
-
-  // useBuilderHotKeys()
-
-  // useEffect(() => {
-  //   setRenderTarget(definition.renderTarget.canvas)
-  // }, [])
+  const { documentManager, saveFragment } = useBuilderDocument()
+  const autoSave = useRef(debounce(() => saveFragment(), 5_000))
+  useGraphEffect(documentManager, autoSave.current, { directChangesOnly: true })
 
   return (
     <div className={styles.root}>
@@ -93,7 +93,6 @@ const FragmentsEditInitial = () => {
           </BuilderCanvas>
 
           <div className={styles.overlays}>
-            <CreateCustomBreakpoint />
             <div className={styles.popoutsOverlay}>
               <BuilderPopouts>
                 <StackCollector>
@@ -161,5 +160,7 @@ export const FragmentsEdit = withModalCollector(
       <FragmentsEditInitial />
     </BuilderProvider>
   ),
-  {}
+  {
+    [modalNames.createCustomBreakpoint]: <CreateCustomBreakpoint />
+  }
 )

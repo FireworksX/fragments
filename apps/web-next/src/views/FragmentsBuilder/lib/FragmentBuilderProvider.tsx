@@ -6,8 +6,9 @@ import { GlobalManager } from '@fragmentsx/render-react'
 
 interface FragmentBuilderProviderProps extends PropsWithChildren {
   builderManager: GraphState
+  canvasManager: GraphState
 }
 
-export const FragmentBuilderProvider: FC<FragmentBuilderProviderProps> = ({ builderManager, children }) => {
-  return <BuilderContext value={{ builderManager }}>{children}</BuilderContext>
+export const FragmentBuilderProvider: FC<FragmentBuilderProviderProps> = ({ children, ...value }) => {
+  return <BuilderContext value={value}>{children}</BuilderContext>
 }

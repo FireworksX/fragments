@@ -1,4 +1,8 @@
 .root {
+
+}
+
+.inner {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -8,6 +12,7 @@
     transition: var(--animation-transition-default);
     padding: 7px 5px;
     border-radius: var(--radius-second);
+    background: transparent;
 
     &:hover {
         background: var(--background-secondary);

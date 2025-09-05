@@ -12,6 +12,7 @@ import { PropertyStringContext } from '@/widgets/modals/PropertyString/ui/Proper
 import { PropertyColorContext } from '@/widgets/modals/PropertyColor/ui/PropertyColor'
 import { ColorPickerContext } from '@/widgets/modals/ColorPicker/ui/ColorPicker'
 import { InviteProjectMemberContext } from '@/widgets/modals/InviteProjectMemberModal/ui/InviteProjectMemberModal'
+import { CreateCustomBreakpointContext } from '@/widgets/modals/CreateCustomBreakpoint/ui/CreateCustomBreakpoint'
 
 interface ModalContextMap {
   [modalNames.configureFeatureFlagVariant]: ConfigureFeatureFlagVariantContext
@@ -23,6 +24,7 @@ interface ModalContextMap {
   [modalNames.propertyColor]: PropertyColorContext
   [modalNames.colorPicker]: ColorPickerContext
   [modalNames.inviteMember]: InviteProjectMemberContext
+  [modalNames.createCustomBreakpoint]: CreateCustomBreakpointContext
 }
 
 type ModalName = keyof typeof modalNames

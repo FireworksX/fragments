@@ -16,6 +16,7 @@ export const useBuilderLayerCell = (layerKey: LinkKey) => {
   const selected = selection === layerKey
   const partialSelected =
     selected || layerInfo.allParents.some(parent => selection === documentManager.keyOfEntity(parent))
+  const partialHidden = layerInfo.allParents.some(parent => documentManager.resolve(parent)?.visible === false)
   const isInstance = layerInfo.type === definition.nodes.Instance
   const breakpointThreshold = useBreakpoints().getBreakpointRangeLabel(layerKey)
   const isPrimaryLayer = layerInfo.isPrimary
@@ -26,6 +27,7 @@ export const useBuilderLayerCell = (layerKey: LinkKey) => {
     hasChildren: !isInstance && layerInfo?.layer?.children?.length > 0,
     selected,
     partialSelected,
+    partialHidden,
     isInstance,
     isPrimaryLayer,
     breakpointThreshold:

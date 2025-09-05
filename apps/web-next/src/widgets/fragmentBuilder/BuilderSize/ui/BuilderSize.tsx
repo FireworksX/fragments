@@ -34,9 +34,9 @@ const BuilderSize: FC<BuilderSizeProps> = ({ className }) => {
   const Options = (type: 'width' | 'height') => (
     <>
       <option value={definition.sizing.Relative} disabled={!canRelativeSize}>
-        Rel
+        Rel (%)
       </option>
-      <option value={definition.sizing.Fixed}>Fixed</option>
+      <option value={definition.sizing.Fixed}>Fixed (px)</option>
       <option value={definition.sizing.Hug} disabled={!(type === 'width' ? canHugContentWidth : canHugContentHeight)}>
         Hug
       </option>
