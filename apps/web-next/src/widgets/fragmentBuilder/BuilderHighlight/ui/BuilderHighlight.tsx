@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useEffect, useState } from 'react'
+import { FC, PropsWithChildren, useEffect, useRef, useState } from 'react'
 import cn from 'classnames'
 import { definition } from '@fragmentsx/definition'
 import { animated, to, useSpringValue } from '@react-spring/web'
@@ -17,6 +17,9 @@ import { droppableAreas } from '@/shared/data'
 import { DragEndEvent } from '@dnd-kit/core/dist/types/events'
 import { pick } from '@fragmentsx/utils'
 import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
+import { useBuilderCanvasField } from '@/shared/hooks/fragmentBuilder/useBuilderCanvasField'
+import { BuilderCanvasTextEditor } from '@/widgets/fragmentBuilder/BuilderHighlight/components/BuilderCanvasTextEditor'
+import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 
 interface BuilderLayerHighlightProps extends PropsWithChildren {
   className?: string
@@ -24,17 +27,34 @@ interface BuilderLayerHighlightProps extends PropsWithChildren {
 
 const BuilderHighlight: FC<BuilderLayerHighlightProps> = ({ className, children }) => {
   const opacity = useSpringValue(0)
-  const { canvas } = useBuilderCanvas(data => pick(data, 'hoverLayer'))
   const { documentManager } = useBuilderDocument()
   const { selection, selectionGraph } = useBuilderSelection()
   const isInstanceSelection = selectionGraph?._type === definition.nodes.Instance
-  const hoverLayerGeometry = useLayerGeometry(canvas.hoverLayer)
+  const [hoverLayer] = useBuilderCanvasField('hoverLayer')
+  const [isDraggingLayer] = useBuilderCanvasField('isDraggingLayer')
+  const [isTextEditing] = useBuilderCanvasField('isTextEditing')
+
+  const hoverLayerGeometry = useLayerGeometry(hoverLayer)
   const selectionGeometry = useLayerGeometry(selection)
   const parentSelectionGeometry = useLayerGeometry(documentManager.keyOfEntity(getParent(documentManager, selection)))
   const { layers: breakpoints } = useFragmentLayers()
 
   const [droppableLayerKey, setDroppableLayerKey] = useState(null)
   const droppableGeometry = useLayerGeometry(droppableLayerKey)
+
+  const editableRef = useRef<HTMLElement | null>(null)
+
+  useEffect(() => {
+    if (isTextEditing) {
+      const selectionNode: HTMLElement | null = document.querySelector(`[data-key="${selection}"]`)
+      if (selectionNode) {
+        editableRef.current = selectionNode
+        selectionNode.style.visibility = 'hidden'
+      }
+    } else {
+      editableRef.current?.attributeStyleMap.delete('visibility')
+    }
+  }, [isTextEditing])
 
   useDndMonitor({
     onDragOver(event: DragOverEvent) {
@@ -53,8 +73,8 @@ const BuilderHighlight: FC<BuilderLayerHighlightProps> = ({ className, children 
   })
 
   useEffect(() => {
-    opacity.set(canvas?.isMoving || !selection ? 0 : 1)
-  }, [canvas?.isMoving, canvas.isDragging, selection, opacity])
+    opacity.set(!selection ? 0 : 1)
+  }, [selection, opacity])
 
   return (
     <>
@@ -73,7 +93,7 @@ const BuilderHighlight: FC<BuilderLayerHighlightProps> = ({ className, children 
           style={{
             ...hoverLayerGeometry,
             opacity: to([hoverLayerGeometry.height, hoverLayerGeometry.width], (h, w) =>
-              h !== 0 && w !== 0 && !!canvas.hoverLayer ? 1 : 0
+              h !== 0 && w !== 0 && !!hoverLayer ? 1 : 0
             )
           }}
         />
@@ -87,14 +107,14 @@ const BuilderHighlight: FC<BuilderLayerHighlightProps> = ({ className, children 
           }}
         >
           <LayerSelectedResize />
-          {/*{isTextEditing && <BuilderCanvasTextEditor />}*/}
+          {isTextEditing && <BuilderCanvasTextEditor />}
         </animated.div>
         <animated.div
           data-highlight='parent'
           className={cn(styles.highlight, styles.mask, styles.parentHighlight)}
           style={{
-            '--style': to(canvas.isDragging, isDragging => (isDragging ? 'solid' : 'dashed')),
-            '--borderWidth': to(canvas.isDragging, isDragging => (isDragging ? '2px' : '1px')),
+            '--style': isDraggingLayer ? 'solid' : 'dashed',
+            '--borderWidth': isDraggingLayer ? '2px' : '1px',
             opacity: to(
               [opacity, parentSelectionGeometry.width, parentSelectionGeometry.height],
               (opacity, width, height) => (width === 0 || height === 0 ? 0 : opacity)

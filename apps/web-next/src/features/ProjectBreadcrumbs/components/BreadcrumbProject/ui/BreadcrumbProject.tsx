@@ -9,6 +9,7 @@ import { DropdownGroup } from '@/shared/ui/DropdownGroup'
 import { DropdownOption } from '@/shared/ui/DropdownOption'
 import CheckIcon from '@/shared/icons/next/check.svg'
 import PlusIcon from '@/shared/icons/next/circle-plus.svg'
+import { SelectMimicry } from '@/shared/ui/SelectMimicry'
 
 interface BreadcrumbProjectProps {
   projects: { logo: { url: string }; id: number; name: string }[]
@@ -59,7 +60,7 @@ export const BreadcrumbProject: FC<BreadcrumbProjectProps> = ({ className, proje
       }
     >
       {active && (
-        <Touchable className={cn(styles.root, className)}>
+        <SelectMimicry className={cn(styles.root, className)} contentNameInner={styles.inner}>
           <Avatar
             uniqueId={active?.id?.toString()}
             firstName={active?.name}
@@ -68,7 +69,7 @@ export const BreadcrumbProject: FC<BreadcrumbProjectProps> = ({ className, proje
             src={active?.logo.url}
           />
           {active?.name}
-        </Touchable>
+        </SelectMimicry>
       )}
     </Dropdown>
   )

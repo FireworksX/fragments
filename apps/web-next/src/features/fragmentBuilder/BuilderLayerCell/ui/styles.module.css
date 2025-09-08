@@ -96,6 +96,10 @@
         }
     }
 
+    &.hidden {
+        opacity: .4;
+    }
+
     &:after {
         content: '';
         position: absolute;

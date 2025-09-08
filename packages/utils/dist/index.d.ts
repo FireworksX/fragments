@@ -139,4 +139,7 @@ declare function roundedNumber(value: number, decimals?: number): number;
 declare function roundedNumberString(value: number, decimals?: number): string;
 declare function roundWithOffset(value: number, offset: number): number;
 
-export { cleanGraph, colorToObject, createConstants, debounce, eventEmitter, filterDeep, findDeep, finiteNumber, fromPx, generateId, get, getKey, hashGenerator, hexToRgb, injectLink, isAbsoluteUrl, _default as isBrowser, isEmptyValue, isFiniteNumber, isHTMLNode, isKey, isObject, isPrimitive, isValue, iterator, mergeIterator, noop, objectToColorString, omit, pick, positiveValue, promiseWaiter, replace, rgbStringToHex, rgbToHex, rgbToRgba, roundWithOffset, roundedNumber, roundedNumberString, set, setKey, times, toKebabCase, toLongHex, toPx };
+declare const linkToCssVariable: (link: string) => string;
+declare const cssVariableToLink: (cssVariable: string) => string | undefined;
+
+export { cleanGraph, colorToObject, createConstants, cssVariableToLink, debounce, eventEmitter, filterDeep, findDeep, finiteNumber, fromPx, generateId, get, getKey, hashGenerator, hexToRgb, injectLink, isAbsoluteUrl, _default as isBrowser, isEmptyValue, isFiniteNumber, isHTMLNode, isKey, isObject, isPrimitive, isValue, iterator, linkToCssVariable, mergeIterator, noop, objectToColorString, omit, pick, positiveValue, promiseWaiter, replace, rgbStringToHex, rgbToHex, rgbToRgba, roundWithOffset, roundedNumber, roundedNumberString, set, setKey, times, toKebabCase, toLongHex, toPx };

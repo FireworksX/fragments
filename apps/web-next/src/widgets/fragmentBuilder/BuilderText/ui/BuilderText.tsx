@@ -31,7 +31,6 @@ const BuilderText: FC<BuilderTextProps> = ({ className }) => {
       {/*    <InputSelect icon={<InputSelectTextIcon />}>{colors.secondary}</InputSelect>*/}
       {/*  </BuilderControlRowWide>*/}
       {/*</BuilderControlRow>*/}
-
       <ControlRow
         title='Content'
         value={content.value}
@@ -44,7 +43,7 @@ const BuilderText: FC<BuilderTextProps> = ({ className }) => {
         }}
       >
         <ControlRowWide>
-          <InputText value={content.value} onChangeValue={content.update} />
+          <InputText value={content.textContent} disabled />
         </ControlRowWide>
       </ControlRow>
 
@@ -56,7 +55,8 @@ const BuilderText: FC<BuilderTextProps> = ({ className }) => {
 
       <ControlRow title='Weight'>
         <ControlRowWide>
-          <Select value={weight.value} onChange={weight.onChange}>
+          <Select value={weight.isMixed ? 'mixed' : weight.value} onChange={weight.onChange}>
+            {weight.isMixed && <option value='mixed'>Mixed</option>}
             {weight.items.map(({ label, value }) => (
               <option key={label} value={value}>
                 {label}
@@ -69,38 +69,63 @@ const BuilderText: FC<BuilderTextProps> = ({ className }) => {
       <ControlRow
         title='Color'
         hasConnector={!color.disabled}
-        variable={{
-          data: color.variableData,
-          actions: color.actions,
-          onReset: color.resetVariable,
-          onClick: color.editVariable
-        }}
+        variable={
+          !color.isMixed
+            ? {
+                data: color.variableData,
+                actions: color.actions,
+                onReset: color.resetVariable,
+                onClick: color.editVariable
+              }
+            : undefined
+        }
       >
         <ControlRowWide>
-          <InputSelect color={color.value} onClick={color.onClick}>
-            {color.value || getNameColor(color.value)}
-          </InputSelect>
+          {color.isMixed ? (
+            <InputSelect hasIcon onClick={color.onClick}>
+              Mixed
+            </InputSelect>
+          ) : (
+            <InputSelect color={color.value} onClick={color.onClick}>
+              {color.value || getNameColor(color.value)}
+            </InputSelect>
+          )}
         </ControlRowWide>
       </ControlRow>
 
       <ControlRow title='Size'>
-        <InputNumber value={fontSize.value} min={0} onChange={fontSize.onChange} />
+        {fontSize.isMixed ? (
+          <InputText value='Mixed' disabled />
+        ) : (
+          <InputNumber value={fontSize.value} min={0} onChange={fontSize.onChange} />
+        )}
         <Stepper value={fontSize.value} min={0} onChange={fontSize.onChange} />
       </ControlRow>
 
       <ControlRow title='Letter'>
-        <InputNumber value={letterSpacing.value} onChange={letterSpacing.onChange} />
+        {letterSpacing.isMixed ? (
+          <InputText value='Mixed' disabled />
+        ) : (
+          <InputNumber value={letterSpacing.value} onChange={letterSpacing.onChange} />
+        )}
+
         <Stepper value={letterSpacing.value} onChange={letterSpacing.onChange} />
       </ControlRow>
 
       <ControlRow title='Line'>
-        <InputNumber value={lineHeight.value} step={0.1} onChange={lineHeight.onChange} />
+        {lineHeight.isMixed ? (
+          <InputText value='Mixed' disabled />
+        ) : (
+          <InputNumber value={lineHeight.value} step={0.1} onChange={lineHeight.onChange} />
+        )}
+
         <Stepper value={lineHeight.value} step={0.1} onChange={lineHeight.onChange} />
       </ControlRow>
 
       <ControlRow title='Transform'>
         <ControlRowWide>
-          <Select value={transform.value} onChange={transform.onChange}>
+          <Select value={transform.isMixed ? 'mixed' : transform.value} onChange={transform.onChange}>
+            {transform.isMixed && <option value='mixed'>Mixed</option>}
             {transform.items.map(val => (
               <option key={val} value={val}>
                 {val}

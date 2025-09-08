@@ -1,6 +1,6 @@
 .root {
     padding: 5px;
-    border-bottom: 1px solid var(--background-secondary);
+    border-bottom: 1px solid var(--border);
     color: var(--text-color-accent);
     font-size: 12px;
     font-weight: 500;

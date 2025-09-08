@@ -7,6 +7,9 @@ import { Panel } from '@/shared/ui/Panel'
 import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { InputNumber } from '@/shared/ui/InputNumber'
 import { Select } from '@/shared/ui/Select'
+import { TabsSelector } from '@/shared/ui/TabsSelector'
+import { booleanTabsSelectorItems } from '@/shared/data'
+import { definition } from '@fragmentsx/definition'
 
 interface BuilderFragmentGrowingProps {
   className?: string
@@ -24,27 +27,27 @@ const BuilderFragmentGrowing: FC<BuilderFragmentGrowingProps> = ({ className }) 
    */
   return (
     <Panel className={cn(styles.root, className)} title='Growing'>
-      <ControlRow title='Verical'>
+      <ControlRow title='X Fill'>
         <ControlRowWide>
-          <Select value={vertical.value} onChange={vertical.update}>
-            {options.map(option => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </Select>
+          <TabsSelector
+            items={booleanTabsSelectorItems}
+            value={horizontal.value === definition.fragmentGrowingMode.fill}
+            onChange={({ name }) =>
+              horizontal.update(name ? definition.fragmentGrowingMode.fill : definition.fragmentGrowingMode.auto)
+            }
+          />
         </ControlRowWide>
       </ControlRow>
 
-      <ControlRow title='Horizontal'>
+      <ControlRow title='Y Fill'>
         <ControlRowWide>
-          <Select value={horizontal.value} onChange={horizontal.update}>
-            {options.map(option => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </Select>
+          <TabsSelector
+            items={booleanTabsSelectorItems}
+            value={vertical.value === definition.fragmentGrowingMode.fill}
+            onChange={({ name }) =>
+              vertical.update(name ? definition.fragmentGrowingMode.fill : definition.fragmentGrowingMode.auto)
+            }
+          />
         </ControlRowWide>
       </ControlRow>
     </Panel>

@@ -8,6 +8,7 @@ import { useDragMove } from './useDragMove'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
 import { builderCanvasMode } from '@/shared/constants/builderConstants'
+import { useBuilderCanvasField } from '@/shared/hooks/fragmentBuilder/useBuilderCanvasField'
 
 interface Options {
   pointerRef: RefObject<ComponentRef<'div'>>
@@ -20,9 +21,15 @@ export const SCALE = {
 }
 
 export const useCanvasDrag = ({ viewportRef, pointerRef }: Options) => {
-  const { canvas, manager: canvasManager } = useBuilderCanvas()
+  const [canvasMode, setCanvasMode] = useBuilderCanvasField('canvasMode')
+  const [canvasX, setCanvasX] = useBuilderCanvasField('x')
+  const [canvasY, setCanvasY] = useBuilderCanvasField('y')
+  const [canvasScale, setCanvasScale] = useBuilderCanvasField('scale')
+  const [, setHoverLayer] = useBuilderCanvasField('hoverLayer')
+  const [, setIsDraggingLayer] = useBuilderCanvasField('isDraggingLayer')
+  const [isResizing] = useBuilderCanvasField('isResizing')
+
   const { documentManager } = useBuilderDocument()
-  const { canvasMode, setCanvasMode } = useBuilder()
   const dragMoveHandler = useDragMove()
   const saveOffset = useRef([0, 0])
   const [, setTop, { value$: top$ }] = useLayerValue('top')
@@ -41,34 +48,15 @@ export const useCanvasDrag = ({ viewportRef, pointerRef }: Options) => {
     }
   }, [])
 
-  useEffect(() => {
-    const down = (e: KeyboardEvent) => {
-      if (e.code === 'Space' && canvasMode !== builderCanvasMode.pan && canvasMode !== builderCanvasMode.panning) {
-        setCanvasMode(builderCanvasMode.pan)
-      }
-    }
-    const up = (e: KeyboardEvent) => {
-      if (e.code === 'Space' && (canvasMode === builderCanvasMode.pan || canvasMode === builderCanvasMode.panning)) {
-        setCanvasMode(builderCanvasMode.select)
-      }
-    }
-
-    window.addEventListener('keydown', down)
-    window.addEventListener('keyup', up)
-    return () => {
-      window.removeEventListener('keydown', down)
-      window.removeEventListener('keyup', up)
-    }
-  }, [canvasMode])
-
   useGesture(
     {
       onMouseMove: ({ event, dragging, moving, wheeling }) => {
         if (dragging || moving || wheeling) return
-        canvasManager.setHoverLayer(findLayerFromPointerEvent(event) ?? null)
+        setHoverLayer(findLayerFromPointerEvent(event) ?? null)
       },
+
       onDrag: dragEvent => {
-        if (animatableValue(canvas?.isResizing)) return
+        if (isResizing) return
 
         const {
           pinching,
@@ -83,10 +71,10 @@ export const useCanvasDrag = ({ viewportRef, pointerRef }: Options) => {
         if (pinching) cancel()
 
         if (canvasMode === builderCanvasMode.pan || canvasMode === builderCanvasMode.panning) {
-          canvas.x.start(saveOffset.current[0] + mx)
-          canvas.y.start(saveOffset.current[1] + my)
+          setCanvasX(saveOffset.current[0] + mx)
+          setCanvasY(saveOffset.current[1] + my)
           if (first) {
-            saveOffset.current = [canvas.x.get(), canvas.y.get()]
+            saveOffset.current = [canvasX.get(), canvasY.get()]
             setCanvasMode(builderCanvasMode.panning)
           }
 
@@ -109,7 +97,8 @@ export const useCanvasDrag = ({ viewportRef, pointerRef }: Options) => {
 
         if (!dragEvent?.memo?.targetLayer) return dragEvent.memo
 
-        canvasManager.setDragging(dragging, dragEvent.memo?.targetLayerLink)
+        setIsDraggingLayer(dragging)
+        // canvasManager.setDragging(dragging, dragEvent.memo?.targetLayerLink)
 
         const dragPoint = dragMoveHandler(dragEvent, { x: animatableValue(left$), y: animatableValue(top$) })
         // dragPoint = dragCollisionsHandler(dragEvent, dragPoint)
@@ -135,7 +124,7 @@ export const useCanvasDrag = ({ viewportRef, pointerRef }: Options) => {
 
           const tx = ox - (x + width / 2)
           const ty = oy - (y + height / 2)
-          memo = [canvas.x.get(), canvas.y.get(), tx, ty]
+          memo = [canvasX.get(), canvasY.get(), tx, ty]
         }
 
         const x = memo[0] - (ms - 1) * memo[2]
@@ -143,9 +132,9 @@ export const useCanvasDrag = ({ viewportRef, pointerRef }: Options) => {
 
         saveOffset.current = [x, y]
 
-        canvas.x.start(x)
-        canvas.y.start(y)
-        canvas.scale.start(scale)
+        setCanvasX(x)
+        setCanvasY(y)
+        setCanvasScale(scale)
 
         return memo
       },
@@ -155,18 +144,18 @@ export const useCanvasDrag = ({ viewportRef, pointerRef }: Options) => {
 
         if (wheelMode.current === 'zoom') {
           const delta = -event.deltaY * 0.01
-          const newScale = Math.min(Math.max(canvas.scale.get() * (1 + delta), SCALE.min), SCALE.max)
-          canvas.scale.start(newScale)
+          const newScale = Math.min(Math.max(canvasScale.get() * (1 + delta), SCALE.min), SCALE.max)
+          setCanvasScale(newScale)
           return
         }
 
         if (wheelMode.current === 'pan') {
           const calcX = saveOffset.current[0] + mx * -1
           const calcY = saveOffset.current[1] + my * -1
-          canvas.x.start(calcX)
-          canvas.y.start(calcY)
+          setCanvasX(calcX)
+          setCanvasY(calcY)
 
-          canvasManager.setMoving(wheeling)
+          // canvasManager.setMoving(wheeling)
         }
       },
       onWheelEnd: ({ event, movement: [mx, my] }) => {
@@ -182,19 +171,19 @@ export const useCanvasDrag = ({ viewportRef, pointerRef }: Options) => {
           wheelMode.current = 'zoom'
         } else {
           wheelMode.current = 'pan'
-          saveOffset.current = [canvas.x.get(), canvas.y.get()]
+          saveOffset.current = [canvasX.get(), canvasY.get()]
         }
       }
     },
     {
       target: pointerRef.current,
-      drag: { from: () => [canvas.x.get(), canvas.y.get()], filterTaps: true },
+      drag: { from: () => [canvasX.get(), canvasY.get()], filterTaps: true },
       pinch: {
         scaleBounds: SCALE,
         rubberband: true
       },
       wheel: {
-        from: () => [canvas.x.get(), canvas.y.get()],
+        from: () => [canvasX.get(), canvasY.get()],
         eventOptions: { passive: false }
       }
     }

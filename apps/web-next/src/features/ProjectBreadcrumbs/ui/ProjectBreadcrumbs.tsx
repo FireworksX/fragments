@@ -30,7 +30,7 @@ export const ProjectBreadcrumbs: FC = () => {
         </>
       )}
 
-      <div className={styles.delimiter} />
+      {/*<div className={styles.delimiter} />*/}
       {/*{project && <BreadcrumbStage />}*/}
 
       {/*{fragmentSlug && (*/}

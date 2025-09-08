@@ -4,6 +4,10 @@ import { to, useSpringValue } from '@react-spring/web'
 import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanvas'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { useWaitForElement } from '@/shared/hooks/useWaitForElement'
+import { useBuilderCanvasField } from '@/shared/hooks/fragmentBuilder/useBuilderCanvasField'
+import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
+import { useUpdateEffect } from 'react-use'
+import { nextTick } from '@/shared/utils/nextTick'
 
 function watchInlineStyleChange(element: HTMLElement, callback: () => void) {
   const observer = new MutationObserver(mutations => {
@@ -18,7 +22,9 @@ function watchInlineStyleChange(element: HTMLElement, callback: () => void) {
 
   observer.observe(element, { attributes: true, attributeFilter: ['style'], subtree: true })
 
-  callback()
+  nextTick(() => {
+    callback()
+  })
 
   return () => observer.disconnect()
 }
@@ -28,8 +34,9 @@ export const useLayerGeometry = (layerKey: LinkKey | null) => {
   const height = useSpringValue(0)
   const top = useSpringValue(0)
   const left = useSpringValue(0)
+  const [scale] = useBuilderCanvasField('scale')
 
-  const { canvas } = useBuilderCanvas()
+  const [content] = useLayerValue('content', layerKey)
 
   const getRect = useCallback((node?: Element | null) => node?.getBoundingClientRect?.(), [])
   const layerNode = useWaitForElement(`[data-key='${layerKey}']`)
@@ -39,32 +46,35 @@ export const useLayerGeometry = (layerKey: LinkKey | null) => {
     (direction: 'top' | 'left') => {
       const rootRect = getRect(rootNode)
       const selectedRect = getRect(layerNode)
-      return ((selectedRect?.[direction] ?? 0) - (rootRect?.[direction] ?? 0)) / animatableValue(canvas.scale)
+      return ((selectedRect?.[direction] ?? 0) - (rootRect?.[direction] ?? 0)) / animatableValue(scale)
     },
-    [canvas.scale, getRect, layerNode, rootNode]
+    [scale, getRect, layerNode, rootNode]
   )
 
   const calcSize = useCallback(
     (type: 'width' | 'height') => {
-      return (getRect(layerNode)?.[type] ?? 0) / animatableValue(canvas.scale)
+      return (getRect(layerNode)?.[type] ?? 0) / animatableValue(scale)
     },
-    [canvas.scale, getRect, layerNode]
+    [scale, getRect, layerNode]
   )
+
+  const runCalc = useCallback(() => {
+    width.set(calcSize('width'))
+    height.set(calcSize('height'))
+    top.set(calcPosition('top'))
+    left.set(calcPosition('left'))
+  }, [width, height, calcSize, top, left, calcPosition])
 
   useEffect(() => {
     if (layerNode) {
-      const runCalc = () => {
-        width.set(calcSize('width'))
-        height.set(calcSize('height'))
-        top.set(calcPosition('top'))
-        left.set(calcPosition('left'))
-      }
-
       const dispose = watchInlineStyleChange(layerNode, runCalc)
-
       return () => dispose()
     }
-  }, [calcPosition, calcSize, height, layerNode, left, top, width, layerKey])
+  }, [layerKey, runCalc])
+
+  useUpdateEffect(() => {
+    runCalc()
+  }, [content, runCalc])
 
   return {
     top,

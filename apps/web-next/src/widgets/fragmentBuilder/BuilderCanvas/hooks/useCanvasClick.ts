@@ -10,13 +10,16 @@ import { useGesture } from '@use-gesture/react'
 import { getAllParents } from '@fragmentsx/render-core'
 import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
 import { builderCanvasMode } from '@/shared/constants/builderConstants'
+import { useBuilderCanvasField } from '@/shared/hooks/fragmentBuilder/useBuilderCanvasField'
+import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 
 export const useCanvasClick = (targetRef: RefObject<ComponentRef<'div'>>) => {
   const { documentManager } = useBuilderDocument()
-  const { manager: builderManager, isTextEditing } = useBuilderManager()
+  const { isTextEditing } = useBuilderManager()
   const { openFragment } = useBuilder()
-  const { manager: canvasManager } = useBuilderCanvas()
-  const { setCanvasMode } = useBuilder()
+  const [, setCanvasMode] = useBuilderCanvasField('canvasMode')
+  const [, setIsTextEditing] = useBuilderCanvasField('isTextEditing')
+  const { select } = useBuilderSelection()
 
   useGesture(
     {
@@ -35,27 +38,33 @@ export const useCanvasClick = (targetRef: RefObject<ComponentRef<'div'>>) => {
 
           // const isTopInstance = getAllParents(documentManager, layerKey)?.at(-1)?._type === definition.nodes.Fragment
           // console.log(isTopInstance)
-          builderManager.toggleTextEditor(false)
+          // builderManager.toggleTextEditor(false)
+          setIsTextEditing(false)
 
           // if (isTopInstance) {
-          canvasManager.setFocus(layerKey)
+          // canvasManager.setFocus(layerKey)
+          select(layerKey)
           // }
         } else if (layerKey) {
           if (!isTextEditing) {
             const clickedLayerValue = documentManager.resolve(layerKey)
 
             if (clickedLayerValue?._type === definition.nodes.Text && event.detail === 2) {
-              canvasManager.setFocus(layerKey)
-              builderManager.toggleTextEditor(true)
+              select(layerKey)
+              // canvasManager.setFocus(layerKey)
+              setIsTextEditing(true)
               return
             }
           }
 
-          builderManager.toggleTextEditor(false)
-          canvasManager.setFocus(layerKey)
+          setIsTextEditing(false)
+          // canvasManager.setFocus(layerKey)
+          select(layerKey)
         } else {
-          builderManager.toggleTextEditor(false)
-          canvasManager.setFocus(null)
+          setIsTextEditing(false)
+          // builderManager.toggleTextEditor(false)
+          // canvasManager.setFocus(null)
+          select(null)
         }
       }
     },

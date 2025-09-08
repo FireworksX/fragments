@@ -12,18 +12,20 @@ export const useTextContent = (layerKey: LinkKey, manager: GraphState) => {
     "content",
     fragmentManager
   );
-  const [attributes] = useLayerValue(layerKey, "attributes", fragmentManager);
+  // const [attributes] = useLayerValue(layerKey, "attributes", fragmentManager);
 
-  const resultAttributes = {
-    ...attributes,
-    color: attributes?.color ?? "rgb(0, 0, 0)",
-  };
+  // const resultAttributes = {
+  //   ...attributes,
+  //   color: attributes?.color ?? "rgb(0, 0, 0)",
+  // };
 
-  return useMemo(() => {
-    if (typeof content === "string" && isValue(attributes)) {
-      return wrapTextInParagraphWithAttributes(content, resultAttributes);
-    }
+  return content;
 
-    return content;
-  }, [contentInfo, content, attributes]);
+  // return useMemo(() => {
+  //   if (typeof content === "string" && isValue(attributes)) {
+  //     return wrapTextInParagraphWithAttributes(content, resultAttributes);
+  //   }
+  //
+  //   return content;
+  // }, [contentInfo, content, attributes]);
 };

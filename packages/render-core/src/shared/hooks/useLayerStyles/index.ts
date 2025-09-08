@@ -99,7 +99,7 @@ export const useLayerStyles = (layerKey: LinkKey) => {
       // ...cssOverride,
     };
   } catch (e) {
-    console.debug(e);
+    // console.debug(e);
     return {};
   }
 };

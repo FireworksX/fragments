@@ -6,12 +6,13 @@ import { useBuilderCanvas } from '@/shared/hooks/fragmentBuilder/useBuilderCanva
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
 import { builderCanvasMode } from '@/shared/constants/builderConstants'
+import { useBuilderCanvasField } from '@/shared/hooks/fragmentBuilder/useBuilderCanvasField'
 
 export const useBuilderAutoCreator = () => {
-  const { canvasMode, canvasModeContext, setCanvasMode } = useBuilder()
+  const [canvasMode, setCanvasMode] = useBuilderCanvasField('canvasMode')
+  const [canvasModeContext] = useBuilderCanvasField('canvasModeContext')
   const { manager, createText, createCollection, createFrame } = useBuilderCreator()
-  const { manager: canvasManager } = useBuilderCanvas()
-  const { selection, selectionGraph } = useBuilderSelection()
+  const { selection, selectionGraph, select } = useBuilderSelection()
 
   useEffect(() => {
     if (
@@ -32,7 +33,7 @@ export const useBuilderAutoCreator = () => {
       setCanvasMode(builderCanvasMode.select)
 
       nextTick(() => {
-        canvasManager.setFocus(nextLayerKey)
+        select(nextLayerKey)
       })
     }
   }, [selection, canvasMode])

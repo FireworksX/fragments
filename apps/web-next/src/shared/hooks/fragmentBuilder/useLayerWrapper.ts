@@ -19,8 +19,10 @@ export const useLayerWrapper = (layerKey: LinkKey) => {
 
   const createWrapper = () => {
     if (canWrap) {
+      const position = layerInfo.indexInParent
       const [wrapperFrame] = createFrame(layerInfo.parent)
       moveChildren(documentManager, layerKey, wrapperFrame)
+      moveChildren(documentManager, wrapperFrame, layerInfo.parent, position)
     }
   }
 

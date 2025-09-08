@@ -7,12 +7,17 @@ import { noop, pick } from '@fragmentsx/utils'
 export const useBuilder = () => {
   const { builderManager } = use(BuilderContext)
   const [builderGraph] = useGraph(builderManager, builderManager.key, { selector: graph => pick(graph, 'canvasMode') })
+  const [documentBuilderGraph] = useGraph(builderManager, builderManager.$document, {
+    selector: graph => pick(graph, 'isSaving', 'savingState')
+  })
   const [searchParams, updateSearchParams] = useSearchParam(['node', 'preview'])
   const isValidId = (id: unknown) => !isNaN(Number(id))
   const currentFragmentId = searchParams?.node
   const preview = searchParams?.preview
   const canvasMode = builderGraph?.canvasMode ?? 'select'
   const setCanvasMode = builderManager?.setCanvasMode ?? noop
+  const isSaving = documentBuilderGraph?.isSaving ?? false
+  const savingState = documentBuilderGraph?.savingState ?? null
 
   const openFragment = (fragmentId: number | null, preview?: boolean) => {
     if (fragmentId === null) {
@@ -33,6 +38,8 @@ export const useBuilder = () => {
   }
 
   return {
+    isSaving,
+    savingState,
     isValidId,
     currentFragmentId: isValidId(currentFragmentId) ? +currentFragmentId : null,
     isPreview: preview === '1',
@@ -40,6 +47,8 @@ export const useBuilder = () => {
     openPreview,
     canvasMode,
     canvasModeContext: builderGraph?.canvasModeContext,
-    setCanvasMode
+    setCanvasMode,
+    setSavingState: builderManager?.$document.setSavingState,
+    setSaving: builderManager?.$document.setSaving
   }
 }

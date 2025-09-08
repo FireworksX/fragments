@@ -9,6 +9,7 @@ import { definition } from '@fragmentsx/definition'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { Spinner } from '@/shared/ui/Spinner'
 import { useBuilderAutoCreator } from '@/shared/hooks/fragmentBuilder/useBuilderAutoCreator'
+import { useBuilderCanvasField } from '@/shared/hooks/fragmentBuilder/useBuilderCanvasField'
 
 interface BuilderFloatBarInfoProps {
   isSaving?: boolean
@@ -17,37 +18,37 @@ interface BuilderFloatBarInfoProps {
 }
 
 export const BuilderFloatBarInfo: FC<BuilderFloatBarInfoProps> = ({ className, isSaving, savingState }) => {
-  const { canvasMode, setCanvasMode } = useBuilder()
-  const infoIsActive = (!!canvasMode && Object.keys(definition.nodes).includes(canvasMode)) || isSaving || !!savingState
+  const [canvasMode] = useBuilderCanvasField('canvasMode')
+  const infoIsActive = !!canvasMode && Object.keys(definition.nodes).includes(canvasMode) // || isSaving || !!savingState
 
   useBuilderAutoCreator()
 
   return (
     <div
       className={cn(styles.info, className, {
-        [styles.infoActive]: infoIsActive,
-        [styles.infoSuccess]: savingState === 'success'
+        [styles.infoActive]: infoIsActive
+        // [styles.infoSuccess]: savingState === 'success'
       })}
     >
       <div className={styles.infoRow}>
-        {isSaving || !!savingState ? (
-          savingState === 'success' ? (
-            <>
-              <CheckIcon size={12} />
-              <span>Saved Successfully</span>
-            </>
-          ) : (
-            <>
-              <Spinner size={12} color='var(--secondary)' />
-              <span>Saving...</span>
-            </>
-          )
-        ) : (
-          <>
-            <SparklesIcon />
-            <span>Select layer for create {capitalize(canvasMode)}</span>
-          </>
-        )}
+        {/*{isSaving || !!savingState ? (*/}
+        {/*  savingState === 'success' ? (*/}
+        {/*    <>*/}
+        {/*      <CheckIcon size={12} />*/}
+        {/*      <span>Saved Successfully</span>*/}
+        {/*    </>*/}
+        {/*  ) : (*/}
+        {/*    <>*/}
+        {/*      <Spinner size={12} color='var(--secondary)' />*/}
+        {/*      <span>Saving...</span>*/}
+        {/*    </>*/}
+        {/*  )*/}
+        {/*) : (*/}
+        <>
+          <SparklesIcon />
+          <span>Select layer for create {capitalize(canvasMode)}</span>
+        </>
+        {/*)}*/}
       </div>
     </div>
   )

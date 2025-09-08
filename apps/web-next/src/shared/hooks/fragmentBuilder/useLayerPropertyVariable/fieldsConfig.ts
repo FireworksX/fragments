@@ -65,8 +65,8 @@ export const fieldsConfig = {
     name: 'Image',
     defaultValue: ''
   },
-  'attributes.color': {
-    nodePropertyControlReference: 'attributes.color',
+  'text.color': {
+    nodePropertyControlReference: 'text.color',
     type: definition.variableType.Color,
     name: 'Text color',
     defaultValue: '#000'

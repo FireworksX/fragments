@@ -10,7 +10,7 @@ import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { useRootLayerAuto } from '@/shared/hooks/fragmentBuilder/useRootLayerAuto'
 
 export const useHeaderLayerTop = (layerKey: LinkKey) => {
-  const { openModal, closeModal } = useModal()
+  const { open: openModal, close: closeModal } = useModal()
   const { documentManager } = useBuilderDocument()
   const [layerGraph] = useGraph(documentManager, layerKey, {
     selector: data => (data ? pick(data, 'name', '_id', 'width') : data)

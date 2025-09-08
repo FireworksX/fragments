@@ -8,7 +8,7 @@ export const builderDocumentPlugin: Plugin = state => {
     savingState: false
   })
 
-  state.$builder = {
+  state.$document = {
     ...entityOfKey(builderKey),
     setSaving: (flag: boolean) => state.mutate(builderKey, { isSaving: flag }),
     setSavingState: (savingState: string) => state.mutate(builderKey, { savingState: savingState })

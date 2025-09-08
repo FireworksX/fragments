@@ -7,6 +7,7 @@ import { canvasPlugin } from '@/shared/store/builderStore/plugins/canvasPlugin'
 import { creatorPlugin } from '@/shared/store/builderStore/plugins/creatorPlugin'
 import { droppablePlugin } from '@/shared/store/builderStore/plugins/droppablePlugin'
 import { builderCanvasMode } from '@/shared/constants/builderConstants'
+import { builderDocumentPlugin } from '@/shared/store/builderStore/plugins/builderDocumentPlugin'
 
 export interface BuilderStore extends BuilderStoreDocumentPlugin {
   _type: 'Builder'
@@ -33,6 +34,7 @@ export const createBuilderStore = () => {
       canvasPlugin,
       creatorPlugin,
       droppablePlugin,
+      builderDocumentPlugin,
       state => {
         state.toggleTextEditor = (value?: boolean) => {
           if (isValue(value)) {

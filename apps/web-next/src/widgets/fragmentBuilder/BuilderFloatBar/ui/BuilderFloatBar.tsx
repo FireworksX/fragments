@@ -40,6 +40,7 @@ import { TabItem } from '@/shared/ui/TabItem'
 import { builderCanvasMode as defCanvasMode } from '@/shared/constants/builderConstants'
 import { promiseWaiter } from '@fragmentsx/utils'
 import { BuilderFloatBarInfo } from '@/widgets/fragmentBuilder/BuilderFloatBar/widgets/BuilderFloatBarInfo'
+import { useBuilderCanvasField } from '@/shared/hooks/fragmentBuilder/useBuilderCanvasField'
 
 interface BuilderFloatBarProps {
   className?: string
@@ -48,7 +49,8 @@ interface BuilderFloatBarProps {
 export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
   const { openPreview } = useBuilder()
   const { saveFragment, isSaving, savingState } = useBuilderDocument()
-  const { canvasMode, setCanvasMode } = useBuilder()
+  const [canvasMode, setCanvasMode] = useBuilderCanvasField('canvasMode')
+  const [_, setCanvasModeContext] = useBuilderCanvasField('canvasModeContext')
 
   const items = [
     {
@@ -56,7 +58,7 @@ export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
       label: <DefaultCursor width={20} height={20} />
     },
     {
-      name: defCanvasMode.pan,
+      name: [defCanvasMode.pan, defCanvasMode.panning],
       label: <GrabCursor width={20} height={20} />
     },
     {
@@ -80,7 +82,10 @@ export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
             [styles.active]: canvasMode === defCanvasMode.Collection
           })}
           isActive={canvasMode === defCanvasMode.Collection}
-          onSelectSource={sourceLink => setCanvasMode(defCanvasMode.Collection, { sourceLink })}
+          onSelectSource={sourceLink => {
+            setCanvasModeContext({ sourceLink })
+            setCanvasMode(defCanvasMode.Collection)
+          }}
         />
       )
     }
@@ -96,7 +101,7 @@ export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
             item =>
               item?.node ?? (
                 <TabItem
-                  isActive={canvasMode === item.name}
+                  isActive={Array.isArray(item.name) ? item.name.includes(canvasMode) : canvasMode === item.name}
                   className={cn(styles.actionButton)}
                   icon={item.label}
                   onClick={() => setCanvasMode(item.name)}
@@ -110,11 +115,11 @@ export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
         <Button mode='outline' onClick={openPreview}>
           Preview
         </Button>
-        <Dropdown className={styles.publishDropdown} disabled trigger='click' options={<BuilderFragmentPublish />}>
-          <Button glowing onClick={saveFragment}>
-            Save
-          </Button>
-        </Dropdown>
+        {/*<Dropdown className={styles.publishDropdown} disabled trigger='click' options={<BuilderFragmentPublish />}>*/}
+        {/*  <Button glowing onClick={saveFragment}>*/}
+        {/*    Save*/}
+        {/*  </Button>*/}
+        {/*</Dropdown>*/}
       </div>
     </div>
   )
