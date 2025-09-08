@@ -6,10 +6,13 @@ import { useGraph } from '@graph-state/react'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useLayerVariable, UseLayerVariableOptions } from '@/shared/hooks/fragmentBuilder/useLayerVariable'
+import { isVariableLink } from '@/shared/utils/isVariableLink'
 
 interface Options
   extends Pick<UseLayerVariableOptions, 'setName' | 'createName' | 'onSetValue' | 'skipUseDefaultValue'> {
+  fieldValue?: unknown
   editAfterCreate?: boolean
+  ignoreDefaultSetValue?: boolean
   onResetVariable?: () => void
 }
 
@@ -18,7 +21,11 @@ export const useLayerPropertyValue = (field: keyof typeof fieldsConfig, options?
   const { selection } = useBuilderSelection()
   const fieldEntity = fieldsConfig[field]
   const [fieldValue, setFieldValue, fieldInfo] = useLayerValue(field)
-  const [variableData] = useGraph(documentManager, fieldInfo?.isVariable ? fieldInfo?.resultValue : null)
+  const resultFieldValue = options?.fieldValue ?? fieldValue
+  const resultValueForVariable = options?.fieldValue ?? fieldInfo?.resultValue
+  const rawValue = options?.fieldValue ?? fieldInfo?.rawValue
+  const isVariable = isVariableLink(resultFieldValue)
+  const [variableData] = useGraph(documentManager, isVariable ? resultValueForVariable : null)
   const disabled = !fieldEntity
   const { editProperty } = useFragmentProperties()
 
@@ -35,12 +42,14 @@ export const useLayerPropertyValue = (field: keyof typeof fieldsConfig, options?
 
   const layerVariable = useLayerVariable({
     layerKey: selection,
-    value: fieldValue,
+    value: resultFieldValue,
     disabled,
     preferredField: fieldEntity,
     ...options,
     onSetValue: value => {
-      handleSetValue(value)
+      if (!options?.ignoreDefaultSetValue) {
+        handleSetValue(value)
+      }
       options?.onSetValue?.(value)
     }
   })
@@ -52,13 +61,13 @@ export const useLayerPropertyValue = (field: keyof typeof fieldsConfig, options?
 
   return {
     fieldEntity,
-    fieldValue,
+    fieldValue: resultFieldValue,
     disabled,
     resetVariable: restoreValue,
     editVariable: () => {
-      fieldInfo?.isVariable && editProperty(fieldInfo?.rawValue)
+      isVariable && editProperty(rawValue)
     },
-    variableData: fieldInfo?.isVariable ? variableData : null,
-    actions: [layerVariable.setVariableOption, layerVariable.createVariableOption]
+    variableData: isVariable ? variableData : null,
+    actions: layerVariable.actions
   }
 }

@@ -39,3 +39,5 @@ export {
   roundedNumberString,
   roundWithOffset,
 } from "./roundedNumber";
+
+export * from "./cssVariable";

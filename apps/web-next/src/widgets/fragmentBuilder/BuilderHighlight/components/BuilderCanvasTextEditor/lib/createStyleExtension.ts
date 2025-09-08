@@ -1,5 +1,55 @@
 import { Extension } from '@tiptap/core'
 
+const collectDescendantChanges = (doc, from, to, attrName, changes) => {
+  doc.nodesBetween(from, to, (descendantNode, descendantPos) => {
+    // Для инлайновых нод
+    if (descendantNode.isInline && descendantNode.attrs[attrName]) {
+      changes.push({
+        type: 'node',
+        pos: descendantPos,
+        attrs: { ...descendantNode.attrs, [attrName]: null }
+      })
+    }
+
+    // Для текстовых марок
+    if (descendantNode.isText) {
+      collectMarkChanges(descendantNode, descendantPos, attrName, changes)
+    }
+  })
+}
+
+const collectMarkChanges = (node, nodePos, attrName, changes) => {
+  const nodeStart = nodePos
+  const nodeEnd = nodePos + node.nodeSize
+
+  node.marks.forEach(mark => {
+    if (mark.attrs[attrName]) {
+      const newAttrs = { ...mark.attrs }
+      delete newAttrs[attrName]
+
+      // Добавляем удаление старой марки
+      changes.push({
+        type: 'mark',
+        remove: true,
+        from: nodeStart,
+        to: nodeEnd,
+        markType: mark.type
+      })
+
+      // Добавляем новую марку (если остались атрибуты)
+      if (Object.keys(newAttrs).length > 0) {
+        changes.push({
+          type: 'mark',
+          add: true,
+          from: nodeStart,
+          to: nodeEnd,
+          newMark: mark.type.create(newAttrs)
+        })
+      }
+    }
+  })
+}
+
 export const createStyleExtension = ({
   name,
   cssProperty,
@@ -52,79 +102,94 @@ export const createStyleExtension = ({
                 .run()
             }
 
-            // Если текст не выделен, обновляем стиль блочного узла (например, paragraph, heading и т.д.)
-            const { $from } = selection
-            const parentNodeType = $from.node($from.depth).type.name
-
-            // СОЗДАЕМ ТРАНЗАКЦИЮ ПРАВИЛЬНО
-            const transaction = editor.state.tr
-
+            // Собираем все изменения сначала
+            const changes = []
             let updated = false
 
             doc.descendants((node, pos) => {
               if (blockTypes.includes(node.type.name)) {
-                transaction.setNodeMarkup(pos, undefined, {
-                  ...node.attrs,
-                  [name]: value
-                })
+                changes.push({ type: 'node', pos, attrs: { ...node.attrs, [name]: value } })
                 updated = true
+
+                // Также собираем изменения для потомков
+                const nodeEnd = pos + node.nodeSize
+                collectDescendantChanges(doc, pos + 1, nodeEnd - 1, name, changes)
               }
             })
 
+            console.log(changes)
+
+            // СОЗДАЕМ ТРАНЗАКЦИЮ ПРАВИЛЬНО
+            // const transaction = editor.state.tr
+            //
+            // doc.descendants((node, pos) => {
+            //   if (blockTypes.includes(node.type.name)) {
+            //     transaction.setNodeMarkup(pos, undefined, {
+            //       ...node.attrs,
+            //       [name]: value
+            //     })
+            //     updated = true
+            //   }
+            //
+            //   // 2.2. Находим всех потомков этой ноды и удаляем у них этот атрибут
+            //   const nodeEnd = pos + node.nodeSize
+            //
+            //   // Рекурсивно проходим по всем потомкам
+            //   doc.nodesBetween(pos + 1, nodeEnd - 1, (descendantNode, descendantPos) => {
+            // Удаляем атрибут у инлайновых нод
+            // if (descendantNode.isInline && descendantNode.attrs[name]) {
+            //   transaction.setNodeMarkup(descendantPos, undefined, {
+            //     ...descendantNode.attrs,
+            //     [name]: null // Удаляем атрибут
+            //   })
+            // }
+            // Удаляем соответствующие марки у текстовых нод
+            // if (descendantNode.isText) {
+            //   descendantNode.marks.forEach(mark => {
+            //     if (mark.attrs[name]) {
+            //       // Создаем новую марку без указанного атрибута
+            //       const newAttrs = { ...mark.attrs }
+            //       delete newAttrs[name] // Удаляем только нужный атрибут
+            //
+            //       // Если в марке остались другие атрибуты - обновляем её
+            //       if (Object.keys(newAttrs).length > 0) {
+            //         const newMark = mark.type.create(newAttrs)
+            //         transaction.removeMark(descendantPos, descendantPos + descendantNode.nodeSize, mark.type)
+            //         transaction.addMark(descendantPos, descendantPos + descendantNode.nodeSize, newMark)
+            //       } else {
+            //         // Если атрибутов не осталось - удаляем марку полностью
+            //         transaction.removeMark(descendantPos, descendantPos + descendantNode.nodeSize, mark.type)
+            //       }
+            //     }
+            //   })
+            // }
+            //   })
+            // })
+
+            // Создаем и применяем транзакцию только один раз
             if (updated) {
+              const transaction = editor.state.tr
+
+              changes.forEach(change => {
+                if (change.type === 'node') {
+                  transaction.setNodeMarkup(change.pos, undefined, change.attrs)
+                } else if (change.type === 'mark') {
+                  if (change.remove) {
+                    transaction.removeMark(change.from, change.to, change.markType)
+                  }
+                  if (change.add && change.newMark) {
+                    transaction.addMark(change.from, change.to, change.newMark)
+                  }
+                }
+              })
+
               editor.view.dispatch(transaction)
               return true
             }
 
-            // console.log(doc, selection)
-            // blockTypes.forEach(type => {
-            //   chain()
-            //     .updateAttributes(type, { [name]: value })
-            //     .run()
-            // })
-
-            // if (this.options.blockTypes.includes(parentNodeType)) {
-            //   // Находим границы текущего родительского узла
-            //   const parentStart = $from.before($from.depth)
-            //   const parentEnd = $from.after($from.depth)
-            //
-            //   let transaction = editor.state.tr
-            //
-            //   doc.descendants((node, pos) => {
-            //     if (blockTypes.includes(node.type.name)) {
-            //       console.log(node, pos, transaction)
-            //
-            //       // Обновляем атрибуты для каждой найденной ноды
-            //       // transaction = transaction.setNodeMarkup(pos, null, {
-            //       //   ...node.attrs,
-            //       //   [name]: value
-            //       // })
-            //     }
-            //   })
-            //
-            //   // Проходим через все ноды внутри родительского узла
-            //   // editor.state.doc.nodesBetween(parentStart, parentEnd, (node, pos) => {
-            //   //   console.log(parentStart, parentEnd, node, pos)
-            //   //   return chain()
-            //   //     .updateAttributes(pos, { [name]: value })
-            //   //     .run()
-            //   //   // if (node.type.name === parentNodeType) {
-            //   //   //   transaction = transaction.setNodeMarkup(pos, null, {
-            //   //   //     ...node.attrs,
-            //   //   //     [name]: value
-            //   //   //   })
-            //   //   // }
-            //   // })
-            //
-            //   // console.log(transaction)
-            //
+            // if (updated) {
             //   editor.view.dispatch(transaction)
             //   return true
-            // }
-            // if (this.options.blockTypes.includes(parentNodeType)) {
-            //   return chain()
-            //     .updateAttributes(parentNodeType, { [name]: value })
-            //     .run()
             // }
 
             return false
@@ -132,8 +197,68 @@ export const createStyleExtension = ({
 
         [`unset${name.charAt(0).toUpperCase() + name.slice(1)}`]:
           () =>
-          ({ chain }) => {
-            return chain().unsetMark('textStyle').run()
+          ({ chain, editor }) => {
+            const { selection, doc } = editor.state
+
+            // Если текст выделен, работаем с текстом
+            if (!selection.empty) {
+              return chain().unsetMark('textStyle').run()
+            }
+
+            const transaction = editor.state.tr
+            let updated = false
+
+            doc.descendants((node, pos) => {
+              if (blockTypes.includes(node.type.name)) {
+                transaction.setNodeMarkup(pos, undefined, {
+                  ...node.attrs,
+                  [name]: null
+                })
+                updated = true
+              }
+
+              // 2.2. Находим всех потомков этой ноды и удаляем у них этот атрибут
+              const nodeEnd = pos + node.nodeSize
+
+              // Рекурсивно проходим по всем потомкам
+              doc.nodesBetween(pos + 1, nodeEnd - 1, (descendantNode, descendantPos) => {
+                // Удаляем атрибут у инлайновых нод
+                if (descendantNode.isInline && descendantNode.attrs[name]) {
+                  transaction.setNodeMarkup(descendantPos, undefined, {
+                    ...descendantNode.attrs,
+                    [name]: null // Удаляем атрибут
+                  })
+                }
+
+                // Удаляем соответствующие марки у текстовых нод
+                if (descendantNode.isText) {
+                  descendantNode.marks.forEach(mark => {
+                    if (mark.attrs[name]) {
+                      // Создаем новую марку без указанного атрибута
+                      const newAttrs = { ...mark.attrs }
+                      delete newAttrs[name] // Удаляем только нужный атрибут
+
+                      // Если в марке остались другие атрибуты - обновляем её
+                      if (Object.keys(newAttrs).length > 0) {
+                        const newMark = mark.type.create(newAttrs)
+                        transaction.removeMark(descendantPos, descendantPos + descendantNode.nodeSize, mark.type)
+                        transaction.addMark(descendantPos, descendantPos + descendantNode.nodeSize, newMark)
+                      } else {
+                        // Если атрибутов не осталось - удаляем марку полностью
+                        transaction.removeMark(descendantPos, descendantPos + descendantNode.nodeSize, mark.type)
+                      }
+                    }
+                  })
+                }
+              })
+            })
+
+            if (updated) {
+              editor.view.dispatch(transaction)
+              return true
+            }
+
+            return false
           }
       }
     },
@@ -155,8 +280,9 @@ export const createStyleExtension = ({
           // Проверяем выделенный текст
           if (!selection.empty) {
             const textStyleAttributes = editor.getAttributes('textStyle')
+
             if (textStyleAttributes[name]) {
-              return textStyleAttributes[name]
+              return [textStyleAttributes[name]]
             }
           }
 

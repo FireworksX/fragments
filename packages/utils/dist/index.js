@@ -38,6 +38,7 @@ __export(src_exports, {
   cleanGraph: () => cleanGraph,
   colorToObject: () => colorToObject,
   createConstants: () => createConstants,
+  cssVariableToLink: () => cssVariableToLink,
   debounce: () => debounce,
   eventEmitter: () => eventEmitter,
   filterDeep: () => filterDeep,
@@ -60,6 +61,7 @@ __export(src_exports, {
   isPrimitive: () => isPrimitive,
   isValue: () => isValue,
   iterator: () => iterator,
+  linkToCssVariable: () => linkToCssVariable,
   mergeIterator: () => mergeIterator,
   noop: () => noop,
   objectToColorString: () => objectToColorString,
@@ -514,11 +516,26 @@ function roundWithOffset(value, offset) {
   }
   return Math.round(value - offset) + offset;
 }
+
+// src/cssVariable.ts
+var linkToCssVariable = (link) => {
+  var _a;
+  return link ? `var(--${(_a = link == null ? void 0 : link.split(":")) == null ? void 0 : _a[1]})` : link;
+};
+var cssVariableToLink = (cssVariable) => {
+  if (typeof cssVariable !== "string")
+    return cssVariable;
+  const cssMatch = cssVariable.match(/var\(--(.*?)\)/);
+  if (cssMatch) {
+    return `Variable:${cssMatch[1]}`;
+  }
+};
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   cleanGraph,
   colorToObject,
   createConstants,
+  cssVariableToLink,
   debounce,
   eventEmitter,
   filterDeep,
@@ -541,6 +558,7 @@ function roundWithOffset(value, offset) {
   isPrimitive,
   isValue,
   iterator,
+  linkToCssVariable,
   mergeIterator,
   noop,
   objectToColorString,

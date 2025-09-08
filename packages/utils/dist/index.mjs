@@ -447,10 +447,25 @@ function roundWithOffset(value, offset) {
   }
   return Math.round(value - offset) + offset;
 }
+
+// src/cssVariable.ts
+var linkToCssVariable = (link) => {
+  var _a;
+  return link ? `var(--${(_a = link == null ? void 0 : link.split(":")) == null ? void 0 : _a[1]})` : link;
+};
+var cssVariableToLink = (cssVariable) => {
+  if (typeof cssVariable !== "string")
+    return cssVariable;
+  const cssMatch = cssVariable.match(/var\(--(.*?)\)/);
+  if (cssMatch) {
+    return `Variable:${cssMatch[1]}`;
+  }
+};
 export {
   cleanGraph,
   colorToObject,
   createConstants,
+  cssVariableToLink,
   debounce,
   eventEmitter,
   filterDeep,
@@ -473,6 +488,7 @@ export {
   isPrimitive,
   isValue,
   iterator,
+  linkToCssVariable,
   mergeIterator,
   noop,
   objectToColorString,

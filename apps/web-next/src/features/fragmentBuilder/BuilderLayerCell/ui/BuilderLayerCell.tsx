@@ -98,6 +98,7 @@ export const BuilderLayerCell: FC<BuilderLayerCellProps> = ({ className, isLast,
       trigger='rightClick'
       placement='bottom'
       appendTo='body'
+      hideOnClick
       options={
         <>
           <DropdownGroup minWidth={200}>

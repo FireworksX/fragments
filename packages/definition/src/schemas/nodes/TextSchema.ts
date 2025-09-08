@@ -16,21 +16,9 @@ export const TextSchema = v.object({
   whiteSpace: layerField(v.enum(Object.keys(whiteSpace)), {
     fallback: whiteSpace.pre,
   }),
-  variableContent: layerField(v.string(), { fallback: null, variable: true }),
+  textAlign: layerField(v.string(), { fallback: "left" }),
+
   parent: layerField(v.nullable(v.string()), { overridable: false }),
-  attributes: v.optional(
-    v.object({
-      fontSize: layerField(v.string(), { fallback: "14px" }),
-      color: layerField(v.string(), { fallback: "#000", variable: true }),
-      lineHeight: layerField(v.string(), { fallback: 1.2 }),
-      fontWeight: layerField(v.string(), { fallback: "normal" }),
-      letterSpacing: layerField(v.string(), { fallback: "0px" }),
-      textTransform: layerField(v.string(), { fallback: "none" }),
-      textDecoration: layerField(v.string(), { fallback: "none" }),
-      whiteSpace: layerField(v.string(), { fallback: "pre" }),
-      textAlign: layerField(v.string(), { fallback: "left" }),
-    })
-  ),
   ...GraphFieldSchema.entries,
   ...OverridesSchema.entries,
   ...CssOverrideSchema.entries,

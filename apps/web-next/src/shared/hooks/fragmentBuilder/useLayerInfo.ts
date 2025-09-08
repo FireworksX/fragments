@@ -5,6 +5,8 @@ import { getAllParents, getParent, isRootLayer } from '@fragmentsx/render-core'
 export const useLayerInfo = (layerKey: LinkKey) => {
   const { documentManager } = useBuilderDocument()
   const layer = documentManager.resolve(layerKey)
+  const parent = getParent(documentManager, layerKey) ?? null
+  const indexInParent = documentManager.resolve(parent)?.children?.findIndex(child => child === layerKey)
 
   return {
     layer,
@@ -12,7 +14,8 @@ export const useLayerInfo = (layerKey: LinkKey) => {
     isBreakpoint: !!layer?.isBreakpoint,
     isPrimary: !!layer?.isPrimary,
     isRootLayer: isRootLayer(documentManager, layerKey),
-    parent: getParent(documentManager, layerKey) ?? null,
+    parent,
+    indexInParent,
     allParents: getAllParents(documentManager, layerKey) ?? []
   }
 }

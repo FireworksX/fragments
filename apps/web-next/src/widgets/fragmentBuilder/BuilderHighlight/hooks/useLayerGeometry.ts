@@ -7,6 +7,7 @@ import { useWaitForElement } from '@/shared/hooks/useWaitForElement'
 import { useBuilderCanvasField } from '@/shared/hooks/fragmentBuilder/useBuilderCanvasField'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { useUpdateEffect } from 'react-use'
+import { nextTick } from '@/shared/utils/nextTick'
 
 function watchInlineStyleChange(element: HTMLElement, callback: () => void) {
   const observer = new MutationObserver(mutations => {
@@ -21,7 +22,9 @@ function watchInlineStyleChange(element: HTMLElement, callback: () => void) {
 
   observer.observe(element, { attributes: true, attributeFilter: ['style'], subtree: true })
 
-  callback()
+  nextTick(() => {
+    callback()
+  })
 
   return () => observer.disconnect()
 }

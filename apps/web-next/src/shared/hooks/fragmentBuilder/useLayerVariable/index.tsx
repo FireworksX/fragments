@@ -146,6 +146,14 @@ export const useLayerVariable = (options: UseLayerVariableOptions) => {
     }
   }, [options?.setName, definitions, getVariable])
 
+  const createVariableOption = useMemo(() => {
+    return {
+      name: 'createVariable',
+      label: options?.createName ?? 'Create variable',
+      onClick: () => createVariable()
+    }
+  }, [options, createVariable])
+
   // const restoreValue = () => {
   //   const fieldEntity = fieldsConfig[field]
   //   // fieldInfo?.restore(fieldEntity?.defaultValue)
@@ -169,11 +177,8 @@ export const useLayerVariable = (options: UseLayerVariableOptions) => {
     //       }
     //     ].concat(allowVariables)
     //   : [],
-    createVariableOption: {
-      name: 'createVariable',
-      label: options?.createName ?? 'Create variable',
-      onClick: () => createVariable()
-    },
-    setVariableOption
+    createVariableOption,
+    setVariableOption,
+    actions: [!!setVariableOption?.options?.length ? setVariableOption : null, createVariableOption].filter(Boolean)
   }
 }
