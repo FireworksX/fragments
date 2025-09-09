@@ -1,32 +1,41 @@
 import requests
 
 from conf.settings import service_settings
-from services.core.routes.schemas.feedback import FeedbackGet, FeelLevelGet
+from services.core.routes.schemas.client import ClientInfo
+from services.core.routes.schemas.feedback import FeedbackPost, FeelLevel
 
 BOT_TOKEN = service_settings.TELEGRAM_BOT_TOKEN
 CHAT_ID = service_settings.TELEGRAM_CHAT_ID
-MESSAGE = 'Hello from your bot!'
 
 # Telegram API URL to send the message
 url = f'https://api.telegram.org/bot{BOT_TOKEN}/sendMessage'
 
 
-def send_feedback(fb: FeedbackGet) -> None:
+def send_feedback(fb: FeedbackPost, client_info: ClientInfo) -> None:
     # Parameters for the API request
     message: str = (
         f'Получили новый фидбек!\nСайт: {fb.page}{'\nСообщенние:' + fb.content if fb.content is not None else ''}'
     )
 
-    if fb.feel == FeelLevelGet.ONE:
+    if fb.feel == FeelLevel.ONE:
         message += '\nНастроение: 😠'
-    if fb.feel == FeelLevelGet.TWO:
+    if fb.feel == FeelLevel.TWO:
         message += '\nНастроение: 😕'
-    if fb.feel == FeelLevelGet.THREE:
+    if fb.feel == FeelLevel.THREE:
         message += '\nНастроение: 😐'
-    if fb.feel == FeelLevelGet.FOUR:
+    if fb.feel == FeelLevel.FOUR:
         message += '\nНастроение: 🙂'
-    if fb.feel == FeelLevelGet.FIVE:
+    if fb.feel == FeelLevel.FIVE:
         message += '\nНастроение: 😃'
+
+    message += f'\nIP: {client_info.ip_address}'
+    message += f'\nDevice: {client_info.device_type}'
+    message += f'\nOS: {client_info.os_type}'
+    message += f'\nBrowser: {client_info.browser}'
+    message += f'\nLanguage: {client_info.language}'
+    message += f'\nScreen Width: {client_info.screen_width}'
+    message += f'\nScreen Height: {client_info.screen_height}'
+
     params = {'chat_id': CHAT_ID, 'text': message}
 
     # Send the request to Telegram
