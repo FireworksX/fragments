@@ -44,6 +44,10 @@ class ServiceSettings(BaseSettings):
     )
     MEDIA_STORAGE_PATH: str = Field(default_factory=lambda: os.getenv('MEDIA_STORAGE_PATH'))
     STATIC_SERVER_URL: str = Field(default_factory=lambda: os.getenv('STATIC_SERVER_URL'))
+    GITHUB_ACCESS_TOKEN: str = Field(default_factory=lambda: os.getenv('GITHUB_ACCESS_TOKEN'))
+    GITHUB_REPO_OWNER: str = Field(default_factory=lambda: os.getenv('GITHUB_REPO_OWNER'))
+    GITHUB_REPO_NAME: str = Field(default_factory=lambda: os.getenv('GITHUB_REPO_NAME'))
+    GITHUB_ASSIGNEE: str = Field(default_factory=lambda: os.getenv('GITHUB_ASSIGNEE'))
 
 
 service_settings = ServiceSettings()

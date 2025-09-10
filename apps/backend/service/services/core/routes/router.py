@@ -41,7 +41,7 @@ from .feature_flag import (
     feature_flag_by_id,
     update_feature_flag_route,
 )
-from .feedback import create_feedback
+from .feedback import create_issue_route
 from .filesystem import (
     create_directory_route,
     delete_directory_route,
@@ -109,7 +109,7 @@ from .schemas.area import AreaGet, AreaPatch, AreaPost
 from .schemas.campaign import CampaignFilter, CampaignGet, CampaignPatch, CampaignPost
 from .schemas.client import ClientAreaGet
 from .schemas.feature_flag import VariantGet
-from .schemas.feedback import FeedbackGet, FeedbackPost
+from .schemas.feedback import IssueGet, IssuePost
 from .schemas.filesystem import ProjectDirectory, ProjectDirectoryGet, ProjectDirectoryPatch
 from .schemas.fragment import FragmentGet, FragmentPatch, FragmentPost
 from .schemas.media import MediaDelete, MediaGet, MediaPost, MediaType
@@ -626,8 +626,8 @@ class ClientQuery:
 @strawberry.type
 class ClientMutation:
     @strawberry.mutation
-    async def feedback(self, info: strawberry.Info[Context], fd: FeedbackPost) -> FeedbackGet:
-        return await create_feedback(info, fd)
+    async def create_issue(self, info: strawberry.Info[Context], issue: IssuePost) -> IssueGet:
+        return await create_issue_route(info, issue)
 
     @strawberry.mutation
     async def add_client_metric(

@@ -391,14 +391,6 @@ class Variant(Base):
     status = Column('status', Integer, nullable=False, default=1)
 
 
-class Feedback(Base):
-    __tablename__ = 'feedback'
-    id = Column('id', Integer, primary_key=True, index=True)
-    feel = Column('feel', Integer, nullable=False)
-    content = Column('content', String)
-    page = Column('page', String, nullable=False)
-
-
 class FragmentMedia(Base):
     __tablename__ = 'fragment_media'
     id = Column('id', Integer, primary_key=True, index=True)
