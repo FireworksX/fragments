@@ -30,8 +30,9 @@ export const useLayerStyles = (layerKey: LinkKey) => {
     );
 
     const [overflow] = useLayerValue(layerKey, "overflow", fragmentManager);
-    const { width, height, ...optionalSizes } = useLayerSize(layerKey);
-    const { position, top, left } = useLayerPosition(layerKey);
+    const { ...optionalSizes } = useLayerSize(layerKey);
+    const { position, top, left, right, bottom, width, height, x, y } =
+      useLayerPosition(layerKey);
     const display = useLayerDisplay(layerKey);
     const background = useLayerBackground(layerKey);
     const border = useLayerBorder(layerKey);
@@ -52,6 +53,10 @@ export const useLayerStyles = (layerKey: LinkKey) => {
       position,
       top,
       left,
+      right,
+      bottom,
+      x,
+      y,
       overflow,
       ...textStyles,
       width,

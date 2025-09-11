@@ -15,24 +15,24 @@ export const useLayerSize = (layerKey: LinkKey) => {
   const minHeight = useOptionalSize("minHeight", layerKey);
   const maxWidth = useOptionalSize("maxWidth", layerKey);
   const maxHeight = useOptionalSize("maxHeight", layerKey);
-  const widthCalc = useLayerSizeValue(layerKey, "width");
-  const heightCalc = useLayerSizeValue(layerKey, "height");
+  // const widthCalc = useLayerSizeValue(layerKey, "width");
+  // const heightCalc = useLayerSizeValue(layerKey, "height");
 
-  const [, , { resultValue: width }] = useLayerValue(
-    layerKey,
-    "width",
-    fragmentManager
-  );
-  const [, , { resultValue: height }] = useLayerValue(
-    layerKey,
-    "height",
-    fragmentManager
-  );
+  // const [, , { resultValue: width }] = useLayerValue(
+  //   layerKey,
+  //   "width",
+  //   fragmentManager
+  // );
+  // const [, , { resultValue: height }] = useLayerValue(
+  //   layerKey,
+  //   "height",
+  //   fragmentManager
+  // );
 
   return useMemo(
     () => ({
-      width: to(width, widthCalc),
-      height: to(height, heightCalc),
+      // width: to(width, widthCalc),
+      // height: to(height, heightCalc),
       minWidth,
       minHeight,
       maxWidth,
@@ -43,10 +43,10 @@ export const useLayerSize = (layerKey: LinkKey) => {
       minHeight,
       maxWidth,
       maxHeight,
-      width,
-      height,
-      widthCalc,
-      heightCalc,
+      // width,
+      // height,
+      // widthCalc,
+      // heightCalc,
     ]
   );
 };

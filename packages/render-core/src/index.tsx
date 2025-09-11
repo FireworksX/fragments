@@ -37,7 +37,10 @@ export { useFragmentManager } from "@/shared/hooks/useFragmentManager";
 export { useFragmentProperties } from "@/shared/hooks/useFragmentProperties";
 export { useReadVariable } from "@/shared/hooks/useReadVariable";
 export { useLayerChildren } from "@/shared/hooks/useLayerChildren";
-export { useNormalizeLayer } from "@/shared/hooks/useNormalizeLayer";
+export {
+  useNormalizeLayer,
+  getNormalizeLayer,
+} from "@/shared/hooks/useNormalizeLayer";
 export { useLayerValue } from "@/shared/hooks/useLayerValue";
 export { useTextContent } from "@/shared/hooks/useTextContent";
 export { useFragmentChildren } from "@/shared/hooks/useFragmentChildren";

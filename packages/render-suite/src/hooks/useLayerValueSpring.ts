@@ -3,7 +3,11 @@ import { SpringValue } from "@react-spring/web";
 import { useCallback, useMemo, useState } from "react";
 import { debounce, noop } from "@fragmentsx/utils";
 import { isVariableLink } from "@fragmentsx/definition";
-import { getOverrider, isInheritField } from "@fragmentsx/render-react";
+import {
+  getOverrider,
+  isInheritField,
+  getNormalizeLayer,
+} from "@fragmentsx/render-react";
 
 interface Options<T> {
   layerKey: LinkKey;
@@ -14,19 +18,23 @@ interface Options<T> {
   onChange?: (value: T) => void;
 }
 
-const springFields = [
-  "top",
-  "left",
-  "opacity",
-  "width",
-  "height",
-  "solidFill",
-  "layerGap",
-  "minWidth",
-  "minHeight",
-  "maxWidth",
-  "maxHeight",
-];
+const springFields = {
+  top: { defaultValue: 0 },
+  left: { defaultValue: 0 },
+  bottom: { defaultValue: 0 },
+  right: { defaultValue: 0 },
+  centerAnchorX: {},
+  centerAnchorY: {},
+  opacity: {},
+  width: {},
+  height: {},
+  solidFill: {},
+  layerGap: {},
+  minWidth: { defaultValue: 0 },
+  minHeight: { defaultValue: 0 },
+  maxWidth: { defaultValue: 0 },
+  maxHeight: { defaultValue: 0 },
+};
 
 export const useLayerValueSpring = <T>({
   layerKey,
@@ -43,7 +51,7 @@ export const useLayerValueSpring = <T>({
 
   const getCacheKey = (layerKey, fieldKey) => `${layerKey}_${fieldKey}`;
   const cacheKey = getCacheKey(layerKey, fieldKey);
-  const springable = springFields.includes(fieldKey);
+  const springable = fieldKey in springFields;
   const isInherit = isInheritField(manager, layerKey, fieldKey);
 
   const getValue$ = useCallback(() => {
@@ -65,10 +73,25 @@ export const useLayerValueSpring = <T>({
         return cache?.get(cacheKey);
       }
 
+      const { layer: normalizedLayer, ...rr } = getNormalizeLayer(
+        layerKey,
+        manager
+      );
+
       const debounceValue = debounce(onFinish ?? noop, 100);
+      const defaultValue =
+        initialValue ??
+        normalizedLayer?.[fieldKey] ??
+        springFields?.[fieldKey]?.defaultValue;
+
+      if (!defaultValue) {
+        console.error(
+          `[Use Spring Value]: Cannot set default value for ${fieldKey}`
+        );
+      }
 
       if (layerKey) {
-        const springValue = new SpringValue(initialValue, {
+        const springValue = new SpringValue(defaultValue, {
           onChange: (value) => {
             onChange?.(value);
             debounceValue(value);
@@ -80,7 +103,7 @@ export const useLayerValueSpring = <T>({
     }
 
     return null;
-  }, [cacheKey, initialValue, isInherit]);
+  }, [cacheKey, initialValue, isInherit, layerKey]);
 
   const value$ = useMemo(() => getValue$(), [cacheKey, initialValue]);
 
@@ -88,6 +111,7 @@ export const useLayerValueSpring = <T>({
     (nextValue: T, ...args) => {
       if (layerKey) {
         const target$ = getValue$();
+
         if (springable && !isVariableLink(nextValue) && !isInherit) {
           target$.set(nextValue);
         } else {

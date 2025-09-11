@@ -42,6 +42,7 @@ export const useLayerStyles = (layerKey: LinkKey) => {
     );
     const [whiteSpace] = useLayerValue(layerKey, "whiteSpace", fragmentManager);
     const textStyles = useLayerTextStyles(layerKey);
+
     // const cssOverride = useLayerCssOverride(layerKey);
 
     // const [{ props, _type }] = useGraph(fragmentManager, layerKey, {

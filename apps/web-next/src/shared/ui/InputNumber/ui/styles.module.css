@@ -5,11 +5,17 @@
     align-items: center;
     background: var(--background-secondary);
     border-radius: var(--radius-second);
+    color: var(--text-color-accent);
 
     &:hover {
         .tickers {
             opacity: 1;
         }
+    }
+
+    &:has(.inner:disabled) {
+        cursor: default;
+        color: rgba(var(--text-color-accent-rgb), .3);
     }
 }
 
@@ -39,9 +45,8 @@
 }
 
 .inner {
-    background: var(--background-secondary);
+    background: transparent;
     font-size: 12px;
-    color: var(--text-color-accent);
     font-variant-numeric: tabular-nums;
     font-weight: 500;
     border: none;
@@ -50,14 +55,10 @@
     width: 100%;
     padding-left: 7px;
     border-radius: var(--radius-second);
-
-    &:disabled {
-        background: var(--border);
-        cursor: default;
-        color: var(--secondary);
-    }
+    color: inherit;
 
     /* Chrome, Safari, Edge, Opera */
+
     &::-webkit-outer-spin-button,
     &::-webkit-inner-spin-button {
         -webkit-appearance: none;
@@ -65,6 +66,7 @@
     }
 
     /* Firefox */
+
     &[type=number] {
         -moz-appearance: textfield;
     }

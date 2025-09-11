@@ -4,7 +4,7 @@ import { definition } from '@fragmentsx/definition'
 import { useGraph } from '@graph-state/react'
 import { useContext, useMemo } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
-import { createConstants } from '@fragmentsx/utils'
+import { createConstants, finiteNumber } from '@fragmentsx/utils'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { to } from '@react-spring/web'
 import { getDomRect } from '@/shared/utils/getDomRect'
@@ -27,8 +27,10 @@ export const useLayerSelectedResize = () => {
   const [scale$] = useBuilderCanvasField('scale')
   const [, setIsResizing] = useBuilderCanvasField('isResizing')
   const { width: isAllowResizeWidth, height: isAllowResizeHeight } = useAllowResize()
-  const [, setTop, { value$: top$ }] = useLayerValue('top')
-  const [, setLeft, { value$: left$ }] = useLayerValue('left')
+  const [baseTop, setTop, { value$: top$ }] = useLayerValue('top')
+  const [baseLeft, setLeft, { value$: left$ }] = useLayerValue('left')
+  const [baseBottom, setBottom, { value$: bottom$ }] = useLayerValue('bottom')
+  const [baseRight, setRight, { value$: right$ }] = useLayerValue('right')
   const [, setWidth, { value$: width$ }] = useLayerValue('width')
   const [, setHeight, { value$: height$ }] = useLayerValue('height')
   const [widthType] = useLayerValue('widthType')
@@ -61,7 +63,13 @@ export const useLayerSelectedResize = () => {
         getLeft: move => move / scale + (targetLeft ?? 0),
         getTop: move => move / scale + (targetTop ?? 0),
         width: animatableValue(width$),
-        height: animatableValue(height$)
+        height: animatableValue(height$),
+        right: baseRight,
+        left: baseLeft,
+        bottom: baseBottom,
+        top: baseTop,
+        hasConstrainX: finiteNumber(baseLeft) && finiteNumber(baseRight),
+        hasConstrainY: finiteNumber(baseTop) && finiteNumber(baseBottom)
       }
     }
 
@@ -70,26 +78,38 @@ export const useLayerSelectedResize = () => {
     const calcHeight = memo.from?.getHeight(my)
 
     if (directions.includes(SELECTION_SIDES.right)) {
+      if (finiteNumber(memo.from.right)) {
+        setRight(memo.from.right - (calcWidth - memo.from.width))
+      }
+
       setWidth(calcWidth)
     }
+
     if (directions.includes(SELECTION_SIDES.bottom)) {
+      if (finiteNumber(memo.from.bottom)) {
+        setBottom(memo.from.bottom - (calcHeight - memo.from.height))
+      }
+
       setHeight(calcHeight)
     }
 
     if (directions.includes(SELECTION_SIDES.left)) {
       const width = memo.from.getWidth(mx * -1)
 
-      if (width > 0) {
-        setWidth(width)
+      if (finiteNumber(memo.from.left)) {
         setLeft(memo.from.getLeft(mx))
+      } else if (width > 0) {
+        setWidth(width)
       }
     }
 
     if (directions.includes(SELECTION_SIDES.top)) {
       const height = memo.from.getHeight(my * -1)
-      if (height > 0) {
-        setHeight(height)
+
+      if (finiteNumber(memo.from.top)) {
         setTop(memo.from.getTop(my))
+      } else if (height > 0) {
+        setHeight(height)
       }
     }
 

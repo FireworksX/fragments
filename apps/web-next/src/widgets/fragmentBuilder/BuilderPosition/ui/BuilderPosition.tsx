@@ -8,13 +8,14 @@ import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { InputNumber } from '@/shared/ui/InputNumber'
 import { Select } from '@/shared/ui/Select'
 import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
+import BuilderPositionToggle from '@/features/fragmentBuilder/BuilderPositionTogggle/ui/BuilderPositionToggler'
 
 interface BuilderPositionProps {
   className?: string
 }
 
 const BuilderPosition: FC<BuilderPositionProps> = memo(({ className }) => {
-  const { type, left, top, hasPosition } = useBuilderPosition()
+  const { type, handleClickTotal, left, top, right, bottom, hasPosition } = useBuilderPosition()
   //
   // if (!selectionGraph?.position && selectionGraph?._type !== builderNodes.Screen) {
   //   return null
@@ -28,15 +29,23 @@ const BuilderPosition: FC<BuilderPositionProps> = memo(({ className }) => {
 
   return (
     <Panel className={cn(styles.root, className)} title='Position'>
-      <AnimatedVisible visible={isVisible}>
-        {/*// <div className={styles.body}>*/}
-        {/*//   <BuilderPositionToggle top={top} right={right} bottom={bottom} left={left} />*/}
-        {/*// </div>*/}
-        <ControlRow title='Position'>
-          <InputNumber suffix='x' value={left.value} min={Infinity} max={Infinity} onChange={left.update} />
-          <InputNumber suffix='y' value={top.value} min={Infinity} max={Infinity} onChange={top.update} />
-        </ControlRow>
-      </AnimatedVisible>
+      {isVisible && (
+        <>
+          <div className={styles.body}>
+            <BuilderPositionToggle
+              top={top}
+              right={right}
+              bottom={bottom}
+              left={left}
+              onClickTotal={handleClickTotal}
+            />
+          </div>
+          {/*<ControlRow title='Position'>*/}
+          {/*  <InputNumber suffix='x' value={left.value} min={Infinity} max={Infinity} onChange={left.update} />*/}
+          {/*  <InputNumber suffix='y' value={top.value} min={Infinity} max={Infinity} onChange={top.update} />*/}
+          {/*</ControlRow>*/}
+        </>
+      )}
 
       <ControlRow title='Type'>
         <ControlRowWide>

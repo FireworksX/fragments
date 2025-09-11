@@ -17,7 +17,7 @@ export const useLayerValue = (
   const resultManager = manager;
   const key = layerKey;
   const [, updateLayerData] = useGraph(resultManager, key, {
-    selector: (data) => (data ? pick(data, fieldKey) : data),
+    // selector: (data) => (data ? pick(data, fieldKey) : data),
   });
 
   const { layer, rawLayer } = useNormalizeLayer(key, resultManager);
