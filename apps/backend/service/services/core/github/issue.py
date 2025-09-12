@@ -4,7 +4,6 @@ from uuid import uuid4
 import requests
 
 from conf.settings import logger, service_settings
-from crud.ipgetter import get_location_by_ip
 from services.core.routes.schemas.client import ClientInfo
 from services.core.routes.schemas.feedback import BugPost, BugPriority, ProposalPost
 
@@ -12,10 +11,13 @@ from services.core.routes.schemas.feedback import BugPost, BugPriority, Proposal
 async def create_github_issue(issue: BugPost | ProposalPost, client_info: ClientInfo) -> str:
     attachment_links = []
     if issue.attachments:
+        # Create issues subdirectory if it doesn't exist
+        issues_dir = os.path.join(service_settings.MEDIA_STORAGE_PATH, 'issues')
+        os.makedirs(issues_dir, exist_ok=True)
         for file in issue.attachments:
             content = await file.read()
             unique_name = f"{uuid4()}_{file.filename}"
-            path = os.path.join(service_settings.MEDIA_STORAGE_PATH, unique_name)
+            path = os.path.join(issues_dir, unique_name)
 
             try:
                 with open(path, 'wb') as f:
@@ -23,10 +25,10 @@ async def create_github_issue(issue: BugPost | ProposalPost, client_info: Client
                 logger.debug(f"Saved file to disk at: {path}")
             except Exception as e:
                 logger.error(f"Failed to save file to disk: {str(e)}")
-                raise e
+                raise RuntimeError(f"Failed to save file to disk: {str(e)}") from e
 
-            public_path = f'{service_settings.STATIC_SERVER_URL}/{unique_name}'
-            attachment_links.append(f"\n![{file.filename}]({public_path})")
+            public_path = f'{service_settings.STATIC_SERVER_URL}/issues/{unique_name}'
+            attachment_links.append(f"\n![{unique_name}]({public_path})")
 
     url = f"https://api.github.com/repos/{service_settings.GITHUB_REPO_OWNER}/{service_settings.GITHUB_REPO_NAME}/issues"
 
@@ -34,18 +36,14 @@ async def create_github_issue(issue: BugPost | ProposalPost, client_info: Client
         'Accept': 'application/vnd.github.v3+json',
         'Authorization': f"token {service_settings.GITHUB_ACCESS_TOKEN}",
     }
-    location = get_location_by_ip(client_info.ip_address if client_info.ip_address else '')
+
     client_info_str = (
         f"Client Info:\n"
-        f"os_type={client_info.os_type}\n"
-        f"device_type={client_info.device_type}\n"
-        f"time_frame={client_info.time_frame}\n"
-        f"page={client_info.page}\n"
-        f"location='city={location.city}, region={location.region}, country={location.country}'\n"
-        f"browser={client_info.browser}\n"
-        f"language={client_info.language}\n"
-        f"screen_width={client_info.screen_width}\n"
-        f"screen_height={client_info.screen_height}"
+        f"OS type: {client_info.os_type}\n"
+        f"Device type: {client_info.device_type}\n"
+        f"Time: {client_info.time_frame.strftime('%Y-%m-%d %H:%M:%S') if client_info.time_frame else 'N/A'}\n"
+        f"Browser: {client_info.browser}\n"
+        f"Language: {client_info.language}"
     )
 
     data = {
@@ -79,6 +77,6 @@ async def create_github_issue(issue: BugPost | ProposalPost, client_info: Client
     response = requests.post(url, headers=headers, json=data, timeout=10)
 
     if response.status_code != 201:
-        raise Exception(f"Failed to create GitHub issue: {response.text}")
+        raise RuntimeError(f"Failed to create GitHub issue: {response.text}")
 
     return response.json()['html_url']
