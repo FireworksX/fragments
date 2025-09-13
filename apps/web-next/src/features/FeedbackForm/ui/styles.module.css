@@ -17,7 +17,7 @@
     gap: var(--gutter-default);
     background: rgba(var(--background--rgb), .8);
     backdrop-filter: blur(5px);
-    color: var(--success);
+    color: var(--primary);
     z-index: 2;
     transition: var(--animation-transition-default);
     opacity: 0;

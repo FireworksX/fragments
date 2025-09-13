@@ -121,7 +121,7 @@ export const FeedbackForm: FC<FeedbackFormProps> = ({ className }) => {
             [styles.feedbackActive]: isNotify
           })}
         >
-          <CheckIcon width={24} height={24} />
+          <CheckIcon width={28} height={28} />
           {feedbackData?.createIssue?.ticketLink && (
             <a href={feedbackData?.createIssue?.ticketLink} target='_blank'>
               <Button TagName='div' mode='tertiary' size='large' icon={<LinkIcon />}>
