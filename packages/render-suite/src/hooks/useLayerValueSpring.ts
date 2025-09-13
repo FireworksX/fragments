@@ -84,11 +84,11 @@ export const useLayerValueSpring = <T>({
         normalizedLayer?.[fieldKey] ??
         springFields?.[fieldKey]?.defaultValue;
 
-      if (!defaultValue) {
-        console.error(
-          `[Use Spring Value]: Cannot set default value for ${fieldKey}`
-        );
-      }
+      // if (!defaultValue) {
+      //   console.error(
+      //     `[Use Spring Value]: Cannot set default value for ${fieldKey}`
+      //   );
+      // }
 
       if (layerKey) {
         const springValue = new SpringValue(defaultValue, {

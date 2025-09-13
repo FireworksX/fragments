@@ -4,19 +4,23 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type SendFeedbackMutationVariables = Types.Exact<{
-  page: Types.Scalars['String']['input'];
-  content: Types.Scalars['String']['input'];
-  feel: Types.FeelLevelGet;
+  type: Types.IssueType;
+  bug?: Types.InputMaybe<Types.BugPost>;
+  feedback?: Types.InputMaybe<Types.FeedbackPost>;
+  proposal?: Types.InputMaybe<Types.ProposalPost>;
 }>;
 
 
-export type SendFeedbackMutation = { __typename?: 'Mutation', feedback: { __typename?: 'FeedbackGet', content?: string | null } };
+export type SendFeedbackMutation = { __typename?: 'Mutation', createIssue: { __typename?: 'IssueGet', type: Types.IssueType, ticketLink?: string | null } };
 
 
 export const SendFeedbackDocument = gql`
-    mutation SendFeedback($page: String!, $content: String!, $feel: FeelLevelGet!) {
-  feedback(fd: {page: $page, content: $content, feel: $feel}) {
-    content
+    mutation SendFeedback($type: IssueType!, $bug: BugPost, $feedback: FeedbackPost, $proposal: ProposalPost) {
+  createIssue(
+    issue: {type: $type, bug: $bug, feedback: $feedback, proposal: $proposal}
+  ) {
+    type
+    ticketLink
   }
 }
     `;
@@ -35,9 +39,10 @@ export type SendFeedbackMutationFn = Apollo.MutationFunction<SendFeedbackMutatio
  * @example
  * const [sendFeedbackMutation, { data, loading, error }] = useSendFeedbackMutation({
  *   variables: {
- *      page: // value for 'page'
- *      content: // value for 'content'
- *      feel: // value for 'feel'
+ *      type: // value for 'type'
+ *      bug: // value for 'bug'
+ *      feedback: // value for 'feedback'
+ *      proposal: // value for 'proposal'
  *   },
  * });
  */

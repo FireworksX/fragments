@@ -85,6 +85,22 @@ export type BrowserAnalytic = {
   views: Scalars['Int']['output'];
 };
 
+export type BugPost = {
+  attachments?: InputMaybe<Array<Scalars['Upload']['input']>>;
+  content: Scalars['String']['input'];
+  page: Scalars['String']['input'];
+  priority: BugPriority;
+  title: Scalars['String']['input'];
+};
+
+export enum BugPriority {
+  Blocking = 'BLOCKING',
+  Critical = 'CRITICAL',
+  High = 'HIGH',
+  Low = 'LOW',
+  Medium = 'MEDIUM'
+}
+
 export type CampaignFilter = {
   areaId?: InputMaybe<Scalars['Int']['input']>;
   campaignId?: InputMaybe<Scalars['Int']['input']>;
@@ -260,20 +276,14 @@ export type FeatureFlagPost = {
   variants: Array<VariantPost>;
 };
 
-export type FeedbackGet = {
-  __typename?: 'FeedbackGet';
-  content?: Maybe<Scalars['String']['output']>;
-  feel: FeelLevelGet;
-  page: Scalars['String']['output'];
-};
-
 export type FeedbackPost = {
-  content?: InputMaybe<Scalars['String']['input']>;
-  feel: FeelLevelGet;
+  attachments?: InputMaybe<Array<Scalars['Upload']['input']>>;
+  content: Scalars['String']['input'];
+  feel: FeelLevel;
   page: Scalars['String']['input'];
 };
 
-export enum FeelLevelGet {
+export enum FeelLevel {
   Five = 'FIVE',
   Four = 'FOUR',
   One = 'ONE',
@@ -400,6 +410,25 @@ export type GoalStatisticGet = {
   trend?: Maybe<StatisticTrend>;
 };
 
+export type IssueGet = {
+  __typename?: 'IssueGet';
+  ticketLink?: Maybe<Scalars['String']['output']>;
+  type: IssueType;
+};
+
+export type IssuePost = {
+  bug?: InputMaybe<BugPost>;
+  feedback?: InputMaybe<FeedbackPost>;
+  proposal?: InputMaybe<ProposalPost>;
+  type: IssueType;
+};
+
+export enum IssueType {
+  Feedback = 'FEEDBACK',
+  Issue = 'ISSUE',
+  Proposal = 'PROPOSAL'
+}
+
 export type MediaDelete = {
   mediaId?: InputMaybe<Scalars['Int']['input']>;
   mediaType: MediaType;
@@ -442,6 +471,7 @@ export type Mutation = {
   createDirectory: Array<ProjectDirectoryGet>;
   createFeatureFlag: FeatureFlagGet;
   createFragment: FragmentGet;
+  createIssue: IssueGet;
   createProject: ProjectGet;
   createProjectGoal: ProjectGoalGet;
   createReleaseCondition: ReleaseConditionGet;
@@ -460,7 +490,6 @@ export type Mutation = {
   deleteProjectPublicKey?: Maybe<Scalars['Void']['output']>;
   deleteReleaseCondition?: Maybe<Scalars['Void']['output']>;
   deleteVariant?: Maybe<Scalars['Void']['output']>;
-  feedback: FeedbackGet;
   inviteUserToProject?: Maybe<Scalars['Void']['output']>;
   login: AuthPayload;
   normalizeVariantsRolloutPercentage?: Maybe<Scalars['Void']['output']>;
@@ -557,6 +586,11 @@ export type MutationCreateFragmentArgs = {
 };
 
 
+export type MutationCreateIssueArgs = {
+  issue: IssuePost;
+};
+
+
 export type MutationCreateProjectArgs = {
   pr: ProjectPost;
 };
@@ -646,11 +680,6 @@ export type MutationDeleteReleaseConditionArgs = {
 
 export type MutationDeleteVariantArgs = {
   variantId: Scalars['Int']['input'];
-};
-
-
-export type MutationFeedbackArgs = {
-  fd: FeedbackPost;
 };
 
 
@@ -868,6 +897,13 @@ export type ProjectStatisticGet = {
   projectId: Scalars['Int']['output'];
   projectName: Scalars['String']['output'];
   trend?: Maybe<StatisticTrend>;
+};
+
+export type ProposalPost = {
+  attachments?: InputMaybe<Array<Scalars['Upload']['input']>>;
+  content: Scalars['String']['input'];
+  page: Scalars['String']['input'];
+  title: Scalars['String']['input'];
 };
 
 export type Query = {

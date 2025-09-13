@@ -5,30 +5,15 @@ import { useLayerValue } from "@/hooks/useLayerValue";
 import { FragmentContext } from "@fragmentsx/render-react";
 
 export const useLayerBackground = (layerKey: LinkKey) => {
-  const { manager: fragmentManager } = useContext(FragmentContext);
-
-  const [fillType] = useLayerValue(layerKey, "fillType", fragmentManager);
-  const [, , { resultValue: solidFill }] = useLayerValue(
-    layerKey,
-    "solidFill",
-    fragmentManager
-  );
-
-  const [, , { resultValue: imageFill }] = useLayerValue(
-    layerKey,
-    "imageFill",
-    fragmentManager
-  );
+  const [fillType] = useLayerValue(layerKey, "fillType");
+  const [, , { resultValue: solidFill }] = useLayerValue(layerKey, "solidFill");
+  const [, , { resultValue: imageFill }] = useLayerValue(layerKey, "imageFill");
 
   /*
   Тут есть проблема. Если устанавливается переменная, то
   нет реакции на изменение imageSize внутри переменной
    */
-  const [, , { resultValue: imageSize }] = useLayerValue(
-    layerKey,
-    "imageSize",
-    fragmentManager
-  );
+  const [, , { resultValue: imageSize }] = useLayerValue(layerKey, "imageSize");
 
   return useMemo(() => {
     if (fillType === definition.paintMode.Solid) {

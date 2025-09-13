@@ -20,49 +20,35 @@ export const useLayerPosition = (layerKey: LinkKey) => {
   const widthCalc = useLayerSizeValue(layerKey, "width");
   const heightCalc = useLayerSizeValue(layerKey, "height");
 
-  const [position] = useLayerValue(layerKey, "position", fragmentManager);
+  const [position] = useLayerValue(layerKey, "position");
 
-  const [, , { resultValue: width$ }] = useLayerValue(
-    layerKey,
-    "width",
-    fragmentManager
-  );
-  const [, , { resultValue: height$ }] = useLayerValue(
-    layerKey,
-    "height",
-    fragmentManager
-  );
+  const [, , { resultValue: width$ }] = useLayerValue(layerKey, "width");
+  const [, , { resultValue: height$ }] = useLayerValue(layerKey, "height");
 
   const [, , { resultValue: centerAnchorX$ }] = useLayerValue(
     layerKey,
-    "centerAnchorX",
-    fragmentManager
+    "centerAnchorX"
   );
   const [, , { resultValue: centerAnchorY$ }] = useLayerValue(
     layerKey,
-    "centerAnchorY",
-    fragmentManager
+    "centerAnchorY"
   );
 
   const [, , { resultValue: top$, rawValue: baseTop }] = useLayerValue(
     layerKey,
-    "top",
-    fragmentManager
+    "top"
   );
   const [, , { resultValue: left$, rawValue: baseLeft }] = useLayerValue(
     layerKey,
-    "left",
-    fragmentManager
+    "left"
   );
   const [, , { resultValue: right$, rawValue: baseRight }] = useLayerValue(
     layerKey,
-    "right",
-    fragmentManager
+    "right"
   );
   const [, , { resultValue: bottom$, rawValue: baseBottom }] = useLayerValue(
     layerKey,
-    "bottom",
-    fragmentManager
+    "bottom"
   );
 
   const skipPosition = (isTop && isDocument) || (!!instanceLayerKey && isTop);
@@ -70,7 +56,7 @@ export const useLayerPosition = (layerKey: LinkKey) => {
   const toWidth = to(width$, (value) => widthCalc(value));
   const toHeight = to(height$, (value) => heightCalc(value));
 
-  if (isTop) {
+  if (isTop && !skipPosition) {
     return {
       position: definition.positionType.absolute,
       top: top$,
@@ -80,9 +66,9 @@ export const useLayerPosition = (layerKey: LinkKey) => {
     };
   }
 
-  if (position === definition.positionType.relative) {
+  if (position === definition.positionType.relative || skipPosition) {
     return {
-      position,
+      position: definition.positionType.relative,
       width: to(width$, (value) => widthCalc(value)),
       height: to(height$, (value) => heightCalc(value)),
     };

@@ -8,10 +8,8 @@ import { to } from "@react-spring/web";
 type SizeType = "minWidth" | "minHeight" | "maxWidth" | "maxHeight";
 
 export const useOptionalSize = (type: SizeType, layerKey: LinkKey) => {
-  const { manager: fragmentManager } = useContext(FragmentContext);
-
-  const [, , valueInfo] = useLayerValue(layerKey, type, fragmentManager);
-  const [valueType] = useLayerValue(layerKey, `${type}Type`, fragmentManager);
+  const [, , valueInfo] = useLayerValue(layerKey, type);
+  const [valueType] = useLayerValue(layerKey, `${type}Type`);
 
   return useMemo(() => {
     return to([valueInfo?.value$, valueType], processOptionalSize);

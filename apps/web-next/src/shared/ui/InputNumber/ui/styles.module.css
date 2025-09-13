@@ -15,7 +15,7 @@
 
     &:has(.inner:disabled) {
         cursor: default;
-        color: rgba(var(--text-color-accent-rgb), .3);
+        color: rgba(var(--text-color-accent--rgb), .3);
     }
 }
 

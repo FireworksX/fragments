@@ -10,7 +10,6 @@ import { useOptionalSize } from "@/hooks/useLayerStyles/useOptionalSize";
 const autoSizes = [definition.sizing.Hug];
 
 export const useLayerSize = (layerKey: LinkKey) => {
-  const { manager: fragmentManager } = useContext(FragmentContext);
   const minWidth = useOptionalSize("minWidth", layerKey);
   const minHeight = useOptionalSize("minHeight", layerKey);
   const maxWidth = useOptionalSize("maxWidth", layerKey);

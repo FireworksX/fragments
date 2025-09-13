@@ -127,12 +127,6 @@ type FeatureFlagGet {
     variants: [VariantGet!]!
 }
 
-type FeedbackGet {
-    content: String
-    feel: FeelLevelGet!
-    page: String!
-}
-
 type FilterDeviceTypeGet {
     deviceTypes: [DeviceType!]!
 }
@@ -191,6 +185,11 @@ type GoalStatisticGet {
     trend: StatisticTrend
 }
 
+type IssueGet {
+    ticketLink: String
+    type: IssueType!
+}
+
 type MediaGet {
     mediaId: Int!
     mediaType: MediaType!
@@ -211,6 +210,7 @@ type Mutation {
     createDirectory(directory: ProjectDirectory!): [ProjectDirectoryGet!]!
     createFeatureFlag(featureFlag: FeatureFlagPost!, projectId: Int!): FeatureFlagGet!
     createFragment(fg: FragmentPost!): FragmentGet!
+    createIssue(issue: IssuePost!): IssueGet!
     createProject(pr: ProjectPost!): ProjectGet!
     createProjectGoal(goal: ProjectGoalPost!): ProjectGoalGet!
     createReleaseCondition(releaseCondition: ReleaseConditionPost!): ReleaseConditionGet!
@@ -229,7 +229,6 @@ type Mutation {
     deleteProjectPublicKey(projectId: Int!, publicKeyId: Int!): Void
     deleteReleaseCondition(releaseConditionId: Int!): Void
     deleteVariant(variantId: Int!): Void
-    feedback(fd: FeedbackPost!): FeedbackGet!
     inviteUserToProject(email: String!, projectId: Int!, role: UserRole!): Void
     login(email: String!, password: String!): AuthPayload!
     normalizeVariantsRolloutPercentage(featureFlagId: Int!): Void
@@ -421,6 +420,14 @@ type VariantStatisticGet {
     variantName: String!
 }
 
+enum BugPriority {
+    BLOCKING
+    CRITICAL
+    HIGH
+    LOW
+    MEDIUM
+}
+
 enum CampaignStatus {
     ACTIVE
     ARCHIVED
@@ -444,12 +451,18 @@ enum DeviceType {
     TABLET
 }
 
-enum FeelLevelGet {
+enum FeelLevel {
     FIVE
     FOUR
     ONE
     THREE
     TWO
+}
+
+enum IssueType {
+    FEEDBACK
+    ISSUE
+    PROPOSAL
 }
 
 enum MediaType {
@@ -515,6 +528,14 @@ input AreaPost {
     description: String
     projectId: Int!
     properties: [JSON!]
+}
+
+input BugPost {
+    attachments: [Upload!]
+    content: String!
+    page: String!
+    priority: BugPriority!
+    title: String!
 }
 
 input CampaignFilter {
@@ -585,8 +606,9 @@ input FeatureFlagPost {
 }
 
 input FeedbackPost {
-    content: String
-    feel: FeelLevelGet!
+    attachments: [Upload!]
+    content: String!
+    feel: FeelLevel!
     page: String!
 }
 
@@ -639,6 +661,13 @@ input FragmentVariantPost {
     props: JSON
 }
 
+input IssuePost {
+    bug: BugPost
+    feedback: FeedbackPost
+    proposal: ProposalPost
+    type: IssueType!
+}
+
 input MediaDelete {
     mediaId: Int
     mediaType: MediaType!
@@ -687,6 +716,13 @@ input ProjectPatch {
 input ProjectPost {
     logo: String
     name: String!
+}
+
+input ProposalPost {
+    attachments: [Upload!]
+    content: String!
+    page: String!
+    title: String!
 }
 
 input ReleaseConditionPatch {

@@ -8,7 +8,7 @@ export const Demo = () => {
   const fragmentsClient = useRef(
     createFragmentsClient({
       apiToken: '3-4bdeacbe0257f0fa1a2f525383ccad59-d46439868498ae35c6e89a207bcdd7d1c549083eb4e8023bdedcdc9a1162be7f',
-      isSelf: true
+      isSelf: false
     })
   )
 
