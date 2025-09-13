@@ -6,11 +6,11 @@ import pycountry
 
 from conf.settings import logger
 from database import GeoLocation, Session
-from utils.lru_cache import CustomLRUCache
+from utils.custom_lru_cache import CustomLRUCache
 
 
 @lru_cache(maxsize=128)
-def get_country_name(country_code: str):
+def get_country_name(country_code: str) -> str:
     logger.debug(f"Getting country name for code: {country_code}")
     try:
         country_name = pycountry.countries.get(alpha_2=country_code.upper()).name
@@ -23,6 +23,29 @@ def get_country_name(country_code: str):
 
 # Global cache instance
 geo_cache = CustomLRUCache(maxsize=128)
+
+
+def _load_geo_locations_from_file(db: Session) -> List[GeoLocation]:
+    """Load geo locations from JSON file and save to database."""
+    logger.info('No geo locations found in DB, loading from file')
+    with open('/opt/app/data/cities500.json', 'r', encoding='utf-8') as file:
+        data = json.load(file)
+
+    # Convert JSON objects to instances of GeoLocationGet
+    logger.debug(f"Converting {len(data)} locations from JSON")
+    geo_locations = [
+        GeoLocation(
+            country=get_country_name(item.get('country', '')),
+            region=item.get('admin1', ''),
+            city=item.get('name', ''),
+        )
+        for item in data
+    ]
+    logger.debug('Adding locations to database')
+    db.add_all(geo_locations)
+    db.commit()
+    logger.info(f"Added {len(geo_locations)} locations to database")
+    return geo_locations
 
 
 def get_geo_locations(
@@ -45,24 +68,7 @@ def get_geo_locations(
 
     geo_locations: List[GeoLocation] = db.query(GeoLocation).all()
     if not geo_locations:
-        logger.info('No geo locations found in DB, loading from file')
-        with open('/opt/app/data/cities500.json', 'r', encoding='utf-8') as file:
-            data = json.load(file)
-
-        # Convert JSON objects to instances of GeoLocationGet
-        logger.debug(f"Converting {len(data)} locations from JSON")
-        geo_locations: List[GeoLocation] = [
-            GeoLocation(
-                country=get_country_name(item.get('country', '')),
-                region=item.get('admin1', ''),
-                city=item.get('name', ''),
-            )
-            for item in data
-        ]
-        logger.debug('Adding locations to database')
-        db.add_all(geo_locations)
-        db.commit()
-        logger.info(f"Added {len(geo_locations)} locations to database")
+        geo_locations = _load_geo_locations_from_file(db)
 
     query = db.query(GeoLocation)
     # Apply filters if provided

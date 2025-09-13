@@ -9,7 +9,7 @@ from user_agents import parse as user_agent_parser
 
 from conf.settings import logger, service_settings
 from crud.client import create_client_db, get_client_by_id_db
-from crud.project import get_project_by_id_db, validate_project_public_api_key
+from crud.project import validate_project_public_api_key
 from crud.user import get_user_by_email_db
 from database import Session
 from database.models import Client, Project, User
@@ -45,6 +45,7 @@ def user_db_to_user(user: User) -> UserGet:
 class UserAgentInfo:
     device_type: Optional[DeviceType] = None
     os_type: Optional[OSType] = None
+    browser: Optional[str] = None
 
     def __init__(self, user_agent: str) -> None:
         user_agent_info = user_agent_parser(user_agent)
@@ -72,12 +73,15 @@ class UserAgentInfo:
             logger.warning('Unknown OS type: %s', user_agent_info)
             self.os_type = None
 
+        self.browser = user_agent_info.browser.family
+
 
 class Context(BaseContext):
-    async def user(self) -> AuthPayload | None:
+    def _extract_authorization_header(self) -> tuple[str, Optional[str]]:
+        """Validate and extract authorization header and refresh token."""
         if not self.request:
             logger.warning('No request object provided')
-            return None
+            raise credentials_exception
 
         authorization = self.request.headers.get('Authorization', None)
         refresh = self.request.headers.get('Refresh', None)
@@ -86,10 +90,14 @@ class Context(BaseContext):
             logger.warning('No authorization header provided')
             raise credentials_exception
 
+        return authorization, refresh
+
+    def _decode_token(self, authorization: str) -> str:
+        """Decode JWT token and extract email."""
         try:
-            authorization = authorization.split(' ')[1]  # format is 'Bearer token'
+            token = authorization.split(' ')[1]  # format is 'Bearer token'
             payload = jwt.decode(
-                authorization,
+                token,
                 service_settings.ACCESS_TOKEN_SECRET_KEY,
                 algorithms=[service_settings.ALGORITHM],
             )
@@ -97,27 +105,35 @@ class Context(BaseContext):
             if email is None:
                 logger.error('No email in token payload')
                 raise credentials_exception
-        except InvalidTokenError:
+            return email
+        except InvalidTokenError as exc:
             logger.error('Invalid token provided')
-            raise credentials_exception
-        except IndexError:
+            raise credentials_exception from exc
+        except IndexError as exc:
             logger.error('Malformed authorization header')
-            raise credentials_exception
-        user: User = await get_user_by_email_db(self.session(), email)
+            raise credentials_exception from exc
+
+    async def user(self) -> AuthPayload:
+        authorization, refresh = self._extract_authorization_header()
+        email = self._decode_token(authorization)
+
+        user: Optional[User] = await get_user_by_email_db(self.session(), email)
         if user is None:
             logger.error('User not found: %s', email)
             raise credentials_exception
+
         if refresh is None:
             refresh = create_refresh_token(data={'sub': user.email})
+
         logger.info('User authenticated: %s', email)
         return AuthPayload(
             user=user_db_to_user(user), access_token=authorization, refresh_token=refresh
         )
 
-    async def project(self) -> Project | None:
+    async def project(self) -> Project:
         if not self.request:
             logger.warning('No request object provided')
-            return None
+            raise credentials_exception
 
         authorization = self.request.headers.get('Authorization', None)
         if authorization is None:
@@ -127,36 +143,59 @@ class Context(BaseContext):
         try:
             public_key = authorization.split(' ')[1]  # format is 'Bearer token'
             project: Project = await validate_project_public_api_key(self.session(), public_key)
-            if project is None:
-                logger.error('Invalid project public key: %s', public_key)
-                raise credentials_exception
-        except IndexError:
+        except IndexError as exc:
             logger.error('Malformed authorization header')
-            raise credentials_exception
-        except ValueError:
+            raise credentials_exception from exc
+        except ValueError as exc:
             logger.error('Invalid public key format')
-            raise credentials_exception
-        else:
-            logger.info('Project authenticated: %s', project.id)
-            return project
+            raise credentials_exception from exc
+
+        logger.info('Project authenticated: %s', project.id)
+        return project
 
     async def client_info(self) -> ClientInfo:
-        agent_header = self.request.headers.get('User-Agent', None)
-        user_agent: UserAgentInfo = UserAgentInfo(agent_header)
+        agent_header = self.request.headers.get('User-Agent', None) if self.request else None
+        user_agent: UserAgentInfo = UserAgentInfo(agent_header if agent_header else '')
 
-        user_ip: Optional[str] = self.request.headers.get('X-User-Ip', None)
+        user_ip: Optional[str] = (
+            self.request.headers.get('X-User-Ip', None) if self.request else None
+        )
         if user_ip is None:
-            user_ip = self.request.headers.get('X-Forwarded-For', self.request.client.host)
-        page: Optional[str] = self.request.headers.get('Referrer', None)
+            if (
+                self.request
+                and self.request.client
+                and self.request.client.host
+                and self.request.headers
+            ):
+                user_ip = self.request.headers.get('X-Forwarded-For', self.request.client.host)
+            else:
+                user_ip = ''
+        page: Optional[str] = self.request.headers.get('Referrer', None) if self.request else None
         gmt_time = datetime.now(timezone.utc)
 
+        language = self.request.headers.get('Accept-Language', None) if self.request else None
+        try:
+            if self.request:
+                screen_width = int(self.request.headers.get('Screen-Width', None) or 0)
+                screen_height = int(self.request.headers.get('Screen-Height', None) or 0)
+            else:
+                screen_width = None
+                screen_height = None
+        except ValueError:
+            screen_width = None
+            screen_height = None
+        browser = user_agent.browser
         logger.info(
-            'Client info - os_type=%s, device_type=%s, time_frame=%s, page=%s, ip_address=%s',
+            'Client info - os_type=%s, device_type=%s, time_frame=%s, page=%s, ip_address=%s, browser=%s, language=%s, screen_width=%s, screen_height=%s',
             user_agent.os_type,
             user_agent.device_type,
             gmt_time,
             page,
             user_ip,
+            browser,
+            language,
+            screen_width,
+            screen_height,
         )
         return ClientInfo(
             os_type=user_agent.os_type,
@@ -164,34 +203,39 @@ class Context(BaseContext):
             time_frame=gmt_time,
             page=page,
             ip_address=user_ip,
+            browser=browser,
+            language=language,
+            screen_width=screen_width,
+            screen_height=screen_height,
         )
 
     async def client(self) -> Client:
         project: Project = await self.project()
-        if project is None:
-            logger.error('No project context available')
-            raise credentials_exception
 
         user_id: Optional[str] = None
-        if self.request.cookies:
+        if self.request and self.request.cookies:
             user_id = self.request.cookies.get('user_id')
 
         if user_id is None:
             logger.info('Creating new client for project %s', project.id)
             return await create_client_db(self.session(), project_id=project.id)
-        else:
-            try:
-                logger.info('Getting existing client %s', user_id)
-                return await get_client_by_id_db(self.session(), int(user_id))
-            except:
-                logger.error('Invalid user_id format: %s', user_id)
-                raise HTTPException(status_code=400, detail='Invalid user_id format')
+        try:
+            logger.info('Getting existing client %s', user_id)
+            client: Optional[Client] = await get_client_by_id_db(self.session(), int(user_id))
+            if client is None:
+                return await create_client_db(self.session(), project_id=project.id)
+            return client
+        except ValueError as exc:
+            logger.error('Invalid user_id format: %s', user_id)
+            raise HTTPException(status_code=400, detail='Invalid user_id format') from exc
 
-    async def refresh_user(self) -> AuthPayload | None:
+    async def refresh_user(self) -> AuthPayload:
         if not self.request:
-            return None
+            raise credentials_exception
 
         refresh = self.request.headers.get('Refresh', None)
+        if refresh is None:
+            raise credentials_exception
         try:
             payload = jwt.decode(
                 refresh,
@@ -202,10 +246,10 @@ class Context(BaseContext):
             if email is None:
                 logger.error('No email in refresh token payload')
                 raise credentials_exception
-        except InvalidTokenError:
+        except InvalidTokenError as exc:
             logger.error('Invalid refresh token')
-            raise credentials_exception
-        user: User = await get_user_by_email_db(self.session(), email)
+            raise credentials_exception from exc
+        user: Optional[User] = await get_user_by_email_db(self.session(), email)
         if user is None:
             logger.error('User not found: %s', email)
             raise credentials_exception

@@ -1,6 +1,7 @@
 from typing import List, Optional
 
 import strawberry
+from strawberry.scalars import JSON
 
 from services.core.routes.schemas.campaign import CampaignGet
 from services.core.routes.schemas.media import MediaGet
@@ -17,7 +18,8 @@ class AreaGet:
     campaigns: List[CampaignGet]
     default_campaign: CampaignGet
     logo: MediaGet
-    properties: Optional[List[strawberry.scalars.JSON]] = None
+    properties: Optional[List[JSON]] = None  # type: ignore[valid-type]
+
 
 @strawberry.input
 class AreaPost:
@@ -25,7 +27,7 @@ class AreaPost:
     area_code: str
     default_campaign_name: str
     description: Optional[str] = None
-    properties: Optional[List[strawberry.scalars.JSON]] = None
+    properties: Optional[List[JSON]] = None  # type: ignore[valid-type]
 
 
 @strawberry.input
@@ -33,4 +35,4 @@ class AreaPatch:
     id: int
     area_code: Optional[str] = None
     description: Optional[str] = None
-    properties: Optional[List[strawberry.scalars.JSON]] = None
+    properties: Optional[List[JSON]] = None  # type: ignore[valid-type]

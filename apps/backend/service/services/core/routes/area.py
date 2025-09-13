@@ -1,5 +1,5 @@
 import json
-from typing import List
+from typing import List, Optional
 
 import strawberry
 from fastapi import HTTPException, UploadFile, status
@@ -18,38 +18,42 @@ from database import Area, Media, Project, Session
 
 from .campaign import campaign_db_to_campaign
 from .middleware import Context
-from .schemas.area import AreaGet, AreaPatch, AreaPost
+from .schemas.area import AreaGet, AreaPatch, AreaPost, CampaignGet
 from .schemas.media import MediaGet, MediaType
-from .schemas.user import AuthPayload, RoleGet
+from .schemas.user import AuthPayload, UserRole
 from .user import user_db_to_user
 from .utils import get_user_role_in_project
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
     logger.info(f"Checking read permission for user {user_id} in project {project_id}")
-    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[UserRole] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None
 
 
 async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
     logger.info(f"Checking write permission for user {user_id} in project {project_id}")
-    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
-    return role is not None and role is not RoleGet.DESIGNER
+    role: Optional[UserRole] = await get_user_role_in_project(db, user_id, project_id)
+    return role is not None and role is not UserRole.DESIGNER
 
 
-async def area_db_to_area(db: Session, area: Area) -> AreaGet:
+def area_db_to_area(area: Area) -> AreaGet:
     logger.debug(f"Converting area {area.id} to schema")
     # Find default campaign and remove it from campaigns list
-    default_campaign = None
     campaigns = []
-
+    default_campaign: Optional[CampaignGet] = None
     for campaign in area.campaigns:
-        if campaign.deleted_at is not None:
-            continue
         if campaign.default:
-            default_campaign = await campaign_db_to_campaign(db, campaign)
+            default_campaign = campaign_db_to_campaign(campaign)
         else:
-            campaigns.append(await campaign_db_to_campaign(db, campaign))
+            campaigns.append(campaign_db_to_campaign(campaign))
+
+    if default_campaign is None:
+        logger.warning(f"No default campaign found for area {area.id}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail='No default campaign found for area',
+        )
 
     return AreaGet(
         id=area.id,
@@ -71,7 +75,7 @@ async def create_area_route(info: strawberry.Info[Context], area: AreaPost) -> A
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    project: Project = await get_project_by_id_db(db, area.project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, area.project_id)
     if project is None:
         logger.error(f"Project {area.project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
@@ -85,13 +89,9 @@ async def create_area_route(info: strawberry.Info[Context], area: AreaPost) -> A
             status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to create areas'
         )
 
-    area_db: Area = await create_area_db(
-        db,
-        user.user.id,
-        area
-    )
+    area_db: Area = await create_area_db(db, user.user.id, area)
     logger.debug(f"Created area {area_db.id}")
-    return await area_db_to_area(db, area_db)
+    return area_db_to_area(area_db)
 
 
 async def get_areas_route(info: strawberry.Info[Context], project_id: int) -> List[AreaGet]:
@@ -99,7 +99,7 @@ async def get_areas_route(info: strawberry.Info[Context], project_id: int) -> Li
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    project: Project = await get_project_by_id_db(db, project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
     if project is None:
         logger.error(f"Project {project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
@@ -113,7 +113,7 @@ async def get_areas_route(info: strawberry.Info[Context], project_id: int) -> Li
 
     areas: List[Area] = await get_areas_by_project_id_db(db, project_id)
     logger.debug(f"Found {len(areas)} areas")
-    return [await area_db_to_area(db, area) for area in areas]
+    return [area_db_to_area(area) for area in areas]
 
 
 async def get_area_by_id_route(info: strawberry.Info[Context], area_id: int) -> AreaGet:
@@ -121,12 +121,12 @@ async def get_area_by_id_route(info: strawberry.Info[Context], area_id: int) -> 
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    area: Area = await get_area_by_id_db(db, area_id)
+    area: Optional[Area] = await get_area_by_id_db(db, area_id)
     if area is None:
         logger.error(f"Area {area_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Area does not exist')
 
-    project: Project = await get_project_by_id_db(db, area.project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, area.project_id)
     if project is None:
         logger.error(f"Project {area.project_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
@@ -138,7 +138,7 @@ async def get_area_by_id_route(info: strawberry.Info[Context], area_id: int) -> 
             status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to view areas'
         )
 
-    return await area_db_to_area(db, area)
+    return area_db_to_area(area)
 
 
 async def update_area_route(info: strawberry.Info[Context], area: AreaPatch) -> AreaGet:
@@ -146,7 +146,7 @@ async def update_area_route(info: strawberry.Info[Context], area: AreaPatch) -> 
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    area_db: Area = await get_area_by_id_db(db, area.id)
+    area_db: Optional[Area] = await get_area_by_id_db(db, area.id)
     if area_db is None:
         logger.error(f"Area {area.id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Area does not exist')
@@ -158,9 +158,9 @@ async def update_area_route(info: strawberry.Info[Context], area: AreaPatch) -> 
             status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not allowed to update areas'
         )
 
-    area_db: Area = await update_area_by_id_db(db, area)
+    area_db = await update_area_by_id_db(db, area)
     logger.debug(f"Updated area {area_db.id}")
-    return await area_db_to_area(db, area_db)
+    return area_db_to_area(area_db)
 
 
 async def delete_area_route(info: strawberry.Info[Context], area_id: int) -> None:
@@ -168,7 +168,7 @@ async def delete_area_route(info: strawberry.Info[Context], area_id: int) -> Non
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    area: Area = await get_area_by_id_db(db, area_id)
+    area: Optional[Area] = await get_area_by_id_db(db, area_id)
     if area is None:
         logger.error(f"Area {area_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Area does not exist')
@@ -191,7 +191,7 @@ async def add_area_logo_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    area: Area = await get_area_by_id_db(db, area_id)
+    area: Optional[Area] = await get_area_by_id_db(db, area_id)
     if area is None:
         logger.error(f"Area {area_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Area does not exist')
@@ -223,7 +223,7 @@ async def delete_area_logo_route(info: strawberry.Info[Context], area_id: int) -
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    area: Area = await get_area_by_id_db(db, area_id)
+    area: Optional[Area] = await get_area_by_id_db(db, area_id)
     if area is None:
         logger.error(f"Area {area_id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Area does not exist')

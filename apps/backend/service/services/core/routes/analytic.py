@@ -1,0 +1,252 @@
+from datetime import datetime
+from typing import Optional
+
+import strawberry
+from fastapi import HTTPException, status
+
+from conf.settings import logger
+from crud.analytic import (
+    get_area_average_conversion_db,
+    get_area_statistic_rating_db,
+    get_campaign_statistic_db,
+    get_goal_statistic_db,
+    get_project_statistic_db,
+    get_variant_statistic_db,
+)
+from crud.area import get_area_by_id_db
+from crud.campaign import get_campaign_by_id_db
+from crud.project import get_project_by_id_db, get_project_goal_by_id_db
+from crud.variant import get_variant_by_id_db
+from database import Session
+from database.models import Area, Campaign, Project, ProjectGoal, Variant
+
+from .middleware import Context
+from .schemas.analytic import (
+    AreaStatisticGet,
+    AreaStatisticRatingGet,
+    CampaignStatisticGet,
+    GoalStatisticGet,
+    ProjectStatisticGet,
+    StatisticRatingFilter,
+    VariantStatisticGet,
+)
+from .schemas.user import AuthPayload, UserRole
+from .utils import get_user_role_in_project
+
+
+async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
+    logger.info(f"Checking read permission for user {user_id} in project {project_id}")
+    role: Optional[UserRole] = await get_user_role_in_project(db, user_id, project_id)
+    return role is not None
+
+
+async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
+    logger.info(f"Checking write permission for user {user_id} in project {project_id}")
+    role: Optional[UserRole] = await get_user_role_in_project(db, user_id, project_id)
+    return role is not None and role is not UserRole.DESIGNER
+
+
+async def get_variant_statistic_route(
+    info: strawberry.Info[Context],
+    variant_id: int,
+    from_ts: datetime,
+    to_ts: datetime,
+    prev_from_ts: datetime,
+    prev_to_ts: datetime,
+) -> Optional[VariantStatisticGet]:
+    logger.info(f"Getting statistic for variant {variant_id}")
+    db: Session = info.context.session()
+
+    variant: Optional[Variant] = await get_variant_by_id_db(db, variant_id)
+    if variant is None:
+        logger.error(f"Variant {variant_id} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Variant not found')
+
+    user: AuthPayload = await info.context.user()
+    permission: bool = await read_permission(db, user.user.id, variant.feature_flag.project_id)
+    if not permission:
+        logger.warning(
+            f"User {user.user.id} unauthorized to view statistic for variant {variant_id}"
+        )
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Unauthorized')
+
+    try:
+        return await get_variant_statistic_db(
+            db=db,
+            variant_id=variant_id,
+            from_ts=from_ts,
+            to_ts=to_ts,
+            prev_from_ts=prev_from_ts,
+            prev_to_ts=prev_to_ts,
+        )
+    except ValueError as e:
+        logger.error(f"Error getting variant statistic for variant {variant_id}: {e}")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+
+
+async def get_campaign_statistic_route(
+    info: strawberry.Info[Context],
+    campaign_id: int,
+    from_ts: datetime,
+    to_ts: datetime,
+    prev_from_ts: datetime,
+    prev_to_ts: datetime,
+) -> Optional[CampaignStatisticGet]:
+    logger.info(f"Getting statistic for campaign {campaign_id}")
+    db: Session = info.context.session()
+    campaign: Optional[Campaign] = await get_campaign_by_id_db(db, campaign_id)
+    if campaign is None:
+        logger.error(f"Campaign {campaign_id} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Campaign not found')
+
+    user: AuthPayload = await info.context.user()
+    permission: bool = await read_permission(db, user.user.id, campaign.project_id)
+    if not permission:
+        logger.warning(
+            f"User {user.user.id} unauthorized to view statistic for campaign {campaign_id}"
+        )
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Unauthorized')
+
+    try:
+        return await get_campaign_statistic_db(
+            db=db,
+            campaign_id=campaign_id,
+            from_ts=from_ts,
+            to_ts=to_ts,
+            prev_from_ts=prev_from_ts,
+            prev_to_ts=prev_to_ts,
+        )
+    except ValueError as e:
+        logger.error(f"Error getting campaign statistic for campaign {campaign_id}: {e}")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+
+
+async def get_area_statistic_route(
+    info: strawberry.Info[Context],
+    area_id: int,
+    from_ts: datetime,
+    to_ts: datetime,
+    prev_from_ts: datetime,
+    prev_to_ts: datetime,
+) -> Optional[AreaStatisticGet]:
+    logger.info(f"Getting statistic for area {area_id}")
+    db: Session = info.context.session()
+    area: Optional[Area] = await get_area_by_id_db(db, area_id)
+    if area is None:
+        logger.error(f"Area {area_id} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Area not found')
+
+    user: AuthPayload = await info.context.user()
+    permission: bool = await read_permission(db, user.user.id, area.project_id)
+    if not permission:
+        logger.warning(f"User {user.user.id} unauthorized to view statistic for area {area_id}")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Unauthorized')
+
+    try:
+        return await get_area_average_conversion_db(
+            db=db,
+            area_id=area_id,
+            from_ts=from_ts,
+            to_ts=to_ts,
+            prev_from_ts=prev_from_ts,
+            prev_to_ts=prev_to_ts,
+        )
+    except ValueError as e:
+        logger.error(f"Error getting area statistic for area {area_id}: {e}")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+
+
+async def get_project_statistic_route(
+    info: strawberry.Info[Context],
+    project_id: int,
+    from_ts: datetime,
+    to_ts: datetime,
+    prev_from_ts: datetime,
+    prev_to_ts: datetime,
+) -> Optional[ProjectStatisticGet]:
+    logger.info(f"Getting statistic for project {project_id}")
+    db: Session = info.context.session()
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
+    if project is None:
+        logger.error(f"Project {project_id} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project not found')
+
+    user: AuthPayload = await info.context.user()
+    permission: bool = await read_permission(db, user.user.id, project_id)
+    if not permission:
+        logger.warning(
+            f"User {user.user.id} unauthorized to view statistic for project {project_id}"
+        )
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Unauthorized')
+
+    try:
+        return await get_project_statistic_db(
+            db=db,
+            project_id=project_id,
+            from_ts=from_ts,
+            to_ts=to_ts,
+            prev_from_ts=prev_from_ts,
+            prev_to_ts=prev_to_ts,
+        )
+    except ValueError as e:
+        logger.error(f"Error getting project statistic for project {project_id}: {e}")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+
+
+async def get_goal_statistic_route(
+    info: strawberry.Info[Context],
+    goal_id: int,
+    from_ts: datetime,
+    to_ts: datetime,
+    prev_from_ts: datetime,
+    prev_to_ts: datetime,
+) -> GoalStatisticGet:
+    logger.info(f"Getting statistic for goal {goal_id}")
+    db: Session = info.context.session()
+    goal: Optional[ProjectGoal] = await get_project_goal_by_id_db(db, goal_id)
+    if goal is None:
+        logger.error(f"Goal {goal_id} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Goal not found')
+
+    user: AuthPayload = await info.context.user()
+    permission: bool = await read_permission(db, user.user.id, goal.project_id)
+    if not permission:
+        logger.warning(f"User {user.user.id} unauthorized to view statistic for goal {goal_id}")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Unauthorized')
+
+    try:
+        return await get_goal_statistic_db(
+            db=db,
+            goal_id=goal_id,
+            from_ts=from_ts,
+            to_ts=to_ts,
+            prev_from_ts=prev_from_ts,
+            prev_to_ts=prev_to_ts,
+            variant_id=None,
+        )
+    except ValueError as e:
+        logger.error(f"Error getting goal statistic for goal {goal_id}: {e}")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+
+
+async def get_area_statistic_rating_route(
+    info: strawberry.Info[Context],
+    area_id: int,
+    statistic_rating_filter: StatisticRatingFilter,
+) -> AreaStatisticRatingGet:
+    logger.info(f"Getting statistic rating for area {area_id}")
+    db: Session = info.context.session()
+    area: Optional[Area] = await get_area_by_id_db(db, area_id)
+    if area is None:
+        logger.error(f"Area {area_id} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Area not found')
+
+    user: AuthPayload = await info.context.user()
+    permission: bool = await read_permission(db, user.user.id, area.project_id)
+    if not permission:
+        logger.warning(
+            f"User {user.user.id} unauthorized to view statistic rating for area {area_id}"
+        )
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Unauthorized')
+
+    return await get_area_statistic_rating_db(db, area, statistic_rating_filter)

@@ -535,7 +535,7 @@ input BugPost {
     content: String!
     page: String!
     priority: BugPriority!
-    title: String!
+    title: String
 }
 
 input CampaignFilter {
@@ -722,7 +722,7 @@ input ProposalPost {
     attachments: [Upload!]
     content: String!
     page: String!
-    title: String!
+    title: String
 }
 
 input ReleaseConditionPatch {

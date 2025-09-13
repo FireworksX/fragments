@@ -3,6 +3,7 @@ import hmac
 import secrets
 from typing import List, Optional
 
+from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from conf.settings import logger, service_settings
@@ -17,6 +18,8 @@ from database.models import (
     ProjectMemberRole,
     User,
 )
+from services.core.routes.schemas.project import ProjectGoalPatch, ProjectGoalPost
+from services.core.routes.schemas.user import UserRole
 
 
 def generate_api_key(project_id: int) -> str:
@@ -47,7 +50,9 @@ def generate_api_key(project_id: int) -> str:
     message = f"{project_id}:{random_hex}".encode('utf-8')
 
     # Compute the HMAC-SHA256 signature of the message using the secret key.
-    signature = hmac.new(secret_key.encode('utf-8'), message, hashlib.sha256).hexdigest()
+    signature = hmac.new(
+        secret_key.encode('utf-8'), message, hashlib.sha256  # pylint: disable=E1101
+    ).hexdigest()
 
     # Combine all parts into the final API key.
     api_key = f"{project_id}-{random_hex}-{signature}"
@@ -55,24 +60,41 @@ def generate_api_key(project_id: int) -> str:
     return api_key
 
 
-async def add_user_to_project_db(db: Session, user_id: int, project_id: int, role: int) -> None:
+async def add_user_to_project_db(
+    db: Session, user_id: int, project_id: int, role: UserRole
+) -> None:
     logger.info(f"Adding user {user_id} to project {project_id} with role {role}")
     project: Project = db.query(Project).filter((Project.id == project_id)).first()
-    role: ProjectMemberRole = ProjectMemberRole(role=role)
+    member_role: ProjectMemberRole = ProjectMemberRole(role=int(role.value))
     user: User = db.query(User).filter((User.id == user_id)).first()
-    role.user = user
-    role.project = project
-    project.members.append(role)
+    member_role.user = user
+    member_role.project = project
+    project.members.append(member_role)
     db.commit()
     logger.debug(f"Added user {user_id} to project {project_id}")
 
 
-async def change_user_role_db(db: Session, user_id: int, project_id: int, role: int) -> None:
+async def remove_user_from_project_db(db: Session, user_id: int, project_id: int) -> None:
+    logger.info(f"Removing user {user_id} from project {project_id}")
+    member_role: ProjectMemberRole = (
+        db.query(ProjectMemberRole)
+        .filter(ProjectMemberRole.user_id == user_id, ProjectMemberRole.project_id == project_id)
+        .first()
+    )
+    if member_role is None:
+        logger.error(f"User {user_id} not found in project {project_id}")
+        raise ValueError(f"User {user_id} not found in project {project_id}")
+    db.delete(member_role)
+    db.commit()
+    logger.debug(f"Removed user {user_id} from project {project_id}")
+
+
+async def change_user_role_db(db: Session, user_id: int, project_id: int, role: UserRole) -> None:
     logger.info(f"Changing role for user {user_id} in project {project_id} to {role}")
     project: Project = db.query(Project).filter((Project.id == project_id)).first()
     for member in project.members:
         if member.user_id == user_id:
-            member.role = role
+            member.role = int(role.value)
     db.commit()
     logger.debug(f"Changed role for user {user_id} in project {project_id}")
 
@@ -91,7 +113,10 @@ async def generate_project_public_api_key(project_id: int) -> ProjectApiKey:
 
 async def change_project_private_api_key(db: Session, project_id: int) -> Project:
     logger.info(f"Changing private API key for project {project_id}")
-    project: Project = await get_project_by_id_db(db, project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
+    if project is None:
+        logger.error(f"Project {project_id} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
     api_key: ProjectApiKey = await generate_project_private_api_key(project.id)
     db.add(api_key)
     db.commit()
@@ -107,7 +132,10 @@ async def add_project_public_api_key(
     db: Session, project_id: int, key_name: Optional[str] = None
 ) -> Project:
     logger.info(f"Adding public API key for project {project_id}")
-    project: Project = await get_project_by_id_db(db, project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
+    if project is None:
+        logger.error(f"Project {project_id} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
     api_key: ProjectApiKey = await generate_project_public_api_key(project.id)
     api_key.name = key_name
     db.add(api_key)
@@ -132,22 +160,21 @@ async def delete_project_public_api_key(db: Session, project_id: int, public_key
     if public_api_key.is_private:
         logger.error(f"Cannot remove private key {public_key_id}")
         raise ValueError("Can't remove private key")
-    else:
-        db.delete(public_api_key)
-        db.commit()
-        logger.debug(f"Deleted public API key {public_key_id}")
+    db.delete(public_api_key)
+    db.commit()
+    logger.debug(f"Deleted public API key {public_key_id}")
 
 
 async def validate_project_public_api_key(db: Session, public_api_key: str) -> Project:
-    logger.info(f"Validating public API key")
-    public_api_key: ProjectApiKey = (
+    logger.info('Validating public API key')
+    public_api_key_db: ProjectApiKey = (
         db.query(ProjectApiKey).filter(ProjectApiKey.key == public_api_key).first()
     )
-    if public_api_key is None:
+    if public_api_key_db is None:
         logger.error('Invalid public key')
         raise ValueError('Invalid public key')
-    logger.debug(f"Validated public API key for project {public_api_key.project_id}")
-    return public_api_key.project
+    logger.debug(f"Validated public API key for project {public_api_key_db.project_id}")
+    return public_api_key_db.project
 
 
 async def create_project_db(db: Session, name: str, user_id: int) -> Project:
@@ -164,7 +191,7 @@ async def create_project_db(db: Session, name: str, user_id: int) -> Project:
     db.refresh(api_key)
     project.private_key_id = api_key.id
 
-    await add_user_to_project_db(db, user_id, project.id, 1)  # 1 = owner
+    await add_user_to_project_db(db, user_id, project.id, UserRole.OWNER)
     root_directory: FilesystemDirectory = await create_directory_db(
         db=db, parent_id=None, name=name, project_id=project.id
     )
@@ -200,20 +227,29 @@ async def get_project_by_id_db(db: Session, project_id: int) -> Optional[Project
 
 async def delete_project_by_id_db(db: Session, project_id: int) -> None:
     logger.info(f"Deleting project {project_id}")
-    db.query(Project).filter(Project.id == project_id).delete()
+    project = db.query(Project).filter(Project.id == project_id).first()
+    if project is None:
+        return
+    db.delete(project)
+    db.commit()
     logger.debug(f"Deleted project {project_id}")
 
 
 async def get_projects_by_user_id_db(db: Session, user_id: int) -> List[Project]:
     logger.info(f"Getting projects for user {user_id}")
-    projects = db.query(Project).filter(Project.owner_id == user_id).all()
+    projects = (
+        db.query(Project).join(ProjectMemberRole).filter(ProjectMemberRole.user_id == user_id).all()
+    )
     logger.debug(f"Found {len(projects)} projects for user {user_id}")
     return projects
 
 
 async def update_project_by_id_db(db: Session, values: dict) -> Project:
     logger.info(f"Updating project {values['id']}")
-    project: Project = await get_project_by_id_db(db, values['id'])
+    project: Optional[Project] = await get_project_by_id_db(db, values['id'])
+    if project is None:
+        logger.error(f"Project {values['id']} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
     if values.get('name') is not None:
         project.name = values['name']
     db.merge(project)
@@ -224,10 +260,17 @@ async def update_project_by_id_db(db: Session, values: dict) -> Project:
 
 
 async def create_project_goal_db(
-    db: Session, project_id: int, name: str, target_action: str
+    db: Session,
+    project_goal: ProjectGoalPost,
 ) -> ProjectGoal:
-    logger.info(f"Creating goal {name} for project {project_id}")
-    goal = ProjectGoal(project_id=project_id, name=name, target_action=target_action)
+    logger.info(f"Creating goal {project_goal.name} for project {project_goal.project_id}")
+    goal = ProjectGoal(
+        project_id=project_goal.project_id,
+        name=project_goal.name,
+        target_action=project_goal.target_action,
+        success_level=project_goal.success_level,
+        failure_level=project_goal.failure_level,
+    )
     db.add(goal)
     db.commit()
     db.refresh(goal)
@@ -269,33 +312,41 @@ async def get_project_goals_db(db: Session, project_id: int) -> List[ProjectGoal
 
 
 async def update_project_goal_db(
-    db: Session, goal_id: int, name: Optional[str] = None, target_action: Optional[str] = None
+    db: Session,
+    goal_db: ProjectGoal,
+    project_goal: ProjectGoalPatch,
 ) -> ProjectGoal:
-    logger.info(f"Updating goal {goal_id} with name {name} and target_action {target_action}")
-    goal = await get_project_goal_by_id_db(db, goal_id)
-    if name is not None:
-        goal.name = name
-    if target_action is not None:
+    logger.info(
+        f"Updating goal {goal_db.id} with name {project_goal.name} and target_action {project_goal.target_action}"
+    )
+    if project_goal.name is not None:
+        goal_db.name = project_goal.name
+    if project_goal.target_action is not None:
         # Check if target_action already exists for another goal in this project
         existing_goal = await get_project_goal_by_target_action_db(
-            db, goal.project_id, target_action
+            db, goal_db.project_id, project_goal.target_action
         )
-        if existing_goal and existing_goal.id != goal.id:
-            logger.error(f"Target action {target_action} already exists in project")
-            raise ValueError(f"Target action {target_action} already exists in project")
-        goal.target_action = target_action
-    db.merge(goal)
+        if existing_goal and existing_goal.id != goal_db.id:
+            logger.error(f"Target action {project_goal.target_action} already exists in project")
+            raise ValueError(
+                f"Target action {project_goal.target_action} already exists in project"
+            )
+        goal_db.target_action = project_goal.target_action
+    if project_goal.success_level is not None:
+        goal_db.success_level = project_goal.success_level
+    if project_goal.failure_level is not None:
+        goal_db.failure_level = project_goal.failure_level
+    db.merge(goal_db)
     db.commit()
-    db.refresh(goal)
-    logger.debug(f"Updated goal {goal_id}")
-    return goal
+    db.refresh(goal_db)
+    logger.debug(f"Updated goal {goal_db.id}")
+    return goal_db
 
 
-async def delete_project_goal_db(db: Session, goal_id: int) -> None:
-    logger.info(f"Deleting goal {goal_id}")
-    db.query(ProjectGoal).filter(ProjectGoal.id == goal_id).delete()
+async def delete_project_goal_db(db: Session, goal_db: ProjectGoal) -> None:
+    logger.info(f"Deleting goal {goal_db.id}")
+    db.delete(goal_db)
     db.commit()
-    logger.debug(f"Deleted goal {goal_id}")
 
 
 async def add_project_allowed_origin_db(
@@ -308,7 +359,10 @@ async def add_project_allowed_origin_db(
     db.add(allowed_origin)
     db.commit()
     db.refresh(allowed_origin)
-    project: Project = await get_project_by_id_db(db, project_id)
+    project: Optional[Project] = await get_project_by_id_db(db, project_id)
+    if project is None:
+        logger.error(f"Project {project_id} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
     project.allowed_origins.append(allowed_origin)
     db.commit()
     db.refresh(project)
@@ -337,7 +391,7 @@ async def delete_project_allowed_origin_db(
 
 
 async def get_all_allowed_origins_db(db: Session) -> List[str]:
-    logger.info(f"Getting all allowed origins")
+    logger.info('Getting all allowed origins')
     allowed_origins = db.query(ProjectAllowedOrigin).all()
     logger.debug(f"Found {len(allowed_origins)} allowed origins")
     return [origin.origin for origin in allowed_origins]

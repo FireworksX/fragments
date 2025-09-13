@@ -13,7 +13,6 @@ from sqlalchemy import (
     Table,
     UniqueConstraint,
     func,
-    orm,
 )
 from sqlalchemy.orm import relationship
 
@@ -27,6 +26,8 @@ class ProjectGoal(Base):
     created_at = Column('created_at', DateTime, default=datetime.datetime.now(datetime.UTC))
     name = Column('name', String, nullable=False)
     target_action = Column('target_action', String, nullable=False)
+    success_level = Column('success_level', Float, nullable=True)
+    failure_level = Column('failure_level', Float, nullable=True)
     __table_args__ = (
         UniqueConstraint('project_id', 'target_action', name='unique_project_target_action'),
     )
@@ -92,7 +93,6 @@ class Area(Base):
     author_id = Column('author_id', Integer, ForeignKey('user.id'))
     author = relationship('User')
     project_id = Column('project_id', Integer, ForeignKey('project.id'), nullable=False)
-    deleted_at = Column('deleted_at', DateTime, nullable=True)
     logo_id = Column('logo_id', Integer, ForeignKey('media.id', ondelete='CASCADE'))
     logo = relationship('Media')
 
@@ -100,7 +100,7 @@ class Area(Base):
     project = relationship('Project')
 
     # One-to-Many relationship with Campaign
-    campaigns = relationship('Campaign', back_populates='area')
+    campaigns = relationship('Campaign', back_populates='area', cascade='all, delete-orphan')
 
     properties = Column('properties', JSON, nullable=True)
 
@@ -115,7 +115,9 @@ class Project(Base):
     owner_id = Column('owner_id', Integer, ForeignKey('user.id'))
     owner = relationship('User')
 
-    members = relationship('ProjectMemberRole', back_populates='project')
+    members = relationship(
+        'ProjectMemberRole', back_populates='project', cascade='all, delete-orphan'
+    )
 
     areas = relationship('Area', back_populates='project', cascade='all, delete-orphan')
 
@@ -170,7 +172,7 @@ class FilesystemDirectory(Base):
     medias = relationship('Media', back_populates='directory', cascade='all, delete-orphan')
 
     @property
-    def items(self):
+    def items(self) -> list:
         """
         Return a combined list of subdirectories and fragments,
         e.g. for display in a file manager.
@@ -200,7 +202,6 @@ class Campaign(Base):
 
     status = Column('status', Integer, nullable=False, default=1)
     default = Column('default', Boolean, nullable=False, default=False)
-    deleted_at = Column('deleted_at', DateTime, nullable=True)
     feature_flag_id = Column(
         'feature_flag_id',
         Integer,
@@ -208,9 +209,6 @@ class Campaign(Base):
         nullable=False,
     )
     feature_flag = relationship('FeatureFlag')
-
-    experiment_id = Column('experiment_id', Integer, ForeignKey('experiment.id'), nullable=True)
-    experiment = relationship('Experiment')
 
 
 class ReleaseCondition(Base):
@@ -372,7 +370,6 @@ class FeatureFlag(Base):
     release_condition = relationship('ReleaseCondition')
     variants = relationship('Variant', back_populates='feature_flag', cascade='all, delete-orphan')
     rotation_type = Column('rotation_type', Integer, nullable=False, default=1)
-    deleted_at = Column('deleted_at', DateTime, nullable=True)
 
 
 class Variant(Base):
@@ -392,33 +389,6 @@ class Variant(Base):
     fragment = relationship('Fragment')
     props = Column('props', JSON, nullable=True)
     status = Column('status', Integer, nullable=False, default=1)
-    deleted_at = Column('deleted_at', DateTime, nullable=True)
-
-    
-
-
-class Experiment(Base):
-    __tablename__ = 'experiment'
-    id = Column('id', Integer, primary_key=True, index=True)
-    name = Column('name', String, nullable=False, unique=True)
-    description = Column('description', String)
-    feature_flag_id = Column(
-        'feature_flag_id', Integer, ForeignKey('feature_flag.id', ondelete='CASCADE')
-    )
-    feature_flag = relationship('FeatureFlag')
-
-    created_at = Column('created_at', DateTime, nullable=False, default=func.now())
-    updated_at = Column(
-        'updated_at', DateTime, nullable=False, default=func.now(), onupdate=func.now()
-    )
-
-
-class Feedback(Base):
-    __tablename__ = 'feedback'
-    id = Column('id', Integer, primary_key=True, index=True)
-    feel = Column('feel', Integer, nullable=False)
-    content = Column('content', String)
-    page = Column('page', String, nullable=False)
 
 
 class FragmentMedia(Base):
@@ -438,6 +408,14 @@ fragment_usage = Table(
     Column(
         'used_fragment_id', Integer, ForeignKey('fragment.id', ondelete='CASCADE'), primary_key=True
     ),
+)
+
+# linked goals
+fragment_goals = Table(
+    'fragment_goals',
+    Base.metadata,
+    Column('fragment_id', Integer, ForeignKey('fragment.id', ondelete='CASCADE'), primary_key=True),
+    Column('goal_id', Integer, ForeignKey('project_goal.id', ondelete='CASCADE'), primary_key=True),
 )
 
 
@@ -482,6 +460,13 @@ class Fragment(Base):
         # since we just want "Fragment has an array of fragments it is using."
     )
 
+    linked_goals = relationship(
+        'ProjectGoal',
+        secondary=fragment_goals,  # use the association table
+        primaryjoin=id == fragment_goals.c.fragment_id,
+        secondaryjoin=ProjectGoal.id == fragment_goals.c.goal_id,
+    )
+
 
 class Media(Base):
     __tablename__ = 'media'
@@ -501,14 +486,14 @@ class Media(Base):
     directory = relationship('FilesystemDirectory', back_populates='medias')
 
     @property
-    def public_path(self):
+    def public_path(self) -> str:
         return f'{service_settings.STATIC_SERVER_URL}/{self.filename}'
 
 
 class Client(Base):
     __tablename__ = 'client'
     id = Column('id', Integer, primary_key=True, index=True)
-    project_id = Column('project_id', Integer, ForeignKey('project.id'))
+    project_id = Column('project_id', Integer, ForeignKey('project.id', ondelete='CASCADE'))
     created_at = Column('created_at', DateTime, default=datetime.datetime.now(datetime.UTC))
     updated_at = Column(
         'updated_at',
@@ -522,24 +507,12 @@ class Client(Base):
     history = relationship('ClientHistory', back_populates='client')
 
 
-class ClientProjectGoal(Base):
-    __tablename__ = 'client_project_goal'
-    id = Column('id', Integer, primary_key=True, index=True)
-    client_id = Column('client_id', Integer, ForeignKey('client.id'))
-    project_goal_id = Column('project_goal_id', Integer, ForeignKey('project_goal.id'))
-    project_id = Column('project_id', Integer, ForeignKey('project.id'))
-    created_at = Column('created_at', DateTime, default=datetime.datetime.now(datetime.UTC))
-
-    # Relationships
-    client = relationship('Client')
-    project_goal = relationship('ProjectGoal')
-    project = relationship('Project')
-
-
 class ClientHistory(Base):
     __tablename__ = 'client_history'
     id = Column('id', Integer, primary_key=True, index=True)
-    client_id = Column('client_id', Integer, ForeignKey('client.id'))
+    client_id = Column(
+        'client_id', Integer, ForeignKey('client.id', ondelete='CASCADE'), nullable=False
+    )
     created_at = Column('created_at', DateTime, default=datetime.datetime.now(datetime.UTC))
 
     # Device info
@@ -549,6 +522,7 @@ class ClientHistory(Base):
     language = Column('language', String)
     screen_width = Column('screen_width', Integer)
     screen_height = Column('screen_height', Integer)
+    page = Column('page', String)
 
     # Page info
     url = Column('url', String)
@@ -563,16 +537,32 @@ class ClientHistory(Base):
     city = Column('city', String)
 
     # Relationships
-    client = relationship('Client', back_populates='history')
+    client = relationship(
+        'Client', back_populates='history', foreign_keys=[client_id], passive_deletes=True
+    )
 
-    area_id = Column('area_id', Integer, ForeignKey('area.id'), nullable=True)
-    campaign_id = Column('campaign_id', Integer, ForeignKey('campaign.id'), nullable=True)
-    campaign = relationship('Campaign')
-    area = relationship('Area')
-    variant_id = Column('variant_id', Integer, ForeignKey('variant.id'), nullable=True)
-    variant = relationship('Variant')
+    area_id = Column('area_id', Integer, ForeignKey('area.id', ondelete='SET NULL'), nullable=True)
+    campaign_id = Column(
+        'campaign_id', Integer, ForeignKey('campaign.id', ondelete='SET NULL'), nullable=True
+    )
+    campaign = relationship('Campaign', foreign_keys=[campaign_id], passive_deletes=True)
+    area = relationship('Area', foreign_keys=[area_id], passive_deletes=True)
+    variant_id = Column(
+        'variant_id', Integer, ForeignKey('variant.id', ondelete='SET NULL'), nullable=True
+    )
+    variant = relationship('Variant', foreign_keys=[variant_id], passive_deletes=True)
 
-    feature_flag_id = Column('feature_flag_id', Integer, ForeignKey('feature_flag.id'), nullable=True)
-    feature_flag = relationship('FeatureFlag')
+    feature_flag_id = Column(
+        'feature_flag_id',
+        Integer,
+        ForeignKey('feature_flag.id', ondelete='SET NULL'),
+        nullable=True,
+    )
+    feature_flag = relationship('FeatureFlag', foreign_keys=[feature_flag_id], passive_deletes=True)
 
     event_type = Column('event_type', Integer, nullable=False)
+
+    goal_id = Column(
+        'goal_id', Integer, ForeignKey('project_goal.id', ondelete='SET NULL'), nullable=True
+    )
+    goal = relationship('ProjectGoal', foreign_keys=[goal_id], passive_deletes=True)

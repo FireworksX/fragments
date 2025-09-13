@@ -1,9 +1,8 @@
-from typing import List, Optional, Union
+from typing import List, Optional
 
 import strawberry
 from fastapi import HTTPException, status
 
-from crud.feature_flag import get_feature_flag_by_id_db
 from crud.release_condition import (
     create_condition_db,
     create_condition_set_db,
@@ -20,7 +19,7 @@ from crud.release_condition import (
     update_condition_set_db,
     update_release_condition_db,
 )
-from database import Condition, ConditionSet, FeatureFlag, ReleaseCondition, Session
+from database import Condition, ConditionSet, ReleaseCondition, Session
 from services.core.routes.middleware import Context
 from services.core.routes.schemas.release_condition import (
     ConditionGet,
@@ -34,25 +33,24 @@ from services.core.routes.schemas.release_condition import (
     FilterGeoLocationsGet,
     FilterOSTypeGet,
     FilterPageGet,
-    FilterPost,
     FilterTimeFrameGet,
-    FilterType,
+    FilterTimeFramesGet,
     ReleaseConditionGet,
     ReleaseConditionPatch,
     ReleaseConditionPost,
 )
-from services.core.routes.schemas.user import AuthPayload, RoleGet
+from services.core.routes.schemas.user import AuthPayload, UserRole
 from services.core.routes.utils import get_user_role_in_project
 
 
 async def read_permission(db: Session, user_id: int, project_id: int) -> bool:
-    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
+    role: Optional[UserRole] = await get_user_role_in_project(db, user_id, project_id)
     return role is not None
 
 
 async def write_permission(db: Session, user_id: int, project_id: int) -> bool:
-    role: RoleGet = await get_user_role_in_project(db, user_id, project_id)
-    return role is not None and role is not RoleGet.DESIGNER
+    role: Optional[UserRole] = await get_user_role_in_project(db, user_id, project_id)
+    return role is not None and role is not UserRole.DESIGNER
 
 
 def condition_db_to_condition(condition: Condition) -> ConditionGet:
@@ -71,7 +69,7 @@ def condition_db_to_condition(condition: Condition) -> ConditionGet:
                     FilterOSTypeGet(os_types=[os.os_type for os in condition.os_type_filters])
                     if condition.os_type_filters
                     else (
-                        FilterTimeFrameGet(
+                        FilterTimeFramesGet(
                             time_frames=[
                                 FilterTimeFrameGet(from_time=tf.from_time, to_time=tf.to_time)
                                 for tf in condition.time_frame_filters
@@ -124,7 +122,7 @@ async def release_condition_by_id(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    release_condition: ReleaseCondition = await get_release_condition_by_id_db(
+    release_condition: Optional[ReleaseCondition] = await get_release_condition_by_id_db(
         db, release_condition_id
     )
     if not release_condition:
@@ -136,7 +134,7 @@ async def release_condition_by_id(
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to view release conditions',
+            detail='User is not allowed to view release conditions',
         )
 
     return release_condition_db_to_release_condition(release_condition)
@@ -148,20 +146,17 @@ async def create_release_condition_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    feature_flag: FeatureFlag = await get_feature_flag_by_id_db(db, rc.feature_flag_id)
-    if not feature_flag:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail='Feature flag does not exist'
-        )
-
     permission: bool = await write_permission(db, user.user.id, rc.project_id)
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to create release conditions',
+            detail='User is not allowed to create release conditions',
         )
 
-    release_condition: ReleaseCondition = await create_release_condition_db(db, rc)
+    try:
+        release_condition: ReleaseCondition = await create_release_condition_db(db, rc)
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)) from e
 
     return release_condition_db_to_release_condition(release_condition)
 
@@ -172,7 +167,7 @@ async def update_release_condition_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    release_condition: ReleaseCondition = await get_release_condition_by_id_db(db, rc.id)
+    release_condition: Optional[ReleaseCondition] = await get_release_condition_by_id_db(db, rc.id)
     if not release_condition:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Release condition does not exist'
@@ -182,12 +177,13 @@ async def update_release_condition_route(
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to change release condition',
+            detail='User is not allowed to change release condition',
         )
 
-    release_condition: ReleaseCondition = await update_release_condition_db(
-        db, release_condition_id=rc.id, rc=rc
-    )
+    try:
+        release_condition = await update_release_condition_db(db, release_condition, rc)
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)) from e
 
     return release_condition_db_to_release_condition(release_condition)
 
@@ -198,7 +194,7 @@ async def delete_release_condition_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    release_condition: ReleaseCondition = await get_release_condition_by_id_db(
+    release_condition: Optional[ReleaseCondition] = await get_release_condition_by_id_db(
         db, release_condition_id
     )
     if not release_condition:
@@ -210,7 +206,7 @@ async def delete_release_condition_route(
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to delete release condition',
+            detail='User is not allowed to delete release condition',
         )
 
     await delete_release_condition_db(db, release_condition_id)
@@ -222,7 +218,7 @@ async def get_condition_sets_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    release_condition: ReleaseCondition = await get_release_condition_by_id_db(
+    release_condition: Optional[ReleaseCondition] = await get_release_condition_by_id_db(
         db, release_condition_id
     )
     if not release_condition:
@@ -234,7 +230,7 @@ async def get_condition_sets_route(
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to view condition sets',
+            detail='User is not allowed to view condition sets',
         )
 
     condition_sets: List[ConditionSet] = await get_condition_sets_by_release_condition_id_db(
@@ -249,7 +245,7 @@ async def get_condition_set_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    condition_set: ConditionSet = await get_condition_set_by_id_db(db, condition_set_id)
+    condition_set: Optional[ConditionSet] = await get_condition_set_by_id_db(db, condition_set_id)
     if not condition_set:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Condition set does not exist'
@@ -261,7 +257,7 @@ async def get_condition_set_route(
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to view condition set',
+            detail='User is not allowed to view condition set',
         )
 
     return condition_set_db_to_condition_set(condition_set)
@@ -273,7 +269,7 @@ async def create_condition_set_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    release_condition: ReleaseCondition = await get_release_condition_by_id_db(
+    release_condition: Optional[ReleaseCondition] = await get_release_condition_by_id_db(
         db, release_condition_id
     )
     if not release_condition:
@@ -285,10 +281,13 @@ async def create_condition_set_route(
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to create condition set',
+            detail='User is not allowed to create condition set',
         )
 
-    condition_set: ConditionSet = await create_condition_set_db(db, release_condition_id, cs)
+    try:
+        condition_set: ConditionSet = await create_condition_set_db(db, release_condition_id, cs)
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)) from e
 
     return condition_set_db_to_condition_set(condition_set)
 
@@ -299,7 +298,7 @@ async def update_condition_set_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    condition_set: ConditionSet = await get_condition_set_by_id_db(db, cs.id)
+    condition_set: Optional[ConditionSet] = await get_condition_set_by_id_db(db, cs.id)
     if not condition_set:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Condition set does not exist'
@@ -310,12 +309,13 @@ async def update_condition_set_route(
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to update condition set',
+            detail='User is not allowed to update condition set',
         )
 
-    condition_set: ConditionSet = await update_condition_set_db(
-        db, condition_set_id=cs.id, condition_set=cs
-    )
+    try:
+        condition_set = await update_condition_set_db(db, condition_set, cs)
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)) from e
 
     return condition_set_db_to_condition_set(condition_set)
 
@@ -324,7 +324,7 @@ async def delete_condition_set_route(info: strawberry.Info[Context], condition_s
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    condition_set: ConditionSet = await get_condition_set_by_id_db(db, condition_set_id)
+    condition_set: Optional[ConditionSet] = await get_condition_set_by_id_db(db, condition_set_id)
     if not condition_set:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Condition set does not exist'
@@ -336,7 +336,7 @@ async def delete_condition_set_route(info: strawberry.Info[Context], condition_s
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to delete condition set',
+            detail='User is not allowed to delete condition set',
         )
 
     await delete_condition_set_db(db, condition_set_id)
@@ -348,7 +348,7 @@ async def get_conditions_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    condition_set: ConditionSet = await get_condition_set_by_id_db(db, condition_set_id)
+    condition_set: Optional[ConditionSet] = await get_condition_set_by_id_db(db, condition_set_id)
     if not condition_set:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Condition set does not exist'
@@ -360,7 +360,7 @@ async def get_conditions_route(
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to view conditions',
+            detail='User is not allowed to view conditions',
         )
 
     conditions: List[Condition] = await get_conditions_by_condition_set_id_db(db, condition_set_id)
@@ -373,7 +373,7 @@ async def create_condition_route(
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    condition_set: ConditionSet = await get_condition_set_by_id_db(db, condition_set_id)
+    condition_set: Optional[ConditionSet] = await get_condition_set_by_id_db(db, condition_set_id)
     if not condition_set:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Condition set does not exist'
@@ -382,14 +382,24 @@ async def create_condition_route(
     permission: bool = await write_permission(
         db, user.user.id, condition_set.release_condition.project_id
     )
-    return await create_condition_db(db, condition_set_id, condition)
+    if not permission:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail='User is not allowed to create condition',
+        )
+
+    try:
+        condition = await create_condition_db(db, condition_set.id, condition=condition)
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)) from e
+    return condition_db_to_condition(condition)
 
 
 async def get_condition_route(info: strawberry.Info[Context], condition_id: int) -> ConditionGet:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    condition: Condition = await get_condition_by_id_db(db, condition_id)
+    condition: Optional[Condition] = await get_condition_by_id_db(db, condition_id)
     if not condition:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Condition does not exist'
@@ -401,7 +411,7 @@ async def get_condition_route(info: strawberry.Info[Context], condition_id: int)
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to view condition',
+            detail='User is not allowed to view condition',
         )
 
     return condition_db_to_condition(condition)
@@ -411,7 +421,7 @@ async def update_condition_route(info: strawberry.Info[Context], c: ConditionPat
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    condition: Condition = await get_condition_by_id_db(db, c.id)
+    condition: Optional[Condition] = await get_condition_by_id_db(db, c.id)
     if not condition:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Condition does not exist'
@@ -422,10 +432,13 @@ async def update_condition_route(info: strawberry.Info[Context], c: ConditionPat
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to update condition',
+            detail='User is not allowed to update condition',
         )
 
-    condition: Condition = await update_condition_db(db, condition_id=c.id, condition=c)
+    try:
+        condition = await update_condition_db(db, condition, c)
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)) from e
 
     return condition_db_to_condition(condition)
 
@@ -434,7 +447,7 @@ async def delete_condition_route(info: strawberry.Info[Context], condition_id: i
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
 
-    condition: Condition = await get_condition_by_id_db(db, condition_id)
+    condition: Optional[Condition] = await get_condition_by_id_db(db, condition_id)
     if not condition:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Condition does not exist'
@@ -446,7 +459,7 @@ async def delete_condition_route(info: strawberry.Info[Context], condition_id: i
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User is not allowed to delete condition',
+            detail='User is not allowed to delete condition',
         )
 
     await delete_condition_db(db, condition_id)

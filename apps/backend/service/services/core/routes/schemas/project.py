@@ -3,9 +3,6 @@ from typing import List, Optional
 import strawberry
 
 from services.core.routes.schemas.area import AreaGet
-from services.core.routes.schemas.campaign import CampaignGet
-from services.core.routes.schemas.client import ClientGet
-from services.core.routes.schemas.filesystem import ProjectDirectoryGet
 from services.core.routes.schemas.media import MediaGet
 from services.core.routes.schemas.user import UserGet, UserRoleGet
 
@@ -29,6 +26,8 @@ class ProjectGoalGet:
     id: int
     name: str
     target_action: str
+    success_level: Optional[float] = None
+    failure_level: Optional[float] = None
 
 
 @strawberry.input
@@ -36,6 +35,8 @@ class ProjectGoalPost:
     project_id: int
     name: str
     target_action: str
+    success_level: Optional[float] = None
+    failure_level: Optional[float] = None
 
 
 @strawberry.input
@@ -43,6 +44,8 @@ class ProjectGoalPatch:
     id: int
     name: Optional[str] = None
     target_action: Optional[str] = None
+    success_level: Optional[float] = None
+    failure_level: Optional[float] = None
 
 
 @strawberry.type
@@ -69,12 +72,3 @@ class ProjectPost:
 class ProjectPatch:
     id: int
     name: Optional[str] = None
-
-
-@strawberry.type
-class ClientProjectGoalGet:
-    id: int
-    client: ClientGet
-    project_goal: ProjectGoalGet
-    project: ProjectGet
-    created_at: str

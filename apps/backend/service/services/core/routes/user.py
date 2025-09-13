@@ -1,4 +1,3 @@
-from copy import copy, deepcopy
 from typing import Optional
 
 import strawberry
@@ -18,7 +17,7 @@ from services.core.utils import (
 
 from .middleware import Context
 from .schemas.media import MediaGet, MediaType
-from .schemas.user import AuthPayload, UserGet
+from .schemas.user import AuthPayload, UserGet, UserSignUp
 
 
 def user_db_to_user(user: User) -> UserGet:
@@ -38,7 +37,7 @@ def user_db_to_user(user: User) -> UserGet:
 async def login(info: strawberry.Info[Context], email: str, password: str) -> AuthPayload:
     logger.info(f"Login attempt for user {email}")
     db: Session = info.context.session()
-    user: User = await get_user_by_email_db(db, email)
+    user: Optional[User] = await get_user_by_email_db(db, email)
     if user is None:
         logger.warning(f"Login failed - user {email} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='User does not exist')
@@ -55,28 +54,27 @@ async def login(info: strawberry.Info[Context], email: str, password: str) -> Au
     )
 
 
-async def signup(
+async def signup_route(
     info: strawberry.Info[Context],
-    email: str,
-    first_name: str,
-    last_name: Optional[str],
-    password: str,
+    user_sign_up: UserSignUp,
 ) -> AuthPayload:
-    logger.info(f"Signup attempt for user {email}")
+    logger.info(f"Signup attempt for user {user_sign_up.email}")
     db: Session = info.context.session()
-    user: User = await get_user_by_email_db(db, email)
+    user: Optional[User] = await get_user_by_email_db(db, user_sign_up.email)
     if user is not None:
-        logger.warning(f"Signup failed - user {email} already exists")
+        logger.warning(f"Signup failed - user {user_sign_up.email} already exists")
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail='User with the same email address already exists',
         )
-    hashed_password: str = get_password_hash(password)
-    user: User = await create_user_db(db, email, first_name, last_name, hashed_password)
+    hashed_password: str = get_password_hash(user_sign_up.password)
+    user = await create_user_db(
+        db, user_sign_up.email, user_sign_up.first_name, user_sign_up.last_name, hashed_password
+    )
 
     access_token = create_access_token(data={'sub': user.email})
     refresh_token = create_refresh_token(data={'sub': user.email})
-    logger.info(f"Signup successful for user {email}")
+    logger.info(f"Signup successful for user {user_sign_up.email}")
     return AuthPayload(
         user=user_db_to_user(user), access_token=access_token, refresh_token=refresh_token
     )
@@ -87,17 +85,19 @@ async def add_avatar_route(info: strawberry.Info[Context], file: UploadFile) -> 
     db: Session = info.context.session()
 
     logger.info(f"Adding avatar for user {auth.user.email}")
-    user: User = await get_user_by_email_db(db, auth.user.email)
+    user: Optional[User] = await get_user_by_email_db(db, auth.user.email)
     if user is None:
         logger.error(f"User {auth.user.email} not found when adding avatar")
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
-    media: Media = await create_media_db(db, file)
-    if media is None:
+    try:
+        media: Media = await create_media_db(db, file)
+    except Exception as exc:
         logger.error(f"Failed to create media file for user {auth.user.email}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='Failed to create media file'
-        )
+        ) from exc
+
     user.avatar_id = media.id
     db.commit()
     logger.info(f"Successfully added avatar for user {auth.user.email}")
@@ -112,7 +112,7 @@ async def delete_avatar_route(info: strawberry.Info[Context]) -> UserGet:
     db: Session = info.context.session()
 
     logger.info(f"Deleting avatar for user {auth.user.email}")
-    user: User = await get_user_by_email_db(db, auth.user.email)
+    user: Optional[User] = await get_user_by_email_db(db, auth.user.email)
     if user is None:
         logger.error(f"User {auth.user.email} not found when deleting avatar")
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
@@ -127,17 +127,11 @@ async def delete_avatar_route(info: strawberry.Info[Context]) -> UserGet:
 
 async def profile(info: strawberry.Info[Context]) -> AuthPayload:
     user = await info.context.user()
-    if user is None:
-        logger.warning('Profile access attempt with unauthorized user')
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     logger.info(f"Profile accessed for user {user.user.email}")
     return user
 
 
 async def refresh(info: strawberry.Info[Context]) -> AuthPayload:
     user = await info.context.refresh_user()
-    if user is None:
-        logger.warning('Token refresh attempt with unauthorized user')
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     logger.info(f"Token refreshed for user {user.user.email}")
     return user

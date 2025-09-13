@@ -1,6 +1,7 @@
 'use client'
 import { FC, useState } from 'react'
 import cn from 'classnames'
+import LinkIcon from '@/shared/icons/next/external-link.svg'
 import styles from './styles.module.css'
 import { Textarea } from '@/shared/ui/Textarea'
 import { CommonLogo } from '@/shared/ui/CommonLogo'
@@ -10,7 +11,7 @@ import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { Select } from '@/shared/ui/Select'
 import { Slider } from '@/shared/ui/Slider'
 import { useSendFeedbackMutation } from '@/features/FeedbackForm/queries/SendFeedback.generated'
-import { BugPriority, FeelLevel, FeelLevelGet, IssuePost, IssueType } from '@/__generated__/types'
+import { BugPriority, FeelLevel, IssueType } from '@/__generated__/types'
 import emojiOne from '../emoji/emoji-cry.png'
 import emojiTwo from '../emoji/emoji-sad.png'
 import emojiThree from '../emoji/emoji-smile.png'
@@ -45,13 +46,21 @@ export const FeedbackForm: FC<FeedbackFormProps> = ({ className }) => {
   const [message, setMessage] = useState('')
   const [isNotify, setIsNotify] = useState(false)
 
-  const [send, { loading }] = useSendFeedbackMutation()
+  const [send, { loading, data: feedbackData }] = useSendFeedbackMutation()
+
+  const resetForm = () => {
+    setMessage('')
+    setEmotion(1)
+    setBugPriority(BugPriority.Medium)
+    setType(IssueType.Feedback)
+  }
 
   const handleSubmit = async e => {
     e?.preventDefault()
     e?.stopPropagation()
     if (isNotify) {
       setIsNotify(false)
+      resetForm()
       return
     }
 
@@ -59,19 +68,19 @@ export const FeedbackForm: FC<FeedbackFormProps> = ({ className }) => {
     const page = window.location.href
 
     if (type === IssueType.Issue) {
-      variableBag = {
+      variableBag.bug = {
         page,
         priority: bugPriority,
         content: message
       }
     } else if (type === IssueType.Feedback) {
-      variableBag = {
+      variableBag.feedback = {
         page,
         content: message,
         feel: emotionToFeel[emotion]
       }
     } else if (type === IssueType.Proposal) {
-      variableBag = {
+      variableBag.proposal = {
         page,
         content: message
       }
@@ -85,13 +94,10 @@ export const FeedbackForm: FC<FeedbackFormProps> = ({ className }) => {
     })
 
     setIsNotify(true)
-    await promiseWaiter(1500)
-    setIsNotify(false)
-
-    setMessage('')
-    setEmotion(1)
-    setBugPriority(BugPriority.Medium)
-    setType(IssueType.Feedback)
+    if (type === IssueType.Feedback) {
+      await promiseWaiter(3000)
+      setIsNotify(false)
+    }
   }
 
   return (
@@ -102,11 +108,11 @@ export const FeedbackForm: FC<FeedbackFormProps> = ({ className }) => {
           <Button
             className={styles.footer}
             type='submit'
+            mode={isNotify ? 'outline' : 'primary'}
             stretched
-            mode={isNotify ? 'success' : 'primary'}
             loading={loading}
           >
-            {isNotify ? 'Success' : 'Submit'}
+            {isNotify ? 'Create New' : 'Submit'}
           </Button>
         }
       >
@@ -115,7 +121,14 @@ export const FeedbackForm: FC<FeedbackFormProps> = ({ className }) => {
             [styles.feedbackActive]: isNotify
           })}
         >
-          <CheckIcon width={24} height={24} />
+          <CheckIcon width={28} height={28} />
+          {feedbackData?.createIssue?.ticketLink && (
+            <a href={feedbackData?.createIssue?.ticketLink} target='_blank'>
+              <Button TagName='div' mode='tertiary' size='large' icon={<LinkIcon />}>
+                Open your ticket
+              </Button>
+            </a>
+          )}
         </div>
         <ControlRow title='Type'>
           <ControlRowWide>

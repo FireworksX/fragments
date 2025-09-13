@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 import strawberry
 
@@ -6,7 +6,7 @@ from conf.settings import logger
 from crud.geolocation import get_geo_locations
 from database import Session
 from services.core.routes.middleware import Context
-from utils.lru_cache import CustomLRUCache
+from utils.custom_lru_cache import CustomLRUCache
 
 from .schemas.release_condition import AllFiltersGet, CountryGet, DeviceType, OSType, RegionGet
 from .schemas.user import AuthPayload
@@ -20,12 +20,12 @@ async def get_all_filters(
     regions_filter: Optional[List[str]] = None,
 ) -> AllFiltersGet:
     logger.info('Getting all filters')
-    user: AuthPayload = await info.context.user()
+    user: AuthPayload = await info.context.user()  # pylint: disable=unused-variable
     db: Session = info.context.session()
 
     logger.debug('Getting OS types and device types')
-    os_types: List[OSType] = [v for v in OSType]
-    device_types: List[DeviceType] = [v for v in DeviceType]
+    os_types: List[OSType] = list(OSType)
+    device_types: List[DeviceType] = list(DeviceType)
 
     locations = get_geo_locations(db, countries_filter, regions_filter)
     logger.debug('Building country dictionary')
@@ -41,7 +41,7 @@ async def get_all_filters(
         logger.debug('Returning cached country dictionary')
         country_dict = cached_results
     else:
-        country_dict: Dict[str, Dict[str, List[str]]] = {}
+        country_dict = {}
         for location in locations:
             if location.country not in country_dict and location.country is not None:
                 country_dict[location.country] = {}

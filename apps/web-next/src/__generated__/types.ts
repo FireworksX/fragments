@@ -90,7 +90,7 @@ export type BugPost = {
   content: Scalars['String']['input'];
   page: Scalars['String']['input'];
   priority: BugPriority;
-  title: Scalars['String']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum BugPriority {
@@ -903,7 +903,7 @@ export type ProposalPost = {
   attachments?: InputMaybe<Array<Scalars['Upload']['input']>>;
   content: Scalars['String']['input'];
   page: Scalars['String']['input'];
-  title: Scalars['String']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Query = {

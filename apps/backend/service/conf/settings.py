@@ -1,11 +1,13 @@
 # pylint: disable=W0401,C0413,W0614
 
-import os
 import logging
+import os
 from typing import Optional
 
-from pydantic_settings import BaseSettings
 from pydantic.fields import Field
+from pydantic_settings import BaseSettings
+
+from conf.envs.prod import *  # isort: ignore
 
 APP_NAME = os.getenv('APP_NAME', 'Server')
 APP_VERSION = os.getenv('APP_VERSION', '0.1.0')
@@ -18,7 +20,6 @@ class Level:
 
 RUN_LEVEL = os.getenv('RUN_LEVEL', Level.PROD)
 
-from conf.envs.prod import *  # isort: ignore
 
 if RUN_LEVEL == Level.DEV:
     from conf.envs.dev import *  # isort: ignore
@@ -43,6 +44,10 @@ class ServiceSettings(BaseSettings):
     )
     MEDIA_STORAGE_PATH: str = Field(default_factory=lambda: os.getenv('MEDIA_STORAGE_PATH'))
     STATIC_SERVER_URL: str = Field(default_factory=lambda: os.getenv('STATIC_SERVER_URL'))
+    GITHUB_ACCESS_TOKEN: str = Field(default_factory=lambda: os.getenv('GITHUB_ACCESS_TOKEN'))
+    GITHUB_REPO_OWNER: str = Field(default_factory=lambda: os.getenv('GITHUB_REPO_OWNER'))
+    GITHUB_REPO_NAME: str = Field(default_factory=lambda: os.getenv('GITHUB_REPO_NAME'))
+    GITHUB_ASSIGNEE: str = Field(default_factory=lambda: os.getenv('GITHUB_ASSIGNEE'))
 
 
 service_settings = ServiceSettings()

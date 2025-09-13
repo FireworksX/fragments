@@ -1,6 +1,4 @@
-import math
 import os
-from io import BytesIO
 from typing import Optional
 from uuid import uuid4
 
@@ -82,7 +80,7 @@ async def generate_default_media(db: Session, filename: str) -> Media:
     img_byte_arr = generate_image()
 
     upload_file = UploadFile(
-        file=img_byte_arr, filename=filename, headers={'content-type': 'image/png'}
+        file=img_byte_arr, filename=filename, headers={'content-type': 'image/png'}  # type: ignore[arg-type]
     )
 
     return await create_media_db(db, upload_file)
