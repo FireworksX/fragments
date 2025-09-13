@@ -32,6 +32,7 @@ async def recalculate_variants_rollout_percentage_db(
     variants: List[Variant] = (
         db.query(Variant)
         .filter(Variant.feature_flag_id == feature_flag_id)
+        .filter(Variant.status == int(VariantStatus.ACTIVE.value))
         .filter(Variant.id != variant_id)
         .all()
     )
