@@ -44,12 +44,12 @@ class FeedbackPost(IssueBase):
 
 @strawberry.input
 class ProposalPost(IssueBase):
-    title: Optional[str] = None
+    title: str
 
 
 @strawberry.input
 class BugPost(IssueBase):
-    title: Optional[str] = None
+    title: str
     priority: BugPriority
 
 

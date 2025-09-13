@@ -46,9 +46,8 @@ async def create_github_issue(issue: BugPost | ProposalPost, client_info: Client
         f"Language: {client_info.language}"
     )
 
-    title = issue.title if issue.title else issue.content.split('.')[0][:40]
     data = {
-        'title': title,
+        'title': issue.title,
         'body': issue.content
         + '\n\n'
         + client_info_str
