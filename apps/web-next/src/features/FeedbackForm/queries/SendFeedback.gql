@@ -1,5 +1,6 @@
-mutation SendFeedback($page: String!, $content: String!, $feel: FeelLevelGet!) {
-    feedback(fd: {page: $page, content: $content, feel: $feel}) {
-        content
+mutation SendFeedback($type: IssueType!, $bug: BugPost, $feedback: FeedbackPost, $proposal: ProposalPost) {
+    createIssue(issue: {type: $type, bug: $bug, feedback: $feedback, proposal: $proposal}) {
+        type
+        ticketLink
     }
 }
