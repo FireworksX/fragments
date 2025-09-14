@@ -84,7 +84,6 @@ export const useBuilderTextBase = () => {
   const { selection } = useBuilderSelection()
   const [content, setContent, contentInfo] = useLayerValue('content')
   const [whiteSpace, setWhiteSpace] = useLayerValue('whiteSpace')
-  const contentVariable = useLayerPropertyValue('content')
 
   const openColor = () => {
     popoutsStore.open('colorPicker', {
@@ -158,6 +157,31 @@ export const useBuilderTextBase = () => {
     onSetValue: value => {
       if (value) {
         handleChangeValue('color', linkToCssVariable(value))
+      }
+    },
+    onResetVariable: () => {
+      handleResetValue('color')
+    }
+  })
+
+  const contentVariable = useLayerPropertyValue('content', {
+    fieldValue: editorState.text?.startsWith('$') ? `${definition.nodes.Variable}:${editorState.text.slice(1)}` : null,
+    onSetValue: value => {
+      if (value) {
+        editor
+          .chain()
+          .focus()
+          .setContent([
+            {
+              type: 'mention',
+              attrs: { id: entityOfKey(value)?._id, mentionSuggestionChar: '$' }
+            },
+            {
+              type: 'text',
+              text: ' '
+            }
+          ])
+          .run()
       }
     },
     onResetVariable: () => {

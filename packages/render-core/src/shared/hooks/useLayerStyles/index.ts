@@ -29,7 +29,7 @@ export const useLayerStyles = (layerKey: LinkKey) => {
     const { manager: fragmentManager } = useContext(FragmentContext);
     const [opacity] = useLayerValue(layerKey, "opacity", fragmentManager);
     const layerSize = useLayerSize(layerKey);
-    const { position, top, left } = useLayerPosition(layerKey);
+    const position = useLayerPosition(layerKey);
     const display = useLayerDisplay(layerKey);
     const background = useLayerBackground(layerKey);
     const border = useLayerBorder(layerKey);
@@ -85,9 +85,7 @@ export const useLayerStyles = (layerKey: LinkKey) => {
       // ...(props ?? {}),
       ...border,
       ...background,
-      position,
-      top,
-      left,
+      ...position,
       opacity,
       "border-radius": borderRadius,
       "white-space": whiteSpace,

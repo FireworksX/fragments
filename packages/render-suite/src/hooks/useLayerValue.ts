@@ -22,7 +22,9 @@ export const useLayerValue = (
   const [coreValue, setCoreValue, coreInfo] = useLayerValueCore(
     layerKey,
     fieldKey,
-    resultManager
+    {
+      manager: resultManager,
+    }
   );
 
   const [value$, setValue$] = useLayerValueSpring({

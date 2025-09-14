@@ -20,6 +20,7 @@ import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
 import { useBuilderCanvasField } from '@/shared/hooks/fragmentBuilder/useBuilderCanvasField'
 import { BuilderCanvasTextEditor } from '@/widgets/fragmentBuilder/BuilderHighlight/components/BuilderCanvasTextEditor'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
+import { useDomNodeGeometry } from '@/shared/hooks/useDomNodeGeometry'
 
 interface BuilderLayerHighlightProps extends PropsWithChildren {
   className?: string
@@ -34,6 +35,8 @@ const BuilderHighlight: FC<BuilderLayerHighlightProps> = ({ className, children 
   const [isDraggingLayer] = useBuilderCanvasField('isDraggingLayer')
   const [isTextEditing] = useBuilderCanvasField('isTextEditing')
 
+  // const richEditorGeometry = useDomNodeGeometry(`.canvas-rich-editor`, ``)
+
   const hoverLayerGeometry = useLayerGeometry(hoverLayer)
   const selectionGeometry = useLayerGeometry(selection)
   const parentSelectionGeometry = useLayerGeometry(documentManager.keyOfEntity(getParent(documentManager, selection)))
@@ -47,6 +50,8 @@ const BuilderHighlight: FC<BuilderLayerHighlightProps> = ({ className, children 
   useEffect(() => {
     if (isTextEditing) {
       const selectionNode: HTMLElement | null = document.querySelector(`[data-key="${selection}"]`)
+      // const canvasEditorNode: HTMLElement | null = document.querySelector(`.canvas-rich-editor`)
+
       if (selectionNode) {
         editableRef.current = selectionNode
         selectionNode.style.visibility = 'hidden'

@@ -117,8 +117,6 @@ export const createStyleExtension = ({
               }
             })
 
-            console.log(changes)
-
             // СОЗДАЕМ ТРАНЗАКЦИЮ ПРАВИЛЬНО
             // const transaction = editor.state.tr
             //

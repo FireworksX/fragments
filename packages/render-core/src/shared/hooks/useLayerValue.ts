@@ -1,4 +1,4 @@
-import { useCallback } from "preact/compat";
+import { useCallback, useContext } from "preact/compat";
 import { useGraph } from "@graph-state/react";
 import { Graph, GraphState, LinkKey, MutateOptions } from "@graph-state/core";
 import { get, omit, pick, set } from "@fragmentsx/utils";
@@ -7,14 +7,19 @@ import { useNormalizeLayer } from "@/shared/hooks/useNormalizeLayer";
 import { useReadVariable } from "@/shared/hooks/useReadVariable";
 import { isInheritField, isPartOfPrimary } from "@/shared/helpers";
 import { useLayerCssVariable } from "@/shared/hooks/useLayerCssVariable";
+import { FragmentContext } from "@/components/Fragment/FragmentContext";
 
 interface Options {
   manager?: GraphState;
 }
 
-export const useLayerValue = (layerKey: LinkKey, fieldKey: string) => {
-  // const { manager: resultManager } = useContext(FragmentContext);
-  const resultManager = manager;
+export const useLayerValue = (
+  layerKey: LinkKey,
+  fieldKey: string,
+  options?: Options
+) => {
+  const { manager: fragmentManager } = useContext(FragmentContext);
+  const resultManager = options?.manager ?? fragmentManager;
   const key = layerKey;
   const [, updateLayerData] = useGraph(resultManager, key, {
     // selector: (data) => (data ? pick(data, fieldKey) : data),

@@ -34,6 +34,20 @@ const RenderDropdown: FC<RenderDropdownProps> = ({
       options={options.map((group, index) => (
         <DropdownGroup key={index}>
           {group.map(option => {
+            if (dropdownProps.pause) {
+              console.log(option, options)
+            }
+
+            return (
+              <button
+                onClick={() => {
+                  alert(1)
+                }}
+              >
+                fsd
+              </button>
+            )
+
             const Option = option && (
               <DropdownOption
                 key={option.name ?? option.label}
