@@ -38,23 +38,34 @@ async def create_github_issue(issue: BugPost | ProposalPost, client_info: Client
     }
 
     client_info_str = (
-        f"Client Info:\n"
-        f"OS type: {client_info.os_type}\n"
-        f"Device type: {client_info.device_type}\n"
-        f"Time: {client_info.time_frame.strftime('%Y-%m-%d %H:%M:%S') if client_info.time_frame else 'N/A'}\n"
-        f"Browser: {client_info.browser}\n"
-        f"Language: {client_info.language}"
+        f"- OS type: {client_info.os_type.name if client_info.os_type else 'N/A'}\n"
+        f"- Device type: {client_info.device_type.name if client_info.device_type else 'N/A'}\n"
+        f"- Time: {client_info.time_frame.strftime('%Y-%m-%d %H:%M:%S') if client_info.time_frame else 'N/A'}\n"
+        f"- Browser: {client_info.browser if client_info.browser else 'N/A'}\n"
+        f"- Page: {client_info.page if client_info.page else 'N/A'}\n"
     )
 
-    title = issue.title if issue.title else issue.content.split('.')[0][:40]
+    body = '## Message\n' + issue.content + '\n\n' + '## Client Info\n' + client_info_str
+
+    if attachment_links:
+        body += '\n\n' + '## Attachments\n\n' + ''.join(attachment_links)
+
+    title = (
+        issue.title
+        if issue.title
+        else (
+            issue.content.split('.')[0][:40]
+            + (
+                issue.content.split('.')[0][40:].split()[0]
+                if len(issue.content.split('.')[0]) > 40
+                else ''
+            )
+            + '...'
+        )
+    )
     data = {
         'title': title,
-        'body': issue.content
-        + '\n\n'
-        + client_info_str
-        + '\n\n'
-        + 'Attachments: \n\n'
-        + ''.join(attachment_links),
+        'body': body,
         'assignees': [service_settings.GITHUB_ASSIGNEE],
     }
     labels = []
