@@ -165,7 +165,9 @@ export const useBuilderTextBase = () => {
   })
 
   const contentVariable = useLayerPropertyValue('content', {
-    fieldValue: editorState.text?.startsWith('$') ? `${definition.nodes.Variable}:${editorState.text.slice(1)}` : null,
+    fieldValue: editorState.text?.startsWith('$')
+      ? `${definition.nodes.Variable}:${editorState.text.slice(1).trim()}`
+      : null,
     onSetValue: value => {
       if (value) {
         editor
@@ -188,8 +190,6 @@ export const useBuilderTextBase = () => {
       handleResetValue('color')
     }
   })
-
-  console.log(contentVariable, editorState)
 
   useUpdateEffect(() => {
     if (selection) {
