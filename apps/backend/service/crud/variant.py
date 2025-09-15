@@ -32,6 +32,7 @@ async def recalculate_variants_rollout_percentage_db(
     variants: List[Variant] = (
         db.query(Variant)
         .filter(Variant.feature_flag_id == feature_flag_id)
+        .filter(Variant.status == int(VariantStatus.ACTIVE.value))
         .filter(Variant.id != variant_id)
         .all()
     )
@@ -75,7 +76,12 @@ async def recalculate_variants_rollout_percentage_db(
 
 async def normalize_variants_rollout_percentage_db(db: Session, feature_flag_id: int) -> None:
     logger.info(f"Normalizing variant rollout percentages for feature flag {feature_flag_id}")
-    variants: List[Variant] = await get_variants_by_feature_flag_id_db(db, feature_flag_id)
+    variants: List[Variant] = (
+        db.query(Variant)
+        .filter(Variant.feature_flag_id == feature_flag_id)
+        .filter(Variant.status == int(VariantStatus.ACTIVE.value))
+        .all()
+    )
     if len(variants) == 0:
         logger.debug('No variants found to normalize')
         return
