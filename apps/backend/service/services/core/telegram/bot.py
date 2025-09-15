@@ -1,15 +1,8 @@
 import requests
 
-from conf.settings import service_settings
-from crud.ipgetter import get_location_by_ip
+from conf.settings import logger, service_settings
 from services.core.routes.schemas.client import ClientInfo
 from services.core.routes.schemas.feedback import FeedbackPost, FeelLevel
-
-BOT_TOKEN = service_settings.TELEGRAM_BOT_TOKEN
-CHAT_ID = service_settings.TELEGRAM_CHAT_ID
-
-# Telegram API URL to send the message
-url = f'https://api.telegram.org/bot{BOT_TOKEN}/sendMessage'
 
 
 def send_feedback(fb: FeedbackPost, client_info: ClientInfo) -> None:
@@ -28,20 +21,20 @@ def send_feedback(fb: FeedbackPost, client_info: ClientInfo) -> None:
     if fb.feel == FeelLevel.FIVE:
         message += '\nНастроение: 😃'
 
-    location = get_location_by_ip(client_info.ip_address if client_info.ip_address else '')
-    message += f'\nLocation: {location.city}, {location.region}, {location.country}'
-    message += f'\nDevice: {client_info.device_type}'
-    message += f'\nOS: {client_info.os_type}'
-    message += f'\nBrowser: {client_info.browser}'
-    message += f'\nLanguage: {client_info.language}'
-    message += f'\nScreen Width: {client_info.screen_width}'
-    message += f'\nScreen Height: {client_info.screen_height}'
+    message += f'\nDevice: {client_info.device_type.name if client_info.device_type else 'N/A'}'
+    message += f'\nOS: {client_info.os_type.name if client_info.os_type else 'N/A'}'
+    message += f'\nBrowser: {client_info.browser if client_info.browser else 'N/A'}'
+    message += f'\nLanguage: {client_info.language if client_info.language else 'N/A'}'
+    message += f'\nPage: {fb.page}'
 
+    BOT_TOKEN = service_settings.TELEGRAM_BOT_TOKEN
+    CHAT_ID = service_settings.TELEGRAM_CHAT_ID
     params = {'chat_id': CHAT_ID, 'text': message}
-
+    url = f'https://api.telegram.org/bot{BOT_TOKEN}/sendMessage'
     response = requests.post(url, params=params, timeout=10)
 
     if response.status_code == 200:
-        print('Message sent successfully!')
+        logger.debug('Telegram message sent successfully!')
     else:
-        print('Failed to send message:', response.text)
+        logger.error(f'Failed to send telegram message: {response.text}')
+        raise RuntimeError(f'Failed to send telegram message: {response.text}')

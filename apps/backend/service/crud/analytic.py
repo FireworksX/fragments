@@ -125,7 +125,7 @@ async def get_goal_detalization_graph_db(
                         ]
                     )
                 )
-            ).label('sessions'),
+            ).label('unique_views'),
         )
         .filter(
             ClientHistory.variant_id == variant_id if variant_id else True,
@@ -141,7 +141,9 @@ async def get_goal_detalization_graph_db(
     graph_points = []
     for point in stats:
         conversion = (
-            round((point.unique_achieved / point.sessions) * 100, 2) if point.sessions > 0 else 0.0
+            round((point.unique_achieved / point.unique_views) * 100, 2)
+            if point.unique_views > 0
+            else 0.0
         )
         graph_points.append(
             DetalizationGraphPoint(
@@ -151,7 +153,7 @@ async def get_goal_detalization_graph_db(
                     views=point.views,
                     conversion=conversion,
                     unique_achieved=point.unique_achieved,
-                    sessions=point.sessions,
+                    unique_views=point.unique_views,
                 ),
             )
         )
@@ -193,11 +195,11 @@ async def get_variant_statistic_db(
     total_conversion = 0.0
     current_views = 0
     current_achieved = 0
-    current_sessions = 0
+    current_unique_views = 0
     current_unique_achieved = 0
     prev_views = 0
     prev_achieved = 0
-    prev_sessions = 0
+    prev_unique_views = 0
     prev_unique_achieved = 0
 
     for goal in variant.fragment.linked_goals:
@@ -209,11 +211,11 @@ async def get_variant_statistic_db(
         total_conversion += goal_stat.current_statistic.conversion
         current_views += goal_stat.current_statistic.views
         current_achieved += goal_stat.current_statistic.achieved
-        current_sessions += goal_stat.current_statistic.sessions
+        current_unique_views += goal_stat.current_statistic.unique_views
         current_unique_achieved += goal_stat.current_statistic.unique_achieved
         prev_views += goal_stat.prev_statistic.views
         prev_achieved += goal_stat.prev_statistic.achieved
-        prev_sessions += goal_stat.prev_statistic.sessions
+        prev_unique_views += goal_stat.prev_statistic.unique_views
         prev_unique_achieved += goal_stat.prev_statistic.unique_achieved
 
     current_conversion = round(total_conversion / len(variant.fragment.linked_goals), 2)
@@ -223,14 +225,14 @@ async def get_variant_statistic_db(
         conversion=current_conversion,
         views=current_views,
         achieved=current_achieved,
-        sessions=current_sessions,
+        unique_views=current_unique_views,
         unique_achieved=current_unique_achieved,
     )
     prev_statistic = StatisticGet(
         conversion=prev_conversion,
         views=prev_views,
         achieved=prev_achieved,
-        sessions=prev_sessions,
+        unique_views=prev_unique_views,
         unique_achieved=prev_unique_achieved,
     )
     trend = await get_statistic_trend_db(current_statistic, prev_statistic)
@@ -269,7 +271,7 @@ async def get_campaign_statistic_db(
     total_conversion = 0.0
     current_views = 0
     current_achieved = 0
-    current_sessions = 0
+    current_unique_views = 0
     current_unique_achieved = 0
     variants = []
     for variant in campaign.feature_flag.variants:
@@ -283,7 +285,7 @@ async def get_campaign_statistic_db(
         )
         current_views += variant_conversion.current_statistic.views
         current_achieved += variant_conversion.current_statistic.achieved
-        current_sessions += variant_conversion.current_statistic.sessions
+        current_unique_views += variant_conversion.current_statistic.unique_views
         current_unique_achieved += variant_conversion.current_statistic.unique_achieved
         variants.append(variant_conversion)
     current_conversion = round(total_conversion / len(campaign.feature_flag.variants), 2)
@@ -292,7 +294,7 @@ async def get_campaign_statistic_db(
     # Get previous
     prev_views = 0
     prev_achieved = 0
-    prev_sessions = 0
+    prev_unique_views = 0
     prev_unique_achieved = 0
     prev_total_conversion = 0.0
     for variant in campaign.feature_flag.variants:
@@ -303,7 +305,7 @@ async def get_campaign_statistic_db(
             continue
         prev_views += variant_conversion.current_statistic.views
         prev_achieved += variant_conversion.current_statistic.achieved
-        prev_sessions += variant_conversion.current_statistic.sessions
+        prev_unique_views += variant_conversion.current_statistic.unique_views
         prev_unique_achieved += variant_conversion.current_statistic.unique_achieved
         prev_total_conversion += variant_conversion.current_statistic.conversion * (
             variant.rollout_percentage / 100
@@ -315,7 +317,7 @@ async def get_campaign_statistic_db(
         conversion=current_conversion,
         views=current_views,
         achieved=current_achieved,
-        sessions=current_sessions,
+        unique_views=current_unique_views,
         unique_achieved=current_unique_achieved,
     )
 
@@ -323,7 +325,7 @@ async def get_campaign_statistic_db(
         conversion=prev_conversion,
         views=prev_views,
         achieved=prev_achieved,
-        sessions=prev_sessions,
+        unique_views=prev_unique_views,
         unique_achieved=prev_unique_achieved,
     )
 
@@ -362,7 +364,7 @@ async def get_area_average_conversion_db(
 
     current_views = 0
     current_achieved = 0
-    current_sessions = 0
+    current_unique_views = 0
     current_unique_achieved = 0
     # Get current period conversion
     campaigns = []
@@ -375,7 +377,7 @@ async def get_area_average_conversion_db(
             continue
         current_views += campaign_conversion.current_statistic.views
         current_achieved += campaign_conversion.current_statistic.achieved
-        current_sessions += campaign_conversion.current_statistic.sessions
+        current_unique_views += campaign_conversion.current_statistic.unique_views
         current_unique_achieved += campaign_conversion.current_statistic.unique_achieved
         campaigns.append(campaign_conversion)
         total_conversion += campaign_conversion.current_statistic.conversion
@@ -385,7 +387,7 @@ async def get_area_average_conversion_db(
     # Get previous day conversion
     prev_views = 0
     prev_achieved = 0
-    prev_sessions = 0
+    prev_unique_views = 0
     prev_unique_achieved = 0
     prev_total_conversion = 0.0
     for campaign in area.campaigns:
@@ -396,7 +398,7 @@ async def get_area_average_conversion_db(
             continue
         prev_views += campaign_conversion.current_statistic.views
         prev_achieved += campaign_conversion.current_statistic.achieved
-        prev_sessions += campaign_conversion.current_statistic.sessions
+        prev_unique_views += campaign_conversion.current_statistic.unique_views
         prev_unique_achieved += campaign_conversion.current_statistic.unique_achieved
         prev_total_conversion += campaign_conversion.current_statistic.conversion
     prev_conversion = round(prev_total_conversion / len(area.campaigns), 2)
@@ -406,7 +408,7 @@ async def get_area_average_conversion_db(
         conversion=current_conversion,
         views=current_views,
         achieved=current_achieved,
-        sessions=current_sessions,
+        unique_views=current_unique_views,
         unique_achieved=current_unique_achieved,
     )
 
@@ -414,7 +416,7 @@ async def get_area_average_conversion_db(
         conversion=prev_conversion,
         views=prev_views,
         achieved=prev_achieved,
-        sessions=prev_sessions,
+        unique_views=prev_unique_views,
         unique_achieved=prev_unique_achieved,
     )
 
@@ -454,7 +456,7 @@ async def get_project_statistic_db(
 
     current_views = 0
     current_achieved = 0
-    current_sessions = 0
+    current_unique_views = 0
     current_unique_achieved = 0
     # Get current period conversion
     areas = []
@@ -467,7 +469,7 @@ async def get_project_statistic_db(
             continue
         current_views += area_conversion.current_statistic.views
         current_achieved += area_conversion.current_statistic.achieved
-        current_sessions += area_conversion.current_statistic.sessions
+        current_unique_views += area_conversion.current_statistic.unique_views
         current_unique_achieved += area_conversion.current_statistic.unique_achieved
         areas.append(area_conversion)
         total_conversion += area_conversion.current_statistic.conversion
@@ -477,7 +479,7 @@ async def get_project_statistic_db(
     # Get previous period conversion
     prev_views = 0
     prev_achieved = 0
-    prev_sessions = 0
+    prev_unique_views = 0
     prev_unique_achieved = 0
     prev_total_conversion = 0.0
     for area in project.areas:
@@ -488,7 +490,7 @@ async def get_project_statistic_db(
             continue
         prev_views += area_conversion.current_statistic.views
         prev_achieved += area_conversion.current_statistic.achieved
-        prev_sessions += area_conversion.current_statistic.sessions
+        prev_unique_views += area_conversion.current_statistic.unique_views
         prev_unique_achieved += area_conversion.current_statistic.unique_achieved
         prev_total_conversion += area_conversion.current_statistic.conversion
     prev_conversion = round(prev_total_conversion / len(project.areas), 2)
@@ -498,7 +500,7 @@ async def get_project_statistic_db(
         conversion=current_conversion,
         views=current_views,
         achieved=current_achieved,
-        sessions=current_sessions,
+        unique_views=current_unique_views,
         unique_achieved=current_unique_achieved,
     )
 
@@ -506,7 +508,7 @@ async def get_project_statistic_db(
         conversion=prev_conversion,
         views=prev_views,
         achieved=prev_achieved,
-        sessions=prev_sessions,
+        unique_views=prev_unique_views,
         unique_achieved=prev_unique_achieved,
     )
 
@@ -544,23 +546,23 @@ async def goal_statistic_db(
 
     views = len(views_query)
 
-    # Calculate unique sessions (30 min gap between views)
-    sessions = 0
+    # Calculate unique views (30 min gap between views)
+    unique_views = 0
     current_client = None
     last_view_time = None
     SESSION_GAP = timedelta(minutes=30)
 
     for view in views_query:
         if view.client_id != current_client:
-            sessions += 1
+            unique_views += 1
             current_client = view.client_id
             last_view_time = view.created_at
         else:
             if view.created_at - last_view_time > SESSION_GAP:
-                sessions += 1
+                unique_views += 1
             last_view_time = view.created_at
 
-    # Count unique achievements per session
+    # Count unique achievements per unique view
     achievements_query = (
         db.query(ClientHistory)
         .filter(
@@ -590,14 +592,14 @@ async def goal_statistic_db(
                 unique_achievements += 1
             last_achievement_time = achievement.created_at
 
-    conversion = round((unique_achievements / sessions) * 100, 2) if sessions > 0 else 0.0
+    conversion = round((unique_achievements / unique_views) * 100, 2) if unique_views > 0 else 0.0
     logger.info(f"Current conversion for goal {goal.id}: {conversion}%")
 
     return StatisticGet(
         conversion=conversion,
         views=views,
         achieved=achievements,
-        sessions=sessions,
+        unique_views=unique_views,
         unique_achieved=unique_achievements,
     )
 
@@ -679,27 +681,27 @@ async def get_statistic_trend_db(
                     else 0.0
                 ),
             ),
-            sessions_trend=StatisticTrendGet(
+            unique_views_trend=StatisticTrendGet(
                 trend=(
                     Trend.UP
-                    if current_statistic.sessions > prev_statistic.sessions
+                    if current_statistic.unique_views > prev_statistic.unique_views
                     else (
                         Trend.DOWN
-                        if current_statistic.sessions < prev_statistic.sessions
+                        if current_statistic.unique_views < prev_statistic.unique_views
                         else Trend.FLAT
                     )
                 ),
-                difference=current_statistic.sessions - prev_statistic.sessions,
+                difference=current_statistic.unique_views - prev_statistic.unique_views,
                 percentage=(
                     round(
                         (
-                            (current_statistic.sessions - prev_statistic.sessions)
-                            / prev_statistic.sessions
+                            (current_statistic.unique_views - prev_statistic.unique_views)
+                            / prev_statistic.unique_views
                             * 100
                         ),
                         2,
                     )
-                    if prev_statistic.sessions > 0
+                    if prev_statistic.unique_views > 0
                     else 0.0
                 ),
             ),
@@ -741,7 +743,7 @@ async def get_goal_statistic_db(
     variant_id: Optional[int] = None,
 ) -> GoalStatisticGet:
     """
-    Get goal conversion rate by calculating unique sessions and achievements
+    Get goal conversion rate by calculating unique views and achievements
     A session is considered ended after 30 minutes of inactivity
     """
     logger.info(f"Getting goal statistics for goal {goal_id}")

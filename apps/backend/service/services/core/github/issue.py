@@ -42,7 +42,7 @@ async def create_github_issue(issue: BugPost | ProposalPost, client_info: Client
         f"- Device type: {client_info.device_type.name if client_info.device_type else 'N/A'}\n"
         f"- Time: {client_info.time_frame.strftime('%Y-%m-%d %H:%M:%S') if client_info.time_frame else 'N/A'}\n"
         f"- Browser: {client_info.browser if client_info.browser else 'N/A'}\n"
-        f"- Page: {client_info.page if client_info.page else 'N/A'}\n"
+        f"- Page: {issue.page}\n"
     )
 
     body = '## Message\n' + issue.content + '\n\n' + '## Client Info\n' + client_info_str

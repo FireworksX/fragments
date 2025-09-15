@@ -25,8 +25,8 @@ class Value:
     achieved: int
     unique_achieved: int
     views: int
-    sessions: int
-    conversion: float  # unique achieved / sessions
+    unique_views: int
+    conversion: float  # unique achieved / unique views
 
 
 @strawberry.type
@@ -53,7 +53,7 @@ class StatisticGet:
     conversion: float
     views: int
     achieved: int
-    sessions: int
+    unique_views: int
     unique_achieved: int
 
 
@@ -62,7 +62,7 @@ class StatisticTrend:
     conversion_trend: StatisticTrendGet
     views_trend: StatisticTrendGet
     achieved_trend: StatisticTrendGet
-    sessions_trend: StatisticTrendGet
+    unique_views_trend: StatisticTrendGet
     unique_achieved_trend: StatisticTrendGet
 
 
