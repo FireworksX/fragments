@@ -1,38 +1,51 @@
 import { GraphState, LinkKey } from "@graph-state/core";
-import { useLayerValue as useLayerValueCore } from "@fragmentsx/render-react";
+import {
+  FragmentContext,
+  useLayerValue as useLayerValueCore,
+} from "@fragmentsx/render-react";
 import { useLayerValueSpring } from "@/hooks/useLayerValueSpring";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 
 export interface UseLayerValueOptions {
   onChange?: (value: unknown) => void;
+  manager?: GraphState;
 }
 
 export const useLayerValue = (
   layerKey: LinkKey,
   fieldKey: string,
-  manager: GraphState,
   options?: UseLayerValueOptions
 ) => {
+  const { manager: fragmentManager } = useContext(FragmentContext);
+  const resultManager = options?.manager ?? fragmentManager;
+
   const [coreValue, setCoreValue, coreInfo] = useLayerValueCore(
     layerKey,
     fieldKey,
-    manager
+    {
+      manager: resultManager,
+    }
   );
 
   const [value$, setValue$] = useLayerValueSpring({
     layerKey,
     fieldKey,
     initialValue: coreValue,
-    manager,
+    manager: resultManager,
     onFinish: setCoreValue,
     onChange: (value) => options?.onChange?.(value),
   });
 
   useEffect(() => {
-    if (!!value$?.get() && !!coreValue && value$?.get() !== coreValue) {
+    if (
+      !coreInfo.isVariable &&
+      !!value$?.get() &&
+      !!coreValue &&
+      value$?.get() !== coreValue
+    ) {
       setValue$(coreValue);
     }
-  }, [coreValue]);
+  }, [coreValue, coreInfo.isVariable]);
 
   return [
     coreValue,

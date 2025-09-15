@@ -1,4 +1,4 @@
-import { useEditor, Editor } from '@tiptap/react'
+import { useEditor, Editor, ReactRenderer } from '@tiptap/react'
 import { StarterKit } from '@tiptap/starter-kit'
 import { createContext, FC, PropsWithChildren } from 'react'
 import { TextStyle } from '@tiptap/extension-text-style'
@@ -10,6 +10,7 @@ import { TextDecoration } from './TextDecorationExtension'
 import { LineHeight } from './LineHeightExtension'
 import { LetterSpacing } from './LetterSpacingExtension'
 import { Color } from './ColorExtension'
+import { TextVariablesExtension } from './TextVariablesExtension'
 
 export const canvasEditorExtensions = [
   StarterKit,
@@ -23,7 +24,8 @@ export const canvasEditorExtensions = [
   TextDecoration,
   LineHeight,
   LetterSpacing,
-  Color
+  Color,
+  TextVariablesExtension
 ]
 const content = ''
 

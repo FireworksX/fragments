@@ -1,17 +1,15 @@
 'use client'
-import { FC, PropsWithChildren } from 'react'
+import { ComponentProps, FC, PropsWithChildren } from 'react'
 import cn from 'classnames'
 import { animated } from '@react-spring/web'
 import styles from './styles.module.css'
 import CaretDown from '@/shared/icons/caret-down.svg'
 
-interface SelectProps extends PropsWithChildren {
+interface SelectProps extends PropsWithChildren, ComponentProps<'select'> {
   className?: string
-  value?: string
-  onChange?(value: string): void
 }
 
-const Select: FC<SelectProps> = animated(({ className, children, value, onChange }) => {
+const Select: FC<SelectProps> = animated(({ className, children, value, onChange, ...rest }) => {
   return (
     <div className={cn(styles.root, className)}>
       <CaretDown className={styles.caret} width={11} />
@@ -21,6 +19,7 @@ const Select: FC<SelectProps> = animated(({ className, children, value, onChange
         onChange={e => {
           onChange?.(e.target.value)
         }}
+        {...rest}
       >
         {children}
       </select>

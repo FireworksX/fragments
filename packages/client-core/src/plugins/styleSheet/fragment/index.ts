@@ -74,11 +74,13 @@ function generateLargerCssBlocks(
     (largerLayer: any, index: number, arr: any[]) => {
       const largerChildren = getAllChildren(layerResolver, largerLayer);
       const largerCssBlocks = largerChildren.map(cssMaker);
+
       const min = largerLayer.width;
       const max = index < arr.length - 1 ? arr[index + 1].width - 1 : null;
       const containerQuery = max
         ? `@container (min-width: ${min}px) and (max-width: ${max}px)`
         : `@container (min-width: ${min}px)`;
+
       return `${containerQuery} {${largerCssBlocks
         .map(buildCssBlock)
         .join("")}}`;
@@ -101,17 +103,21 @@ function extractStyleSheet(styles: LayerStyles, layerResolver: LayerResolver) {
   const fragmentCssRules: string[] = [];
   // Основной слой
   fragmentCssRules.push(buildCssBlock(cssMaker(group.fragmentLayerKey)));
+
   // Primary breakpoint
   const primaryStyles = generatePrimaryCssBlocks(
     layerResolver,
     group,
     cssMaker
   );
+
   fragmentCssRules.push(...primaryStyles);
+
   // Smaller breakpoints
   fragmentCssRules.push(
     ...generateSmallerCssBlocks(layerResolver, group, cssMaker)
   );
+
   // Larger breakpoints
   fragmentCssRules.push(
     ...generateLargerCssBlocks(layerResolver, group, cssMaker)

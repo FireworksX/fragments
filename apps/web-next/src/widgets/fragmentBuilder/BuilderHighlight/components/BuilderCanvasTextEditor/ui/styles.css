@@ -1,7 +1,5 @@
 .canvas-rich-editor {
     pointer-events: auto;
-    position: absolute;
-    inset: 0;
 
     .tiptap {
         outline: none;
@@ -10,6 +8,16 @@
 
         :where(p) {
             margin: 0;
+            font-size: 14px;
+            color: #000;
+            font-weight: 400;
+        }
+
+        .variable {
+            font-weight: 500;
+            color: var(--primary);
+            text-decoration: underline;
+            white-space: nowrap;
         }
     }
 }

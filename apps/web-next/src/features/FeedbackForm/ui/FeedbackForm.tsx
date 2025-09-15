@@ -19,6 +19,12 @@ import emojiFour from '../emoji/emoji-love.png'
 import CheckIcon from '@/shared/icons/next/check.svg'
 import { promiseWaiter } from '@fragmentsx/utils'
 import { capitalize } from '@/shared/utils/capitalize'
+import { InputText } from '@/shared/ui/InputText'
+import { ImagePicker } from '@/features/fragmentBuilder/ImagePicker'
+import { ImageSelector } from '@/shared/ui/ImageSelector'
+import ImageSelectorShort from '@/shared/ui/ImageSelectorShort/ui/ImageSelectorShort'
+import { InputSelect } from '@/shared/ui/InputSelect'
+import { ImageFileViewer } from '@/shared/ui/ImageFileViewer'
 
 interface FeedbackFormProps {
   className?: string
@@ -43,13 +49,16 @@ export const FeedbackForm: FC<FeedbackFormProps> = ({ className }) => {
   const [type, setType] = useState(IssueType.Feedback)
   const [bugPriority, setBugPriority] = useState(BugPriority.Medium)
   const [emotion, setEmotion] = useState(1)
+  const [title, setTitle] = useState('')
   const [message, setMessage] = useState('')
   const [isNotify, setIsNotify] = useState(false)
+  const [attachments, setAttachments] = useState<File[]>([])
 
   const [send, { loading, data: feedbackData }] = useSendFeedbackMutation()
 
   const resetForm = () => {
     setMessage('')
+    setTitle('')
     setEmotion(1)
     setBugPriority(BugPriority.Medium)
     setType(IssueType.Feedback)
@@ -70,19 +79,24 @@ export const FeedbackForm: FC<FeedbackFormProps> = ({ className }) => {
     if (type === IssueType.Issue) {
       variableBag.bug = {
         page,
+        title,
         priority: bugPriority,
-        content: message
+        content: message,
+        attachments
       }
     } else if (type === IssueType.Feedback) {
       variableBag.feedback = {
         page,
         content: message,
+        attachments,
         feel: emotionToFeel[emotion]
       }
     } else if (type === IssueType.Proposal) {
       variableBag.proposal = {
         page,
-        content: message
+        title,
+        content: message,
+        attachments
       }
     }
 
@@ -116,25 +130,11 @@ export const FeedbackForm: FC<FeedbackFormProps> = ({ className }) => {
           </Button>
         }
       >
-        <div
-          className={cn(styles.feedbackDone, {
-            [styles.feedbackActive]: isNotify
-          })}
-        >
-          <CheckIcon width={24} height={24} />
-          {feedbackData?.createIssue?.ticketLink && (
-            <a href={feedbackData?.createIssue?.ticketLink} target='_blank'>
-              <Button TagName='div' mode='tertiary' size='large' icon={<LinkIcon />}>
-                Open your ticket
-              </Button>
-            </a>
-          )}
-        </div>
         <ControlRow title='Type'>
           <ControlRowWide>
             <Select disabled={loading} value={type} onChange={setType}>
               {Object.values(IssueType).map(type => (
-                <option value={type}>{capitalize(type)}</option>
+                <option value={type}>{capitalize(type.toLowerCase())}</option>
               ))}
             </Select>
           </ControlRowWide>
@@ -144,7 +144,7 @@ export const FeedbackForm: FC<FeedbackFormProps> = ({ className }) => {
             <ControlRowWide>
               <Select disabled={loading} value={bugPriority} onChange={setBugPriority}>
                 {Object.values(BugPriority).map(type => (
-                  <option value={type}>{capitalize(type)}</option>
+                  <option value={type}>{capitalize(type.toLowerCase())}</option>
                 ))}
               </Select>
             </ControlRowWide>
@@ -156,6 +156,38 @@ export const FeedbackForm: FC<FeedbackFormProps> = ({ className }) => {
             <Slider disabled={loading} value={emotion} min={0} max={3} onChange={setEmotion} />
           </ControlRow>
         )}
+        <ControlRow title='Attachments'>
+          <ControlRowWide>
+            {attachments.map((attachment, index) => (
+              <InputSelect
+                icon={<ImageFileViewer file={attachment} />}
+                onReset={() =>
+                  setAttachments(prev => {
+                    return prev.toSpliced(index, 1)
+                  })
+                }
+              >
+                {attachment.name}
+              </InputSelect>
+            ))}
+
+            <ImageSelectorShort
+              // value={urlInvoker?.value}
+              isUploading={loading}
+              onChange={file => setAttachments(prev => [...prev, file])}
+              // onReset={() => urlInvoker?.onChange('')}
+            />
+          </ControlRowWide>
+        </ControlRow>
+
+        {type !== IssueType.Feedback && (
+          <ControlRow isHideTitle>
+            <ControlRowWide>
+              <InputText placeholder='Title' value={title} onChangeValue={setTitle} />
+            </ControlRowWide>
+          </ControlRow>
+        )}
+
         <ControlRow isHideTitle>
           <ControlRowWide>
             <Textarea
@@ -167,6 +199,21 @@ export const FeedbackForm: FC<FeedbackFormProps> = ({ className }) => {
             />
           </ControlRowWide>
         </ControlRow>
+
+        <div
+          className={cn(styles.feedbackDone, {
+            [styles.feedbackActive]: isNotify
+          })}
+        >
+          <CheckIcon width={28} height={28} />
+          {feedbackData?.createIssue?.ticketLink && (
+            <a href={feedbackData?.createIssue?.ticketLink} target='_blank'>
+              <Button TagName='div' mode='tertiary' size='large' icon={<LinkIcon />}>
+                Open your ticket
+              </Button>
+            </a>
+          )}
+        </div>
       </Panel>
     </form>
   )

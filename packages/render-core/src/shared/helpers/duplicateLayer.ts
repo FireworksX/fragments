@@ -1,27 +1,38 @@
-import { Entity, GraphState } from "@graph-state/core";
+import { Entity, GraphState, keyOfEntity, LinkKey } from "@graph-state/core";
 import { createLayer } from "@/shared/helpers/createLayer.ts";
 import { getParent } from "@/shared/helpers/getParent";
 import { insertChildren } from "@/shared/helpers/children";
+import { generateId, setKey } from "@fragmentsx/utils";
 
 export const duplicateLayer = (
   manager: GraphState,
   layer: Entity,
-  _deep?: boolean
+  _deep?: boolean,
+  _newParent?: LinkKey
 ) => {
   const layerGraph = manager.resolve(layer);
 
   if (layerGraph) {
+    const nextId = generateId();
+    const nextLayerKey = keyOfEntity({
+      _type: layerGraph._type,
+      _id: nextId,
+    });
+
     const clonedChildren = (layerGraph?.children ?? []).map((child) =>
-      duplicateLayer(manager, child, true)
+      duplicateLayer(manager, child, true, nextLayerKey)
     );
 
+    // console.log(layerGraph, nextLayerKey);
     const duplicatedLayer = createLayer(
       {
         _type: layerGraph._type,
         ...layerGraph,
+        _id: nextId,
+        parent: _deep ? setKey(_newParent) : layerGraph?.parent,
         children: clonedChildren,
       },
-      true
+      false
     );
 
     const duplicatedKey = manager.mutate(duplicatedLayer);

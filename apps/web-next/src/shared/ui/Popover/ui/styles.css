@@ -9,7 +9,7 @@
 
     .tippy-box {
         position: relative;
-        background-color: #333;
+        background-color: transparent;
         color: #fff;
         border-radius: 4px;
         font-size: 14px;

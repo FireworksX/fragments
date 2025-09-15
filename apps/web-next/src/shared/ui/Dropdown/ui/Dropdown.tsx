@@ -10,6 +10,7 @@ export interface DropdownProps extends PopoverProps {
   options?: ReactNode | ReactNode[]
   isLoading?: boolean
   className?: string
+  pause?: boolean
   header?: ReactNode
   width?: number | 'contentSize'
 }
@@ -19,6 +20,7 @@ const Dropdown: FC<DropdownProps> = ({
   children,
   header,
   isLoading,
+  pause = false,
   width,
   options,
   onCreate,
@@ -34,27 +36,29 @@ const Dropdown: FC<DropdownProps> = ({
     onCreate?.(instance)
   }
 
-  return (
-    <Popover
-      className={cn(styles.root, className)}
-      interactive
-      {...restProps}
-      content={
-        <div className={styles.content}>
-          {header && !isLoading && <div className={styles.header}>{header}</div>}
-          <div className={styles.options} style={{ width: optionsWidth }}>
-            {isLoading ? (
-              <div className={styles.loadingContainer}>
-                <Spinner size={14} color='var(--text-color-accent)' />
-              </div>
-            ) : (
-              options
-            )}
-          </div>
+  const Content = (
+    <div className={cn(styles.root, className)}>
+      <div className={styles.content}>
+        {header && !isLoading && <div className={styles.header}>{header}</div>}
+        <div className={styles.options} style={{ width: optionsWidth }}>
+          {isLoading ? (
+            <div className={styles.loadingContainer}>
+              <Spinner size={14} color='var(--text-color-accent)' />
+            </div>
+          ) : (
+            options
+          )}
         </div>
-      }
-      onCreate={onCreateProxy}
-    >
+      </div>
+    </div>
+  )
+
+  if (pause) {
+    return Content
+  }
+
+  return (
+    <Popover interactive {...restProps} content={Content} onCreate={onCreateProxy}>
       {children}
     </Popover>
   )

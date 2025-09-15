@@ -1,4 +1,4 @@
-import { Entity, GraphState, LinkKey } from "@graph-state/core";
+import { Entity, GraphState, LinkKey, keyOfEntity } from "@graph-state/core";
 import { LayerResolver, LayerStyles } from "../fragment";
 
 export const getAllChildren = (
@@ -9,12 +9,12 @@ export const getAllChildren = (
   const layer = layerResolver(layerKey) ?? {};
 
   if (acc.length === 0) {
-    acc.push(layerKey);
+    acc.push(keyOfEntity(layerKey));
   }
 
   layer?.children?.forEach((child: string | null) => {
     if (child) {
-      acc.push(child);
+      acc.push(keyOfEntity(child));
       getAllChildren(layerResolver, child, acc);
     }
   });

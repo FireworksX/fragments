@@ -32,8 +32,6 @@ export const useCanvasDrag = ({ viewportRef, pointerRef }: Options) => {
   const { documentManager } = useBuilderDocument()
   const dragMoveHandler = useDragMove()
   const saveOffset = useRef([0, 0])
-  const [, setTop, { value$: top$ }] = useLayerValue('top')
-  const [, setLeft, { value$: left$ }] = useLayerValue('left')
   const wheelMode = useRef<'pan' | 'zoom' | null>(null)
 
   useEffect(() => {
@@ -100,15 +98,18 @@ export const useCanvasDrag = ({ viewportRef, pointerRef }: Options) => {
         setIsDraggingLayer(dragging)
         // canvasManager.setDragging(dragging, dragEvent.memo?.targetLayerLink)
 
-        const dragPoint = dragMoveHandler(dragEvent, { x: animatableValue(left$), y: animatableValue(top$) })
+        const dragPoint = dragMoveHandler(dragEvent)
         // dragPoint = dragCollisionsHandler(dragEvent, dragPoint)
 
-        setTop(dragPoint.y)
-        setLeft(dragPoint.x)
+        // setTop(dragPoint.y)
+        // setLeft(dragPoint.x)
         // documentManager.mutate(dragEvent.memo?.targetLayerLink, {
         //   top: dragPoint.y,
         //   left: dragPoint.x
         // })
+
+        // setCenterAnchorX(dragPoint.x)
+        // setCenterAnchorY(dragPoint.y)
 
         // up(dragPoint.x)
 

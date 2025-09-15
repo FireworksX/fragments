@@ -17,7 +17,7 @@ export const FragmentPreview: FC<FragmentPreviewProps> = ({ className }) => {
     <div className={cn(styles.root, className)} data-testid='BuilderPreview'>
       <BuilderFragmentTabs isPreview />
       <div className={styles.body}>
-        <FragmentPreviewSandbox fragmentId={currentFragmentId} />
+        <FragmentPreviewSandbox fragmentId={currentFragmentId} hideOpenInEditor />
       </div>
     </div>
   )

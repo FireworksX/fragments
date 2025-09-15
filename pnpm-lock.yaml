@@ -57,6 +57,9 @@ importers:
       '@feature-sliced/cli':
         specifier: ^1.0.0
         version: 1.0.0
+      '@floating-ui/dom':
+        specifier: ^1.7.4
+        version: 1.7.4
       '@fragmentsx/client-core':
         specifier: workspace:*
         version: link:../../packages/client-core
@@ -105,6 +108,9 @@ importers:
       '@tiptap/extension-color':
         specifier: ^3.4.0
         version: 3.4.0(@tiptap/extension-text-style@3.4.0(@tiptap/core@3.4.0(@tiptap/pm@3.4.0)))
+      '@tiptap/extension-mention':
+        specifier: ^3.4.2
+        version: 3.4.2(@tiptap/core@3.4.0(@tiptap/pm@3.4.0))(@tiptap/pm@3.4.0)(@tiptap/suggestion@3.4.2(@tiptap/core@3.4.0(@tiptap/pm@3.4.0))(@tiptap/pm@3.4.0))
       '@tiptap/extension-text-align':
         specifier: ^3.4.0
         version: 3.4.0(@tiptap/core@3.4.0(@tiptap/pm@3.4.0))
@@ -3225,6 +3231,13 @@ packages:
       '@tiptap/core': ^3.4.0
       '@tiptap/pm': ^3.4.0
 
+  '@tiptap/extension-mention@3.4.2':
+    resolution: {integrity: sha512-HBGz7zOYr2JEM6SwkWCogvJ0acrq69O3/eKUVGUK5+J8bTu48KgxEXmlPDytZ6euA4Yd/2dJaYeJA3/nW/KDPQ==}
+    peerDependencies:
+      '@tiptap/core': ^3.4.2
+      '@tiptap/pm': ^3.4.2
+      '@tiptap/suggestion': ^3.4.2
+
   '@tiptap/extension-ordered-list@3.4.0':
     resolution: {integrity: sha512-2F/c2NPESYTsIzZr5KFzpjFEsJzqTnBbmYpRA6kDlwGSfvYlcxb22KyD0zrKXClls4OkVSsUbar+HSsaYDuCvQ==}
     peerDependencies:
@@ -3279,6 +3292,12 @@ packages:
 
   '@tiptap/starter-kit@3.4.0':
     resolution: {integrity: sha512-7JFP/FWe5vEZMn0dW2tclWVaYlSk0/PHQYM2G89ZlWiCm16LHyuSj+9fGiEXMew37zVTfq1KkNYV+7BBeQmyyg==}
+
+  '@tiptap/suggestion@3.4.2':
+    resolution: {integrity: sha512-sljtfiDtdAsbPOwrXrFGf64D6sXUjeU3Iz5v3TvN7TVJKozkZ/gaMkPRl+WC1CGwC6BnzQVDBEEa1e+aApV0mA==}
+    peerDependencies:
+      '@tiptap/core': ^3.4.2
+      '@tiptap/pm': ^3.4.2
 
   '@trysound/sax@0.2.0':
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==}
@@ -9511,16 +9530,13 @@ snapshots:
   '@floating-ui/core@1.7.3':
     dependencies:
       '@floating-ui/utils': 0.2.10
-    optional: true
 
   '@floating-ui/dom@1.7.4':
     dependencies:
       '@floating-ui/core': 1.7.3
       '@floating-ui/utils': 0.2.10
-    optional: true
 
-  '@floating-ui/utils@0.2.10':
-    optional: true
+  '@floating-ui/utils@0.2.10': {}
 
   '@graph-state/checkers@0.1.2': {}
 
@@ -10999,6 +11015,12 @@ snapshots:
       '@tiptap/core': 3.4.0(@tiptap/pm@3.4.0)
       '@tiptap/pm': 3.4.0
 
+  '@tiptap/extension-mention@3.4.2(@tiptap/core@3.4.0(@tiptap/pm@3.4.0))(@tiptap/pm@3.4.0)(@tiptap/suggestion@3.4.2(@tiptap/core@3.4.0(@tiptap/pm@3.4.0))(@tiptap/pm@3.4.0))':
+    dependencies:
+      '@tiptap/core': 3.4.0(@tiptap/pm@3.4.0)
+      '@tiptap/pm': 3.4.0
+      '@tiptap/suggestion': 3.4.2(@tiptap/core@3.4.0(@tiptap/pm@3.4.0))(@tiptap/pm@3.4.0)
+
   '@tiptap/extension-ordered-list@3.4.0(@tiptap/extension-list@3.4.0(@tiptap/core@3.4.0(@tiptap/pm@3.4.0))(@tiptap/pm@3.4.0))':
     dependencies:
       '@tiptap/extension-list': 3.4.0(@tiptap/core@3.4.0(@tiptap/pm@3.4.0))(@tiptap/pm@3.4.0)
@@ -11093,6 +11115,11 @@ snapshots:
       '@tiptap/extension-text': 3.4.0(@tiptap/core@3.4.0(@tiptap/pm@3.4.0))
       '@tiptap/extension-underline': 3.4.0(@tiptap/core@3.4.0(@tiptap/pm@3.4.0))
       '@tiptap/extensions': 3.4.0(@tiptap/core@3.4.0(@tiptap/pm@3.4.0))(@tiptap/pm@3.4.0)
+      '@tiptap/pm': 3.4.0
+
+  '@tiptap/suggestion@3.4.2(@tiptap/core@3.4.0(@tiptap/pm@3.4.0))(@tiptap/pm@3.4.0)':
+    dependencies:
+      '@tiptap/core': 3.4.0(@tiptap/pm@3.4.0)
       '@tiptap/pm': 3.4.0
 
   '@trysound/sax@0.2.0': {}

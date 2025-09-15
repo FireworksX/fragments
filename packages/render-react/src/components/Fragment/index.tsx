@@ -63,7 +63,7 @@ const FragmentInternal: FC<FragmentProps> = ({
               key={childLink}
               layerKey={childLink}
               hidden={!isResize && !isPrimary && !isTopFragment}
-              // style={{ display: isPrimary ? null : "none" }}
+              style={{ display: isPrimary ? null : "none" }}
             />
           );
         })}

@@ -135,6 +135,7 @@ export const moveChildren = (
 ) => {
   const targetClone = duplicateLayer(manager, targetKey, true);
 
+  // TODO ну нужно удалять детей
   insertChildren(manager, toKey, index, targetClone);
   removeChildren(manager, targetKey);
 };

@@ -68,6 +68,7 @@ export const useLayerPropertyValue = (field: keyof typeof fieldsConfig, options?
       isVariable && editProperty(rawValue)
     },
     variableData: isVariable ? variableData : null,
-    actions: layerVariable.actions
+    actions: layerVariable.actions,
+    layerVariable
   }
 }

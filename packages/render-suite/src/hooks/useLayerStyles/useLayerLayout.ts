@@ -7,12 +7,7 @@ import {
 import { useLayerValue } from "@/hooks/useLayerValue";
 
 export const useLayerLayout = (layerKey: LinkKey) => {
-  const { manager } = useContext(FragmentContext);
-  const [, , { resultValue: layerGap }] = useLayerValue(
-    layerKey,
-    "layerGap",
-    manager
-  );
+  const [, , { resultValue: layerGap }] = useLayerValue(layerKey, "layerGap");
 
   const layout = useLayerLayoutCore(layerKey);
 

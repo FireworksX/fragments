@@ -3,6 +3,7 @@ import { useDateCompare } from '@/shared/hooks/useDateCompare'
 import { useMemo, useState } from 'react'
 import { buildChartDataWithCompare } from '@/shared/utils/charts/buildChartDataWithCompare'
 import dayjs from '@/shared/lib/dayjs'
+import { useParams } from 'next/navigation'
 
 const data0 = {
   nodes: [
@@ -21,15 +22,18 @@ const data0 = {
 }
 
 export const useAreaVisitorsStatistics = () => {
+  const { areaSlug } = useParams()
   const [chartMode, setChartMode] = useState<'chart' | 'flow'>('chart')
   const dateCompare = useDateCompare('today')
 
   const { data: statisticsData } = useAreaVisitorsStatisticsQuery({
     variables: {
-      areaId: 8,
+      areaId: +areaSlug,
       ...dateCompare
     }
   })
+
+  console.log(statisticsData, dateCompare)
 
   const chartData = useMemo(() => {
     if (chartMode === 'flow') {

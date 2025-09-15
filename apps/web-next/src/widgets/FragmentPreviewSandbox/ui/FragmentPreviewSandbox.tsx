@@ -3,6 +3,7 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import { definition } from '@fragmentsx/definition'
 import { Spinner } from '@/shared/ui/Spinner'
+import ExternalLink from '@/shared/icons/next/external-link.svg'
 import { PreviewSandboxResize } from '../components/PreviewSandboxResize'
 import { PreviewSandboxProps } from '../widgets/PreviewSandboxProps'
 import { useFragmentPreviewSandbox } from '@/widgets/FragmentPreviewSandbox/hooks/useFragmentPreviewSandbox'
@@ -17,11 +18,13 @@ import { StackCreateGoal } from '@/features/popouts/StackCreateGoal'
 import { StackFragmentProps } from '@/features/popouts/StackFragmentProps'
 import { StackObjectValue } from '@/features/popouts/StackObjectValue'
 import { StackArrayValue } from '@/features/popouts/StackArrayValue'
+import { Link } from '@/shared/ui/Link'
 
 interface FragmentPreviewSandboxProps {
   initialProps?: unknown
   fragmentId: unknown
   className?: string
+  hideOpenInEditor?: boolean
   areaProperties?: unknown
   onChangeProps?: () => void
 }
@@ -29,6 +32,7 @@ interface FragmentPreviewSandboxProps {
 export const FragmentPreviewSandbox: FC<FragmentPreviewSandboxProps> = ({
   className,
   fragmentId,
+  hideOpenInEditor,
   initialProps,
   areaProperties,
   onChangeProps
@@ -70,6 +74,14 @@ export const FragmentPreviewSandbox: FC<FragmentPreviewSandboxProps> = ({
             >
               Edit props
             </Button>
+
+            {!hideOpenInEditor && (
+              <Link type='builderFragment' fragmentId={fragmentId} target='_blank'>
+                <Button TagName='div' icon={<ExternalLink />} mode='tertiary'>
+                  Open in editor
+                </Button>
+              </Link>
+            )}
 
             {/*<PreviewSandboxProps fragmentId={fragmentId} props={props} onChange={setProps} />*/}
           </div>

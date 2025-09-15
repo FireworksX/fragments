@@ -4,10 +4,9 @@ import { useContext, useMemo } from "react";
 import { FragmentContext, useCalcLayerBorder } from "@fragmentsx/render-react";
 
 export const useLayerBorder = (layerKey: LinkKey) => {
-  const { manager } = useContext(FragmentContext);
-  const [borderTypeValue] = useLayerValue(layerKey, "borderType", manager);
-  const [borderWidth] = useLayerValue(layerKey, "borderWidth", manager);
-  const [borderColor] = useLayerValue(layerKey, "borderColor", manager);
+  const [borderTypeValue] = useLayerValue(layerKey, "borderType");
+  const [borderWidth] = useLayerValue(layerKey, "borderWidth");
+  const [borderColor] = useLayerValue(layerKey, "borderColor");
   const calcBorder = useCalcLayerBorder(layerKey);
 
   return useMemo(

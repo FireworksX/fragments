@@ -8,7 +8,7 @@ export const Demo = () => {
   const fragmentsClient = useRef(
     createFragmentsClient({
       apiToken: '3-4bdeacbe0257f0fa1a2f525383ccad59-d46439868498ae35c6e89a207bcdd7d1c549083eb4e8023bdedcdc9a1162be7f',
-      isSelf: true
+      isSelf: false
     })
   )
 
@@ -2657,6 +2657,7 @@ export const Demo = () => {
                               <h2 className='sc-1wwwqdz-3 cljHfd'>Популярные бонусы</h2>
                             </div>
                             <div className='sc-1wwwqdz-5 eiMaMi'>
+                              <Area areaCode='17b86191139fd8' options={{ ssr: false }} />
                               <div className='sc-1wwwqdz-6 ewBEO'>
                                 <div className='sc-1wwwqdz-7 jqwhfH'>Букмекер</div>
                                 <div className='sc-1wwwqdz-7 jqwhfH'>Бонус</div>

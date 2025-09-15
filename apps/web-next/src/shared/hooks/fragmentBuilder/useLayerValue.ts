@@ -7,5 +7,8 @@ export const useLayerValue = (fieldKey: string, layerKey?: LinkKey, options?: Us
   const { selection } = useBuilderSelection()
   const { documentManager } = useBuilderDocument()
 
-  return useLayerValueLib(layerKey ?? selection, fieldKey, documentManager, options)
+  return useLayerValueLib(layerKey ?? selection, fieldKey, {
+    ...options,
+    manager: documentManager
+  })
 }
