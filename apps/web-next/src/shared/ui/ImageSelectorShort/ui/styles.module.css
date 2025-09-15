@@ -1,0 +1,27 @@
+.root {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-color-accent);
+    position: relative;
+    padding: 8px 12px;
+    background: var(--background-secondary);
+    border-radius: var(--radius-second);
+    overflow: hidden;
+    cursor: pointer;
+    transition: var(--animation-transition-default);
+
+    &:hover {
+        background: var(--secondary-bg);
+    }
+}
+
+
+.target {
+    position: absolute;
+    top: 1000px;
+    visibility: hidden;
+}

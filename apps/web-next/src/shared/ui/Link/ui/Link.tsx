@@ -1,5 +1,5 @@
 'use client'
-import { FC, PropsWithChildren, ReactNode } from 'react'
+import { ComponentProps, FC, PropsWithChildren, ReactNode } from 'react'
 import NextLink from 'next/link'
 import cn from 'classnames'
 import styles from './styles.module.css'
@@ -7,7 +7,7 @@ import { linkConfig, LinkType } from '../lib/linkConfig'
 import { useLink } from '@/shared/ui/Link/hooks/useLink'
 import { Touchable, TouchableProps } from '@/shared/ui/Touchable'
 
-interface LinkProps {
+interface LinkProps extends ComponentProps<'a'> {
   className?: string
   type?: LinkType
   partial?: boolean
@@ -27,7 +27,7 @@ export const Link: FC<LinkProps> = ({ className, children, onClick, ...inputLink
   }
 
   return (
-    <NextLink className={cn(styles.root, className)} href={href} onClick={onClick}>
+    <NextLink className={cn(styles.root, className)} href={href} onClick={onClick} target={inputLinkData.target}>
       {typeof children === 'function' ? children({ isActive }) : children}
     </NextLink>
   )

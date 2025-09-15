@@ -10,58 +10,14 @@ query AreaVisitorsStatistics($areaId: Int!, $fromTs: DateTime!, $toTs: DateTime!
         }
         currentStatistic {
             conversion
-            achieved
+            uniqueAchieved
             views
+            sessions
         }
         prevStatistic {
             conversion
             achieved
             views
-        }
-        campaigns {
-            campaignId
-            campaignName
-            trend {
-                conversionTrend {
-                    trend
-                    difference
-                }
-            }
-            currentStatistic {
-                conversion
-                achieved
-                views
-            }
-            variants {
-                variantId
-                variantName
-                trend {
-                    conversionTrend {
-                        trend
-                        difference
-                    }
-                }
-                currentStatistic {
-                    conversion
-                    achieved
-                    views
-                }
-                goals {
-                    goalId
-                    goalName
-                    trend {
-                        conversionTrend {
-                            trend
-                            difference
-                        }
-                    }
-                    currentStatistic {
-                        conversion
-                        achieved
-                        views
-                    }
-                }
-            }
         }
     }
 }

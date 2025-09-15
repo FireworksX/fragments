@@ -47,18 +47,16 @@ export const useTextContent = (layerKey: LinkKey, manager: GraphState) => {
     variables.map((variable) => variable.variableKey)
   );
 
-  const contentWithReplaced = useMemo(() => {
-    let nextContent = content;
+  let nextContent = content;
 
-    variables.forEach((variable) => {
-      nextContent = nextContent.replace(
-        variable.fullMatch,
-        readVariable(variable.variableKey).value
-      );
-    });
+  variables.forEach((variable) => {
+    nextContent = nextContent.replace(
+      variable.fullMatch,
+      readVariable(variable.variableKey).value
+    );
+  });
 
-    return nextContent;
-  }, [variablesStack, content]);
+  return nextContent;
 
   // const [attributes] = useLayerValue(layerKey, "attributes", fragmentManager);
 
@@ -66,8 +64,6 @@ export const useTextContent = (layerKey: LinkKey, manager: GraphState) => {
   //   ...attributes,
   //   color: attributes?.color ?? "rgb(0, 0, 0)",
   // };
-
-  return contentWithReplaced;
 
   // return useMemo(() => {
   //   if (typeof content === "string" && isValue(attributes)) {

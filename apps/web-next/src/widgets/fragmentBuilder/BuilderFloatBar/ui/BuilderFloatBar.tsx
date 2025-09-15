@@ -59,7 +59,8 @@ export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
     },
     {
       name: [defCanvasMode.pan, defCanvasMode.panning],
-      label: <GrabCursor width={20} height={20} />
+      label: <GrabCursor width={20} height={20} />,
+      value: defCanvasMode.pan
     },
     {
       name: defCanvasMode.Frame,
@@ -104,7 +105,7 @@ export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
                   isActive={Array.isArray(item.name) ? item.name.includes(canvasMode) : canvasMode === item.name}
                   className={cn(styles.actionButton)}
                   icon={item.label}
-                  onClick={() => setCanvasMode(item.name)}
+                  onClick={() => setCanvasMode(item.value ?? item.name)}
                 />
               )
           )}

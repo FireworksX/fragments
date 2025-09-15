@@ -2657,6 +2657,7 @@ export const Demo = () => {
                               <h2 className='sc-1wwwqdz-3 cljHfd'>Популярные бонусы</h2>
                             </div>
                             <div className='sc-1wwwqdz-5 eiMaMi'>
+                              <Area areaCode='17b86191139fd8' options={{ ssr: false }} />
                               <div className='sc-1wwwqdz-6 ewBEO'>
                                 <div className='sc-1wwwqdz-7 jqwhfH'>Букмекер</div>
                                 <div className='sc-1wwwqdz-7 jqwhfH'>Бонус</div>

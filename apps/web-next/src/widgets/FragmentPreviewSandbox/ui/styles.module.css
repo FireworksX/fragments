@@ -17,6 +17,7 @@
 
 .actions {
     display: flex;
+    gap: var(--gutter-default);
     padding: 12px;
 }
 

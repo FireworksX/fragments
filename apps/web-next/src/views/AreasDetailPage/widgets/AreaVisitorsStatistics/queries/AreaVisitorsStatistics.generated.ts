@@ -12,7 +12,7 @@ export type AreaVisitorsStatisticsQueryVariables = Types.Exact<{
 }>;
 
 
-export type AreaVisitorsStatisticsQuery = { __typename?: 'Query', areaStatistic: Array<{ __typename?: 'AreaStatisticGet', areaId: number, areaCode: string, trend?: { __typename?: 'StatisticTrend', conversionTrend: { __typename?: 'StatisticTrendGet', difference: number, trend: Types.Trend } } | null, currentStatistic: { __typename?: 'StatisticGet', conversion: number, achieved: number, views: number }, prevStatistic: { __typename?: 'StatisticGet', conversion: number, achieved: number, views: number }, campaigns: Array<{ __typename?: 'CampaignStatisticGet', campaignId: number, campaignName: string, trend?: { __typename?: 'StatisticTrend', conversionTrend: { __typename?: 'StatisticTrendGet', trend: Types.Trend, difference: number } } | null, currentStatistic: { __typename?: 'StatisticGet', conversion: number, achieved: number, views: number }, variants: Array<{ __typename?: 'VariantStatisticGet', variantId: number, variantName: string, trend?: { __typename?: 'StatisticTrend', conversionTrend: { __typename?: 'StatisticTrendGet', trend: Types.Trend, difference: number } } | null, currentStatistic: { __typename?: 'StatisticGet', conversion: number, achieved: number, views: number }, goals: Array<{ __typename?: 'GoalStatisticGet', goalId: number, goalName: string, trend?: { __typename?: 'StatisticTrend', conversionTrend: { __typename?: 'StatisticTrendGet', trend: Types.Trend, difference: number } } | null, currentStatistic: { __typename?: 'StatisticGet', conversion: number, achieved: number, views: number } }> }> }> } | null> };
+export type AreaVisitorsStatisticsQuery = { __typename?: 'Query', areaStatistic: Array<{ __typename?: 'AreaStatisticGet', areaId: number, areaCode: string, trend?: { __typename?: 'StatisticTrend', conversionTrend: { __typename?: 'StatisticTrendGet', difference: number, trend: Types.Trend } } | null, currentStatistic: { __typename?: 'StatisticGet', conversion: number, uniqueAchieved: number, views: number, sessions: number }, prevStatistic: { __typename?: 'StatisticGet', conversion: number, achieved: number, views: number } } | null> };
 
 
 export const AreaVisitorsStatisticsDocument = gql`
@@ -30,58 +30,14 @@ export const AreaVisitorsStatisticsDocument = gql`
     }
     currentStatistic {
       conversion
-      achieved
+      uniqueAchieved
       views
+      sessions
     }
     prevStatistic {
       conversion
       achieved
       views
-    }
-    campaigns {
-      campaignId
-      campaignName
-      trend {
-        conversionTrend {
-          trend
-          difference
-        }
-      }
-      currentStatistic {
-        conversion
-        achieved
-        views
-      }
-      variants {
-        variantId
-        variantName
-        trend {
-          conversionTrend {
-            trend
-            difference
-          }
-        }
-        currentStatistic {
-          conversion
-          achieved
-          views
-        }
-        goals {
-          goalId
-          goalName
-          trend {
-            conversionTrend {
-              trend
-              difference
-            }
-          }
-          currentStatistic {
-            conversion
-            achieved
-            views
-          }
-        }
-      }
     }
   }
 }
