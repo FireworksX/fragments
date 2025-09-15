@@ -189,6 +189,8 @@ export const useBuilderTextBase = () => {
     }
   })
 
+  console.log(contentVariable, editorState)
+
   useUpdateEffect(() => {
     if (selection) {
       editor.commands.setContent(content)
