@@ -74,6 +74,16 @@ async def get_area_by_code_db(db: Session, area_code: str) -> Optional[Area]:
     return area
 
 
+async def get_areas_by_codes_db(db: Session, area_codes: List[str]) -> List[Area]:
+    logger.info(f"Getting areas by codes {area_codes}")
+    areas = db.query(Area).filter(Area.area_code.in_(area_codes)).all()
+    if areas:
+        logger.debug(f"Found {len(areas)} areas")
+    else:
+        logger.debug(f"Areas with codes {area_codes} not found")
+    return areas
+
+
 async def get_area_by_code_and_project_id_db(
     db: Session, project_id: int, area_code: str
 ) -> Optional[Area]:

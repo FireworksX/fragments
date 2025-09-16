@@ -31,7 +31,7 @@ from .campaign import (
     delete_campaign_route,
     update_campaign_route,
 )
-from .client import client_area_route, contribute_to_project_goal_route
+from .client import client_area_route, client_areas_route, contribute_to_project_goal_route
 from .feature_flag import (
     FeatureFlagGet,
     FeatureFlagPatch,
@@ -621,6 +621,12 @@ class ClientQuery:
         self, info: strawberry.Info[Context], area_code: str
     ) -> Optional[ClientAreaGet]:
         return await client_area_route(info, area_code)
+
+    @strawberry.field
+    async def client_areas(
+        self, info: strawberry.Info[Context], area_codes: List[str]
+    ) -> List[ClientAreaGet | None]:
+        return await client_areas_route(info, area_codes)
 
 
 @strawberry.type
