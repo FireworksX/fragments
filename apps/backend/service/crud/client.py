@@ -44,6 +44,7 @@ async def create_client_history_db(
         screen_width=client_history.screen_width,
         screen_height=client_history.screen_height,
         country=client_history.country,
+        country_code=client_history.country_code,
         region=client_history.region,
         city=client_history.city,
         event_type=int(client_history.event_type.value),

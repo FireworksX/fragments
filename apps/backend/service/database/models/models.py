@@ -535,7 +535,7 @@ class ClientHistory(Base):
     country = Column('country', String)
     region = Column('region', String)
     city = Column('city', String)
-    country_code = Column('country_code', String, nullable=True)
+    country_code = Column('country_code', String)
     # Relationships
     client = relationship(
         'Client', back_populates='history', foreign_keys=[client_id], passive_deletes=True

@@ -170,7 +170,7 @@ class Context(BaseContext):
                 user_ip = self.request.headers.get('X-Forwarded-For', self.request.client.host)
             else:
                 user_ip = ''
-        page: Optional[str] = self.request.headers.get('Referrer', None) if self.request else None
+        page: Optional[str] = self.request.headers.get('Referer', None) if self.request else None
         gmt_time = datetime.now(timezone.utc)
 
         language = self.request.headers.get('Accept-Language', None) if self.request else None
