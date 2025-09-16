@@ -85,6 +85,8 @@ class VariantStatisticGet:
     prev_statistic: StatisticGet
     trend: Optional[StatisticTrend]
     goals: List[GoalStatisticGet]
+    current_group_by_date: DetalizationGraph
+    prev_group_by_date: DetalizationGraph
 
 
 @strawberry.type
@@ -95,6 +97,8 @@ class CampaignStatisticGet:
     prev_statistic: StatisticGet
     trend: Optional[StatisticTrend]
     variants: List[VariantStatisticGet]
+    current_group_by_date: DetalizationGraph
+    prev_group_by_date: DetalizationGraph
 
 
 @strawberry.type
@@ -105,6 +109,8 @@ class AreaStatisticGet:
     prev_statistic: StatisticGet
     trend: Optional[StatisticTrend]
     campaigns: List[CampaignStatisticGet]
+    current_group_by_date: DetalizationGraph
+    prev_group_by_date: DetalizationGraph
 
 
 @strawberry.type
@@ -115,6 +121,8 @@ class ProjectStatisticGet:
     prev_statistic: StatisticGet
     trend: Optional[StatisticTrend]
     areas: List[AreaStatisticGet]
+    current_group_by_date: DetalizationGraph
+    prev_group_by_date: DetalizationGraph
 
 
 @strawberry.input

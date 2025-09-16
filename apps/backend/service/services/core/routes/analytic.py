@@ -6,7 +6,7 @@ from fastapi import HTTPException, status
 
 from conf.settings import logger
 from crud.analytic import (
-    get_area_average_conversion_db,
+    get_area_statistic_db,
     get_area_statistic_rating_db,
     get_campaign_statistic_db,
     get_goal_statistic_db,
@@ -143,7 +143,7 @@ async def get_area_statistic_route(
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Unauthorized')
 
     try:
-        return await get_area_average_conversion_db(
+        return await get_area_statistic_db(
             db=db,
             area_id=area_id,
             from_ts=from_ts,

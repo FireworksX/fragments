@@ -165,6 +165,141 @@ async def get_goal_detalization_graph_db(
     )
 
 
+async def get_variant_detalization_graph_db(
+    db: Session,
+    variant_id: int,
+    from_ts: datetime,
+    to_ts: datetime,
+) -> DetalizationGraph:
+    """
+    Get variant detalization graph with granularity based on time range:
+    - 24 hours: by 10 minutes
+    - 7 days: by hour
+    - 28-31 days: by day
+    """
+    logger.info(
+        f"Getting variant detalization graph for variant {variant_id} from {from_ts} to {to_ts}"
+    )
+    variant: Optional[Variant] = db.query(Variant).filter(Variant.id == variant_id).first()
+    if not variant:
+        logger.error(f"No variant found with id {variant_id}")
+        raise ValueError(f"No variant found with id {variant_id}")
+
+    time_diff = to_ts - from_ts
+    detalization = Detalization.MINUTE_10
+    # Determine granularity based on time range
+    if time_diff <= timedelta(days=1):
+        # By 10 minutes for 24 hours
+        detalization = Detalization.MINUTE_10
+        group_by = func.date_trunc('hour', ClientHistory.created_at) + func.make_interval(
+            minutes=func.floor(func.date_part('minute', ClientHistory.created_at) / 10) * 10
+        )
+        logger.debug('Using 10 minute detalization')
+    elif time_diff <= timedelta(days=7):
+        # By hour for 7 days
+        detalization = Detalization.HOUR
+        group_by = func.date_trunc('hour', ClientHistory.created_at)
+        logger.debug('Using hour detalization')
+    elif timedelta(days=28) <= time_diff <= timedelta(days=31):
+        # By day for month
+        detalization = Detalization.DAY
+        group_by = func.date_trunc('day', ClientHistory.created_at)
+        logger.debug('Using day detalization')
+    else:
+        logger.error(f"Invalid time range {time_diff}. Must be 24h, 7d or 28-31d")
+        raise ValueError('Invalid time range. Must be 24h, 7d or 28-31d')
+
+    # Get total views and achievements per time bucket
+    stats = (
+        db.query(
+            group_by.label('ts'),
+            func.sum(
+                case(
+                    [(ClientHistory.event_type == int(ClientHistoryEventType.GOAL_VIEW.value), 1)],
+                    else_=0,
+                )
+            ).label('views'),
+            func.sum(
+                case(
+                    [
+                        (
+                            ClientHistory.event_type
+                            == int(ClientHistoryEventType.GOAL_CONTRIBUTE.value),
+                            1,
+                        )
+                    ],
+                    else_=0,
+                )
+            ).label('achieved'),
+            func.count(
+                distinct(
+                    case(
+                        [
+                            (
+                                ClientHistory.event_type
+                                == int(ClientHistoryEventType.GOAL_CONTRIBUTE.value),
+                                ClientHistory.client_id,
+                            )
+                        ]
+                    )
+                )
+            ).label('unique_achieved'),
+            func.count(
+                distinct(
+                    case(
+                        [
+                            (
+                                ClientHistory.event_type
+                                == int(ClientHistoryEventType.GOAL_VIEW.value),
+                                func.date_trunc('hour', ClientHistory.created_at)
+                                + func.make_interval(
+                                    minutes=func.floor(
+                                        func.date_part('minute', ClientHistory.created_at) / 30
+                                    )
+                                    * 30
+                                ),
+                            )
+                        ]
+                    )
+                )
+            ).label('unique_views'),
+        )
+        .filter(
+            ClientHistory.variant_id == variant_id,
+            ClientHistory.created_at >= from_ts,
+            ClientHistory.created_at <= to_ts,
+        )
+        .group_by('ts')
+        .order_by('ts')
+        .all()
+    )
+
+    graph_points = []
+    for point in stats:
+        conversion = (
+            round((point.unique_achieved / point.unique_views) * 100, 2)
+            if point.unique_views > 0
+            else 0.0
+        )
+        graph_points.append(
+            DetalizationGraphPoint(
+                time=point.ts,
+                value=Value(
+                    achieved=point.achieved,
+                    views=point.views,
+                    conversion=conversion,
+                    unique_achieved=point.unique_achieved,
+                    unique_views=point.unique_views,
+                ),
+            )
+        )
+
+    return DetalizationGraph(
+        detalization=detalization,
+        points=graph_points,
+    )
+
+
 async def get_variant_statistic_db(
     db: Session,
     variant_id: int,
@@ -237,6 +372,10 @@ async def get_variant_statistic_db(
         unique_achieved=prev_unique_achieved,
     )
     trend = await get_statistic_trend_db(current_statistic, prev_statistic)
+    current_group_by_date = await get_variant_detalization_graph_db(db, variant_id, from_ts, to_ts)
+    prev_group_by_date = await get_variant_detalization_graph_db(
+        db, variant_id, prev_from_ts, prev_to_ts
+    )
     return VariantStatisticGet(
         variant_id=variant_id,
         variant_name=variant.name,
@@ -244,6 +383,143 @@ async def get_variant_statistic_db(
         prev_statistic=prev_statistic,
         trend=trend,
         goals=goals,
+        current_group_by_date=current_group_by_date,
+        prev_group_by_date=prev_group_by_date,
+    )
+
+
+async def get_campaign_detalization_graph_db(
+    db: Session,
+    campaign_id: int,
+    from_ts: datetime,
+    to_ts: datetime,
+) -> DetalizationGraph:
+    """
+    Get campaign detalization graph with granularity based on time range:
+    - 24 hours: by 10 minutes
+    - 7 days: by hour
+    - 28-31 days: by day
+    """
+    logger.info(
+        f"Getting campaign detalization graph for campaign {campaign_id} from {from_ts} to {to_ts}"
+    )
+    campaign: Optional[Campaign] = db.query(Campaign).filter(Campaign.id == campaign_id).first()
+    if not campaign:
+        logger.error(f"No campaign found with id {campaign_id}")
+        raise ValueError(f"No campaign found with id {campaign_id}")
+
+    time_diff = to_ts - from_ts
+    detalization = Detalization.MINUTE_10
+    # Determine granularity based on time range
+    if time_diff <= timedelta(days=1):
+        # By 10 minutes for 24 hours
+        detalization = Detalization.MINUTE_10
+        group_by = func.date_trunc('hour', ClientHistory.created_at) + func.make_interval(
+            minutes=func.floor(func.date_part('minute', ClientHistory.created_at) / 10) * 10
+        )
+        logger.debug('Using 10 minute detalization')
+    elif time_diff <= timedelta(days=7):
+        # By hour for 7 days
+        detalization = Detalization.HOUR
+        group_by = func.date_trunc('hour', ClientHistory.created_at)
+        logger.debug('Using hour detalization')
+    elif timedelta(days=28) <= time_diff <= timedelta(days=31):
+        # By day for month
+        detalization = Detalization.DAY
+        group_by = func.date_trunc('day', ClientHistory.created_at)
+        logger.debug('Using day detalization')
+    else:
+        logger.error(f"Invalid time range {time_diff}. Must be 24h, 7d or 28-31d")
+        raise ValueError('Invalid time range. Must be 24h, 7d or 28-31d')
+
+    # Get total views and achievements per time bucket
+    stats = (
+        db.query(
+            group_by.label('ts'),
+            func.sum(
+                case(
+                    [(ClientHistory.event_type == int(ClientHistoryEventType.GOAL_VIEW.value), 1)],
+                    else_=0,
+                )
+            ).label('views'),
+            func.sum(
+                case(
+                    [
+                        (
+                            ClientHistory.event_type
+                            == int(ClientHistoryEventType.GOAL_CONTRIBUTE.value),
+                            1,
+                        )
+                    ],
+                    else_=0,
+                )
+            ).label('achieved'),
+            func.count(
+                distinct(
+                    case(
+                        [
+                            (
+                                ClientHistory.event_type
+                                == int(ClientHistoryEventType.GOAL_CONTRIBUTE.value),
+                                ClientHistory.client_id,
+                            )
+                        ]
+                    )
+                )
+            ).label('unique_achieved'),
+            func.count(
+                distinct(
+                    case(
+                        [
+                            (
+                                ClientHistory.event_type
+                                == int(ClientHistoryEventType.GOAL_VIEW.value),
+                                func.date_trunc('hour', ClientHistory.created_at)
+                                + func.make_interval(
+                                    minutes=func.floor(
+                                        func.date_part('minute', ClientHistory.created_at) / 30
+                                    )
+                                    * 30
+                                ),
+                            )
+                        ]
+                    )
+                )
+            ).label('unique_views'),
+        )
+        .filter(
+            ClientHistory.campaign_id == campaign_id,
+            ClientHistory.created_at >= from_ts,
+            ClientHistory.created_at <= to_ts,
+        )
+        .group_by('ts')
+        .order_by('ts')
+        .all()
+    )
+
+    graph_points = []
+    for point in stats:
+        conversion = (
+            round((point.unique_achieved / point.unique_views) * 100, 2)
+            if point.unique_views > 0
+            else 0.0
+        )
+        graph_points.append(
+            DetalizationGraphPoint(
+                time=point.ts,
+                value=Value(
+                    achieved=point.achieved,
+                    views=point.views,
+                    conversion=conversion,
+                    unique_achieved=point.unique_achieved,
+                    unique_views=point.unique_views,
+                ),
+            )
+        )
+
+    return DetalizationGraph(
+        detalization=detalization,
+        points=graph_points,
     )
 
 
@@ -276,19 +552,19 @@ async def get_campaign_statistic_db(
     current_unique_achieved = 0
     variants = []
     for variant in campaign.feature_flag.variants:
-        variant_conversion = await get_variant_statistic_db(
+        variant_statistic = await get_variant_statistic_db(
             db, variant.id, from_ts, to_ts, prev_from_ts, prev_to_ts
         )
-        if not variant_conversion:
+        if not variant_statistic:
             continue
-        total_conversion += variant_conversion.current_statistic.conversion * (
+        total_conversion += variant_statistic.current_statistic.conversion * (
             variant.rollout_percentage / 100
         )
-        current_views += variant_conversion.current_statistic.views
-        current_achieved += variant_conversion.current_statistic.achieved
-        current_unique_views += variant_conversion.current_statistic.unique_views
-        current_unique_achieved += variant_conversion.current_statistic.unique_achieved
-        variants.append(variant_conversion)
+        current_views += variant_statistic.current_statistic.views
+        current_achieved += variant_statistic.current_statistic.achieved
+        current_unique_views += variant_statistic.current_statistic.unique_views
+        current_unique_achieved += variant_statistic.current_statistic.unique_achieved
+        variants.append(variant_statistic)
     current_conversion = round(total_conversion / len(campaign.feature_flag.variants), 2)
     logger.info(f"Current conversion for campaign {campaign_id}: {current_conversion}%")
 
@@ -299,16 +575,16 @@ async def get_campaign_statistic_db(
     prev_unique_achieved = 0
     prev_total_conversion = 0.0
     for variant in campaign.feature_flag.variants:
-        variant_conversion = await get_variant_statistic_db(
+        variant_statistic = await get_variant_statistic_db(
             db, variant.id, prev_from_ts, prev_to_ts, prev_from_ts, prev_to_ts
         )
-        if not variant_conversion:
+        if not variant_statistic:
             continue
-        prev_views += variant_conversion.current_statistic.views
-        prev_achieved += variant_conversion.current_statistic.achieved
-        prev_unique_views += variant_conversion.current_statistic.unique_views
-        prev_unique_achieved += variant_conversion.current_statistic.unique_achieved
-        prev_total_conversion += variant_conversion.current_statistic.conversion * (
+        prev_views += variant_statistic.current_statistic.views
+        prev_achieved += variant_statistic.current_statistic.achieved
+        prev_unique_views += variant_statistic.current_statistic.unique_views
+        prev_unique_achieved += variant_statistic.current_statistic.unique_achieved
+        prev_total_conversion += variant_statistic.current_statistic.conversion * (
             variant.rollout_percentage / 100
         )
     prev_conversion = round(prev_total_conversion / len(campaign.feature_flag.variants), 2)
@@ -331,6 +607,12 @@ async def get_campaign_statistic_db(
     )
 
     trend = await get_statistic_trend_db(current_statistic, prev_statistic)
+    current_group_by_date = await get_campaign_detalization_graph_db(
+        db, campaign_id, from_ts, to_ts
+    )
+    prev_group_by_date = await get_campaign_detalization_graph_db(
+        db, campaign_id, prev_from_ts, prev_to_ts
+    )
     return CampaignStatisticGet(
         campaign_id=campaign_id,
         campaign_name=campaign.name,
@@ -338,10 +620,145 @@ async def get_campaign_statistic_db(
         prev_statistic=prev_statistic,
         trend=trend,
         variants=variants,
+        current_group_by_date=current_group_by_date,
+        prev_group_by_date=prev_group_by_date,
     )
 
 
-async def get_area_average_conversion_db(
+async def get_area_detalization_graph_db(
+    db: Session,
+    area_id: int,
+    from_ts: datetime,
+    to_ts: datetime,
+) -> DetalizationGraph:
+    """
+    Get area detalization graph with granularity based on time range:
+    - 24 hours: by 10 minutes
+    - 7 days: by hour
+    - 28-31 days: by day
+    """
+    logger.info(f"Getting area detalization graph for area {area_id} from {from_ts} to {to_ts}")
+    area: Optional[Area] = db.query(Area).filter(Area.id == area_id).first()
+    if not area:
+        logger.error(f"No area found with id {area_id}")
+        raise ValueError(f"No area found with id {area_id}")
+
+    time_diff = to_ts - from_ts
+    detalization = Detalization.MINUTE_10
+    # Determine granularity based on time range
+    if time_diff <= timedelta(days=1):
+        # By 10 minutes for 24 hours
+        detalization = Detalization.MINUTE_10
+        group_by = func.date_trunc('hour', ClientHistory.created_at) + func.make_interval(
+            minutes=func.floor(func.date_part('minute', ClientHistory.created_at) / 10) * 10
+        )
+        logger.debug('Using 10 minute detalization')
+    elif time_diff <= timedelta(days=7):
+        # By hour for 7 days
+        detalization = Detalization.HOUR
+        group_by = func.date_trunc('hour', ClientHistory.created_at)
+        logger.debug('Using hour detalization')
+    elif timedelta(days=28) <= time_diff <= timedelta(days=31):
+        # By day for month
+        detalization = Detalization.DAY
+        group_by = func.date_trunc('day', ClientHistory.created_at)
+        logger.debug('Using day detalization')
+    else:
+        logger.error(f"Invalid time range {time_diff}. Must be 24h, 7d or 28-31d")
+        raise ValueError('Invalid time range. Must be 24h, 7d or 28-31d')
+
+    # Get total views and achievements per time bucket
+    stats = (
+        db.query(
+            group_by.label('ts'),
+            func.sum(
+                case(
+                    [(ClientHistory.event_type == int(ClientHistoryEventType.GOAL_VIEW.value), 1)],
+                    else_=0,
+                )
+            ).label('views'),
+            func.sum(
+                case(
+                    [
+                        (
+                            ClientHistory.event_type
+                            == int(ClientHistoryEventType.GOAL_CONTRIBUTE.value),
+                            1,
+                        )
+                    ],
+                    else_=0,
+                )
+            ).label('achieved'),
+            func.count(
+                distinct(
+                    case(
+                        [
+                            (
+                                ClientHistory.event_type
+                                == int(ClientHistoryEventType.GOAL_CONTRIBUTE.value),
+                                ClientHistory.client_id,
+                            )
+                        ]
+                    )
+                )
+            ).label('unique_achieved'),
+            func.count(
+                distinct(
+                    case(
+                        [
+                            (
+                                ClientHistory.event_type
+                                == int(ClientHistoryEventType.GOAL_VIEW.value),
+                                func.date_trunc('hour', ClientHistory.created_at)
+                                + func.make_interval(
+                                    minutes=func.floor(
+                                        func.date_part('minute', ClientHistory.created_at) / 30
+                                    )
+                                    * 30
+                                ),
+                            )
+                        ]
+                    )
+                )
+            ).label('unique_views'),
+        )
+        .filter(
+            ClientHistory.area_id == area_id,
+            ClientHistory.created_at >= from_ts,
+            ClientHistory.created_at <= to_ts,
+        )
+        .group_by('ts')
+        .order_by('ts')
+        .all()
+    )
+
+    graph_points = []
+    for point in stats:
+        conversion = (
+            round((point.unique_achieved / point.unique_views) * 100, 2)
+            if point.unique_views > 0
+            else 0.0
+        )
+        graph_points.append(
+            DetalizationGraphPoint(
+                time=point.ts,
+                value=Value(
+                    achieved=point.achieved,
+                    views=point.views,
+                    conversion=conversion,
+                    unique_achieved=point.unique_achieved,
+                    unique_views=point.unique_views,
+                ),
+            )
+        )
+
+    return DetalizationGraph(
+        detalization=detalization,
+        points=graph_points,
+    )
+
+
+async def get_area_statistic_db(
     db: Session,
     area_id: int,
     from_ts: datetime,
@@ -371,17 +788,17 @@ async def get_area_average_conversion_db(
     campaigns = []
     total_conversion = 0.0
     for campaign in area.campaigns:
-        campaign_conversion = await get_campaign_statistic_db(
+        campaign_statistic = await get_campaign_statistic_db(
             db, campaign.id, from_ts, to_ts, prev_from_ts, prev_to_ts
         )
-        if not campaign_conversion:
+        if not campaign_statistic:
             continue
-        current_views += campaign_conversion.current_statistic.views
-        current_achieved += campaign_conversion.current_statistic.achieved
-        current_unique_views += campaign_conversion.current_statistic.unique_views
-        current_unique_achieved += campaign_conversion.current_statistic.unique_achieved
-        campaigns.append(campaign_conversion)
-        total_conversion += campaign_conversion.current_statistic.conversion
+        current_views += campaign_statistic.current_statistic.views
+        current_achieved += campaign_statistic.current_statistic.achieved
+        current_unique_views += campaign_statistic.current_statistic.unique_views
+        current_unique_achieved += campaign_statistic.current_statistic.unique_achieved
+        campaigns.append(campaign_statistic)
+        total_conversion += campaign_statistic.current_statistic.conversion
     current_conversion = round(total_conversion / len(area.campaigns), 2)
     logger.info(f"Current conversion for area {area_id}: {current_conversion}%")
 
@@ -392,16 +809,16 @@ async def get_area_average_conversion_db(
     prev_unique_achieved = 0
     prev_total_conversion = 0.0
     for campaign in area.campaigns:
-        campaign_conversion = await get_campaign_statistic_db(
+        campaign_statistic = await get_campaign_statistic_db(
             db, campaign.id, prev_from_ts, prev_to_ts, prev_from_ts, prev_to_ts
         )
-        if not campaign_conversion:
+        if not campaign_statistic:
             continue
-        prev_views += campaign_conversion.current_statistic.views
-        prev_achieved += campaign_conversion.current_statistic.achieved
-        prev_unique_views += campaign_conversion.current_statistic.unique_views
-        prev_unique_achieved += campaign_conversion.current_statistic.unique_achieved
-        prev_total_conversion += campaign_conversion.current_statistic.conversion
+        prev_views += campaign_statistic.current_statistic.views
+        prev_achieved += campaign_statistic.current_statistic.achieved
+        prev_unique_views += campaign_statistic.current_statistic.unique_views
+        prev_unique_achieved += campaign_statistic.current_statistic.unique_achieved
+        prev_total_conversion += campaign_statistic.current_statistic.conversion
     prev_conversion = round(prev_total_conversion / len(area.campaigns), 2)
     logger.info(f"Previous conversion for area {area_id}: {prev_conversion}%")
 
@@ -423,6 +840,9 @@ async def get_area_average_conversion_db(
 
     trend = await get_statistic_trend_db(current_statistic, prev_statistic)
 
+    current_group_by_date = await get_area_detalization_graph_db(db, area_id, from_ts, to_ts)
+    prev_group_by_date = await get_area_detalization_graph_db(db, area_id, prev_from_ts, prev_to_ts)
+
     return AreaStatisticGet(
         area_id=area_id,
         area_code=area.area_code,
@@ -430,6 +850,143 @@ async def get_area_average_conversion_db(
         prev_statistic=prev_statistic,
         trend=trend,
         campaigns=campaigns,
+        current_group_by_date=current_group_by_date,
+        prev_group_by_date=prev_group_by_date,
+    )
+
+
+async def get_project_detalization_graph_db(
+    db: Session,
+    project_id: int,
+    from_ts: datetime,
+    to_ts: datetime,
+) -> DetalizationGraph:
+    """
+    Get project detalization graph with granularity based on time range:
+    - 24 hours: by 10 minutes
+    - 7 days: by hour
+    - 28-31 days: by day
+    """
+    logger.info(
+        f"Getting project detalization graph for project {project_id} from {from_ts} to {to_ts}"
+    )
+    project: Optional[Project] = db.query(Project).filter(Project.id == project_id).first()
+    if not project:
+        logger.error(f"No project found with id {project_id}")
+        raise ValueError(f"No project found with id {project_id}")
+
+    time_diff = to_ts - from_ts
+    detalization = Detalization.MINUTE_10
+    # Determine granularity based on time range
+    if time_diff <= timedelta(days=1):
+        # By 10 minutes for 24 hours
+        detalization = Detalization.MINUTE_10
+        group_by = func.date_trunc('hour', ClientHistory.created_at) + func.make_interval(
+            minutes=func.floor(func.date_part('minute', ClientHistory.created_at) / 10) * 10
+        )
+        logger.debug('Using 10 minute detalization')
+    elif time_diff <= timedelta(days=7):
+        # By hour for 7 days
+        detalization = Detalization.HOUR
+        group_by = func.date_trunc('hour', ClientHistory.created_at)
+        logger.debug('Using hour detalization')
+    elif timedelta(days=28) <= time_diff <= timedelta(days=31):
+        # By day for month
+        detalization = Detalization.DAY
+        group_by = func.date_trunc('day', ClientHistory.created_at)
+        logger.debug('Using day detalization')
+    else:
+        logger.error(f"Invalid time range {time_diff}. Must be 24h, 7d or 28-31d")
+        raise ValueError('Invalid time range. Must be 24h, 7d or 28-31d')
+
+    # Get total views and achievements per time bucket
+    stats = (
+        db.query(
+            group_by.label('ts'),
+            func.sum(
+                case(
+                    [(ClientHistory.event_type == int(ClientHistoryEventType.GOAL_VIEW.value), 1)],
+                    else_=0,
+                )
+            ).label('views'),
+            func.sum(
+                case(
+                    [
+                        (
+                            ClientHistory.event_type
+                            == int(ClientHistoryEventType.GOAL_CONTRIBUTE.value),
+                            1,
+                        )
+                    ],
+                    else_=0,
+                )
+            ).label('achieved'),
+            func.count(
+                distinct(
+                    case(
+                        [
+                            (
+                                ClientHistory.event_type
+                                == int(ClientHistoryEventType.GOAL_CONTRIBUTE.value),
+                                ClientHistory.client_id,
+                            )
+                        ]
+                    )
+                )
+            ).label('unique_achieved'),
+            func.count(
+                distinct(
+                    case(
+                        [
+                            (
+                                ClientHistory.event_type
+                                == int(ClientHistoryEventType.GOAL_VIEW.value),
+                                func.date_trunc('hour', ClientHistory.created_at)
+                                + func.make_interval(
+                                    minutes=func.floor(
+                                        func.date_part('minute', ClientHistory.created_at) / 30
+                                    )
+                                    * 30
+                                ),
+                            )
+                        ]
+                    )
+                )
+            ).label('unique_views'),
+        )
+        .filter(
+            ClientHistory.area_id.in_(db.query(Area.id).filter(Area.project_id == project_id)),
+            ClientHistory.created_at >= from_ts,
+            ClientHistory.created_at <= to_ts,
+        )
+        .group_by('ts')
+        .order_by('ts')
+        .all()
+    )
+
+    graph_points = []
+    for point in stats:
+        conversion = (
+            round((point.unique_achieved / point.unique_views) * 100, 2)
+            if point.unique_views > 0
+            else 0.0
+        )
+        graph_points.append(
+            DetalizationGraphPoint(
+                time=point.ts,
+                value=Value(
+                    achieved=point.achieved,
+                    views=point.views,
+                    conversion=conversion,
+                    unique_achieved=point.unique_achieved,
+                    unique_views=point.unique_views,
+                ),
+            )
+        )
+
+    return DetalizationGraph(
+        detalization=detalization,
+        points=graph_points,
     )
 
 
@@ -463,17 +1020,17 @@ async def get_project_statistic_db(
     areas = []
     total_conversion = 0.0
     for area in project.areas:
-        area_conversion = await get_area_average_conversion_db(
+        area_statistic = await get_area_statistic_db(
             db, area.id, from_ts, to_ts, prev_from_ts, prev_to_ts
         )
-        if not area_conversion:
+        if not area_statistic:
             continue
-        current_views += area_conversion.current_statistic.views
-        current_achieved += area_conversion.current_statistic.achieved
-        current_unique_views += area_conversion.current_statistic.unique_views
-        current_unique_achieved += area_conversion.current_statistic.unique_achieved
-        areas.append(area_conversion)
-        total_conversion += area_conversion.current_statistic.conversion
+        current_views += area_statistic.current_statistic.views
+        current_achieved += area_statistic.current_statistic.achieved
+        current_unique_views += area_statistic.current_statistic.unique_views
+        current_unique_achieved += area_statistic.current_statistic.unique_achieved
+        areas.append(area_statistic)
+        total_conversion += area_statistic.current_statistic.conversion
     current_conversion = round(total_conversion / len(project.areas), 2)
     logger.info(f"Current conversion for project {project_id}: {current_conversion}%")
 
@@ -484,16 +1041,16 @@ async def get_project_statistic_db(
     prev_unique_achieved = 0
     prev_total_conversion = 0.0
     for area in project.areas:
-        area_conversion = await get_area_average_conversion_db(
+        area_statistic = await get_area_statistic_db(
             db, area.id, prev_from_ts, prev_to_ts, prev_from_ts, prev_to_ts
         )
-        if not area_conversion:
+        if not area_statistic:
             continue
-        prev_views += area_conversion.current_statistic.views
-        prev_achieved += area_conversion.current_statistic.achieved
-        prev_unique_views += area_conversion.current_statistic.unique_views
-        prev_unique_achieved += area_conversion.current_statistic.unique_achieved
-        prev_total_conversion += area_conversion.current_statistic.conversion
+        prev_views += area_statistic.current_statistic.views
+        prev_achieved += area_statistic.current_statistic.achieved
+        prev_unique_views += area_statistic.current_statistic.unique_views
+        prev_unique_achieved += area_statistic.current_statistic.unique_achieved
+        prev_total_conversion += area_statistic.current_statistic.conversion
     prev_conversion = round(prev_total_conversion / len(project.areas), 2)
     logger.info(f"Previous conversion for project {project_id}: {prev_conversion}%")
 
@@ -515,6 +1072,11 @@ async def get_project_statistic_db(
 
     trend = await get_statistic_trend_db(current_statistic, prev_statistic)
 
+    current_group_by_date = await get_project_detalization_graph_db(db, project_id, from_ts, to_ts)
+    prev_group_by_date = await get_project_detalization_graph_db(
+        db, project_id, prev_from_ts, prev_to_ts
+    )
+
     return ProjectStatisticGet(
         project_id=project_id,
         project_name=project.name,
@@ -522,6 +1084,8 @@ async def get_project_statistic_db(
         prev_statistic=prev_statistic,
         trend=trend,
         areas=areas,
+        current_group_by_date=current_group_by_date,
+        prev_group_by_date=prev_group_by_date,
     )
 
 
