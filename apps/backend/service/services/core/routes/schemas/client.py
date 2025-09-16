@@ -29,6 +29,7 @@ class ClientHistoryPost:
     country: Optional[str] = None
     region: Optional[str] = None
     city: Optional[str] = None
+    country_code: Optional[str] = None
     url: Optional[str] = None
     referrer: Optional[str] = None
     domain: Optional[str] = None

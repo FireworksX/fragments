@@ -7,11 +7,16 @@ from conf.settings import logger
 
 class GeoLocation:
     def __init__(
-        self, city: str | None = None, region: str | None = None, country: str | None = None
+        self,
+        city: str | None = None,
+        region: str | None = None,
+        country: str | None = None,
+        country_code: str | None = None,
     ):
         self.city = city
         self.region = region
         self.country = country
+        self.country_code = country_code
 
 
 @lru_cache(maxsize=1000)
@@ -25,10 +30,13 @@ def get_location_by_ip(ip_address: str) -> GeoLocation:
         logger.debug(f"Received location data: {data}")
 
         location = GeoLocation(
-            city=data.get('city'), region=data.get('regionName'), country=data.get('country')
+            city=data.get('city'),
+            region=data.get('regionName'),
+            country=data.get('country'),
+            country_code=data.get('countryCode'),
         )
         logger.info(
-            f"Found location: city={location.city}, region={location.region}, country={location.country}"
+            f"Found location: city={location.city}, region={location.region}, country={location.country}, country_code={location.country_code}"
         )
         return location
 
