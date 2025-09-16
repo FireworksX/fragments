@@ -801,6 +801,8 @@ async def get_area_statistic_rating_db(
     for record in history:
         if record.page:
             pages_dict[record.page] = pages_dict.get(record.page, 0) + 1
+        else:
+            pages_dict['Other'] = pages_dict.get('Other', 0) + 1
 
     pages = [
         PageAnalytic(
@@ -822,22 +824,26 @@ async def get_area_statistic_rating_db(
     for country, count in countries_dict.items():
         countries.append(
             CountryAnalytic(
-                name=country[0],
-                iso=country[1].lower(),
+                name=country[0] if country[0] is not None else 'Other',
+                iso=country[1].lower() if country[1] is not None else 'other',
                 percentage=round((count / total_views * 100), 2) if total_views > 0 else 0.0,
                 views=count,
             )
         )
 
     # Group by OS type
-    os_types_dict: Dict[int, int] = {}
+    os_types_dict: Dict[str, int] = {}
     for record in history:
         if record.os_type:
-            os_types_dict[record.os_type] = os_types_dict.get(record.os_type, 0) + 1
+            os_types_dict[OSType(record.os_type).name] = (
+                os_types_dict.get(OSType(record.os_type).name, 0) + 1
+            )
+        else:
+            os_types_dict['Other'] = os_types_dict.get('Other', 0) + 1
 
     os_types = [
         OSTypeAnalytic(
-            name=OSType(os_type).name,
+            name=os_type,
             percentage=round((count / total_views * 100), 2) if total_views > 0 else 0.0,
             views=count,
         )
@@ -845,14 +851,18 @@ async def get_area_statistic_rating_db(
     ]
 
     # Group by device type
-    device_types_dict: Dict[int, int] = {}
+    device_types_dict: Dict[str, int] = {}
     for record in history:
         if record.device_type:
-            device_types_dict[record.device_type] = device_types_dict.get(record.device_type, 0) + 1
+            device_types_dict[DeviceType(record.device_type).name] = (
+                device_types_dict.get(DeviceType(record.device_type).name, 0) + 1
+            )
+        else:
+            device_types_dict['Other'] = device_types_dict.get('Other', 0) + 1
 
     device_types = [
         DeviceTypeAnalytic(
-            name=DeviceType(device_type).name,
+            name=device_type,
             percentage=round((count / total_views * 100), 2) if total_views > 0 else 0.0,
             views=count,
         )
@@ -864,6 +874,8 @@ async def get_area_statistic_rating_db(
     for record in history:
         if record.browser:
             browsers_dict[record.browser] = browsers_dict.get(record.browser, 0) + 1
+        else:
+            browsers_dict['Other'] = browsers_dict.get('Other', 0) + 1
 
     browsers = [
         BrowserAnalytic(
