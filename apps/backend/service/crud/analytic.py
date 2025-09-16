@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 from sqlalchemy import distinct, func
 from sqlalchemy.orm import Session
@@ -31,6 +31,7 @@ from services.core.routes.schemas.analytic import (
     VariantStatisticGet,
 )
 from services.core.routes.schemas.client import ClientHistoryEventType
+from services.core.routes.schemas.release_condition import DeviceType, OSType
 
 
 async def get_goal_detalization_graph_db(
@@ -811,20 +812,22 @@ async def get_area_statistic_rating_db(
     ]
 
     # Group by country
-    countries_dict: Dict[str, int] = {}
+    countries_dict: Dict[Tuple[str, str], int] = {}
     for record in history:
-        if record.country:
-            countries_dict[record.country] = countries_dict.get(record.country, 0) + 1
-
-    countries = [
-        CountryAnalytic(
-            name=country,
-            isocode=country,  # Would need mapping to ISO codes
-            percentage=round((count / total_views * 100), 2) if total_views > 0 else 0.0,
-            views=count,
+        countries_dict[(record.country, record.country_code)] = (
+            countries_dict.get((record.country, record.country_code), 0) + 1
         )
-        for country, count in countries_dict.items()
-    ]
+
+    countries: List[CountryAnalytic] = []
+    for country, count in countries_dict.items():
+        countries.append(
+            CountryAnalytic(
+                name=country[0],
+                iso=country[1].lower(),
+                percentage=round((count / total_views * 100), 2) if total_views > 0 else 0.0,
+                views=count,
+            )
+        )
 
     # Group by OS type
     os_types_dict: Dict[int, int] = {}
@@ -834,7 +837,7 @@ async def get_area_statistic_rating_db(
 
     os_types = [
         OSTypeAnalytic(
-            name=str(os_type),
+            name=OSType(os_type).name,
             percentage=round((count / total_views * 100), 2) if total_views > 0 else 0.0,
             views=count,
         )
@@ -849,7 +852,7 @@ async def get_area_statistic_rating_db(
 
     device_types = [
         DeviceTypeAnalytic(
-            name=str(device_type),
+            name=DeviceType(device_type).name,
             percentage=round((count / total_views * 100), 2) if total_views > 0 else 0.0,
             views=count,
         )

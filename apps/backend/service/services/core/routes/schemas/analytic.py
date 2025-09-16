@@ -143,7 +143,7 @@ class PageAnalytic:
 @strawberry.type
 class CountryAnalytic:
     name: str
-    isocode: str
+    iso: str
     percentage: float
     views: int
 
