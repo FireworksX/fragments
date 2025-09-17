@@ -744,6 +744,7 @@ class AnalyticQuery:
             for area_id in statistic_rating_filter.data_ids
         ]
 
+
 @strawberry.type
 class TemplateQuery:
     @strawberry.field
