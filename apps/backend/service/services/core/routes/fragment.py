@@ -4,6 +4,7 @@ import strawberry
 from fastapi import HTTPException, UploadFile
 from starlette import status
 
+from conf.settings import logger
 from crud.fragment import (
     Fragment,
     add_fragment_media_db,
@@ -344,6 +345,7 @@ async def clone_fragment_route(
             detail='User is not allowed to clone fragments',
         )
 
+    logger.debug(f"Cloning fragment {fragment_db.id} with deep_copy={deep_copy}")
     linked_fragments: List[int] = []
     if deep_copy:
         # Deep copy - recursively clone all linked fragments
@@ -384,12 +386,10 @@ async def clone_fragment_route(
                 await update_fragment_route(info, update)
     else:
         # Shallow copy - just reference the original linked fragments and goals
-        linked_fragments = (
-            [fragment.id for fragment in fragment_db.linked_fragments]
-            if fragment_db.linked_fragments
-            else []
-        )
+        if fragment_db.linked_fragments:
+            linked_fragments = [fragment.id for fragment in fragment_db.linked_fragments]
 
+    logger.debug(f"Linked fragments: {linked_fragments}")
     # Create the root fragment with appropriate linked IDs
     fragment_post = FragmentPost(
         project_id=clone.project_id,

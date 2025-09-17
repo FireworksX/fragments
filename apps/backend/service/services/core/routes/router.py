@@ -745,6 +745,7 @@ class AnalyticQuery:
         ]
 
 
+@strawberry.type
 class TemplateQuery:
     @strawberry.field
     async def default_templates(self, info: strawberry.Info[Context]) -> List[FragmentGet]:
