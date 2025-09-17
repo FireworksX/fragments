@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 import strawberry
 from fastapi import HTTPException, UploadFile
@@ -16,10 +16,11 @@ from crud.fragment import (
 )
 from crud.media import create_media_db, delete_media_by_id_db
 from crud.project import get_project_by_id_db
+from crud.template import is_default_template_db
 from database import Media, Project, Session
 
 from .middleware import Context
-from .schemas.fragment import FragmentGet, FragmentPatch, FragmentPost
+from .schemas.fragment import FragmentClonePost, FragmentGet, FragmentPatch, FragmentPost
 from .schemas.media import MediaGet, MediaType
 from .schemas.user import AuthPayload, UserRole
 from .user import user_db_to_user
@@ -48,7 +49,7 @@ def gather_all_linked_fragments(root_fragment: Fragment) -> list[Fragment]:
     visited_ids = set()
     result = []
 
-    # You can do either a stack (DFS) or queue (BFS). Here is DFS:
+    # DFS
     stack = [root_fragment]
 
     while stack:
@@ -314,6 +315,94 @@ async def fragment_by_id(info: strawberry.Info[Context], fragment_id: int) -> Fr
     project_id: int = fragment.project_id
     await check_read_permissions(db, user.user.id, project_id)
     return fragment_db_to_fragment(fragment)
+
+
+async def clone_fragment_route(
+    info: strawberry.Info[Context], clone: FragmentClonePost
+) -> FragmentGet:
+    user: AuthPayload = await info.context.user()
+    db: Session = info.context.session()
+    fragment_db: Optional[Fragment] = await get_fragment_by_id_db(db, clone.fragment_id)
+    if fragment_db is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f'Fragment with id {clone.fragment_id} does not exist',
+        )
+
+    default_template: bool = await is_default_template_db(db, clone.fragment_id)
+    deep_copy: bool = default_template
+    if not deep_copy and clone.deep_copy is not None:
+        deep_copy = clone.deep_copy
+
+    if not default_template:
+        await check_read_permissions(db, user.user.id, fragment_db.project_id)
+
+    permission: bool = await write_permission(db, user.user.id, clone.project_id)
+    if not permission:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail='User is not allowed to clone fragments',
+        )
+
+    linked_fragments: List[int] = []
+    if deep_copy:
+        # Deep copy - recursively clone all linked fragments
+        linked_fragment_id_map: Dict[int, int] = {}  # Maps original IDs to new IDs
+
+        # Get all linked fragments recursively using gather_all_linked_fragments
+        all_fragments = gather_all_linked_fragments(fragment_db)
+        fragments_to_process = [f for f in all_fragments if f.id != fragment_db.id]
+
+        # Process fragments in reverse order (deepest first)
+        for linked_fragment in reversed(fragments_to_process):
+            # Create fragment with empty linked_fragments first
+            linked_post = FragmentPost(
+                project_id=clone.project_id,
+                name=linked_fragment.name,
+                document=linked_fragment.document,
+                props=linked_fragment.props,
+                directory_id=clone.directory_id,
+                linked_fragments=[],  # Will update after all fragments created
+                linked_goals=[],
+            )
+            new_fragment: FragmentGet = await create_fragment_route(info, linked_post)
+            linked_fragment_id_map[linked_fragment.id] = new_fragment.id
+            linked_fragments.append(new_fragment.id)
+
+        # Update linked_fragments for each cloned fragment
+        for original_fragment in fragments_to_process:
+            if original_fragment.linked_fragments:
+                new_fragment_id = linked_fragment_id_map[original_fragment.id]
+                new_linked_ids = [
+                    linked_fragment_id_map[f.id]
+                    for f in original_fragment.linked_fragments
+                    if f.id in linked_fragment_id_map
+                ]
+
+                # Update fragment with correct linked fragments
+                update = FragmentPatch(id=new_fragment_id, linked_fragments=new_linked_ids)
+                await update_fragment_route(info, update)
+    else:
+        # Shallow copy - just reference the original linked fragments and goals
+        linked_fragments = (
+            [fragment.id for fragment in fragment_db.linked_fragments]
+            if fragment_db.linked_fragments
+            else []
+        )
+
+    # Create the root fragment with appropriate linked IDs
+    fragment_post = FragmentPost(
+        project_id=clone.project_id,
+        name=fragment_db.name,
+        document=fragment_db.document,
+        props=fragment_db.props,
+        directory_id=clone.directory_id,
+        linked_fragments=linked_fragments,
+        linked_goals=(
+            [] if deep_copy else [g.id for g in fragment_db.linked_goals]
+        ),  # Only include goals for shallow copy
+    )
+    return await create_fragment_route(info, fragment_post)
 
 
 async def get_client_fragment(info: strawberry.Info[Context], fragment_id: int) -> FragmentGet:

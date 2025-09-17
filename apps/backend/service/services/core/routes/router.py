@@ -51,6 +51,7 @@ from .filesystem import (
 from .filter import get_all_filters
 from .fragment import (
     add_fragment_asset_route,
+    clone_fragment_route,
     create_fragment_route,
     delete_fragment_asset_route,
     delete_fragment_route,
@@ -111,7 +112,7 @@ from .schemas.client import ClientAreaGet
 from .schemas.feature_flag import VariantGet
 from .schemas.feedback import IssueGet, IssuePost
 from .schemas.filesystem import ProjectDirectory, ProjectDirectoryGet, ProjectDirectoryPatch
-from .schemas.fragment import FragmentGet, FragmentPatch, FragmentPost
+from .schemas.fragment import FragmentClonePost, FragmentGet, FragmentPatch, FragmentPost
 from .schemas.media import MediaDelete, MediaGet, MediaPost, MediaType
 from .schemas.metric import ClientMetricPost, ClientMetricType
 from .schemas.project import (
@@ -135,6 +136,7 @@ from .schemas.release_condition import (
     ReleaseConditionPost,
 )
 from .schemas.user import AuthPayload, UserRole, UserSignUp
+from .template import get_default_templates
 from .user import add_avatar_route, delete_avatar_route, login, profile, refresh, signup_route
 from .variant import (
     VariantPatch,
@@ -203,6 +205,12 @@ class FragmentMutation:
     @strawberry.mutation
     async def delete_fragment(self, info: strawberry.Info[Context], fragment_id: int) -> None:
         await delete_fragment_route(info, fragment_id)
+
+    @strawberry.mutation
+    async def clone_fragment(
+        self, info: strawberry.Info[Context], clone: FragmentClonePost
+    ) -> FragmentGet:
+        return await clone_fragment_route(info, clone)
 
 
 @strawberry.type
@@ -737,6 +745,12 @@ class AnalyticQuery:
         ]
 
 
+class TemplateQuery:
+    @strawberry.field
+    async def default_templates(self, info: strawberry.Info[Context]) -> List[FragmentGet]:
+        return await get_default_templates(info)
+
+
 @strawberry.type
 class Query(
     AuthQuery,
@@ -749,6 +763,7 @@ class Query(
     FeatureFlagQuery,
     ClientQuery,
     AnalyticQuery,
+    TemplateQuery,
 ):
     pass
 
