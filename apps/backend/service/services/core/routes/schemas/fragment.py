@@ -46,3 +46,11 @@ class FragmentGet:
 
     directory_id: int
     linked_goals: Optional[List[int]] = None  # ids of goals
+
+
+@strawberry.input
+class FragmentClonePost:
+    project_id: int
+    fragment_id: int
+    directory_id: int
+    deep_copy: Optional[bool] = None
