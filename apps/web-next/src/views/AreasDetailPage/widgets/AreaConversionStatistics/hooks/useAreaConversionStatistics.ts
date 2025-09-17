@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import { buildChartDataWithCompare } from '@/shared/utils/charts/buildChartDataWithCompare'
 import dayjs from '@/shared/lib/dayjs'
 import { useParams } from 'next/navigation'
+import { useAreaConversionStatisticsQuery } from '@/views/AreasDetailPage/widgets/AreaConversionStatistics/queries/AreaConversionStatistics.generated'
 
 const data0 = {
   nodes: [
@@ -21,30 +22,18 @@ const data0 = {
   ]
 }
 
-export const useAreaVisitorsStatistics = () => {
+export const useAreaConversionStatistics = () => {
   const { areaSlug } = useParams()
-  const [chartMode, setChartMode] = useState<'chart' | 'flow'>('chart')
   const dateCompare = useDateCompare('today')
 
-  const { data: statisticsData } = useAreaVisitorsStatisticsQuery({
+  const { data: statisticsData } = useAreaConversionStatisticsQuery({
     variables: {
       areaId: +areaSlug,
       ...dateCompare
     }
   })
 
-  const chartData = useMemo(() => {
-    if (chartMode === 'flow') {
-      return data0
-    }
-
-    return []
-  }, [chartMode])
-
   return {
-    chartData,
-    chartMode,
-    setChartMode,
     statistics: statisticsData?.areaStatistic?.at(0)
   }
 }

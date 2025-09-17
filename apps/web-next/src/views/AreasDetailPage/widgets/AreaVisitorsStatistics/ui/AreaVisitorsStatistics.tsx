@@ -101,7 +101,7 @@ const items = [
 ]
 
 export const AreaVisitorsStatistics: FC<AreaVisitorsStatisticsProps> = ({ className, bodyClassName }) => {
-  const { statistics, chartMode, setChartMode } = useAreaVisitorsStatistics()
+  const { statistics } = useAreaVisitorsStatistics()
 
   return (
     <AreaChartSection
@@ -109,13 +109,11 @@ export const AreaVisitorsStatistics: FC<AreaVisitorsStatisticsProps> = ({ classN
       bodyClassName={bodyClassName}
       title='Visitors'
       description='Graph of visitiors on this area'
-      value={421}
-      trend={Trend.Up}
-      trendValue={2}
-      chart={chartMode}
-      onChangeChart={setChartMode}
+      value={statistics?.currentStatistic?.views ?? 0}
+      trend={statistics?.trend?.viewsTrend?.trend}
+      trendValue={statistics?.trend?.viewsTrend?.difference}
     >
-      {chartMode === 'flow' ? <AreaChartFlow data={data0} /> : <AreaChartSpline data={data} />}
+      <AreaChartSpline data={data} />
     </AreaChartSection>
   )
 }

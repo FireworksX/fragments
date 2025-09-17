@@ -45,7 +45,7 @@
     .cell {
         font-weight: 400;
         color: var(--text-color-accent-secondary);
-        background: rgba(var(--secondary-bg-rgb), .6);
+        background: rgba(var(--secondary-bg--rgb), .6);
         border-top: 1px solid var(--border-light);
         border-bottom: 1px solid var(--border-light);
         border-right: 1px solid var(--border-light);

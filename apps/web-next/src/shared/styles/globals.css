@@ -40,7 +40,7 @@
     --secondary--rgb: 135, 152, 168;
     --secondary-active: #657280;
     --secondary-bg: #F3F5F7;
-    --secondary-bg-rgb: 243, 245, 247;
+    --secondary-bg--rgb: 243, 245, 247;
     --secondary-disabled: #DAE0E4;
 
     --secondary-light: #F6F6F6;
@@ -124,7 +124,7 @@
         --secondary: rgb(135, 152, 168);
         --secondary-active: #657280;
         --secondary-bg: #232222;
-        --secondary-bg-rgb: 35, 34, 34;
+        --secondary-bg--rgb: 35, 34, 34;
         --secondary-disabled: #DAE0E4;
 
         --secondary-light: #F6F6F6;

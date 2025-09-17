@@ -58,7 +58,7 @@ export const PropertyContentArray: FC<PropertyContentArrayProps> = ({
    * В будущем нужно будет сделать чтобы каждый элемент в списке был объектом с ключом
    */
   const defaultValueWithStableKey = useMemo(
-    () => (defaultValue.value ?? []).map(item => ({ item, key: generateId() })),
+    () => (defaultValue.value ?? []).map((item, index) => ({ item, key: `item_${index}` })),
     [defaultValue.value]
   )
 
@@ -149,23 +149,23 @@ export const PropertyContentArray: FC<PropertyContentArrayProps> = ({
 
       {!!definitionLink && (
         <Panel className={styles.fieldsPanel}>
-          {/*<Sortable onSort={handleSort}>*/}
-          {defaultValueWithStableKey?.map(({ item: value, key }, index) => (
-            <div className={styles.item} key={index}>
-              <InstancePropertyGeneric
-                property={definitionLink}
-                manager={manager}
-                value={cleanGraph(value)}
-                hasConnector
-                isHideTitle
-                onChange={nextValue => handleUpdateValue(index, nextValue)}
-              />
-              <Touchable className={styles.remove} onClick={() => handleRemoveItem(index)}>
-                <RemoveIcon />
-              </Touchable>
-            </div>
-          ))}
-          {/*</Sortable>*/}
+          <Sortable onSort={handleSort}>
+            {defaultValueWithStableKey?.map(({ item: value, key }, index) => (
+              <div className={styles.item} key={key}>
+                <InstancePropertyGeneric
+                  property={definitionLink}
+                  manager={manager}
+                  value={cleanGraph(value)}
+                  hasConnector
+                  isHideTitle
+                  onChange={nextValue => handleUpdateValue(index, nextValue)}
+                />
+                <Touchable className={styles.remove} onClick={() => handleRemoveItem(index)}>
+                  <RemoveIcon />
+                </Touchable>
+              </div>
+            ))}
+          </Sortable>
 
           <ControlRow isHideTitle>
             <Button mode='secondary' stretched onClick={handleAddItem}>

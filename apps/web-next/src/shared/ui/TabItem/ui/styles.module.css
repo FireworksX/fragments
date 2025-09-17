@@ -9,7 +9,7 @@
         border-radius: var(--radius-second);
 
         &.active {
-            background: rgba(var(--secondary-bg-rgb), .7);
+            background: rgba(var(--secondary-bg--rgb), .7);
             font-weight: 500;
 
             .icon {

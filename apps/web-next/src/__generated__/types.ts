@@ -205,7 +205,7 @@ export type ConditionSetPost = {
 
 export type CountryAnalytic = {
   __typename?: 'CountryAnalytic';
-  isocode: Scalars['String']['output'];
+  iso: Scalars['String']['output'];
   name: Scalars['String']['output'];
   percentage: Scalars['Float']['output'];
   views: Scalars['Int']['output'];
@@ -914,6 +914,7 @@ export type Query = {
   campaign: Array<CampaignGet>;
   campaignStatistic: Array<Maybe<CampaignStatisticGet>>;
   clientArea?: Maybe<ClientAreaGet>;
+  clientAreas: Array<Maybe<ClientAreaGet>>;
   clientFragment?: Maybe<FragmentGet>;
   condition: ConditionGet;
   conditionSet: ConditionSetGet;
@@ -960,6 +961,11 @@ export type QueryCampaignStatisticArgs = {
 
 export type QueryClientAreaArgs = {
   areaCode: Scalars['String']['input'];
+};
+
+
+export type QueryClientAreasArgs = {
+  areaCodes: Array<Scalars['String']['input']>;
 };
 
 
@@ -1077,8 +1083,8 @@ export type StatisticGet = {
   __typename?: 'StatisticGet';
   achieved: Scalars['Int']['output'];
   conversion: Scalars['Float']['output'];
-  sessions: Scalars['Int']['output'];
   uniqueAchieved: Scalars['Int']['output'];
+  uniqueViews: Scalars['Int']['output'];
   views: Scalars['Int']['output'];
 };
 
@@ -1092,8 +1098,8 @@ export type StatisticTrend = {
   __typename?: 'StatisticTrend';
   achievedTrend: StatisticTrendGet;
   conversionTrend: StatisticTrendGet;
-  sessionsTrend: StatisticTrendGet;
   uniqueAchievedTrend: StatisticTrendGet;
+  uniqueViewsTrend: StatisticTrendGet;
   viewsTrend: StatisticTrendGet;
 };
 
@@ -1147,8 +1153,8 @@ export type Value = {
   __typename?: 'Value';
   achieved: Scalars['Int']['output'];
   conversion: Scalars['Float']['output'];
-  sessions: Scalars['Int']['output'];
   uniqueAchieved: Scalars['Int']['output'];
+  uniqueViews: Scalars['Int']['output'];
   views: Scalars['Int']['output'];
 };
 

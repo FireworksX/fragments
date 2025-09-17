@@ -35,6 +35,7 @@ import { Chip } from '@/shared/ui/Chip'
 import { NodeProps } from 'recharts/types/chart/Sankey'
 import { AreaVisitorsStatistics } from '@/views/AreasDetailPage/widgets/AreaVisitorsStatistics'
 import { AreaConversionStatistics } from '@/views/AreasDetailPage/widgets/AreaConversionStatistics'
+import { useAreaAnalyticsRating } from '@/views/AreasDetailPage/hooks/useAreaAnalyticsRating'
 
 interface CampaignDetailPageProps {}
 
@@ -188,6 +189,8 @@ const CustomLink = (props: {
 }
 
 export const AreasDetailPage: FC<CampaignDetailPageProps> = () => {
+  const { pages, countries, browsers, devices, osTypes } = useAreaAnalyticsRating()
+
   return (
     <div className={styles.root}>
       <div className={styles.body}>
@@ -229,14 +232,14 @@ export const AreasDetailPage: FC<CampaignDetailPageProps> = () => {
           className={styles.part}
           title='Pages'
           description='Pages which render this area'
-          data={pagesData}
+          data={pages}
         />
 
         <AnalyticsRating
           className={styles.part}
           title='Countries'
           description='Top countries which visit this area'
-          data={countriesData}
+          data={countries}
           renderLabel={item => (
             <div className={styles.countryAnalyticsLabel}>
               <CommonLogo size={20} iso={item.iso} />
@@ -245,41 +248,11 @@ export const AreasDetailPage: FC<CampaignDetailPageProps> = () => {
           )}
         />
 
-        <AnalyticsRating
-          className={styles.short}
-          title='Browsers'
-          data={countriesData}
-          renderLabel={item => (
-            <div className={styles.countryAnalyticsLabel}>
-              <CommonLogo size={20} iso={item.iso} />
-              {item.label}
-            </div>
-          )}
-        />
+        <AnalyticsRating className={styles.short} title='Browsers' data={browsers} />
 
-        <AnalyticsRating
-          className={styles.short}
-          title='Operating Systems'
-          data={countriesData}
-          renderLabel={item => (
-            <div className={styles.countryAnalyticsLabel}>
-              <CommonLogo size={20} iso={item.iso} />
-              {item.label}
-            </div>
-          )}
-        />
+        <AnalyticsRating className={styles.short} title='Operating Systems' data={osTypes} />
 
-        <AnalyticsRating
-          className={styles.short}
-          title='Devices'
-          data={countriesData}
-          renderLabel={item => (
-            <div className={styles.countryAnalyticsLabel}>
-              <CommonLogo size={20} iso={item.iso} />
-              {item.label}
-            </div>
-          )}
-        />
+        <AnalyticsRating className={styles.short} title='Devices' data={devices} />
       </div>
     </div>
   )

@@ -21,15 +21,8 @@ interface AreaChartSectionProps extends PropsWithChildren {
   value?: number
   trend?: Trend
   trendValue?: ReactNode
-  chart?: 'chart' | 'flow'
   format?: DisplayNumberProps['format']
-  onChangeChart?: (value: unknown) => void
 }
-
-const items = [
-  { label: <ChartIcon />, name: 'chart' },
-  { label: <FlowIcon />, name: 'flow' }
-]
 
 export const AreaChartSection: FC<AreaChartSectionProps> = ({
   className,
@@ -40,9 +33,7 @@ export const AreaChartSection: FC<AreaChartSectionProps> = ({
   value,
   trend,
   trendValue,
-  chart,
-  children,
-  onChangeChart
+  children
 }) => {
   return (
     <InfoSection
@@ -51,18 +42,14 @@ export const AreaChartSection: FC<AreaChartSectionProps> = ({
       colorMode='inverse'
       header={
         <InfoSectionHeader
-          title={
-            <>
-              {title}
-              <ChipTrend size='s' trend={trend}>
-                <DisplayNumber format={format}>{trendValue}</DisplayNumber>
-              </ChipTrend>
-            </>
-          }
+          title={title}
           description={description}
           aside={
             !!value && (
               <>
+                <ChipTrend trend={trend}>
+                  <DisplayNumber format={format}>{trendValue}</DisplayNumber>
+                </ChipTrend>
                 <DisplayNumber className={styles.value} styled format={format}>
                   {value}
                 </DisplayNumber>
@@ -72,14 +59,6 @@ export const AreaChartSection: FC<AreaChartSectionProps> = ({
         />
       }
     >
-      <TabsSelector
-        className={styles.tabsSelector}
-        cellClassName={styles.tabsSelectorCell}
-        items={items}
-        value={chart}
-        onChange={({ name }) => onChangeChart(name)}
-      />
-
       {children}
     </InfoSection>
   )

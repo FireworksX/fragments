@@ -26,7 +26,11 @@ export const useBuilderAutoCreator = () => {
         ;[nextLayerKey] = createText(selection, { content: 'text' })
       } else if (canvasMode === definition.nodes.Frame) {
         ;[nextLayerKey] = createFrame(selection)
-      } else if (canvasMode === definition.nodes.Collection && collectionSourceLink) {
+      } else if (
+        canvasMode === definition.nodes.Collection &&
+        collectionSourceLink &&
+        selectionGraph?._type !== definition.nodes.Collection
+      ) {
         ;[nextLayerKey] = createCollection(selection, { source: collectionSourceLink })
       }
 

@@ -40,7 +40,7 @@ export const StackArrayProperty: FC<StackArrayPropertyProps> = ({ className }) =
   const [definition, setDefinition] = useLayerValue('definition', context?.propertyLink)
 
   const handleCreateDefinition = type => {
-    const propertyLink = createProperty({ type, name: `${name} Item`, parent: context?.propertyLink })
+    const propertyLink = createProperty({ type, name: `${name} Definition`, parent: context?.propertyLink })
     setDefinition(propertyLink)
   }
 

@@ -7,10 +7,13 @@ import { InfoSectionCellProgress } from '@/components/InfoSection/components/Inf
 import { InfoSectionFooter } from '@/components/InfoSection/components/InfoSectionFooter'
 import { Button } from '@/shared/ui/Button'
 import { CommonLogo } from '@/shared/ui/CommonLogo'
+import { CellBadge } from '@/shared/ui/Cell/components/CellBadge'
+import { InfoSectionCellEmpty } from '@/components/InfoSection/components/InfoSectionCellEmpty'
 
 interface Item {
-  value: number
+  percentage: number
   label: string
+  value?: number
 }
 
 interface AnalyticsRatingProps<T extends Item> {
@@ -42,8 +45,8 @@ export const AnalyticsRating = <TItem extends Item>({
 }: AnalyticsRatingProps<TItem>) => {
   const resultList = useMemo(() => {
     const limitList = data.slice(0, limit)
-    const sortList = limitList.toSorted((a, b) => b.value - a.value)
-    const progressList = calculateProgress(sortList.map(el => el.value))
+    const sortList = limitList.toSorted((a, b) => b.percentage - a.percentage)
+    const progressList = calculateProgress(sortList.map(el => el.percentage))
 
     return sortList.map((item, index) => ({
       ...item,
@@ -57,15 +60,25 @@ export const AnalyticsRating = <TItem extends Item>({
       colorMode='inverse'
       header={<InfoSectionHeader title={title} description={description} />}
       footer={
-        <InfoSectionFooter aside={<Button mode='tertiary'>Show all</Button>}>Now show top 5 results.</InfoSectionFooter>
+        resultList?.length > 5 && (
+          <InfoSectionFooter aside={<Button mode='tertiary'>Show all</Button>}>
+            Now show top 5 results.
+          </InfoSectionFooter>
+        )
       }
     >
+      {!resultList?.length && <InfoSectionCellEmpty />}
       {resultList.map(item => (
         <InfoSectionCellProgress
           key={item.label}
           progress={item.progress}
           label={renderLabel?.(item) ?? item.label}
-          value={`${item.value}%`}
+          value={
+            <>
+              {item.value && <span className={styles.cellValue}>({item.value})</span>}
+              {item.percentage}%
+            </>
+          }
         />
       ))}
     </InfoSection>

@@ -91,7 +91,7 @@ type ConditionSetGet {
 }
 
 type CountryAnalytic {
-    isocode: String!
+    iso: String!
     name: String!
     percentage: Float!
     views: Int!
@@ -328,6 +328,7 @@ type Query {
     campaign(campaignFilter: CampaignFilter!): [CampaignGet!]!
     campaignStatistic(statisticFilter: StatisticFilter!): [CampaignStatisticGet]!
     clientArea(areaCode: String!): ClientAreaGet
+    clientAreas(areaCodes: [String!]!): [ClientAreaGet]!
     clientFragment(fragmentId: Int!): FragmentGet
     condition(conditionId: Int!): ConditionGet!
     conditionSet(conditionSetId: Int!): ConditionSetGet!
@@ -359,16 +360,16 @@ type ReleaseConditionGet {
 type StatisticGet {
     achieved: Int!
     conversion: Float!
-    sessions: Int!
     uniqueAchieved: Int!
+    uniqueViews: Int!
     views: Int!
 }
 
 type StatisticTrend {
     achievedTrend: StatisticTrendGet!
     conversionTrend: StatisticTrendGet!
-    sessionsTrend: StatisticTrendGet!
     uniqueAchievedTrend: StatisticTrendGet!
+    uniqueViewsTrend: StatisticTrendGet!
     viewsTrend: StatisticTrendGet!
 }
 
@@ -398,8 +399,8 @@ type UserRoleGet {
 type Value {
     achieved: Int!
     conversion: Float!
-    sessions: Int!
     uniqueAchieved: Int!
+    uniqueViews: Int!
     views: Int!
 }
 

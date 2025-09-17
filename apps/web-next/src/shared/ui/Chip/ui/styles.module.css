@@ -30,6 +30,7 @@
     .success {
         background: var(--success-bg);
         color: var(--success);
+        border: 1px solid var(--success);
 
         .prefix {
             color: var(--success);
@@ -39,6 +40,7 @@
     .danger {
         background: var(--danger-bg);
         color: var(--danger);
+        border: 1px solid rgba(var(--danger--rgb), .3);
 
         .prefix {
             color: var(--danger);
@@ -48,6 +50,7 @@
     .gray {
         background: var(--secondary-bg);
         color: var(--secondary);
+        border: 1px solid rgba(var(--secondary--rgb), .2);
 
         .prefix {
             color: var(--secondary);

@@ -12,7 +12,7 @@ export type AreaVisitorsStatisticsQueryVariables = Types.Exact<{
 }>;
 
 
-export type AreaVisitorsStatisticsQuery = { __typename?: 'Query', areaStatistic: Array<{ __typename?: 'AreaStatisticGet', areaId: number, areaCode: string, trend?: { __typename?: 'StatisticTrend', conversionTrend: { __typename?: 'StatisticTrendGet', difference: number, trend: Types.Trend } } | null, currentStatistic: { __typename?: 'StatisticGet', conversion: number, uniqueAchieved: number, views: number, sessions: number }, prevStatistic: { __typename?: 'StatisticGet', conversion: number, achieved: number, views: number } } | null> };
+export type AreaVisitorsStatisticsQuery = { __typename?: 'Query', areaStatistic: Array<{ __typename?: 'AreaStatisticGet', areaId: number, areaCode: string, trend?: { __typename?: 'StatisticTrend', viewsTrend: { __typename?: 'StatisticTrendGet', difference: number, trend: Types.Trend } } | null, currentStatistic: { __typename?: 'StatisticGet', views: number, uniqueViews: number } } | null> };
 
 
 export const AreaVisitorsStatisticsDocument = gql`
@@ -23,21 +23,14 @@ export const AreaVisitorsStatisticsDocument = gql`
     areaId
     areaCode
     trend {
-      conversionTrend {
+      viewsTrend {
         difference
         trend
       }
     }
     currentStatistic {
-      conversion
-      uniqueAchieved
       views
-      sessions
-    }
-    prevStatistic {
-      conversion
-      achieved
-      views
+      uniqueViews
     }
   }
 }

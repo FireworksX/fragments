@@ -1,31 +1,18 @@
 import TextAlignLeft from '@/shared/icons/text-align-left.svg'
 import TextAlignRight from '@/shared/icons/text-align-right.svg'
 import TextAlignCenter from '@/shared/icons/text-align-center.svg'
-import { use, useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { use } from 'react'
 import { popoutsStore } from '@/shared/store/popouts.store'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
-import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderManager'
-import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
-import { useDisplayColor } from '@/shared/hooks/fragmentBuilder/useDisplayColor'
-import { getSpringColor } from '@/shared/utils/getSpringColor'
 import { TabsSelectorItem } from '@/shared/ui/TabsSelector'
 import { fromPx } from '@/shared/utils/fromPx'
 import { toPx } from '@/shared/utils/toPx'
-import { canvasEditorExtensions, CanvasTextEditorContext } from '@/widgets/fragmentBuilder/BuilderHighlight'
-import { Editor, useEditorState } from '@tiptap/react'
-import { generateHTML, generateText, generateJSON } from '@tiptap/core'
+import { CanvasTextEditorContext } from '@/widgets/fragmentBuilder/BuilderHighlight'
+import { useEditorState } from '@tiptap/react'
 import { capitalize } from '@/shared/utils/capitalize'
-import { isValue, objectToColorString, toKebabCase, cssVariableToLink, linkToCssVariable } from '@fragmentsx/utils'
-import { useGraph } from '@graph-state/react'
-import { BuilderContext } from '@/shared/providers/BuilderContext'
+import { createConstants, cssVariableToLink, linkToCssVariable, objectToColorString } from '@fragmentsx/utils'
 import { definition } from '@fragmentsx/definition'
-import { getMarksInSelection } from '../lib/getMarksInSelection'
-import { getTopLevelNodeRanges } from '../lib/getTopLevelNodeRanges'
-import { wrapTextInParagraphWithAttributes } from '../lib/wrapTextInParagraphWithAttributes'
-import { isVariableLink } from '@/shared/utils/isVariableLink'
-import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
-import { useLayerVariables } from '../../../../shared/hooks/fragmentBuilder/useLayerVariable'
 import { useLayerPropertyValue } from '@/shared/hooks/fragmentBuilder/useLayerPropertyVariable'
 import { useUpdateEffect } from 'react-use'
 import { entityOfKey } from '@graph-state/core'
@@ -73,11 +60,22 @@ export const cleanHtmlContent = html => {
 
 const fonts: string[] = ['Inter', 'Roboto']
 const weights = [
-  { label: 'regular', value: 400 },
-  { label: 'medium', value: 500 },
-  { label: 'bold', value: 700 }
+  { label: 'regular', value: '400' },
+  { label: 'medium', value: '500' },
+  { label: 'bold', value: '700' }
 ]
 const transforms: TextTransform[] = ['none', 'uppercase', 'lowercase', 'capitalize']
+
+const TEXT_ATTRS = createConstants(
+  'color',
+  'fontSize',
+  'fontWeight',
+  'textAlign',
+  'textDecoration',
+  'textTransform',
+  'lineHeight',
+  'letterSpacing'
+)
 
 export const useBuilderTextBase = () => {
   const editor = use(CanvasTextEditorContext)
@@ -113,7 +111,12 @@ export const useBuilderTextBase = () => {
   }
 
   const handleChangeValue = (key, value) => {
-    editor.chain().focus()?.[`set${capitalize(key)}`]?.(value).run()
+    const methodName = `set${capitalize(key)}`
+    const chain = editor.chain()?.focus()
+
+    if (methodName in chain && key in TEXT_ATTRS) {
+      chain?.[methodName]?.(value)?.run()
+    }
     // console.log(editor?.getHTML())
     // setAttributes({ [key]: value })
   }
@@ -139,14 +142,14 @@ export const useBuilderTextBase = () => {
       return {
         content: editor?.getHTML(),
         text: editor?.getText(),
-        color: readValue('color', '#000'),
-        fontSize: readValue('fontSize', 14),
-        fontWeight: readValue('fontWeight', 400),
-        textAlign: readValue('textAlign', 'left'),
-        textDecoration: readValue('textDecoration', definition.textDecorations.none),
-        textTransform: readValue('textTransform', definition.textTransform.none),
-        lineHeight: readValue('lineHeight', 1.2),
-        letterSpacing: readValue('letterSpacing', 0)
+        [TEXT_ATTRS.color]: readValue('color', '#000'),
+        [TEXT_ATTRS.fontSize]: readValue('fontSize', 14),
+        [TEXT_ATTRS.fontWeight]: readValue('fontWeight', 400),
+        [TEXT_ATTRS.textAlign]: readValue('textAlign', 'left'),
+        [TEXT_ATTRS.textDecoration]: readValue('textDecoration', definition.textDecorations.none),
+        [TEXT_ATTRS.textTransform]: readValue('textTransform', definition.textTransform.none),
+        [TEXT_ATTRS.lineHeight]: readValue('lineHeight', 1.2),
+        [TEXT_ATTRS.letterSpacing]: readValue('letterSpacing', 0)
         // fontFamily: ctx.editor.getAttributes('textStyle').fontFamily || 'Inter',
       }
     }
@@ -167,7 +170,7 @@ export const useBuilderTextBase = () => {
   const contentVariable = useLayerPropertyValue('content', {
     fieldValue: editorState.text?.startsWith('$')
       ? `${definition.nodes.Variable}:${editorState.text.slice(1).trim()}`
-      : null,
+      : editorState.text,
     onSetValue: value => {
       if (value) {
         editor
@@ -184,10 +187,11 @@ export const useBuilderTextBase = () => {
             }
           ])
           .run()
+
+        Object.entries(editorState).forEach(([key, state]) => {
+          handleChangeValue(key, state.value)
+        })
       }
-    },
-    onResetVariable: () => {
-      handleResetValue('color')
     }
   })
 
@@ -213,14 +217,14 @@ export const useBuilderTextBase = () => {
     },
     weight: {
       items: weights,
-      value: editorState['fontWeight'].value,
-      isMixed: editorState?.fontWeight?.isMixed,
+      value: editorState[TEXT_ATTRS.fontWeight].value,
+      isMixed: editorState?.[TEXT_ATTRS.fontWeight]?.isMixed,
       onChange: value => handleChangeValue('fontWeight', value)
     },
     color: {
       ...colorVariable,
-      value: editorState.color.value ?? '#000',
-      isMixed: editorState?.color?.isMixed,
+      value: editorState[TEXT_ATTRS.color].value ?? '#000',
+      isMixed: editorState?.[TEXT_ATTRS.color]?.isMixed,
       onClick: openColor
     },
     align: {
@@ -229,30 +233,30 @@ export const useBuilderTextBase = () => {
       onChange: value => handleChangeValue('textAlign', value)
     },
     fontSize: {
-      value: 'fontSize' in editorState ? fromPx(editorState['fontSize'].value) : 14,
-      isMixed: editorState?.fontSize?.isMixed,
+      value: 'fontSize' in editorState ? fromPx(editorState[TEXT_ATTRS.fontSize].value) : 14,
+      isMixed: editorState?.[TEXT_ATTRS.fontSize]?.isMixed,
       onChange: value => handleChangeValue('fontSize', toPx(value))
     },
     decoration: {
       items: decorations,
-      value: editorState['textDecoration'].value ?? 'none',
-      onChange: value => handleChangeValue('textDecoration', value)
+      value: editorState[TEXT_ATTRS.textDecoration].value ?? 'none',
+      onChange: value => handleChangeValue(TEXT_ATTRS.textDecoration, value)
     },
     transform: {
       items: transforms,
-      value: editorState['textTransform']?.value ?? 'none',
-      isMixed: editorState?.textTransform?.isMixed,
-      onChange: value => handleChangeValue('textTransform', value)
+      value: editorState[TEXT_ATTRS.textTransform]?.value ?? 'none',
+      isMixed: editorState?.[TEXT_ATTRS.textTransform]?.isMixed,
+      onChange: value => handleChangeValue(TEXT_ATTRS.textTransform, value)
     },
     lineHeight: {
-      value: Number(editorState['lineHeight']?.value) ?? 1,
-      isMixed: editorState?.lineHeight?.isMixed,
-      onChange: value => handleChangeValue('lineHeight', value)
+      value: Number(editorState[TEXT_ATTRS.lineHeight]?.value) ?? 1,
+      isMixed: editorState?.[TEXT_ATTRS.lineHeight]?.isMixed,
+      onChange: value => handleChangeValue(TEXT_ATTRS.lineHeight, value)
     },
     letterSpacing: {
-      value: fromPx(editorState['letterSpacing']?.value) ?? 0,
-      isMixed: editorState?.letterSpacing?.isMixed,
-      onChange: value => handleChangeValue('letterSpacing', toPx(value))
+      value: fromPx(editorState[TEXT_ATTRS.letterSpacing]?.value) ?? 0,
+      isMixed: editorState?.[TEXT_ATTRS.letterSpacing]?.isMixed,
+      onChange: value => handleChangeValue(TEXT_ATTRS.letterSpacing, toPx(value))
     },
     whiteSpace: {
       options: Object.keys(definition.whiteSpace),

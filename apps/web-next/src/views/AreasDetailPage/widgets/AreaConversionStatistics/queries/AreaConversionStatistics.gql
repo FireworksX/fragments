@@ -1,16 +1,15 @@
-query AreaVisitorsStatistics($areaId: Int!, $fromTs: DateTime!, $toTs: DateTime!, $prevFromTs: DateTime!, $prevToTs: DateTime!) {
+query AreaConversionStatistics($areaId: Int!, $fromTs: DateTime!, $toTs: DateTime!, $prevFromTs: DateTime!, $prevToTs: DateTime!) {
     areaStatistic(statisticFilter:{dataIds: [$areaId], fromTs: $fromTs, toTs: $toTs, prevFromTs: $prevFromTs, prevToTs: $prevToTs}) {
         areaId
         areaCode
         trend {
-            viewsTrend {
+            conversionTrend {
                 difference
                 trend
             }
         }
         currentStatistic {
-            views
-            uniqueViews
+            conversion
         }
     }
 }

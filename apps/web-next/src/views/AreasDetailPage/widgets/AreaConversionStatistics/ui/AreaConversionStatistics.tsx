@@ -6,6 +6,7 @@ import { AreaChartFlow } from '@/views/AreasDetailPage/components/AreaChartFlow'
 import { AreaChartSpline } from '@/views/AreasDetailPage/components/AreaChartSpline'
 import { AreaChartSection } from '@/views/AreasDetailPage/components/AreaChartSection'
 import { SplineChartPoint } from '@/shared/types'
+import { useAreaConversionStatistics } from '@/views/AreasDetailPage/widgets/AreaConversionStatistics/hooks/useAreaConversionStatistics'
 
 interface AreaConversionStatisticsProps {
   className?: string
@@ -38,18 +39,18 @@ const data0 = {
 }
 
 export const AreaConversionStatistics: FC<AreaConversionStatisticsProps> = ({ className, bodyClassName }) => {
+  const { statistics } = useAreaConversionStatistics()
+
   return (
     <AreaChartSection
       className={className}
       bodyClassName={bodyClassName}
       title='Conversion'
       description='Conversion of area'
-      value={0.1}
+      value={statistics?.currentStatistic?.conversion?.toString() ?? '0'}
       format={{ style: 'percent' }}
-      trend={Trend.Up}
-      trendValue={0.1}
-      chart={'chart'}
-      // onChangeChart={setChartMode}
+      trend={statistics?.trend?.conversionTrend?.trend}
+      trendValue={statistics?.trend?.conversionTrend?.difference}
     >
       <AreaChartSpline data={data} />
     </AreaChartSection>
