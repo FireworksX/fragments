@@ -109,7 +109,7 @@ def fragment_db_to_fragment(fragment: Fragment) -> FragmentGet:
             id=f.id,
             directory_id=fragment.directory_id,
             name=f.name,
-            author=f.author,
+            author=user_db_to_user(f.author),
             document=f.document,
             props=f.props,
             assets=(
