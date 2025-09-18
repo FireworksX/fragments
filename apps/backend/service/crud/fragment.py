@@ -23,19 +23,17 @@ async def create_fragment_db(db: Session, author_id: int, fragment: FragmentPost
     db.refresh(fragment_db)
 
     if fragment.linked_goals is not None:
-        logger.debug(f"Linking fragment {fragment_db.name} to goals {fragment.linked_goals}")
+        logger.debug(f"Linking fragment {fragment.name} to goals {fragment.linked_goals}")
         goals: List[ProjectGoal] = (
-            db.query(ProjectGoal).filter(ProjectGoal.id.in_(fragment_db.linked_goals)).all()
+            db.query(ProjectGoal).filter(ProjectGoal.id.in_(fragment.linked_goals)).all()
         )
         for goal in goals:
             fragment_db.linked_goals.append(goal)
 
-    if fragment_db.linked_fragments is not None:
-        logger.debug(
-            f"Linking fragment {fragment_db.name} to fragments {fragment.linked_fragments}"
-        )
+    if fragment.linked_fragments is not None:
+        logger.debug(f"Linking fragment {fragment.name} to fragments {fragment.linked_fragments}")
         fragments: List[Fragment] = (
-            db.query(Fragment).filter(Fragment.id.in_(fragment_db.linked_fragments)).all()
+            db.query(Fragment).filter(Fragment.id.in_(fragment.linked_fragments)).all()
         )
         for fr in fragments:
             fragment_db.linked_fragments.append(fr)
