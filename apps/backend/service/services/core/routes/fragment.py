@@ -1,3 +1,4 @@
+import uuid
 from typing import Dict, List, Optional
 
 import strawberry
@@ -360,7 +361,7 @@ async def clone_fragment_route(
             # Create fragment with empty linked_fragments first
             linked_post = FragmentPost(
                 project_id=clone.project_id,
-                name=linked_fragment.name,
+                name=f'{linked_fragment.name} (copy)-{uuid.uuid4()}',
                 document=linked_fragment.document,
                 props=linked_fragment.props,
                 directory_id=clone.directory_id,
@@ -389,11 +390,11 @@ async def clone_fragment_route(
         if fragment_db.linked_fragments:
             linked_fragments = [fragment.id for fragment in fragment_db.linked_fragments]
 
-    logger.debug(f"Linked fragments: {linked_fragments}")
+    logger.debug(f"Linked fragments: {linked_fragments}, {fragment_db.linked_fragments}")
     # Create the root fragment with appropriate linked IDs
     fragment_post = FragmentPost(
         project_id=clone.project_id,
-        name=fragment_db.name,
+        name=f'{fragment_db.name} (copy)-{uuid.uuid4()}',
         document=fragment_db.document,
         props=fragment_db.props,
         directory_id=clone.directory_id,
