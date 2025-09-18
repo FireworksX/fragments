@@ -12,12 +12,15 @@ import { FragmentsEditPlaceholder } from '@/views/FragmentsBuilder/widgets/Fragm
 import { FragmentsEdit } from '@/views/FragmentsEdit'
 import { FragmentPreview } from '@/views/FragmentPreview'
 import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
+import { withModalCollector } from '@/shared/hocs/withModalCollector'
+import { modalNames } from '@/shared/data'
+import { CreateNewFragment } from '@/widgets/modals/CreateNewFragment'
 
 interface FragmentsBuilderContentProps {
   className?: string
 }
 
-export const FragmentsBuilderContent: FC<FragmentsBuilderContentProps> = ({ className }) => {
+const FragmentsBuilderContentInternal: FC<FragmentsBuilderContentProps> = ({ className }) => {
   const { documentManager, loading } = useBuilderDocument()
   const { isPreview, currentFragmentId } = useBuilder()
 
@@ -35,3 +38,7 @@ export const FragmentsBuilderContent: FC<FragmentsBuilderContentProps> = ({ clas
 
   return <FragmentsEdit />
 }
+
+export const FragmentsBuilderContent = withModalCollector(FragmentsBuilderContentInternal, {
+  [modalNames.createFragment]: <CreateNewFragment />
+})

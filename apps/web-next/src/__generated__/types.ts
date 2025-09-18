@@ -58,7 +58,9 @@ export type AreaStatisticGet = {
   areaCode: Scalars['String']['output'];
   areaId: Scalars['Int']['output'];
   campaigns: Array<CampaignStatisticGet>;
+  currentGroupByDate: DetalizationGraph;
   currentStatistic: StatisticGet;
+  prevGroupByDate: DetalizationGraph;
   prevStatistic: StatisticGet;
   trend?: Maybe<StatisticTrend>;
 };
@@ -140,7 +142,9 @@ export type CampaignStatisticGet = {
   __typename?: 'CampaignStatisticGet';
   campaignId: Scalars['Int']['output'];
   campaignName: Scalars['String']['output'];
+  currentGroupByDate: DetalizationGraph;
   currentStatistic: StatisticGet;
+  prevGroupByDate: DetalizationGraph;
   prevStatistic: StatisticGet;
   trend?: Maybe<StatisticTrend>;
   variants: Array<VariantStatisticGet>;
@@ -892,7 +896,9 @@ export type ProjectPost = {
 export type ProjectStatisticGet = {
   __typename?: 'ProjectStatisticGet';
   areas: Array<AreaStatisticGet>;
+  currentGroupByDate: DetalizationGraph;
   currentStatistic: StatisticGet;
+  prevGroupByDate: DetalizationGraph;
   prevStatistic: StatisticGet;
   projectId: Scalars['Int']['output'];
   projectName: Scalars['String']['output'];
@@ -1185,8 +1191,10 @@ export type VariantPost = {
 
 export type VariantStatisticGet = {
   __typename?: 'VariantStatisticGet';
+  currentGroupByDate: DetalizationGraph;
   currentStatistic: StatisticGet;
   goals: Array<GoalStatisticGet>;
+  prevGroupByDate: DetalizationGraph;
   prevStatistic: StatisticGet;
   trend?: Maybe<StatisticTrend>;
   variantId: Scalars['Int']['output'];

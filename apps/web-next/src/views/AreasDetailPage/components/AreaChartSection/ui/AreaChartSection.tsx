@@ -19,6 +19,7 @@ interface AreaChartSectionProps extends PropsWithChildren {
   className?: string
   bodyClassName?: string
   value?: number
+  loading?: boolean
   trend?: Trend
   trendValue?: ReactNode
   format?: DisplayNumberProps['format']
@@ -31,6 +32,7 @@ export const AreaChartSection: FC<AreaChartSectionProps> = ({
   format,
   description,
   value,
+  loading,
   trend,
   trendValue,
   children
@@ -39,7 +41,7 @@ export const AreaChartSection: FC<AreaChartSectionProps> = ({
     <InfoSection
       className={cn(styles.root, className)}
       bodyClassName={cn(bodyClassName, styles.body)}
-      colorMode='inverse'
+      loading={loading}
       header={
         <InfoSectionHeader
           title={title}

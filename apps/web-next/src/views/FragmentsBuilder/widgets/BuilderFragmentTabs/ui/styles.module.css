@@ -42,6 +42,7 @@
     gap: 7px;
     color: var(--secondary);
     transition: var(--animation-transition-default);
+    white-space: nowrap;
 
     &:hover {
         background: rgba(var(--background-secondary--rgb), .4);

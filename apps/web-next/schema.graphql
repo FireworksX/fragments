@@ -29,7 +29,9 @@ type AreaStatisticGet {
     areaCode: String!
     areaId: Int!
     campaigns: [CampaignStatisticGet!]!
+    currentGroupByDate: DetalizationGraph!
     currentStatistic: StatisticGet!
+    prevGroupByDate: DetalizationGraph!
     prevStatistic: StatisticGet!
     trend: StatisticTrend
 }
@@ -67,7 +69,9 @@ type CampaignGet {
 type CampaignStatisticGet {
     campaignId: Int!
     campaignName: String!
+    currentGroupByDate: DetalizationGraph!
     currentStatistic: StatisticGet!
+    prevGroupByDate: DetalizationGraph!
     prevStatistic: StatisticGet!
     trend: StatisticTrend
     variants: [VariantStatisticGet!]!
@@ -203,6 +207,7 @@ type Mutation {
     addUserToProject(projectId: Int!, role: UserRole!, userId: Int!): Void
     changeProjectPrivateKey(projectId: Int!): ProjectGet!
     changeUserRole(projectId: Int!, role: UserRole!, userId: Int!): Void
+    cloneFragment(clone: FragmentClonePost!): FragmentGet!
     createArea(area: AreaPost!): AreaGet!
     createCampaign(cmp: CampaignPost!): CampaignGet!
     createCondition(condition: ConditionPost!, conditionSetId: Int!): ConditionGet!
@@ -314,7 +319,9 @@ type ProjectKeyGet {
 
 type ProjectStatisticGet {
     areas: [AreaStatisticGet!]!
+    currentGroupByDate: DetalizationGraph!
     currentStatistic: StatisticGet!
+    prevGroupByDate: DetalizationGraph!
     prevStatistic: StatisticGet!
     projectId: Int!
     projectName: String!
@@ -332,6 +339,7 @@ type Query {
     clientFragment(fragmentId: Int!): FragmentGet
     condition(conditionId: Int!): ConditionGet!
     conditionSet(conditionSetId: Int!): ConditionSetGet!
+    defaultTemplates: [FragmentGet!]!
     directory(directoryId: Int!): [ProjectDirectoryGet!]!
     featureFlag(featureFlagId: Int!): FeatureFlagGet!
     filter(countries: [String!], regions: [String!]): AllFiltersGet!
@@ -413,8 +421,10 @@ type VariantGet {
 }
 
 type VariantStatisticGet {
+    currentGroupByDate: DetalizationGraph!
     currentStatistic: StatisticGet!
     goals: [GoalStatisticGet!]!
+    prevGroupByDate: DetalizationGraph!
     prevStatistic: StatisticGet!
     trend: StatisticTrend
     variantId: Int!
@@ -630,6 +640,13 @@ input FilterPost {
 input FilterTimeFramePost {
     fromTime: DateTime!
     toTime: DateTime!
+}
+
+input FragmentClonePost {
+    deepCopy: Boolean
+    directoryId: Int!
+    fragmentId: Int!
+    projectId: Int!
 }
 
 input FragmentPatch {

@@ -1,0 +1,41 @@
+query AreaStatistics($areaId: Int!, $fromTs: DateTime!, $toTs: DateTime!, $prevFromTs: DateTime!, $prevToTs: DateTime!) {
+    areaStatistic(statisticFilter:{dataIds: [$areaId], fromTs: $fromTs, toTs: $toTs, prevFromTs: $prevFromTs, prevToTs: $prevToTs}) {
+        areaId
+        areaCode
+        trend {
+            viewsTrend {
+                difference
+                trend
+            }
+            conversionTrend {
+                difference
+                trend
+            }
+        }
+        currentStatistic {
+            views
+            conversion
+        }
+
+        currentGroupByDate {
+            detalization
+            points {
+                time
+                value {
+                    views
+                    conversion
+                }
+            }
+        }
+        prevGroupByDate {
+            detalization
+            points {
+                time
+                value {
+                    views
+                    conversion
+                }
+            }
+        }
+    }
+}

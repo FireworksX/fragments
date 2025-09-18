@@ -33,35 +33,11 @@ import { CommonLogo } from '@/shared/ui/CommonLogo'
 import { TabsSelector } from '@/shared/ui/TabsSelector'
 import { Chip } from '@/shared/ui/Chip'
 import { NodeProps } from 'recharts/types/chart/Sankey'
-import { AreaVisitorsStatistics } from '@/views/AreasDetailPage/widgets/AreaVisitorsStatistics'
-import { AreaConversionStatistics } from '@/views/AreasDetailPage/widgets/AreaConversionStatistics'
 import { useAreaAnalyticsRating } from '@/views/AreasDetailPage/hooks/useAreaAnalyticsRating'
+import { AreaChartSpline } from '@/views/AreasDetailPage/components/AreaChartSpline'
+import { AreaChartSection } from '@/views/AreasDetailPage/components/AreaChartSection'
 
 interface CampaignDetailPageProps {}
-
-const resultData = [
-  {
-    timestamp: 100,
-    areaId: 1,
-    campaingId: 1,
-    variantId: 1,
-    value: 10
-  },
-  {
-    timestamp: 200,
-    areaId: 1,
-    campaingId: 2,
-    variantId: 3,
-    value: 35
-  },
-  {
-    timestamp: 300,
-    areaId: 1,
-    campaingId: 2,
-    variantId: 3,
-    value: 4
-  }
-]
 
 const data = [
   { xAxis: '00:01', value: 80 },
@@ -189,14 +165,26 @@ const CustomLink = (props: {
 }
 
 export const AreasDetailPage: FC<CampaignDetailPageProps> = () => {
-  const { pages, countries, browsers, devices, osTypes } = useAreaAnalyticsRating()
+  const {
+    conversionChart,
+    visitorsChart,
+    statistics,
+    loading,
+    pages,
+    countries,
+    browsers,
+    devices,
+    osTypes,
+    interval,
+    setInterval
+  } = useAreaAnalyticsRating()
 
   return (
     <div className={styles.root}>
       <div className={styles.body}>
         <IntegrationMissMatch className={cn(styles.integration, styles.wide)} />
 
-        <PeriodSelector className={styles.wide} period='today' onChange={() => undefined}>
+        <PeriodSelector className={styles.wide} period={interval} onChange={setInterval}>
           <Dropdown
             trigger='click'
             placement='bottom-end'
@@ -224,9 +212,33 @@ export const AreasDetailPage: FC<CampaignDetailPageProps> = () => {
         {/*  $12,432*/}
         {/*</AnalyticsValueInfo>*/}
 
-        <AreaVisitorsStatistics className={styles.wide} bodyClassName={styles.graphContainer} />
+        <AreaChartSection
+          className={styles.wide}
+          bodyClassName={styles.graphContainer}
+          loading={loading}
+          title='Visitors'
+          description='Graph of visitiors on this area'
+          value={statistics?.currentStatistic?.views?.toString() ?? '0'}
+          format={{ style: 'percent' }}
+          trend={statistics?.trend?.viewsTrend?.trend}
+          trendValue={statistics?.trend?.viewsTrend?.difference}
+        >
+          <AreaChartSpline data={visitorsChart} />
+        </AreaChartSection>
 
-        <AreaConversionStatistics className={styles.wide} bodyClassName={styles.graphContainer} />
+        <AreaChartSection
+          className={styles.wide}
+          bodyClassName={styles.graphContainer}
+          loading={loading}
+          title='Conversion'
+          description='Conversion of area'
+          value={statistics?.currentStatistic?.conversion?.toString() ?? '0'}
+          format={{ style: 'percent' }}
+          trend={statistics?.trend?.conversionTrend?.trend}
+          trendValue={statistics?.trend?.conversionTrend?.difference}
+        >
+          <AreaChartSpline data={conversionChart} />
+        </AreaChartSection>
 
         <AnalyticsRating
           className={styles.part}

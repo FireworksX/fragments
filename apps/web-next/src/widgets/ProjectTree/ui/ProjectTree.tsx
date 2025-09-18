@@ -6,6 +6,9 @@ import { projectItemType, useProjectTree } from '../hooks/useProjectTree'
 import { ProjectTreeSortableItem } from '../widgets/ProjectTreeSortableItem'
 import { Spinner } from '@/shared/ui/Spinner'
 import { DragOverlay } from '@dnd-kit/core'
+import { withModalCollector } from '@/shared/hocs/withModalCollector'
+import { modalNames } from '@/shared/data'
+import { CreateNewFragment } from '@/widgets/modals/CreateNewFragment'
 
 export interface ProjectTreeItem {
   id: number
@@ -23,7 +26,7 @@ export const ProjectTreeContext = createContext({
   toggleIsOpen: (id: number, flag?: boolean) => undefined
 })
 
-export const ProjectTree: FC<ProjectTreeProps> = ({ className, draggable, onClick }) => {
+const ProjectTreeInternal: FC<ProjectTreeProps> = ({ className, draggable, onClick }) => {
   const { list, draggableItem, fetching, openedIds, toggleIsOpen } = useProjectTree()
   const treeRef = useRef(null)
 
@@ -62,3 +65,7 @@ export const ProjectTree: FC<ProjectTreeProps> = ({ className, draggable, onClic
     </ProjectTreeContext>
   )
 }
+
+export const ProjectTree = withModalCollector(ProjectTreeInternal, {
+  [modalNames.createFragment]: <CreateNewFragment />
+})

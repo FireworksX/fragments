@@ -48,12 +48,12 @@ export const useBuilderTabs = () => {
       openFragment(resultTabsNodes.at(-1)?.id)
     }
   }, [tabsNodes, prevTabsNodes, currentFragmentId, openFragment, resultTabsNodes])
-
-  useEffect(() => {
-    if (!tabsKeys.length) {
-      openFragment(null)
-    }
-  }, [tabsKeys.length])
+  //
+  // useEffect(() => {
+  //   if (!tabsKeys.length) {
+  //     openFragment(null)
+  //   }
+  // }, [tabsKeys.length])
 
   const tabs =
     resultTabsNodes
