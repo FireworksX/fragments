@@ -53,6 +53,15 @@ export const StackPanelColorPicker: FC<StackPanelColorPickerProps> = ({ classNam
         />
       </Panel>
 
+      {!context?.withoutStack && (
+        <SolidPaintStyles
+          initialColor={resColor}
+          activeColorKey={resColor}
+          onSelect={updateColor}
+          // onCreate={popoutsStore.goPrev}
+        />
+      )}
+
       {/*<SolidPaintStyles*/}
       {/*  getInitialColor={() => animatableValue(resColor)}*/}
       {/*  activeColorKey={isLinkKey(context?.value) ? context?.value : undefined}*/}

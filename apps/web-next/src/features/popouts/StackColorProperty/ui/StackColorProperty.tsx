@@ -35,6 +35,7 @@ export const StackColorProperty: FC<StackColorPropertyProps> = ({ className }) =
     popoutsStore.open(popoutNames.colorPicker, {
       context: {
         value: defaultValue,
+        withoutStack: true,
         onChange: nextColor => {
           setDefaultValue(objectToColorString(nextColor))
         }

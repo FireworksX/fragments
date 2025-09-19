@@ -66,7 +66,7 @@ const weights = [
 ]
 const transforms: TextTransform[] = ['none', 'uppercase', 'lowercase', 'capitalize']
 
-const TEXT_ATTRS = createConstants(
+export const TEXT_ATTRS = createConstants(
   'color',
   'fontSize',
   'fontWeight',
@@ -142,7 +142,6 @@ export const useBuilderTextBase = () => {
       return {
         content: editor?.getHTML(),
         text: editor?.getText(),
-        [TEXT_ATTRS.color]: readValue('color', '#000'),
         [TEXT_ATTRS.fontSize]: readValue('fontSize', 14),
         [TEXT_ATTRS.fontWeight]: readValue('fontWeight', 400),
         [TEXT_ATTRS.textAlign]: readValue('textAlign', 'left'),
@@ -152,18 +151,6 @@ export const useBuilderTextBase = () => {
         [TEXT_ATTRS.letterSpacing]: readValue('letterSpacing', 0)
         // fontFamily: ctx.editor.getAttributes('textStyle').fontFamily || 'Inter',
       }
-    }
-  })
-
-  const colorVariable = useLayerPropertyValue('text.color', {
-    fieldValue: cssVariableToLink(editorState.color.value),
-    onSetValue: value => {
-      if (value) {
-        handleChangeValue('color', linkToCssVariable(value))
-      }
-    },
-    onResetVariable: () => {
-      handleResetValue('color')
     }
   })
 
@@ -220,12 +207,6 @@ export const useBuilderTextBase = () => {
       value: editorState[TEXT_ATTRS.fontWeight].value,
       isMixed: editorState?.[TEXT_ATTRS.fontWeight]?.isMixed,
       onChange: value => handleChangeValue('fontWeight', value)
-    },
-    color: {
-      ...colorVariable,
-      value: editorState[TEXT_ATTRS.color].value ?? '#000',
-      isMixed: editorState?.[TEXT_ATTRS.color]?.isMixed,
-      onClick: openColor
     },
     align: {
       items: aligns,

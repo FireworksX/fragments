@@ -60,7 +60,13 @@ export const useBuilderAssetsColors = () => {
     documentManager?.invalidate(styleKey)
   }
 
+  const propertiesMap = colorProperties.reduce((acc, prop) => {
+    acc[prop._id] = prop.defaultValue
+    return acc
+  }, {})
+
   return {
+    propertiesMap,
     colorProperties,
     createColor,
     editColor,

@@ -14,13 +14,14 @@ import { TabsSelector } from '@/shared/ui/TabsSelector'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { InputText } from '@/shared/ui/InputText'
 import { useBuilderTextBase } from '@/widgets/fragmentBuilder/BuilderText/hooks/useBuilderTextBase'
+import BuilderTextColor from '@/widgets/fragmentBuilder/BuilderTextColor/ui/BuilderTextColor'
 
 interface BuilderTextProps {
   className?: string
 }
 
 const BuilderText: FC<BuilderTextProps> = ({ className }) => {
-  const { weight, content, color, align, fontSize, whiteSpace, lineHeight, letterSpacing, transform, decoration } =
+  const { weight, content, align, fontSize, whiteSpace, lineHeight, letterSpacing, transform, decoration } =
     useBuilderTextBase()
   const { getColor, getNameColor } = useDisplayColor()
 
@@ -66,32 +67,7 @@ const BuilderText: FC<BuilderTextProps> = ({ className }) => {
         </ControlRowWide>
       </ControlRow>
 
-      <ControlRow
-        title='Color'
-        hasConnector={!color.disabled}
-        variable={
-          !color.isMixed
-            ? {
-                data: color.variableData,
-                actions: color.actions,
-                onReset: color.resetVariable,
-                onClick: color.editVariable
-              }
-            : undefined
-        }
-      >
-        <ControlRowWide>
-          {color.isMixed ? (
-            <InputSelect hasIcon onClick={color.onClick}>
-              Mixed
-            </InputSelect>
-          ) : (
-            <InputSelect color={color.value} onClick={color.onClick}>
-              {color.value || getNameColor(color.value)}
-            </InputSelect>
-          )}
-        </ControlRowWide>
-      </ControlRow>
+      <BuilderTextColor />
 
       <ControlRow title='Size'>
         {fontSize.isMixed ? (
