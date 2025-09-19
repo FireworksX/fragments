@@ -1,1 +1,12 @@
 .root {}
+
+.propertyIcon {
+    color: var(--secondary);
+}
+
+.colorIcon {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    box-shadow: var(--shadow-basic);
+}

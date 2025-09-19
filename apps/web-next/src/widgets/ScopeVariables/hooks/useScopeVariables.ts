@@ -24,6 +24,7 @@ export const useScopeVariables = ({ properties, onChange }: UseScopeVariablesOpt
         initialState: property,
         onSubmit: nextForm => {
           console.log(nextForm)
+          closeModal()
         }
       })
     }
@@ -39,7 +40,7 @@ export const useScopeVariables = ({ properties, onChange }: UseScopeVariablesOpt
             _id: generateId()
           }
         ])
-        close()
+        closeModal()
       }
     })
   }

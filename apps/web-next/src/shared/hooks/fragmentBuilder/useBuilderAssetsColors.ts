@@ -49,23 +49,11 @@ export const useBuilderAssetsColors = () => {
     popoutsStore.open(popoutNames.stackSolidPaintStyle, {
       position: 'left',
       context: {
+        defaultValue: initialColor,
         onSubmit: nextProperty => updateProperties([...properties, nextProperty])
       },
       ...popoutOptions
     })
-    // const color = initialColor ?? getRandomColor()
-    // const link = documentManager.createSolidPaintStyle({
-    //   name: getEntityName('Color variable', documentManager, definition.nodes.SolidPaintStyle),
-    //   color
-    // })
-    //
-    // popoutsStore.open(popoutNames.stackSolidPaintStyle, {
-    //   position: 'left',
-    //   context: {
-    //     link,
-    //     ...popoutOptions
-    //   }
-    // })
   }
 
   const removeColor = (styleKey: string) => {

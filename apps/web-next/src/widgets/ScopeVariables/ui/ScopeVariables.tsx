@@ -1,4 +1,5 @@
 import { FC } from 'react'
+import styles from './styles.module.css'
 import { InfoSectionHeader } from '@/components/InfoSection/components/InfoSectionHeader'
 import { InfoSectionFooter } from '@/components/InfoSection/components/InfoSectionFooter'
 import { InfoSectionCell } from '@/components/InfoSection/components/InfoSectionCell'
@@ -66,7 +67,13 @@ const ScopeVariablesInternal: FC<ScopeVariablesProps> = ({ className, loading, p
               Edit
             </Button>
           }
-          before={<PropertyIcon type={variable?.type} />}
+          before={
+            variable?.type === definition.variableType.Color ? (
+              <div className={styles.colorIcon} style={{ background: variable?.defaultValue }} />
+            ) : (
+              <PropertyIcon type={variable?.type} className={styles.propertyIcon} />
+            )
+          }
         ></InfoSectionCell>
       ))}
     </InfoSection>

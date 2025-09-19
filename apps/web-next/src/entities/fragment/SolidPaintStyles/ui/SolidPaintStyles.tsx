@@ -19,11 +19,12 @@ export type StackColorsValue = Color
 interface StackColorsProps {
   className?: string
   activeColorKey?: string
+  initialColor?: string
   onSelect?: (colorKey: StackColorsValue) => void
   onCreate?: () => void
 }
 
-const SolidPaintStyles: FC<StackColorsProps> = ({ className, activeColorKey, onSelect, onCreate }) => {
+const SolidPaintStyles: FC<StackColorsProps> = ({ className, activeColorKey, initialColor, onSelect, onCreate }) => {
   const [search, setSearch] = useState('')
   const { colorProperties, editColor, createColor } = useBuilderAssetsColors()
 
@@ -34,14 +35,14 @@ const SolidPaintStyles: FC<StackColorsProps> = ({ className, activeColorKey, onS
 
   const handleCreateColor = () => {
     createColor({
-      initialColor: '',
+      initialColor,
       onSubmit: onCreate
     })
   }
 
   return (
     <div className={cn(styles.root, className)}>
-      <InputText placeholder='Search' value={search} onChange={setSearch} />
+      <InputText placeholder='Search' value={search} onChangeValue={setSearch} />
       <div>
         {filteredColors.map(variable => (
           <ColorCell

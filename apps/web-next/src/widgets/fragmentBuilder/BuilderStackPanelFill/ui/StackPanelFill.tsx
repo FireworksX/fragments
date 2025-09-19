@@ -36,7 +36,7 @@ const tabs: TabsSelectorItem[] = [
 
 const StackPanelFill: FC<StackPanelFillProps> = ({ className, stackColors }) => {
   const [fillType, setFillType] = useLayerValue('fillType')
-  const [, setSolidFill, { resultValue: solidFillValue }] = useLayerValue('solidFill')
+  const [solidFill, setSolidFill, { resultValue: solidFillValue, isVariable }] = useLayerValue('solidFill')
   const [, setImageFill, { resultValue: imageFillValue }] = useLayerValue('imageFill')
   const [, setImageSize, { resultValue: imageSizeValue }] = useLayerValue('imageSize')
 
@@ -62,6 +62,7 @@ const StackPanelFill: FC<StackPanelFillProps> = ({ className, stackColors }) => 
         </Panel>
       )}
       <SolidPaintStyles
+        initialColor={isVariable ? null : solidFill}
         activeColorKey={solidFillValue}
         onSelect={setSolidFill}
         // onCreate={popoutsStore.goPrev}
