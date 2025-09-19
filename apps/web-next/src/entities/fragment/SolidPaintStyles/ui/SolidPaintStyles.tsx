@@ -9,60 +9,59 @@ import { InputSelect } from '@/shared/ui/InputSelect'
 import { ColorCell } from '@/shared/ui/ColorCell'
 import { useBuilderAssetsColors } from '@/shared/hooks/fragmentBuilder/useBuilderAssetsColors'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { useProject } from '@/shared/hooks/useProject'
+import { definition } from '@fragmentsx/definition'
+import { Button } from '@/shared/ui/Button'
+import { keyOfEntity } from '@graph-state/core'
 
 export type StackColorsValue = Color
 
 interface StackColorsProps {
   className?: string
-  getInitialColor?: () => Color
   activeColorKey?: string
   onSelect?: (colorKey: StackColorsValue) => void
-  onCreate?: (colorKey: StackColorsValue) => void
+  onCreate?: () => void
 }
 
-const SolidPaintStyles: FC<StackColorsProps> = ({ className, activeColorKey, getInitialColor, onSelect, onCreate }) => {
-  const { documentManager } = useBuilderDocument()
+const SolidPaintStyles: FC<StackColorsProps> = ({ className, activeColorKey, onSelect, onCreate }) => {
   const [search, setSearch] = useState('')
-  const { colorVariables, editColor, createColor } = useBuilderAssetsColors()
+  const { colorProperties, editColor, createColor } = useBuilderAssetsColors()
 
   const filteredColors = useMemo(
-    () => colorVariables.filter(({ name }) => name?.search(search) !== -1),
-    [colorVariables, search]
+    () => colorProperties.filter(({ name }) => name?.search(search) !== -1),
+    [colorProperties, search]
   )
+
+  const handleCreateColor = () => {
+    createColor({
+      initialColor: '',
+      onSubmit: onCreate
+    })
+  }
 
   return (
     <div className={cn(styles.root, className)}>
-      <div className={styles.searchWrapper}>
-        <InputText placeholder='Search' value={search} onChange={setSearch} />
-      </div>
+      <InputText placeholder='Search' value={search} onChange={setSearch} />
       <div>
-        <InputSelect
-          className={styles.newCell}
-          color='var(--border)'
-          icon={<Plus className={styles.iconWrapper} width={15} height={15} />}
-          placeholder='New color'
-          onClick={() =>
-            createColor({
-              initialColor: omit(getInitialColor(), '_type'),
-              onSubmit: onCreate
-            })
-          }
-        />
         {filteredColors.map(variable => (
           <ColorCell
             className={cn(styles.cell, {
-              [styles.active]: activeColorKey === documentManager.keyOfEntity(variable)
+              [styles.active]: activeColorKey === keyOfEntity(variable)
             })}
             key={variable?.name}
             sizeColor={15}
-            color={variable?.color}
-            onEdit={() => editColor(documentManager.keyOfEntity(variable))}
-            onClick={() => onSelect && onSelect(documentManager.keyOfEntity(variable))}
+            color={variable?.defaultValue}
+            onEdit={() => editColor(variable._id)}
+            onClick={() => onSelect && onSelect(keyOfEntity(variable))}
           >
             {variable?.name}
           </ColorCell>
         ))}
       </div>
+
+      <Button mode='secondary' stretched onClick={handleCreateColor}>
+        New Color
+      </Button>
     </div>
   )
 }

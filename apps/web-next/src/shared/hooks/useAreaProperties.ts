@@ -15,32 +15,18 @@ export const useAreaProperties = () => {
 
   const properties = data?.area?.at(0)?.properties ?? []
 
-  const addProperty = useCallback(
-    (property: unknown) =>
-      updateAreaProperties({
-        variables: {
-          id: +areaSlug,
-          properties: [...properties, property]
-        }
-      }),
-    [areaSlug, properties, updateAreaProperties]
-  )
-
-  const removeProperty = useCallback(
-    (propertyId: string) =>
-      updateAreaProperties({
-        variables: {
-          id: +areaSlug,
-          properties: properties.find(prop => prop?._id === propertyId)
-        }
-      }),
-    [areaSlug, properties, updateAreaProperties]
-  )
+  const updateProperties = nextProperties => {
+    updateAreaProperties({
+      variables: {
+        id: +areaSlug,
+        properties: nextProperties
+      }
+    })
+  }
 
   return {
     loadingProperties,
     properties,
-    addProperty,
-    removeProperty
+    updateProperties
   }
 }

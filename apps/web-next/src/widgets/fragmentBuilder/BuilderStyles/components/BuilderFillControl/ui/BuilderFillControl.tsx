@@ -21,6 +21,7 @@ export const BuilderFillControl: FC<BuilderFillControlProps> = memo(({ className
   const [imageValue, , imageValueInfo] = useLayerValue('imageFill')
   const solidFillVariable = useLayerPropertyValue('solidFill', {
     skipUseDefaultValue: fillType !== definition.paintMode.Solid,
+    editVariable: options => (options.isProjectVariable ? openFill() : options.editVariable()),
     onSetValue: () => setFillType(definition.paintMode.Solid),
     onResetVariable: () => setFillType(definition.paintMode.None)
   })

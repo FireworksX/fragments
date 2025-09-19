@@ -5,6 +5,7 @@ import styles from './styles.module.css'
 import { Container } from '@/shared/ui/Container'
 import { Cell } from '@/shared/ui/Cell'
 import SettingsIcon from '@/shared/icons/next/settings-2.svg'
+import VariableIcon from '@/shared/icons/next/variable.svg'
 import KeyIcon from '@/shared/icons/next/key.svg'
 import UsersIcon from '@/shared/icons/next/users.svg'
 import { Panel } from '@/shared/ui/Panel'
@@ -35,6 +36,13 @@ const pages = [
       type: 'projectSettingMembers'
     },
     icon: <UsersIcon />
+  },
+  {
+    label: 'Variables',
+    link: {
+      type: 'projectSettingVariables'
+    },
+    icon: <VariableIcon />
   }
 ]
 

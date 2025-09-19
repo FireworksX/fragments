@@ -16,8 +16,8 @@ interface FragmentsBuilderAsideProps {
 
 const tabs: TabsSelectorItem = [
   { name: 'project', label: 'Project' },
-  { name: 'layers', label: 'Layers' },
-  { name: 'assets', label: 'Assets' }
+  { name: 'layers', label: 'Layers' }
+  // { name: 'assets', label: 'Assets' }
 ]
 
 export const FragmentsBuilderAside: FC<FragmentsBuilderAsideProps> = ({ className }) => {
@@ -36,7 +36,7 @@ export const FragmentsBuilderAside: FC<FragmentsBuilderAsideProps> = ({ classNam
       <div className={styles.body}>
         <ProjectTree className={cn({ [styles.hidden]: mode !== 'project' })} onClick={fg => openFragment(fg.id)} />
         {!!documentManager && <BuilderLayers className={cn({ [styles.hidden]: mode !== 'layers' })} />}
-        <ProjectAssets className={cn({ [styles.hidden]: mode !== 'assets' })} />
+        {/*<ProjectAssets className={cn({ [styles.hidden]: mode !== 'assets' })} />*/}
       </div>
     </div>
   )

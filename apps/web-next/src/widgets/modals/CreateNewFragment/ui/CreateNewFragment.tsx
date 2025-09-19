@@ -17,6 +17,7 @@ import { InfoSectionFooter } from '@/components/InfoSection/components/InfoSecti
 import { Touchable } from '@/shared/ui/Touchable'
 import { times } from '@fragmentsx/utils'
 import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
+import { Panel } from '@/shared/ui/Panel'
 
 interface CreateNewFragmentProps {
   className?: string
@@ -54,30 +55,33 @@ export const CreateNewFragment: FC<CreateNewFragmentProps> = ({ className }) => 
       }
     >
       <div className={styles.container}>
-        <ControlRow title='Name'>
-          <ControlRowWide>
-            <InputText placeholder='Text name of fragment' value={name} onChangeValue={setName} />
-          </ControlRowWide>
-        </ControlRow>
+        <Panel>
+          <ControlRow title='Name'>
+            <ControlRowWide>
+              <InputText placeholder='Text name of fragment' value={name} onChangeValue={setName} />
+            </ControlRowWide>
+          </ControlRow>
+        </Panel>
 
-        <div className={styles.templatesTitle}>templates</div>
-
-        <div className={styles.body}>
-          {times(40).map(i => (
-            <Touchable onClick={() => setActiveIndex(i)}>
-              <InfoSection
-                className={cn(styles.template, {
-                  [styles.templateActive]: activeIndex === i
-                })}
-                footer={<InfoSectionFooter icon={<FragmentIcon />}>Button</InfoSectionFooter>}
-              >
-                <div className={styles.templateImage}>
-                  <ImageIcon width={24} height={24} />
-                </div>
-              </InfoSection>
-            </Touchable>
-          ))}
-        </div>
+        <Panel>
+          <div className={styles.templatesTitle}>Templates</div>
+          <div className={styles.body}>
+            {times(40).map(i => (
+              <Touchable onClick={() => setActiveIndex(i)}>
+                <InfoSection
+                  className={cn(styles.template, {
+                    [styles.templateActive]: activeIndex === i
+                  })}
+                  footer={<InfoSectionFooter icon={<FragmentIcon />}>Button</InfoSectionFooter>}
+                >
+                  <div className={styles.templateImage}>
+                    <ImageIcon width={24} height={24} />
+                  </div>
+                </InfoSection>
+              </Touchable>
+            ))}
+          </div>
+        </Panel>
       </div>
     </ModalContainer>
   )

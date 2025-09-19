@@ -61,12 +61,11 @@ const StackPanelFill: FC<StackPanelFillProps> = ({ className, stackColors }) => 
           />
         </Panel>
       )}
-      {/*<SolidPaintStyles*/}
-      {/*  getInitialColor={() => solidFill.value?.get?.() ?? getRandomColor()}*/}
-      {/*  activeColorKey={solidFill.value}*/}
-      {/*  onSelect={solidFill.onChange}*/}
-      {/*  onCreate={popoutsStore.goPrev}*/}
-      {/*/>*/}
+      <SolidPaintStyles
+        activeColorKey={solidFillValue}
+        onSelect={setSolidFill}
+        // onCreate={popoutsStore.goPrev}
+      />
 
       {fillType === definition.paintMode.Image && (
         <ImagePicker

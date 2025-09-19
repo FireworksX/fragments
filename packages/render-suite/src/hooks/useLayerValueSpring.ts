@@ -73,10 +73,7 @@ export const useLayerValueSpring = <T>({
         return cache?.get(cacheKey);
       }
 
-      const { layer: normalizedLayer, ...rr } = getNormalizeLayer(
-        layerKey,
-        manager
-      );
+      const { layer: normalizedLayer } = getNormalizeLayer(layerKey, manager);
 
       const debounceValue = debounce(onFinish ?? noop, 100);
       const defaultValue =
@@ -112,7 +109,12 @@ export const useLayerValueSpring = <T>({
       if (layerKey) {
         const target$ = getValue$();
 
-        if (springable && !isVariableLink(nextValue) && !isInherit) {
+        if (
+          springable &&
+          !isVariableLink(nextValue) &&
+          !isInherit &&
+          target$ instanceof SpringValue
+        ) {
           target$.set(nextValue);
         } else {
           onFinish?.(nextValue, ...args);
