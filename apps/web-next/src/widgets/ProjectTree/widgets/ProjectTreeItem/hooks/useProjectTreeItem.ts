@@ -25,6 +25,7 @@ export const useProjectTreeItem = ({ itemId, type, parentId, onClick }: Options)
   const { openFragment } = useBuilder()
   const { projectSlug } = useProject()
   const {
+    duplicateProjectFragment,
     updateProjectDirectory,
     updateProjectFragment,
     createProjectDirectory,
@@ -97,6 +98,18 @@ export const useProjectTreeItem = ({ itemId, type, parentId, onClick }: Options)
     toggleIsLoading()
   }
 
+  const duplicateItem = async () => {
+    if (type === projectItemType.fragment) {
+      await duplicateProjectFragment({
+        variables: {
+          projectSlug,
+          id: itemId,
+          parentId
+        }
+      })
+    }
+  }
+
   const rename = async (name: string) => {
     toggleIsLoading()
 
@@ -136,6 +149,7 @@ export const useProjectTreeItem = ({ itemId, type, parentId, onClick }: Options)
     rename: resultParentId ? rename : null,
     edit: resultParentId ? edit : null,
     delete: resultParentId ? deleteItem : null,
+    duplicate: resultParentId ? duplicateItem : null,
     handleClick: () => (type === projectItemType.fragment ? onClick?.() : null) // TODO openFragment()
   }
 }

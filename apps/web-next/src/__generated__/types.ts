@@ -354,6 +354,13 @@ export type FilterTimeFramesGet = {
   timeFrames: Array<FilterTimeFrameGet>;
 };
 
+export type FragmentClonePost = {
+  deepCopy?: InputMaybe<Scalars['Boolean']['input']>;
+  directoryId: Scalars['Int']['input'];
+  fragmentId: Scalars['Int']['input'];
+  projectId: Scalars['Int']['input'];
+};
+
 export type FragmentGet = {
   __typename?: 'FragmentGet';
   assets: Array<MediaGet>;
@@ -468,6 +475,7 @@ export type Mutation = {
   addUserToProject?: Maybe<Scalars['Void']['output']>;
   changeProjectPrivateKey: ProjectGet;
   changeUserRole?: Maybe<Scalars['Void']['output']>;
+  cloneFragment: FragmentGet;
   createArea: AreaGet;
   createCampaign: CampaignGet;
   createCondition: ConditionGet;
@@ -549,6 +557,11 @@ export type MutationChangeUserRoleArgs = {
   projectId: Scalars['Int']['input'];
   role: UserRole;
   userId: Scalars['Int']['input'];
+};
+
+
+export type MutationCloneFragmentArgs = {
+  clone: FragmentClonePost;
 };
 
 
@@ -924,6 +937,7 @@ export type Query = {
   clientFragment?: Maybe<FragmentGet>;
   condition: ConditionGet;
   conditionSet: ConditionSetGet;
+  defaultTemplates: Array<FragmentGet>;
   directory: Array<ProjectDirectoryGet>;
   featureFlag: FeatureFlagGet;
   filter: AllFiltersGet;

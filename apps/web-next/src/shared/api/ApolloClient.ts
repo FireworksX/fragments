@@ -90,6 +90,25 @@ export function makeApolloClient() {
                 }
               }
             },
+            cloneFragment: {
+              merge(outcome, incoming, { cache, variables }) {
+                const parentId = variables?.parentId
+
+                if (parentId) {
+                  cache.modify({
+                    id: `ProjectDirectoryGet:${parentId}`, // Родительский объект
+                    fields: {
+                      hasFragments() {
+                        return true
+                      },
+                      fragments(existingFragments = []) {
+                        return [...existingFragments, incoming]
+                      }
+                    }
+                  })
+                }
+              }
+            },
             createDirectory: {
               merge(outcome, [incoming], { cache, variables }) {
                 const nextDirectory = cache.readFragment({

@@ -5,6 +5,14 @@
     gap: 8px;
 }
 
+.sm {
+    height: 30px;
+}
+
+.md {
+    height: 34px;
+}
+
 .before {
     min-width: 15px;
     display: flex;

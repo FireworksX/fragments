@@ -12,6 +12,7 @@ import { useProjectDirectoryQuery } from './queries/ProjectDirectory.generated'
 import { useCallback } from 'react'
 import { getEmptyFragment } from '@/shared/hooks/useProjectFiles/emptyFragment'
 import { generateId } from '@fragmentsx/utils'
+import { useDuplicateProjectFragmentMutation } from '@/shared/hooks/useProjectFiles/queries/DuplicateProjectFragment.generated'
 
 export const useProjectFiles = () => {
   const { projectSlug, project } = useProject()
@@ -26,6 +27,7 @@ export const useProjectFiles = () => {
   const [updateProjectDirectory] = useUpdateProjectDirectoryMutation()
   const [deleteProjectDirectory] = useDeleteProjectDirectoryMutation()
 
+  const [duplicateProjectFragment, { loading: duplicateFragmentLoading }] = useDuplicateProjectFragmentMutation()
   const [createProjectFragment, { loading: createFragmentLoading }] = useCreateProjectFragmentMutation()
   const [updateProjectFragment, { loading: updateFragmentLoading }] = useUpdateProjectFragmentMutation()
   const [deleteProjectFragment, { loading: deleteFragmentLoading }] = useDeleteProjectFragmentMutation()
@@ -50,7 +52,8 @@ export const useProjectFiles = () => {
     loading: {
       createFragmentLoading,
       updateFragmentLoading,
-      deleteFragmentLoading
+      deleteFragmentLoading,
+      duplicateFragmentLoading
     },
 
     rootDirectoryId: project?.rootDirectoryId,
@@ -63,6 +66,7 @@ export const useProjectFiles = () => {
 
     createProjectFragment: proxyCreateProjectFragment,
     updateProjectFragment,
+    duplicateProjectFragment,
     deleteProjectFragment
   }
 }

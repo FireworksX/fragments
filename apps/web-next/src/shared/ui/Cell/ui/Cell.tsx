@@ -4,6 +4,7 @@ import styles from './styles.module.css'
 import { Touchable, TouchableProps } from '@/shared/ui/Touchable'
 
 interface CellProps extends TouchableProps, PropsWithChildren {
+  size?: 'sm' | 'md'
   before?: ReactNode
   after?: ReactNode
   description?: ReactNode
@@ -13,6 +14,7 @@ interface CellProps extends TouchableProps, PropsWithChildren {
 
 const Cell: FC<CellProps> = ({
   className,
+  size = 'md',
   beforeClassName,
   children,
   before,
@@ -21,7 +23,7 @@ const Cell: FC<CellProps> = ({
   ...touchableProps
 }) => {
   return (
-    <Touchable className={cn(styles.root, className)} TagName='button' {...touchableProps}>
+    <Touchable className={cn(styles.root, className, styles[size])} TagName='button' {...touchableProps}>
       {before && <div className={cn(styles.before, beforeClassName)}>{before}</div>}
       <div className={styles.text}>{children}</div>
       {description && <div className={styles.description}>{description}</div>}

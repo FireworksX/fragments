@@ -107,6 +107,7 @@ export const FeedbackForm: FC<FeedbackFormProps> = ({ className }) => {
       }
     })
 
+    resetForm()
     setIsNotify(true)
     if (type === IssueType.Feedback) {
       await promiseWaiter(3000)

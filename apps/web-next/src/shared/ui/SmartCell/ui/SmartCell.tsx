@@ -20,8 +20,9 @@ import CaretRight from '@/shared/icons/next/chevrone-right.svg'
 import FolderIcon from '@/shared/icons/next/folder.svg'
 import FragmentIcon from '@/shared/icons/next/component.svg'
 import { Spinner } from '@/shared/ui/Spinner'
+import { CellProps } from 'recharts'
 
-interface SmartCellProps {
+interface SmartCellProps extends CellProps {
   className?: string
   children: string
   collapsed?: boolean
@@ -48,7 +49,8 @@ const SmartCell: FC<SmartCellProps> = ({
   onToggleCollapse,
   onEdit,
   onCancelEdit,
-  onClick
+  onClick,
+  ...cellProps
 }) => {
   const [localName, setLocalName] = useState<string | null>(null)
   const inputRef = useRef<ComponentRef<'input'>>(null)
@@ -101,6 +103,7 @@ const SmartCell: FC<SmartCellProps> = ({
         [styles.hasCollapsable]: isCollapsable
       })}
       effect='none'
+      {...cellProps}
       before={
         <div className={styles.before}>
           <div className={styles.beforeContent}>

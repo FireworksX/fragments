@@ -10,6 +10,7 @@ interface FragmentOptions {
   onInsert?(): void
   onRename?(): void
   onDelete?(): void
+  onDuplicate?(): void
 }
 
 interface FolderOptions {
@@ -28,6 +29,7 @@ export const ProjectTreeItemOptions: FC<ProjectTreeItemOptionsProps> = props => 
       <>
         <DropdownGroup>
           <DropdownOption onClick={props.onRename}>Rename</DropdownOption>
+          <DropdownOption onClick={props.onDuplicate}>Duplicate</DropdownOption>
           <DropdownOption mode='danger' onClick={props.onDelete}>
             Delete
           </DropdownOption>

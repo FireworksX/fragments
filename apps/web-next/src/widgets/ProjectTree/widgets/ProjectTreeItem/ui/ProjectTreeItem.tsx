@@ -38,6 +38,7 @@ export const ProjectTreeItem: FC<ProjectTreeItemProps> = ({ className, id, paren
         })}
       >
         <SmartCell
+          size='sm'
           ref={projectItem.cellRef}
           collapsed={type === projectItemType.directory ? !projectItem.isOpen : false}
           // selected={selected}
@@ -68,7 +69,12 @@ export const ProjectTreeItem: FC<ProjectTreeItemProps> = ({ className, id, paren
             options={
               <>
                 {type === projectItemType.fragment && (
-                  <ProjectTreeItemOptions type={type} onRename={projectItem.edit} onDelete={projectItem.delete} />
+                  <ProjectTreeItemOptions
+                    type={type}
+                    onRename={projectItem.edit}
+                    onDelete={projectItem.delete}
+                    onDuplicate={projectItem.duplicate}
+                  />
                 )}
                 {type === projectItemType.directory && (
                   <ProjectTreeItemOptions
