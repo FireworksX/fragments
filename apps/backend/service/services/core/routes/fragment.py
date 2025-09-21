@@ -1,4 +1,3 @@
-import uuid
 from typing import Dict, List, Optional
 
 import strawberry
@@ -332,76 +331,75 @@ async def clone_fragment_route(
         )
 
     default_template: bool = await is_default_template_db(db, clone.fragment_id)
-    deep_copy: bool = default_template
-    if not deep_copy and clone.deep_copy is not None:
-        deep_copy = clone.deep_copy
-
-    if not default_template:
+    if default_template:
+        if clone.project_id is None or clone.directory_id is None:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail='Project ID and directory ID are required for default templates',
+            )
+    else:
         await check_read_permissions(db, user.user.id, fragment_db.project_id)
 
-    permission: bool = await write_permission(db, user.user.id, clone.project_id)
+    project_id: int = clone.project_id if clone.project_id is not None else fragment_db.project_id
+    directory_id: int = (
+        clone.directory_id if clone.directory_id is not None else fragment_db.directory_id
+    )
+    permission: bool = await write_permission(db, user.user.id, project_id)
     if not permission:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail='User is not allowed to clone fragments',
         )
 
-    logger.debug(f"Cloning fragment {fragment_db.id} with deep_copy={deep_copy}")
+    logger.debug(f"Cloning fragment {fragment_db.id}")
     linked_fragments: List[int] = []
-    if deep_copy:
-        # Deep copy - recursively clone all linked fragments
-        linked_fragment_id_map: Dict[int, int] = {}  # Maps original IDs to new IDs
+    # Deep copy - recursively clone all linked fragments
+    linked_fragment_id_map: Dict[int, int] = {}  # Maps original IDs to new IDs
 
-        # Get all linked fragments recursively using gather_all_linked_fragments
-        all_fragments = gather_all_linked_fragments(fragment_db)
-        fragments_to_process = [f for f in all_fragments if f.id != fragment_db.id]
+    # Get all linked fragments recursively using gather_all_linked_fragments
+    all_fragments = gather_all_linked_fragments(fragment_db)
+    fragments_to_process = [f for f in all_fragments if f.id != fragment_db.id]
 
-        # Process fragments in reverse order (deepest first)
-        for linked_fragment in reversed(fragments_to_process):
-            # Create fragment with empty linked_fragments first
-            linked_post = FragmentPost(
-                project_id=clone.project_id,
-                name=f'{linked_fragment.name} (copy)-{uuid.uuid4()}',
-                document=linked_fragment.document,
-                props=linked_fragment.props,
-                directory_id=clone.directory_id,
-                linked_fragments=[],  # Will update after all fragments created
-                linked_goals=[],
-            )
-            new_fragment: FragmentGet = await create_fragment_route(info, linked_post)
-            linked_fragment_id_map[linked_fragment.id] = new_fragment.id
-            linked_fragments.append(new_fragment.id)
+    # Process fragments in reverse order (deepest first)
+    for linked_fragment in reversed(fragments_to_process):
+        # Create fragment with empty linked_fragments first
+        linked_post = FragmentPost(
+            project_id=project_id,
+            name=linked_fragment.name,
+            document=linked_fragment.document,
+            props=linked_fragment.props,
+            directory_id=directory_id,
+            linked_fragments=[],  # Will update after all fragments created
+            linked_goals=[],
+        )
+        new_fragment: FragmentGet = await create_fragment_route(info, linked_post)
+        linked_fragment_id_map[linked_fragment.id] = new_fragment.id
+        linked_fragments.append(new_fragment.id)
 
-        # Update linked_fragments for each cloned fragment
-        for original_fragment in fragments_to_process:
-            if original_fragment.linked_fragments:
-                new_fragment_id = linked_fragment_id_map[original_fragment.id]
-                new_linked_ids = [
-                    linked_fragment_id_map[f.id]
-                    for f in original_fragment.linked_fragments
-                    if f.id in linked_fragment_id_map
-                ]
+    # Update linked_fragments for each cloned fragment
+    for original_fragment in fragments_to_process:
+        if original_fragment.linked_fragments:
+            new_fragment_id = linked_fragment_id_map[original_fragment.id]
+            new_linked_ids = [
+                linked_fragment_id_map[f.id]
+                for f in original_fragment.linked_fragments
+                if f.id in linked_fragment_id_map
+            ]
 
-                # Update fragment with correct linked fragments
-                update = FragmentPatch(id=new_fragment_id, linked_fragments=new_linked_ids)
-                await update_fragment_route(info, update)
-    else:
-        # Shallow copy - just reference the original linked fragments and goals
-        if fragment_db.linked_fragments:
-            linked_fragments = [fragment.id for fragment in fragment_db.linked_fragments]
+            # Update fragment with correct linked fragments
+            update = FragmentPatch(id=new_fragment_id, linked_fragments=new_linked_ids)
+            await update_fragment_route(info, update)
 
     logger.debug(f"Linked fragments: {linked_fragments}, {fragment_db.linked_fragments}")
     # Create the root fragment with appropriate linked IDs
     fragment_post = FragmentPost(
-        project_id=clone.project_id,
-        name=f'{fragment_db.name} (copy)-{uuid.uuid4()}',
+        project_id=project_id,
+        name=fragment_db.name,
         document=fragment_db.document,
         props=fragment_db.props,
-        directory_id=clone.directory_id,
+        directory_id=directory_id,
         linked_fragments=linked_fragments,
-        linked_goals=(
-            [] if deep_copy else [g.id for g in fragment_db.linked_goals]
-        ),  # Only include goals for shallow copy
+        linked_goals=([]),
     )
     return await create_fragment_route(info, fragment_post)
 

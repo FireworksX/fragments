@@ -1,6 +1,7 @@
 from typing import List, Optional
 
 import strawberry
+from strawberry.scalars import JSON
 
 from services.core.routes.schemas.area import AreaGet
 from services.core.routes.schemas.media import MediaGet
@@ -60,15 +61,18 @@ class ProjectGet:
     private_key: Optional[ProjectKeyGet]
     public_keys: List[ProjectKeyGet]
     allowed_origins: List[ProjectAllowedOriginGet]
+    properties: Optional[List[JSON]] = None  # type: ignore[valid-type]
 
 
 @strawberry.input
 class ProjectPost:
     name: str
     logo: Optional[str] = None
+    properties: Optional[List[JSON]] = None  # type: ignore[valid-type]
 
 
 @strawberry.input
 class ProjectPatch:
     id: int
     name: Optional[str] = None
+    properties: Optional[List[JSON]] = None  # type: ignore[valid-type]

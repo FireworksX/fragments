@@ -21,11 +21,11 @@ async def create_issue_route(info: strawberry.Info[Context], issue: IssuePost) -
     fb: IssueGet = IssueGet(type=issue.type)
     if issue.type == IssueType.FEEDBACK and issue.feedback is not None:
         logger.debug('Sending feedback notification via Telegram')
-        send_feedback(issue.feedback, client_info)
+        send_feedback(issue.feedback, client_info, user.user)
         logger.info('Successfully created and sent feedback')
     elif issue.type == IssueType.ISSUE and issue.bug is not None:
-        fb.ticket_link = await create_github_issue(issue.bug, client_info)
+        fb.ticket_link = await create_github_issue(issue.bug, client_info, user.user)
     elif issue.type == IssueType.PROPOSAL and issue.proposal is not None:
-        fb.ticket_link = await create_github_issue(issue.proposal, client_info)
+        fb.ticket_link = await create_github_issue(issue.proposal, client_info, user.user)
 
     return fb

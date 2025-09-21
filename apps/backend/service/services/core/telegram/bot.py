@@ -3,9 +3,10 @@ import requests
 from conf.settings import logger, service_settings
 from services.core.routes.schemas.client import ClientInfo
 from services.core.routes.schemas.feedback import FeedbackPost, FeelLevel
+from services.core.routes.schemas.user import UserGet
 
 
-def send_feedback(fb: FeedbackPost, client_info: ClientInfo) -> None:
+def send_feedback(fb: FeedbackPost, client_info: ClientInfo, user: UserGet) -> None:
     message: str = (
         f'Получили новый фидбек!\nСайт: {fb.page}{'\nСообщенние:' + fb.content if fb.content is not None else ''}'
     )
@@ -26,6 +27,10 @@ def send_feedback(fb: FeedbackPost, client_info: ClientInfo) -> None:
     message += f'\nBrowser: {client_info.browser if client_info.browser else 'N/A'}'
     message += f'\nLanguage: {client_info.language if client_info.language else 'N/A'}'
     message += f'\nPage: {fb.page}'
+    message += f'\nUser ID: {user.id}'
+    message += f'\nEmail: {user.email}'
+    message += f'\nFirst Name: {user.first_name}'
+    message += f'\nLast Name: {user.last_name if user.last_name else 'N/A'}'
 
     BOT_TOKEN = service_settings.TELEGRAM_BOT_TOKEN
     CHAT_ID = service_settings.TELEGRAM_CHAT_ID

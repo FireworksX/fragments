@@ -60,3 +60,4 @@ class ClientInfo:
 class ClientAreaGet:
     variant: VariantGet
     area_properties: Optional[List[JSON]] = None  # type: ignore[valid-type]
+    project_properties: Optional[List[JSON]] = None  # type: ignore[valid-type]
