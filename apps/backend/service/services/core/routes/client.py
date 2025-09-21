@@ -339,6 +339,9 @@ async def client_areas_route(
                 ClientAreaGet(
                     variant=variantFragment,
                     area_properties=json.loads(area.properties) if area.properties else None,
+                    project_properties=(
+                        json.loads(project.properties) if project.properties else None
+                    ),
                 )
             )
         out.append(None)

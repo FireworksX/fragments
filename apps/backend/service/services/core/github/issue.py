@@ -6,9 +6,12 @@ import requests
 from conf.settings import logger, service_settings
 from services.core.routes.schemas.client import ClientInfo
 from services.core.routes.schemas.feedback import BugPost, BugPriority, ProposalPost
+from services.core.routes.schemas.user import UserGet
 
 
-async def create_github_issue(issue: BugPost | ProposalPost, client_info: ClientInfo) -> str:
+async def create_github_issue(
+    issue: BugPost | ProposalPost, client_info: ClientInfo, user: UserGet
+) -> str:
     attachment_links = []
     if issue.attachments:
         # Create issues subdirectory if it doesn't exist
@@ -43,6 +46,10 @@ async def create_github_issue(issue: BugPost | ProposalPost, client_info: Client
         f"- Time: {client_info.time_frame.strftime('%Y-%m-%d %H:%M:%S') if client_info.time_frame else 'N/A'}\n"
         f"- Browser: {client_info.browser if client_info.browser else 'N/A'}\n"
         f"- Page: {issue.page}\n"
+        f"- User ID: {user.id}\n"
+        f"- Email: {user.email}\n"
+        f"- First Name: {user.first_name}\n"
+        f"- Last Name: {user.last_name if user.last_name else 'N/A'}\n"
     )
 
     body = '## Message\n' + issue.content + '\n\n' + '## Client Info\n' + client_info_str

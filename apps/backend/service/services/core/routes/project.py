@@ -1,3 +1,4 @@
+import json
 from typing import List, Optional
 
 import strawberry
@@ -134,6 +135,7 @@ async def project_db_to_project(
                 for origin in project.allowed_origins
             ]
         ),
+        properties=json.loads(project.properties) if project.properties else None,
     )
 
 
@@ -173,7 +175,7 @@ async def create_project_route(info: strawberry.Info[Context], pr: ProjectPost) 
     logger.info(f"Creating new project with name {pr.name}")
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
-    project: Project = await create_project_db(db, pr.name, user.user.id)
+    project: Project = await create_project_db(db, pr, user.user.id)
     logger.info(f"Created project {project.id}")
     return await project_db_to_project(info, db, project)
 

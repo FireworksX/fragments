@@ -1,5 +1,6 @@
 import hashlib
 import hmac
+import json
 import secrets
 from typing import List, Optional
 
@@ -18,7 +19,7 @@ from database.models import (
     ProjectMemberRole,
     User,
 )
-from services.core.routes.schemas.project import ProjectGoalPatch, ProjectGoalPost
+from services.core.routes.schemas.project import ProjectGoalPatch, ProjectGoalPost, ProjectPost
 from services.core.routes.schemas.user import UserRole
 
 
@@ -177,10 +178,15 @@ async def validate_project_public_api_key(db: Session, public_api_key: str) -> P
     return public_api_key_db.project
 
 
-async def create_project_db(db: Session, name: str, user_id: int) -> Project:
-    logger.info(f"Creating project {name} for user {user_id}")
-    default_project_logo = await generate_default_media(db, f"{name}.png")
-    project: Project = Project(name=name, owner_id=user_id, logo_id=default_project_logo.id)
+async def create_project_db(db: Session, project_post: ProjectPost, user_id: int) -> Project:
+    logger.info(f"Creating project {project_post.name} for user {user_id}")
+    default_project_logo = await generate_default_media(db, f"{project_post.name}.png")
+    project: Project = Project(
+        name=project_post.name,
+        owner_id=user_id,
+        logo_id=default_project_logo.id,
+        properties=json.dumps(project_post.properties) if project_post.properties else None,
+    )
     db.add(project)
     db.commit()
     db.refresh(project)
@@ -193,7 +199,7 @@ async def create_project_db(db: Session, name: str, user_id: int) -> Project:
 
     await add_user_to_project_db(db, user_id, project.id, UserRole.OWNER)
     root_directory: FilesystemDirectory = await create_directory_db(
-        db=db, parent_id=None, name=name, project_id=project.id
+        db=db, parent_id=None, name=project.name, project_id=project.id
     )
     project.root_directory = root_directory
 

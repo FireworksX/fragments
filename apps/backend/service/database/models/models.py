@@ -145,6 +145,8 @@ class Project(Base):
         'ProjectAllowedOrigin', back_populates='project', cascade='all, delete-orphan'
     )
 
+    properties = Column('properties', JSON, nullable=True)
+
 
 class FilesystemDirectory(Base):
     __tablename__ = 'filesystem_directory'
