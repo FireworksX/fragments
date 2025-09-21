@@ -2,10 +2,10 @@ import { FC } from 'react'
 import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { animated } from '@react-spring/web'
 import { InputSelect } from '@/shared/ui/InputSelect'
-import { popoutsStore } from '@/shared/store/popouts.store'
 import { popoutNames } from '@/shared/data'
 import { objectToColorString } from '@fragmentsx/utils'
 import { BuilderControlRowProps } from '@/shared/ui/ControlRow/ui/default/ControlRow'
+import { useStack } from '@/shared/hooks/useStack'
 
 interface InstancePropertyFillProps extends Pick<BuilderControlRowProps, 'variable' | 'hasConnector'> {
   name: string
@@ -21,6 +21,8 @@ const InstancePropertyColor: FC<InstancePropertyFillProps> = ({
   onChange,
   ...controlRowProps
 }) => {
+  const stack = useStack()
+
   return (
     <ControlRow className={className} title={name} {...controlRowProps}>
       <ControlRowWide>
@@ -28,15 +30,18 @@ const InstancePropertyColor: FC<InstancePropertyFillProps> = ({
           hasIcon
           color={value}
           onClick={() => {
-            popoutsStore.open(popoutNames.colorPicker, {
-              position: 'right',
-              context: {
+            stack.open(
+              popoutNames.colorPicker,
+              {
                 value,
                 onChange: v => {
                   onChange(objectToColorString(v))
                 }
+              },
+              {
+                position: 'right'
               }
-            })
+            )
           }}
         >
           {value}

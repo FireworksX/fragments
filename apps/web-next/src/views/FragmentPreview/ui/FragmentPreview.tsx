@@ -5,6 +5,7 @@ import styles from './styles.module.css'
 import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
 import { FragmentPreviewSandbox } from '@/widgets/FragmentPreviewSandbox'
 import { BuilderFragmentTabs } from '@/views/FragmentsBuilder/widgets/BuilderFragmentTabs'
+import { StackProvider } from '@/widgets/StackCollector'
 
 interface FragmentPreviewProps {
   className?: string

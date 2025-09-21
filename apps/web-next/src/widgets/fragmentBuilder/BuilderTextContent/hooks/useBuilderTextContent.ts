@@ -1,4 +1,3 @@
-import { popoutsStore } from '@/shared/store/popouts.store'
 import { cssVariableToLink, linkToCssVariable, objectToColorString } from '@fragmentsx/utils'
 import { useLayerPropertyValue } from '@/shared/hooks/fragmentBuilder/useLayerPropertyVariable'
 import { useBuilderTextField } from '@/shared/hooks/fragmentBuilder/useBuilderTextField'

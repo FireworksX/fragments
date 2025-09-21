@@ -3,8 +3,6 @@ import cn from 'classnames'
 import { definition } from '@fragmentsx/definition'
 import styles from './styles.module.css'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
-import { POPOUT_TYPE, popoutsStore } from '@/shared/store/popouts.store'
-import { useGraph } from '@graph-state/react'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { TabsSelector, TabsSelectorItem } from '@/shared/ui/TabsSelector'
 import { capitalize } from '@/shared/utils/capitalize'
@@ -26,6 +24,12 @@ import { useStackGoals } from '@/features/popouts/StackGoals/hooks/useStackGoals
 import { Panel } from '@/shared/ui/Panel'
 import { useCreateGoalMutation } from '@/shared/api/goals/CreateGoal.generated'
 import { useProject } from '@/shared/hooks/useProject'
+import { useStack } from '@/shared/hooks/useStack'
+
+export interface StackCreateGoalContext {
+  fragmentLink?: any
+  onCreate?: (goal: any) => void
+}
 
 interface StackNumberVariableProps {
   className?: string
@@ -55,8 +59,8 @@ const requiredControls: TabsSelectorItem[] = [
 
 export const StackCreateGoal: FC<StackNumberVariableProps> = ({ className }) => {
   const { projectSlug } = useProject()
-  const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackCreateGoal}`)
-  const context = popout?.context ?? {}
+  const stack = useStack()
+  const context = stack.readContext(popoutNames.stackCreateGoal) ?? {}
   const [name, setName] = useState('')
   const [code, setCode] = useState('')
   const [createGoal, { loading }] = useCreateGoalMutation()

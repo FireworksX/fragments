@@ -1,5 +1,4 @@
 import { createContext, useCallback, useMemo, useRef, useState } from 'react'
-import { POPOUT_TYPE } from '@/shared/store/popouts.store'
 import { modalNames } from '@/shared/data'
 import { ConfigureFeatureFlagVariantContext } from '@/widgets/modals/ConfigureFeatureFlagVariant/ui/ConfigureFeatureFlagVariant'
 import { ProjectTreeModalContext } from '@/widgets/modals/ProjectTreeModal/ui/ProjectTreeModal'

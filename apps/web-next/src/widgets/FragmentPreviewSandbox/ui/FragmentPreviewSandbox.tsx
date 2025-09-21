@@ -8,10 +8,9 @@ import { PreviewSandboxResize } from '../components/PreviewSandboxResize'
 import { PreviewSandboxProps } from '../widgets/PreviewSandboxProps'
 import { useFragmentPreviewSandbox } from '@/widgets/FragmentPreviewSandbox/hooks/useFragmentPreviewSandbox'
 import { Instance } from '@fragmentsx/render-react'
-import { StackCollector } from '@/widgets/StackCollector'
+import { StackCollector, StackProvider } from '@/widgets/StackCollector'
 import { popoutNames } from '@/shared/data'
 import { Button } from '@/shared/ui/Button'
-import { popoutsStore } from '@/shared/store/popouts.store'
 import { StackPanelColorPicker } from '@/features/popouts/StackPanelColorPicker'
 import { StackGoals } from '@/features/popouts/StackGoals'
 import { StackCreateGoal } from '@/features/popouts/StackCreateGoal'
@@ -19,6 +18,7 @@ import { StackFragmentProps } from '@/features/popouts/StackFragmentProps'
 import { StackObjectValue } from '@/features/popouts/StackObjectValue'
 import { StackArrayValue } from '@/features/popouts/StackArrayValue'
 import { Link } from '@/shared/ui/Link'
+import { useStack } from '@/shared/hooks/useStack'
 
 interface FragmentPreviewSandboxProps {
   initialProps?: unknown
@@ -29,7 +29,7 @@ interface FragmentPreviewSandboxProps {
   onChangeProps?: () => void
 }
 
-export const FragmentPreviewSandbox: FC<FragmentPreviewSandboxProps> = ({
+const FragmentPreviewSandboxInternal: FC<FragmentPreviewSandboxProps> = ({
   className,
   fragmentId,
   hideOpenInEditor,
@@ -38,6 +38,7 @@ export const FragmentPreviewSandbox: FC<FragmentPreviewSandboxProps> = ({
   onChangeProps
 }) => {
   const { props, setProps } = useFragmentPreviewSandbox(initialProps, onChangeProps, areaProperties)
+  const stack = useStack()
   // const { loading } = useFragmentManager(fragmentId)
 
   return (
@@ -61,15 +62,18 @@ export const FragmentPreviewSandbox: FC<FragmentPreviewSandboxProps> = ({
             <Button
               mode='outline'
               onClick={() => {
-                popoutsStore.open(popoutNames.stackFragmentProps, {
-                  initial: true,
-                  context: {
+                stack.open(
+                  popoutNames.stackFragmentProps,
+                  {
                     fragmentId,
                     props,
                     areaProperties,
                     onChange: setProps
+                  },
+                  {
+                    initial: true
                   }
-                })
+                )
               }}
             >
               Edit props
@@ -93,3 +97,9 @@ export const FragmentPreviewSandbox: FC<FragmentPreviewSandboxProps> = ({
     </div>
   )
 }
+
+export const FragmentPreviewSandbox: FC<FragmentPreviewSandboxProps> = props => (
+  <StackProvider>
+    <FragmentPreviewSandboxInternal {...props} />
+  </StackProvider>
+)

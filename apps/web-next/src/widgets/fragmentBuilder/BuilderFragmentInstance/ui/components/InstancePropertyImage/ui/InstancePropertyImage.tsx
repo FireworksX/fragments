@@ -2,13 +2,13 @@ import React, { FC } from 'react'
 import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { animated } from '@react-spring/web'
 import { InputSelect } from '@/shared/ui/InputSelect'
-import { popoutsStore } from '@/shared/store/popouts.store'
 import { popoutNames } from '@/shared/data'
 import { objectToColorString } from '@fragmentsx/utils'
 import { BuilderControlRowProps } from '@/shared/ui/ControlRow/ui/default/ControlRow'
 import styles from '@/features/popouts/StackImageProperty/ui/styles.module.css'
 import { CommonLogo } from '@/shared/ui/CommonLogo'
 import { Button } from '@/shared/ui/Button'
+import { useStack } from '@/shared/hooks/useStack'
 
 interface InstancePropertyImageProps extends Pick<BuilderControlRowProps, 'variable' | 'hasConnector'> {
   name: string
@@ -28,14 +28,14 @@ export const InstancePropertyImage: FC<InstancePropertyImageProps> = ({
   onChange,
   ...controlRowProps
 }) => {
+  const stack = useStack()
+
   const openImagePicker = () => {
-    popoutsStore.open(popoutNames.imagePicker, {
-      context: {
-        url: value,
-        scaleMode,
-        onChangeUrl: onChange,
-        onChangeScaleMode: onChangeScaleMode
-      }
+    stack.open(popoutNames.imagePicker, {
+      url: value,
+      scaleMode,
+      onChangeUrl: onChange,
+      onChangeScaleMode: onChangeScaleMode
     })
   }
 

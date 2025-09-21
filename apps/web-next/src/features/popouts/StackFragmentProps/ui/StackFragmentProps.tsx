@@ -1,19 +1,23 @@
 import { FC } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { POPOUT_TYPE, popoutsStore } from '@/shared/store/popouts.store'
-import { useGraph } from '@graph-state/react'
 import { popoutNames } from '@/shared/data'
 import { InstancePropertyGeneric } from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/components/InstancePropertyGeneric'
 import { useStackFragmentProps } from '@/features/popouts/StackFragmentProps/hooks/useStackFragmentProps'
+import { useStack } from '@/shared/hooks/useStack'
+
+export interface StackFragmentPropsContext {
+  fragmentLink?: any
+  manager?: any
+}
 
 interface StackNumberVariableProps {
   className?: string
 }
 
 export const StackFragmentProps: FC<StackNumberVariableProps> = ({ className }) => {
-  const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackFragmentProps}`, { deep: true })
-  const context = popout?.context ?? {}
+  const stack = useStack()
+  const context = stack.readContext(popoutNames.stackFragmentProps) ?? {}
 
   const { definitions, manager } = useStackFragmentProps(context)
 

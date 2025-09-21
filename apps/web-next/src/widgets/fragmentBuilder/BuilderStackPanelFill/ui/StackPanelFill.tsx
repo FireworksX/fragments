@@ -1,7 +1,6 @@
 import { FC, ReactNode, useContext, useEffect } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { popoutsStore } from '@/shared/store/popouts.store'
 import { TabsSelector, TabsSelectorItem } from '@/shared/ui/TabsSelector'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'

@@ -1,5 +1,4 @@
 import { useFragmentManager, useFragmentProperties } from '@fragmentsx/render-suite'
-import { popoutsStore } from '@/shared/store/popouts.store'
 import { popoutNames } from '@/shared/data'
 import { isObject, omit } from '@fragmentsx/utils'
 import { useMemo } from 'react'

@@ -1,5 +1,4 @@
 import { FC, useContext, useEffect, useMemo, useState } from 'react'
-import { popoutsStore } from '@/shared/store/popouts.store'
 import { isObject, objectToColorString, omit } from '@fragmentsx/utils'
 import { isLinkKey } from '@graph-state/core'
 import { definition } from '@fragmentsx/definition'
@@ -22,6 +21,7 @@ import Rectangle from '@/shared/icons/rectangle.svg'
 import { BoxSizingSides } from '@/shared/ui/BoxSizingSides'
 import { toPx } from '@/shared/utils/toPx'
 import { BuilderSidesInput } from '@/features/fragmentBuilder/BuilderSidesInput'
+import { useStack } from '@/shared/hooks/useStack'
 
 export interface StackPanelBorderOptions {
   value?: BorderData
@@ -33,6 +33,7 @@ interface StackPanelBorderProps extends StackPanel {
 }
 
 const StackPanelBorder: FC<StackPanelBorderProps> = ({ className }) => {
+  const stack = useStack()
   const [borderType, setBorderType] = useLayerValue('borderType')
   const [borderColor, setBorderColor] = useLayerValue('borderColor')
   const [borderWidth, setBorderWidth] = useLayerValue('borderWidth')
@@ -81,12 +82,10 @@ const StackPanelBorder: FC<StackPanelBorderProps> = ({ className }) => {
           <InputSelect
             color={borderColor}
             onClick={() =>
-              popoutsStore.open(popoutNames.colorPicker, {
-                context: {
-                  value: borderColor,
-                  onChange: nextColor => {
-                    setBorderColor(objectToColorString(nextColor))
-                  }
+              stack.open(popoutNames.colorPicker, {
+                value: borderColor,
+                onChange: nextColor => {
+                  setBorderColor(objectToColorString(nextColor))
                 }
               })
             }

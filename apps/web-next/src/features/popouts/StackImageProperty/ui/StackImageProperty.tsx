@@ -4,8 +4,6 @@ import { entityOfKey } from '@graph-state/core'
 import styles from './styles.module.css'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
-import { POPOUT_TYPE, popoutsStore } from '@/shared/store/popouts.store'
-import { useGraph } from '@graph-state/react'
 import { TabsSelector, TabsSelectorItem } from '@/shared/ui/TabsSelector'
 import { capitalize } from '@/shared/utils/capitalize'
 import { booleanTabsSelectorItems, popoutNames } from '@/shared/data'
@@ -19,14 +17,19 @@ import { Button } from '@/shared/ui/Button'
 import { CommonLogo } from '@/shared/ui/CommonLogo'
 import { InstancePropertyColor } from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/components/InstancePropertyColor'
 import { InstancePropertyImage } from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/components/InstancePropertyImage'
+import { useStack } from '@/shared/hooks/useStack'
+
+export interface StackImagePropertyContext {
+  propertyLink: any
+}
 
 interface StackImagePropertyProps {
   className?: string
 }
 
 export const StackImageProperty: FC<StackImagePropertyProps> = ({ className }) => {
-  const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackImageProperty}`)
-  const context = popout?.context ?? {}
+  const stack = useStack()
+  const context = stack.readContext(popoutNames.stackImageProperty) ?? {}
   const id = entityOfKey(context.propertyLink)?._id
   const [name, setName] = useLayerValue('name', context?.propertyLink)
   const [required, setRequired] = useLayerValue('required', context?.propertyLink)

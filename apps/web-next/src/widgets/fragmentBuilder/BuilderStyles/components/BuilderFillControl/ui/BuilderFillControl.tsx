@@ -3,10 +3,11 @@ import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { InputSelect } from '@/shared/ui/InputSelect'
 import { definition } from '@fragmentsx/definition'
-import { popoutsStore } from '@/shared/store/popouts.store'
 import Image from 'next/image'
 import { useLayerPropertyValue } from '@/shared/hooks/fragmentBuilder/useLayerPropertyVariable'
 import { useCombinePropertyVariables } from '@/shared/hooks/fragmentBuilder/useCombinePropertyVariables'
+import { useStack } from '@/shared/hooks/useStack'
+import { popoutNames } from '@/shared/data'
 
 interface BuilderFillControlProps {
   className?: string
@@ -16,6 +17,7 @@ export const ALLOW_FILL_TYPES = [definition.paintMode.Solid]
 export const TYPES_WITH_ICON = [definition.paintMode.Solid, definition.paintMode.Image]
 
 export const BuilderFillControl: FC<BuilderFillControlProps> = memo(({ className }) => {
+  const { open: openStack } = useStack()
   const [fillType, setFillType] = useLayerValue('fillType')
   const [solidValue, , solidValueInfo] = useLayerValue('solidFill')
   const [imageValue, , imageValueInfo] = useLayerValue('imageFill')
@@ -49,9 +51,7 @@ export const BuilderFillControl: FC<BuilderFillControlProps> = memo(({ className
   }, [fillType, imageValue, solidValueInfo?.resultValue])
 
   const openFill = () => {
-    popoutsStore.open('fill', {
-      initial: true
-    })
+    openStack(popoutNames.fill, {}, { initial: true })
   }
 
   return (

@@ -50,20 +50,20 @@ export const useLayerSelectedResize = () => {
       memo.from = {
         getWidth: move => {
           if (targetWidthType === definition.sizing.Relative) {
-            move = (move / parentRect.width) * 100
+            move = (move / (parentRect?.width ?? 0)) * 100
           }
           return move / scale + (memo?.from?.width ?? 0)
         },
         getHeight: move => {
           if (targetHeightType === definition.sizing.Relative) {
-            move = (move / parentRect.height) * 100
+            move = (move / (parentRect?.height ?? 0)) * 100
           }
           return move / scale + (memo?.from?.height ?? 0)
         },
         getLeft: move => move / scale + (targetLeft ?? 0),
         getTop: move => move / scale + (targetTop ?? 0),
-        width: animatableValue(width$),
-        height: animatableValue(height$),
+        width: animatableValue(width$) ?? 0,
+        height: animatableValue(height$) ?? 0,
         right: baseRight,
         left: baseLeft,
         bottom: baseBottom,

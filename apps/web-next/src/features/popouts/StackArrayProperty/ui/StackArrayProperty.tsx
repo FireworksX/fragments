@@ -3,8 +3,6 @@ import cn from 'classnames'
 import { definition } from '@fragmentsx/definition'
 import { createLayer } from '@fragmentsx/render-suite'
 import styles from './styles.module.css'
-import { POPOUT_TYPE, popoutsStore } from '@/shared/store/popouts.store'
-import { useGraph, GraphValue } from '@graph-state/react'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { PropertyContentObject } from '@/entities/properyContent/PropertyContentObject'
 import { popoutNames } from '@/shared/data'
@@ -23,6 +21,11 @@ import { Dropdown } from '@/shared/ui/Dropdown'
 import { Instance } from '@/shared/ui/Popover/ui/Popover'
 import { VariableIcon } from '@/entities/fragment/VariableIcon'
 import { copyLayer } from '@fragmentsx/render-suite'
+import { useStack } from '@/shared/hooks/useStack'
+
+export interface StackArrayPropertyContext {
+  propertyLink: any
+}
 
 interface StackArrayPropertyProps {
   className?: string
@@ -31,8 +34,8 @@ interface StackArrayPropertyProps {
 export const StackArrayProperty: FC<StackArrayPropertyProps> = ({ className }) => {
   const { createProperty } = useFragmentProperties()
   const { documentManager } = useBuilderDocument()
-  const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackArrayProperty}`)
-  const context = popout?.context ?? {}
+  const stack = useStack()
+  const context = stack.readContext(popoutNames.stackArrayProperty) ?? {}
   const id = documentManager.entityOfKey(context.propertyLink)?._id
   const [name, setName] = useLayerValue('name', context?.propertyLink)
   const [required, setRequired] = useLayerValue('required', context?.propertyLink)

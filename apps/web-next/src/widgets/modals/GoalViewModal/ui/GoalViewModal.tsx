@@ -4,7 +4,6 @@ import styles from './styles.module.css'
 import { Modal } from '@/shared/ui/Modal'
 import { ModalContainer } from '@/shared/ui/ModalContainer'
 import { useGraph } from '@graph-state/react'
-import { modalStore } from '@/shared/store/modal.store'
 import { modalNames } from '@/shared/data'
 import { ProjectTree } from '@/widgets/ProjectTree'
 import { Button } from '@/shared/ui/Button'
@@ -33,7 +32,7 @@ interface GoalViewModalProps {
 }
 
 export const GoalViewModal: FC<GoalViewModalProps> = ({ className }) => {
-  const { readContext } = useModal()
+  const { readContext, close: closeModal } = useModal()
   const context = readContext(modalNames.goalView)
   const currentGoal = context?.currentGoal
   const isEdit = !!currentGoal
@@ -56,7 +55,7 @@ export const GoalViewModal: FC<GoalViewModalProps> = ({ className }) => {
       title={isEdit ? 'Goal View' : 'Create Goal'}
       footer={
         <>
-          <Button mode='secondary' stretched onClick={modalStore.close}>
+          <Button mode='secondary' stretched onClick={closeModal}>
             Cancel
           </Button>
           <Button type='submit' stretched onClick={() => handleSubmit()}>

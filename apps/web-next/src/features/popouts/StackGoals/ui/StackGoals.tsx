@@ -3,8 +3,6 @@ import cn from 'classnames'
 import { definition } from '@fragmentsx/definition'
 import styles from './styles.module.css'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
-import { POPOUT_TYPE, popoutsStore } from '@/shared/store/popouts.store'
-import { useGraph } from '@graph-state/react'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { TabsSelector, TabsSelectorItem } from '@/shared/ui/TabsSelector'
 import { capitalize } from '@/shared/utils/capitalize'
@@ -27,6 +25,13 @@ import { Dropdown } from '@/shared/ui/Dropdown'
 import { DropdownOption } from '@/shared/ui/DropdownOption'
 import InfoIcon from '@/shared/icons/next/info.svg'
 import { DropdownGroup } from '@/shared/ui/DropdownGroup'
+import { useStack } from '@/shared/hooks/useStack'
+
+export interface StackGoalsContext {
+  fragmentLink?: any
+  activeGoalCode?: string
+  onSelect?: (goal: any) => void
+}
 
 interface StackNumberVariableProps {
   className?: string
@@ -55,8 +60,8 @@ const requiredControls: TabsSelectorItem[] = [
 ]
 
 export const StackGoals: FC<StackNumberVariableProps> = ({ className }) => {
-  const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackGoals}`)
-  const context = popout?.context ?? {}
+  const stack = useStack()
+  const context = stack.readContext(popoutNames.stackGoals) ?? {}
   const { list } = useStackGoals()
 
   return (
@@ -67,11 +72,9 @@ export const StackGoals: FC<StackNumberVariableProps> = ({ className }) => {
         className={styles.cellCreate}
         before={<PlusIcon />}
         onClick={() => {
-          popoutsStore.open(popoutNames.stackCreateGoal, {
-            context: {
-              onCreate: () => {
-                popoutsStore.goPrev()
-              }
+          stack.open(popoutNames.stackCreateGoal, {
+            onCreate: () => {
+              stack.goPrev()
             }
           })
         }}

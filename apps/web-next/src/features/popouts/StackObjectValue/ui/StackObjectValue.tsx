@@ -1,7 +1,6 @@
 import React, { FC } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { POPOUT_TYPE, popoutsStore } from '@/shared/store/popouts.store'
 import { useGraph, GraphValue, GraphValues } from '@graph-state/react'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { popoutNames } from '@/shared/data'
@@ -12,6 +11,14 @@ import { InstancePropertyGeneric } from '@/widgets/fragmentBuilder/BuilderFragme
 import { undefined } from 'zod'
 import { cleanGraph, omit } from '@fragmentsx/utils'
 import { keyOfEntity } from '@graph-state/core'
+import { useStack } from '@/shared/hooks/useStack'
+
+export interface StackObjectValueContext {
+  value?: Record<string, any>
+  manager?: any
+  fields?: Record<string, any>
+  onChange?: (value: Record<string, any>) => void
+}
 
 interface StackObjectValueProps {
   className?: string
@@ -19,8 +26,8 @@ interface StackObjectValueProps {
 
 export const StackObjectValue: FC<StackObjectValueProps> = ({ className }) => {
   const { documentManager } = useBuilderDocument()
-  const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackObjectValue}`)
-  const context = popout?.context ?? {}
+  const stack = useStack()
+  const context = stack.readContext(popoutNames.stackObjectValue) ?? {}
   const resultManager = context?.manager ?? documentManager
   const inputValue = cleanGraph(context?.value ?? {})
   const fields = omit(context?.fields ?? {}, '_type', '_id')
@@ -31,10 +38,6 @@ export const StackObjectValue: FC<StackObjectValueProps> = ({ className }) => {
       ...inputValue,
       [key]: value
     }
-
-    popoutsStore.updateCurrentContext({
-      value: nextValue
-    })
 
     onChange(nextValue)
   }

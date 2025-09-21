@@ -5,35 +5,35 @@ import styles from './styles.module.css'
 import { Panel } from '@/shared/ui/Panel'
 import { ColorPicker } from '@/shared/ui/ColorPicker'
 import { InputText } from '@/shared/ui/InputText'
-import { useStackSolidPaintStyle } from '../hooks/useStackSolidPaintStyle'
-import { useGraph } from '@graph-state/react'
-import { POPOUT_TYPE, popoutsStore } from '@/shared/store/popouts.store'
 import { popoutNames } from '@/shared/data'
 import { Button } from '@/shared/ui/Button'
 import { objectToColorString } from '@fragmentsx/utils'
+import { useStack } from '@/shared/hooks/useStack'
 
 export type StackPanelColorEntity = { name: string; color: Color }
 
-export interface StackPanelCreateColorOptions {
+export interface StackSolidPaintStyleContext {
+  name?: string
+  defaultValue?: string
   initialColor?: Color
   onSubmit?: (color: StackPanelColorEntity) => void
 }
 
-interface StackPanelCreateColorProps extends StackPanel {
+interface StackPanelCreateColorProps {
   className?: string
 }
 
 const StackSolidPaintStyle: FC<StackPanelCreateColorProps> = ({ className }) => {
-  const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackSolidPaintStyle}`, { deep: true })
-  const context = popout?.context
+  const stack = useStack()
+  const context = stack.readContext(popoutNames.stackSolidPaintStyle)
   const nameRef = useRef<ComponentRef<'input'>>(null)
   const [name, setName] = useState('')
   const [color, setColor] = useState('#000')
 
   useEffect(() => {
     if (context) {
-      setName(context.name)
-      setColor(context.defaultValue)
+      !!context?.name && setName(context?.name)
+      !!context?.defaultValue && setColor(context?.defaultValue)
     }
   }, [context])
 
@@ -58,7 +58,7 @@ const StackSolidPaintStyle: FC<StackPanelCreateColorProps> = ({ className }) => 
               name,
               defaultValue: color
             })
-            popoutsStore?.goPrev()
+            stack.goPrev()
           }}
         >
           Save
