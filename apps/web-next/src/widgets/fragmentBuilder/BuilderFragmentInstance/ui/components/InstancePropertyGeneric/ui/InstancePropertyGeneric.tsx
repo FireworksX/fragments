@@ -34,6 +34,7 @@ export interface InstancePropertyGenericProps extends BuilderControlRowProps {
   property: LinkKey
   manager: GraphState
   className?: string
+  withDefaultValue?: boolean
   onChange(value: boolean): void
 }
 
@@ -41,12 +42,13 @@ export const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({
   className,
   manager,
   value,
+  withDefaultValue = true,
   property,
   onChange,
   ...controlRowProps
 }) => {
   const { layer } = useNormalizeLayer(property, manager)
-  value = value ?? layer?.defaultValue
+  value = withDefaultValue ? value ?? layer?.defaultValue : value
 
   if (layer?.type === definition.variableType.Number) {
     return (
@@ -88,7 +90,6 @@ export const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({
   }
 
   if (layer?.type === definition.variableType.Array) {
-    console.log(layer)
     const editValue = () => {
       popoutsStore.open(popoutNames.stackArrayValue, {
         context: {

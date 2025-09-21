@@ -55,7 +55,7 @@ export const useStackFragmentProps = (options: Options) => {
       const value =
         isObject(options.props) && resolvedDefinition._id in options.props
           ? options?.props[resolvedDefinition._id]
-          : resolvedDefinition.defaultValue
+          : null //resolvedDefinition.defaultValue
 
       return {
         link: definition,

@@ -5,7 +5,7 @@ import { useBuilderTextColor } from '@/widgets/fragmentBuilder/BuilderTextColor/
 
 interface BuilderTextColorProps {}
 
-const BuilderTextColor: FC<BuilderTextColorProps> = () => {
+export const BuilderTextColor: FC<BuilderTextColorProps> = () => {
   const color = useBuilderTextColor()
 
   return (
@@ -29,7 +29,7 @@ const BuilderTextColor: FC<BuilderTextColorProps> = () => {
             Mixed
           </InputSelect>
         ) : (
-          <InputSelect color={color.value} onClick={color.onClick}>
+          <InputSelect hasIcon={!!color.value} color={color.value} onClick={color.onClick}>
             {color.value}
           </InputSelect>
         )}
@@ -37,5 +37,3 @@ const BuilderTextColor: FC<BuilderTextColorProps> = () => {
     </ControlRow>
   )
 }
-
-export default BuilderTextColor

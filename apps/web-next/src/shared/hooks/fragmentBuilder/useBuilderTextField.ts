@@ -4,14 +4,18 @@ import { capitalize } from '@/shared/utils/capitalize'
 import { TEXT_ATTRS } from '@/widgets/fragmentBuilder/BuilderText/hooks/useBuilderTextBase'
 import { useEditorState } from '@tiptap/react'
 
-export const useBuilderTextField = field => {
+interface UseBuilderTextFieldOptions {
+  fallback?: unknown
+}
+
+export const useBuilderTextField = (field, options?: UseBuilderTextFieldOptions) => {
   const editor = use(CanvasTextEditorContext)
 
   const changeValue = value => {
     const methodName = `set${capitalize(field)}`
     const chain = editor.chain()?.focus()
 
-    if (methodName in chain && field in TEXT_ATTRS) {
+    if (methodName in chain) {
       chain?.[methodName]?.(value)?.run()
     }
   }
@@ -26,7 +30,7 @@ export const useBuilderTextField = field => {
       const value = ctx.editor?.storage?.[field]?.[`get${capitalize(field)}`]?.({ editor })
 
       return {
-        value: value?.at(0),
+        value: value?.at(0) ?? options?.fallback,
         isMixed: value?.length > 1
       }
     }

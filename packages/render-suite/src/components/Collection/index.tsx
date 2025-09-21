@@ -21,7 +21,9 @@ export const Collection: FC<CollectionProps> = (props) => {
   const { layerKey: instanceLayerKey } = useContext(InstanceContext);
   const isNestedInstanceLayer = !!instanceLayerKey;
   const styles = useLayerStyles(props.layerKey);
-  const { sourceValue } = useCollection(props.layerKey);
+  const { sourceValue } = useCollection(props.layerKey, {
+    collectStyle: isNestedInstanceLayer,
+  });
 
   const isArray = Array.isArray(sourceValue);
   if (!isArray || (isArray && sourceValue?.length === 0)) {

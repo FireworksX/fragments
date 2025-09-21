@@ -31,10 +31,14 @@ export const StackArrayValue: FC<StackArrayValueProps> = ({ className }) => {
   const fields = omit(context?.fields ?? {}, '_type', '_id')
   const definitionLink = context?.definition
   const onChange = context?.onChange ?? noop
-  const [definitionGraph] = useGraph(resultManager, definitionLink, { selector: graph => graph?.defaultValue })
+  const [definitionDefaultValue] = useLayerValue('defaultValue', definitionLink, { manager: resultManager })
 
   const handleAddItem = () => {
-    onChange([...value, definitionGraph?.defaultValue])
+    const nextValue = [...value, definitionDefaultValue]
+    onChange(nextValue)
+    popoutsStore.updateCurrentContext({
+      value: nextValue
+    })
   }
 
   const handleRemoveItem = (index: number) => {

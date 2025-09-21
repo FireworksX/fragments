@@ -39,6 +39,9 @@ export const useFragmentPreviewSandbox = (
 
   return {
     props: resultProps,
-    setProps
+    setProps: v => {
+      console.log(v)
+      setProps(v)
+    }
   }
 }

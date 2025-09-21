@@ -20,7 +20,7 @@ export const Collection: FC<CollectionProps> = ({
     source,
     children,
     sourceValue,
-  } = useCollection(layerKey);
+  } = useCollection(layerKey, restProps);
   const FrameTag = restProps?.FrameTag ?? "div";
   const FrameElement = restProps?.FrameElement ?? Frame;
   const resultStyles = inputStyles ?? styles;

@@ -1,1 +1,1 @@
-export { default as BuilderText } from './ui/BuilderTextColor'
+export { BuilderTextColor } from './ui/BuilderTextColor'

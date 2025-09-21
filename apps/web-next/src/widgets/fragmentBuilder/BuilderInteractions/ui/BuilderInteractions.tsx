@@ -31,8 +31,6 @@ const BuilderInteractions: FC<BuilderPositionProps> = memo(({ className }) => {
   //   return null
   // }
 
-  console.log(interactions)
-
   return (
     <Panel
       className={cn(styles.root, className)}

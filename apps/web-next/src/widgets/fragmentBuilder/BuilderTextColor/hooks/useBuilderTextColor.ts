@@ -5,7 +5,7 @@ import { useBuilderTextField } from '@/shared/hooks/fragmentBuilder/useBuilderTe
 import { isVariableLink } from '@fragmentsx/definition'
 
 export const useBuilderTextColor = () => {
-  const { value, isMixed, changeValue, resetValue } = useBuilderTextField('color')
+  const { value, isMixed, changeValue, resetValue } = useBuilderTextField('color', '#000')
 
   const openColor = () => {
     popoutsStore.open('colorPicker', {
