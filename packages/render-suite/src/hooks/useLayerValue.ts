@@ -4,7 +4,8 @@ import {
   useLayerValue as useLayerValueCore,
 } from "@fragmentsx/render-react";
 import { useLayerValueSpring } from "@/hooks/useLayerValueSpring";
-import { useContext, useEffect } from "react";
+import { useCallback, useContext, useEffect, useRef } from "react";
+import { debounce, noop } from "@fragmentsx/utils";
 
 export interface UseLayerValueOptions {
   onChange?: (value: unknown) => void;
@@ -27,7 +28,7 @@ export const useLayerValue = (
     }
   );
 
-  const [value$, setValue$] = useLayerValueSpring({
+  const [value$, setValue$, patchUpdate] = useLayerValueSpring({
     layerKey,
     fieldKey,
     initialValue: coreValue,
@@ -35,6 +36,16 @@ export const useLayerValue = (
     onFinish: setCoreValue,
     onChange: (value) => options?.onChange?.(value),
   });
+
+  const debouncePatch = debounce(patchUpdate ?? noop, 200);
+
+  const setWithAutoPatch = useCallback(
+    (...args) => {
+      setValue$(...args);
+      debouncePatch();
+    },
+    [setValue$, patchUpdate]
+  );
 
   useEffect(() => {
     if (
@@ -53,6 +64,8 @@ export const useLayerValue = (
     {
       ...coreInfo,
       resultValue: coreInfo.isVariable || !value$ ? coreValue : value$,
+      patchUpdate,
+      setWithAutoPatch,
       value$,
     },
   ];

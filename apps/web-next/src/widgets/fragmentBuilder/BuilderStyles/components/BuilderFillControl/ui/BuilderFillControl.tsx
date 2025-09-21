@@ -38,7 +38,7 @@ export const BuilderFillControl: FC<BuilderFillControlProps> = memo(({ className
   const result = useMemo(() => {
     if (fillType === definition.paintMode.Solid) {
       return {
-        value: solidValueInfo?.value$
+        value: solidValueInfo?.resultValue
       }
     }
     if (fillType === definition.paintMode.Image) {
@@ -46,7 +46,7 @@ export const BuilderFillControl: FC<BuilderFillControlProps> = memo(({ className
         value: imageValue
       }
     }
-  }, [fillType, imageValue, solidValueInfo?.value$])
+  }, [fillType, imageValue, solidValueInfo?.resultValue])
 
   const openFill = () => {
     popoutsStore.open('fill', {

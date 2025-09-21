@@ -18,13 +18,11 @@ export const useBuilderSize = () => {
 
   const { width: layerWidth$, height: layerHeight$ } = useLayerRect(selection)
 
-  const [left] = useLayerValue('left')
-  const [right, setRight] = useLayerValue('right')
-  const [top] = useLayerValue('top')
-  const [bottom, setBottom] = useLayerValue('bottom')
+  const [right, , { setWithAutoPatch: setRight }] = useLayerValue('right')
+  const [bottom, , { setWithAutoPatch: setBottom }] = useLayerValue('bottom')
 
-  const [width, setWidth, widthInfo] = useLayerValue('width')
-  const [height, setHeight, heightInfo] = useLayerValue('height')
+  const [width, , { setWithAutoPatch: setWidth, ...widthInfo }] = useLayerValue('width')
+  const [height, , { setWithAutoPatch: setHeight, ...heightInfo }] = useLayerValue('height')
   const [widthType, setWidthType, widthTypeInfo] = useLayerValue('widthType')
   const [heightType, setHeightType, heightTypeInfo] = useLayerValue('heightType')
   const [aspectRatio, setAspectRatio] = useLayerValue('aspectRatio')

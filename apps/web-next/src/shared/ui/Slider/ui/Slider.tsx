@@ -11,26 +11,30 @@ interface SliderProps<T = number> {
   min?: number
   max?: number
   onChange?: (value: this['value']) => void
+  onFinish?: (value: this['value']) => void
 }
 
-const Slider: FC<SliderProps> = animated(({ className, disabled, value, step = 1, min = 0, max = 100, onChange }) => {
-  const getProgress = (value: number) => `${(value / max) * 100}%`
+const Slider: FC<SliderProps> = animated(
+  ({ className, disabled, value, step = 1, min = 0, max = 100, onChange, onFinish }) => {
+    const getProgress = (value: number) => `${(value / max) * 100}%`
 
-  return (
-    <input
-      type='range'
-      value={value}
-      className={cn(styles.root, className)}
-      style={{
-        '--progress': value instanceof SpringValue ? value.to(getProgress) : getProgress(value)
-      }}
-      step={step}
-      disabled={disabled}
-      max={max}
-      min={min}
-      onChange={e => onChange && onChange(+e.target.value)}
-    />
-  )
-})
+    return (
+      <input
+        type='range'
+        value={value}
+        className={cn(styles.root, className)}
+        style={{
+          '--progress': value instanceof SpringValue ? value.to(getProgress) : getProgress(value)
+        }}
+        step={step}
+        disabled={disabled}
+        max={max}
+        min={min}
+        onChange={e => onChange && onChange(+e.target.value)}
+        onMouseUp={e => onFinish?.(+e.target.value)}
+      />
+    )
+  }
+)
 
 export default Slider

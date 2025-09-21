@@ -75,7 +75,6 @@ export const useLayerValueSpring = <T>({
 
       const { layer: normalizedLayer } = getNormalizeLayer(layerKey, manager);
 
-      const debounceValue = debounce(onFinish ?? noop, 100);
       const defaultValue =
         initialValue ??
         normalizedLayer?.[fieldKey] ??
@@ -91,7 +90,6 @@ export const useLayerValueSpring = <T>({
         const springValue = new SpringValue(defaultValue, {
           onChange: (value) => {
             onChange?.(value);
-            debounceValue(value);
           },
         });
         cache?.set(cacheKey, springValue);
@@ -103,6 +101,15 @@ export const useLayerValueSpring = <T>({
   }, [cacheKey, initialValue, isInherit, layerKey]);
 
   const value$ = useMemo(() => getValue$(), [cacheKey, initialValue]);
+
+  const patchUpdate = useCallback(() => {
+    const target$ = getValue$();
+
+    if (springable && !isInherit && target$ instanceof SpringValue) {
+      const targetValue = target$?.get();
+      onFinish?.(targetValue);
+    }
+  }, [onFinish, getValue$]);
 
   const updateValue = useCallback(
     (nextValue: T, ...args) => {
@@ -121,8 +128,8 @@ export const useLayerValueSpring = <T>({
         }
       }
     },
-    [onFinish, getValue$]
+    [getValue$, patchUpdate]
   );
 
-  return [value$, updateValue] as const;
+  return [value$, updateValue, patchUpdate] as const;
 };

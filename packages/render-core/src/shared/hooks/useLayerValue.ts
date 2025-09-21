@@ -64,6 +64,8 @@ export const useLayerValue = (
     (value: unknown, options?: MutateOptions) => {
       const { success, output } = parseLayerField(layer, fieldKey, value);
 
+      console.log(fieldKey, value);
+
       if (success) {
         if (isVariableLink(value)) {
           /*
