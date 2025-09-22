@@ -344,6 +344,7 @@ async def clone_fragment_route(
     directory_id: int = (
         clone.directory_id if clone.directory_id is not None else fragment_db.directory_id
     )
+    name: str = clone.name if clone.name is not None else fragment_db.name
     permission: bool = await write_permission(db, user.user.id, project_id)
     if not permission:
         raise HTTPException(
@@ -365,7 +366,7 @@ async def clone_fragment_route(
         # Create fragment with empty linked_fragments first
         linked_post = FragmentPost(
             project_id=project_id,
-            name=linked_fragment.name,
+            name=f'{linked_fragment.name} - {name}',
             document=linked_fragment.document,
             props=linked_fragment.props,
             directory_id=directory_id,
@@ -394,7 +395,7 @@ async def clone_fragment_route(
     # Create the root fragment with appropriate linked IDs
     fragment_post = FragmentPost(
         project_id=project_id,
-        name=fragment_db.name,
+        name=name,
         document=fragment_db.document,
         props=fragment_db.props,
         directory_id=directory_id,
