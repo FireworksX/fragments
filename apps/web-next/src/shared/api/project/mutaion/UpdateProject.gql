@@ -1,6 +1,7 @@
-mutation UpdateProject($projectSlug: Int!, $name: String) {
-    updateProject(pr: {id: $projectSlug, name: $name}) {
+mutation UpdateProject($projectSlug: Int!, $name: String, $properties: [JSON!]) {
+    updateProject(pr: {id: $projectSlug, name: $name, properties: $properties}) {
         id
         name
+        properties
     }
 }

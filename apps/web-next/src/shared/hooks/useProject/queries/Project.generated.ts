@@ -8,7 +8,7 @@ export type ProjectQueryVariables = Types.Exact<{
 }>;
 
 
-export type ProjectQuery = { __typename?: 'Query', project: Array<{ __typename?: 'ProjectGet', id: number, name: string, rootDirectoryId: number, allowedOrigins: Array<{ __typename?: 'ProjectAllowedOriginGet', id: number, origin: string }>, logo: { __typename?: 'MediaGet', publicPath: string } }> };
+export type ProjectQuery = { __typename?: 'Query', project: Array<{ __typename?: 'ProjectGet', id: number, name: string, rootDirectoryId: number, properties?: Array<any> | null, allowedOrigins: Array<{ __typename?: 'ProjectAllowedOriginGet', id: number, origin: string }>, logo: { __typename?: 'MediaGet', publicPath: string } }> };
 
 
 export const ProjectDocument = gql`
@@ -24,6 +24,7 @@ export const ProjectDocument = gql`
     logo {
       publicPath
     }
+    properties
   }
 }
     `;

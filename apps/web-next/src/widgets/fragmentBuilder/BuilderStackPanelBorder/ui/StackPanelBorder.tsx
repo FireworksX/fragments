@@ -22,6 +22,7 @@ import { BoxSizingSides } from '@/shared/ui/BoxSizingSides'
 import { toPx } from '@/shared/utils/toPx'
 import { BuilderSidesInput } from '@/features/fragmentBuilder/BuilderSidesInput'
 import { useStack } from '@/shared/hooks/useStack'
+import { useLayerPropertyValue } from '@/shared/hooks/fragmentBuilder/useLayerPropertyVariable'
 
 export interface StackPanelBorderOptions {
   value?: BorderData
@@ -38,12 +39,27 @@ const StackPanelBorder: FC<StackPanelBorderProps> = ({ className }) => {
   const [borderColor, setBorderColor] = useLayerValue('borderColor')
   const [borderWidth, setBorderWidth] = useLayerValue('borderWidth')
 
+  const borderColorVariable = useLayerPropertyValue('borderColor', {
+    editVariable: options => (options.isProjectVariable ? openColor() : options.editVariable())
+  })
+
+  console.log(borderColorVariable)
+
   const resultWidth = fromPx(borderWidth)
   const sides = borderWidth?.split(' ')?.map(fromPx)
   const initialMode = sides?.length > 1 ? 'sides' : 'plain'
 
   const [mode, setMode] = useState(initialMode)
   const [side, setSide] = useState<number | undefined>()
+
+  const openColor = () => {
+    stack.open(popoutNames.colorPicker, {
+      value: borderColor,
+      onChange: nextColor => {
+        setBorderColor(objectToColorString(nextColor))
+      }
+    })
+  }
 
   const sideByIndex = useMemo(() => {
     if (side === 0) return 'top'
@@ -77,19 +93,17 @@ const StackPanelBorder: FC<StackPanelBorderProps> = ({ className }) => {
 
   return (
     <Panel className={className}>
-      <ControlRow title='Color'>
+      <ControlRow
+        title='Color'
+        variable={{
+          data: borderColorVariable?.variableData,
+          actions: borderColorVariable?.actions,
+          onClick: borderColorVariable?.editVariable,
+          onReset: borderColorVariable?.resetVariable
+        }}
+      >
         <ControlRowWide>
-          <InputSelect
-            color={borderColor}
-            onClick={() =>
-              stack.open(popoutNames.colorPicker, {
-                value: borderColor,
-                onChange: nextColor => {
-                  setBorderColor(objectToColorString(nextColor))
-                }
-              })
-            }
-          >
+          <InputSelect color={borderColor} onClick={openColor}>
             {borderColor}
           </InputSelect>
         </ControlRowWide>

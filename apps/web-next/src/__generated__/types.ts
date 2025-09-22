@@ -159,6 +159,7 @@ export enum CampaignStatus {
 export type ClientAreaGet = {
   __typename?: 'ClientAreaGet';
   areaProperties?: Maybe<Array<Scalars['JSON']['output']>>;
+  projectProperties?: Maybe<Array<Scalars['JSON']['output']>>;
   variant: VariantGet;
 };
 
@@ -355,10 +356,9 @@ export type FilterTimeFramesGet = {
 };
 
 export type FragmentClonePost = {
-  deepCopy?: InputMaybe<Scalars['Boolean']['input']>;
-  directoryId: Scalars['Int']['input'];
+  directoryId?: InputMaybe<Scalars['Int']['input']>;
   fragmentId: Scalars['Int']['input'];
-  projectId: Scalars['Int']['input'];
+  projectId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type FragmentGet = {
@@ -860,6 +860,7 @@ export type ProjectGet = {
   name: Scalars['String']['output'];
   owner: UserGet;
   privateKey?: Maybe<ProjectKeyGet>;
+  properties?: Maybe<Array<Scalars['JSON']['output']>>;
   publicKeys: Array<ProjectKeyGet>;
   rootDirectoryId: Scalars['Int']['output'];
 };
@@ -899,11 +900,13 @@ export type ProjectKeyGet = {
 export type ProjectPatch = {
   id: Scalars['Int']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
+  properties?: InputMaybe<Array<Scalars['JSON']['input']>>;
 };
 
 export type ProjectPost = {
   logo?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
+  properties?: InputMaybe<Array<Scalars['JSON']['input']>>;
 };
 
 export type ProjectStatisticGet = {

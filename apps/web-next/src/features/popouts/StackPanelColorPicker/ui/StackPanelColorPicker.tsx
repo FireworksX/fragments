@@ -38,6 +38,11 @@ export const StackPanelColorPicker: FC<StackPanelColorPickerProps> = ({ classNam
     }
   }
 
+  const selectVariable = value => {
+    updateColor(value)
+    stack.goPrev()
+  }
+
   return (
     <div className={cn(styles.root, className)}>
       <Panel>
@@ -55,7 +60,7 @@ export const StackPanelColorPicker: FC<StackPanelColorPickerProps> = ({ classNam
         <SolidPaintStyles
           initialColor={resColor}
           activeColorKey={resColor}
-          onSelect={updateColor}
+          onSelect={selectVariable}
           // onCreate={popoutsStore.goPrev}
         />
       )}

@@ -36,15 +36,16 @@ export const FragmentsEditPlaceholder: FC<FragmentsEditPlaceholderProps> = ({ cl
 
   const handleCreateFragment = async () => {
     openModal(modalNames.createFragment, {
-      onCreate: async name => {
+      onCreate: async (name, templateId) => {
         const response = await createProjectFragment({
+          templateId,
           variables: {
             name: name ?? 'Untitled'
           }
         })
 
-        if (response.data?.createFragment?.id) {
-          openFragment(response.data?.createFragment?.id)
+        if (response.id) {
+          openFragment(response?.id)
         }
       }
     })

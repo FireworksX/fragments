@@ -79,6 +79,7 @@ type CampaignStatisticGet {
 
 type ClientAreaGet {
     areaProperties: [JSON!]
+    projectProperties: [JSON!]
     variant: VariantGet!
 }
 
@@ -299,6 +300,7 @@ type ProjectGet {
     name: String!
     owner: UserGet!
     privateKey: ProjectKeyGet
+    properties: [JSON!]
     publicKeys: [ProjectKeyGet!]!
     rootDirectoryId: Int!
 }
@@ -643,10 +645,9 @@ input FilterTimeFramePost {
 }
 
 input FragmentClonePost {
-    deepCopy: Boolean
-    directoryId: Int!
+    directoryId: Int
     fragmentId: Int!
-    projectId: Int!
+    projectId: Int
 }
 
 input FragmentPatch {
@@ -729,11 +730,13 @@ input ProjectGoalPost {
 input ProjectPatch {
     id: Int!
     name: String
+    properties: [JSON!]
 }
 
 input ProjectPost {
     logo: String
     name: String!
+    properties: [JSON!]
 }
 
 input ProposalPost {

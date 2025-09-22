@@ -64,8 +64,8 @@ export const useProjectTreeItem = ({ itemId, type, parentId, onClick }: Options)
             }
           })
 
-          if (response.data?.createFragment?.id) {
-            openFragment(response.data?.createFragment?.id)
+          if (response?.id) {
+            openFragment(response?.id)
           }
         }
       })

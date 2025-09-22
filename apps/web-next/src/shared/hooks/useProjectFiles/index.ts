@@ -33,8 +33,27 @@ export const useProjectFiles = () => {
   const [deleteProjectFragment, { loading: deleteFragmentLoading }] = useDeleteProjectFragmentMutation()
 
   const proxyCreateProjectFragment = useCallback(
-    ({ variables }: { variables: Pick<CreateProjectFragmentMutationVariables, 'name' | 'parentId'> }) => {
-      return createProjectFragment({
+    async ({
+      variables,
+      templateId
+    }: {
+      variables: Pick<CreateProjectFragmentMutationVariables, 'name' | 'parentId'>
+      templateId?: number | null
+    }) => {
+      if (templateId) {
+        const result = await duplicateProjectFragment({
+          variables: {
+            projectSlug,
+            name: variables?.name,
+            parentId: variables?.parentId ?? project?.rootDirectoryId,
+            id: templateId
+          }
+        })
+
+        return result.data?.cloneFragment
+      }
+
+      const result = await createProjectFragment({
         variables: {
           name: variables?.name,
           projectSlug,
@@ -42,6 +61,8 @@ export const useProjectFiles = () => {
           document: getEmptyFragment(generateId())
         }
       })
+
+      return result.data?.createFragment
     },
     [createProjectFragment, project]
   )

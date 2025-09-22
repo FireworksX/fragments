@@ -38,7 +38,7 @@ export const BuilderBorderControl: FC<BuilderBorderControlProps> = memo(({ class
       <ControlRowWide>
         <InputSelect
           placeholder='Add...'
-          hasIcon={!!borderType && borderType !== definition.borderType.None}
+          hasIcon={!!borderType && borderType !== definition.borderType.None && !borderColorInfo?.isVariable}
           color={borderColor}
           onReset={() => setBorderType(definition.borderType.None)}
           onClick={openBorder}

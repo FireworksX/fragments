@@ -1,4 +1,4 @@
-import { FC, useContext, useState } from 'react'
+import { FC, useContext, useEffect, useState } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { useGraph, useGraphFields } from '@graph-state/react'
@@ -17,20 +17,40 @@ import { Touchable } from '@/shared/ui/Touchable'
 import { times } from '@fragmentsx/utils'
 import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { Panel } from '@/shared/ui/Panel'
+import { useFragmentTemplatesQuery } from '@/widgets/modals/CreateNewFragment/queries/FragmentTamplates.generated'
+import { Spinner } from '@/shared/ui/Spinner'
+import { SpinnerBlock } from '@/shared/ui/SpinnerBlock'
 
 interface CreateNewFragmentProps {
   className?: string
 }
 
 export interface CreateNewFragmentContext {
-  onCreate?: (name: string) => void
+  onCreate?: (name: string, templateId?: number | null) => void
+}
+
+const BLANK_TEMPLATE = {
+  id: null,
+  name: 'Blank'
 }
 
 export const CreateNewFragment: FC<CreateNewFragmentProps> = ({ className }) => {
   const { readContext, close } = useModal()
-  const [activeIndex, setActiveIndex] = useState(0)
+  const [activeId, setActiveId] = useState(BLANK_TEMPLATE.id)
   const [name, setName] = useState('')
   const context = readContext(modalNames.createFragment)
+
+  const { data, loading } = useFragmentTemplatesQuery({
+    skip: !context
+  })
+  const templates = [BLANK_TEMPLATE, ...(data?.defaultTemplates ?? [])]
+
+  useEffect(() => {
+    if (!context) {
+      setName('')
+      setActiveId(BLANK_TEMPLATE.id)
+    }
+  }, [context])
 
   return (
     <ModalContainer
@@ -44,7 +64,7 @@ export const CreateNewFragment: FC<CreateNewFragmentProps> = ({ className }) => 
           <Button
             stretched
             onClick={() => {
-              context?.onCreate?.(name)
+              context?.onCreate?.(name, activeId)
               close()
             }}
           >
@@ -63,23 +83,29 @@ export const CreateNewFragment: FC<CreateNewFragmentProps> = ({ className }) => 
         </Panel>
 
         <Panel>
-          <div className={styles.templatesTitle}>Templates</div>
-          <div className={styles.body}>
-            {times(40).map(i => (
-              <Touchable onClick={() => setActiveIndex(i)}>
-                <InfoSection
-                  className={cn(styles.template, {
-                    [styles.templateActive]: activeIndex === i
-                  })}
-                  footer={<InfoSectionFooter icon={<FragmentIcon />}>Button</InfoSectionFooter>}
-                >
-                  <div className={styles.templateImage}>
-                    <ImageIcon width={24} height={24} />
-                  </div>
-                </InfoSection>
-              </Touchable>
-            ))}
-          </div>
+          {loading ? (
+            <SpinnerBlock size={16} />
+          ) : (
+            <>
+              <div className={styles.templatesTitle}>Templates</div>
+              <div className={styles.body}>
+                {templates.map(template => (
+                  <Touchable onClick={() => setActiveId(template.id)}>
+                    <InfoSection
+                      className={cn(styles.template, {
+                        [styles.templateActive]: activeId === template.id
+                      })}
+                      footer={<InfoSectionFooter icon={<FragmentIcon />}>{template.name}</InfoSectionFooter>}
+                    >
+                      <div className={styles.templateImage}>
+                        <ImageIcon width={24} height={24} />
+                      </div>
+                    </InfoSection>
+                  </Touchable>
+                ))}
+              </div>
+            </>
+          )}
         </Panel>
       </div>
     </ModalContainer>
