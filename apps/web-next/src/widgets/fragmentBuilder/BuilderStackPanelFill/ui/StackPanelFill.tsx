@@ -50,23 +50,25 @@ const StackPanelFill: FC<StackPanelFillProps> = ({ className, stackColors }) => 
     <div className={cn(styles.root, className)}>
       <TabsSelector items={tabs} value={fillType} onChange={({ name }) => setFillType(name)} />
       {fillType === definition.paintMode.Solid && (
-        <Panel>
-          <ColorPicker
-            color={solidFillValue}
-            onChange={color => {
-              if (color) {
-                setWithAutoPatch(objectToColorString(color.rgb))
-              }
-            }}
+        <>
+          <Panel>
+            <ColorPicker
+              color={solidFillValue}
+              onChange={color => {
+                if (color) {
+                  setWithAutoPatch(objectToColorString(color.rgb))
+                }
+              }}
+            />
+          </Panel>
+          <SolidPaintStyles
+            initialColor={isVariable ? null : solidFill}
+            activeColorKey={solidFillValue}
+            onSelect={setSolidFill}
+            // onCreate={popoutsStore.goPrev}
           />
-        </Panel>
+        </>
       )}
-      <SolidPaintStyles
-        initialColor={isVariable ? null : solidFill}
-        activeColorKey={solidFillValue}
-        onSelect={setSolidFill}
-        // onCreate={popoutsStore.goPrev}
-      />
 
       {fillType === definition.paintMode.Image && (
         <ImagePicker

@@ -9,6 +9,7 @@ import { popoutNames } from '@/shared/data'
 import { Button } from '@/shared/ui/Button'
 import { objectToColorString } from '@fragmentsx/utils'
 import { useStack } from '@/shared/hooks/useStack'
+import { definition, getNormalizeLayer } from '@fragmentsx/definition'
 
 export type StackPanelColorEntity = { name: string; color: Color }
 
@@ -22,6 +23,13 @@ export interface StackSolidPaintStyleContext {
 interface StackPanelCreateColorProps {
   className?: string
 }
+
+const initial = getNormalizeLayer({
+  _type: definition.nodes.Variable,
+  _id: 'replaceBeforeSave',
+  type: definition.variableType.Color,
+  name: 'Color property'
+})
 
 const StackSolidPaintStyle: FC<StackPanelCreateColorProps> = ({ className }) => {
   const stack = useStack()
@@ -54,6 +62,7 @@ const StackSolidPaintStyle: FC<StackPanelCreateColorProps> = ({ className }) => 
           disabled={!name?.length}
           onClick={() => {
             context?.onSubmit?.({
+              ...initial,
               ...context,
               name,
               defaultValue: color

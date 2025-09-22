@@ -27,7 +27,7 @@ interface ScopeVariablesProps {
 }
 
 const ScopeVariablesInternal: FC<ScopeVariablesProps> = ({ className, loading, properties = [], onChange }) => {
-  const { handleEditProperty, handleAddProperty } = useScopeVariables({ properties, onChange })
+  const { handleEditProperty, handleAddProperty, handleRemoveProperty } = useScopeVariables({ properties, onChange })
 
   return (
     <InfoSection
@@ -63,9 +63,14 @@ const ScopeVariablesInternal: FC<ScopeVariablesProps> = ({ className, loading, p
           title={variable?.name}
           description={`ID: ${variable?._id}`}
           after={
-            <Button mode='outline' onClick={() => handleEditProperty?.(variable._id)}>
-              Edit
-            </Button>
+            <>
+              <Button mode='outline' onClick={() => handleEditProperty?.(variable._id)}>
+                Edit
+              </Button>
+              <Button mode='danger-outline' onClick={() => handleRemoveProperty?.(variable._id)}>
+                Remove
+              </Button>
+            </>
           }
           before={
             variable?.type === definition.variableType.Color ? (

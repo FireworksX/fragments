@@ -14,6 +14,14 @@ export interface UseScopeVariablesOptions {
 export const useScopeVariables = ({ properties, onChange }: UseScopeVariablesOptions) => {
   const { open: openModal, close: closeModal } = useModal()
 
+  const handleRemoveProperty = id => {
+    const propertyIndex = properties.findIndex(el => el._id === id)
+
+    if (propertyIndex !== -1) {
+      onChange(properties.toSpliced(propertyIndex, 1))
+    }
+  }
+
   const handleEditProperty = id => {
     const property = properties.find(el => el._id === id)
 
@@ -47,6 +55,7 @@ export const useScopeVariables = ({ properties, onChange }: UseScopeVariablesOpt
 
   return {
     handleAddProperty,
-    handleEditProperty
+    handleEditProperty,
+    handleRemoveProperty
   }
 }

@@ -10,6 +10,7 @@ import { definition } from '@fragmentsx/definition'
 import { useProject } from '@/shared/hooks/useProject'
 import { LinkKey } from '@graph-state/core'
 import { useStack } from '@/shared/hooks/useStack'
+import { generateId } from '@fragmentsx/utils'
 
 export interface BuilderAssetsColorsOptions extends Partial<OpenPopoutOptions<'colorPicker'>> {
   initialColor?: Color
@@ -54,7 +55,14 @@ export const useBuilderAssetsColors = () => {
       popoutNames.stackSolidPaintStyle,
       {
         defaultValue: initialColor,
-        onSubmit: nextProperty => updateProperties([...properties, nextProperty])
+        onSubmit: nextProperty =>
+          updateProperties([
+            ...properties,
+            {
+              ...nextProperty,
+              _id: generateId()
+            }
+          ])
       },
       {
         position: 'left',

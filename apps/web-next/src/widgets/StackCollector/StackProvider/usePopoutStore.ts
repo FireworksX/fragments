@@ -114,17 +114,18 @@ export const useStackStore = () => {
           const cell = state.current.history.at(indexHistory)
 
           if (cell) {
-            cell.context = {
-              ...cell.context,
-              ...(context ?? {})
-            }
+            cell.context = context ?? {}
+            // cell.context = {
+            //   ...cell.context,
+            //   ...(context ?? {})
+            // }
           }
         }
       }
 
       triggerUpdate()
     },
-    [triggerUpdate]
+    [triggerUpdate, currentStack]
   )
 
   const close = useCallback(() => {

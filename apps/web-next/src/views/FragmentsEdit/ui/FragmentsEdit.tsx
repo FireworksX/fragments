@@ -66,7 +66,7 @@ import { useCallback, useEffect, useRef } from 'react'
 const FragmentsEditInitial = () => {
   const { documentManager, saveFragment } = useBuilderDocument()
   const autoSave = useRef(debounce(() => saveFragment(), 5_000))
-  // useGraphEffect(documentManager, autoSave.current, { directChangesOnly: true })
+  useGraphEffect(documentManager, autoSave.current, { directChangesOnly: true })
 
   return (
     <div className={styles.root}>
