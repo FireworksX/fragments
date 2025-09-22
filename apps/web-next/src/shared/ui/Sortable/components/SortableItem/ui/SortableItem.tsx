@@ -12,29 +12,31 @@ export interface SortableItemProps {
   index?: number
   className?: string
   children: ReactNode
+  pauseAppearAnimation?: boolean
 }
 
-export const SortableItem: FC<SortableItemProps> = ({ className, id, index = 0, children }) => {
+export const SortableItem: FC<SortableItemProps> = ({ className, pauseAppearAnimation, id, index = 0, children }) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id })
 
   // Анимация появления элемента
-  // const appearAnimation = useSpring({
-  //   from: {
-  //     opacity: 0,
-  //     transform: 'translateY(20px)',
-  //     scale: 0.9
-  //   },
-  //   to: {
-  //     opacity: 1,
-  //     transform: 'translateY(0px)',
-  //     scale: 1
-  //   },
-  //   delay: index * 50,
-  //   config: {
-  //     tension: 300,
-  //     friction: 20
-  //   }
-  // })
+  const appearAnimation = useSpring({
+    from: {
+      opacity: 0,
+      transform: 'translateY(20px)',
+      scale: 0.9
+    },
+    to: {
+      opacity: 1,
+      transform: 'translateY(0px)',
+      scale: 1
+    },
+    delay: index * 50,
+    pause: pauseAppearAnimation,
+    config: {
+      tension: 300,
+      friction: 20
+    }
+  })
 
   // Анимация при перетаскивании
   const dragAnimation = useSpring({
@@ -60,10 +62,10 @@ export const SortableItem: FC<SortableItemProps> = ({ className, id, index = 0, 
       className={styles.root}
       ref={setNodeRef}
       style={{
-        // ...appearAnimation,
+        ...appearAnimation,
         ...dragAnimation,
         ...style,
-        opacity: isDragging ? 0.8 : 1 //appearAnimation.opacity
+        opacity: isDragging ? 0.8 : appearAnimation.opacity
       }}
     >
       <Touchable className={styles.handler} {...handlers}>

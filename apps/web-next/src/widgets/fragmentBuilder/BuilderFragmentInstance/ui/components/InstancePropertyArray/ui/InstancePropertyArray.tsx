@@ -9,7 +9,7 @@ import { VariableIcon } from '@/entities/fragment/VariableIcon'
 
 interface InstancePropertyArrayProps extends Pick<BuilderControlRowProps, 'variable' | 'hasConnector'> {
   name: string
-  value: unknown[]
+  value?: unknown[]
   className?: string
   onOpen: () => void
 }
@@ -17,8 +17,7 @@ interface InstancePropertyArrayProps extends Pick<BuilderControlRowProps, 'varia
 export const InstancePropertyArray: FC<InstancePropertyArrayProps> = ({
   className,
   name,
-  value = [],
-  onChange,
+  value,
   onOpen,
   ...controlRowProps
 }) => {
@@ -26,7 +25,7 @@ export const InstancePropertyArray: FC<InstancePropertyArrayProps> = ({
     <ControlRow className={className} title={name} {...controlRowProps}>
       <ControlRowWide>
         <InputSelect icon={<VariableIcon type='Array' color='var(--light)' />} color='var(--primary)' onClick={onOpen}>
-          Items: {value.length}
+          {!value?.length ? `Set value` : `Items: ${value.length}`}
         </InputSelect>
       </ControlRowWide>
     </ControlRow>

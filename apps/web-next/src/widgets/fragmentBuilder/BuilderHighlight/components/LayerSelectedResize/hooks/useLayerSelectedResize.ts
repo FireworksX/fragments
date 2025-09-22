@@ -27,16 +27,16 @@ export const useLayerSelectedResize = () => {
   const [scale$] = useBuilderCanvasField('scale')
   const [, setIsResizing] = useBuilderCanvasField('isResizing')
   const { width: isAllowResizeWidth, height: isAllowResizeHeight } = useAllowResize()
-  const [baseTop, setTop, { value$: top$ }] = useLayerValue('top')
-  const [baseLeft, setLeft, { value$: left$ }] = useLayerValue('left')
-  const [baseBottom, setBottom, { value$: bottom$ }] = useLayerValue('bottom')
-  const [baseRight, setRight, { value$: right$ }] = useLayerValue('right')
-  const [, setWidth, { value$: width$ }] = useLayerValue('width')
-  const [, setHeight, { value$: height$ }] = useLayerValue('height')
+  const [baseTop, setTop, { value$: top$, setWithAutoPatch: setWithAutoPatchTop }] = useLayerValue('top')
+  const [baseLeft, setLeft, { value$: left$, setWithAutoPatch: setWithAutoPatchLeft }] = useLayerValue('left')
+  const [baseBottom, setBottom, { setWithAutoPatch: setWithAutoPatchBottom }] = useLayerValue('bottom')
+  const [baseRight, setRight, { setWithAutoPatch: setWithAutoPatchRight }] = useLayerValue('right')
+  const [, setWidth, { value$: width$, setWithAutoPatch: setWithAutoPatchWidth }] = useLayerValue('width')
+  const [, setHeight, { value$: height$, setWithAutoPatch: setWithAutoPatchHeight }] = useLayerValue('height')
   const [widthType] = useLayerValue('widthType')
   const [heightType] = useLayerValue('heightType')
 
-  const handler = useDrag(({ movement: [mx, my], args: [directions], first, memo = {}, dragging }) => {
+  const handler = useDrag(({ movement: [mx, my], args: [directions], first, last, memo = {}, dragging }) => {
     setIsResizing(dragging)
 
     if (first) {
@@ -50,20 +50,20 @@ export const useLayerSelectedResize = () => {
       memo.from = {
         getWidth: move => {
           if (targetWidthType === definition.sizing.Relative) {
-            move = (move / parentRect.width) * 100
+            move = (move / (parentRect?.width ?? 0)) * 100
           }
           return move / scale + (memo?.from?.width ?? 0)
         },
         getHeight: move => {
           if (targetHeightType === definition.sizing.Relative) {
-            move = (move / parentRect.height) * 100
+            move = (move / (parentRect?.height ?? 0)) * 100
           }
           return move / scale + (memo?.from?.height ?? 0)
         },
         getLeft: move => move / scale + (targetLeft ?? 0),
         getTop: move => move / scale + (targetTop ?? 0),
-        width: animatableValue(width$),
-        height: animatableValue(height$),
+        width: animatableValue(width$) ?? 0,
+        height: animatableValue(height$) ?? 0,
         right: baseRight,
         left: baseLeft,
         bottom: baseBottom,
@@ -76,30 +76,37 @@ export const useLayerSelectedResize = () => {
     const scale = animatableValue(scale$)
     const calcWidth = memo.from?.getWidth(mx)
     const calcHeight = memo.from?.getHeight(my)
+    const resultSetRight = last ? setWithAutoPatchRight : setRight
+    const resultSetBottom = last ? setWithAutoPatchBottom : setBottom
+    const resultSetLeft = last ? setWithAutoPatchLeft : setLeft
+    const resultSetTop = last ? setWithAutoPatchTop : setTop
+    const resultSetWidth = last ? setWithAutoPatchWidth : setWidth
+    const resultSetHeight = last ? setWithAutoPatchHeight : setHeight
 
     if (directions.includes(SELECTION_SIDES.right)) {
       if (finiteNumber(memo.from.right)) {
-        setRight(memo.from.right - (calcWidth - memo.from.width))
+        resultSetRight(memo.from.right - (calcWidth - memo.from.width))
       }
 
-      setWidth(calcWidth)
+      resultSetWidth(calcWidth)
     }
 
     if (directions.includes(SELECTION_SIDES.bottom)) {
       if (finiteNumber(memo.from.bottom)) {
-        setBottom(memo.from.bottom - (calcHeight - memo.from.height))
+        resultSetBottom(memo.from.bottom - (calcHeight - memo.from.height))
       }
 
-      setHeight(calcHeight)
+      resultSetHeight(calcHeight)
     }
 
     if (directions.includes(SELECTION_SIDES.left)) {
       const width = memo.from.getWidth(mx * -1)
 
       if (finiteNumber(memo.from.left)) {
-        setLeft(memo.from.getLeft(mx))
-      } else if (width > 0) {
-        setWidth(width)
+        resultSetLeft(memo.from.getLeft(mx))
+      }
+      if (width > 0) {
+        resultSetWidth(width)
       }
     }
 
@@ -107,9 +114,10 @@ export const useLayerSelectedResize = () => {
       const height = memo.from.getHeight(my * -1)
 
       if (finiteNumber(memo.from.top)) {
-        setTop(memo.from.getTop(my))
-      } else if (height > 0) {
-        setHeight(height)
+        resultSetTop(memo.from.getTop(my))
+      }
+      if (height > 0) {
+        resultSetHeight(height)
       }
     }
 

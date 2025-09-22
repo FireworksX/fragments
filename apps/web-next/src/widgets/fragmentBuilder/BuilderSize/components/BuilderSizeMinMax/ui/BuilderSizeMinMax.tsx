@@ -38,7 +38,7 @@ export const BuilderSizeMinMax: FC<BuilderSizeMinMaxProps> = ({ className }) => 
         field =>
           field.enabled && (
             <ControlRow key={field.label} title={field.label} actions={[[{ label: 'Remove', onClick: field.disable }]]}>
-              <InputNumber value={field.valueInfo.value$} onChange={field.setValue} />
+              <InputNumber value={field.valueInfo.resultValue} onChange={field.setValue} />
               <Select value={field.valueType} onChange={field.setValueType}>
                 <Options />
               </Select>

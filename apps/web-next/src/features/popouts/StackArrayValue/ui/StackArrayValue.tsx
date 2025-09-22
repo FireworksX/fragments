@@ -1,8 +1,6 @@
 import React, { FC } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { POPOUT_TYPE, popoutsStore } from '@/shared/store/popouts.store'
-import { useGraph, GraphValue, GraphValues } from '@graph-state/react'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { popoutNames } from '@/shared/data'
 import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmentProperties'
@@ -17,6 +15,15 @@ import RemoveIcon from '@/shared/icons/next/trash.svg'
 import { Button } from '@/shared/ui/Button'
 import { nextTick } from '@/shared/utils/nextTick'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
+import { useStack } from '@/shared/hooks/useStack'
+
+export interface StackArrayValueContext {
+  value?: unknown[]
+  manager?: any
+  fields?: Record<string, any>
+  definition?: any
+  onChange?: (value: unknown[]) => void
+}
 
 interface StackArrayValueProps {
   className?: string
@@ -24,17 +31,18 @@ interface StackArrayValueProps {
 
 export const StackArrayValue: FC<StackArrayValueProps> = ({ className }) => {
   const { documentManager } = useBuilderDocument()
-  const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackArrayValue}`)
-  const context = popout?.context ?? {}
+  const stack = useStack()
+  const context = stack.readContext(popoutNames.stackArrayValue) ?? {}
   const value = context?.value ?? []
   const resultManager = context?.manager ?? documentManager
   const fields = omit(context?.fields ?? {}, '_type', '_id')
   const definitionLink = context?.definition
   const onChange = context?.onChange ?? noop
-  const [definitionGraph] = useGraph(resultManager, definitionLink, { selector: graph => graph?.defaultValue })
+  const [definitionDefaultValue] = useLayerValue('defaultValue', definitionLink, { manager: resultManager })
 
   const handleAddItem = () => {
-    onChange([...value, definitionGraph?.defaultValue])
+    const nextValue = [...value, definitionDefaultValue]
+    onChange(nextValue)
   }
 
   const handleRemoveItem = (index: number) => {

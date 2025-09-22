@@ -4,6 +4,7 @@ import { HotKeysProvider } from '@/shared/hooks/hotkeys/HotKeysProvider'
 import { useBuilderHotKeys } from '@/shared/hooks/hotkeys/useBuilderHotKeys'
 import { CanvasTextEditorProvider } from '@/widgets/fragmentBuilder/BuilderHighlight'
 import { ToastProvider } from '@/widgets/Toast/providers/ToastContext'
+import { StackProvider } from '@/widgets/StackCollector'
 
 const MemoBuilder = memo(({ children }) => {
   return children
@@ -17,14 +18,16 @@ const BuilderProviderInitial: FC<PropsWithChildren> = ({ children }) => {
 
 export const BuilderProvider: FC<PropsWithChildren> = ({ children }) => {
   return (
-    <RenderTargetProvider>
-      <ToastProvider>
-        <HotKeysProvider>
-          <CanvasTextEditorProvider>
-            <BuilderProviderInitial>{children}</BuilderProviderInitial>
-          </CanvasTextEditorProvider>
-        </HotKeysProvider>
-      </ToastProvider>
-    </RenderTargetProvider>
+    <StackProvider>
+      <RenderTargetProvider>
+        <ToastProvider>
+          <HotKeysProvider>
+            <CanvasTextEditorProvider>
+              <BuilderProviderInitial>{children}</BuilderProviderInitial>
+            </CanvasTextEditorProvider>
+          </HotKeysProvider>
+        </ToastProvider>
+      </RenderTargetProvider>
+    </StackProvider>
   )
 }

@@ -3,13 +3,13 @@ import { useToggle } from 'react-use'
 import { FileSystemItemType } from '@/__generated__/graphql'
 import { projectItemType } from '../../../hooks/useProjectTree'
 import { nextTick } from '@/shared/utils/nextTick'
-import { useApolloClient, useFragment } from '@apollo/client'
 import { useProjectFiles } from '@/shared/hooks/useProjectFiles'
 import { ProjectTreeContext } from '../../../ui/ProjectTree'
-import { PROJECT_TREE_DIRECTORY_FRAGMENT, PROJECT_TREE_FRAGMENT_FRAGMENT } from '../lib/ProjectTreeItemFragment'
 import { useProject } from '@/shared/hooks/useProject'
 import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
 import { useReadProjectTreeItem } from '@/shared/api/fragment/query/useReadProjectTreeItem'
+import { modalNames } from '@/shared/data'
+import { useModal } from '@/shared/hooks/useModal'
 
 interface Options {
   itemId: number
@@ -21,8 +21,11 @@ interface Options {
 export const useProjectTreeItem = ({ itemId, type, parentId, onClick }: Options) => {
   const [isLoading, toggleIsLoading] = useToggle(false)
   const { openedIds, toggleIsOpen } = use(ProjectTreeContext)
+  const { open: openModal } = useModal()
+  const { openFragment } = useBuilder()
   const { projectSlug } = useProject()
   const {
+    duplicateProjectFragment,
     updateProjectDirectory,
     updateProjectFragment,
     createProjectDirectory,
@@ -45,10 +48,28 @@ export const useProjectTreeItem = ({ itemId, type, parentId, onClick }: Options)
   }
 
   const handleCreateNew = (type: typeof projectItemType) => {
-    setCreatingNew(type)
-    nextTick(() => {
-      creatingRef.current.edit()
-    })
+    if (type === projectItemType.directory) {
+      setCreatingNew(type)
+      nextTick(() => {
+        creatingRef.current.edit()
+      })
+    } else if (type === projectItemType.fragment) {
+      openModal(modalNames.createFragment, {
+        onCreate: async name => {
+          const response = await createProjectFragment({
+            variables: {
+              name: name ?? 'Untitled',
+              projectSlug,
+              parentId: itemId
+            }
+          })
+
+          if (response?.id) {
+            openFragment(response?.id)
+          }
+        }
+      })
+    }
   }
   //
   const handleFinishCreateNew = async (name: string) => {
@@ -75,6 +96,18 @@ export const useProjectTreeItem = ({ itemId, type, parentId, onClick }: Options)
     await fn({ variables })
 
     toggleIsLoading()
+  }
+
+  const duplicateItem = async () => {
+    if (type === projectItemType.fragment) {
+      await duplicateProjectFragment({
+        variables: {
+          projectSlug,
+          id: itemId,
+          parentId
+        }
+      })
+    }
   }
 
   const rename = async (name: string) => {
@@ -116,6 +149,7 @@ export const useProjectTreeItem = ({ itemId, type, parentId, onClick }: Options)
     rename: resultParentId ? rename : null,
     edit: resultParentId ? edit : null,
     delete: resultParentId ? deleteItem : null,
+    duplicate: resultParentId ? duplicateItem : null,
     handleClick: () => (type === projectItemType.fragment ? onClick?.() : null) // TODO openFragment()
   }
 }

@@ -1,0 +1,23 @@
+.root {
+    border-radius: 8px !important;
+    background: var(--primary-bg) !important;
+    border: 2px solid var(--primary) !important;
+    padding: 20px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: var(--primary) !important;
+}
+
+.title {
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.description {
+    font-size: 12px;
+    font-weight: normal;
+    text-align: center;
+}

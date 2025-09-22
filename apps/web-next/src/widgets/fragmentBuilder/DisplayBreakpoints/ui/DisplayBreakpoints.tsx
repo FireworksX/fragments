@@ -4,9 +4,10 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useBuilder } from '@/shared/hooks/fragmentBuilder/useBuilder'
-import { CustomRender, Fragment, Instance } from '@fragmentsx/render-suite'
+import { CustomRender, Fragment, getCssVariables, Instance } from '@fragmentsx/render-suite'
 import { useDroppable } from '@dnd-kit/core'
 import { droppableAreas } from '@/shared/data'
+import { useProject } from '@/shared/hooks/useProject'
 
 interface BuilderDisplayBreakpointsProps {
   className?: string
@@ -28,6 +29,11 @@ const WithDroppable: FC<PropsWithChildren> = ({ children, layerKey }) => {
 
 const DisplayBreakpoints: FC<BuilderDisplayBreakpointsProps> = ({ className }) => {
   const { currentFragmentId } = useBuilder()
+  const { properties } = useProject()
+  const props = properties.reduce((acc, prop) => {
+    acc[prop._id] = prop.defaultValue
+    return acc
+  }, {})
 
   return (
     <div className={cn(styles.root, className)}>
@@ -36,7 +42,7 @@ const DisplayBreakpoints: FC<BuilderDisplayBreakpointsProps> = ({ className }) =
           return <WithDroppable layerKey={layerKey}>{Node}</WithDroppable>
         }}
       >
-        <Instance fragmentId={currentFragmentId} />
+        <Instance fragmentId={currentFragmentId} props={props} />
         {/*<Fragment fragmentId={currentFragmentId} />*/}
       </CustomRender>
 

@@ -25,15 +25,16 @@ import InstancePropertyEnum from '@/widgets/fragmentBuilder/BuilderFragmentInsta
 import { BuilderControlRowProps } from '@/shared/ui/ControlRow/ui/default/ControlRow'
 import { InstancePropertyImage } from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/components/InstancePropertyImage'
 import { InstancePropertyObject } from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/components/InstancePropertyObject'
-import { popoutsStore } from '@/shared/store/popouts.store'
 import { cleanGraph, isObject, omit } from '@fragmentsx/utils'
 import { InstancePropertyArray } from '@/widgets/fragmentBuilder/BuilderFragmentInstance/ui/components/InstancePropertyArray'
+import { useStack } from '@/shared/hooks/useStack'
 
 export interface InstancePropertyGenericProps extends BuilderControlRowProps {
   value: unknown
   property: LinkKey
   manager: GraphState
   className?: string
+  withDefaultValue?: boolean
   onChange(value: boolean): void
 }
 
@@ -41,12 +42,14 @@ export const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({
   className,
   manager,
   value,
+  withDefaultValue = true,
   property,
   onChange,
   ...controlRowProps
 }) => {
+  const stack = useStack()
   const { layer } = useNormalizeLayer(property, manager)
-  value = value ?? layer?.defaultValue
+  value = withDefaultValue ? value ?? layer?.defaultValue : value
 
   if (layer?.type === definition.variableType.Number) {
     return (
@@ -65,13 +68,11 @@ export const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({
 
   if (layer?.type === definition.variableType.Object) {
     const openObject = () => {
-      popoutsStore.open(popoutNames.stackObjectValue, {
-        context: {
-          fields: cleanGraph(layer?.fields),
-          value: isObject(value) && Object.keys(value).length === 0 ? null : value,
-          manager,
-          onChange
-        }
+      stack.open(popoutNames.stackObjectValue, {
+        fields: cleanGraph(layer?.fields),
+        value: isObject(value) && Object.keys(value).length === 0 ? null : value,
+        manager,
+        onChange
       })
     }
 
@@ -88,15 +89,12 @@ export const InstancePropertyGeneric: FC<InstancePropertyGenericProps> = ({
   }
 
   if (layer?.type === definition.variableType.Array) {
-    console.log(layer)
     const editValue = () => {
-      popoutsStore.open(popoutNames.stackArrayValue, {
-        context: {
-          definition: layer?.definition,
-          value,
-          manager,
-          onChange
-        }
+      stack.open(popoutNames.stackArrayValue, {
+        definition: layer?.definition,
+        value,
+        manager,
+        onChange
       })
     }
 

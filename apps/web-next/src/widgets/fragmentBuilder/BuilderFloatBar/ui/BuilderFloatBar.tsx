@@ -117,7 +117,7 @@ export const BuilderFloatBar: FC<BuilderFloatBarProps> = ({ className }) => {
           Preview
         </Button>
         <Dropdown className={styles.publishDropdown} disabled trigger='click' options={<BuilderFragmentPublish />}>
-          <Button glowing onClick={saveFragment}>
+          <Button glowing loading={isSaving} onClick={saveFragment}>
             Save
           </Button>
         </Dropdown>

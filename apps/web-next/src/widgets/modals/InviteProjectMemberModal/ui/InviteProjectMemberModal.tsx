@@ -4,7 +4,6 @@ import styles from './styles.module.css'
 import { Modal } from '@/shared/ui/Modal'
 import { ModalContainer } from '@/shared/ui/ModalContainer'
 import { useGraph } from '@graph-state/react'
-import { modalStore } from '@/shared/store/modal.store'
 import { modalNames } from '@/shared/data'
 import { ProjectTree } from '@/widgets/ProjectTree'
 import { Button } from '@/shared/ui/Button'
@@ -34,7 +33,7 @@ interface InviteProjectMemberModalProps {
 }
 
 export const InviteProjectMemberModal: FC<InviteProjectMemberModalProps> = ({ className }) => {
-  const { readContext } = useModal()
+  const { readContext, close: closeModal } = useModal()
   const context = readContext(modalNames.inviteMember)
   const [email, setEmail] = useState('')
   const [role, setRole] = useState<UserRole>(UserRole.Manager)
@@ -51,7 +50,7 @@ export const InviteProjectMemberModal: FC<InviteProjectMemberModalProps> = ({ cl
       title='Invite member'
       footer={
         <>
-          <Button mode='secondary' stretched onClick={modalStore.close}>
+          <Button mode='secondary' stretched onClick={closeModal}>
             Cancel
           </Button>
           <Button type='submit' stretched onClick={() => handleSubmit()}>

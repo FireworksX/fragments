@@ -34,7 +34,7 @@ const BuilderLink: FC<BuilderLinkProps> = ({ className }) => {
             title='Link to'
             hasConnector={!href.variable.disabled}
             variable={{
-              link: href.variable.variableLink,
+              data: href.variable.variableData,
               actions: href.variable.actions,
               onClick: href.variable.editVariable,
               onReset: href.variable.resetVariable

@@ -12,8 +12,15 @@ export const Collection: FC<CollectionProps> = ({
   styles: inputStyles,
   ...restProps
 }) => {
-  const { fragmentManager, styles, hash, source, children, sourceValue } =
-    useCollection(layerKey);
+  const {
+    fragmentManager,
+    styles,
+    sourceDefinition,
+    hash,
+    source,
+    children,
+    sourceValue,
+  } = useCollection(layerKey, restProps);
   const FrameTag = restProps?.FrameTag ?? "div";
   const FrameElement = restProps?.FrameElement ?? Frame;
   const resultStyles = inputStyles ?? styles;
@@ -42,6 +49,7 @@ export const Collection: FC<CollectionProps> = ({
             value={{
               type: definition.scopeTypes.CollectionItemScope,
               source,
+              sourceDefinition,
               value: collectionItem,
               manager: fragmentManager,
             }}

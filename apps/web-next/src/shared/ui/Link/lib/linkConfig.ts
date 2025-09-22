@@ -47,6 +47,10 @@ export const linkConfig = {
     path: ({ projectSlug }) => `/project/${projectSlug}/settings/members`,
     params: ['projectSlug']
   },
+  projectSettingVariables: {
+    path: ({ projectSlug }) => `/project/${projectSlug}/settings/variables`,
+    params: ['projectSlug']
+  },
   projectCreate: {
     path: '/project/create',
     params: []

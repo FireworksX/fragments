@@ -12,14 +12,14 @@ export const useDragMove = () => {
   const { documentManager } = useBuilderDocument()
   const { canvas } = useBuilderCanvas()
 
-  const [, setTop, { rawValue: baseTop }] = useLayerValue('top')
-  const [, setRight, { rawValue: baseRight }] = useLayerValue('right')
-  const [, setBottom, { rawValue: baseBottom }] = useLayerValue('bottom')
-  const [, setLeft, { rawValue: baseLeft }] = useLayerValue('left')
-  const [baseCenterX, setCenterAnchorX] = useLayerValue('centerAnchorX')
-  const [baseCenterY, setCenterAnchorY] = useLayerValue('centerAnchorY')
+  const [, setTop, { rawValue: baseTop, patchUpdate: patchTop }] = useLayerValue('top')
+  const [, setRight, { rawValue: baseRight, patchUpdate: patchRight }] = useLayerValue('right')
+  const [, setBottom, { rawValue: baseBottom, patchUpdate: patchBottom }] = useLayerValue('bottom')
+  const [, setLeft, { rawValue: baseLeft, patchUpdate: patchLeft }] = useLayerValue('left')
+  const [baseCenterX, setCenterAnchorX, { patchUpdate: patchCenterAnchorX }] = useLayerValue('centerAnchorX')
+  const [baseCenterY, setCenterAnchorY, { patchUpdate: patchCenterAnchorY }] = useLayerValue('centerAnchorY')
 
-  return ({ memo, movement: [mx, my], first }: DragEvent) => {
+  return ({ memo, movement: [mx, my], first, last }: DragEvent) => {
     if (first) {
       const layerParent = getParent(documentManager, memo.targetLayerLink)
       const layerRect = getDomRect(keyOfEntity(memo.targetLayerLink))
@@ -50,25 +50,41 @@ export const useDragMove = () => {
       const newRight = memo.from.right - deltaX
       setLeft(newLeft)
       setRight(newRight)
+      if (last) {
+        patchLeft()
+        patchRight()
+      }
     } else if (isFiniteNumber(memo.from.left)) {
       // Только left констрейнт активен
       const newLeft = memo.from.left + deltaX
       setLeft(newLeft)
+      if (last) {
+        patchLeft()
+      }
 
       // Автоматически обновляем right если он был задан
       if (isFiniteNumber(memo.from.right)) {
         const newRight = memo.parentRect.width - newLeft - memo.from.width
         setRight(newRight)
+        if (last) {
+          patchRight()
+        }
       }
     } else if (isFiniteNumber(memo.from.right)) {
       // Только right констрейнт активен
       const newRight = memo.from.right - deltaX
       setRight(newRight)
+      if (last) {
+        patchRight()
+      }
 
       // Автоматически обновляем left если он был задан
       if (isFiniteNumber(memo.from.left)) {
         const newLeft = memo.parentRect.width - newRight - memo.from.width
         setLeft(newLeft)
+        if (last) {
+          patchLeft()
+        }
       }
     }
 
@@ -76,24 +92,41 @@ export const useDragMove = () => {
     if (isFiniteNumber(memo.from.top)) {
       const newTop = memo.from.top + deltaY
       setTop(newTop)
+      if (last) {
+        patchTop()
+      }
 
       // Автоматически обновляем bottom
       if (isFiniteNumber(memo.from.bottom)) {
         const newBottom = memo.parentRect.height - newTop - memo.from.height
         setBottom(newBottom)
+        if (last) {
+          patchBottom()
+        }
       }
     } else if (isFiniteNumber(memo.from.bottom)) {
       const newBottom = memo.from.bottom - deltaY
       setBottom(newBottom)
+      if (last) {
+        patchBottom()
+      }
 
       // Автоматически обновляем top
       if (isFiniteNumber(memo.from.top)) {
         const newTop = memo.parentRect.height - newBottom - memo.from.height
         setTop(newTop)
+        if (last) {
+          patchTop()
+        }
       }
     }
 
     setCenterAnchorX(memo?.from?.centerX + mx / scale / memo.parentRect.width)
     setCenterAnchorY(memo?.from?.centerY + my / scale / memo.parentRect.height)
+
+    if (last) {
+      patchCenterAnchorX()
+      patchCenterAnchorY()
+    }
   }
 }

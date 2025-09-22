@@ -96,8 +96,8 @@ const FragmentsEditInitial = () => {
             <div className={styles.popoutsOverlay}>
               <BuilderPopouts>
                 <StackCollector>
-                  <StackPanelBorder name='border' title='Border' />
-                  <StackPanelFill name='fill' title='Fill' />
+                  <StackPanelBorder name={popoutNames.border} title='Border' />
+                  <StackPanelFill name={popoutNames.fill} title='Fill' />
                   <StackImagePicker name={popoutNames.imagePicker} title='Image' />
                   <StackImageProperty name={popoutNames.stackImageProperty} title='Image Property' />
                   <StackPanelColorPicker name={popoutNames.colorPicker} title='Color' />

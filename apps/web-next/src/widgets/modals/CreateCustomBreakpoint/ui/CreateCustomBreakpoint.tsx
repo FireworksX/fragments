@@ -7,7 +7,6 @@ import { ModalContainer } from '@/shared/ui/ModalContainer'
 import { Button } from '@/shared/ui/Button'
 import { InputText } from '@/shared/ui/InputText'
 import { InputNumber } from '@/shared/ui/InputNumber'
-import { modalStore } from '@/shared/store/modal.store'
 import { modalNames } from '@/shared/data'
 import { useModal } from '@/shared/hooks/useModal'
 

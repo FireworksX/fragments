@@ -17,7 +17,8 @@ import GoalsIcon from '@/shared/icons/next/circle-dot.svg'
 import UsersIcon from '@/shared/icons/next/users.svg'
 import SettingsIcon from '@/shared/icons/next/settings-2.svg'
 import { Container } from '@/shared/ui/Container'
-import historyPlugin from '@graph-state/plugin-history'
+import historyPlugin from '../historyPlugin'
+// import historyPlugin from '@graph-state/plugin-history'
 
 export const ProjectDetailLayout: FC<PropsWithChildren> = ({ children }) => {
   const { data } = useSession()

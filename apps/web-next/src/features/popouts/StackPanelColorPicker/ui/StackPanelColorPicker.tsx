@@ -3,7 +3,6 @@ import cn from 'classnames'
 import styles from './styles.module.css'
 import { Color } from 'react-color'
 import { useGraph } from '@graph-state/react'
-import { POPOUT_TYPE, popoutsStore } from '@/shared/store/popouts.store'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useDisplayColor } from '@/shared/hooks/fragmentBuilder/useDisplayColor'
 import { Panel } from '@/shared/ui/Panel'
@@ -14,6 +13,7 @@ import { animatableValue } from '@/shared/utils/animatableValue'
 import { getRandomColor } from '@/shared/utils/random'
 import { isLinkKey, LinkKey } from '@graph-state/core'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { useStack } from '@/shared/hooks/useStack'
 
 export interface StackPanelColorPickerOptions {
   value?: Color
@@ -26,18 +26,21 @@ interface StackPanelColorPickerProps extends StackPanel {
 
 export const StackPanelColorPicker: FC<StackPanelColorPickerProps> = ({ className }) => {
   const { documentManager } = useBuilderDocument()
-  const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.colorPicker}`)
-  const context = popout.context ?? {}
+  const stack = useStack()
+  const context = stack.readContext(popoutNames.colorPicker) ?? {}
   // const { getColor } = useDisplayColor(documentManager)
   const [color] = useGraph(documentManager, context?.value)
   const resColor = color ?? context?.value
 
   const updateColor = (color?: Color | LinkKey) => {
     if (color && context?.onChange) {
-      // $updateContextPopout('colorPicker', { value: color })
-      popoutsStore.updateCurrentContext({ value: color })
       context.onChange(color)
     }
+  }
+
+  const selectVariable = value => {
+    updateColor(value)
+    stack.goPrev()
   }
 
   return (
@@ -52,6 +55,15 @@ export const StackPanelColorPicker: FC<StackPanelColorPickerProps> = ({ classNam
           }}
         />
       </Panel>
+
+      {!context?.withoutStack && (
+        <SolidPaintStyles
+          initialColor={resColor}
+          activeColorKey={resColor}
+          onSelect={selectVariable}
+          // onCreate={popoutsStore.goPrev}
+        />
+      )}
 
       {/*<SolidPaintStyles*/}
       {/*  getInitialColor={() => animatableValue(resColor)}*/}

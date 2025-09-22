@@ -3,8 +3,6 @@ import cn from 'classnames'
 import { definition } from '@fragmentsx/definition'
 import styles from './styles.module.css'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
-import { POPOUT_TYPE, popoutsStore } from '@/shared/store/popouts.store'
-import { useGraph } from '@graph-state/react'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { TabsSelector, TabsSelectorItem } from '@/shared/ui/TabsSelector'
 import { capitalize } from '@/shared/utils/capitalize'
@@ -19,6 +17,11 @@ import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { InputSelect } from '@/shared/ui/InputSelect'
 import GoalIcon from '@/shared/icons/next/circle-dot.svg'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { useStack } from '@/shared/hooks/useStack'
+
+export interface StackEventPropertyContext {
+  propertyLink: any
+}
 
 interface StackNumberVariableProps {
   className?: string
@@ -48,8 +51,8 @@ const requiredControls: TabsSelectorItem[] = [
 
 export const StackEventProperty: FC<StackNumberVariableProps> = ({ className }) => {
   const { documentManager } = useBuilderDocument()
-  const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackEventProperty}`)
-  const context = popout?.context ?? {}
+  const stack = useStack()
+  const context = stack.readContext(popoutNames.stackEventProperty) ?? {}
   const id = documentManager.entityOfKey(context.propertyLink)?._id
   const [name, setName] = useLayerValue('name', context.propertyLink)
   const [required, setRequired] = useLayerValue('required', context.propertyLink)
@@ -81,13 +84,11 @@ export const StackEventProperty: FC<StackNumberVariableProps> = ({ className }) 
               icon={<GoalIcon style={{ color: 'var(--text-color)' }} />}
               color={'var(--primary)'}
               onClick={() =>
-                popoutsStore.open(popoutNames.stackGoals, {
-                  context: {
-                    activeGoal: defaultValue?.code,
-                    onSelect: goal => {
-                      popoutsStore.goPrev()
-                      setDefaultValue(goal)
-                    }
+                stack.open(popoutNames.stackGoals, {
+                  activeGoal: defaultValue?.code,
+                  onSelect: goal => {
+                    stack.goPrev()
+                    setDefaultValue(goal)
                   }
                 })
               }

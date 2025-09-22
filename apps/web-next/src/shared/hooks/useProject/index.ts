@@ -1,6 +1,8 @@
 import { useParams } from 'next/navigation'
 import { useQuery } from '@apollo/client'
 import { useProjectQuery } from './queries/Project.generated'
+import { useCallback, useState } from 'react'
+import { useUpdateProjectMutation } from '@/shared/api/project/mutaion/UpdateProject.generated'
 
 export const useProject = () => {
   const { projectSlug: urlProjectSlug } = useParams()
@@ -14,9 +16,22 @@ export const useProject = () => {
 
   const project = data?.project?.at(0)
 
+  const [updateProject, { loading: isUpdatingProject }] = useUpdateProjectMutation()
+
+  const handleUpdateProperties = useCallback(nextProperties => {
+    updateProject({
+      variables: {
+        projectSlug,
+        properties: nextProperties
+      }
+    })
+  }, [])
+
   return {
     projectSlug,
     project,
-    loading
+    loading,
+    properties: project?.properties ?? [],
+    updateProperties: handleUpdateProperties
   }
 }

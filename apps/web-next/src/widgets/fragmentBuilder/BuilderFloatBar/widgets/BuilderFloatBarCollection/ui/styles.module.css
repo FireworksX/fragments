@@ -1,4 +1,6 @@
-.root {}
+.root {
+    background: var(--background);
+}
 
 .content {
     padding-inline: 16px;

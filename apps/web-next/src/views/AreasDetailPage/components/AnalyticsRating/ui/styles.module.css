@@ -1,1 +1,8 @@
 .root {}
+
+.cellValue {
+    font-size: 11px;
+    color: var(--secondary);
+    display: inline-block;
+    margin-inline: 4px;
+}

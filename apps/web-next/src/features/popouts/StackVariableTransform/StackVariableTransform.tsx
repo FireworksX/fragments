@@ -1,7 +1,6 @@
 import { FC, useContext, useMemo, useState } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { POPOUT_TYPE, popoutsStore } from '@/shared/store/popouts.store'
 import { useGraph, useGraphStack } from '@graph-state/react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { popoutNames } from '@/shared/data'

@@ -1,7 +1,6 @@
 import { FC, ReactNode, useContext, useEffect } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
-import { popoutsStore } from '@/shared/store/popouts.store'
 import { TabsSelector, TabsSelectorItem } from '@/shared/ui/TabsSelector'
 import { animatableValue } from '@/shared/utils/animatableValue'
 import { AnimatedVisible } from '@/shared/ui/AnimatedVisible'
@@ -36,7 +35,8 @@ const tabs: TabsSelectorItem[] = [
 
 const StackPanelFill: FC<StackPanelFillProps> = ({ className, stackColors }) => {
   const [fillType, setFillType] = useLayerValue('fillType')
-  const [, setSolidFill, { resultValue: solidFillValue }] = useLayerValue('solidFill')
+  const [solidFill, setSolidFill, { resultValue: solidFillValue, isVariable, setWithAutoPatch }] =
+    useLayerValue('solidFill')
   const [, setImageFill, { resultValue: imageFillValue }] = useLayerValue('imageFill')
   const [, setImageSize, { resultValue: imageSizeValue }] = useLayerValue('imageSize')
 
@@ -50,23 +50,25 @@ const StackPanelFill: FC<StackPanelFillProps> = ({ className, stackColors }) => 
     <div className={cn(styles.root, className)}>
       <TabsSelector items={tabs} value={fillType} onChange={({ name }) => setFillType(name)} />
       {fillType === definition.paintMode.Solid && (
-        <Panel>
-          <ColorPicker
-            color={solidFillValue}
-            onChange={color => {
-              if (color) {
-                setSolidFill(objectToColorString(color.rgb))
-              }
-            }}
+        <>
+          <Panel>
+            <ColorPicker
+              color={solidFillValue}
+              onChange={color => {
+                if (color) {
+                  setWithAutoPatch(objectToColorString(color.rgb))
+                }
+              }}
+            />
+          </Panel>
+          <SolidPaintStyles
+            initialColor={isVariable ? null : solidFill}
+            activeColorKey={solidFillValue}
+            onSelect={setSolidFill}
+            // onCreate={popoutsStore.goPrev}
           />
-        </Panel>
+        </>
       )}
-      {/*<SolidPaintStyles*/}
-      {/*  getInitialColor={() => solidFill.value?.get?.() ?? getRandomColor()}*/}
-      {/*  activeColorKey={solidFill.value}*/}
-      {/*  onSelect={solidFill.onChange}*/}
-      {/*  onCreate={popoutsStore.goPrev}*/}
-      {/*/>*/}
 
       {fillType === definition.paintMode.Image && (
         <ImagePicker

@@ -1,0 +1,34 @@
+query AreaAnalytics($areaId: Int!, $fromTs: DateTime!, $toTs: DateTime!) {
+    areaStatisticRating(statisticRatingFilter: {fromTs: $fromTs, toTs: $toTs, dataIds: [$areaId]}) {
+        areaId
+        areaCode
+        currentPeriod {
+            pages {
+                label: page
+                value: views
+                percentage
+            }
+            osTypes {
+                label: name
+                value: views
+                percentage
+            }
+            deviceTypes {
+                label: name
+                value: views
+                percentage
+            }
+            countries {
+                iso
+                label: name
+                value: views
+                percentage
+            }
+            browsers {
+                label: name
+                value: views
+                percentage
+            }
+        }
+    }
+}

@@ -1,10 +1,11 @@
 'use client'
-import { FC, PropsWithChildren } from 'react'
+import { cloneElement, FC, PropsWithChildren } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { Container } from '@/shared/ui/Container'
 import { Cell } from '@/shared/ui/Cell'
 import SettingsIcon from '@/shared/icons/next/settings-2.svg'
+import VariableIcon from '@/shared/icons/next/variable.svg'
 import KeyIcon from '@/shared/icons/next/key.svg'
 import UsersIcon from '@/shared/icons/next/users.svg'
 import { Panel } from '@/shared/ui/Panel'
@@ -35,6 +36,13 @@ const pages = [
       type: 'projectSettingMembers'
     },
     icon: <UsersIcon />
+  },
+  {
+    label: 'Variables',
+    link: {
+      type: 'projectSettingVariables'
+    },
+    icon: <VariableIcon />
   }
 ]
 
@@ -49,7 +57,7 @@ export const ProjectSettingsLayout: FC<ProjectSettingsProps> = ({ className, chi
                 <Cell
                   className={cn(styles.cell, { [styles.activeCell]: isActive })}
                   beforeClassName={styles.cellBefore}
-                  before={page.icon}
+                  before={cloneElement(page.icon, { width: 16, height: 16 })}
                 >
                   {page.label}
                 </Cell>
@@ -58,6 +66,7 @@ export const ProjectSettingsLayout: FC<ProjectSettingsProps> = ({ className, chi
           ))}
         </Panel>
       </div>
+
       <div className={styles.content}>{children}</div>
     </Container>
   )

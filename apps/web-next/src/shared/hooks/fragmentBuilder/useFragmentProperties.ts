@@ -1,7 +1,6 @@
 import { definition } from '@fragmentsx/definition'
 
 import { Entity, LinkKey } from '@graph-state/core'
-import { popoutsStore } from '@/shared/store/popouts.store'
 import { popoutNames } from '@/shared/data'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
@@ -10,6 +9,7 @@ import { setKey } from '@fragmentsx/utils'
 import { useMemo } from 'react'
 import { capitalize } from '@/shared/utils/capitalize'
 import { useGraphStack } from '@graph-state/react'
+import { useStack } from '@/shared/hooks/useStack'
 
 export const FRAGMENT_PROPERTY_TYPES = [
   definition.variableType.Event,
@@ -37,6 +37,7 @@ export const useFragmentProperties = () => {
   const { documentManager } = useBuilderDocument()
   const [propertiesLinks] = useLayerValue('properties', documentManager?.$fragment?.root)
   const propertiesLayers = useGraphStack(documentManager, propertiesLinks)
+  const stack = useStack()
 
   const properties = useMemo(() => (propertiesLayers ?? []).filter(prop => !prop.parent), [propertiesLayers])
 
@@ -83,13 +84,16 @@ export const useFragmentProperties = () => {
         [definition.variableType.Array]: popoutNames.stackArrayProperty
       }[type]
 
-      popoutsStore.open(popoutName, {
-        initial: popoutOptions?.initial ?? true,
-        position: popoutOptions?.position ?? 'right',
-        context: {
+      stack.open(
+        popoutName,
+        {
           propertyLink
+        },
+        {
+          initial: popoutOptions?.initial ?? true,
+          position: popoutOptions?.position ?? 'right'
         }
-      })
+      )
     }
   }
 

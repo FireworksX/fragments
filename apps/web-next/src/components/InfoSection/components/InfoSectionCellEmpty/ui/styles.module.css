@@ -1,0 +1,12 @@
+@layer  {
+    .root {
+        padding: 16px;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        justify-content: center;
+        font-weight: 500;
+        font-size: 14px;
+        color: var(--secondary);
+    }
+}

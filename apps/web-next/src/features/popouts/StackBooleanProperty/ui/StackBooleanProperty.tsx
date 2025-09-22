@@ -2,8 +2,6 @@ import { FC, useContext, useMemo, useState } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
-import { POPOUT_TYPE, popoutsStore } from '@/shared/store/popouts.store'
-import { useGraph } from '@graph-state/react'
 import { TabsSelector, TabsSelectorItem } from '@/shared/ui/TabsSelector'
 import { capitalize } from '@/shared/utils/capitalize'
 import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
@@ -11,6 +9,11 @@ import { InputText } from '@/shared/ui/InputText'
 import { popoutNames } from '@/shared/data'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { useStack } from '@/shared/hooks/useStack'
+
+export interface StackBooleanPropertyContext {
+  propertyLink: any
+}
 
 interface StackBooleanVariableProps {
   className?: string
@@ -29,8 +32,8 @@ const controls: TabsSelectorItem[] = [
 
 export const StackBooleanProperty: FC<StackBooleanVariableProps> = ({ className }) => {
   const { documentManager } = useBuilderDocument()
-  const [popout] = useGraph(popoutsStore, `${POPOUT_TYPE}:${popoutNames.stackBooleanProperty}`)
-  const context = popout?.context ?? {}
+  const stack = useStack()
+  const context = stack.readContext(popoutNames.stackBooleanProperty) ?? {}
   const id = documentManager.entityOfKey(context.propertyLink)?._id
   const [name, setName] = useLayerValue('name', context?.propertyLink)
   const [required, setRequired] = useLayerValue('required', context?.propertyLink)

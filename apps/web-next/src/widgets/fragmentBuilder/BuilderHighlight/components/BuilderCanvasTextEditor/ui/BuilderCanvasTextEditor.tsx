@@ -7,6 +7,7 @@ import { useFragmentProperties } from '@/shared/hooks/fragmentBuilder/useFragmen
 import cn from 'classnames'
 import { getCssVariables } from '@fragmentsx/render-core'
 import { keyOfEntity } from '@graph-state/core'
+import { useBuilderAssetsColors } from '@/shared/hooks/fragmentBuilder/useBuilderAssetsColors'
 
 interface BuilderFloatBarProps {
   className?: string
@@ -15,6 +16,7 @@ interface BuilderFloatBarProps {
 export const BuilderCanvasTextEditor: FC<BuilderFloatBarProps> = ({ className }) => {
   const editor = useContext(CanvasTextEditorContext)
   const { properties } = useFragmentProperties()
+  const { propertiesMap } = useBuilderAssetsColors()
   const colorVariables = properties
     ?.filter(prop => prop.type === definition.variableType.Color)
     .reduce((acc, prop) => {
@@ -23,11 +25,15 @@ export const BuilderCanvasTextEditor: FC<BuilderFloatBarProps> = ({ className })
       return acc
     }, {})
   const cssVariables = getCssVariables(colorVariables)
+  const projectCssVariables = getCssVariables(propertiesMap)
 
   return (
     <div
       className={cn('canvas-rich-editor', className)}
-      style={cssVariables}
+      style={{
+        ...cssVariables,
+        ...projectCssVariables
+      }}
       onClickCapture={e => {
         e.preventDefault()
         e.stopPropagation()

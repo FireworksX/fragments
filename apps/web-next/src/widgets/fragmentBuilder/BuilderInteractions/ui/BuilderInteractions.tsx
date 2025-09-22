@@ -45,10 +45,12 @@ const BuilderInteractions: FC<BuilderPositionProps> = memo(({ className }) => {
         <GraphValue key={`${index}_${interaction.event}`} graphState={manager} field={interaction.event}>
           {event => (
             <ControlRow title={capitalize(interaction.on)}>
+              {console.log(event)}
+
               <ControlRowWide>
                 <InputSelect
                   icon={
-                    event.mode === definition.eventMode.callback ? (
+                    event?.mode === definition.eventMode.callback ? (
                       <ActionIcon style={{ color: 'var(--text-color)' }} />
                     ) : (
                       <GoalIcon style={{ color: 'var(--text-color)' }} />

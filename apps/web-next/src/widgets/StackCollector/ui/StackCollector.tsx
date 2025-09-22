@@ -1,4 +1,4 @@
-import React, { createContext, ElementRef, FC, useEffect, useRef } from 'react'
+import React, { createContext, ElementRef, FC, PropsWithChildren, ReactNode, useEffect, useRef } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { StackPanel, useStackCollector } from '../hooks/useStackCollector'
@@ -10,7 +10,7 @@ import { Touchable } from '@/shared/ui/Touchable'
 
 export interface StackCollectorProps {
   className?: string
-  children: StackPanel[]
+  children: any[]
   onPrev?: () => void
   onClose?: () => void
 }

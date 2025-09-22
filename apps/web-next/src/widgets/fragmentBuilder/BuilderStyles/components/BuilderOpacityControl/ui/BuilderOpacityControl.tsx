@@ -35,8 +35,15 @@ export const BuilderOpacityControl: FC<BuilderOpacityControlProps> = memo(({ cla
         onReset: resetVariable
       }}
     >
-      <InputNumber value={opacityInfo.value$} step={0.1} max={1} min={0} onChange={setOpacity} />
-      <Slider value={opacityInfo.value$} step={0.1} max={1} min={0} onChange={setOpacity} />
+      <InputNumber value={opacityInfo.resultValue} step={0.1} max={1} min={0} onChange={opacityInfo.setWithAutoPatch} />
+      <Slider
+        value={opacityInfo.resultValue}
+        step={0.1}
+        max={1}
+        min={0}
+        onChange={setOpacity}
+        onFinish={opacityInfo.patchUpdate}
+      />
     </ControlRow>
   )
 })

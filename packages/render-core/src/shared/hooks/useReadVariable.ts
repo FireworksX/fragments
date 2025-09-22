@@ -21,18 +21,30 @@ export const useReadVariable = (variableKey?: LinkKey | null) => {
       (scope) => scope?.type === definition.scopeTypes.InstanceScope
     )?.props?.[variableId];
 
-    const lastCollectionItemValue = scopes.findLast(
+    const lastCollectionItem = scopes.findLast(
       (scope) => scope?.type === definition.scopeTypes.CollectionItemScope
-    )?.value;
-    const collectionItemProp = isPrimitive(lastCollectionItemValue)
-      ? lastCollectionItemValue
-      : lastCollectionItemValue?.[variableId];
+    );
+
+    const collectionItemProp =
+      isPrimitive(lastCollectionItem?.value) &&
+      entityOfKey(lastCollectionItem?.sourceDefinition)?._id === variableId
+        ? lastCollectionItem?.value
+        : lastCollectionItem?.value?.[variableId];
 
     const fragmentDefinition = scopes.findLast(
-      (scope) =>
-        scope.type === definition.scopeTypes.FragmentScope &&
-        scope?.definitions?.find((def) => def === variableKey)
+      (scope) => scope.type === definition.scopeTypes.FragmentScope //&&
+      // scope?.definitions?.find((def) => def === variableKey)
     );
+
+    // if (variableId === "fdb3f5406b956") {
+    //   console.log(
+    //     variableId,
+    //     scopes,
+    //     lastCollectionItem,
+    //     collectionItemProp,
+    //     fragmentDefinition
+    //   );
+    // }
 
     if (!isVariable) {
       return {

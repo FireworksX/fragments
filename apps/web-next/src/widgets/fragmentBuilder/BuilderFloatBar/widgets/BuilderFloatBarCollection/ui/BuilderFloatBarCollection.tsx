@@ -58,6 +58,7 @@ export const BuilderFloatBarCollection: FC<BuilderFloatBarCollectionProps> = ({
 
   return (
     <Dropdown
+      className={styles.root}
       width={230}
       trigger='click'
       offset={[0, 20]}

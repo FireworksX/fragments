@@ -1,4 +1,3 @@
-import { popoutsStore } from '@/shared/store/popouts.store'
 import { useBuilderAssetsColors } from '@/shared/hooks/fragmentBuilder/useBuilderAssetsColors'
 import { useBuilderAssetsCss } from '@/shared/hooks/fragmentBuilder/useBuilderAssetsCss'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'

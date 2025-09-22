@@ -1,8 +1,8 @@
 import { useContext } from 'react'
 import { useGraphFields, useGraphStack } from '@graph-state/react'
-import { popoutsStore } from '@/shared/store/popouts.store'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
+import { useStack } from '@/shared/hooks/useStack'
 
 type ExtendOptions = Partial<OpenPopoutOptions<'cssOverride'>>
 
@@ -14,6 +14,7 @@ export const useBuilderAssetsCss = () => {
   const { documentManager } = useBuilderDocument()
   const fields = useGraphFields(documentManager, nodes.CssLink)
   const values = useGraphStack(documentManager, fields)
+  const stack = useStack()
 
   const editCssOverride = (variableKey: EntityKey, options?: ExtendOptions) => {
     if (variableKey && graphState) {
@@ -36,17 +37,20 @@ export const useBuilderAssetsCss = () => {
   }
 
   const createCssOverride = ({ onSubmit: optionsOnSubmit, ...popoutOptions }: BuilderAssetsCssOverrideOptions) => {
-    popoutsStore.open('cssOverride', {
-      context: {
+    stack.open(
+      'cssOverride',
+      {
         name: '',
         onSubmit: override => {
           const cssLink = documentManager.createCssLink(override)
           optionsOnSubmit && optionsOnSubmit(cssLink)
         }
       },
-      position: 'left',
-      ...popoutOptions
-    })
+      {
+        position: 'left',
+        ...popoutOptions
+      }
+    )
   }
 
   const removeCssOverride = (key: EntityKey) => {

@@ -43,7 +43,9 @@ export const useBuilderLayers = () => {
       id: documentManager.keyOfEntity(node) ?? undefined,
       collapsed,
       children: isNestedFragment ? [] : (node?.children || []).map(key => getNode(key, deepIndex + 1)),
-      canHaveChildren: [definition.nodes.Frame, definition.nodes.Breakpoint].includes(node?._type)
+      canHaveChildren: [definition.nodes.Frame, definition.nodes.Breakpoint, definition.nodes.Collection].includes(
+        node?._type
+      )
     }
   }
 

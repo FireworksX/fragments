@@ -26,6 +26,7 @@ export const FragmentsEditPlaceholder: FC<FragmentsEditPlaceholderProps> = ({ cl
   })
   const { createProjectFragment, loading } = useProjectFiles()
   const { openFragment } = useBuilder()
+  const { open: openModal } = useModal()
 
   useGraphEffect(builderManager, builderManager.$droppable.builderPlaceholderDroppableKey, nextValue => {
     if (nextValue.active?.type === draggableTypes.fragmentProjectItem) {
@@ -34,15 +35,20 @@ export const FragmentsEditPlaceholder: FC<FragmentsEditPlaceholderProps> = ({ cl
   })
 
   const handleCreateFragment = async () => {
-    const response = await createProjectFragment({
-      variables: {
-        name: 'Untitled'
+    openModal(modalNames.createFragment, {
+      onCreate: async (name, templateId) => {
+        const response = await createProjectFragment({
+          templateId,
+          variables: {
+            name: name ?? 'Untitled'
+          }
+        })
+
+        if (response.id) {
+          openFragment(response?.id)
+        }
       }
     })
-
-    if (response.data?.createFragment?.id) {
-      openFragment(response.data?.createFragment?.id)
-    }
   }
 
   return (

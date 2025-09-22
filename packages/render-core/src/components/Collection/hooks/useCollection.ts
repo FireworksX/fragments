@@ -11,16 +11,20 @@ import { pick } from "@fragmentsx/utils";
 
 export const useCollection = (layerKey: LinkKey, options?: UseFrameOptions) => {
   const { manager: fragmentManager } = useContext(FragmentContext);
+
   const frame = useFrame(layerKey, options);
   const children = useLayerChildren(layerKey, fragmentManager);
   const [collectionLayer] = useGraph(fragmentManager, layerKey, {
     selector: (graph) => pick(graph, "source"),
   });
+  const source = collectionLayer?.source;
+  const sourceDefinition = fragmentManager?.resolve(source)?.definition;
 
   const [sourceValue] = useLayerValue(layerKey, "source", fragmentManager);
 
   return {
-    source: collectionLayer?.source,
+    source,
+    sourceDefinition,
     sourceValue: sourceValue ?? [],
     fragmentManager,
     children,

@@ -62,6 +62,7 @@ export const FeedbackForm: FC<FeedbackFormProps> = ({ className }) => {
     setEmotion(1)
     setBugPriority(BugPriority.Medium)
     setType(IssueType.Feedback)
+    setAttachments([])
   }
 
   const handleSubmit = async e => {
@@ -107,6 +108,7 @@ export const FeedbackForm: FC<FeedbackFormProps> = ({ className }) => {
       }
     })
 
+    resetForm()
     setIsNotify(true)
     if (type === IssueType.Feedback) {
       await promiseWaiter(3000)

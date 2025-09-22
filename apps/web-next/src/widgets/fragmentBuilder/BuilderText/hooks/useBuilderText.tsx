@@ -2,7 +2,6 @@ import TextAlignLeft from '@/shared/icons/text-align-left.svg'
 import TextAlignRight from '@/shared/icons/text-align-right.svg'
 import TextAlignCenter from '@/shared/icons/text-align-center.svg'
 import { use, useCallback, useContext, useEffect, useRef, useState } from 'react'
-import { popoutsStore } from '@/shared/store/popouts.store'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
 import { useBuilderManager } from '@/shared/hooks/fragmentBuilder/useBuilderManager'
 import { useLayerInvoker } from '@/shared/hooks/fragmentBuilder/useLayerInvoker'
@@ -28,6 +27,7 @@ import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { useLayerVariables } from '../../../../shared/hooks/fragmentBuilder/useLayerVariable'
 import { pick } from '@fragmentsx/utils'
 import { useLayerPropertyValue } from '@/shared/hooks/fragmentBuilder/useLayerPropertyVariable'
+import { useStack } from '@/shared/hooks/useStack'
 
 const aligns: TabsSelectorItem[] = [
   {
@@ -68,6 +68,7 @@ const weights = [
 const transforms: TextTransform[] = ['none', 'uppercase', 'lowercase', 'capitalize']
 
 export const useBuilderText = () => {
+  const stack = useStack()
   const { builderManager } = use(BuilderContext)
   const { documentManager } = useBuilderDocument()
   const editor = use(CanvasTextEditorContext)
@@ -148,9 +149,9 @@ export const useBuilderText = () => {
     const currentColor = marks.color || '#000'
     lastSelectionRef.current = editor.state.selection
 
-    popoutsStore.open('colorPicker', {
-      position: 'right',
-      context: {
+    stack.open(
+      'colorPicker',
+      {
         value: currentColor,
         onChange: newColor => {
           const color = objectToColorString(newColor)
@@ -158,8 +159,11 @@ export const useBuilderText = () => {
           setAttributes({ color })
         }
       },
-      initial: true
-    })
+      {
+        position: 'right',
+        initial: true
+      }
+    )
   }
 
   const openFonts = () => {

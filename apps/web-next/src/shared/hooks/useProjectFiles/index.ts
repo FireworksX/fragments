@@ -12,6 +12,7 @@ import { useProjectDirectoryQuery } from './queries/ProjectDirectory.generated'
 import { useCallback } from 'react'
 import { getEmptyFragment } from '@/shared/hooks/useProjectFiles/emptyFragment'
 import { generateId } from '@fragmentsx/utils'
+import { useDuplicateProjectFragmentMutation } from '@/shared/hooks/useProjectFiles/queries/DuplicateProjectFragment.generated'
 
 export const useProjectFiles = () => {
   const { projectSlug, project } = useProject()
@@ -26,13 +27,33 @@ export const useProjectFiles = () => {
   const [updateProjectDirectory] = useUpdateProjectDirectoryMutation()
   const [deleteProjectDirectory] = useDeleteProjectDirectoryMutation()
 
+  const [duplicateProjectFragment, { loading: duplicateFragmentLoading }] = useDuplicateProjectFragmentMutation()
   const [createProjectFragment, { loading: createFragmentLoading }] = useCreateProjectFragmentMutation()
   const [updateProjectFragment, { loading: updateFragmentLoading }] = useUpdateProjectFragmentMutation()
   const [deleteProjectFragment, { loading: deleteFragmentLoading }] = useDeleteProjectFragmentMutation()
 
   const proxyCreateProjectFragment = useCallback(
-    ({ variables }: { variables: Pick<CreateProjectFragmentMutationVariables, 'name' | 'parentId'> }) => {
-      return createProjectFragment({
+    async ({
+      variables,
+      templateId
+    }: {
+      variables: Pick<CreateProjectFragmentMutationVariables, 'name' | 'parentId'>
+      templateId?: number | null
+    }) => {
+      if (templateId) {
+        const result = await duplicateProjectFragment({
+          variables: {
+            projectSlug,
+            name: variables?.name,
+            parentId: variables?.parentId ?? project?.rootDirectoryId,
+            id: templateId
+          }
+        })
+
+        return result.data?.cloneFragment
+      }
+
+      const result = await createProjectFragment({
         variables: {
           name: variables?.name,
           projectSlug,
@@ -40,6 +61,8 @@ export const useProjectFiles = () => {
           document: getEmptyFragment(generateId())
         }
       })
+
+      return result.data?.createFragment
     },
     [createProjectFragment, project]
   )
@@ -50,7 +73,8 @@ export const useProjectFiles = () => {
     loading: {
       createFragmentLoading,
       updateFragmentLoading,
-      deleteFragmentLoading
+      deleteFragmentLoading,
+      duplicateFragmentLoading
     },
 
     rootDirectoryId: project?.rootDirectoryId,
@@ -63,6 +87,7 @@ export const useProjectFiles = () => {
 
     createProjectFragment: proxyCreateProjectFragment,
     updateProjectFragment,
+    duplicateProjectFragment,
     deleteProjectFragment
   }
 }

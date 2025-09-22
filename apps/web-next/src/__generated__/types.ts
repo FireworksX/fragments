@@ -58,7 +58,9 @@ export type AreaStatisticGet = {
   areaCode: Scalars['String']['output'];
   areaId: Scalars['Int']['output'];
   campaigns: Array<CampaignStatisticGet>;
+  currentGroupByDate: DetalizationGraph;
   currentStatistic: StatisticGet;
+  prevGroupByDate: DetalizationGraph;
   prevStatistic: StatisticGet;
   trend?: Maybe<StatisticTrend>;
 };
@@ -140,7 +142,9 @@ export type CampaignStatisticGet = {
   __typename?: 'CampaignStatisticGet';
   campaignId: Scalars['Int']['output'];
   campaignName: Scalars['String']['output'];
+  currentGroupByDate: DetalizationGraph;
   currentStatistic: StatisticGet;
+  prevGroupByDate: DetalizationGraph;
   prevStatistic: StatisticGet;
   trend?: Maybe<StatisticTrend>;
   variants: Array<VariantStatisticGet>;
@@ -155,6 +159,7 @@ export enum CampaignStatus {
 export type ClientAreaGet = {
   __typename?: 'ClientAreaGet';
   areaProperties?: Maybe<Array<Scalars['JSON']['output']>>;
+  projectProperties?: Maybe<Array<Scalars['JSON']['output']>>;
   variant: VariantGet;
 };
 
@@ -205,7 +210,7 @@ export type ConditionSetPost = {
 
 export type CountryAnalytic = {
   __typename?: 'CountryAnalytic';
-  isocode: Scalars['String']['output'];
+  iso: Scalars['String']['output'];
   name: Scalars['String']['output'];
   percentage: Scalars['Float']['output'];
   views: Scalars['Int']['output'];
@@ -350,6 +355,12 @@ export type FilterTimeFramesGet = {
   timeFrames: Array<FilterTimeFrameGet>;
 };
 
+export type FragmentClonePost = {
+  directoryId?: InputMaybe<Scalars['Int']['input']>;
+  fragmentId: Scalars['Int']['input'];
+  projectId?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type FragmentGet = {
   __typename?: 'FragmentGet';
   assets: Array<MediaGet>;
@@ -464,6 +475,7 @@ export type Mutation = {
   addUserToProject?: Maybe<Scalars['Void']['output']>;
   changeProjectPrivateKey: ProjectGet;
   changeUserRole?: Maybe<Scalars['Void']['output']>;
+  cloneFragment: FragmentGet;
   createArea: AreaGet;
   createCampaign: CampaignGet;
   createCondition: ConditionGet;
@@ -545,6 +557,11 @@ export type MutationChangeUserRoleArgs = {
   projectId: Scalars['Int']['input'];
   role: UserRole;
   userId: Scalars['Int']['input'];
+};
+
+
+export type MutationCloneFragmentArgs = {
+  clone: FragmentClonePost;
 };
 
 
@@ -843,6 +860,7 @@ export type ProjectGet = {
   name: Scalars['String']['output'];
   owner: UserGet;
   privateKey?: Maybe<ProjectKeyGet>;
+  properties?: Maybe<Array<Scalars['JSON']['output']>>;
   publicKeys: Array<ProjectKeyGet>;
   rootDirectoryId: Scalars['Int']['output'];
 };
@@ -882,17 +900,21 @@ export type ProjectKeyGet = {
 export type ProjectPatch = {
   id: Scalars['Int']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
+  properties?: InputMaybe<Array<Scalars['JSON']['input']>>;
 };
 
 export type ProjectPost = {
   logo?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
+  properties?: InputMaybe<Array<Scalars['JSON']['input']>>;
 };
 
 export type ProjectStatisticGet = {
   __typename?: 'ProjectStatisticGet';
   areas: Array<AreaStatisticGet>;
+  currentGroupByDate: DetalizationGraph;
   currentStatistic: StatisticGet;
+  prevGroupByDate: DetalizationGraph;
   prevStatistic: StatisticGet;
   projectId: Scalars['Int']['output'];
   projectName: Scalars['String']['output'];
@@ -914,9 +936,11 @@ export type Query = {
   campaign: Array<CampaignGet>;
   campaignStatistic: Array<Maybe<CampaignStatisticGet>>;
   clientArea?: Maybe<ClientAreaGet>;
+  clientAreas: Array<Maybe<ClientAreaGet>>;
   clientFragment?: Maybe<FragmentGet>;
   condition: ConditionGet;
   conditionSet: ConditionSetGet;
+  defaultTemplates: Array<FragmentGet>;
   directory: Array<ProjectDirectoryGet>;
   featureFlag: FeatureFlagGet;
   filter: AllFiltersGet;
@@ -960,6 +984,11 @@ export type QueryCampaignStatisticArgs = {
 
 export type QueryClientAreaArgs = {
   areaCode: Scalars['String']['input'];
+};
+
+
+export type QueryClientAreasArgs = {
+  areaCodes: Array<Scalars['String']['input']>;
 };
 
 
@@ -1077,8 +1106,8 @@ export type StatisticGet = {
   __typename?: 'StatisticGet';
   achieved: Scalars['Int']['output'];
   conversion: Scalars['Float']['output'];
-  sessions: Scalars['Int']['output'];
   uniqueAchieved: Scalars['Int']['output'];
+  uniqueViews: Scalars['Int']['output'];
   views: Scalars['Int']['output'];
 };
 
@@ -1092,8 +1121,8 @@ export type StatisticTrend = {
   __typename?: 'StatisticTrend';
   achievedTrend: StatisticTrendGet;
   conversionTrend: StatisticTrendGet;
-  sessionsTrend: StatisticTrendGet;
   uniqueAchievedTrend: StatisticTrendGet;
+  uniqueViewsTrend: StatisticTrendGet;
   viewsTrend: StatisticTrendGet;
 };
 
@@ -1147,8 +1176,8 @@ export type Value = {
   __typename?: 'Value';
   achieved: Scalars['Int']['output'];
   conversion: Scalars['Float']['output'];
-  sessions: Scalars['Int']['output'];
   uniqueAchieved: Scalars['Int']['output'];
+  uniqueViews: Scalars['Int']['output'];
   views: Scalars['Int']['output'];
 };
 
@@ -1179,8 +1208,10 @@ export type VariantPost = {
 
 export type VariantStatisticGet = {
   __typename?: 'VariantStatisticGet';
+  currentGroupByDate: DetalizationGraph;
   currentStatistic: StatisticGet;
   goals: Array<GoalStatisticGet>;
+  prevGroupByDate: DetalizationGraph;
   prevStatistic: StatisticGet;
   trend?: Maybe<StatisticTrend>;
   variantId: Scalars['Int']['output'];

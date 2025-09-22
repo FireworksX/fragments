@@ -13,7 +13,7 @@ const BuilderAssets: FC<BuilderAssetsProps> = ({ className }) => {
   return (
     <div className={cn(styles.root, className)}>
       <AssetsStyles assetsColorsNode={<AssetsColors />} />
-      <AssetsFragments />
+      {/*<AssetsFragments />*/}
     </div>
   )
 }

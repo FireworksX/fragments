@@ -10,6 +10,7 @@ import { displayColor } from '@/shared/utils/displayColor'
 interface ColorPickerProps {
   className?: string
   onChange: (color: string) => void
+  onFinish: (color: string) => void
 }
 
 const alphaStyles = {
@@ -33,11 +34,17 @@ const inputStyles = {
   }
 }
 
-const ColorPicker: FC<ColorPickerProps> = ({ className, rgb, hex, hsl, hsv, onChange }) => {
+const ColorPicker: FC<ColorPickerProps> = ({ className, rgb, hex, hsl, hsv, onChange, onFinish }) => {
   return (
     <div className={cn(styles.root, className)}>
       <div className={styles.saturationWrapper}>
-        <Saturation hsl={hsl} hsv={hsv} pointer={() => <div className={styles.pointer} />} onChange={onChange} />
+        <Saturation
+          hsl={hsl}
+          hsv={hsv}
+          pointer={() => <div className={styles.pointer} />}
+          onChange={onChange}
+          onChangeComplete={onFinish}
+        />
       </div>
       <div className={styles.controls}>
         <div className={styles.colorControls}>
@@ -50,6 +57,9 @@ const ColorPicker: FC<ColorPickerProps> = ({ className, rgb, hex, hsl, hsv, onCh
             onChange={nextColor => {
               onChange(nextColor.hsl)
             }}
+            onChangeComplete={nextColor => {
+              onFinish(nextColor.hsl)
+            }}
           />
           <div className={styles.hueWrapper}>
             <Hue
@@ -58,6 +68,7 @@ const ColorPicker: FC<ColorPickerProps> = ({ className, rgb, hex, hsl, hsv, onCh
               height='8px'
               pointer={() => <div className={styles.pointer} />}
               onChange={onChange}
+              onChangeComplete={onFinish}
             />
           </div>
         </div>
@@ -65,6 +76,7 @@ const ColorPicker: FC<ColorPickerProps> = ({ className, rgb, hex, hsl, hsv, onCh
           style={inputStyles}
           value={displayColor(rgb?.a < 1 ? rgb : hex)}
           onChange={value => onChange(value)}
+          onChangeComplete={value => onChange(value)}
         />
       </div>
     </div>

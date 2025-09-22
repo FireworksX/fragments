@@ -59,6 +59,12 @@ export const fieldsConfig = {
     name: 'Fill',
     defaultValue: '#fff'
   },
+  borderColor: {
+    nodePropertyControlReference: 'borderColor',
+    type: definition.variableType.Color,
+    name: 'Border Color',
+    defaultValue: '#000'
+  },
   imageFill: {
     nodePropertyControlReference: 'imageFill',
     type: definition.variableType.Image,

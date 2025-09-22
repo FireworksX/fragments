@@ -3,10 +3,11 @@ import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { InputSelect } from '@/shared/ui/InputSelect'
 import { definition } from '@fragmentsx/definition'
-import { popoutsStore } from '@/shared/store/popouts.store'
 import Image from 'next/image'
 import { useLayerPropertyValue } from '@/shared/hooks/fragmentBuilder/useLayerPropertyVariable'
 import { useCombinePropertyVariables } from '@/shared/hooks/fragmentBuilder/useCombinePropertyVariables'
+import { useStack } from '@/shared/hooks/useStack'
+import { popoutNames } from '@/shared/data'
 
 interface BuilderFillControlProps {
   className?: string
@@ -16,11 +17,13 @@ export const ALLOW_FILL_TYPES = [definition.paintMode.Solid]
 export const TYPES_WITH_ICON = [definition.paintMode.Solid, definition.paintMode.Image]
 
 export const BuilderFillControl: FC<BuilderFillControlProps> = memo(({ className }) => {
+  const { open: openStack } = useStack()
   const [fillType, setFillType] = useLayerValue('fillType')
   const [solidValue, , solidValueInfo] = useLayerValue('solidFill')
   const [imageValue, , imageValueInfo] = useLayerValue('imageFill')
   const solidFillVariable = useLayerPropertyValue('solidFill', {
     skipUseDefaultValue: fillType !== definition.paintMode.Solid,
+    editVariable: options => (options.isProjectVariable ? openFill() : options.editVariable()),
     onSetValue: () => setFillType(definition.paintMode.Solid),
     onResetVariable: () => setFillType(definition.paintMode.None)
   })
@@ -37,7 +40,7 @@ export const BuilderFillControl: FC<BuilderFillControlProps> = memo(({ className
   const result = useMemo(() => {
     if (fillType === definition.paintMode.Solid) {
       return {
-        value: solidValueInfo?.value$
+        value: solidValueInfo?.resultValue
       }
     }
     if (fillType === definition.paintMode.Image) {
@@ -45,12 +48,10 @@ export const BuilderFillControl: FC<BuilderFillControlProps> = memo(({ className
         value: imageValue
       }
     }
-  }, [fillType, imageValue, solidValueInfo?.value$])
+  }, [fillType, imageValue, solidValueInfo?.resultValue])
 
   const openFill = () => {
-    popoutsStore.open('fill', {
-      initial: true
-    })
+    openStack(popoutNames.fill, {}, { initial: true })
   }
 
   return (

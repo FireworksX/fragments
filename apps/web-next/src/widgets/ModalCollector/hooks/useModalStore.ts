@@ -1,5 +1,4 @@
 import { createContext, useCallback, useMemo, useRef, useState } from 'react'
-import { POPOUT_TYPE } from '@/shared/store/popouts.store'
 import { modalNames } from '@/shared/data'
 import { ConfigureFeatureFlagVariantContext } from '@/widgets/modals/ConfigureFeatureFlagVariant/ui/ConfigureFeatureFlagVariant'
 import { ProjectTreeModalContext } from '@/widgets/modals/ProjectTreeModal/ui/ProjectTreeModal'
@@ -13,6 +12,7 @@ import { PropertyColorContext } from '@/widgets/modals/PropertyColor/ui/Property
 import { ColorPickerContext } from '@/widgets/modals/ColorPicker/ui/ColorPicker'
 import { InviteProjectMemberContext } from '@/widgets/modals/InviteProjectMemberModal/ui/InviteProjectMemberModal'
 import { CreateCustomBreakpointContext } from '@/widgets/modals/CreateCustomBreakpoint/ui/CreateCustomBreakpoint'
+import { CreateNewFragmentContext } from '@/widgets/modals/CreateNewFragment/ui/CreateNewFragment'
 
 interface ModalContextMap {
   [modalNames.configureFeatureFlagVariant]: ConfigureFeatureFlagVariantContext
@@ -25,6 +25,7 @@ interface ModalContextMap {
   [modalNames.colorPicker]: ColorPickerContext
   [modalNames.inviteMember]: InviteProjectMemberContext
   [modalNames.createCustomBreakpoint]: CreateCustomBreakpointContext
+  [modalNames.createFragment]: CreateNewFragmentContext
 }
 
 type ModalName = keyof typeof modalNames

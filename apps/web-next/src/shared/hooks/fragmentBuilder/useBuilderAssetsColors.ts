@@ -1,5 +1,4 @@
 import { Color } from 'react-color'
-import { popoutsStore } from '@/shared/store/popouts.store'
 import { useContext } from 'react'
 import { useGraph, useGraphFields, useGraphStack } from '@graph-state/react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
@@ -8,6 +7,10 @@ import { getRandomColor } from '@/shared/utils/random'
 import { getEntityName } from '@/shared/utils/getEntityName'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { definition } from '@fragmentsx/definition'
+import { useProject } from '@/shared/hooks/useProject'
+import { LinkKey } from '@graph-state/core'
+import { useStack } from '@/shared/hooks/useStack'
+import { generateId } from '@fragmentsx/utils'
 
 export interface BuilderAssetsColorsOptions extends Partial<OpenPopoutOptions<'colorPicker'>> {
   initialColor?: Color
@@ -15,44 +18,71 @@ export interface BuilderAssetsColorsOptions extends Partial<OpenPopoutOptions<'c
 }
 
 export const useBuilderAssetsColors = () => {
-  const { documentManager } = useBuilderDocument()
-  const [fragmentGraph] = useGraph(documentManager, documentManager.fragment)
-  const solidStyleValues = useGraphStack(documentManager, fragmentGraph?.solidPainStyles ?? [])
+  const { open: openStack } = useStack()
+  const { properties, updateProperties } = useProject()
+  const colorProperties = properties?.filter(prop => prop.type === definition.variableType.Color)
 
-  const editColor = (styleKey: string, options?: OpenPopoutOptions<'colorPicker'>) => {
-    if (styleKey && documentManager) {
-      popoutsStore.open(popoutNames.stackSolidPaintStyle, {
-        position: 'left',
-        context: {
-          link: styleKey
+  const updateProperty = (propertyId: string, nextProperty: unknown) => {
+    const index = properties.findIndex(el => el._id === propertyId)
+    const updatesProperties = properties.toSpliced(index, 1, {
+      ...properties.at(index),
+      ...nextProperty
+    })
+
+    updateProperties(updatesProperties)
+  }
+
+  const editColor = (propertyId: string, options?: OpenPopoutOptions<'colorPicker'>) => {
+    const propertyEntity = colorProperties.find(el => el._id === propertyId)
+
+    if (propertyEntity) {
+      openStack(
+        popoutNames.stackSolidPaintStyle,
+        {
+          ...propertyEntity,
+          onSubmit: nextProperty => updateProperty(propertyId, nextProperty)
         },
-        ...options
-      })
+        {
+          position: 'left',
+          ...options
+        }
+      )
     }
   }
 
   const createColor = ({ initialColor, onSubmit: optionsOnSubmit, ...popoutOptions }: BuilderAssetsColorsOptions) => {
-    const color = initialColor ?? getRandomColor()
-    const link = documentManager.createSolidPaintStyle({
-      name: getEntityName('Color variable', documentManager, definition.nodes.SolidPaintStyle),
-      color
-    })
-
-    popoutsStore.open(popoutNames.stackSolidPaintStyle, {
-      position: 'left',
-      context: {
-        link,
+    openStack(
+      popoutNames.stackSolidPaintStyle,
+      {
+        defaultValue: initialColor,
+        onSubmit: nextProperty =>
+          updateProperties([
+            ...properties,
+            {
+              ...nextProperty,
+              _id: generateId()
+            }
+          ])
+      },
+      {
+        position: 'left',
         ...popoutOptions
       }
-    })
+    )
   }
 
   const removeColor = (styleKey: string) => {
     documentManager?.invalidate(styleKey)
   }
 
+  const propertiesMap = colorProperties.reduce((acc, prop) => {
+    acc[prop._id] = prop.defaultValue
+    return acc
+  }, {})
+
   return {
-    colorVariables: solidStyleValues,
+    propertiesMap,
+    colorProperties,
     createColor,
     editColor,
     removeColor

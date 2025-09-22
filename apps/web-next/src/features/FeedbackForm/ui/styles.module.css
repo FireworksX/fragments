@@ -15,8 +15,7 @@
     justify-content: center;
     flex-direction: column;
     gap: var(--gutter-default);
-    background: rgba(var(--background--rgb), .8);
-    backdrop-filter: blur(5px);
+    background: var(--background);
     color: var(--primary);
     z-index: 2;
     transition: var(--animation-transition-default);

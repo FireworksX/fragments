@@ -2,23 +2,28 @@ import { FC, memo } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
-import { popoutsStore } from '@/shared/store/popouts.store'
 import { ControlRow, ControlRowWide } from '@/shared/ui/ControlRow'
 import { InputSelect } from '@/shared/ui/InputSelect'
 import { definition } from '@fragmentsx/definition'
+import { useStack } from '@/shared/hooks/useStack'
 
 interface BuilderBorderControlProps {
   className?: string
 }
 
 export const BuilderBorderControl: FC<BuilderBorderControlProps> = memo(({ className }) => {
+  const stack = useStack()
   const [borderType, setBorderType, borderTypeInfo] = useLayerValue('borderType')
   const [borderColor, setBorderColor, borderColorInfo] = useLayerValue('borderColor')
 
   const openBorder = () => {
-    popoutsStore.open('border', {
-      initial: true
-    })
+    stack.open(
+      'border',
+      {},
+      {
+        initial: true
+      }
+    )
   }
 
   return (
@@ -33,7 +38,7 @@ export const BuilderBorderControl: FC<BuilderBorderControlProps> = memo(({ class
       <ControlRowWide>
         <InputSelect
           placeholder='Add...'
-          hasIcon={!!borderType && borderType !== definition.borderType.None}
+          hasIcon={!!borderType && borderType !== definition.borderType.None && !borderColorInfo?.isVariable}
           color={borderColor}
           onReset={() => setBorderType(definition.borderType.None)}
           onClick={openBorder}

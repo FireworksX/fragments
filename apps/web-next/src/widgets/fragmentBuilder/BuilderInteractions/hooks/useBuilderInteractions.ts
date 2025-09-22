@@ -3,7 +3,7 @@ import { useLayerValue } from '@/shared/hooks/fragmentBuilder/useLayerValue'
 import { LinkKey } from '@graph-state/core'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useBuilderSelection } from '@/shared/hooks/fragmentBuilder/useBuilderSelection'
-import { popoutsStore } from '@/shared/store/popouts.store'
+import { useStack } from '@/shared/hooks/useStack'
 import { popoutNames } from '@/shared/data'
 import { nextTick } from '@/shared/utils/nextTick'
 import { useLayerPropertyValue } from '@/shared/hooks/fragmentBuilder/useLayerPropertyVariable'
@@ -11,6 +11,7 @@ import { fieldsConfig } from '@/shared/hooks/fragmentBuilder/useLayerPropertyVar
 import { useLayerVariable } from '@/shared/hooks/fragmentBuilder/useLayerVariable'
 
 export const useBuilderInteractions = () => {
+  const stack = useStack()
   const { documentManager } = useBuilderDocument()
   const { selection } = useBuilderSelection()
   const [interactions, setInteractions, interactionsInfo] = useLayerValue('interactions')
@@ -27,17 +28,19 @@ export const useBuilderInteractions = () => {
     const currentInteractions = documentManager.resolve(selection)?.interactions
     const currentInteraction = currentInteractions?.at(index)
 
-    popoutsStore.open(popoutNames.stackInteraction, {
-      initial: true,
-      context: {
+    stack.open(
+      popoutNames.stackInteraction,
+      {
         on: currentInteraction.on,
         event: currentInteraction.event,
         onChangeOn: nextValue => {
-          popoutsStore.updateCurrentContext({ on: nextValue })
           documentManager.mutate(documentManager.keyOfEntity(currentInteraction), { on: nextValue })
         }
+      },
+      {
+        initial: true
       }
-    })
+    )
   }
 
   const addInteraction = (eventLinkKey: LinkKey) => {

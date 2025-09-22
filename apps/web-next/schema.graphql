@@ -29,7 +29,9 @@ type AreaStatisticGet {
     areaCode: String!
     areaId: Int!
     campaigns: [CampaignStatisticGet!]!
+    currentGroupByDate: DetalizationGraph!
     currentStatistic: StatisticGet!
+    prevGroupByDate: DetalizationGraph!
     prevStatistic: StatisticGet!
     trend: StatisticTrend
 }
@@ -67,7 +69,9 @@ type CampaignGet {
 type CampaignStatisticGet {
     campaignId: Int!
     campaignName: String!
+    currentGroupByDate: DetalizationGraph!
     currentStatistic: StatisticGet!
+    prevGroupByDate: DetalizationGraph!
     prevStatistic: StatisticGet!
     trend: StatisticTrend
     variants: [VariantStatisticGet!]!
@@ -75,6 +79,7 @@ type CampaignStatisticGet {
 
 type ClientAreaGet {
     areaProperties: [JSON!]
+    projectProperties: [JSON!]
     variant: VariantGet!
 }
 
@@ -91,7 +96,7 @@ type ConditionSetGet {
 }
 
 type CountryAnalytic {
-    isocode: String!
+    iso: String!
     name: String!
     percentage: Float!
     views: Int!
@@ -203,6 +208,7 @@ type Mutation {
     addUserToProject(projectId: Int!, role: UserRole!, userId: Int!): Void
     changeProjectPrivateKey(projectId: Int!): ProjectGet!
     changeUserRole(projectId: Int!, role: UserRole!, userId: Int!): Void
+    cloneFragment(clone: FragmentClonePost!): FragmentGet!
     createArea(area: AreaPost!): AreaGet!
     createCampaign(cmp: CampaignPost!): CampaignGet!
     createCondition(condition: ConditionPost!, conditionSetId: Int!): ConditionGet!
@@ -294,6 +300,7 @@ type ProjectGet {
     name: String!
     owner: UserGet!
     privateKey: ProjectKeyGet
+    properties: [JSON!]
     publicKeys: [ProjectKeyGet!]!
     rootDirectoryId: Int!
 }
@@ -314,7 +321,9 @@ type ProjectKeyGet {
 
 type ProjectStatisticGet {
     areas: [AreaStatisticGet!]!
+    currentGroupByDate: DetalizationGraph!
     currentStatistic: StatisticGet!
+    prevGroupByDate: DetalizationGraph!
     prevStatistic: StatisticGet!
     projectId: Int!
     projectName: String!
@@ -328,9 +337,11 @@ type Query {
     campaign(campaignFilter: CampaignFilter!): [CampaignGet!]!
     campaignStatistic(statisticFilter: StatisticFilter!): [CampaignStatisticGet]!
     clientArea(areaCode: String!): ClientAreaGet
+    clientAreas(areaCodes: [String!]!): [ClientAreaGet]!
     clientFragment(fragmentId: Int!): FragmentGet
     condition(conditionId: Int!): ConditionGet!
     conditionSet(conditionSetId: Int!): ConditionSetGet!
+    defaultTemplates: [FragmentGet!]!
     directory(directoryId: Int!): [ProjectDirectoryGet!]!
     featureFlag(featureFlagId: Int!): FeatureFlagGet!
     filter(countries: [String!], regions: [String!]): AllFiltersGet!
@@ -359,16 +370,16 @@ type ReleaseConditionGet {
 type StatisticGet {
     achieved: Int!
     conversion: Float!
-    sessions: Int!
     uniqueAchieved: Int!
+    uniqueViews: Int!
     views: Int!
 }
 
 type StatisticTrend {
     achievedTrend: StatisticTrendGet!
     conversionTrend: StatisticTrendGet!
-    sessionsTrend: StatisticTrendGet!
     uniqueAchievedTrend: StatisticTrendGet!
+    uniqueViewsTrend: StatisticTrendGet!
     viewsTrend: StatisticTrendGet!
 }
 
@@ -398,8 +409,8 @@ type UserRoleGet {
 type Value {
     achieved: Int!
     conversion: Float!
-    sessions: Int!
     uniqueAchieved: Int!
+    uniqueViews: Int!
     views: Int!
 }
 
@@ -412,8 +423,10 @@ type VariantGet {
 }
 
 type VariantStatisticGet {
+    currentGroupByDate: DetalizationGraph!
     currentStatistic: StatisticGet!
     goals: [GoalStatisticGet!]!
+    prevGroupByDate: DetalizationGraph!
     prevStatistic: StatisticGet!
     trend: StatisticTrend
     variantId: Int!
@@ -631,6 +644,12 @@ input FilterTimeFramePost {
     toTime: DateTime!
 }
 
+input FragmentClonePost {
+    directoryId: Int
+    fragmentId: Int!
+    projectId: Int
+}
+
 input FragmentPatch {
     directoryId: Int
     document: JSON
@@ -711,11 +730,13 @@ input ProjectGoalPost {
 input ProjectPatch {
     id: Int!
     name: String
+    properties: [JSON!]
 }
 
 input ProjectPost {
     logo: String
     name: String!
+    properties: [JSON!]
 }
 
 input ProposalPost {

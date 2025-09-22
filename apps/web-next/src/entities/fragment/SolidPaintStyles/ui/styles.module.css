@@ -1,8 +1,7 @@
 .root {
-}
-
-.searchWrapper {
-    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gutter-medium);
 }
 
 .cellButton {

@@ -40,7 +40,7 @@
     --secondary--rgb: 135, 152, 168;
     --secondary-active: #657280;
     --secondary-bg: #F3F5F7;
-    --secondary-bg-rgb: 243, 245, 247;
+    --secondary-bg--rgb: 243, 245, 247;
     --secondary-disabled: #DAE0E4;
 
     --secondary-light: #F6F6F6;
@@ -54,6 +54,10 @@
     --background-accent--rgb: 17, 17, 17;
     --background-secondary: #f8f8f8;
     --background-secondary--rgb: 248, 248, 248;
+    --background-secondary-hover: #f1f1f1;
+    --background-secondary-hover--rgb: 241, 241, 241;
+    --background-secondary-active: #eeeeee;
+    --background-secondary-active--rgb: 241, 240, 240;
     --background-light: #faf9f9;
     --background-light--rgb: 250, 249, 249;
 
@@ -109,7 +113,7 @@
         --primary--rgb: 0, 153, 255;
         --primary-active: #4E7BC0;
         --primary-bg: #252528;
-        --primary-disabled: #a4d8fa;
+        --primary-disabled: #0065a4;
 
         --text-color: #223654;
         --text-color-accent: #fff;
@@ -124,7 +128,7 @@
         --secondary: rgb(135, 152, 168);
         --secondary-active: #657280;
         --secondary-bg: #232222;
-        --secondary-bg-rgb: 35, 34, 34;
+        --secondary-bg--rgb: 35, 34, 34;
         --secondary-disabled: #DAE0E4;
 
         --secondary-light: #F6F6F6;
@@ -151,6 +155,10 @@
         --background--rgb: 17, 17, 17;
         --background-secondary: #1c1c1c;
         --background-secondary--rgb: 28, 28, 28;
+        --background-secondary-hover: #262626;
+        --background-secondary-hover--rgb: 241, 241, 241;
+        --background-secondary-active: #2a2a2a;
+        --background-secondary-active--rgb: 241, 240, 240;
         --background-light: #171717;
         --background-light--rgb: 23, 23, 23;
 

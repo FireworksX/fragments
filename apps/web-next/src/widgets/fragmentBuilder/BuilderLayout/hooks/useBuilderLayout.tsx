@@ -73,7 +73,7 @@ export const useBuilderLayout = () => {
   const [layerAlign, setLayerAlign] = useLayerValue('layerAlign')
   const layerAlignVariable = useLayerPropertyValue('layerAlign')
 
-  const [, setLayerGap, { value$: layerGap$ }] = useLayerValue('layerGap')
+  const [, , { resultValue: layerGap$, setWithAutoPatch: setLayerGap }] = useLayerValue('layerGap')
   const layerGapVariable = useLayerPropertyValue('layerGap')
 
   const [layerWrap, setLayerWrap] = useLayerValue('layerWrap')

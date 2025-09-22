@@ -1,25 +1,49 @@
-import { ElementRef, FC, useContext, useEffect, useRef, useState } from 'react'
+import { ComponentRef, ElementRef, FC, useContext, useEffect, useRef, useState } from 'react'
 import { Color } from 'react-color'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { Panel } from '@/shared/ui/Panel'
 import { ColorPicker } from '@/shared/ui/ColorPicker'
 import { InputText } from '@/shared/ui/InputText'
-import { useStackSolidPaintStyle } from '../hooks/useStackSolidPaintStyle'
+import { popoutNames } from '@/shared/data'
+import { Button } from '@/shared/ui/Button'
+import { objectToColorString } from '@fragmentsx/utils'
+import { useStack } from '@/shared/hooks/useStack'
+import { definition, getNormalizeLayer } from '@fragmentsx/definition'
 
 export type StackPanelColorEntity = { name: string; color: Color }
 
-export interface StackPanelCreateColorOptions {
+export interface StackSolidPaintStyleContext {
+  name?: string
+  defaultValue?: string
   initialColor?: Color
   onSubmit?: (color: StackPanelColorEntity) => void
 }
 
-interface StackPanelCreateColorProps extends StackPanel {
+interface StackPanelCreateColorProps {
   className?: string
 }
 
+const initial = getNormalizeLayer({
+  _type: definition.nodes.Variable,
+  _id: 'replaceBeforeSave',
+  type: definition.variableType.Color,
+  name: 'Color property'
+})
+
 const StackSolidPaintStyle: FC<StackPanelCreateColorProps> = ({ className }) => {
-  const { nameRef, name, setName, color$, updateColor } = useStackSolidPaintStyle()
+  const stack = useStack()
+  const context = stack.readContext(popoutNames.stackSolidPaintStyle)
+  const nameRef = useRef<ComponentRef<'input'>>(null)
+  const [name, setName] = useState('')
+  const [color, setColor] = useState('#000')
+
+  useEffect(() => {
+    if (context) {
+      !!context?.name && setName(context?.name)
+      !!context?.defaultValue && setColor(context?.defaultValue)
+    }
+  }, [context])
 
   return (
     <div className={cn(styles.root, className)}>
@@ -27,12 +51,27 @@ const StackSolidPaintStyle: FC<StackPanelCreateColorProps> = ({ className }) => 
         <InputText inputRef={nameRef} placeholder='Color name' value={name} onChangeValue={setName} />
         <Panel>
           <ColorPicker
-            color={color$}
+            color={color}
             onChange={({ rgb }) => {
-              updateColor(rgb)
+              setColor(objectToColorString(rgb))
             }}
           />
         </Panel>
+        <Button
+          stretched
+          disabled={!name?.length}
+          onClick={() => {
+            context?.onSubmit?.({
+              ...initial,
+              ...context,
+              name,
+              defaultValue: color
+            })
+            stack.goPrev()
+          }}
+        >
+          Save
+        </Button>
       </div>
     </div>
   )

@@ -6,17 +6,19 @@ const defaultOptions = {} as const;
 export type UpdateProjectMutationVariables = Types.Exact<{
   projectSlug: Types.Scalars['Int']['input'];
   name?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  properties?: Types.InputMaybe<Array<Types.Scalars['JSON']['input']> | Types.Scalars['JSON']['input']>;
 }>;
 
 
-export type UpdateProjectMutation = { __typename?: 'Mutation', updateProject: { __typename?: 'ProjectGet', id: number, name: string } };
+export type UpdateProjectMutation = { __typename?: 'Mutation', updateProject: { __typename?: 'ProjectGet', id: number, name: string, properties?: Array<any> | null } };
 
 
 export const UpdateProjectDocument = gql`
-    mutation UpdateProject($projectSlug: Int!, $name: String) {
-  updateProject(pr: {id: $projectSlug, name: $name}) {
+    mutation UpdateProject($projectSlug: Int!, $name: String, $properties: [JSON!]) {
+  updateProject(pr: {id: $projectSlug, name: $name, properties: $properties}) {
     id
     name
+    properties
   }
 }
     `;
@@ -37,6 +39,7 @@ export type UpdateProjectMutationFn = Apollo.MutationFunction<UpdateProjectMutat
  *   variables: {
  *      projectSlug: // value for 'projectSlug'
  *      name: // value for 'name'
+ *      properties: // value for 'properties'
  *   },
  * });
  */
