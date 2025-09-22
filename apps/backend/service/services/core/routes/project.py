@@ -387,7 +387,7 @@ async def update_project_route(info: strawberry.Info[Context], pr: ProjectPatch)
         logger.error(f"Project {pr.id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
 
-    project = await update_project_by_id_db(db, values=pr.__dict__)
+    project = await update_project_by_id_db(db, pr)
     logger.info(f"Updated project {pr.id}")
     return await project_db_to_project(info, db, project)
 

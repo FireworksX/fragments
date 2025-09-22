@@ -19,7 +19,12 @@ from database.models import (
     ProjectMemberRole,
     User,
 )
-from services.core.routes.schemas.project import ProjectGoalPatch, ProjectGoalPost, ProjectPost
+from services.core.routes.schemas.project import (
+    ProjectGoalPatch,
+    ProjectGoalPost,
+    ProjectPatch,
+    ProjectPost,
+)
 from services.core.routes.schemas.user import UserRole
 
 
@@ -250,14 +255,16 @@ async def get_projects_by_user_id_db(db: Session, user_id: int) -> List[Project]
     return projects
 
 
-async def update_project_by_id_db(db: Session, values: dict) -> Project:
-    logger.info(f"Updating project {values['id']}")
-    project: Optional[Project] = await get_project_by_id_db(db, values['id'])
+async def update_project_by_id_db(db: Session, project_patch: ProjectPatch) -> Project:
+    logger.info(f"Updating project {project_patch.id}")
+    project: Optional[Project] = await get_project_by_id_db(db, project_patch.id)
     if project is None:
-        logger.error(f"Project {values['id']} not found")
+        logger.error(f"Project {project_patch.id} not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Project does not exist')
-    if values.get('name') is not None:
-        project.name = values['name']
+    if project_patch.name is not None:
+        project.name = project_patch.name
+    if project_patch.properties is not None:
+        project.properties = json.dumps(project_patch.properties)
     db.merge(project)
     db.commit()
     db.refresh(project)

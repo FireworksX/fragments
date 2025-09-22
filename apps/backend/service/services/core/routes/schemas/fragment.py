@@ -51,5 +51,6 @@ class FragmentGet:
 @strawberry.input
 class FragmentClonePost:
     fragment_id: int
+    name: Optional[str] = None
     project_id: Optional[int] = None
     directory_id: Optional[int] = None
