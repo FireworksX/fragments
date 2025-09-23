@@ -17,6 +17,7 @@ async def create_fragment_db(db: Session, author_id: int, fragment: FragmentPost
         document=fragment.document,
         props=fragment.props,
         directory_id=fragment.directory_id,
+        favorite=fragment.favorite if fragment.favorite is not None else False,
     )
     db.add(fragment_db)
     db.commit()
@@ -45,7 +46,10 @@ async def create_fragment_db(db: Session, author_id: int, fragment: FragmentPost
 
 
 async def get_fragments_by_ids_db(
-    db: Session, fragment_ids: Optional[List[int]] = None, project_id: Optional[int] = None
+    db: Session,
+    fragment_ids: Optional[List[int]] = None,
+    project_id: Optional[int] = None,
+    favorite: Optional[bool] = None,
 ) -> List[Fragment]:
     logger.info(f"Getting fragments with ids={fragment_ids} and project_id={project_id}")
     query = db.query(Fragment)
@@ -55,6 +59,9 @@ async def get_fragments_by_ids_db(
 
     if project_id:
         query = query.filter(Fragment.project_id == project_id)
+
+    if favorite:
+        query = query.filter(Fragment.favorite == favorite)
 
     fragments = query.all()
     logger.debug(f"Found {len(fragments)} fragments")
@@ -122,6 +129,9 @@ async def _update_fragment_values(fragment_db: Fragment, fragment: FragmentPatch
     if fragment.directory_id is not None:
         logger.debug(f"Updating directory_id to {fragment.directory_id}")
         fragment_db.directory_id = fragment.directory_id
+    if fragment.favorite is not None:
+        logger.debug(f"Updating favorite to {fragment.favorite}")
+        fragment_db.favorite = fragment.favorite
 
 
 async def add_fragment_media_db(db: Session, fragment_db: Fragment, media: Media) -> Fragment:

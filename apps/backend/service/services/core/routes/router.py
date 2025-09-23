@@ -184,8 +184,9 @@ class FragmentQuery:
         info: strawberry.Info[Context],
         fragment_ids: Optional[List[int]] = None,
         project_id: Optional[int] = None,
+        favorite: Optional[bool] = None,
     ) -> List[FragmentGet]:
-        return await fragments_by_ids(info, fragment_ids, project_id)
+        return await fragments_by_ids(info, fragment_ids, project_id, favorite)
 
 
 @strawberry.type
