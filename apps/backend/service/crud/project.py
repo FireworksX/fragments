@@ -217,7 +217,10 @@ async def create_project_db(db: Session, project_post: ProjectPost, user_id: int
 
 async def get_user_project_role(db: Session, user_id: int, project_id: int) -> int | None:
     logger.info(f"Getting role for user {user_id} in project {project_id}")
-    project: Project = db.query(Project).filter((Project.id == project_id)).first()
+    project: Optional[Project] = db.query(Project).filter((Project.id == project_id)).first()
+    if project is None:
+        logger.error(f"Project {project_id} not found")
+        return None
     for member in project.members:
         if member.user_id == user_id:
             logger.debug(f"Found role {member.role} for user {user_id}")

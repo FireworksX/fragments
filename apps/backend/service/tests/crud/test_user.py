@@ -1,4 +1,8 @@
-from unittest.mock import AsyncMock, Mock
+from unittest.mock import AsyncMock, Mock, patch
+
+mock_logger = Mock()
+patch('logging.getLogger', Mock(return_value=mock_logger)).start()
+patch('logging.config.fileConfig', Mock()).start()
 
 import pytest
 
@@ -15,7 +19,6 @@ def mock_session():
     session.query = Mock()
     return session
 
-
 @pytest.mark.asyncio
 async def test_create_user(mock_session):
     email = 'test@example.com'
@@ -23,20 +26,27 @@ async def test_create_user(mock_session):
     last_name = 'User'
     hashed_password = 'hashedpass123'
 
-    # Configure mock to return the user object after refresh
-    mock_session.refresh.side_effect = lambda x: None
+    # Mock generate_default_media to avoid extra db.add call
+    with patch('crud.user.generate_default_media', new_callable=AsyncMock) as mock_generate_media:
+        mock_media = Mock()
+        mock_media.id = 1
+        mock_generate_media.return_value = mock_media
 
-    user = await create_user_db(mock_session, email, first_name, last_name, hashed_password)
+        # Configure mock to return the user object after refresh
+        mock_session.refresh.side_effect = lambda x: None
 
-    assert isinstance(user, User)
-    assert user.email == email
-    assert user.first_name == first_name
-    assert user.last_name == last_name
-    assert user.hashed_password == hashed_password
+        user = await create_user_db(mock_session, email, first_name, last_name, hashed_password)
 
-    mock_session.add.assert_called_once()
-    mock_session.commit.assert_called_once()
-    mock_session.refresh.assert_called_once()
+        assert isinstance(user, User)
+        assert user.email == email
+        assert user.first_name == first_name
+        assert user.last_name == last_name
+        assert user.hashed_password == hashed_password
+        assert user.avatar_id == mock_media.id
+
+        mock_session.add.assert_called_once()
+        mock_session.commit.assert_called_once()
+        mock_session.refresh.assert_called_once()
 
 
 @pytest.mark.asyncio
