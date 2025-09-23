@@ -52,7 +52,7 @@ def area_db_to_area(area: Area) -> AreaGet:
         logger.warning(f"No default campaign found for area {area.id}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail='No default campaign found for area',
+            detail=f'No default campaign found for area {area.id}',
         )
 
     return AreaGet(

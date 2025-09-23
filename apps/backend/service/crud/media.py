@@ -79,8 +79,9 @@ async def generate_default_media(db: Session, filename: str) -> Media:
     logger.info(f"Generating default media with filename: {filename}")
     img_byte_arr = generate_image()
 
+    sanitized_filename = filename.lower().replace(' ', '_').replace('/', '_').replace('\\', '_')
     upload_file = UploadFile(
-        file=img_byte_arr, filename=filename, headers={'content-type': 'image/png'}  # type: ignore[arg-type]
+        file=img_byte_arr, filename=sanitized_filename, headers={'content-type': 'image/png'}  # type: ignore[arg-type]
     )
 
     return await create_media_db(db, upload_file)
