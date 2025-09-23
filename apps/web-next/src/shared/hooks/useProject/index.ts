@@ -8,7 +8,7 @@ export const useProject = () => {
   const { projectSlug: urlProjectSlug } = useParams()
   const projectSlug = urlProjectSlug ? +urlProjectSlug : 0
 
-  const { data, loading } = useProjectQuery({
+  const { data, loading, error } = useProjectQuery({
     variables: {
       projectSlug
     }
@@ -28,6 +28,7 @@ export const useProject = () => {
   }, [])
 
   return {
+    isRestricted: !!error,
     projectSlug,
     project,
     loading,
