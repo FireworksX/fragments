@@ -185,7 +185,7 @@ async def validate_project_public_api_key(db: Session, public_api_key: str) -> P
 
 async def create_project_db(db: Session, project_post: ProjectPost, user_id: int) -> Project:
     logger.info(f"Creating project {project_post.name} for user {user_id}")
-    default_project_logo = await generate_default_media(db, f"{project_post.name}.png")
+    default_project_logo = await generate_default_media(db)
     project: Project = Project(
         name=project_post.name,
         owner_id=user_id,

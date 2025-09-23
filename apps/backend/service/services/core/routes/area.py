@@ -237,7 +237,7 @@ async def delete_area_logo_route(info: strawberry.Info[Context], area_id: int) -
         )
 
     await delete_media_by_id_db(db, area.logo_id)
-    default_logo = await generate_default_media(db, f"{area.area_code}.png")
+    default_logo = await generate_default_media(db)
     area.logo_id = default_logo.id
     db.commit()
     logger.debug(f"Deleted logo from area {area_id} and set default logo {default_logo.id}")

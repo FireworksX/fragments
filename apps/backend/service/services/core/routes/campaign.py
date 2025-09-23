@@ -299,7 +299,7 @@ async def delete_campaign_logo_route(
         )
 
     await delete_media_by_id_db(db, campaign.logo_id)
-    default_logo = await generate_default_media(db, f"{campaign.name}.png")
+    default_logo = await generate_default_media(db)
     campaign = await add_campaign_logo_db(db, campaign, default_logo)
     logger.debug(f"Deleted logo from campaign {campaign_id} and set default logo {default_logo.id}")
     return campaign_db_to_campaign(campaign)

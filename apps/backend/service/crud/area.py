@@ -24,7 +24,7 @@ async def create_area_db(
         raise ValueError(f"Area code {area.area_code} already exists in project")
 
     try:
-        default_media = await generate_default_media(db, f"{area.area_code}.png")
+        default_media = await generate_default_media(db)
     except Exception as e:
         logger.error(f"Error generating default media for area {area.area_code}: {e}")
         raise RuntimeError(f"Error generating default media for area {area.area_code}") from e

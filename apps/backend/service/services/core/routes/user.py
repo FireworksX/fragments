@@ -118,7 +118,7 @@ async def delete_avatar_route(info: strawberry.Info[Context]) -> UserGet:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
     await delete_media_by_id_db(db, user.avatar_id)
-    default_avatar = await generate_default_media(db, f"{user.first_name}.png")
+    default_avatar = await generate_default_media(db)
     user.avatar_id = default_avatar.id
     db.commit()
     logger.info(f"Successfully deleted avatar for user {auth.user.email}")
