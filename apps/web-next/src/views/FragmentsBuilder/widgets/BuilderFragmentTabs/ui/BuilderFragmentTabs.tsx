@@ -8,6 +8,7 @@ import { useBuilderTabs } from '../hooks/useBuilderTabs'
 import PreviewIcon from '@/shared/icons/next/play.svg'
 import FragmentIcon from '@/shared/icons/next/component.svg'
 import { Spinner } from '@/shared/ui/Spinner'
+import { Button } from '@/shared/ui/Button'
 
 interface BuilderFragmentTabsProps {
   isPreview?: boolean
@@ -15,7 +16,7 @@ interface BuilderFragmentTabsProps {
 }
 
 export const BuilderFragmentTabs: FC<BuilderFragmentTabsProps> = ({ className, isPreview }) => {
-  const { tabs, selectTab, closeTab } = useBuilderTabs()
+  const { tabs, selectTab, closeTab, closeAll } = useBuilderTabs()
 
   if (!tabs.length) {
     return null
@@ -28,34 +29,44 @@ export const BuilderFragmentTabs: FC<BuilderFragmentTabsProps> = ({ className, i
       })}
       data-testid='BuilderFragmentTabs'
     >
-      {tabs.map((tab, index) => (
-        <Touchable
-          key={tab.key}
-          effect='none'
-          className={cn(styles.tab, { [styles.active]: tab.isActive })}
-          onClick={() => selectTab(tab.id, tab.preview)}
-        >
-          <div className={styles.beforeSlot}>
-            {tab.preview ? (
-              <PreviewIcon className={styles.previewIcon} />
-            ) : (
-              <FragmentIcon className={styles.fragmentIcon} style={{ opacity: tab.fetching ? 0 : 1 }} />
-            )}
+      <div className={styles.inner}>
+        {tabs.map((tab, index) => (
+          <Touchable
+            key={tab.key}
+            effect='none'
+            className={cn(styles.tab, { [styles.active]: tab.isActive })}
+            onClick={() => selectTab(tab.id, tab.preview)}
+          >
+            <div className={styles.beforeSlot}>
+              {tab.preview ? (
+                <PreviewIcon className={styles.previewIcon} />
+              ) : (
+                <FragmentIcon className={styles.fragmentIcon} style={{ opacity: tab.fetching ? 0 : 1 }} />
+              )}
 
-            <Spinner
-              className={styles.spinner}
-              size={12}
-              color='var(--text-color-accent)'
-              style={{ opacity: tab.fetching ? 1 : 0 }}
-            />
-          </div>
+              <Spinner
+                className={styles.spinner}
+                size={12}
+                color='var(--text-color-accent)'
+                style={{ opacity: tab.fetching ? 1 : 0 }}
+              />
+            </div>
 
-          {tab.name ?? 'Fragment'}
-          <Touchable className={styles.close} isCapture preventDefault onClick={() => closeTab(index)}>
-            <CloseIcon />
+            {tab.name ?? 'Fragment'}
+            <Touchable className={styles.close} isCapture preventDefault onClick={() => closeTab(index)}>
+              <CloseIcon />
+            </Touchable>
           </Touchable>
-        </Touchable>
-      ))}
+        ))}
+      </div>
+
+      {tabs?.length && (
+        <div className={styles.closeAll}>
+          <Button size='small' mode='outline' onClick={closeAll}>
+            Close All
+          </Button>
+        </div>
+      )}
     </Container>
   )
 }

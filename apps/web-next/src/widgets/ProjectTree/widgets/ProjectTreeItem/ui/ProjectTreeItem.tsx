@@ -5,6 +5,7 @@ import styles from './styles.module.css'
 import FolderIcon from '@/shared/icons/next/folder.svg'
 import FragmentIcon from '@/shared/icons/next/component.svg'
 import EllipsisIcon from '@/shared/icons/next/ellipsis.svg'
+import PlusIcon from '@/shared/icons/next/plus.svg'
 import { Touchable } from '@/shared/ui/Touchable'
 import { Dropdown } from '@/shared/ui/Dropdown'
 import { ProjectTreeItemOptions } from '../components/ProjectTreeItemOptions'
@@ -88,8 +89,12 @@ export const ProjectTreeItem: FC<ProjectTreeItemProps> = ({ className, id, paren
               </>
             }
           >
-            <Touchable className={styles.actions}>
-              <EllipsisIcon />
+            <Touchable
+              className={cn(styles.actions, {
+                [styles.rootFolder]: projectItem.isRootFolder
+              })}
+            >
+              {projectItem.isRootFolder ? <PlusIcon /> : <EllipsisIcon />}
             </Touchable>
           </Dropdown>
         )}

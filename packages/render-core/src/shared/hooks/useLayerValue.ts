@@ -1,6 +1,12 @@
 import { useCallback, useContext } from "preact/compat";
 import { useGraph } from "@graph-state/react";
-import { Graph, GraphState, LinkKey, MutateOptions } from "@graph-state/core";
+import {
+  Graph,
+  GraphState,
+  keyOfEntity,
+  LinkKey,
+  MutateOptions,
+} from "@graph-state/core";
 import { get, omit, pick, set } from "@fragmentsx/utils";
 import { parseLayerField, isVariableLink } from "@fragmentsx/definition";
 import { useNormalizeLayer } from "@/shared/hooks/useNormalizeLayer";
@@ -8,8 +14,10 @@ import { useReadVariable } from "@/shared/hooks/useReadVariable";
 import { isInheritField, isPartOfPrimary } from "@/shared/helpers";
 import { useLayerCssVariable } from "@/shared/hooks/useLayerCssVariable";
 import { FragmentContext } from "@/components/Fragment/FragmentContext";
+import { GetLayerOptions } from "./useNormalizeLayer/getLayer";
+import { layerFieldSetter } from "@/shared/helpers/layerValue/layerFieldSetter";
 
-interface Options {
+interface Options extends GetLayerOptions {
   manager?: GraphState;
 }
 
@@ -20,12 +28,12 @@ export const useLayerValue = (
 ) => {
   const { manager: fragmentManager } = useContext(FragmentContext);
   const resultManager = options?.manager ?? fragmentManager;
-  const key = layerKey;
+  const key = keyOfEntity(layerKey);
   const [, updateLayerData] = useGraph(resultManager, key, {
     // selector: (data) => (data ? pick(data, fieldKey) : data),
   });
 
-  const { layer, rawLayer } = useNormalizeLayer(key, resultManager);
+  const { layer, rawLayer } = useNormalizeLayer(key, resultManager, options);
   const rawValue = get(rawLayer, fieldKey);
   const layerValue = get(layer, fieldKey);
 
@@ -35,11 +43,13 @@ export const useLayerValue = (
   const isInherit = isInheritField(resultManager, key, fieldKey);
   const isOverride = !isInherit && !isPartOfPrimary(resultManager, key);
 
+  const setter = layerFieldSetter(resultManager, key, fieldKey, currentValue);
+
   const resetOverride = useCallback(() => {
     // TODO Добавить в updateLayerData возможность передать replace: true
     // TODO Сейчас если удалить свойство из объекта, не будет реакции, нужно править selector
     resultManager.mutate(
-      layerKey,
+      key,
       (prev) => {
         const r = omit(prev, fieldKey);
 
@@ -52,7 +62,7 @@ export const useLayerValue = (
   const restore = useCallback(
     (fallbackValue: unknown) => {
       const tempValue = resultManager.resolve(resultManager?.$fragment?.temp)?.[
-        layerKey
+        key
       ]?.[fieldKey];
 
       updateLayerData({ [fieldKey]: tempValue ?? fallbackValue });
@@ -62,33 +72,9 @@ export const useLayerValue = (
 
   const updateValue = useCallback(
     (value: unknown, options?: MutateOptions) => {
-      const { success, output } = parseLayerField(layer, fieldKey, value);
-
-      console.log(fieldKey, value);
-
-      if (success) {
-        if (isVariableLink(value)) {
-          /*
-          Если меняем значение на переменную, то сохраняем значение, чтобы
-          можно было вызвать restore и восстановить значение, которое
-          было до установки переменной
-           */
-          resultManager.mutate(resultManager?.$fragment?.temp, {
-            [layerKey]: {
-              [fieldKey]: currentValue,
-            },
-          });
-
-          resultManager.resolve(resultManager?.$fragment?.temp);
-        }
-
-        updateLayerData((prev) => {
-          set(prev, fieldKey, output);
-          return prev;
-        }, options);
-      }
+      setter(value, options);
     },
-    [layer, fieldKey, updateLayerData, resultManager, layerKey, currentValue]
+    [setter]
   );
 
   const { value: cssValue } = useLayerCssVariable(rawValue ?? layerValue);

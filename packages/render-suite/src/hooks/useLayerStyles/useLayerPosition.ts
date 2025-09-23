@@ -34,21 +34,21 @@ export const useLayerPosition = (layerKey: LinkKey) => {
     "centerAnchorY"
   );
 
-  const [, , { resultValue: top$, rawValue: baseTop }] = useLayerValue(
+  const [baseTop, , { resultValue: top$ }] = useLayerValue(layerKey, "top", {
+    withFallback: false,
+  });
+  const [baseLeft, , { resultValue: left$ }] = useLayerValue(layerKey, "left", {
+    withFallback: false,
+  });
+  const [baseRight, , { resultValue: right$ }] = useLayerValue(
     layerKey,
-    "top"
+    "right",
+    { withFallback: false }
   );
-  const [, , { resultValue: left$, rawValue: baseLeft }] = useLayerValue(
+  const [baseBottom, , { resultValue: bottom$ }] = useLayerValue(
     layerKey,
-    "left"
-  );
-  const [, , { resultValue: right$, rawValue: baseRight }] = useLayerValue(
-    layerKey,
-    "right"
-  );
-  const [, , { resultValue: bottom$, rawValue: baseBottom }] = useLayerValue(
-    layerKey,
-    "bottom"
+    "bottom",
+    { withFallback: false }
   );
 
   const skipPosition = (isTop && isDocument) || (!!instanceLayerKey && isTop);

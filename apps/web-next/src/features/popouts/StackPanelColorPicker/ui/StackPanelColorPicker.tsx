@@ -1,4 +1,4 @@
-import { FC, ReactNode, useContext } from 'react'
+import { FC, ReactNode, useContext, useDeferredValue, useEffect, useState } from 'react'
 import cn from 'classnames'
 import styles from './styles.module.css'
 import { Color } from 'react-color'
@@ -14,6 +14,9 @@ import { getRandomColor } from '@/shared/utils/random'
 import { isLinkKey, LinkKey } from '@graph-state/core'
 import { useBuilderDocument } from '@/shared/hooks/fragmentBuilder/useBuilderDocument'
 import { useStack } from '@/shared/hooks/useStack'
+import { objectToColorString } from '@fragmentsx/utils'
+import { useDebounce } from 'react-use'
+import { useSpringValue } from '@react-spring/web'
 
 export interface StackPanelColorPickerOptions {
   value?: Color
@@ -42,6 +45,8 @@ export const StackPanelColorPicker: FC<StackPanelColorPickerProps> = ({ classNam
     updateColor(value)
     stack.goPrev()
   }
+
+  console.log(resColor)
 
   return (
     <div className={cn(styles.root, className)}>

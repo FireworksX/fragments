@@ -10,4 +10,5 @@ export { getOverrider } from "./getOverrider";
 export { declareFragmentProperty } from "./declareFragmentProperty";
 export { duplicateLayer } from "./duplicateLayer";
 export { getCssVariables } from "./getCssVariables";
+export { layerFieldSetter } from "./layerValue/layerFieldSetter";
 export * from "./children";

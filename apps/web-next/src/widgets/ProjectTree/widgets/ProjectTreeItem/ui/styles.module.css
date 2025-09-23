@@ -27,6 +27,10 @@
     justify-content: center;
 }
 
+.rootFolder {
+    opacity: 1;
+}
+
 .fragment {
     --primary: var(--component);
 }

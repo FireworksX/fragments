@@ -1,3 +1,6 @@
+export const isCssLink = (value: unknown) =>
+  typeof value === "string" ? value.startsWith("var(--") : false;
+
 export const linkToCssVariable = (link: string) =>
   link ? `var(--${link?.split(":")?.[1]})` : link;
 

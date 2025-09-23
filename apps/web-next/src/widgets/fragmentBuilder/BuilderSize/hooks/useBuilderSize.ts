@@ -6,13 +6,14 @@ import { isFiniteNumber, isValue } from '@fragmentsx/utils'
 import { useLayerInfo } from '@/shared/hooks/fragmentBuilder/useLayerInfo'
 import { useRootLayerAuto } from '@/shared/hooks/fragmentBuilder/useRootLayerAuto'
 import { useLayerRect } from '@/shared/hooks/useLayerRect'
+import { useBuilderSizeType } from '@/widgets/fragmentBuilder/BuilderSize/hooks/useBuilderSizeType'
+import { animatableValue } from '@/shared/utils/animatableValue'
 
 const DISABLE_UTILS: (keyof typeof definition.sizing)[] = [definition.sizing.Fill, definition.sizing.Hug]
 
 export const useBuilderSize = () => {
   const { selection } = useBuilderSelection()
   const { parent, isRootLayer, type, layer, isBreakpoint } = useLayerInfo(selection)
-  const [parentLayerMode] = useLayerValue('layerMode', parent)
   const childOfBreakpoint = parent?._type === definition.nodes.Breakpoint
   const canRelativeSize = !childOfBreakpoint && !isRootLayer && !isBreakpoint
 
@@ -23,33 +24,30 @@ export const useBuilderSize = () => {
 
   const [width, , { setWithAutoPatch: setWidth, ...widthInfo }] = useLayerValue('width')
   const [height, , { setWithAutoPatch: setHeight, ...heightInfo }] = useLayerValue('height')
-  const [widthType, setWidthType, widthTypeInfo] = useLayerValue('widthType')
-  const [heightType, setHeightType, heightTypeInfo] = useLayerValue('heightType')
+
+  const widthType = useBuilderSizeType('width')
+  const heightType = useBuilderSizeType('height')
+
   const [aspectRatio, setAspectRatio] = useLayerValue('aspectRatio')
   const { width: isAllowResizeWidth, height: isAllowResizeHeight } = useAllowResize()
-  const { canHugContent } = useRootLayerAuto()
 
-  const hugContentEnabled =
-    (!!layer?.children?.length || type === definition.nodes.Text || type === definition.nodes.Instance) && canHugContent
-  const fillContentEnabled = canRelativeSize && parentLayerMode === definition.layerMode.flex
+  const widthValue = widthType.value === definition.sizing.Relative ? widthInfo.resultValue : layerWidth$
+  const heightValue = heightType.value === definition.sizing.Relative ? heightInfo.resultValue : layerHeight$
 
   return {
-    canHugContentWidth: canHugContent && hugContentEnabled,
-    canHugContentHeight: hugContentEnabled,
-    fillContentEnabled,
     aspectRatio: {
-      disabled: [widthType, heightType].some(v => v === DISABLE_UTILS.includes(v)),
+      disabled: [widthType.value, heightType.value].some(v => v === DISABLE_UTILS.includes(v)),
       isActive: isValue(aspectRatio) && aspectRatio !== -1,
       toggle: () => {
         setAspectRatio(isValue(aspectRatio) && aspectRatio !== -1 ? -1 : height / width)
       }
     },
     width: {
-      value: layerWidth$,
+      value: widthValue,
       info: widthInfo,
       update: v => {
         if (isFiniteNumber(right)) {
-          setRight(right + (layerWidth$?.get() - v))
+          setRight(right + (animatableValue(widthValue) - v))
         }
         setWidth(v)
       }
@@ -59,21 +57,13 @@ export const useBuilderSize = () => {
       info: heightInfo,
       update: v => {
         if (isFiniteNumber(bottom)) {
-          setBottom(bottom + (layerHeight$?.get() - v))
+          setBottom(bottom + (animatableValue(heightValue) - v))
         }
         setHeight(v)
       }
     },
-    widthType: {
-      value: widthType,
-      info: widthTypeInfo,
-      update: setWidthType
-    },
-    heightType: {
-      value: heightType,
-      info: heightTypeInfo,
-      update: setHeightType
-    },
+    widthType,
+    heightType,
     isAllowResizeWidth,
     isAllowResizeHeight,
     canRelativeSize

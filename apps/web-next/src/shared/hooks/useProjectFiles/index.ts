@@ -40,11 +40,13 @@ export const useProjectFiles = () => {
       variables: Pick<CreateProjectFragmentMutationVariables, 'name' | 'parentId'>
       templateId?: number | null
     }) => {
+      const name = !!variables?.name?.length ? variables?.name : 'Untitled'
+
       if (templateId) {
         const result = await duplicateProjectFragment({
           variables: {
             projectSlug,
-            name: variables?.name,
+            name,
             parentId: variables?.parentId ?? project?.rootDirectoryId,
             id: templateId
           }
@@ -55,7 +57,7 @@ export const useProjectFiles = () => {
 
       const result = await createProjectFragment({
         variables: {
-          name: variables?.name,
+          name,
           projectSlug,
           parentId: variables?.parentId ?? project?.rootDirectoryId,
           document: getEmptyFragment(generateId())

@@ -449,6 +449,7 @@ function roundWithOffset(value, offset) {
 }
 
 // src/cssVariable.ts
+var isCssLink = (value) => typeof value === "string" ? value.startsWith("var(--") : false;
 var linkToCssVariable = (link) => {
   var _a;
   return link ? `var(--${(_a = link == null ? void 0 : link.split(":")) == null ? void 0 : _a[1]})` : link;
@@ -480,6 +481,7 @@ export {
   injectLink,
   isAbsoluteUrl,
   isBrowser_default as isBrowser,
+  isCssLink,
   isEmptyValue,
   isFiniteNumber,
   isHTMLNode,
