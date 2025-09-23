@@ -11,7 +11,7 @@ async def create_user_db(
     db: Session, email: str, first_name: str, last_name: Optional[str], hashed_password: str
 ) -> User:
     logger.info(f"Creating new user with email: {email}")
-    default_user_avatar = await generate_default_media(db, f"{first_name}.png")
+    default_user_avatar = await generate_default_media(db)
     user: User = User(
         email=email,
         first_name=first_name,

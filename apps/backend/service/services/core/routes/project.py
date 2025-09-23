@@ -467,7 +467,7 @@ async def delete_project_logo_route(info: strawberry.Info[Context], project_id: 
         )
 
     await delete_media_by_id_db(db, project.logo_id)
-    default_logo = await generate_default_media(db, f"{project.name}.png")
+    default_logo = await generate_default_media(db)
     project.logo_id = default_logo.id
     db.commit()
     logger.info(f"Deleted logo from project {project_id}")

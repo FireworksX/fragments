@@ -17,7 +17,7 @@ async def create_media_db(
 ) -> Media:
     logger.info(f"Creating media from file: {file.filename}")
     content = await file.read()
-    unique_name = f"{uuid4()}_{file.filename}"
+    unique_name = f"{uuid4()}"
     path = os.path.join(service_settings.MEDIA_STORAGE_PATH, unique_name)
 
     # Save file to disk
@@ -75,13 +75,12 @@ async def delete_media_by_id_db(db: Session, media_id: int) -> None:
     logger.info(f"Successfully deleted media with ID: {media_id}")
 
 
-async def generate_default_media(db: Session, filename: str) -> Media:
-    logger.info(f"Generating default media with filename: {filename}")
-    img_byte_arr = generate_image()
+async def generate_default_media(db: Session) -> Media:
+    logger.info(f"Generating default media")
+    img_byte_arr: bytes = generate_image()
 
-    sanitized_filename = filename.lower().replace(' ', '_').replace('/', '_').replace('\\', '_')
     upload_file = UploadFile(
-        file=img_byte_arr, filename=sanitized_filename, headers={'content-type': 'image/png'}  # type: ignore[arg-type]
+        file=img_byte_arr, filename=f"{uuid4()}.png", headers={'content-type': 'image/png'}  # type: ignore[arg-type]
     )
 
     return await create_media_db(db, upload_file)

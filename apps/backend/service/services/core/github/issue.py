@@ -19,12 +19,7 @@ async def create_github_issue(
         os.makedirs(issues_dir, exist_ok=True)
         for file in issue.attachments:
             content = await file.read()
-            unique_name = f"{uuid4()}_{file.filename}"
-            # Replace special characters in filename to ensure valid URL
-            unique_name = unique_name.replace(' ', '_')  # Replace spaces with underscores
-            unique_name = ''.join(
-                c for c in unique_name if c.isalnum() or c in '_-.'
-            )  # Keep only alphanumeric, underscore, hyphen and period
+            unique_name = f"{uuid4()}"
             path = os.path.join(issues_dir, unique_name)
 
             try:
