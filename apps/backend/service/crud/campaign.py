@@ -16,7 +16,11 @@ async def create_campaign_db(
     db: Session, project_id: int, author_id: int, campaign: CampaignPost, default: bool = False
 ) -> Campaign:
     logger.info(f"Creating campaign {campaign.name} in area {campaign.area_id}")
-    default_campaign_logo = await generate_default_media(db, f"{campaign.name}_campaign.png")
+    try:
+        default_campaign_logo = await generate_default_media(db, f"{campaign.name}_campaign.png")
+    except Exception as e:
+        logger.error(f"Error generating default media for campaign {campaign.name}: {e}")
+        raise RuntimeError(f"Error generating default media for campaign {campaign.name}") from e
     try:
         logger.debug(f"Creating default feature flag for campaign {campaign.name}")
         default_campaign_feature_flag = await create_feature_flag_db(

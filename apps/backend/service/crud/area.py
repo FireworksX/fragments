@@ -23,7 +23,12 @@ async def create_area_db(
         logger.error(f"Area code {area.area_code} already exists in project {area.project_id}")
         raise ValueError(f"Area code {area.area_code} already exists in project")
 
-    default_media = await generate_default_media(db, f"{area.area_code}.png")
+    try:
+        default_media = await generate_default_media(db, f"{area.area_code}.png")
+    except Exception as e:
+        logger.error(f"Error generating default media for area {area.area_code}: {e}")
+        raise RuntimeError(f"Error generating default media for area {area.area_code}") from e
+
     area_db = Area(
         project_id=area.project_id,
         author_id=author_id,
@@ -37,18 +42,27 @@ async def create_area_db(
     db.refresh(area_db)
     logger.debug(f"Created area {area_db.id}")
 
-    default_campaign = await create_campaign_db(
-        db,
-        area_db.project_id,
-        author_id,
-        CampaignPost(
-            area_id=area_db.id,
-            name=area.default_campaign_name,
-            description=f'Default campaign for {area_db.area_code}',
-            status=CampaignStatus.ACTIVE,
-        ),
-        default=True,
-    )
+    try:
+        default_campaign = await create_campaign_db(
+            db,
+            area_db.project_id,
+            author_id,
+            CampaignPost(
+                area_id=area_db.id,
+                name=area.default_campaign_name,
+                description=f'Default campaign for {area_db.area_code}',
+                status=CampaignStatus.ACTIVE,
+            ),
+            default=True,
+        )
+    except Exception as e:
+        logger.error(f"Error creating default campaign for area {area_db.id}: {e}")
+        # Delete the area  and media if the default campaign creation fails
+        db.delete(default_media)
+        db.delete(area_db)
+        db.commit()
+        raise RuntimeError(f"Error creating default campaign for area {area_db.id}") from e
+
     logger.debug(f"Created default campaign {default_campaign.id} for area {area_db.id}")
 
     return area_db
