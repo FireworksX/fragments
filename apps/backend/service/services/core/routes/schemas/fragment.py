@@ -19,6 +19,8 @@ class FragmentPost:
     directory_id: int
     linked_goals: Optional[List[int]] = None  # ids of goals
 
+    favorite: Optional[bool] = None
+
 
 @strawberry.input
 class FragmentPatch:
@@ -32,6 +34,8 @@ class FragmentPatch:
     directory_id: Optional[int] = None
     linked_goals: Optional[List[int]] = None  # ids of goals
 
+    favorite: Optional[bool] = None
+
 
 @strawberry.type
 class FragmentGet:
@@ -41,7 +45,7 @@ class FragmentGet:
     document: JSON  # type: ignore[valid-type]
     props: Optional[JSON] = None  # type: ignore[valid-type]
     assets: List[MediaGet]
-
+    favorite: bool
     linked_fragments: Optional[List['FragmentGet']] = None  # flat list of fragments
 
     directory_id: int

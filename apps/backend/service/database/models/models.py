@@ -433,6 +433,7 @@ class Fragment(Base):
     name = Column('name', String, nullable=False)  # Name of the fragment version
     document = Column('document', JSON, nullable=False)  # Version-specific document
     props = Column('props', JSON, nullable=False)  # Version-specific properties
+    favorite = Column('favorite', Boolean, nullable=False, default=False)
 
     created_at = Column(
         'created_at', DateTime, nullable=False, default=func.now()

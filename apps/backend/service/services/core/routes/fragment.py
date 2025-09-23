@@ -82,6 +82,7 @@ def fragment_db_to_fragment(fragment: Fragment) -> FragmentGet:
         author=user_db_to_user(fragment.author),
         document=fragment.document,
         props=fragment.props,
+        favorite=fragment.favorite,
         assets=(
             []
             if not fragment.assets
@@ -111,6 +112,7 @@ def fragment_db_to_fragment(fragment: Fragment) -> FragmentGet:
             author=user_db_to_user(f.author),
             document=f.document,
             props=f.props,
+            favorite=f.favorite,
             assets=(
                 []
                 if not f.assets
@@ -177,11 +179,16 @@ async def fragments_in_project(
 
 
 async def fragments_by_ids(
-    info: strawberry.Info[Context], fragment_ids: Optional[List[int]], project_id: Optional[int]
+    info: strawberry.Info[Context],
+    fragment_ids: Optional[List[int]],
+    project_id: Optional[int],
+    favorite: Optional[bool],
 ) -> List[FragmentGet]:
     user: AuthPayload = await info.context.user()
     db: Session = info.context.session()
-    fragments: List[Fragment] = await get_fragments_by_ids_db(db, fragment_ids, project_id)
+    fragments: List[Fragment] = await get_fragments_by_ids_db(
+        db, fragment_ids, project_id, favorite
+    )
     out: List[FragmentGet] = []
     for fragment in fragments:
         await check_read_permissions(db, user.user.id, fragment.project_id)
@@ -372,6 +379,7 @@ async def clone_fragment_route(
             directory_id=directory_id,
             linked_fragments=[],  # Will update after all fragments created
             linked_goals=[],
+            favorite=False,
         )
         new_fragment: FragmentGet = await create_fragment_route(info, linked_post)
         linked_fragment_id_map[linked_fragment.id] = new_fragment.id
@@ -401,6 +409,7 @@ async def clone_fragment_route(
         directory_id=directory_id,
         linked_fragments=linked_fragments,
         linked_goals=([]),
+        favorite=False,
     )
     return await create_fragment_route(info, fragment_post)
 

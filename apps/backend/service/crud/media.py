@@ -1,4 +1,5 @@
 import os
+from io import BytesIO
 from typing import Optional
 from uuid import uuid4
 
@@ -76,8 +77,8 @@ async def delete_media_by_id_db(db: Session, media_id: int) -> None:
 
 
 async def generate_default_media(db: Session) -> Media:
-    logger.info(f"Generating default media")
-    img_byte_arr: bytes = generate_image()
+    logger.info('Generating default media')
+    img_byte_arr: BytesIO = generate_image()
 
     upload_file = UploadFile(
         file=img_byte_arr, filename=f"{uuid4()}.png", headers={'content-type': 'image/png'}  # type: ignore[arg-type]
