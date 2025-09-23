@@ -647,6 +647,7 @@ input FilterTimeFramePost {
 input FragmentClonePost {
     directoryId: Int
     fragmentId: Int!
+    name: String
     projectId: Int
 }
 

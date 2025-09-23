@@ -1,5 +1,5 @@
-mutation DuplicateProjectFragment($projectSlug: Int!, $id: Int!, $parentId: Int!) {
-    cloneFragment(clone: {projectId: $projectSlug, directoryId: $parentId, fragmentId: $id}) {
+mutation DuplicateProjectFragment($projectSlug: Int!, $id: Int!, $parentId: Int!, $name: String) {
+    cloneFragment(clone: {projectId: $projectSlug, directoryId: $parentId, fragmentId: $id, name: $name}) {
         id
         name
         directoryId

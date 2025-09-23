@@ -25,6 +25,7 @@ export const useProjectTreeItem = ({ itemId, type, parentId, onClick }: Options)
   const { openFragment } = useBuilder()
   const { projectSlug } = useProject()
   const {
+    rootDirectoryId,
     duplicateProjectFragment,
     updateProjectDirectory,
     updateProjectFragment,
@@ -134,6 +135,7 @@ export const useProjectTreeItem = ({ itemId, type, parentId, onClick }: Options)
   }
 
   return {
+    isRootFolder: itemId === rootDirectoryId,
     isOpen,
     isLoading,
     type,

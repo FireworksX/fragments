@@ -358,6 +358,7 @@ export type FilterTimeFramesGet = {
 export type FragmentClonePost = {
   directoryId?: InputMaybe<Scalars['Int']['input']>;
   fragmentId: Scalars['Int']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
   projectId?: InputMaybe<Scalars['Int']['input']>;
 };
 

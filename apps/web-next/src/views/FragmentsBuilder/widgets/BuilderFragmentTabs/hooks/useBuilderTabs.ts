@@ -11,8 +11,8 @@ import { useFragmentsNamesQuery } from '@/views/FragmentsBuilder/widgets/Builder
 
 export const useBuilderTabs = () => {
   const { projectSlug } = useProject()
-  const { currentFragmentId, isPreview, isValidId, openFragment } = useBuilder()
-  const { value: tabsNodes, push, splice } = useLocalStorageArray<string>('tabs', [], { sync: true })
+  const { currentFragmentId, isPreview, isValidId, openFragment, toHomeBuilder } = useBuilder()
+  const { value: tabsNodes, push, splice, setValue } = useLocalStorageArray<string>('tabs', [], { sync: true })
   const resultTabsNodes = tabsNodes.filter(tab => isValidId(tab?.id))
   const builderTabKey = tab => `${tab?.id}_${tab?.preview}`
   const tabsKeys = resultTabsNodes.map(builderTabKey)
@@ -45,7 +45,12 @@ export const useBuilderTabs = () => {
    */
   useEffect(() => {
     if (tabsNodes.length < prevTabsNodes?.length) {
-      openFragment(resultTabsNodes.at(-1)?.id)
+      const id = resultTabsNodes.at(-1)?.id
+      if (id) {
+        openFragment(id)
+      } else {
+        toHomeBuilder()
+      }
     }
   }, [tabsNodes, prevTabsNodes, currentFragmentId, openFragment, resultTabsNodes])
   //
@@ -87,6 +92,9 @@ export const useBuilderTabs = () => {
       if (index !== -1) {
         splice(index, 1)
       }
+    },
+    closeAll: () => {
+      setValue(tabs.filter(tab => tab.isActive))
     }
   }
 }

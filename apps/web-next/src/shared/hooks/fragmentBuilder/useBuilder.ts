@@ -3,6 +3,8 @@ import { useGraph } from '@graph-state/react'
 import { use, useEffect } from 'react'
 import { BuilderContext } from '@/shared/providers/BuilderContext'
 import { noop, pick } from '@fragmentsx/utils'
+import { useLink } from '@/shared/ui/Link'
+import { useRouter } from 'next/navigation'
 
 export const useBuilder = () => {
   const { builderManager } = use(BuilderContext)
@@ -12,6 +14,7 @@ export const useBuilder = () => {
     selector: graph => pick(graph, 'isSaving', 'savingState')
   })
 
+  const router = useRouter()
   const [searchParams, updateSearchParams] = useSearchParam(['node', 'preview'])
   const isValidId = (id: unknown) => !isNaN(Number(id))
   const currentFragmentId = searchParams?.node
@@ -20,6 +23,7 @@ export const useBuilder = () => {
   // const setCanvasMode = builderManager?.setCanvasMode ?? noop
   const isSaving = documentBuilderGraph?.isSaving ?? false
   const savingState = documentBuilderGraph?.savingState ?? null
+  const builderLink = useLink({ type: 'builder' })
 
   const openFragment = (fragmentId: number | null, preview?: boolean) => {
     if (fragmentId === null) {
@@ -35,6 +39,12 @@ export const useBuilder = () => {
     }
   }
 
+  const toHomeBuilder = () => {
+    if (builderLink.href) {
+      router.push(builderLink.href)
+    }
+  }
+
   const openPreview = () => {
     openFragment(currentFragmentId, true)
   }
@@ -47,6 +57,7 @@ export const useBuilder = () => {
     isPreview: preview === '1',
     openFragment,
     openPreview,
+    toHomeBuilder,
     // canvasMode,
     // canvasModeContext: builderGraph?.canvasModeContext,
     // setCanvasMode,

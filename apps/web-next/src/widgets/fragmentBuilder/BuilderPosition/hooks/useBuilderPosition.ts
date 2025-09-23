@@ -20,10 +20,10 @@ export const useBuilderPosition = () => {
   const childOfBreakpoint = parent?._type === definition.nodes.Breakpoint
 
   const [position, setPosition] = useLayerValue('position')
-  const [, , { rawValue: baseTop, setWithAutoPatch: setTop }] = useLayerValue('top')
-  const [, , { rawValue: baseRight, setWithAutoPatch: setRight }] = useLayerValue('right')
-  const [, , { rawValue: baseBottom, setWithAutoPatch: setBottom }] = useLayerValue('bottom')
-  const [, , { rawValue: baseLeft, setWithAutoPatch: setLeft }] = useLayerValue('left')
+  const [baseTop, , { setWithAutoPatch: setTop }] = useLayerValue('top', undefined, { widthFallback: false })
+  const [baseRight, , { setWithAutoPatch: setRight }] = useLayerValue('right', undefined, { widthFallback: false })
+  const [baseBottom, , { setWithAutoPatch: setBottom }] = useLayerValue('bottom', undefined, { widthFallback: false })
+  const [baseLeft, , { setWithAutoPatch: setLeft }] = useLayerValue('left', undefined, { widthFallback: false })
 
   const layerRect = useLayerRect(selection)
 

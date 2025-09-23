@@ -1,7 +1,11 @@
 import { getLayerSchema } from "@/helpers/getLayerSchema";
 import { normalizeLayer } from "@/helpers/normalizeLayer";
 
-export const getNormalizeLayer = (layer: unknown, overrider?: unknown) => {
+export const getNormalizeLayer = (
+  layer: unknown,
+  overrider?: unknown,
+  withFallback?: boolean
+) => {
   if (!layer) return null;
 
   const schema = getLayerSchema(layer);
@@ -9,5 +13,6 @@ export const getNormalizeLayer = (layer: unknown, overrider?: unknown) => {
 
   return normalizeLayer(schema, layer, {
     overrideTarget: overrider,
+    withFallback,
   });
 };

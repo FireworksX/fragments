@@ -1,14 +1,17 @@
 .root {
     position: relative;
+    background: var(--background);
+    border-bottom: 1px solid var(--border);
+    z-index: var(--z-index-builder-tabs);
+    width: calc(100vw - var(--builder-size-left-bar) - var(--builder-size-right-bar));
+}
+
+.inner {
     display: flex;
     align-items: center;
     gap: 5px;
-    background: var(--background);
-    min-height: var(--app-size-tabs-height);
-    border-bottom: 1px solid var(--border);
-    z-index: var(--z-index-builder-tabs);
     overflow: auto;
-    width: calc(100vw - var(--builder-size-left-bar) - var(--builder-size-right-bar));
+    min-height: var(--app-size-tabs-height);
 }
 
 .preview {
@@ -71,4 +74,16 @@
     &:hover {
         background: var(--secondary-bg);
     }
+}
+
+.closeAll {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    padding-inline: 12px;
+    background: linear-gradient(to right, rgba(var(--background--rgb), 0) 0, var(--background) 10%, var(--background) 100%);
 }

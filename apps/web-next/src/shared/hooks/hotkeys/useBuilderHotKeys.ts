@@ -27,7 +27,7 @@ export const useBuilderHotKeys = () => {
   )
 
   useHotkeys(
-    'backspace',
+    'backspace, delete',
     () => {
       if (layerFlags.canRemove) {
         layerFlags.remove()

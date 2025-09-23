@@ -7,6 +7,7 @@ export type DuplicateProjectFragmentMutationVariables = Types.Exact<{
   projectSlug: Types.Scalars['Int']['input'];
   id: Types.Scalars['Int']['input'];
   parentId: Types.Scalars['Int']['input'];
+  name?: Types.InputMaybe<Types.Scalars['String']['input']>;
 }>;
 
 
@@ -14,9 +15,9 @@ export type DuplicateProjectFragmentMutation = { __typename?: 'Mutation', cloneF
 
 
 export const DuplicateProjectFragmentDocument = gql`
-    mutation DuplicateProjectFragment($projectSlug: Int!, $id: Int!, $parentId: Int!) {
+    mutation DuplicateProjectFragment($projectSlug: Int!, $id: Int!, $parentId: Int!, $name: String) {
   cloneFragment(
-    clone: {projectId: $projectSlug, directoryId: $parentId, fragmentId: $id}
+    clone: {projectId: $projectSlug, directoryId: $parentId, fragmentId: $id, name: $name}
   ) {
     id
     name
@@ -42,6 +43,7 @@ export type DuplicateProjectFragmentMutationFn = Apollo.MutationFunction<Duplica
  *      projectSlug: // value for 'projectSlug'
  *      id: // value for 'id'
  *      parentId: // value for 'parentId'
+ *      name: // value for 'name'
  *   },
  * });
  */

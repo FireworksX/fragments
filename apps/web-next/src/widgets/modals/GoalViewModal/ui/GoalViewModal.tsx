@@ -81,7 +81,7 @@ export const GoalViewModal: FC<GoalViewModalProps> = ({ className }) => {
             <Slider min={0} max={100} step={0.01} value={min} onChange={setMin} />
           </ControlRow>
           <ControlRow title='Max %'>
-            <InputText placeholder='Max' min={0} max={100} step={0.01} value={max} onChange={setMax} />
+            <InputNumber placeholder='Max' min={0} max={100} step={0.01} value={max} onChange={setMax} />
             <Slider min={0} max={100} step={0.01} value={max} onChange={setMax} />
           </ControlRow>
         </Panel>
